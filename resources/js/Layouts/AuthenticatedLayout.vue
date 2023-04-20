@@ -36,6 +36,10 @@ const showingNavigationDropdown = ref(false);
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
+                            <div class="flex flex-col justify-center items-center ">
+                                <div class="text-xs leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400">Balance</div>
+                                <div class="text-xl font-bold text-gray-300 dark:text-gray-200">$524.43</div>
+                            </div>
                             <!-- Settings Dropdown -->
                             <div class="ml-3 relative">
                                 <Dropdown align="right" width="48">
