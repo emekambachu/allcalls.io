@@ -17,6 +17,10 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $types = [
+            'Auto Insurance' => ['AR', 'NY'],
+        ];
+
         return [
             'first_name' => $this->faker->firstName,
             'last_name' => $this->faker->lastName,
@@ -27,6 +31,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => bcrypt('password'),
             'remember_token' => Str::random(10),
+            'states_info' => json_encode(['types' => $types]),
         ];
     }
 

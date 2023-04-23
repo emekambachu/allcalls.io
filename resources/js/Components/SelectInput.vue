@@ -18,6 +18,11 @@
       type: String,
       required: true,
     },
+
+    multiple: {
+      type: Boolean,
+      default: false,
+    },
   });
   
   defineEmits(['update:modelValue']);

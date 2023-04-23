@@ -61,4 +61,15 @@ class User extends Authenticatable
         ->withPivot(['state_id', 'call_type_id'])
         ->withTimestamps();
     }
+
+    public function getStatesInfo()
+    {
+        return json_decode($this->states_info, true);
+    }
+    
+    public function setStatesInfo(array $statesInfo)
+    {
+        $this->states_info = json_encode($statesInfo);
+        $this->save();
+    }    
 }

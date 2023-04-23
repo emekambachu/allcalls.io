@@ -78,4 +78,23 @@ class UserTest extends TestCase
         $this->assertEquals([1, 2], $user->states()->where('states.id', $stateX->id)->pluck('users_call_type_state.call_type_id')->toArray());
         $this->assertEquals([1], $user->states()->where('states.id', $stateY->id)->pluck('users_call_type_state.call_type_id')->toArray());
     }
+
+    public function testSetStates()
+    {
+        $user = User::factory()->create();
+    
+        $states = [
+            'Auto Insurance' => [
+                'AR', 'NY'
+            ],
+            'Final Expense' => [
+                'U65 Health'
+            ]
+        ];
+    
+        $user->setStates($states);
+    
+        $this->assertEquals($states, $user->getStates());
+    }    
 }
+

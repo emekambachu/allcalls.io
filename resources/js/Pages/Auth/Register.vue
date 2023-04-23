@@ -123,6 +123,7 @@ const submit = () => {
                 <InputLabel for="insurance_type" value="Insurance Type" />
 
                 <SelectInput
+                    :multiple="true"
                     required
                     class="mt-1 block w-full"
                     id="insurance_type"
