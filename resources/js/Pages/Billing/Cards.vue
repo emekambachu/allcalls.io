@@ -77,7 +77,7 @@ import { Head, Link } from "@inertiajs/vue3";
                 Add a credit card
               </h2>
               <form action="#">
-                <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+                <div class="grid gap-4 sm:grid-cols-2 sm:gap-6 mb-6">
                   <div class="sm:col-span-2">
                     <label
                       for="number"
@@ -142,6 +142,69 @@ import { Head, Link } from "@inertiajs/vue3";
                       placeholder="XXX"
                       required
                       pattern="[0-9]{3}"
+                    />
+                  </div>
+                </div>
+
+                <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+                  <div class="w-full">
+                    <label
+                      for="street"
+                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      >Street address</label
+                    >
+                    <input
+                      type="text"
+                      name="street"
+                      id="street"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                      placeholder="123 Main St"
+                      required
+                    />
+                  </div>
+                  <div class="w-full">
+                    <label
+                      for="city"
+                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      >City</label
+                    >
+                    <input
+                      type="text"
+                      name="city"
+                      id="city"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                      placeholder="New York"
+                      required
+                    />
+                  </div>
+                  <div class="w-full">
+                    <label
+                      for="state"
+                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      >State</label
+                    >
+                    <input
+                      type="text"
+                      name="state"
+                      id="state"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                      placeholder="NY"
+                      required
+                    />
+                  </div>
+                  <div class="w-full">
+                    <label
+                      for="zip"
+                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      >ZIP code</label
+                    >
+                    <input
+                      type="text"
+                      name="zip"
+                      id="zip"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                      placeholder="10001"
+                      required
                     />
                   </div>
                 </div>
