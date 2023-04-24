@@ -4,6 +4,7 @@
       :value="modelValue"
       @input="$emit('update:modelValue', $event.target.value)"
       ref="select"
+      :multiple="multiple"
     >
       <option disabled value="">Please select one</option>
       <slot></slot>
