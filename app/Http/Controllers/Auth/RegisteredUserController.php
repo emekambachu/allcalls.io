@@ -35,20 +35,18 @@ class RegisteredUserController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:'.User::class,
-            // 'insurance_type' => 'required|string|max:255',
-            // 'license_state' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:'.User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'states_info' => 'required',
         ]);
 
         $user = User::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'username' => $request->username,
-            // 'insurance_type' => $request->insurance_type,
-            // 'license_state' => $request->license_state,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'states_info' => json_encode($request->states_info),
         ]);
 
         event(new Registered($user));

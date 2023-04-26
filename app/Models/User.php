@@ -24,8 +24,7 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
-        'insurance_type',
-        'license_state',
+        'states_info',
     ];
 
     /**

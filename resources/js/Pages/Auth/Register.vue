@@ -18,6 +18,15 @@ const form = useForm({
   password_confirmation: "",
   insurance_type: "Life Insurance",
   license_state: "",
+  states_info: {
+    "Lead / call types": [],
+    "Auto Insurance": [],
+    "Final Expense": [],
+    "U65 Health": [],
+    ACA: [],
+    "Medicare/Medicaid": [],
+    "Debt Relief": [],
+  },
 });
 
 const submit = () => {
@@ -57,8 +66,6 @@ const onTypeUpdate = (event) => {
       1
     );
   }
-
-  console.log("SELECTED TYPES NOW", selectedTypes.value);
 };
 
 const customLabel = function(options, select$) {
@@ -241,7 +248,7 @@ const customLabel = function(options, select$) {
                 { value: 'WI', label: 'Wisconsin' },
                 { value: 'WY', label: 'Wyoming' },
               ]"
-              v-model="selectedTypesWithStates[insuranceType]"
+              v-model="form.states_info[insuranceType]"
               track-by="value"
               label="label"
               mode="tags"
@@ -250,81 +257,7 @@ const customLabel = function(options, select$) {
           </div>
         </div>
 
-        <!-- <Multiselect
-                    v-model="form.insurance_type"
-                    :options="[
-                        'First type',
-                        'Second type',
-                        'Third type',
-                    ]"
-                /> -->
-
         <InputError class="mt-2" :message="form.errors.insurance_type" />
-      </div>
-
-      <div class="mt-4">
-        <InputLabel for="license_state" value="License State" />
-
-        <SelectInput
-          required
-          class="mt-1 block w-full"
-          id="license_state"
-          v-model="form.license_state"
-        >
-          <option value="">Please select one</option>
-          <option value="AL">Alabama</option>
-          <option value="AK">Alaska</option>
-          <option value="AZ">Arizona</option>
-          <option value="AR">Arkansas</option>
-          <option value="CA">California</option>
-          <option value="CO">Colorado</option>
-          <option value="CT">Connecticut</option>
-          <option value="DE">Delaware</option>
-          <option value="FL">Florida</option>
-          <option value="GA">Georgia</option>
-          <option value="HI">Hawaii</option>
-          <option value="ID">Idaho</option>
-          <option value="IL">Illinois</option>
-          <option value="IN">Indiana</option>
-          <option value="IA">Iowa</option>
-          <option value="KS">Kansas</option>
-          <option value="KY">Kentucky</option>
-          <option value="LA">Louisiana</option>
-          <option value="ME">Maine</option>
-          <option value="MD">Maryland</option>
-          <option value="MA">Massachusetts</option>
-          <option value="MI">Michigan</option>
-          <option value="MN">Minnesota</option>
-          <option value="MS">Mississippi</option>
-          <option value="MO">Missouri</option>
-          <option value="MT">Montana</option>
-          <option value="NE">Nebraska</option>
-          <option value="NV">Nevada</option>
-          <option value="NH">New Hampshire</option>
-          <option value="NJ">New Jersey</option>
-          <option value="NM">New Mexico</option>
-          <option value="NY">New York</option>
-          <option value="NC">North Carolina</option>
-          <option value="ND">North Dakota</option>
-          <option value="OH">Ohio</option>
-          <option value="OK">Oklahoma</option>
-          <option value="OR">Oregon</option>
-          <option value="PA">Pennsylvania</option>
-          <option value="RI">Rhode Island</option>
-          <option value="SC">South Carolina</option>
-          <option value="SD">South Dakota</option>
-          <option value="TN">Tennessee</option>
-          <option value="TX">Texas</option>
-          <option value="UT">Utah</option>
-          <option value="VT">Vermont</option>
-          <option value="VA">Virginia</option>
-          <option value="WA">Washington</option>
-          <option value="WV">West Virginia</option>
-          <option value="WI">Wisconsin</option>
-          <option value="WY">Wyoming</option>
-        </SelectInput>
-
-        <InputError class="mt-2" :message="form.errors.license_state" />
       </div>
 
       <div class="flex items-center justify-end mt-4">

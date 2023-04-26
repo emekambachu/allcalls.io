@@ -1,213 +1,270 @@
 <script setup>
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import SelectInput from '@/Components/SelectInput.vue';
-import { Link, useForm, usePage } from '@inertiajs/vue3';
-
+import InputError from "@/Components/InputError.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import TextInput from "@/Components/TextInput.vue";
+import SelectInput from "@/Components/SelectInput.vue";
+import { Link, useForm, usePage } from "@inertiajs/vue3";
+import { ref, reactive } from "vue";
+import Multiselect from "@vueform/multiselect";
 
 defineProps({
-    mustVerifyEmail: {
-        type: Boolean,
-    },
-    status: {
-        type: String,
-    },
+  mustVerifyEmail: {
+    type: Boolean,
+  },
+  status: {
+    type: String,
+  },
 });
 
-const user = usePage().props.auth.user;
+let user = usePage().props.auth.user;
 
-const form = useForm({
-    first_name: user.first_name,
-    last_name: user.last_name,
-    username: user.username,
-    email: user.email,
-    insurance_type: user.insurance_type,
-    license_state: user.license_state,
+let form = useForm({
+  first_name: user.first_name,
+  last_name: user.last_name,
+  username: user.username,
+  email: user.email,
+  states_info: user.states_info,
 });
+
+let statesInfo = reactive(JSON.parse(user.states_info));
+let selectedTypes = ref([]);
+
+let onTypeUpdate = (event) => {
+  if (event.target.checked) {
+    selectedTypes.value.push(event.target.value);
+  } else {
+    selectedTypes.value.splice(
+      selectedTypes.value.indexOf(event.target.value),
+      1
+    );
+  }
+};
+
+let customLabel = function (options, select$) {
+  console.log("All options: ", options);
+
+  let labels = options.map((option) => option.label).join(", ");
+
+  return labels;
+};
 </script>
 
 <template>
-    <section>
-        <header>
-            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Profile Information</h2>
+  <section>
+    <header>
+      <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+        Profile Information
+      </h2>
 
-            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Update your account's profile information and email address.
-            </p>
-        </header>
+      <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+        Update your account's profile information and email address.
+      </p>
+    </header>
 
-        <form @submit.prevent="form.patch(route('profile.update'))" class="mt-6 space-y-6">
-            <div>
-                <InputLabel for="first_name" value="First Name" />
+    <form
+      @submit.prevent="form.patch(route('profile.update'))"
+      class="mt-6 space-y-6"
+    >
+      <div>
+        <InputLabel for="first_name" value="First Name" />
 
-                <TextInput
-                    id="first_name"
-                    type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.first_name"
-                    required
-                    autofocus
-                />
+        <TextInput
+          id="first_name"
+          type="text"
+          class="mt-1 block w-full"
+          v-model="form.first_name"
+          required
+          autofocus
+        />
 
-                <InputError class="mt-2" :message="form.errors.first_name" />
-            </div>
+        <InputError class="mt-2" :message="form.errors.first_name" />
+      </div>
 
-            <div>
-                <InputLabel for="last_name" value="Last Name" />
+      <div>
+        <InputLabel for="last_name" value="Last Name" />
 
-                <TextInput
-                    id="last_name"
-                    type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.last_name"
-                    required
-                />
+        <TextInput
+          id="last_name"
+          type="text"
+          class="mt-1 block w-full"
+          v-model="form.last_name"
+          required
+        />
 
-                <InputError class="mt-2" :message="form.errors.last_name" />
-            </div>
+        <InputError class="mt-2" :message="form.errors.last_name" />
+      </div>
 
-            <div>
-                <InputLabel for="username" value="Username" />
+      <div>
+        <InputLabel for="username" value="Username" />
 
-                <TextInput
-                    id="username"
-                    type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.username"
-                    required
-                />
+        <TextInput
+          id="username"
+          type="text"
+          class="mt-1 block w-full"
+          v-model="form.username"
+          required
+        />
 
-                <InputError class="mt-2" :message="form.errors.username" />
-            </div>
+        <InputError class="mt-2" :message="form.errors.username" />
+      </div>
 
-            <div>
-                <InputLabel for="email" value="Email" />
+      <div>
+        <InputLabel for="email" value="Email" />
 
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    v-model="form.email"
-                    required
-                    autocomplete="username"
-                />
+        <TextInput
+          id="email"
+          type="email"
+          class="mt-1 block w-full"
+          v-model="form.email"
+          required
+          autocomplete="username"
+        />
 
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
+        <InputError class="mt-2" :message="form.errors.email" />
+      </div>
 
-            <div v-if="mustVerifyEmail && user.email_verified_at === null">
-                <p class="text-sm mt-2 text-gray-800 dark:text-gray-200">
-                    Your email address is unverified.
-                    <Link
-                        :href="route('verification.send')"
-                        method="post"
-                        as="button"
-                        class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
-                    >
-                        Click here to re-send the verification email.
-                    </Link>
-                </p>
+      <div v-if="mustVerifyEmail && user.email_verified_at === null">
+        <p class="text-sm mt-2 text-gray-800 dark:text-gray-200">
+          Your email address is unverified.
+          <Link
+            :href="route('verification.send')"
+            method="post"
+            as="button"
+            class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+          >
+            Click here to re-send the verification email.
+          </Link>
+        </p>
 
-                <div
-                    v-show="status === 'verification-link-sent'"
-                    class="mt-2 font-medium text-sm text-green-600 dark:text-green-400"
-                >
-                    A new verification link has been sent to your email address.
-                </div>
-            </div>
+        <div
+          v-show="status === 'verification-link-sent'"
+          class="mt-2 font-medium text-sm text-green-600 dark:text-green-400"
+        >
+          A new verification link has been sent to your email address.
+        </div>
+      </div>
 
-            <div>
-                <InputLabel for="insurance_type" value="Insurance Type" />
+      <div>
+        <div
+          v-for="(value, key, index) in statesInfo"
+          :key="index"
+          class="dark:text-white"
+        >
+          <input
+            :id="`insurance-${index}`"
+            type="checkbox"
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            @change="onTypeUpdate"
+            :value="key"
+            :checked="statesInfo[key].length"
+          />
+          <label
+            class="ml-2 text-md font-medium text-gray-900 dark:text-gray-300"
+            :for="`insurance-${index}`"
+            v-text="key"
+          ></label>
 
-                <SelectInput
-                    required
-                    class="mt-1 block w-full"
-                    id="insurance_type"
-                    v-model="form.insurance_type">
-                    <option value="Life Insurance">Life Insurance</option>
-                    <option value="Auto Insurance">Auto Insurance</option>
-                    <option value="Health Insurance">Health Insurance</option>
-                </SelectInput>
+          <div
+            class="py-2 dark:text-white"
+          >
+            <label
+                class="ml-2 text-xs font-medium text-gray-900 dark:text-gray-300"
+            >States you're licensed in:</label>
+            <Multiselect
+              :options="[
+                { value: 'AL', label: 'Alabama' },
+                { value: 'AK', label: 'Alaska' },
+                { value: 'AZ', label: 'Arizona' },
+                { value: 'AR', label: 'Arkansas' },
+                { value: 'CA', label: 'California' },
+                { value: 'CO', label: 'Colorado' },
+                { value: 'CT', label: 'Connecticut' },
+                { value: 'DE', label: 'Delaware' },
+                { value: 'FL', label: 'Florida' },
+                { value: 'GA', label: 'Georgia' },
+                { value: 'HI', label: 'Hawaii' },
+                { value: 'ID', label: 'Idaho' },
+                { value: 'IL', label: 'Illinois' },
+                { value: 'IN', label: 'Indiana' },
+                { value: 'IA', label: 'Iowa' },
+                { value: 'KS', label: 'Kansas' },
+                { value: 'KY', label: 'Kentucky' },
+                { value: 'LA', label: 'Louisiana' },
+                { value: 'ME', label: 'Maine' },
+                { value: 'MD', label: 'Maryland' },
+                { value: 'MA', label: 'Massachusetts' },
+                { value: 'MI', label: 'Michigan' },
+                { value: 'MN', label: 'Minnesota' },
+                { value: 'MS', label: 'Mississippi' },
+                { value: 'MO', label: 'Missouri' },
+                { value: 'MT', label: 'Montana' },
+                { value: 'NE', label: 'Nebraska' },
+                { value: 'NV', label: 'Nevada' },
+                { value: 'NH', label: 'New Hampshire' },
+                { value: 'NJ', label: 'New Jersey' },
+                { value: 'NM', label: 'New Mexico' },
+                { value: 'NY', label: 'New York' },
+                { value: 'NC', label: 'North Carolina' },
+                { value: 'ND', label: 'North Dakota' },
+                { value: 'OH', label: 'Ohio' },
+                { value: 'OK', label: 'Oklahoma' },
+                { value: 'OR', label: 'Oregon' },
+                { value: 'PA', label: 'Pennsylvania' },
+                { value: 'RI', label: 'Rhode Island' },
+                { value: 'SC', label: 'South Carolina' },
+                { value: 'SD', label: 'South Dakota' },
+                { value: 'TN', label: 'Tennessee' },
+                { value: 'TX', label: 'Texas' },
+                { value: 'UT', label: 'Utah' },
+                { value: 'VT', label: 'Vermont' },
+                { value: 'VA', label: 'Virginia' },
+                { value: 'WA', label: 'Washington' },
+                { value: 'WV', label: 'West Virginia' },
+                { value: 'WI', label: 'Wisconsin' },
+                { value: 'WY', label: 'Wyoming' },
+              ]"
+              track-by="value"
+              label="label"
+              mode="tags"
+              v-model="statesInfo[key]"
+            >
+            </Multiselect>
+          </div>
+        </div>
+      </div>
 
+      <div class="flex items-center gap-4">
+        <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
 
-                <InputError class="mt-2" :message="form.errors.insurance_type" />
-            </div>
-
-            
-
-            <div>
-                <InputLabel for="license_state" value="License State" />
-
-                <SelectInput
-                    required
-                    class="mt-1 block w-full"
-                    id="license_state"
-                    v-model="form.license_state">
-                    <option value="">Please select one</option>
-                    <option value="AL">Alabama</option>
-                    <option value="AK">Alaska</option>
-                    <option value="AZ">Arizona</option>
-                    <option value="AR">Arkansas</option>
-                    <option value="CA">California</option>
-                    <option value="CO">Colorado</option>
-                    <option value="CT">Connecticut</option>
-                    <option value="DE">Delaware</option>
-                    <option value="FL">Florida</option>
-                    <option value="GA">Georgia</option>
-                    <option value="HI">Hawaii</option>
-                    <option value="ID">Idaho</option>
-                    <option value="IL">Illinois</option>
-                    <option value="IN">Indiana</option>
-                    <option value="IA">Iowa</option>
-                    <option value="KS">Kansas</option>
-                    <option value="KY">Kentucky</option>
-                    <option value="LA">Louisiana</option>
-                    <option value="ME">Maine</option>
-                    <option value="MD">Maryland</option>
-                    <option value="MA">Massachusetts</option>
-                    <option value="MI">Michigan</option>
-                    <option value="MN">Minnesota</option>
-                    <option value="MS">Mississippi</option>
-                    <option value="MO">Missouri</option>
-                    <option value="MT">Montana</option>
-                    <option value="NE">Nebraska</option>
-                    <option value="NV">Nevada</option>
-                    <option value="NH">New Hampshire</option>
-                    <option value="NJ">New Jersey</option>
-                    <option value="NM">New Mexico</option>
-                    <option value="NY">New York</option>
-                    <option value="NC">North Carolina</option>
-                    <option value="ND">North Dakota</option>
-                    <option value="OH">Ohio</option>
-                    <option value="OK">Oklahoma</option>
-                    <option value="OR">Oregon</option>
-                    <option value="PA">Pennsylvania</option>
-                    <option value="RI">Rhode Island</option>
-                    <option value="SC">South Carolina</option>
-                    <option value="SD">South Dakota</option>
-                    <option value="TN">Tennessee</option>
-                    <option value="TX">Texas</option>
-                    <option value="UT">Utah</option>
-                    <option value="VT">Vermont</option>
-                    <option value="VA">Virginia</option>
-                    <option value="WA">Washington</option>
-                    <option value="WV">West Virginia</option>
-                    <option value="WI">Wisconsin</option>
-                    <option value="WY">Wyoming</option>
-                </SelectInput>
-
-                <InputError class="mt-2" :message="form.errors.license_state" />
-            </div>
-
-            <div class="flex items-center gap-4">
-                <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
-
-                <Transition enter-from-class="opacity-0" leave-to-class="opacity-0" class="transition ease-in-out">
-                    <p v-if="form.recentlySuccessful" class="text-sm text-gray-600 dark:text-gray-400">Saved.</p>
-                </Transition>
-            </div>
-        </form>
-    </section>
+        <Transition
+          enter-from-class="opacity-0"
+          leave-to-class="opacity-0"
+          class="transition ease-in-out"
+        >
+          <p
+            v-if="form.recentlySuccessful"
+            class="text-sm text-gray-600 dark:text-gray-400"
+          >
+            Saved.
+          </p>
+        </Transition>
+      </div>
+    </form>
+  </section>
 </template>
+
+
+<style src="@vueform/multiselect/themes/default.css"></style>
+<style>
+.multiselect {
+  color: black !important;
+  border: none;
+  border-radius: 10px;
+}
+
+.multiselect-wrapper {
+    background-color: rgb(17 24 39 / var(--tw-bg-opacity));
+    border-radius: 5px;
+}
+</style>
