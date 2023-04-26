@@ -22,7 +22,6 @@ let user = usePage().props.auth.user;
 let form = useForm({
   first_name: user.first_name,
   last_name: user.last_name,
-  username: user.username,
   email: user.email,
   states_info: user.states_info,
 });
@@ -101,20 +100,6 @@ let submitForm = () => {
       </div>
 
       <div>
-        <InputLabel for="username" value="Username" />
-
-        <TextInput
-          id="username"
-          type="text"
-          class="mt-1 block w-full"
-          v-model="form.username"
-          required
-        />
-
-        <InputError class="mt-2" :message="form.errors.username" />
-      </div>
-
-      <div>
         <InputLabel for="email" value="Email" />
 
         <TextInput
@@ -123,7 +108,6 @@ let submitForm = () => {
           class="mt-1 block w-full"
           v-model="form.email"
           required
-          autocomplete="username"
         />
 
         <InputError class="mt-2" :message="form.errors.email" />

@@ -12,7 +12,6 @@ import { ref, reactive } from "vue";
 const form = useForm({
   first_name: "",
   last_name: "",
-  username: "",
   email: "",
   password: "",
   password_confirmation: "",
@@ -109,20 +108,6 @@ const customLabel = function(options, select$) {
       </div>
 
       <div class="mt-4">
-        <InputLabel for="username" value="Username" />
-
-        <TextInput
-          id="username"
-          type="text"
-          class="mt-1 block w-full"
-          v-model="form.username"
-          required
-        />
-
-        <InputError class="mt-2" :message="form.errors.username" />
-      </div>
-
-      <div class="mt-4">
         <InputLabel for="email" value="Email" />
 
         <TextInput
@@ -131,7 +116,6 @@ const customLabel = function(options, select$) {
           class="mt-1 block w-full"
           v-model="form.email"
           required
-          autocomplete="username"
         />
 
         <InputError class="mt-2" :message="form.errors.email" />
