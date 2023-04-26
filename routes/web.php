@@ -31,9 +31,7 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/billing/funds', function () {
-    return Inertia::render('Billing/Funds');
-})->middleware(['auth', 'verified'])->name('billing.funds');
+
 
 
 
@@ -47,6 +45,7 @@ Route::middleware('auth')->group(function () {
 // Route::get('billing/cards', function () {
 //     return Inertia::render('Billing/Cards');
 // })->middleware(['auth', 'verified'])->name('billing.cards');
+Route::get('/billing/funds', [FundsController::class, 'index'])->middleware(['auth', 'verified'])->name('billing.funds.index');
 Route::get('billing/cards', [CardsController::class, 'index'])->middleware(['auth', 'verified'])->name('billing.cards.index');
 Route::post('billing/cards', [CardsController::class, 'store'])->middleware(['auth', 'verified'])->name('billing.cards.store');
 Route::delete('billing/cards/{card}', [CardsController::class, 'destroy'])->middleware(['auth', 'verified'])->name('billing.cards.delete');
