@@ -19,7 +19,6 @@ const form = useForm({
   insurance_type: "Life Insurance",
   license_state: "",
   states_info: {
-    "Lead / call types": [],
     "Auto Insurance": [],
     "Final Expense": [],
     "U65 Health": [],
@@ -36,7 +35,6 @@ const submit = () => {
 };
 
 const insuranceTypes = ref([
-  "Lead / call types",
   "Auto Insurance",
   "Final Expense",
   "U65 Health",
@@ -48,7 +46,6 @@ const insuranceTypes = ref([
 let selectedTypes = ref([]);
 
 let selectedTypesWithStates = ref({
-  "Lead / call types": [],
   "Auto Insurance": [],
   "Final Expense": [],
   "U65 Health": [],
