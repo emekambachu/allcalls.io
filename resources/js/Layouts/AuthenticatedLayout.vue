@@ -35,7 +35,7 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink href="#" :active="route().current('reporting')">
                                     Reporting
                                 </NavLink>
-                                <NavLink :href="route('billing.funds')" :active="route().current('billing.funds') || route().current('billing.cards.index')">
+                                <NavLink :href="route('billing.funds.index')" :active="route().current('billing.funds.index') || route().current('billing.cards.index')">
                                     Billing
                                 </NavLink>
                                 <NavLink href="#" :active="route().current('clients')">
@@ -134,7 +134,7 @@ const showingNavigationDropdown = ref(false);
                         <ResponsiveNavLink href="#" :active="route().current('reporting')">
                             Reporting
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink :href="route('billing.funds')" :active="route().current('billing.funds') || route().current('billing.cards.index')">
+                        <ResponsiveNavLink :href="route('billing.funds.index')" :active="route().current('billing.funds.index') || route().current('billing.cards.index')">
                             Billing
                         </ResponsiveNavLink>
                         <ResponsiveNavLink href="#" :active="route().current('clients')">

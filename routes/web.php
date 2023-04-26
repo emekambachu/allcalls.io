@@ -4,6 +4,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\CardsController;
+use App\Http\Controllers\FundsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CardsAPIController;
 
