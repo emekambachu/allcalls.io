@@ -32,6 +32,18 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </NavLink>
+                                <NavLink href="#" :active="route().current('reporting')">
+                                    Reporting
+                                </NavLink>
+                                <NavLink :href="route('billing.funds')" :active="route().current('billing.funds') || route().current('billing.cards.index')">
+                                    Billing
+                                </NavLink>
+                                <NavLink href="#" :active="route().current('clients')">
+                                    Clients
+                                </NavLink>
+                                <NavLink :href="route('profile.edit')" :active="route().current('profile.edit')">
+                                    Profile
+                                </NavLink>
                             </div>
                         </div>
 
@@ -68,7 +80,6 @@ const showingNavigationDropdown = ref(false);
                                     </template>
 
                                     <template #content>
-                                        <DropdownLink :href="route('profile.edit')"> Profile </DropdownLink>
                                         <DropdownLink :href="route('logout')" method="post" as="button">
                                             Log Out
                                         </DropdownLink>
@@ -119,6 +130,19 @@ const showingNavigationDropdown = ref(false);
                         <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                             Dashboard
                         </ResponsiveNavLink>
+
+                        <ResponsiveNavLink href="#" :active="route().current('reporting')">
+                            Reporting
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('billing.funds')" :active="route().current('billing.funds') || route().current('billing.cards.index')">
+                            Billing
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink href="#" :active="route().current('clients')">
+                            Clients
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('profile.edit')" :active="route().current('profile.edit')">
+                            Profile
+                        </ResponsiveNavLink>
                     </div>
 
                     <!-- Responsive Settings Options -->
@@ -131,7 +155,6 @@ const showingNavigationDropdown = ref(false);
                         </div>
 
                         <div class="mt-3 space-y-1">
-                            <ResponsiveNavLink :href="route('profile.edit')"> Profile </ResponsiveNavLink>
                             <ResponsiveNavLink :href="route('logout')" method="post" as="button">
                                 Log Out
                             </ResponsiveNavLink>

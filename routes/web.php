@@ -1,9 +1,11 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
+use App\Http\Controllers\CardsController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CardsAPIController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,14 +35,20 @@ Route::get('/billing/funds', function () {
     return Inertia::render('Billing/Funds');
 })->middleware(['auth', 'verified'])->name('billing.funds');
 
-Route::get('/billing/cards', function () {
-    return Inertia::render('Billing/Cards');
-})->middleware(['auth', 'verified'])->name('billing.cards');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+
+// Route::get('billing/cards', function () {
+//     return Inertia::render('Billing/Cards');
+// })->middleware(['auth', 'verified'])->name('billing.cards');
+Route::get('billing/cards', [CardsController::class, 'index'])->middleware(['auth', 'verified'])->name('billing.cards.index');
+Route::post('billing/cards', [CardsController::class, 'store'])->middleware(['auth', 'verified'])->name('billing.cards.store');
+Route::delete('billing/cards/{card}', [CardsController::class, 'destroy'])->middleware(['auth', 'verified'])->name('billing.cards.delete');
 
 require __DIR__.'/auth.php';

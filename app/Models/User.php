@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Card;
 use App\Models\UserCallTypeState;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
@@ -69,5 +70,10 @@ class User extends Authenticatable
     {
         $this->states_info = json_encode($statesInfo);
         $this->save();
-    }    
+    }
+
+    public function cards()
+    {
+        return $this->hasMany(Card::class);
+    }
 }
