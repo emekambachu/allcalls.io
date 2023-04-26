@@ -50,13 +50,7 @@ let customLabel = function (options, select$) {
 };
 
 let submitForm = () => {
-
-    // console.log('submit form now!');
-    // console.log(JSON.stringify(statesInfo));
-    // console.log(statesInfo);
     form.states_info = JSON.stringify(statesInfo);
-
-    // console.log(form);
     form.patch(route('profile.update'));
 }
 </script>
