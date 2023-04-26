@@ -48,6 +48,17 @@ let customLabel = function (options, select$) {
 
   return labels;
 };
+
+let submitForm = () => {
+
+    // console.log('submit form now!');
+    // console.log(JSON.stringify(statesInfo));
+    // console.log(statesInfo);
+    form.states_info = JSON.stringify(statesInfo);
+
+    // console.log(form);
+    form.patch(route('profile.update'));
+}
 </script>
 
 <template>
@@ -63,7 +74,7 @@ let customLabel = function (options, select$) {
     </header>
 
     <form
-      @submit.prevent="form.patch(route('profile.update'))"
+      @submit.prevent="submitForm"
       class="mt-6 space-y-6"
     >
       <div>
