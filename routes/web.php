@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
 //     return Inertia::render('Billing/Cards');
 // })->middleware(['auth', 'verified'])->name('billing.cards');
 Route::get('/billing/funds', [FundsController::class, 'index'])->middleware(['auth', 'verified'])->name('billing.funds.index');
+Route::post('/billing/funds', [FundsController::class, 'store'])->middleware(['auth', 'verified'])->name('billing.funds.store');
 Route::get('billing/cards', [CardsController::class, 'index'])->middleware(['auth', 'verified'])->name('billing.cards.index');
 Route::post('billing/cards', [CardsController::class, 'store'])->middleware(['auth', 'verified'])->name('billing.cards.store');
 Route::delete('billing/cards/{card}', [CardsController::class, 'destroy'])->middleware(['auth', 'verified'])->name('billing.cards.delete');

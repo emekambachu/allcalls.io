@@ -1,12 +1,29 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import SelectInput from "@/Components/SelectInput.vue";
-import { Head, Link } from "@inertiajs/vue3";
-defineProps({
+import { Head, Link, router } from "@inertiajs/vue3";
+import { ref } from 'vue';
+let props = defineProps({
   cards: {
     type: Array
   }
 });
+
+let amount = ref(100);
+let selectedCardId = ref(0);
+let selectCard = cardId => {
+  console.log('clicked', cardId);
+  selectedCardId.value = cardId
+}
+
+let addFunds = () => {
+  router.visit("/billing/funds", {
+    method: "post",
+    data: {
+      amount: amount.value,
+      cardId: selectedCardId.value,
+  }
+  });
+};
 </script>
 
 <template>
@@ -81,9 +98,13 @@ defineProps({
           </h2>
 
           <div
-            class="flex items-center p-2 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 mb-2 cursor-pointer"
+            class="flex items-center px-2 py-4 bg-white border-2 border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 mb-2 cursor-pointer select-none"
+            :class="{
+              'dark:border-blue-900': selectedCardId === card.id,
+            }"
             v-for="card in cards"
             :key="card.id"
+            @click.prevent="selectCard(card.id)"
           >
             <div
               class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300 flex items-center"
@@ -105,10 +126,11 @@ defineProps({
                 $
               </div>
               <input
-                type="text"
+                type="number"
                 id="amount"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-8 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="500"
+                v-model="amount"
               />
             </div>
           </div>
@@ -116,6 +138,7 @@ defineProps({
           <button
             type="button"
             class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+            @click.prevent="addFunds"
           >
             Add funds
           </button>
