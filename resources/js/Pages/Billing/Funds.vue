@@ -94,7 +94,7 @@ let addFunds = () => {
           </ul>
         </div>
 
-        <div class="py-4 px-4 mx-auto max-w-2xl lg:py-16">
+        <div v-if="cards.length" class="py-4 px-4 mx-auto max-w-2xl lg:py-16">
           <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">
             Add funds
           </h2>
@@ -144,6 +144,16 @@ let addFunds = () => {
           >
             Add funds
           </button>
+        </div>
+
+        <div v-else class="text-center">
+          <p class="dark:text-gray-400 mt-6 mb-8">You haven't added any cards yet.</p>
+          <Link
+            href="/billing/cards"
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+          >
+            Add credit card
+        </Link>        
         </div>
       </form>
     </div>

@@ -1,25 +1,19 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import SelectInput from "@/Components/SelectInput.vue";
-import { Head, Link, router } from "@inertiajs/vue3";
-import { ref, reactive, onMounted } from "vue";
-// import { useShepherd } from 'vue-shepherd';
+import { Head, Link, router, usePage } from "@inertiajs/vue3";
+import { ref, reactive, onMounted, computed } from "vue";
+import { createToaster } from "@meforma/vue-toaster";
 
-const headline = ref(null);
+const page = usePage()
 
-// const tour = useShepherd({
-//   useModalOverlay: true
-// });
-  
-onMounted(() =>  {
-  // tour.addStep({
-  //   attachTo: { element: headline.value, on: 'top' },
-  //   text: 'Test'
-  // });
-
-  // tour.start();
+const toaster = createToaster({
+  position: 'top-right',
 });
 
+if (page.props.flash.message) {
+  toaster.success(page.props.flash.message);
+}
 
 let props = defineProps({
   cards: {
@@ -50,6 +44,8 @@ let removeCard = (id) => {
     method: 'delete',
   });
 }
+
+
 </script>
 
 <template>
@@ -123,7 +119,7 @@ let removeCard = (id) => {
         <div>
           <section class="bg-white dark:bg-gray-900">
             <div class="py-8 px-4 mx-auto max-w-2xl lg:py-16">
-              <h2 ref="headline" class="mb-4 text-xl font-bold text-gray-900 dark:text-white">
+              <h2 id="headline" class="mb-4 text-xl font-bold text-gray-900 dark:text-white">
                 Add a credit card
               </h2>
               <form @submit.prevent="addNewCard()">
@@ -269,6 +265,7 @@ let removeCard = (id) => {
                 </div>
 
                 <button
+                  id="button"
                   type="submit"
                   class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 mt-6"
                 >

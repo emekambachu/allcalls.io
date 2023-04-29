@@ -1,10 +1,28 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { Link } from "@inertiajs/vue3";
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
+
+// import tippy from 'tippy.js';
+// import 'tippy.js/dist/tippy.css';
+
+// onMounted(() => {
+//   tippy('#billing-nav-link', {
+//     content: `
+//         <h1 class="text-gray-100 text-lg font-bold mb-2">Step 1</h1>
+
+//         <p class="text-gray-400 text-sm">Click here to manage your billing information.</p>
+//     `,
+//     allowHTML: true,
+//     showOnCreate: true,
+//     placement: "bottom",
+//     trigger: 'manual',
+//     theme: 'light',
+//   });
+// });
 
 const showingNavigationDropdown = ref(false);
 </script>
@@ -32,7 +50,7 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink href="#" :active="route().current('reporting')">
                                     Reporting
                                 </NavLink>
-                                <NavLink :href="route('billing.funds.index')" :active="route().current('billing.funds.index') || route().current('billing.cards.index')">
+                                <NavLink id="billing-nav-link" :href="route('billing.funds.index')" :active="route().current('billing.funds.index') || route().current('billing.cards.index')">
                                     Billing
                                 </NavLink>
                                 <NavLink href="#" :active="route().current('clients')">

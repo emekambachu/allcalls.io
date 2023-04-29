@@ -57,7 +57,9 @@ class CardsController extends Controller
             'user_id' => Auth::user()->id,
         ]);
 
-        return redirect()->back();
+        return redirect()->back()->with([
+            'message' => 'New card added successfully.'
+        ]);
     }
 
     public function destroy(Card $card)
