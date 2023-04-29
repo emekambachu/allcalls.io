@@ -19,6 +19,7 @@
     "dependencies": {
         "@vueform/multiselect": "^2.6.2",
         "vue-multi-select": "^4.6.0",
-        "vue-multiselect": "^2.1.7"
+        "vue-multiselect": "^2.1.7",
+        "vue-shepherd": "^3.0.0"
     }
 }

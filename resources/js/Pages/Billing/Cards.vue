@@ -2,7 +2,24 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import SelectInput from "@/Components/SelectInput.vue";
 import { Head, Link, router } from "@inertiajs/vue3";
-import { reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
+// import { useShepherd } from 'vue-shepherd';
+
+const headline = ref(null);
+
+// const tour = useShepherd({
+//   useModalOverlay: true
+// });
+  
+onMounted(() =>  {
+  // tour.addStep({
+  //   attachTo: { element: headline.value, on: 'top' },
+  //   text: 'Test'
+  // });
+
+  // tour.start();
+});
+
 
 let props = defineProps({
   cards: {
@@ -104,7 +121,7 @@ let removeCard = (id) => {
         <div>
           <section class="bg-white dark:bg-gray-900">
             <div class="py-8 px-4 mx-auto max-w-2xl lg:py-16">
-              <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">
+              <h2 ref="headline" class="mb-4 text-xl font-bold text-gray-900 dark:text-white">
                 Add a credit card
               </h2>
               <form @submit.prevent="addNewCard()">
