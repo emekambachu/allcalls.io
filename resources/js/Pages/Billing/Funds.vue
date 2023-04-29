@@ -27,6 +27,8 @@ let addFunds = () => {
 </script>
 
 <template>
+  <Head title="Funds" />
+
   <AuthenticatedLayout>
     <template #header>
       <h2

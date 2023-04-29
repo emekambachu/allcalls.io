@@ -53,6 +53,8 @@ let removeCard = (id) => {
 </script>
 
 <template>
+  <Head title="Cards" />
+
   <AuthenticatedLayout>
     <template #header>
       <h2
