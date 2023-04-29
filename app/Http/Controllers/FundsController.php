@@ -59,23 +59,30 @@ class FundsController extends Controller
         $card = Card::findOrFail($request->cardId);
         $user = Auth::user();
 
-        // $gw = new NMIGateway;
-        // $gw->setLogin(env('NMI_KEY'));
+        $gw = new NMIGateway;
+        $gw->setLogin(env('NMI_KEY'));
 
-        // $gw->setBilling($user->first_name, $user->last_name, $address1, $card->city, $card->state, $card->zip, 'US', $user->phone, $user->email);
+        $gw->setBilling($user->first_name, $user->last_name, $card->address, $card->city, $card->state, $card->zip, 'US', $user->phone, $user->email);
         
-        // $r = $gw->doSale($request->amount, $card->number, $card->month . substr($card->year, -2));
-        // $response = $gw->responses['responsetext'];
+        $cardNumber = Crypt::decryptString($card->number);
+        $cardMonth = Crypt::decryptString($card->month);
+        $cardYear = Crypt::decryptString($card->year);
         
+        $r = $gw->doSale($request->amount, $cardNumber, $cardMonth . substr($cardYear, -2));
+        $response = $gw->responses['responsetext'];
+        
+        if ($response !== 'SUCCESS') {
+            // The payment is declined:
+            dd('RESPNOSE IS NOT SUCCESS');
+        }
 
         // The payment is approved:
-
         $user->update([
             'balance' => $user->balance + (float) $request->amount,
         ]);
 
-        // The payment is declined:
-
-        return redirect()->back();
+        return redirect()->back()->with([
+            'message' => '$' . $request->amount . ' added to your funds.'
+        ]);
     }
 }

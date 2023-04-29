@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, Link, router } from "@inertiajs/vue3";
+import { Head, Link, router, usePage } from "@inertiajs/vue3";
 import { ref } from 'vue';
 let props = defineProps({
   cards: {
@@ -8,19 +8,38 @@ let props = defineProps({
   }
 });
 
+import { createToaster } from "@meforma/vue-toaster";
+
+const page = usePage()
+
+const toaster = createToaster({
+  position: 'top-right',
+});
+
+if (page.props.flash.message) {
+  toaster.success(page.props.flash.message);
+}
+
 let amount = ref(100);
 let selectedCardId = ref(0);
 let selectCard = cardId => {
   console.log('clicked', cardId);
-  selectedCardId.value = cardId
+  selectedCardId.value = Number(cardId);
 }
 
 let addFunds = () => {
+  let cardId = selectedCardId.value;
+
+  if (cardId === 0 && props.cards.length){
+    cardId = props.cards[0].id
+  }
+
+
   router.visit("/billing/funds", {
     method: "post",
     data: {
       amount: amount.value,
-      cardId: selectedCardId.value,
+      cardId: cardId,
   }
   });
 };
@@ -100,9 +119,10 @@ let addFunds = () => {
           </h2>
 
           <div
-            class="flex items-center px-2 py-4 bg-white border-2 border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 mb-2 cursor-pointer select-none"
             :class="{
-              'dark:border-blue-900': selectedCardId === card.id,
+              'flex items-center px-2 py-4 bg-white border-2 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 mb-2 cursor-pointer select-none': true,
+              'border-blue-900 dark:border-blue-900': selectedCardId === card.id,
+              'border-gray-200 dark:border-gray-700': selectedCardId !== card.id,
             }"
             v-for="card in cards"
             :key="card.id"
@@ -133,6 +153,7 @@ let addFunds = () => {
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-8 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="500"
                 v-model="amount"
+                :disabled="selectedCardId === 0"
               />
             </div>
           </div>
