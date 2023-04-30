@@ -4,6 +4,9 @@ import SelectInput from "@/Components/SelectInput.vue";
 import { Head, Link, router, usePage } from "@inertiajs/vue3";
 import { ref, reactive, onMounted, computed } from "vue";
 import { createToaster } from "@meforma/vue-toaster";
+// import tippy from 'tippy.js';
+// import 'tippy.js/dist/tippy.css'; // optional for styling
+
 
 const page = usePage()
 
@@ -45,7 +48,16 @@ let removeCard = (id) => {
   });
 }
 
-
+// onMounted(() => {
+  // tippy('#step-one', {
+  //   content: 'Step one',
+  //   placement: 'bottom-start',
+  //   trigger: 'manual',
+  //   inertia: true,
+  //   showOnCreate: true,
+  //   allowHTML: true,
+  // });
+// });
 </script>
 
 <template>
@@ -119,6 +131,7 @@ let removeCard = (id) => {
         <div>
           <section class="bg-white dark:bg-gray-900">
             <div class="py-8 px-4 mx-auto max-w-2xl lg:py-16">
+
               <h2 id="headline" class="mb-4 text-xl font-bold text-gray-900 dark:text-white">
                 Add a credit card
               </h2>

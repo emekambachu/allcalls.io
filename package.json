@@ -24,6 +24,7 @@
         "vue-multi-select": "^4.6.0",
         "vue-multiselect": "^2.1.7",
         "vue-shepherd": "^3.0.0",
-        "vue-tour": "^2.0.0"
+        "vue-tour": "^2.0.0",
+        "vue3-tour": "^0.3.4"
     }
 }
