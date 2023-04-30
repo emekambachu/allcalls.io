@@ -38,8 +38,16 @@ defineProps({
           href="/register"
           class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-8 rounded-lg transition duration-300"
         >
-          Get started
+          Get Started
         </a>
+
+        <a
+          href="/login"
+          class="border border-gray-50 text-white hover:bg-blue-500 hover:border-transparent dark:text-white font-semibold py-3 px-8 rounded-lg transition duration-300 ml-3"
+        >
+          Login
+        </a>
+
       </div>
     </div>
   </div>
