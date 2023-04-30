@@ -76,6 +76,8 @@ const submit = () => {
                 </label>
             </div>
 
+
+
             <div class="flex items-center justify-end mt-4">
                 <Link
                     v-if="canResetPassword"
@@ -89,6 +91,12 @@ const submit = () => {
                     Log in
                 </PrimaryButton>
             </div>
+
+            <div class="mt-6">
+                <p class="dark:text-gray-400 text-center">Don’t have an account? <Link href="/register" class="dark:text-white">Register Here</Link></p>
+            </div>
+
+
         </form>
     </GuestLayout>
 </template>
