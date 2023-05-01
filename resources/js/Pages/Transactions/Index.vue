@@ -40,12 +40,14 @@ import { Head } from "@inertiajs/vue3";
                   >
                     ID
                   </th>
-                  <td class="px-6 py-4">$500.00</td>
+                  <td class="px-6 py-4 text-green-500">
+                    +$500.00
+                  </td>
                   <td class="px-6 py-4">
                     <a
                       href="#"
-                      class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                      >Edit</a
+                      class="px-3 py-2 text-xs font-medium text-center text-white  bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 rounded-lg mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+                      >Delete Transaction</a
                     >
                   </td>
                 </tr>

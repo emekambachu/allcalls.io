@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->float('amount', 8, 2);
             $table->boolean('sign');
-            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('card_id');
+            $table->unsignedInteger('user_id')->nullable();
             $table->timestamps();
         });
     }
