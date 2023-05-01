@@ -3,9 +3,9 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
 
 defineProps({
-  'transactions': {
+  transactions: {
     type: Array,
-  }
+  },
 });
 </script>
 
@@ -24,41 +24,49 @@ defineProps({
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="relative overflow-x-auto">
           <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <table
-              class="w-full text-sm text-left text-gray-500 dark:text-gray-400"
-            >
-              <thead
-                class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+            <div class="relative overflow-x-auto">
+              <table
+                class="w-full text-sm text-left text-gray-500 dark:text-gray-400"
               >
-                <tr>
-                  <th scope="col" class="px-6 py-3">ID</th>
-                  <th scope="col" class="px-6 py-3">Amount</th>
-                  <th scope="col" class="px-6 py-3">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  class="bg-white border-b dark:bg-gray-900 dark:border-gray-700"
-                  v-for="transaction in transactions"
-                  :key="transaction.id"
+                <thead
+                  class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
                 >
-                  <th
-                    scope="row"
-                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                    v-text="transaction.id"
+                  <tr>
+                    <th scope="col" class="px-6 py-3">ID</th>
+                    <th scope="col" class="px-6 py-3">Amount</th>
+                    <th scope="col" class="px-6 py-3">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    v-for="transaction in transactions"
+                    :key="transaction.id"
+                    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                   >
-                  </th>
-                  <td class="px-6 py-4 text-green-500">${{ transaction.amount }}</td>
-                  <td class="px-6 py-4">
-                    <a
-                      href="#"
-                      class="px-3 py-2 text-xs font-medium text-center text-white  bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 rounded-lg mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
-                      >Delete Transaction</a
-                    >
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                    <th
+                      scope="row"
+                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      v-text="transaction.id"
+                    ></th>
+                    <td class="px-6 py-4">
+                      <span v-if="transaction.sign === 1" class="text-green-500">
+                        +${{ transaction.amount.toFixed(2) }}
+                      </span>
+                      <span v-if="transaction.sign === 0" class="text-red-500">
+                        -${{ transaction.amount.toFixed(2) }}
+                      </span>
+                    </td>
+                    <td class="px-6 py-4">
+                      <a
+                        href="#"
+                        class="px-3 py-2 text-xs font-medium text-center text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 rounded-lg mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+                        >Delete Transaction</a
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
