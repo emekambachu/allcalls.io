@@ -15,4 +15,17 @@ class TransactionsController extends Controller
 
         return Inertia::render('Transactions/Index', compact('transactions'));
     }
+
+    public function destroy(Transaction $transaction)
+    {
+        if (Auth::user()->id !== $transaction->user_id) {
+            return;
+        }
+
+        $transaction->delete();
+
+        return redirect()->back()->with([
+            'message' => 'Transaction deleted.',
+        ]);
+    }
 }
