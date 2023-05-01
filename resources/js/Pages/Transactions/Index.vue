@@ -1,6 +1,12 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
+
+defineProps({
+  'transactions': {
+    type: Array,
+  }
+});
 </script>
 
 <template>
@@ -33,16 +39,16 @@ import { Head } from "@inertiajs/vue3";
               <tbody>
                 <tr
                   class="bg-white border-b dark:bg-gray-900 dark:border-gray-700"
+                  v-for="transaction in transactions"
+                  :key="transaction.id"
                 >
                   <th
                     scope="row"
                     class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    v-text="transaction.id"
                   >
-                    ID
                   </th>
-                  <td class="px-6 py-4 text-green-500">
-                    +$500.00
-                  </td>
+                  <td class="px-6 py-4 text-green-500">${{ transaction.amount }}</td>
                   <td class="px-6 py-4">
                     <a
                       href="#"
