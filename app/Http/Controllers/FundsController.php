@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Card;
 use Inertia\Inertia;
+use App\Models\Transaction;
 use App\Services\NMIGateway;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -79,6 +80,13 @@ class FundsController extends Controller
         // The payment is approved:
         $user->update([
             'balance' => $user->balance + (float) $request->amount,
+        ]);
+
+        // Add the transactions.
+        Transaction::create([
+            'amount' => (float) $request->amount,
+            'user_id' => $user->id,
+            'sign' => true,
         ]);
 
         return redirect()->back()->with([

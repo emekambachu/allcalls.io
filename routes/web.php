@@ -7,6 +7,7 @@ use App\Http\Controllers\CardsController;
 use App\Http\Controllers\FundsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CardsAPIController;
+use App\Http\Controllers\TransactionsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +33,7 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/transactions', [TransactionsController::class, 'index'])->middleware(['auth', 'verified'])->name('transactions.index');
 
 
 
