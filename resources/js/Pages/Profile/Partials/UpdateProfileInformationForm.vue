@@ -217,6 +217,7 @@ let submitForm = () => {
               label="label"
               mode="tags"
               v-model="statesInfo[key]"
+              :close-on-select="false"
             >
             </Multiselect>
           </div>
