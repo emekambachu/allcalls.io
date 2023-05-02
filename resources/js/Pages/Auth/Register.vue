@@ -64,12 +64,12 @@ const onTypeUpdate = (event) => {
   }
 };
 
-const customLabel = function(options, select$) {
-    console.log('All options: ', options);
+const customLabel = function (options, select$) {
+  console.log("All options: ", options);
 
-    let labels = options.map(option => option.label).join(', ');
+  let labels = options.map((option) => option.label).join(", ");
 
-    return labels;
+  return labels;
 };
 </script>
 
@@ -152,9 +152,17 @@ const customLabel = function(options, select$) {
       </div>
 
       <div class="mt-4">
-        <InputLabel class="mb-3" for="insurance_type" value="What types of calls do you want to receive?" />
+        <InputLabel
+          class="mb-3"
+          for="insurance_type"
+          value="What types of calls do you want to receive?"
+        />
 
-        <div v-for="insuranceType in insuranceTypes" :key="insuranceType" class="mb-4">
+        <div
+          v-for="insuranceType in insuranceTypes"
+          :key="insuranceType"
+          class="mb-4"
+        >
           <input
             :id="`insurance_type_${insuranceTypes.indexOf(insuranceType)}`"
             type="checkbox"
@@ -172,10 +180,10 @@ const customLabel = function(options, select$) {
             v-if="selectedTypes.includes(insuranceType)"
             class="py-2 dark:text-white"
           >
-
             <label
-                class="ml-2 text-xs font-medium text-gray-900 dark:text-gray-300"
-            >States you're licensed in:</label>
+              class="ml-2 text-xs font-medium text-gray-900 dark:text-gray-300"
+              >States you're licensed in:</label
+            >
             <Multiselect
               :options="[
                 { value: 'AL', label: 'Alabama' },
@@ -233,6 +241,7 @@ const customLabel = function(options, select$) {
               track-by="value"
               label="label"
               mode="tags"
+              :close-on-select="false"
             >
             </Multiselect>
           </div>
@@ -270,7 +279,7 @@ const customLabel = function(options, select$) {
 }
 
 .multiselect-wrapper {
-    background-color: rgb(17 24 39 / var(--tw-bg-opacity));
-    border-radius: 5px;
+  background-color: rgb(17 24 39 / var(--tw-bg-opacity));
+  border-radius: 5px;
 }
 </style>
