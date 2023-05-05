@@ -2,6 +2,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import BillingNav from "@/Components/BillingNav.vue";
 import { ref } from 'vue';
+import { Head, router } from '@inertiajs/vue3';
 
 defineProps({
   cards: {
@@ -18,12 +19,17 @@ let settings = ref({
 
 let chosenCard = ref(null);
 
-// let saveChanges = () => {
-//   router.visit('/billing/autopay', {
-//     method: 'post',
-//     data: settings.value,
-//   });
-// }
+let saveChanges = () => {
+  router.visit('/billing/autopay', {
+    method: 'post',
+    data: {
+      enabled: settings.value.enabled,
+      threshold: settings.value.threshold,
+      amount: settings.value.amount,
+      card_id: chosenCard.value.id,
+    },
+  });
+}
 
 let chooseCard = (card) => {
   chosenCard.value = card;
@@ -127,7 +133,7 @@ let chooseCard = (card) => {
             </div>
 
 
-            <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 mt-2">Save Changes</button>
+            <button @click.prevent="saveChanges()" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 mt-2">Save Changes</button>
           </section>
         </div>
       </div>

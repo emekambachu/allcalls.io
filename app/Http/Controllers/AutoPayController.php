@@ -62,6 +62,7 @@ class AutoPayController extends Controller
             [
                 'enabled' => $request->enabled,
                 'threshold' => $request->threshold,
+                'amount' => $request->amount,
                 'card_id' => $request->card_id,
             ]
         );

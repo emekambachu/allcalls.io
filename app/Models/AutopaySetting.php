@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class AutopaySetting extends Model
 {
     use HasFactory;
+
+    protected $guarded = [];
 }
