@@ -49,21 +49,23 @@ class AutoPayController extends Controller
             'amount' => 'required|numeric',
             'card_id' => 'required|numeric',
         ]);
-
+    
         $card = Card::find($request->card_id);
-
+    
         // Check if the card belongs to the user
         if (! $card || $card->user_id !== Auth::user()->id) {
             return redirect()->back();
         }
-
-        AutopaySetting::create([
-            'enabled' => $request->enabled,
-            'threshold' => $request->enabled,
-            'user_id' => Auth::user()->id,
-            'card_id' => $request->card_id,
-        ]);
-
+    
+        AutopaySetting::updateOrCreate(
+            ['user_id' => Auth::user()->id],
+            [
+                'enabled' => $request->enabled,
+                'threshold' => $request->threshold,
+                'card_id' => $request->card_id,
+            ]
+        );
+    
         return redirect()->back()->with([
             'message' => 'Autopay settings saved.'
         ]);
