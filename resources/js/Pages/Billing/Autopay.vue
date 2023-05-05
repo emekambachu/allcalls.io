@@ -13,6 +13,7 @@ let settings = ref({
   enabled: false,
   threshold: 500,
   amount: 100,
+  card_id: null,
 });
 
 let chosenCard = ref(null);

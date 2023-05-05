@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Card;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use App\Models\AutopaySetting;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 
@@ -37,5 +39,33 @@ class AutoPayController extends Controller
         });
 
         return Inertia::render('Billing/Autopay', compact('cards'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'enabled' => 'required',
+            'threshold' => 'required|numeric',
+            'amount' => 'required|numeric',
+            'card_id' => 'required|numeric',
+        ]);
+
+        $card = Card::find($request->card_id);
+
+        // Check if the card belongs to the user
+        if (! $card || $card->user_id !== Auth::user()->id) {
+            return redirect()->back();
+        }
+
+        AutopaySetting::create([
+            'enabled' => $request->enabled,
+            'threshold' => $request->enabled,
+            'user_id' => Auth::user()->id,
+            'card_id' => $request->card_id,
+        ]);
+
+        return redirect()->back()->with([
+            'message' => 'Autopay settings saved.'
+        ]);
     }
 }
