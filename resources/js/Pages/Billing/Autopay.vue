@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import BillingNav from "@/Components/BillingNav.vue";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 
 import { createToaster } from "@meforma/vue-toaster";
@@ -16,11 +16,15 @@ if (page.props.flash.message) {
   toaster.success(page.props.flash.message);
 }
 
-defineProps({
+let props = defineProps({
   cards: {
     type: Array,
   },
+  setting: {
+    type: Object,
+  },
 });
+
 
 let settings = ref({
   enabled: false,
@@ -29,13 +33,18 @@ let settings = ref({
   card_id: null,
 });
 
+
+
+
+
+
 let chosenCard = ref(null);
 
 let saveChanges = () => {
   router.visit("/billing/autopay", {
     method: "post",
     data: {
-      enabled: settings.value.enabled,
+      enabled: settings.value.enabled ? 1 : 0,
       threshold: settings.value.threshold,
       amount: settings.value.amount,
       card_id: chosenCard.value.id,
@@ -46,6 +55,21 @@ let saveChanges = () => {
 let chooseCard = (card) => {
   chosenCard.value = card;
 };
+
+
+if (props.setting) {
+  settings.value = {
+    enabled: (props.setting.enabled === 1) ? true : false,
+    threshold: props.setting.threshold,
+    amount: props.setting.amount,
+    card_id: props.setting.card_id,
+  }
+
+  chosenCard.value = props.cards.filter(card => {
+    return card.id === props.setting.card_id;
+  })[0];
+}
+
 </script>
 
 <template>
@@ -87,6 +111,7 @@ let chooseCard = (card) => {
                   value=""
                   class="sr-only peer"
                   :checked="settings.enabled"
+                  v-model="settings.enabled"
                 />
                 <div
                   class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
@@ -171,6 +196,7 @@ let chooseCard = (card) => {
             <div v-else>
               <p class="dark:text-gray-400 mt-6 mb-8">You haven't added any cards yet.</p>
             </div>
+
           </section>
         </div>
       </div>

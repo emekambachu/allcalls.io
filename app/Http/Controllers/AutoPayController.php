@@ -38,7 +38,12 @@ class AutoPayController extends Controller
             return $card;
         });
 
-        return Inertia::render('Billing/Autopay', compact('cards'));
+        $setting = AutopaySetting::whereUserId(Auth::user()->id)->first();
+
+        return Inertia::render('Billing/Autopay', [
+            'cards' => $cards,
+            'setting' => $setting ?? null,
+        ]);
     }
 
     public function store(Request $request)
