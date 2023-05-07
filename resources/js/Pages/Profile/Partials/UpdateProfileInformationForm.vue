@@ -23,6 +23,7 @@ let form = useForm({
   first_name: user.first_name,
   last_name: user.last_name,
   email: user.email,
+  phone: user.phone,
   states_info: user.states_info,
 });
 
@@ -111,6 +112,20 @@ let submitForm = () => {
         />
 
         <InputError class="mt-2" :message="form.errors.email" />
+      </div>
+
+      <div>
+        <InputLabel for="phone" value="Phone" />
+
+        <TextInput
+          id="phone"
+          type="text"
+          class="mt-1 block w-full"
+          v-model="form.phone"
+          required
+        />
+
+        <InputError class="mt-2" :message="form.errors.phone" />
       </div>
 
       <div v-if="mustVerifyEmail && user.email_verified_at === null">

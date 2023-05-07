@@ -17,6 +17,7 @@ const form = useForm({
   password_confirmation: "",
   insurance_type: "Life Insurance",
   license_state: "",
+  phone: "",
   states_info: {
     "Auto Insurance": [],
     "Final Expense": [],
@@ -119,6 +120,21 @@ const customLabel = function (options, select$) {
         />
 
         <InputError class="mt-2" :message="form.errors.email" />
+      </div>
+
+
+      <div class="mt-4">
+        <InputLabel for="phone" value="Phone" />
+
+        <TextInput
+          id="phone"
+          type="text"
+          class="mt-1 block w-full"
+          v-model="form.phone"
+          required
+        />
+
+        <InputError class="mt-2" :message="form.errors.phone" />
       </div>
 
       <div class="mt-4">
