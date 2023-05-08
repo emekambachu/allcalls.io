@@ -26,6 +26,7 @@ const form = useForm({
     "Medicare/Medicaid": [],
     "Debt Relief": [],
   },
+  consent: false,
 });
 
 const submit = () => {
@@ -265,6 +266,16 @@ const customLabel = function (options, select$) {
 
         <InputError class="mt-2" :message="form.errors.insurance_type" />
       </div>
+
+      <div class="flex mt-10">
+        <input id="checked-checkbox" type="checkbox" v-model="form.consent" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+        <label for="checked-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-400">
+          I hereby consent to receive promotional texts and calls/robocalls at the phone number provided. I understand that consent is not a condition of registration and that message and data rates may apply.
+        </label>
+      </div>
+
+      <InputError class="mt-2" :message="form.errors.consent" />
+
 
       <div class="flex items-center justify-end mt-4">
         <Link

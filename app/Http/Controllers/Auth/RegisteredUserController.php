@@ -38,7 +38,12 @@ class RegisteredUserController extends Controller
             'phone' => ['required', 'string', 'max:255', 'unique:'.User::class, 'regex:/^\+?1?[-.\s]?(\([2-9]\d{2}\)|[2-9]\d{2})[-.\s]?\d{3}[-.\s]?\d{4}$/'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'states_info' => 'required',
+            'consent' => 'required'
         ]);
+
+        if (! $request->consent) {
+            return redirect()->back()->withErrors(['consent' => 'Consent is required.']);
+        }
 
         $user = User::create([
             'first_name' => $request->first_name,
