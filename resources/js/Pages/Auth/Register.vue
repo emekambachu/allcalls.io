@@ -270,7 +270,13 @@ const customLabel = function (options, select$) {
       <div class="flex mt-10">
         <input id="checked-checkbox" type="checkbox" v-model="form.consent" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
         <label for="checked-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-400">
-          I hereby consent to receive promotional texts and calls/robocalls at the phone number provided. I understand that consent is not a condition of registration and that message and data rates may apply.
+          By clicking Continue, I agree to email marketing, the Terms and Conditions (which include mandatory arbitration), Privacy Policy, and site visit recordation by Trusted Form and Jornaya.
+
+I provide my express written consent and electronic signature to receive monitored or recorded phone sales calls and text messages from SaveToday, PolicySavings, and our Medicare Insurance marketing partners regarding products and services including Medicare Supplement, Medicare Advantage, and Prescription Drug Plans on the landline or mobile number I provided even if I am on a federal or State do not call registry. 
+
+I confirm that the phone number set forth above is accurate and I am the regular user of the phone. I understand these calls may be generated using an automated dialing system and may contain pre-recorded and artificial voice messages and that consenting is not required to receive a quote or speak with an agent and that I can revoke my consent at any time by any reasonable means. To receive a quote without providing consent, please call (866) 523-1718.
+
+For SMS message campaigns: Text STOP to stop and HELP for help. Msg and data rates may apply. Periodic messages; max. 30/month.
         </label>
       </div>
 
