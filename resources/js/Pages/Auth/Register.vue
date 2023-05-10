@@ -292,8 +292,7 @@ let customLabel = function (options, select$) {
             and site visit recordation by Trusted Form and Jornaya. I provide my
             express written consent and electronic signature to receive
             monitored or recorded phone sales calls and text messages from
-            SaveToday, PolicySavings, and our Medicare Insurance marketing
-            partners regarding products and services including Medicare
+            AllCalls.io regarding products and services including Medicare
             Supplement, Medicare Advantage, and Prescription Drug Plans on the
             landline or mobile number I provided even if I am on a federal or
             State do not call registry. I confirm that the phone number set
