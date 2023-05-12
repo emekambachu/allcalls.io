@@ -285,7 +285,7 @@ let customLabel = function (options, select$) {
           />
           <label
             for="checked-checkbox"
-            class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-400"
+            class="ml-2 text-xs font-medium text-gray-900 dark:text-gray-400"
           >
             By clicking Continue, I agree to email marketing, the Terms and
             Conditions (which include mandatory arbitration), Privacy Policy,
