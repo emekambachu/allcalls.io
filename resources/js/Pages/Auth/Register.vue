@@ -90,7 +90,6 @@ let customLabel = function (options, select$) {
             class="mt-1 block w-full"
             v-model="form.first_name"
             required
-            autofocus
           />
 
           <InputError class="mt-2" :message="form.errors.first_name" />
