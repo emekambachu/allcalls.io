@@ -9,6 +9,7 @@ use App\Http\Controllers\AutoPayController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CardsAPIController;
 use App\Http\Controllers\TransactionsController;
+use App\Http\Controllers\UsageActivityController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,5 +51,9 @@ Route::post('/billing/cards', [CardsController::class, 'store'])->middleware(['a
 Route::delete('/billing/cards/{card}', [CardsController::class, 'destroy'])->middleware(['auth', 'verified'])->name('billing.cards.delete');
 Route::get('/billing/autopay', [AutoPayController::class, 'show'])->middleware(['auth', 'verified'])->name('billing.autopay.index');
 Route::post('/billing/autopay', [AutoPayController::class, 'store'])->middleware(['auth', 'verified'])->name('billing.autopay.store');
+
+Route::get('/usage-activities', [UsageActivityController::class, 'index'])->middleware(['auth', 'verified'])->name('activities.index');
+// Route::post('/billing/autopay', [AutoPayController::class, 'store'])->middleware(['auth', 'verified'])->name('billing.autopay.store');
+
 
 require __DIR__.'/auth.php';
