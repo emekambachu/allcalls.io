@@ -48,6 +48,8 @@ class RegisteredUserController extends Controller
             'typesWithStates' => 'required',
         ]);
 
+        dd($request->typesWithStates);
+
         if (! $request->consent) {
             return redirect()->back()->withErrors(['consent' => 'Consent is required.']);
         }
