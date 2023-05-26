@@ -22,8 +22,10 @@ class UpdateLastActivity
 
             $user = Auth::user();
             $activity = $user->activities->where('session_id', $sessionId)->first();
-            $activity->last_activity_at = now();
-            $activity->save();
+            if ($activity) {
+                $activity->last_activity_at = now();
+                $activity->save();
+            }
         }
 
         return $next($request);
