@@ -5,15 +5,18 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import SelectInput from "@/Components/SelectInput.vue";
 import { Link, useForm, usePage } from "@inertiajs/vue3";
-import { ref, reactive } from "vue";
+import { ref, reactive, computed } from "vue";
 import Multiselect from "@vueform/multiselect";
 
-defineProps({
+let props = defineProps({
   mustVerifyEmail: {
     type: Boolean,
   },
   status: {
     type: String,
+  },
+  callTypes: {
+    type: Array,
   },
 });
 
@@ -25,6 +28,17 @@ let form = useForm({
   email: user.email,
   phone: user.phone,
   states_info: user.states_info,
+  call_types: props.callTypes,
+  selected_states: props.callTypes.map(type => {
+    return {
+      typeId: type.id,
+      selectedStateIds: type.statesWithSelection.filter(state => {
+        return state.selected;
+      }).map(state => {
+        return state.id;
+      }),
+    };
+  })
 });
 
 let statesInfo = reactive(JSON.parse(user.states_info));
@@ -42,8 +56,6 @@ let onTypeUpdate = (event) => {
 };
 
 let customLabel = function (options, select$) {
-  console.log("All options: ", options);
-
   let labels = options.map((option) => option.label).join(", ");
 
   return labels;
@@ -53,6 +65,14 @@ let submitForm = () => {
     form.states_info = JSON.stringify(statesInfo);
     form.patch(route('profile.update'));
 }
+
+let optionsForStates = (callType) => {
+  return callType.statesWithSelection.map(state => {
+    return {
+      value: state.id, label: state.name,
+    };
+  });
+};
 </script>
 
 <template>
@@ -149,7 +169,7 @@ let submitForm = () => {
         </div>
       </div>
 
-      <div>
+      <!-- <div>
         <div
           v-for="(value, key, index) in statesInfo"
           :key="index"
@@ -237,7 +257,28 @@ let submitForm = () => {
             </Multiselect>
           </div>
         </div>
-      </div>
+      </div> -->
+
+        <div v-for="callType in form.call_types" :key="callType.id">
+            <input type="checkbox" :id="`call-type-${callType.id}`" v-model="callType.selected" />
+            <label :for="`call-type-${callType.id}`" class="dark:text-white ml-2">{{ callType.type }}</label>
+
+          <div class="dark:text-white">
+            <label class="ml-2 text-xs font-medium text-gray-900 dark:text-gray-300">
+              States you're licensed in:
+            </label>
+
+            <Multiselect
+              :options="optionsForStates(callType)"
+              v-model="form.selected_states[form.call_types.indexOf(callType)].selectedStateIds"
+              track-by="value"
+              label="label"
+              mode="tags"
+              :close-on-select="false"
+            >
+            </Multiselect>
+          </div>
+        </div>
 
       <div class="flex items-center gap-4">
         <PrimaryButton :disabled="form.processing">Save</PrimaryButton>

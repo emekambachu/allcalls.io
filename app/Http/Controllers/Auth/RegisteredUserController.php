@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use Exception;
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\RedirectResponse;
+use Inertia\Inertia;
+use App\Models\State;
+use Inertia\Response;
+use App\Models\CallType;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
-use Inertia\Inertia;
-use Inertia\Response;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Auth\Events\Registered;
+use App\Providers\RouteServiceProvider;
 
 class RegisteredUserController extends Controller
 {
@@ -21,7 +25,10 @@ class RegisteredUserController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Auth/Register');
+        $callTypes = CallType::all();
+        $states = State::all();
+
+        return Inertia::render('Auth/Register', compact('callTypes', 'states'));
     }
 
     /**
@@ -38,7 +45,8 @@ class RegisteredUserController extends Controller
             'phone' => ['required', 'string', 'max:255', 'unique:'.User::class, 'regex:/^\+?1?[-.\s]?(\([2-9]\d{2}\)|[2-9]\d{2})[-.\s]?\d{3}[-.\s]?\d{4}$/'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'states_info' => 'required',
-            'consent' => 'required'
+            'consent' => 'required',
+            'typesWithStates' => 'required',
         ]);
 
         if (! $request->consent) {
@@ -54,10 +62,69 @@ class RegisteredUserController extends Controller
             'states_info' => json_encode($request->states_info),
         ]);
 
+        $typesWithStates = $request->typesWithStates;
+
+        // Initialize an empty array to hold the data
+        $data = [];
+        
+        // Get the current timestamp
+        $now = now()->toDateTimeString();
+        
+        // Build the data array
+        foreach($typesWithStates as $typeId => $stateIds) {
+            foreach($stateIds as $stateId) {
+                $data[] = [
+                    'user_id' => $user->id,  // assuming you have the $user available here
+                    'call_type_id' => $typeId,
+                    'state_id' => $stateId,
+                    'created_at' => $now,  // if you are using timestamps in your pivot table
+                    'updated_at' => $now,  // if you are using timestamps in your pivot table
+                ];
+            }
+        }
+        
+        DB::transaction(function () use ($user, $data) {
+            // Remove existing entries
+            DB::table('users_call_type_state')->where('user_id', $user->id)->delete();
+        
+            // Insert new entries
+            DB::table('users_call_type_state')->insert($data);
+        });
+
         event(new Registered($user));
 
         Auth::login($user);
 
         return redirect(RouteServiceProvider::HOME);
+    }
+
+    protected function saveCallTypeStates(array $data, User $user): void
+    {
+        // begin a database transaction
+        DB::beginTransaction();
+    
+        try {
+            // iterate over the data array
+            foreach ($data as $callTypeId => $stateIds) {
+                // find the CallType
+                $callType = CallType::findOrFail($callTypeId);
+    
+                // iterate over the stateIds for this callType
+                foreach ($stateIds as $stateId) {
+                    // find the State
+                    $state = State::findOrFail($stateId);
+    
+                    // create a new record in the pivot table
+                    $user->callTypes()->attach($callType, ['state_id' => $state->id]);
+                }
+            }
+    
+            // if we made it this far without an exception, commit the transaction
+            DB::commit();
+        } catch (Exception $e) {
+            // if there was any exception, rollback the transaction
+            DB::rollBack();
+            throw $e;
+        }
     }
 }
