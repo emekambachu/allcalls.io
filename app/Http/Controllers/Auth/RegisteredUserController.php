@@ -45,7 +45,10 @@ class RegisteredUserController extends Controller
             'phone' => ['required', 'string', 'max:255', 'unique:'.User::class, 'regex:/^\+?1?[-.\s]?(\([2-9]\d{2}\)|[2-9]\d{2})[-.\s]?\d{3}[-.\s]?\d{4}$/'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'consent' => 'required',
-            'typesWithStates' => 'required',
+
+            'typesWithStates' => 'required|array',
+            'typesWithStates.*' => ['nullable', 'exists:call_types,id'],
+            'typesWithStates.*.*' => ['nullable', 'exists:states,id'],
         ]);
 
         if (! $request->consent) {
