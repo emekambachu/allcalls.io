@@ -54,9 +54,10 @@ let props = defineProps({
 });
 
 let stateOptions = computed(() => {
-  return props.states.map(state => {
+  return props.states.map((state) => {
     return {
-      value: state.id, label: state.name,
+      value: state.id,
+      label: state.name,
     };
   });
 });
@@ -70,18 +71,10 @@ let form = useForm({
   insurance_type: "Life Insurance",
   license_state: "",
   phone: "",
-  states_info: {
-    "Auto Insurance": [],
-    "Final Expense": [],
-    "U65 Health": [],
-    ACA: [],
-    "Medicare/Medicaid": [],
-    "Debt Relief": [],
-  },
   consent: false,
   typesWithStates: props.callTypes.reduce((acc, obj) => {
-      acc[obj.id] = [];
-      return acc;
+    acc[obj.id] = [];
+    return acc;
   }, {}),
 });
 
@@ -182,7 +175,9 @@ let submit = () => {
         </div>
 
         <div class="flex items-center justify-end mt-4">
-          <PrimaryButton type="button" class="ml-4" @click.prevent="step = 1">Next</PrimaryButton>
+          <PrimaryButton type="button" class="ml-4" @click.prevent="step = 1"
+            >Next</PrimaryButton
+          >
         </div>
       </div>
 
@@ -194,11 +189,7 @@ let submit = () => {
             value="What types of calls do you want to receive?"
           />
 
-          <div
-            v-for="callType in callTypes"
-            :key="callType.id"
-            class="mb-4"
-          >
+          <div v-for="callType in callTypes" :key="callType.id" class="mb-4">
             <input
               :id="`insurance_type_${callType.id}`"
               type="checkbox"

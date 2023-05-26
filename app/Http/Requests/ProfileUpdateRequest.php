@@ -19,7 +19,6 @@ class ProfileUpdateRequest extends FormRequest
             'first_name' => ['string', 'max:255'],
             'last_name' => ['string', 'max:255'],
             'email' => ['email', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
-            'states_info' => ['required'],
             'phone' => ['required', 'string', 'max:255', 'regex:/^\+?1?[-.\s]?(\([2-9]\d{2}\)|[2-9]\d{2})[-.\s]?\d{3}[-.\s]?\d{4}$/'],
             'call_types' => ['required'],
             'selected_states' => ['required'],
