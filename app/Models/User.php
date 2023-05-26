@@ -4,12 +4,9 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Card;
-<<<<<<< HEAD
 use App\Models\State;
 use App\Models\CallType;
-=======
 use App\Models\Activity;
->>>>>>> 06bf001881f817abb6600014c52557839ef21283
 use App\Models\Transaction;
 use App\Models\UserCallTypeState;
 use Laravel\Sanctum\HasApiTokens;
