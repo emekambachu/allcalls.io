@@ -33,8 +33,8 @@ class ProfileController extends Controller
         // So, I'm just filtering it down to currently authenticated user, might be a cleaner
         // way to go about it. Might update later. :)
 
-        $userCallTypesWithStates = $userCallTypesWithStates->map(function($type) use ($user) {
-            $type->user_states = $type->states->filter(function($state) use ($user) {
+        $userCallTypesWithStates = $userCallTypesWithStates->map(function ($type) use ($user) {
+            $type->user_states = $type->states->filter(function ($state) use ($user) {
                 return (int) $state->pivot->user_id === (int) $user->id;
             })->toArray();
 
@@ -44,24 +44,24 @@ class ProfileController extends Controller
         $callTypes = CallType::all();
         $states = State::all();
 
-        $callTypes = $callTypes->map(function($callType) use ($userCallTypesWithStates, $states) {
-    // Find the corresponding call type in $userCallTypesWithStates, if it exists
-    $userCallType = $userCallTypesWithStates->firstWhere('id', $callType->id);
+        $callTypes = $callTypes->map(function ($callType) use ($userCallTypesWithStates, $states) {
+            // Find the corresponding call type in $userCallTypesWithStates, if it exists
+            $userCallType = $userCallTypesWithStates->firstWhere('id', $callType->id);
 
-    // If a corresponding call type was found in $userCallTypesWithStates, set the call type's selected property
-    $callType->selected = $userCallType !== null;
+            // If a corresponding call type was found in $userCallTypesWithStates, set the call type's selected property
+            $callType->selected = $userCallType !== null;
 
-    $callType->statesWithSelection = $states->map(function($state) use ($userCallType) {
-        if ($userCallType !== null && in_array($state->id, array_column($userCallType->user_states, 'id'))) {
-            $state['selected'] = true;
-        } else {
-            $state['selected'] = false;
-        }
+            $callType->statesWithSelection = $states->map(function ($state) use ($userCallType) {
+                if ($userCallType !== null && in_array($state->id, array_column($userCallType->user_states, 'id'))) {
+                    $state['selected'] = true;
+                } else {
+                    $state['selected'] = false;
+                }
 
-        return $state;
-    })->toArray();
+                return $state;
+            })->toArray();
 
-    return $callType;
+            return $callType;
 
         });
 
@@ -71,6 +71,7 @@ class ProfileController extends Controller
             'callTypes' => $callTypes,
         ]);
     }
+
 
     /**
      * Update the user's profile information.
@@ -89,36 +90,58 @@ class ProfileController extends Controller
 
         $selectedStates = $request->selected_states;
 
-        // Initialize an empty array to hold the data
-        $data = [];
-        
-        // Get the current timestamp
-        $now = now()->toDateTimeString();
-        
-        // Build the data array
+        $incomingData = [];
+
         foreach($selectedStates as $item) {
             $typeId = $item['typeId'];
             $stateIds = $item['selectedStateIds'];
-        
+    
             foreach($stateIds as $stateId) {
-                $data[] = [
-                    'user_id' => $request->user()->id,
+                $incomingData[] = [
                     'call_type_id' => $typeId,
                     'state_id' => $stateId,
-                    'created_at' => $now,  // if you are using timestamps in your pivot table
-                    'updated_at' => $now,  // if you are using timestamps in your pivot table
                 ];
             }
         }
-        
-        // Use a transaction to ensure data integrity
-        DB::transaction(function () use ($user, $data) {
-            // Remove existing entries
-            DB::table('users_call_type_state')->where('user_id', $user->id)->delete();
+    
+        UserCallTypeState::updateUserCallTypeState($request->user(), $incomingData);
+    
+        return Redirect::route('profile.edit');
+    }
 
-            // Insert new entries
-            DB::table('users_call_type_state')->insert($data);
-        });
+    /**
+     * Update the user's profile information.
+     */
+    public function updateOld(ProfileUpdateRequest $request): RedirectResponse
+    {
+        $user = $request->user();
+
+        $request->user()->fill($request->validated());
+
+        if ($request->user()->isDirty('email')) {
+            $request->user()->email_verified_at = null;
+        }
+
+        $request->user()->save();
+
+        $selectedStates = $request->selected_states;
+
+
+        $incomingData = [];
+
+        foreach ($selectedStates as $item) {
+            $typeId = $item['typeId'];
+            $stateIds = $item['selectedStateIds'];
+
+            foreach ($stateIds as $stateId) {
+                $incomingData[] = [
+                    'call_type_id' => $typeId,
+                    'state_id' => $stateId,
+                ];
+            }
+        }
+
+        UserCallTypeState::updateUserCallTypeState($request->user(), $incomingData);
 
         return Redirect::route('profile.edit');
     }
