@@ -110,43 +110,6 @@ class ProfileController extends Controller
     }
 
     /**
-     * Update the user's profile information.
-     */
-    public function updateOld(ProfileUpdateRequest $request): RedirectResponse
-    {
-        $user = $request->user();
-
-        $request->user()->fill($request->validated());
-
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
-
-        $request->user()->save();
-
-        $selectedStates = $request->selected_states;
-
-
-        $incomingData = [];
-
-        foreach ($selectedStates as $item) {
-            $typeId = $item['typeId'];
-            $stateIds = $item['selectedStateIds'];
-
-            foreach ($stateIds as $stateId) {
-                $incomingData[] = [
-                    'call_type_id' => $typeId,
-                    'state_id' => $stateId,
-                ];
-            }
-        }
-
-        UserCallTypeState::updateUserCallTypeState($request->user(), $incomingData);
-
-        return Redirect::route('profile.edit');
-    }
-
-    /**
      * Delete the user's account.
      */
     public function destroy(Request $request): RedirectResponse
