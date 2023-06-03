@@ -72,31 +72,34 @@ class ProfileController extends Controller
         ]);
     }
 
-
-    /**
-     * Update the user's profile information.
-     */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $user = $request->user();
-
-        $request->user()->fill($request->validated());
-
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        
+        $user->fill($request->validated());
+    
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
-
-        $request->user()->save();
-
-        $selectedStates = $request->selected_states;
-
+    
+        $user->save();
+    
+        $incomingData = $this->buildIncomingData($request->selected_states);
+        
+        UserCallTypeState::updateUserCallTypeState($user, $incomingData);
+    
+        return Redirect::route('profile.edit');
+    }
+    
+    private function buildIncomingData($selectedStates): array
+    {
         $incomingData = [];
-
-        foreach($selectedStates as $item) {
+    
+        foreach ($selectedStates as $item) {
             $typeId = $item['typeId'];
             $stateIds = $item['selectedStateIds'];
     
-            foreach($stateIds as $stateId) {
+            foreach ($stateIds as $stateId) {
                 $incomingData[] = [
                     'call_type_id' => $typeId,
                     'state_id' => $stateId,
@@ -104,9 +107,7 @@ class ProfileController extends Controller
             }
         }
     
-        UserCallTypeState::updateUserCallTypeState($request->user(), $incomingData);
-    
-        return Redirect::route('profile.edit');
+        return $incomingData;
     }
 
     /**
