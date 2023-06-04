@@ -76,4 +76,40 @@ class Ringba
 
         return $response->json();
     }
+
+    public function getAllTargets()
+    {
+        $url = $this->apiUrl . $this->accountId . '/targets';
+    
+        $headers = [
+            'Authorization' => 'Token ' . $this->apiToken,
+        ];
+    
+        $response = Http::withHeaders($headers)->get($url);
+    
+        if ($response->failed()) {
+            throw new Exception('Error making API request: ' . $response->body());
+        }
+    
+        // This will return an array of targets
+        return $response->json()['targets'];
+    }
+
+    public function deleteTarget($targetId)
+    {
+        $url = $this->apiUrl . $this->accountId . '/targets/' . $targetId;
+    
+        $headers = [
+            'Authorization' => 'Token ' . $this->apiToken,
+        ];
+    
+        $response = Http::withHeaders($headers)->delete($url);
+    
+        if ($response->failed()) {
+            throw new Exception('Error making API request: ' . $response->body());
+        }
+    
+        // This will return the response as an array, where 'isSuccessful' indicates if the deletion was successful
+        return $response->json();
+    }
 }

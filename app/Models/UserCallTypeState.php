@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\State;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use App\Events\UserCallTypeStateUpdated;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -63,5 +64,7 @@ class UserCallTypeState extends Pivot
                 self::insert($record);
             }
         });
+
+        UserCallTypeStateUpdated::dispatch($user->id, $recordsToDelete, $recordsToInsert);
     }
 }
