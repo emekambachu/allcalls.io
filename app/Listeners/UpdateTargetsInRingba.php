@@ -30,10 +30,10 @@ class UpdateTargetsInRingba
      */
     public function handle(UserCallTypeStateUpdated $event): void
     {
-        Log::debug('Update targets now...');
-        Log::debug($event->userId);
-        Log::debug($event->toDelete);
-        Log::debug($event->toInsert);
+        // Log::debug('Update targets now...');
+        // Log::debug($event->userId);
+        // Log::debug($event->toDelete);
+        // Log::debug($event->toInsert);
 
         $user = User::find($event->userId);
         $ringba = new Ringba;
