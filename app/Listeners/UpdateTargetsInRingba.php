@@ -54,13 +54,23 @@ class UpdateTargetsInRingba
             }
         }
 
-        foreach ($event->toInsert as $record) {
-            $callTypeId = $record['call_type_id'];
-            $callType = CallType::find($callTypeId);
-            $state = State::find($record['state_id']);
+        $groupedToInsert = [];
 
-            $targetName = $user->first_name . ' ' . $user->last_name . ' - ' . $user->id . ' - ' . $callType->type . ' - ' . $callType->id;
-            $ringba->createTarget($targetName, '+18045172235', [$state->name]);
+        foreach ($event->toInsert as $record) {
+            $groupedToInsert[$record['call_type_id']][] = $record;
         }
+        
+        foreach ($groupedToInsert as $callTypeId => $records) {
+            $callType = CallType::find($callTypeId);
+            $stateNames = [];
+        
+            foreach ($records as $record) {
+                $state = State::find($record['state_id']);
+                $stateNames[] = $state->name;
+            }
+        
+            $targetName = $user->first_name . ' ' . $user->last_name . ' - ' . $user->id . ' - ' . $callType->type . ' - ' . $callType->id;
+            $ringba->createTarget($targetName, '+18045172235', $stateNames);
+        }        
     }
 }
