@@ -3,9 +3,11 @@
 namespace App\Listeners;
 
 use Exception;
+use Faker\Factory;
 use App\Models\State;
 use App\Models\CallType;
 use App\Services\Ringba;
+use App\Models\UsedPhoneNumber;
 use App\Models\UserCallTypeState;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Auth\Events\Registered;
@@ -57,15 +59,33 @@ class AddTargetsInRingba
 
         $ringba = new Ringba();
 
+        $faker = Factory::create('en_US');
+
         foreach ($selectedCallTypes as $type) {
             $targetName = $user->first_name . ' ' . $user->last_name . ' - ' . $user->id . ' - ' . $type->type . ' - ' . $type->id;
             $targetStates = collect($type['selected_states'])->pluck('name')->toArray();
+
+            // Get all used phone numbers.
+            $usedPhoneNumbers = UsedPhoneNumber::all()->pluck('phone')->toArray();
+
+            // Generate a unique phone number.
+            $phoneNumber = $faker->phoneNumber;
+            while(in_array($phoneNumber, $usedPhoneNumbers)) {
+                $phoneNumber = $faker->phoneNumber;
+            }
+
+            // Store the generated number in the database.
+            UsedPhoneNumber::create(['phone' => $phoneNumber]);
         
             try {
-                $response = $ringba->createTarget($targetName, '+18045172235', $targetStates);
+                $response = $ringba->createTarget($targetName, $phoneNumber, $targetStates);
             } catch (Exception $e) {
                 echo 'Error creating target: ' . $e->getMessage();
             }
         }
+
+        // If the target needs to be associated with a call plan:
+            // 1. Use the Ringba API service to retrieve the call plan data.
+            // 2. Use the Ringba API service to add the new target to the desired call plan.
     }
 }
