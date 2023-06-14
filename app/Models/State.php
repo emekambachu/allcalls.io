@@ -9,6 +9,8 @@ class State extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['name'];
+
     public function users()
     {
         return $this->belongsToMany(User::class, 'users_call_type_state')

@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->text('states_info');
+        Schema::create('used_phone_numbers', function (Blueprint $table) {
+            $table->id();
+            $table->string('phone');
+            $table->timestamps();
         });
     }
 
@@ -21,8 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('states_info');
-        });
+        Schema::dropIfExists('used_phone_numbers');
     }
 };

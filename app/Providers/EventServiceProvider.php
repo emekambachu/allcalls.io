@@ -3,9 +3,12 @@
 namespace App\Providers;
 
 use App\Models\Transaction;
+use App\Listeners\AddTargetsInRingba;
 use Illuminate\Support\Facades\Event;
 use App\Observers\TransactionObserver;
 use Illuminate\Auth\Events\Registered;
+use App\Events\UserCallTypeStateUpdated;
+use App\Listeners\UpdateTargetsInRingba;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -19,6 +22,11 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
+            AddTargetsInRingba::class,
+        ],
+
+        UserCallTypeStateUpdated::class => [
+            UpdateTargetsInRingba::class,
         ],
     ];
 

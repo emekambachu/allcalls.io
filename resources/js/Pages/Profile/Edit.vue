@@ -12,6 +12,9 @@ defineProps({
     status: {
         type: String,
     },
+    callTypes: {
+        type: Array,
+    },
 });
 </script>
 
@@ -29,6 +32,7 @@ defineProps({
                     <UpdateProfileInformationForm
                         :must-verify-email="mustVerifyEmail"
                         :status="status"
+                        :call-types="callTypes"
                         class="max-w-xl"
                     />
                 </div>

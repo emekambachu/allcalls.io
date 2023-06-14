@@ -60,9 +60,11 @@ class AuthenticatedSessionController extends Controller
 
         $activity = $user->activities->where('session_id', $sessionId)->first();
 
-        $activity->update([
-            'logout_time' => now()
-        ]);
+        if ($activity) {
+            $activity->update([
+                'logout_time' => now()
+            ]);
+        }
 
         return redirect('/');
     }

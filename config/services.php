@@ -31,4 +31,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'ringba' => [
+        'token' => env('RINGBA_API_TOKEN'),
+        'accountId' => env('RINGBA_ACCOUNT_ID'),
+    ],
+
 ];
