@@ -29,43 +29,20 @@ const showingNavigationDropdown = ref(false);
 
 <template>
     <div>
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-            <nav class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+        <div class="min-h-screen bg-custom-blue">
+            <nav class="bg-custom-blue border-b border-gray-100 dark:border-gray-700">
                 <!-- Primary Navigation Menu -->
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
                         <div class="flex">
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
-                                <Link class="dark:text-white uppercase tracking-wider" :href="route('dashboard')">
+                                <Link class="bg-clip-text text-4xl text-transparent bg-gradient-to-r from-blue-400 to-green-500 font-bold uppercase tracking-wider" :href="route('dashboard')">
                                     AllCalls.io
                                 </Link>
                             </div>
 
-                            <!-- Navigation Links -->
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                                    Dashboard
-                                </NavLink>
-                                <NavLink href="#" :active="route().current('reporting')">
-                                    Reporting
-                                </NavLink>
-                                <NavLink id="billing-nav-link" :href="route('billing.funds.index')" :active="route().current('billing.funds.index') || route().current('billing.cards.index')">
-                                    Billing
-                                </NavLink>
-                                <NavLink href="#" :active="route().current('clients')">
-                                    Clients
-                                </NavLink>
-                                <NavLink :href="route('transactions.index')" :active="route().current('transactions.index')">
-                                    Transcations
-                                </NavLink>
-                                <NavLink :href="route('activities.index')" :active="route().current('activities.index')">
-                                    Activity
-                                </NavLink>
-                                <NavLink :href="route('profile.edit')" :active="route().current('profile.edit')">
-                                    Profile
-                                </NavLink>
-                            </div>
+
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
@@ -140,6 +117,8 @@ const showingNavigationDropdown = ref(false);
                             </button>
                         </div>
                     </div>
+
+                    <p class="mt-10 text-lg text-white font-bold ">Manage your team and preferences here.</p>
                 </div>
 
                 <!-- Responsive Navigation Menu -->
@@ -188,16 +167,42 @@ const showingNavigationDropdown = ref(false);
             </nav>
 
             <!-- Page Heading -->
-            <header class="bg-white dark:bg-gray-800 shadow" v-if="$slots.header">
+            <!-- <header class="bg-white dark:bg-gray-800 shadow" v-if="$slots.header">
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                     <slot name="header" />
                 </div>
-            </header>
+            </header> -->
 
-            <!-- Page Content -->
-            <main>
-                <slot />
-            </main>
+            <!-- Navigation Links -->
+            <div class="grid grid-cols-5 max-w-screen-2xl mx-auto">
+                <div class="py-12 hidden sm:-my-px sm:ml-10 col-span-1 sm:flex sm:flex-col">
+                    <NavLink class="mb-10" :href="route('dashboard')" :active="route().current('dashboard')">
+                        Dashboard
+                    </NavLink>
+                    <NavLink class="mb-10" href="#" :active="route().current('reporting')">
+                        Reporting
+                    </NavLink>
+                    <NavLink class="mb-10" id="billing-nav-link" :href="route('billing.funds.index')" :active="route().current('billing.funds.index') || route().current('billing.cards.index')">
+                        Billing
+                    </NavLink>
+                    <NavLink class="mb-10" href="#" :active="route().current('clients')">
+                        Clients
+                    </NavLink>
+                    <NavLink class="mb-10" :href="route('transactions.index')" :active="route().current('transactions.index')">
+                        Transcations
+                    </NavLink>
+                    <NavLink class="mb-10" :href="route('activities.index')" :active="route().current('activities.index')">
+                        Activity
+                    </NavLink>
+                    <NavLink class="mb-10" :href="route('profile.edit')" :active="route().current('profile.edit')">
+                        Profile
+                    </NavLink>
+                </div>
+                <!-- Page Content -->
+                <main class="col-span-4">
+                    <slot />
+                </main>
+            </div>
         </div>
     </div>
 </template>

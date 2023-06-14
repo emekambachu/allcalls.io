@@ -17,9 +17,13 @@ module.exports = {
 
             colors: {
                 'custom-blue': '#03243D',
+                'custom-green': '#3CFA7A',
             },
         },
     },
 
-    plugins: [require('@tailwindcss/forms')],
+    plugins: [
+        require('@tailwindcss/forms'),
+        require('@tailwindcss/typography'),
+    ],
 };
