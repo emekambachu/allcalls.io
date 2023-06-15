@@ -577,18 +577,40 @@ html, body {
 
 @media (max-width: 538px) {
 
+    .header__nav ul {
+        text-align: center;
+        display: block;
+    }
+
+    .header__nav ul li {
+        margin-bottom: 12px;
+    }
+
     .main__title {
-        line-height: 66px;
-        font-size: 48px;
+        line-height: normal;
+        font-size: 40px;
         margin-bottom: 28px;
     }
 
     .main__subtitle {
-        font-size: 24.99px;
+        font-size: 21.99px;
     }
 
     .secTwo__why {
         display: block;
+    }
+
+    .secTwo__verticals {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .secTwo__verticals-i img {
+        margin: auto;
+    }
+
+    .secTwo__title {
+        text-align: center;
     }
 
     .secFour__grid {
@@ -607,4 +629,13 @@ html, body {
     .secFive__grid {
         flex-direction: column;
     }
+}
+
+
+@media (max-width: 333px) {
+    
+    .container {
+        padding: 0 14px !important;
+    }
+
 }
