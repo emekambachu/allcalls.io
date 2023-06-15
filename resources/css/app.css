@@ -215,7 +215,7 @@ html, body {
 }
 
 .secFour__grid {
-    height: 100%;
+    min-height: 100vh;
     display: grid;
     grid-template-columns: 40% 60%;
 }
@@ -272,7 +272,7 @@ html, body {
 .secFive {
     min-height: 100vh;
     display: grid;
-    grid-template-rows: 58% 42%;
+    grid-template-rows: repeat(2, 1fr);
 }
 
 .secFive__row {
