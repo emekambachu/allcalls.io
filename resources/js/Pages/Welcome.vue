@@ -100,7 +100,7 @@ defineProps({
             <div class="secTwo__para">Leave prospecting behind and let us do the heavy lifting for you and your business. Experience the Power of On-Demand Calls and start talking with potential clients Today!</div>
             <div class="secTwo__button">
               <p>See it in action</p>
-              <img src="/img/arrow.png" alt="">
+              <img src="/img/orange-arrow.png" alt="">
             </div>
           </div>
         </div>
@@ -136,7 +136,12 @@ defineProps({
               <div class="secFour__subtitle">Stay Connected</div>
               <div class="secFour__title">Talk To New Client's On-Demand</div>
               <div class="secFour__para">With AllCalls.io, you decide when to receive calls based on your schedule. Turn on the mobile app when you're ready to connect, and turn it off when you're busy. We give you the flexibility to manage your calls on your terms, ensuring you never miss an opportunity.</div>
-              <div class="secFour__button">Learn More</div>
+              <a href="">
+                <div class="secFour__button">
+                  <div>Learn more</div>
+                  <img src="/img/orange-arrow.png" alt="">
+                </div>
+              </a>
             </div>
           </div>
         </div>
@@ -150,7 +155,12 @@ defineProps({
               <div class="secFour__subtitle">Boost Efficiency</div>
               <div class="secFour__title">Seamless Integration</div>
               <div class="secFour__para">AllCalls.io fits smoothly into your existing workflow. Our web and mobile apps ensure you can manage your calls from anywhere, on any device. Plus, with our intuitive interface and straightforward setup, you'll be up and running in no time.</div>
-              <div class="secFour__button">Learn More</div>
+              <a href="">
+                <div class="secFour__button">
+                  <div>Learn more</div>
+                  <img src="/img/orange-arrow.png" alt="">
+                </div>
+              </a>
             </div>
           </div>
         </div>
@@ -164,7 +174,12 @@ defineProps({
               <div class="secFour__subtitle">Increase Revenue</div>
               <div class="secFour__title">More Calls = More Sales</div>
               <div class="secFour__para">At AllCalls.io, we believe quality calls shouldn't break the bank. And if we can put you in front of more potential clients for your money, we know we can help increase your sales.  We offer competitive pricing to fit your companies needs and budget.  Whether you're a small startup or a large enterprise, we have a solution for you!</div>
-              <div class="secFour__button">Learn More</div>
+              <a href="">
+                <div class="secFour__button">
+                  <div>Learn more</div>
+                  <img src="/img/orange-arrow.png" alt="">
+                </div>
+              </a>
             </div>
           </div>
         </div>
@@ -175,35 +190,51 @@ defineProps({
 
   <section id="resources"> 
     <div class="secFive" >
-      <div class="secFive__row">
-        <div class="secFive__inner">
-          <div class="secFive__texts">
-            <div class="text-6xl font-semibold text-white mb-5">Streamlined Process for On-Demand Calls</div>
-            <div class="text-lg font-semibold text-white">Getting started with AllCalls.io is as easy as 1-2-3. Create your account, download our app, and start managing your calls on your terms. With our user-friendly interface, you'll be up to speed in no time. Whether you're managing a busy schedule or want to ensure availability for crucial calls, AllCalls.io is designed with your needs in mind.</div>
-          </div>
-          <div class="secFive__img">
-            <img class="mb-5" src="/img/artboard-123.png" alt="">
-            <div class="font-semibold custom-white text-5xl text-center"><a href="#">Get Started Now</a></div>
+      <div class="secFive__outer">
+        <div class="secFive__row">
+          <div class="secFive__inner">
+            <div class="secFive__texts">
+              <div class="text-6xl font-semibold text-white mb-5">Streamlined Process for On-Demand Calls</div>
+              <div class="text-lg font-semibold text-white">Getting started with AllCalls.io is as easy as 1-2-3. Create your account, download our app, and start managing your calls on your terms. With our user-friendly interface, you'll be up to speed in no time. Whether you're managing a busy schedule or want to ensure availability for crucial calls, AllCalls.io is designed with your needs in mind.</div>
+            </div>
+            <div class="secFive__img">
+              <img class="mb-5" src="/img/artboard-123.png" alt="">
+              <div class="font-semibold custom-white text-5xl text-center"><a href="#">Get Started Now</a></div>
+            </div>
           </div>
         </div>
       </div>
 
       <div class="secFive__grid">
         <div class="secFive__one">
-          <div class="container">
-            <div class="secFive__subtitle">Start Receiving Calls Fast</div>
-            <div class="secFive__title">Our technology allows you start taking calls in seconds</div>
-            <a href="#">
-              <div class="secFive__button">
-                <p class="custom-blue">Download Our Mobile App</p>
-                <img src="/img/blue-arrow.png" alt="">
-              </div>
-            </a>
+          <div class="container"
+            style="
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+          ">
+            <!-- <div class="secFive__one-hold"> -->
+              <div class="secFive__subtitle">Start Receiving Calls Fast</div>
+              <div class="secFive__title">Our technology allows you start taking calls in seconds</div>
+              <a href="#">
+                <div class="secFive__button">
+                  <p class="custom-blue">Download Our Mobile App</p>
+                  <img src="/img/blue-arrow.png" alt="">
+                </div>
+              </a>
+            <!-- </div> -->
           </div>
         </div>
 
         <div class="secFive__two">
-          <div class="container">
+          <div class="container"
+            style="
+              height: 100%;
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+          ">
             <div class="secFive__subtitle custom-white">Access my Account</div>
             <div class="secFive__title text-white">Log In and Start Speaking with Prospects Now</div>
             <a href="/login">

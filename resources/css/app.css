@@ -134,6 +134,7 @@ html, body {
     display: flex;
     justify-content: space-between;
     gap: 36px;
+    padding-bottom: 80px;
 }
 
 .secTwo__why-l img {
@@ -142,6 +143,8 @@ html, body {
 
 .secTwo__why-l {
     flex: 1;
+    display: grid;
+    place-items: center;
 }
 
 .secTwo__why-r {
@@ -208,6 +211,15 @@ html, body {
     top: 0;
     right: 0;
     z-index: 1;
+    width: 84%;
+    height: 100%;
+}
+
+.secThree__layer img {
+    position: inherit;
+    top: 0;
+    right: 0;
+    width: 30%;
 }
 
 .secFour__hold {
@@ -267,6 +279,12 @@ html, body {
     line-height: 55px;
     color: #FA702F;
     margin-bottom: 75px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.secFour__button img {
+    height: 60px;
 }
 
 .secFive {
@@ -277,11 +295,17 @@ html, body {
 
 .secFive__row {
     margin: auto;
-    height: 80%;
+    /* height: 80%; */
     padding: 48px;
     width: 95%;
     border-radius: 32px 0px;
     background-color: #239DFA;
+}
+
+.secFive__one-hold {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .secFive__inner {
@@ -289,6 +313,10 @@ html, body {
     grid-template-columns: 52% 48%;
     place-items: center;
     height: 100%;
+}
+
+.secFive__outer {
+    padding: 20px 0;
 }
 
 .secFive__texts {
@@ -401,5 +429,51 @@ html, body {
 
     .main__getstarted {
         margin-top: 4rem;
+    }
+
+    .secTwo__title {
+        font-size: 30px;
+        margin-bottom: 14px;
+        line-height: normal;
+    }
+
+    .secTwo__para {
+        font-size: 23px;
+        margin-bottom: 10px;
+        line-height: normal;
+    }
+
+    .secTwo__button {
+        font-size: 31px;
+    }
+
+    .secThree__title {
+        font-size: 60px;
+    }
+
+    .secFour__subtitle {
+        font-size: 45px;
+    }
+
+    .secFour__title {
+        font-size: 60px;
+        line-height: normal;
+    }
+
+    .secFour__para {
+        font-size: 24px;
+        margin-bottom: 0;
+    }
+
+    .secTwo__verticals-i img {
+        max-width: 90px;
+    }
+
+    .secFive {
+        max-width: 100%;
+    }
+
+    .secFive__title {
+        font-size: 40px;
     }
 }
