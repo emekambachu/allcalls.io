@@ -26,8 +26,8 @@ class AddTargetsInRingba
 
     public function handle(Registered $event): void
     {
-        Log::debug('Add targets now...');
-        Log::debug(var_dump($event));
+        // Log::debug('Add targets now...');
+        // Log::debug(var_dump($event));
 
         $user = $event->user;
 
