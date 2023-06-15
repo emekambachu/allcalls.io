@@ -70,6 +70,8 @@ html, body {
     color: #eee;
     padding-left: 48px;
     margin-top: 10rem;
+    position: relative;
+    z-index: 4;
 }
 
 .main__title {
@@ -288,7 +290,7 @@ html, body {
 }
 
 .secFive {
-    min-height: 100vh;
+    min-height: 100%;
     display: grid;
     grid-template-rows: repeat(2, 1fr);
 }
@@ -431,6 +433,10 @@ html, body {
         margin-top: 4rem;
     }
 
+    .main__title {
+        font-size: 65px;
+    }
+
     .secTwo__title {
         font-size: 30px;
         margin-bottom: 14px;
@@ -475,5 +481,130 @@ html, body {
 
     .secFive__title {
         font-size: 40px;
+    }
+}
+
+
+@media (max-width: 780px) {
+
+    .header {
+        flex-direction: column;
+    }
+
+    .header__logo {
+        margin-bottom: 20px;
+    }
+
+    .header__nav {
+        margin-bottom: 20px;
+    }
+    
+    .main__title {
+        line-height: 100px;
+        font-size: 60px;
+    }
+
+    .main__button a img {
+        width: 65%;
+    }
+
+    .secTwo__title {
+        font-size: 26px;
+    }
+
+    .secTwo__para {
+        font-size: 18px;
+    }
+
+    .secTwo__button {
+        font-size: 25px;
+    }
+
+    .secThree__title {
+        line-height: 78px;
+        font-size: 50px;
+    }
+
+    .secFour__subtitle {
+        font-size: 35px;
+    }
+
+    .secFour__title {
+        font-size: 40px;
+    }
+
+    .secFour__para {
+        font-size: 20px;
+    }
+
+    .secFour__button {
+        font-size: 36px;
+    }
+
+    .secFive__texts-t {
+        font-size: 40px;
+    }
+
+    .secFive__texts-s {
+        font-size: 17px;
+    }
+
+    .secFive__title {
+        line-height: normal;
+        margin-bottom: 0;
+        font-size: 27px;
+    }
+
+    .secFive__subtitle {
+        margin-bottom: 0;
+        line-height: normal;
+        font-size: 21px;
+    }
+
+    .secFive__button p {
+        font-size: 22px;
+    }
+
+    .secFive__one .container {
+        justify-content: space-around !important;
+    }
+
+    .secFive__two .container {
+        justify-content: space-around !important;
+    }
+}
+
+
+@media (max-width: 538px) {
+
+    .main__title {
+        line-height: 66px;
+        font-size: 48px;
+        margin-bottom: 28px;
+    }
+
+    .main__subtitle {
+        font-size: 24.99px;
+    }
+
+    .secTwo__why {
+        display: block;
+    }
+
+    .secFour__grid {
+        display: block;
+    }
+
+    .secFour__img img {
+        width: 55%;
+        padding: 40px;
+    }
+
+    .secFive__inner{
+        display: block;
+    }
+    
+    .secFive__grid {
+        flex-direction: column;
     }
 }

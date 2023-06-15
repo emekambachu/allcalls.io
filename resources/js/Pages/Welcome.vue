@@ -46,6 +46,10 @@ defineProps({
           <a href="/login">
             <div class="header__button">Log In</div>
           </a>
+
+          <!-- hamburger -->
+
+
         </header>
         <div class="main__getstarted max-w-4xl">
           <div class="main__title mb-5">Your Next Opportunity is Just a Call Away</div>
@@ -194,8 +198,8 @@ defineProps({
         <div class="secFive__row">
           <div class="secFive__inner">
             <div class="secFive__texts">
-              <div class="text-6xl font-semibold text-white mb-5">Streamlined Process for On-Demand Calls</div>
-              <div class="text-lg font-semibold text-white">Getting started with AllCalls.io is as easy as 1-2-3. Create your account, download our app, and start managing your calls on your terms. With our user-friendly interface, you'll be up to speed in no time. Whether you're managing a busy schedule or want to ensure availability for crucial calls, AllCalls.io is designed with your needs in mind.</div>
+              <div class="text-6xl font-semibold text-white mb-5 secFive__texts-t">Streamlined Process for On-Demand Calls</div>
+              <div class="text-lg font-semibold text-white secFive__texts-s">Getting started with AllCalls.io is as easy as 1-2-3. Create your account, download our app, and start managing your calls on your terms. With our user-friendly interface, you'll be up to speed in no time. Whether you're managing a busy schedule or want to ensure availability for crucial calls, AllCalls.io is designed with your needs in mind.</div>
             </div>
             <div class="secFive__img">
               <img class="mb-5" src="/img/artboard-123.png" alt="">
