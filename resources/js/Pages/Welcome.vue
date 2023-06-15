@@ -27,8 +27,8 @@ defineProps({
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&family=Nunito+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   </Head>
 
-  <section>
-    <div class="main" id="getstarted">
+  <section id="getstarted">
+    <div class="main">
       <div class="container">
         <header class="header">
           <div class="header__logo">
@@ -65,9 +65,9 @@ defineProps({
   </section>
 
 
-  <section>
+  <section id="solutions">
     <div class="container">
-      <div class="secTwo" id="solutions">
+      <div class="secTwo">
         <div class="secTwo__title">We help businesses get connected with clients</div>
         <div class="secTwo__verticals">
           <div class="secTwo__verticals-i">
@@ -127,47 +127,54 @@ defineProps({
   
   <section>
       <div class="secFour" id="howItWorks">
-        <div class="secFour__grid wrap">
-          <div class="secFour__img">
-            <img src="/img/why-01.png" alt="">
-          </div>
-          <div class="secFour__texts wrap">
-            <div class="secFour__subtitle">Stay Connected</div>
-            <div class="secFour__title">Talk To New Client's On-Demand</div>
-            <div class="secFour__para">With AllCalls.io, you decide when to receive calls based on your schedule. Turn on the mobile app when you're ready to connect, and turn it off when you're busy. We give you the flexibility to manage your calls on your terms, ensuring you never miss an opportunity.</div>
-            <div class="secFour__button">Learn More</div>
-          </div>
-        </div>
-
-        <div class="secFour__grid wrap">
-          <div class="secFour__img">
-            <img src="/img/why-02.png" alt="">
-          </div>
-          <div class="secFour__texts wrap">
-            <div class="secFour__subtitle">Boost Efficiency</div>
-            <div class="secFour__title">Seamless Integration</div>
-            <div class="secFour__para">AllCalls.io fits smoothly into your existing workflow. Our web and mobile apps ensure you can manage your calls from anywhere, on any device. Plus, with our intuitive interface and straightforward setup, you'll be up and running in no time.</div>
-            <div class="secFour__button">Learn More</div>
+        <div class="secFour__hold">
+          <div class="secFour__grid wrap">
+            <div class="secFour__img">
+              <img src="/img/why-01.png" alt="">
+            </div>
+            <div class="secFour__texts wrap">
+              <div class="secFour__subtitle">Stay Connected</div>
+              <div class="secFour__title">Talk To New Client's On-Demand</div>
+              <div class="secFour__para">With AllCalls.io, you decide when to receive calls based on your schedule. Turn on the mobile app when you're ready to connect, and turn it off when you're busy. We give you the flexibility to manage your calls on your terms, ensuring you never miss an opportunity.</div>
+              <div class="secFour__button">Learn More</div>
+            </div>
           </div>
         </div>
 
-        <div class="secFour__grid wrap">
-          <div class="secFour__img">
-            <img src="/img/why-03.png" alt="">
-          </div>
-          <div class="secFour__texts wrap">
-            <div class="secFour__subtitle">Increase Revenue</div>
-            <div class="secFour__title">More Calls = More Sales</div>
-            <div class="secFour__para">At AllCalls.io, we believe quality calls shouldn't break the bank. And if we can put you in front of more potential clients for your money, we know we can help increase your sales.  We offer competitive pricing to fit your companies needs and budget.  Whether you're a small startup or a large enterprise, we have a solution for you!</div>
-            <div class="secFour__button">Learn More</div>
+        <div class="secFour__hold">
+          <div class="secFour__grid wrap">
+            <div class="secFour__img">
+              <img src="/img/why-02.png" alt="">
+            </div>
+            <div class="secFour__texts wrap">
+              <div class="secFour__subtitle">Boost Efficiency</div>
+              <div class="secFour__title">Seamless Integration</div>
+              <div class="secFour__para">AllCalls.io fits smoothly into your existing workflow. Our web and mobile apps ensure you can manage your calls from anywhere, on any device. Plus, with our intuitive interface and straightforward setup, you'll be up and running in no time.</div>
+              <div class="secFour__button">Learn More</div>
+            </div>
           </div>
         </div>
+
+        <div class="secFour__hold">
+          <div class="secFour__grid wrap">
+            <div class="secFour__img">
+              <img src="/img/why-03.png" alt="">
+            </div>
+            <div class="secFour__texts wrap">
+              <div class="secFour__subtitle">Increase Revenue</div>
+              <div class="secFour__title">More Calls = More Sales</div>
+              <div class="secFour__para">At AllCalls.io, we believe quality calls shouldn't break the bank. And if we can put you in front of more potential clients for your money, we know we can help increase your sales.  We offer competitive pricing to fit your companies needs and budget.  Whether you're a small startup or a large enterprise, we have a solution for you!</div>
+              <div class="secFour__button">Learn More</div>
+            </div>
+          </div>
+        </div>
+
       </div>
   </section>
 
 
-  <section>
-    <div class="secFive" id="resources">
+  <section id="resources"> 
+    <div class="secFive" >
       <div class="secFive__row">
         <div class="secFive__inner">
           <div class="secFive__texts">
