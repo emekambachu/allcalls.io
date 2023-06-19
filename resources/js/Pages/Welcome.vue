@@ -73,15 +73,15 @@ const showHamburger = ref(false);
           <div class="main__title mb-5">Your Next Opportunity is Just a Call Away</div>
           <div class="main__subtitle mb-12">Instantly Connect with your prospects on demand.
             <span style="color: #3CFA7A;">Flexible, affordable, and tailored to your success.</span></div>
-            <a href="/register">
-              <div class="main__button">
-                    <PrimaryButton class="my-4 px-2">
+            <div class="main__button">
+                <a href="/register" class="w-max flex flex-col items-center">
+                    <div class="inline-flex items-center px-4 py-3 bg-white border border-transparent rounded-md font-semibold text-md text-custom-green uppercase tracking-widest hover:bg-custom-blue hover:drop-shadow-2xl focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
                       <div class="lg:text-3xl xl:text-4xl bg-clip-text text-md font-extrabold text-transparent bg-gradient-to-r from-blue-400 to-green-500">BUY CALLS NOW</div>
                       <img class="w-10 lg:w-20" src="/img/green-arrow.png" alt="">
-                    </PrimaryButton>
-                    <div class="text-sm lg:text-lg text-gray-400 drop-shadow-wxl">Starting as Low as $25 / Call</div>
+                    </div>
+                    <div class="text-sm lg:text-lg text-gray-400 drop-shadow-wxl mt-2">Starting as Low as $25 / Call</div>
+                  </a>
               </div>
-            </a>
         </div>
       </div>
       <div class="main__layer">

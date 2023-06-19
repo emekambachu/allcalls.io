@@ -22,6 +22,7 @@ module.exports = {
                 'custom-gray': '#D7D7D7',
                 'custom-sky': '#239DFA',
                 'custom-orange': '#FA702F',
+                'new-white': '#2200ff',
             },
 
             dropShadow: {
