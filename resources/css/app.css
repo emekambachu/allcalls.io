@@ -613,9 +613,9 @@ html, body {
         margin: auto;
     }
 
-    .secTwo__title {
+    /* .secTwo__title {
         text-align: center;
-    }
+    } */
 
     .secFour__grid {
         display: block;
@@ -633,13 +633,25 @@ html, body {
     .secFive__grid {
         flex-direction: column;
     }
+
+    .secFive__one .container {
+        align-items: center;
+    }
+    
+    .secFive__two .container {
+        align-items: center;
+    }
+
+    .secFive__title {
+        text-align: center;
+    }
 }
 
 
 @media (max-width: 333px) {
     
-    .container {
+    /* .container {
         padding: 0 14px !important;
-    }
+    } */
 
 }

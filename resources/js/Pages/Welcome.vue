@@ -1,6 +1,7 @@
 <script setup>
 import { Head, Link } from "@inertiajs/vue3";
 import { ref } from 'vue';
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Footer from "@/Components/Footer.vue";
 
 defineProps({
@@ -47,11 +48,10 @@ const showHamburger = ref(false);
 
           <nav class="header__nav hidden xl:flex items-end">
             <ul class="">
-              <li><a href="#getstarted">Get Started</a></li>
-              <li><a href="#solutions">Solutions</a></li>
-              <li><a href="#company">Company</a></li>
-              <li><a href="#resources">Resources</a></li>
-              <li><a href="#howItWorks">How it works</a></li>
+              <a href="#getstarted" class="hover:text-custom-green"><li>Live Transfers</li></a>
+              <a href="#solutions" class="hover:text-custom-green"><li>Why AllCalls.io</li></a>
+              <a href="#resources" class="hover:text-custom-green"><li>How It Works</li></a>
+              <a href="/register" class="hover:text-custom-green"><li>Sign Up Now</li></a>
             </ul>
           </nav>
           <a href="/login" class="hidden xl:flex">
@@ -62,11 +62,9 @@ const showHamburger = ref(false);
         </header>
 
         <ul class="text-white transition-all delay-700 duration-800 w-full relative z-20 text-center" v-show="showHamburger">
-            <a href="#getstarted"><li class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2">Get Started</li></a>
-            <a href="#solutions"><li class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2" >Solutions</li></a>
-            <a href="#company"><li class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2" >Company</li></a>
-            <a href="#resources"><li class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2" >Resources</li></a>
-            <a href="#howItWorks"><li class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-6" >How it works</li></a>
+            <a href="#getstarted"><li class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2">Live Transfers</li></a>
+            <a href="#solutions"><li class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2" >Why AllCalls.io</li></a>
+            <a href="#resources"><li class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2" >How It Works</li></a>
             <a href="/login"><li class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2" >Log In</li></a>
             <a href="/register"><li class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white" >Register</li></a>
           </ul>
@@ -75,11 +73,16 @@ const showHamburger = ref(false);
           <div class="main__title mb-5">Your Next Opportunity is Just a Call Away</div>
           <div class="main__subtitle mb-12">Instantly Connect with your prospects on demand.
             <span style="color: #3CFA7A;">Flexible, affordable, and tailored to your success.</span></div>
-          <div class="main__button">
-            <a href="#">
-              <img src="/img/getstarted.png" alt="">
+            <a href="/register">
+              <div class="main__button">
+                    <PrimaryButton class="my-4 px-2">
+                      <div class="lg:hidden bg-clip-text text-md font-extrabold text-transparent bg-gradient-to-r from-blue-400 to-green-500">GET STARTED NOW</div>
+                      <img class="hidden lg:block" src="/img/getstarted.png" alt="">
+                      <img class="w-10 lg:w-20" src="/img/green-arrow.png" alt="">
+                    </PrimaryButton>
+                    <div class="text-sm text-gray-400 drop-shadow-wxl">No Contracts | Cancel Anytime</div>
+              </div>
             </a>
-          </div>
         </div>
       </div>
       <div class="main__layer">
@@ -122,10 +125,10 @@ const showHamburger = ref(false);
           <div class="secTwo__why-r">
             <div class="secTwo__title">Why Choose AllCalls.io</div>
             <div class="secTwo__para">Leave prospecting behind and let us do the heavy lifting for you and your business. Experience the Power of On-Demand Calls and start talking with potential clients Today!</div>
-            <div class="secTwo__button">
-              <p>See it in action</p>
-              <img src="/img/orange-arrow.png" alt="">
-            </div>
+            <PrimaryButton class="my-4">
+                  <div class="text-custom-orange">See it in action</div>
+                  <img class="w-10" src="/img/orange-arrow.png" alt="">
+                </PrimaryButton>
           </div>
         </div>
       </div>
@@ -136,7 +139,7 @@ const showHamburger = ref(false);
   <section class="wrap" id="company">
     <div class="container">
       <div class="secThree">
-        <div class="secThree__subtitle">Why AllCalls.io</div>
+        <div class="secThree__subtitle">The AllCalls.io Lead Solution</div>
         <div class="secThree__title">Simplify your Sales with AllCalls.io Mobile App</div>
 
         <div class="secThree__layer">
@@ -160,11 +163,11 @@ const showHamburger = ref(false);
               <div class="secFour__subtitle">Stay Connected</div>
               <div class="secFour__title">Talk To New Client's On-Demand</div>
               <div class="secFour__para">With AllCalls.io, you decide when to receive calls based on your schedule. Turn on the mobile app when you're ready to connect, and turn it off when you're busy. We give you the flexibility to manage your calls on your terms, ensuring you never miss an opportunity.</div>
-              <a href="">
-                <div class="secFour__button">
-                  <div>Learn more</div>
-                  <img src="/img/orange-arrow.png" alt="">
-                </div>
+              <a href="#">
+                <PrimaryButton class="my-4">
+                  <div class="text-custom-orange">Learn more</div>
+                  <img class="w-10" src="/img/orange-arrow.png" alt="">
+                </PrimaryButton>
               </a>
             </div>
           </div>
@@ -179,11 +182,11 @@ const showHamburger = ref(false);
               <div class="secFour__subtitle">Boost Efficiency</div>
               <div class="secFour__title">Seamless Integration</div>
               <div class="secFour__para">AllCalls.io fits smoothly into your existing workflow. Our web and mobile apps ensure you can manage your calls from anywhere, on any device. Plus, with our intuitive interface and straightforward setup, you'll be up and running in no time.</div>
-              <a href="">
-                <div class="secFour__button">
-                  <div>Learn more</div>
-                  <img src="/img/orange-arrow.png" alt="">
-                </div>
+              <a href="#">
+                <PrimaryButton class="my-4">
+                  <div class="text-custom-orange">Learn more</div>
+                  <img class="w-10" src="/img/orange-arrow.png" alt="">
+                </PrimaryButton>
               </a>
             </div>
           </div>
@@ -198,11 +201,11 @@ const showHamburger = ref(false);
               <div class="secFour__subtitle">Increase Revenue</div>
               <div class="secFour__title">More Calls = More Sales</div>
               <div class="secFour__para">At AllCalls.io, we believe quality calls shouldn't break the bank. And if we can put you in front of more potential clients for your money, we know we can help increase your sales.  We offer competitive pricing to fit your companies needs and budget.  Whether you're a small startup or a large enterprise, we have a solution for you!</div>
-              <a href="">
-                <div class="secFour__button">
-                  <div>Learn more</div>
-                  <img src="/img/orange-arrow.png" alt="">
-                </div>
+              <a href="#">
+                <PrimaryButton class="my-4">
+                  <div class="text-custom-orange">Learn more</div>
+                  <img class="w-10" src="/img/orange-arrow.png" alt="">
+                </PrimaryButton>
               </a>
             </div>
           </div>
@@ -216,14 +219,24 @@ const showHamburger = ref(false);
     <div class="secFive" >
       <div class="secFive__outer">
         <div class="secFive__row">
-          <div class="secFive__inner">
+          <div class="secFive__inner gap-8">
             <div class="secFive__texts">
               <div class="text-6xl font-semibold text-white mb-5 secFive__texts-t">Streamlined Process for On-Demand Calls</div>
-              <div class="text-lg font-semibold text-white secFive__texts-s">Getting started with AllCalls.io is as easy as 1-2-3. Create your account, download our app, and start managing your calls on your terms. With our user-friendly interface, you'll be up to speed in no time. Whether you're managing a busy schedule or want to ensure availability for crucial calls, AllCalls.io is designed with your needs in mind.</div>
+              <ul class="text-sm font-semibold text-custom-sky space-y-2 lg:text-lg">
+                <li class="w-full bg-white py-1 px-2 rounded drop-shadow-xl lg:bg-transparent lg:text-white">1. Join & Sign Up for AllCalls.io</li> 
+                <li class="w-full bg-white py-1 px-2 rounded drop-shadow-xl lg:bg-transparent lg:text-white">2. Setup Schedule and Payment Info</li> 
+                <li class="w-full bg-white py-1 px-2 rounded drop-shadow-xl lg:bg-transparent lg:text-white">3. Download Mobile App and Start Taking Calls!</li> 
+              </ul>
             </div>
-            <div class="secFive__img">
-              <img class="mb-5" src="/img/artboard-123.png" alt="">
-              <div class="font-semibold custom-white text-5xl text-center"><a href="/register">Get Started Now</a></div>
+            <div class="secFive__img flex flex-col items-center">
+              <img class="mb-5 drop-shadow-2xl" src="/img/artboard-123.png" alt="">
+              <a href="/register">
+                <PrimaryButton class="bg-custom-white">
+                  <div class="font-semibold 2xl:text-4xl text-center">Get Started Now</div>
+                  <img src="/img/green-arrow.png" class="w-10 2xl:w-20" alt="">
+                </PrimaryButton>
+              </a>
+              
             </div>
           </div>
         </div>
@@ -242,10 +255,10 @@ const showHamburger = ref(false);
               <div class="secFive__subtitle">Start Receiving Calls Fast</div>
               <div class="secFive__title">Our technology allows you start taking calls in seconds</div>
               <a href="#">
-                <div class="secFive__button">
-                  <p class="custom-blue">Download Our Mobile App</p>
-                  <img src="/img/blue-arrow.png" alt="">
-                </div>
+                <PrimaryButton class="my-4">
+                  <div class="text-custom-sky">Download Our Mobile App</div>
+                  <img class="w-10" src="/img/blue-arrow.png" alt="">
+                </PrimaryButton>
               </a>
             <!-- </div> -->
           </div>
@@ -262,10 +275,10 @@ const showHamburger = ref(false);
             <div class="secFive__subtitle custom-white">Access my Account</div>
             <div class="secFive__title text-white">Log In and Start Speaking with Prospects Now</div>
             <a href="/login">
-              <div class="secFive__button">
-                  <p class="custom-green">Log In</p>
-                  <img src="/img/green-arrow.png" alt="">
-              </div>
+              <PrimaryButton class="my-4">
+                  <div class="text-custom-green">Log In</div>
+                  <img class="w-10" src="/img/green-arrow.png" alt="">
+                </PrimaryButton>
             </a>
           </div>
         </div>
