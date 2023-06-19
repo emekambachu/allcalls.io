@@ -55,7 +55,7 @@ const showHamburger = ref(false);
             </ul>
           </nav>
           <a href="/login" class="hidden xl:flex">
-            <div class="header__button">Log In</div>
+            <div class="header__button hover:text-custom-green">Log In</div>
           </a>
 
           <!-- hamburger -->
@@ -76,11 +76,10 @@ const showHamburger = ref(false);
             <a href="/register">
               <div class="main__button">
                     <PrimaryButton class="my-4 px-2">
-                      <div class="lg:hidden bg-clip-text text-md font-extrabold text-transparent bg-gradient-to-r from-blue-400 to-green-500">GET STARTED NOW</div>
-                      <img class="hidden lg:block" src="/img/getstarted.png" alt="">
+                      <div class="lg:text-3xl xl:text-4xl bg-clip-text text-md font-extrabold text-transparent bg-gradient-to-r from-blue-400 to-green-500">BUY CALLS NOW</div>
                       <img class="w-10 lg:w-20" src="/img/green-arrow.png" alt="">
                     </PrimaryButton>
-                    <div class="text-sm text-gray-400 drop-shadow-wxl">No Contracts | Cancel Anytime</div>
+                    <div class="text-sm lg:text-lg text-gray-400 drop-shadow-wxl">Starting as Low as $25 / Call</div>
               </div>
             </a>
         </div>
@@ -163,9 +162,9 @@ const showHamburger = ref(false);
               <div class="secFour__subtitle">Stay Connected</div>
               <div class="secFour__title">Talk To New Client's On-Demand</div>
               <div class="secFour__para">With AllCalls.io, you decide when to receive calls based on your schedule. Turn on the mobile app when you're ready to connect, and turn it off when you're busy. We give you the flexibility to manage your calls on your terms, ensuring you never miss an opportunity.</div>
-              <a href="#">
+              <a href="/register">
                 <PrimaryButton class="my-4">
-                  <div class="text-custom-orange">Learn more</div>
+                  <div class="text-custom-orange">Try AllCalls.io Now</div>
                   <img class="w-10" src="/img/orange-arrow.png" alt="">
                 </PrimaryButton>
               </a>
@@ -184,7 +183,7 @@ const showHamburger = ref(false);
               <div class="secFour__para">AllCalls.io fits smoothly into your existing workflow. Our web and mobile apps ensure you can manage your calls from anywhere, on any device. Plus, with our intuitive interface and straightforward setup, you'll be up and running in no time.</div>
               <a href="#">
                 <PrimaryButton class="my-4">
-                  <div class="text-custom-orange">Learn more</div>
+                  <div class="text-custom-orange">Buy Live Transfers Today</div>
                   <img class="w-10" src="/img/orange-arrow.png" alt="">
                 </PrimaryButton>
               </a>

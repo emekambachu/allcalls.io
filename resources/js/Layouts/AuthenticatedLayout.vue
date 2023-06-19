@@ -189,7 +189,7 @@ const showingNavigationDropdown = ref(false);
                         Clients
                     </NavLink>
                     <NavLink class="mb-10" :href="route('transactions.index')" :active="route().current('transactions.index')">
-                        Transcations
+                        Transactions
                     </NavLink>
                     <NavLink class="mb-10" :href="route('activities.index')" :active="route().current('activities.index')">
                         Activity
