@@ -223,7 +223,7 @@ const showHamburger = ref(false);
             </div>
             <div class="secFive__img">
               <img class="mb-5" src="/img/artboard-123.png" alt="">
-              <div class="font-semibold custom-white text-5xl text-center"><a href="#">Get Started Now</a></div>
+              <div class="font-semibold custom-white text-5xl text-center"><a href="/register">Get Started Now</a></div>
             </div>
           </div>
         </div>
