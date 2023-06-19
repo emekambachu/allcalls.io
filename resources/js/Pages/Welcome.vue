@@ -62,13 +62,13 @@ const showHamburger = ref(false);
         </header>
 
         <ul class="text-white transition-all delay-700 duration-800 w-full relative z-20 text-center" v-show="showHamburger">
-            <li class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2"><a href="#getstarted">Get Started</a></li>
-            <li class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2" ><a href="#solutions">Solutions</a></li>
-            <li class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2" ><a href="#company">Company</a></li>
-            <li class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2" ><a href="#resources">Resources</a></li>
-            <li class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-6" ><a href="#howItWorks">How it works</a></li>
-            <li class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2" ><a href="/login">Log In</a></li>
-            <li class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white" ><a href="/register">Register</a></li>
+            <a href="#getstarted"><li class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2">Get Started</li></a>
+            <a href="#solutions"><li class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2" >Solutions</li></a>
+            <a href="#company"><li class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2" >Company</li></a>
+            <a href="#resources"><li class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2" >Resources</li></a>
+            <a href="#howItWorks"><li class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-6" >How it works</li></a>
+            <a href="/login"><li class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2" >Log In</li></a>
+            <a href="/register"><li class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white" >Register</li></a>
           </ul>
 
         <div class="main__getstarted max-w-4xl">
