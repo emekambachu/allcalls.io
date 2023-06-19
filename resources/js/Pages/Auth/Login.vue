@@ -39,10 +39,10 @@ const submit = () => {
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
             {{ status }}
         </div>
-
+        
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="email" value="Email" />
+                <div class="py-4 mb-4 text-custom-blue text-3xl font-bold">Log In</div>
 
                 <TextInput
                     id="email"
@@ -52,13 +52,13 @@ const submit = () => {
                     required
                     autofocus
                     autocomplete="username"
+                    placeholder="Email"
                 />
 
                 <InputError class="mt-2" :message="form.errors.email" />
             </div>
 
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
+            <div class="mt-6">
 
                 <TextInput
                     id="password"
@@ -67,6 +67,7 @@ const submit = () => {
                     v-model="form.password"
                     required
                     autocomplete="current-password"
+                    placeholder="Password"
                 />
 
                 <InputError class="mt-2" :message="form.errors.password" />
@@ -81,26 +82,42 @@ const submit = () => {
 
 
 
-            <div class="flex items-center justify-end mt-4">
+            <div class="flex flex-col items-start mt-6">
+                <PrimaryButton class="mb-6" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                    Log in
+                </PrimaryButton>
+                
                 <Link
                     v-if="canResetPassword"
                     :href="route('password.request')"
-                    class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+                    class="font-semibold text-sm lg:text-md text-custom-sky hover:text-custom-green rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
                 >
                     Forgot your password?
                 </Link>
-
-                <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Log in
-                </PrimaryButton>
             </div>
 
-            <div class="mt-6">
-                <p class="dark:text-gray-400 text-center">Don’t have an account? <Link href="/register" class="dark:text-white">Register Here</Link></p>
+            <div class="mt-2 mb-10">
+                <p class="text-sm lg:text-lg text-custom-blue font-extrabold">New to AllCalls.io? <Link href="/register" class="text-custom-sky font-bold">Register Here</Link></p>
             </div>
 
 
         </form>
+
+        <template v-slot:titles>
+                <div class="text-4xl lg:text-5xl xl:text-8xl text-white mb-10 "><span class="text-custom-green">On-Demand</span> Calls</div>
+                <div class="text-white text-2xl lg:text-2xl xl:text-5xl text-3xl">Bringing Clients right to your Fingertips.</div>
+        </template>
+
+        <template v-slot:subtitles>
+            <div class="text-custom-blue text-2xl xl:text-5xl font-bold">
+                Creating New 
+                Opportunities for 
+                Our Customers is 
+                What We Do!
+            </div>
+        </template>
+
+
 
     <!-- </GuestLayout> -->
     </NewGuestLayout>

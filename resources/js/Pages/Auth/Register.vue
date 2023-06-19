@@ -5,6 +5,8 @@ import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import SelectInput from "@/Components/SelectInput.vue";
+import NewGuestLayout from "@/Layouts/NewGuestLayout.vue";
+import Footer from "@/Components/Footer.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import Multiselect from "@vueform/multiselect";
 import { ref, reactive, computed } from "vue";
@@ -86,7 +88,9 @@ let submit = () => {
 </script>
 
 <template>
-  <GuestLayout>
+  <!-- <GuestLayout> -->
+  <NewGuestLayout>
+
     <Head title="Register" />
 
     <form @submit.prevent="submit">
@@ -263,7 +267,7 @@ let submit = () => {
         <div class="flex items-center justify-end mt-4">
           <Link
             :href="route('login')"
-            class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+            class="underline text-sm text-custom-blue hover:text-custom-green rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
           >
             Already registered?
           </Link>
@@ -278,7 +282,27 @@ let submit = () => {
         </div>
       </div>
     </form>
-  </GuestLayout>
+
+
+
+    
+    <template v-slot:titles>
+      <div class="text-4xl lg:text-5xl xl:text-8xl text-white mb-10 ">Getting Started is Easy.<span class="text-custom-green">Create your account today!</span></div>
+    </template>
+    
+    <template v-slot:subtitles>
+      <div class="text-custom-blue font-bold text-2xl lg:text-2xl xl:text-5xl text-3xl">Try our Calls for Yourself!</div>
+      
+      <div class="text-custom-blue text-sm md:text-lg lg:text-2xl mt-6 font-bold">
+        We pride ourselves on ease of use. Once you have created an account, you will be able to select what kind of calls you would like to receive and begin speaking with customers right away! Create an account to get started.
+      </div>
+    </template>
+    
+  </NewGuestLayout>
+  <!-- </GuestLayout> -->
+
+  <Footer />
+
 </template>
 
 <style src="@vueform/multiselect/themes/default.css"></style>
