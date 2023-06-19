@@ -1,5 +1,6 @@
 <script setup>
 import { Head, Link } from "@inertiajs/vue3";
+import { ref } from 'vue';
 import Footer from "@/Components/Footer.vue";
 
 defineProps({
@@ -18,6 +19,10 @@ defineProps({
     required: true,
   },
 });
+
+// Define a reactive property for v-show
+const showHamburger = ref(false);
+
 </script>
 
 <template>
@@ -30,12 +35,18 @@ defineProps({
   <section id="getstarted">
     <div class="main">
       <div class="container">
+
         <header class="header">
           <div class="header__logo">
             <img src="/img/logo.png" alt="">
           </div>
-          <nav class="header__nav">
-            <ul>
+
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 sm:w-10 sm:h-10 text-white xl:hidden cursor-pointer transition hover:text-custom-green hamburger" @click="showHamburger = !showHamburger">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+          </svg>
+
+          <nav class="header__nav hidden xl:flex items-end">
+            <ul class="">
               <li><a href="#getstarted">Get Started</a></li>
               <li><a href="#solutions">Solutions</a></li>
               <li><a href="#company">Company</a></li>
@@ -43,14 +54,23 @@ defineProps({
               <li><a href="#howItWorks">How it works</a></li>
             </ul>
           </nav>
-          <a href="/login">
+          <a href="/login" class="hidden xl:flex">
             <div class="header__button">Log In</div>
           </a>
 
           <!-- hamburger -->
-
-
         </header>
+
+        <ul class="text-white transition-all delay-700 duration-800 w-full relative z-20 text-center" v-show="showHamburger">
+            <li class="py-1 rounded text-custom-blue border-radius bg-custom-green hover:bg-custom-blue hover: hover:cursor-pointer text-white mb-2"><a href="#getstarted">Get Started</a></li>
+            <li class="py-1 rounded text-custom-blue border-radius bg-custom-green hover:bg-custom-blue hover: hover:cursor-pointer text-white mb-2" ><a href="#solutions">Solutions</a></li>
+            <li class="py-1 rounded text-custom-blue border-radius bg-custom-green hover:bg-custom-blue hover: hover:cursor-pointer text-white mb-2" ><a href="#company">Company</a></li>
+            <li class="py-1 rounded text-custom-blue border-radius bg-custom-green hover:bg-custom-blue hover: hover:cursor-pointer text-white mb-2" ><a href="#resources">Resources</a></li>
+            <li class="py-1 rounded text-custom-blue border-radius bg-custom-green hover:bg-custom-blue hover: hover:cursor-pointer text-white mb-6" ><a href="#howItWorks">How it works</a></li>
+            <li class="py-1 rounded text-custom-blue border-radius bg-custom-green hover:bg-custom-blue hover: hover:cursor-pointer text-white mb-2" ><a href="/login">Log In</a></li>
+            <li class="py-1 rounded text-custom-blue border-radius bg-custom-green hover:bg-custom-blue hover: hover:cursor-pointer text-white" ><a href="/register">Register</a></li>
+          </ul>
+
         <div class="main__getstarted max-w-4xl">
           <div class="main__title mb-5">Your Next Opportunity is Just a Call Away</div>
           <div class="main__subtitle mb-12">Instantly Connect with your prospects on demand.

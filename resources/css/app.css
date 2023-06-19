@@ -45,11 +45,12 @@ html, body {
     padding: 48px 64px;
     position: relative;
     z-index: 3;
+    align-items: center;
 }
 
 .header__nav ul {
     display: flex;
-    gap: 18px;
+    gap: 22px;
 }
 
 .header__nav ul li {
@@ -431,6 +432,7 @@ html, body {
 
     .main__getstarted {
         margin-top: 4rem;
+        padding-left: unset;
     }
 
     .main__title {
@@ -488,8 +490,10 @@ html, body {
 @media (max-width: 780px) {
 
     .header {
-        flex-direction: column;
+        /* flex-direction: column; */
+        align-items: start;
     }
+
 
     .header__logo {
         margin-bottom: 20px;
