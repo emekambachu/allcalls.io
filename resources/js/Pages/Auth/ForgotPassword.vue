@@ -1,9 +1,11 @@
 <script setup>
 import GuestLayout from '@/Layouts/GuestLayout.vue';
+import NewGuestLayout from '@/Layouts/NewGuestLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import Footer from '@/Components/Footer.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 
 defineProps({
@@ -22,13 +24,15 @@ const submit = () => {
 </script>
 
 <template>
-    <GuestLayout>
+    <!-- <GuestLayout> -->
+    <NewGuestLayout>
+
         <Head title="Forgot Password" />
 
-        <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+        <!-- <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
             Forgot your password? No problem. Just let us know your email address and we will email you a password reset
             link that will allow you to choose a new one.
-        </div>
+        </div> -->
 
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
             {{ status }}
@@ -57,5 +61,20 @@ const submit = () => {
                 </PrimaryButton>
             </div>
         </form>
-    </GuestLayout>
+
+        <template v-slot:titles>
+                <div class="text-4xl lg:text-5xl xl:text-8xl text-white mb-10 "><span class="text-custom-green">Forgot your password?</span> No problem. </div>
+        </template>
+
+        
+        <template v-slot:subtitles>            
+            <div class="text-custom-blue text-sm md:text-lg lg:text-2xl mt-6 font-bold">
+                Just let us know your email address and we will email you a password reset
+                link that will allow you to choose a new one.
+            </div>
+        </template>
+
+    </NewGuestLayout>
+    <!-- </GuestLayout> -->
+    <Footer />
 </template>
