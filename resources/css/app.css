@@ -615,6 +615,11 @@ html, body {
         grid-template-columns: repeat(2, 1fr);
     }
 
+    .secTwo__verticals:last-child {
+        justify-self: center;
+        grid-column: 1 / span 2;
+      }
+
     .secTwo__verticals-i img {
         margin: auto;
     }
@@ -622,6 +627,19 @@ html, body {
     /* .secTwo__title {
         text-align: center;
     } */
+
+    .secThree {
+        padding: 60px 0;
+    }
+
+    .secThree__title {
+        font-size: 42px;
+        line-height: 60px;
+    }
+
+    .secThree__subtitle {
+        font-size: 35px;
+    }
 
     .secFour__grid {
         display: block;
