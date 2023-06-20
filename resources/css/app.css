@@ -486,6 +486,12 @@ html, body {
     }
 }
 
+@media (max-height: 858px) {
+    .main__getstarted {
+        margin-top: 2rem;
+    }
+}
+
 
 @media (max-width: 780px) {
 

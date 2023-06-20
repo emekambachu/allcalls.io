@@ -10,6 +10,7 @@ import Footer from "@/Components/Footer.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import Multiselect from "@vueform/multiselect";
 import { ref, reactive, computed } from "vue";
+// import { useVeeValidate } from '@vee-validate/vue3';
 
 let step = ref(0);
 
@@ -80,6 +81,24 @@ let form = useForm({
   }, {}),
 });
 
+let text = ref([]);
+
+let check = () => {
+
+}
+
+let next = () => {
+  // alert(form);
+  console.log(form.first_name);
+  // if (trim().form.first_name) {
+  //   console.log('its empty');
+  // } else {
+  //   console.log('it has value')
+  // }
+
+  // console.log(form.errors.phone); 
+}
+
 let submit = () => {
   form.post(route("register"), {
     onFinish: () => form.reset("password", "password_confirmation"),
@@ -103,8 +122,12 @@ let submit = () => {
             type="text"
             class="mt-1 block w-full"
             v-model="form.first_name"
+            minlength="2" 
+            required 
+            pattern="[A-Za-z]{1,32}" 
+            onkeyup="this.value=this.value.replace(/[0-9]/g,'') check();"
           />
-
+          <InputError class="mt-2" :message="text" />
           <InputError class="mt-2" :message="form.errors.first_name" />
         </div>
 
@@ -116,6 +139,9 @@ let submit = () => {
             type="text"
             class="mt-1 block w-full"
             v-model="form.last_name"
+            required 
+            pattern="[A-Za-z]{1,32}" 
+            onkeyup="this.value=this.value.replace(/[0-9]/g,'');"
           />
 
           <InputError class="mt-2" :message="form.errors.last_name" />
@@ -129,6 +155,8 @@ let submit = () => {
             type="email"
             class="mt-1 block w-full"
             v-model="form.email"
+            required
+            pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}"
           />
 
           <InputError class="mt-2" :message="form.errors.email" />
@@ -142,6 +170,10 @@ let submit = () => {
             type="text"
             class="mt-1 block w-full"
             v-model="form.phone"
+            minlength="10" 
+            maxlength="10" 
+            onkeyup="this.value=this.value.replace(/[^\d]/,&#39;&#39;)" 
+            pattern="^\(?([0-9]{3})\)?[-.●]?([0-9]{3})[-.●]?([0-9]{4})$"
           />
 
           <InputError class="mt-2" :message="form.errors.phone" />
@@ -179,7 +211,7 @@ let submit = () => {
         </div>
 
         <div class="flex items-center justify-end mt-4">
-          <PrimaryButton type="button" class="ml-4" @click.prevent="step = 1"
+          <PrimaryButton type="button" class="ml-4" @click.prevent="next()"
             >Next</PrimaryButton
           >
         </div>
