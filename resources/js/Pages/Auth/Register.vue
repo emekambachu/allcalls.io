@@ -87,17 +87,10 @@ let check = () => {
 
 }
 
-let next = () => {
-  // alert(form);
-  console.log(form.first_name);
-  // if (trim().form.first_name) {
-  //   console.log('its empty');
-  // } else {
-  //   console.log('it has value')
-  // }
-
-  // console.log(form.errors.phone); 
-}
+// next() { 
+//   this.step = 1
+//   // alert ('its working though')
+// }
 
 let submit = () => {
   form.post(route("register"), {
@@ -112,8 +105,25 @@ let submit = () => {
 
     <Head title="Register" />
 
+    <template v-slot:smallStepOneLoading >
+      <div v-show="step === 0" class="flex flex-col items-center w-full">
+        <div class="w-[80%] max-w-xl bg-gray-200 rounded-full h-1.5 dark:bg-gray-700 mb-1">
+            <div class="bg-blue-600 h-1.5 rounded-full dark:bg-blue-500" style="width: 45%"></div>
+        </div>
+        <div class="text-sm text-gray-500">Create Your Account: Step 1 of 2</div>
+      </div>
+
+      <div v-show="step === 1" class="flex flex-col items-center w-full">
+        <div class="w-[80%] max-w-xl bg-gray-200 rounded-full h-1.5 dark:bg-gray-700 mb-1">
+            <div class="bg-blue-600 h-1.5 rounded-full dark:bg-blue-500" style="width: 95%"></div>
+        </div>
+        <div class="text-sm text-gray-500">Create Your Account: Step 2 of 2</div>
+      </div>
+    </template>
+
     <form @submit.prevent="submit">
       <div v-show="step === 0">
+
         <div>
           <InputLabel for="first_name" value="First Name" />
 
@@ -125,9 +135,8 @@ let submit = () => {
             minlength="2" 
             required 
             pattern="[A-Za-z]{1,32}" 
-            onkeyup="this.value=this.value.replace(/[0-9]/g,'') check();"
+            onkeyup="this.value=this.value.replace(/[0-9]/g,'');"
           />
-          <InputError class="mt-2" :message="text" />
           <InputError class="mt-2" :message="form.errors.first_name" />
         </div>
 
@@ -211,7 +220,7 @@ let submit = () => {
         </div>
 
         <div class="flex items-center justify-end mt-4">
-          <PrimaryButton type="button" class="ml-4" @click.prevent="next()"
+          <PrimaryButton type="button" class="ml-4" @click.prevent="step = 1"
             >Next</PrimaryButton
           >
         </div>

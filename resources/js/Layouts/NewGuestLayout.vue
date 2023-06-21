@@ -5,15 +5,22 @@ import { Link } from '@inertiajs/vue3';
 </script>
 
 <template>
+
     <div class="min-h-screen flex flex-col items-center lg:block">
-        <div class="lg:hidden block py-8">
-            <Link href="/">
+        <div class="lg:hidden block py-4 flex flex-col items-center gap-1">
+            <Link href="/" class="mb-2">
                 <ApplicationLogo class="w-fit" />
-            </Link>
+            </Link>            
+        </div>
+
+        <div class="lg:hidden flex flex-col items-center gap-1 ">
+            <div class="px-10 text-center text-4xl font-black text-sky-900 tracking-tighter font-['Roboto']">Start Receiving Live Calls Now!</div>
+            <div class="text-md text-custom-blue font-semibold text-center px-10 mb-6">No risk, no contracts, and no long-term commitment. Cancel anytime, hassle-free.</div>
+            <slot name="smallStepOneLoading" />
         </div>
 
         <div
-            class="w-[80%] sm:max-w-xl lg:w-full  m-6 px-6 py-4 bg-white drop-shadow-2xl overflow-hidden sm:rounded-lg lg:absolute lg:top-60 lg:right-10 z-10"
+            class="w-[80%] sm:max-w-xl lg:w-full m-3 px-6 py-4 bg-white drop-shadow-2xl overflow-hidden sm:rounded-lg lg:absolute lg:top-60 lg:right-10 z-10"
         >
             <slot />
         </div>

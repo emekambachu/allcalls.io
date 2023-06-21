@@ -75,7 +75,7 @@ const showHamburger = ref(false);
             <span style="color: #3CFA7A;">Flexible, affordable, and tailored to your success.</span></div>
             <div class="main__button">
                 <a href="/register" class="w-max flex flex-col items-center">
-                    <div class="inline-flex items-center px-4 py-3 bg-white border border-transparent rounded-md font-semibold text-md text-custom-green uppercase tracking-widest hover:bg-custom-blue hover:drop-shadow-2xl focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
+                    <div class="inline-flex items-center px-4 py-3 bg-gray-100 border border-transparent rounded-md font-semibold text-md text-custom-green uppercase tracking-widest hover:bg-custom-blue hover:drop-shadow-2xl focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
                       <div class="lg:text-3xl xl:text-4xl bg-clip-text text-md font-extrabold text-transparent bg-gradient-to-r from-blue-400 to-green-500">BUY CALLS NOW</div>
                       <img class="w-10 lg:w-20" src="/img/green-arrow.png" alt="">
                     </div>
@@ -124,10 +124,12 @@ const showHamburger = ref(false);
           <div class="secTwo__why-r">
             <div class="secTwo__title">Why Choose AllCalls.io</div>
             <div class="secTwo__para">Leave prospecting behind and let us do the heavy lifting for you and your business. Experience the Power of On-Demand Calls and start talking with potential clients Today!</div>
-            <PrimaryButton class="my-4">
+              <a href="/register">
+                <PrimaryButton class="my-4">
                   <div class="text-custom-orange">See it in action</div>
                   <img class="w-10" src="/img/orange-arrow.png" alt="">
                 </PrimaryButton>
+              </a>
           </div>
         </div>
       </div>
@@ -181,7 +183,7 @@ const showHamburger = ref(false);
               <div class="secFour__subtitle">Boost Efficiency</div>
               <div class="secFour__title">Seamless Integration</div>
               <div class="secFour__para">AllCalls.io fits smoothly into your existing workflow. Our web and mobile apps ensure you can manage your calls from anywhere, on any device. Plus, with our intuitive interface and straightforward setup, you'll be up and running in no time.</div>
-              <a href="#">
+              <a href="/register">
                 <PrimaryButton class="my-4">
                   <div class="text-custom-orange">Buy Live Transfers Today</div>
                   <img class="w-10" src="/img/orange-arrow.png" alt="">
@@ -200,9 +202,9 @@ const showHamburger = ref(false);
               <div class="secFour__subtitle">Increase Revenue</div>
               <div class="secFour__title">More Calls = More Sales</div>
               <div class="secFour__para">At AllCalls.io, we believe quality calls shouldn't break the bank. And if we can put you in front of more potential clients for your money, we know we can help increase your sales.  We offer competitive pricing to fit your companies needs and budget.  Whether you're a small startup or a large enterprise, we have a solution for you!</div>
-              <a href="#">
+              <a href="/register">
                 <PrimaryButton class="my-4">
-                  <div class="text-custom-orange">Learn more</div>
+                  <div class="text-custom-orange">Learn How to Get Started</div>
                   <img class="w-10" src="/img/orange-arrow.png" alt="">
                 </PrimaryButton>
               </a>
@@ -228,9 +230,9 @@ const showHamburger = ref(false);
               </ul>
             </div>
             <div class="secFive__img flex flex-col items-center">
-              <img class="mb-5 drop-shadow-2xl" src="/img/artboard-123.png" alt="">
+              <img class="mb-5 drop-shadow-2xl xl:mr-10" src="/img/streamlined.png" alt="">
               <a href="/register">
-                <PrimaryButton class="bg-custom-white">
+                <PrimaryButton class="bg-gray-100">
                   <div class="font-semibold 2xl:text-4xl text-center">Get Started Now</div>
                   <img src="/img/green-arrow.png" class="w-10 2xl:w-20" alt="">
                 </PrimaryButton>

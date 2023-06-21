@@ -669,6 +669,10 @@ html, body {
     .secFive__title {
         text-align: center;
     }
+
+    .secFive__img {
+        margin-top: 10px;
+    }
 }
 
 
