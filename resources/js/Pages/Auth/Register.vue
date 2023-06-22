@@ -121,6 +121,22 @@ let submit = () => {
       </div>
     </template>
 
+    <template v-slot:largeStepOneLoading >
+      <div v-show="step === 0" class="flex flex-col items-center w-full">
+        <div class="w-full bg-gray-300 rounded-full h-1.5  mb-1">
+            <div class="bg-blue-600 h-1.5 rounded-full dark:bg-blue-500" style="width: 45%"></div>
+        </div>
+        <div class="text-sm text-gray-300">Create Your Account: Step 1 of 2</div>
+      </div>
+
+      <div v-show="step === 1" class="flex flex-col items-center w-full">
+        <div class="w-full bg-gray-300 rounded-full h-1.5  mb-1">
+            <div class="bg-blue-600 h-1.5 rounded-full dark:bg-blue-500" style="width: 95%"></div>
+        </div>
+        <div class="text-sm text-gray-300">Create Your Account: Step 2 of 2</div>
+      </div>
+    </template>
+
     <form @submit.prevent="submit">
       <div v-show="step === 0">
 

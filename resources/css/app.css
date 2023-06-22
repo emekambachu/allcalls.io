@@ -122,14 +122,15 @@ html, body {
 .secTwo__verticals {
     display: flex;
     align-items: center;
+    gap: 10px;
     width: 100%;
     margin-top: 77px;
     justify-content: space-between;
 }
 
 .secTwo__verticals-i img {
-    max-height: 200px;
-    max-width: 160px;
+    max-width: 200px;
+    height: 80px;
 }
 
 .secTwo__why {
@@ -474,7 +475,8 @@ html, body {
     }
 
     .secTwo__verticals-i img {
-        max-width: 90px;
+        max-width: 70px;
+        height: 60px;
     }
 
     .secFive {
@@ -606,19 +608,25 @@ html, body {
         font-size: 21.99px;
     }
 
+    .secTwo__title {
+        text-align: center;
+    }
+
     .secTwo__why {
         display: block;
     }
 
     .secTwo__verticals {
         display: grid;
+        gap: 6px;
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .secTwo__verticals:last-child {
+    /* secTwo__verticals:last-child */
+    .last-i {
         justify-self: center;
         grid-column: 1 / span 2;
-      }
+    }
 
     .secTwo__verticals-i img {
         margin: auto;
@@ -676,10 +684,17 @@ html, body {
 }
 
 
-@media (max-width: 333px) {
+@media (max-width: 363px) {
     
     /* .container {
         padding: 0 14px !important;
     } */
 
+    .secThree__subtitle {
+        font-size: 26px;
+    }
+
+    .secThree__title {
+        font-size: 36px;
+    }
 }

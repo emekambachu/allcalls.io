@@ -96,24 +96,29 @@ const showHamburger = ref(false);
       <div class="secTwo">
         <div class="secTwo__title">We help businesses get connected with clients</div>
         <div class="secTwo__verticals">
-          <div class="secTwo__verticals-i">
+          <div class="secTwo__verticals-i flex flex-col items-center gap-2">
             <img src="/img/auto.png" alt="">
+            <div class="text-sm font-bold text-gray-600 text-center">Auto Insurance</div>
           </div>
 
-          <div class="secTwo__verticals-i">
+          <div class="secTwo__verticals-i flex flex-col items-center gap-2">
             <img src="/img/debt-relief.png" alt="">
+            <div class="text-sm font-bold text-gray-600 text-center">Life Insurance</div>
           </div>
 
-          <div class="secTwo__verticals-i">
+          <div class="secTwo__verticals-i flex flex-col items-center gap-2">
             <img src="/img/health.png" alt="">
+            <div class="text-sm font-bold text-gray-600 text-center">Medicare</div>
           </div>
 
-          <div class="secTwo__verticals-i">
+          <div class="secTwo__verticals-i flex flex-col items-center gap-2">
             <img src="/img/life.png" alt="">
+            <div class="text-sm font-bold text-gray-600 text-center">ACA Health</div>
           </div>
 
-          <div class="secTwo__verticals-i">
+          <div class="secTwo__verticals-i last-i flex flex-col items-center gap-2">
             <img src="/img/medicare.png" alt="">
+            <div class="text-sm font-bold text-gray-600 text-center">U65 Health</div>
           </div>
         </div>
 

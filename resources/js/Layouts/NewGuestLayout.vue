@@ -14,19 +14,30 @@ import { Link } from '@inertiajs/vue3';
         </div>
 
         <div class="lg:hidden flex flex-col items-center gap-1 ">
-            <div class="px-10 text-center text-4xl font-black text-sky-900 tracking-tighter font-['Roboto']">Start Receiving Live Calls Now!</div>
+            <div class="px-10 text-center text-4xl font-black text-sky-900 tracking-tighter font-extrabold">Start Receiving Live Calls Now!</div>
             <div class="text-md text-custom-blue font-semibold text-center px-10 mb-6">No risk, no contracts, and no long-term commitment. Cancel anytime, hassle-free.</div>
             <slot name="smallStepOneLoading" />
         </div>
+        
 
         <div
-            class="w-[80%] sm:max-w-xl lg:w-full m-3 px-6 py-4 bg-white drop-shadow-2xl overflow-hidden sm:rounded-lg lg:absolute lg:top-60 lg:right-10 z-10"
+            class="w-[80%] sm:max-w-xl lg:w-full lg:absolute lg:top-60 lg:right-10 z-10"
         >
-            <slot />
+
+            <div class="hidden lg:block flex flex-col items-center gap-1 ">
+                <div class="px-10 text-center text-4xl xl:text-5xl text-custom-white font-extrabold tracking-tighter">Start Receiving Live Calls Now!</div>
+                <div class="text-md text-blue-400 font-semibold text-center px-10 mb-6">No risk, no contracts, and no long-term commitment. Cancel anytime, hassle-free.</div>
+                <slot name="largeStepOneLoading" />
+            </div>
+        
+            <div class="bg-white m-3 px-6 py-4 bg-white drop-shadow-2xl overflow-hidden sm:rounded-lg">
+                <slot />
+            </div>
+        
         </div>
         
         <div class="bg-custom-blue w-full px-6 py-6 md:px-20 md:pb-20 mt-6 md:mt-0 relative">
-            <div class="hidden lg:block py-20">
+            <div class="hidden lg:block pt-4 pb-14 xl:py-20">
                 <Link href="/">
                     <ApplicationLogo class="w-fit" />
                 </Link>
