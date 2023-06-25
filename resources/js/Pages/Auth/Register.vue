@@ -133,7 +133,7 @@ let submit = () => {
     });
   }
   form.post(route("register"), {
-    onFinish: () => form.reset("password", "password_confirmation"),
+    // onFinish: () => form.reset("password", "password_confirmation"),
   });
 };
 </script>
@@ -307,7 +307,7 @@ let submit = () => {
               :value="callType.id"
             />
             <label
-              class="ml-2 text-md font-medium text-gray-900 dark:text-gray-300"
+              class="ml-2 text-md font-medium text-custom-white"
               :for="`insurance_type_${callType.id}`"
               v-text="callType.type"
             ></label>
@@ -317,7 +317,7 @@ let submit = () => {
               class="py-2 dark:text-white"
             >
               <label
-                class="ml-2 text-xs font-medium text-gray-900 dark:text-gray-300"
+                class="ml-2 text-xs font-medium text-custom-white"
                 >States you're licensed in:</label
               >
               <Multiselect
