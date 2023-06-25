@@ -29,8 +29,8 @@ const showingNavigationDropdown = ref(false);
 
 <template>
     <div>
-        <div class="min-h-screen bg-custom-blue">
-            <nav class="bg-custom-blue border-b border-gray-100 dark:border-gray-700">
+        <div class="min-h-screen bg-custom-indigo">
+            <nav class="bg-custom-indigo border-b border-gray-100 dark:border-gray-700">
                 <!-- Primary Navigation Menu -->
                 <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
@@ -45,7 +45,7 @@ const showingNavigationDropdown = ref(false);
 
                         </div>
 
-                        <div class="hidden sm:flex sm:items-center sm:ml-6">
+                        <div class="hidden sm:flex sm:self-start sm:pt-6 sm:ml-6">
                             <div class="flex flex-col justify-center items-center ">
                                 <div class="text-xs leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400">Balance</div>
                                 <div class="text-xl font-bold text-gray-300 dark:text-gray-200">${{ $page.props.auth.user.balance }}</div>
@@ -57,12 +57,12 @@ const showingNavigationDropdown = ref(false);
                                         <span class="inline-flex rounded-md">
                                             <button
                                                 type="button"
-                                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150"
+                                                class="inline-flex items-center px-3 py-2 border text-lg leading-4 font-bold rounded-md bg-clip-text text-transparent bg-gradient-to-r from-green-500 to-custom-sky hover:text-custom-green focus:outline-none transition ease-in-out duration-150"
                                             >
                                                 {{ $page.props.auth.user.first_name + ' ' + $page.props.auth.user.last_name }}
 
                                                 <svg
-                                                    class="ml-2 -mr-0.5 h-4 w-4"
+                                                    class="ml-2 -mr-0.5 h-4 w-4 text-white"
                                                     xmlns="http://www.w3.org/2000/svg"
                                                     viewBox="0 0 20 20"
                                                     fill="currentColor"
@@ -118,7 +118,7 @@ const showingNavigationDropdown = ref(false);
                         </div>
                     </div>
 
-                    <p class="mt-10 text-lg text-white font-bold ">Manage your team and preferences here.</p>
+                    <p class="mt-10 mb-2 text-lg text-white font-bold ">Manage your team and preferences here.</p>
                 </div>
 
                 <!-- Responsive Navigation Menu -->

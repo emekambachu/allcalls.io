@@ -52,7 +52,7 @@ let addFunds = () => {
   <AuthenticatedLayout>
     <template #header>
       <h2
-        class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
+        class="font-semibold text-xl text-gray-300 leading-tight"
       >
         Billing
       </h2>

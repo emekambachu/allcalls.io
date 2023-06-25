@@ -79,7 +79,7 @@ let removeCard = (id) => {
           <section class="bg-white dark:bg-gray-900">
             <div class="py-8 px-4 mx-auto max-w-2xl lg:py-16">
 
-              <h2 id="headline" class="mb-4 text-xl font-bold text-gray-900 dark:text-white">
+              <h2 id="headline" class="mb-4 text-xl font-bold text-gray-300">
                 Add a credit card
               </h2>
               <form @submit.prevent="addNewCard()">
@@ -87,14 +87,14 @@ let removeCard = (id) => {
                   <div class="sm:col-span-2">
                     <label
                       for="number"
-                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      class="block mb-2 text-sm font-medium text-gray-300 dark:text-white"
                       >Card number</label
                     >
                     <input
                       type="text"
                       name="number"
                       id="number"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                      class="bg-gray-50 border border-gray-300 text-gray-300 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       placeholder="XXXXXXXXXXXXXXXX"
                       required
                       v-model="cardForm.number"
@@ -105,14 +105,14 @@ let removeCard = (id) => {
                   <div class="w-full">
                     <label
                       for="month"
-                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      class="block mb-2 text-sm font-medium text-gray-300 dark:text-white"
                       >Expiration month</label
                     >
                     <input
                       type="number"
                       name="month"
                       id="month"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                      class="bg-gray-50 border border-gray-300 text-gray-300 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       placeholder="MM"
                       required
                       min="1"
@@ -123,14 +123,14 @@ let removeCard = (id) => {
                   <div class="w-full">
                     <label
                       for="year"
-                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      class="block mb-2 text-sm font-medium text-gray-300 dark:text-white"
                       >Expiration year</label
                     >
                     <input
                       type="number"
                       name="year"
                       id="year"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                      class="bg-gray-50 border border-gray-300 text-gray-300 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       placeholder="YYYY"
                       required
                       min="2023"
@@ -141,14 +141,14 @@ let removeCard = (id) => {
                   <div class="w-full">
                     <label
                       for="cvv"
-                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      class="block mb-2 text-sm font-medium text-gray-300 dark:text-white"
                       >CVV</label
                     >
                     <input
                       type="password"
                       name="cvv"
                       id="cvv"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                      class="bg-gray-50 border border-gray-300 text-gray-300 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       placeholder="XXX"
                       required
                       pattern="[0-9]{3}"
@@ -161,14 +161,14 @@ let removeCard = (id) => {
                   <div class="w-full">
                     <label
                       for="street"
-                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      class="block mb-2 text-sm font-medium text-gray-300 dark:text-white"
                       >Street address</label
                     >
                     <input
                       type="text"
                       name="street"
                       id="street"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                      class="bg-gray-50 border border-gray-300 text-gray-300 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       placeholder="123 Main St"
                       required
                       v-model="cardForm.address"
@@ -177,14 +177,14 @@ let removeCard = (id) => {
                   <div class="w-full">
                     <label
                       for="city"
-                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      class="block mb-2 text-sm font-medium text-gray-300 dark:text-white"
                       >City</label
                     >
                     <input
                       type="text"
                       name="city"
                       id="city"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                      class="bg-gray-50 border border-gray-300 text-gray-300 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       placeholder="New York"
                       required
                       v-model="cardForm.city"
@@ -193,14 +193,14 @@ let removeCard = (id) => {
                   <div class="w-full">
                     <label
                       for="state"
-                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      class="block mb-2 text-sm font-medium text-gray-300 dark:text-white"
                       >State</label
                     >
                     <input
                       type="text"
                       name="state"
                       id="state"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                      class="bg-gray-50 border border-gray-300 text-gray-300 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       placeholder="NY"
                       required
                       v-model="cardForm.state"
@@ -209,14 +209,14 @@ let removeCard = (id) => {
                   <div class="w-full">
                     <label
                       for="zip"
-                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      class="block mb-2 text-sm font-medium text-gray-300 dark:text-white"
                       >ZIP code</label
                     >
                     <input
                       type="text"
                       name="zip"
                       id="zip"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                      class="bg-gray-50 border border-gray-300 text-gray-300 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       placeholder="10001"
                       required
                       v-model="cardForm.zip"
@@ -239,7 +239,7 @@ let removeCard = (id) => {
         <div>
           <div class="px-4 mx-auto max-w-2xl">
             <div class="flex items-center justify-between">
-              <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">
+              <h2 class="mb-4 text-xl font-bold text-gray-300 dark:text-white">
                 Your Cards
               </h2>
             </div>
@@ -252,18 +252,18 @@ let removeCard = (id) => {
                   <div class="flex items-center space-x-4">
                     <div class="flex-1 min-w-0">
                       <p
-                        class="text-sm font-medium text-gray-900 truncate dark:text-white"
+                        class="text-sm font-medium text-gray-300 truncate dark:text-white"
                       >
                         Visa ending in {{ card.last4 }}
                       </p>
                       <p
-                        class="text-sm text-gray-500 truncate dark:text-gray-400"
+                        class="text-sm text-gray-300 truncate"
                       >
                         Expiry date: {{ card.expiryDate }}
                       </p>
                     </div>
                     <div
-                      class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white"
+                      class="inline-flex items-center text-base font-semibold text-gray-300 dark:text-white"
                     >
                       <button
                         type="button"
@@ -279,7 +279,7 @@ let removeCard = (id) => {
 
               <div v-if="! cards.length">
 
-                <p class="dark:text-gray-400">You haven't added any cards yet.</p>
+                <p class="text-gray-300">You haven't added any cards yet.</p>
 
               </div>
             </div>

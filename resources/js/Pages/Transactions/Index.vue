@@ -31,7 +31,7 @@ let deleteTransaction = (transactionId) => {
   <AuthenticatedLayout>
     <template #header>
       <h2
-        class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
+        class="font-semibold text-xl text-gray-300 leading-tight"
       >
         Transactions
       </h2>
@@ -43,10 +43,10 @@ let deleteTransaction = (transactionId) => {
           <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
             <div class="relative overflow-x-auto" v-if="transactions.length">
               <table
-                class="w-full text-sm text-left text-gray-500 dark:text-gray-400"
+                class="w-full text-sm text-left text-gray-300"
               >
                 <thead
-                  class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+                  class="text-xs text-gray-200 uppercase bg-gray-50"
                 >
                   <tr>
                     <th scope="col" class="px-6 py-3">ID</th>
@@ -63,7 +63,7 @@ let deleteTransaction = (transactionId) => {
                   >
                     <th
                       scope="row"
-                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      class="px-6 py-4 font-medium text-gray-300 whitespace-nowrap"
                       v-text="transaction.id"
                     ></th>
                     <td class="px-6 py-4">
@@ -88,7 +88,7 @@ let deleteTransaction = (transactionId) => {
               </table>
             </div>
 
-            <div class="text-center text-gray-900 dark:text-gray-400" v-else>
+            <div class="text-center text-gray-300" v-else>
               You haven't made any transactions yet.
             </div>
           </div>
