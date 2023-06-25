@@ -1,7 +1,7 @@
 <script setup>
 import GuestLayout from "@/Layouts/GuestLayout.vue";
 import InputError from "@/Components/InputError.vue";
-import InputLabel from "@/Components/InputLabel.vue";
+import GuestInputLabel from "@/Components/GuestInputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import GuestTextInput from "@/Components/GuestTextInput.vue";
 import SelectInput from "@/Components/SelectInput.vue";
@@ -185,7 +185,7 @@ let submit = () => {
       <div v-show="step === 0">
 
         <div>
-          <InputLabel for="first_name" value="First Name" />
+          <GuestInputLabel for="first_name" value="First Name" />
 
           <GuestTextInput
             id="first_name"
@@ -202,7 +202,7 @@ let submit = () => {
         </div>
 
         <div class="mt-4">
-          <InputLabel for="last_name" value="Last Name" />
+          <GuestInputLabel for="last_name" value="Last Name" />
 
           <GuestTextInput
             id="last_name"
@@ -219,7 +219,7 @@ let submit = () => {
         </div>
 
         <div class="mt-4">
-          <InputLabel for="email" value="Email" />
+          <GuestInputLabel for="email" value="Email" />
 
           <GuestTextInput
             id="email"
@@ -235,7 +235,7 @@ let submit = () => {
         </div>
 
         <div class="mt-4">
-          <InputLabel for="phone" value="Phone" />
+          <GuestInputLabel for="phone" value="Phone" />
 
           <GuestTextInput
             id="phone"
@@ -252,7 +252,7 @@ let submit = () => {
         </div>
 
         <div class="mt-4">
-          <InputLabel for="password" value="Password" />
+          <GuestInputLabel for="password" value="Password" />
 
           <GuestTextInput
             id="password"
@@ -267,7 +267,7 @@ let submit = () => {
         </div>
 
         <div class="mt-4">
-          <InputLabel for="password_confirmation" value="Confirm Password" />
+          <GuestInputLabel for="password_confirmation" value="Confirm Password" />
 
           <GuestTextInput
             id="password_confirmation"
@@ -292,7 +292,7 @@ let submit = () => {
 
       <div v-show="step === 1">
         <div class="mt-4">
-          <InputLabel
+          <GuestInputLabel
             class="mb-3"
             for="insurance_type"
             value="What types of calls do you want to receive?"
