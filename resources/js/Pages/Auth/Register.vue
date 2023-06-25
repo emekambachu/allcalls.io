@@ -103,7 +103,8 @@ let submit = () => {
     return axios.post('/register-step-one', form)
     .then(response => {
         // This block handles the success case.
-        console.log('Validation passed', response.data);
+        // console.log('Validation passed', response.data);
+        step.value = 1;
     })
     .catch(error => {
         // This block handles the error case.
