@@ -48,7 +48,7 @@ const showingNavigationDropdown = ref(false);
                         <div class="hidden sm:flex sm:self-start sm:pt-6 sm:ml-6">
                             <div class="flex flex-col justify-center items-center ">
                                 <div class="text-xs leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400">Balance</div>
-                                <div class="text-xl font-bold text-gray-300 dark:text-gray-200">${{ $page.props.auth.user.balance }}</div>
+                                <div class="text-xl font-bold text-custom-sky">${{ $page.props.auth.user.balance }}</div>
                             </div>
                             <!-- Settings Dropdown -->
                             <div class="ml-3 relative">
@@ -57,7 +57,7 @@ const showingNavigationDropdown = ref(false);
                                         <span class="inline-flex rounded-md">
                                             <button
                                                 type="button"
-                                                class="inline-flex items-center px-3 py-2 border text-lg leading-4 font-bold rounded-md bg-clip-text text-transparent bg-gradient-to-r from-green-500 to-custom-sky hover:text-custom-green focus:outline-none transition ease-in-out duration-150"
+                                                class="inline-flex items-center px-3 py-2 border-[0.25px] border-gray-400 text-lg leading-4 font-bold rounded-md bg-clip-text text-transparent bg-gradient-to-r from-green-500 to-custom-sky hover:text-custom-green focus:outline-none transition ease-in-out duration-150"
                                             >
                                                 {{ $page.props.auth.user.first_name + ' ' + $page.props.auth.user.last_name }}
 
