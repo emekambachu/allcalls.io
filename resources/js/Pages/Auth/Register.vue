@@ -11,8 +11,10 @@ import { Head, Link, useForm } from "@inertiajs/vue3";
 import Multiselect from "@vueform/multiselect";
 import { ref, reactive, computed } from "vue";
 // import { useVeeValidate } from '@vee-validate/vue3';
+import axios from 'axios';
 
 let step = ref(0);
+let firstStepErrors = ref({});
 
 let insuranceTypes = ref([
   "Auto Insurance",
@@ -93,6 +95,42 @@ let check = () => {
 // }
 
 let submit = () => {
+  if (step.value === 0) {
+    // return form.post('/register-step-one', {
+    //   onFinish: () => step.value = 1,
+    // })
+
+    return axios.post('/register-step-one', form)
+    .then(response => {
+        // This block handles the success case.
+        console.log('Validation passed', response.data);
+    })
+    .catch(error => {
+        // This block handles the error case.
+        // Error details are in error.response.data.
+
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            console.log(error.response.data);
+
+            if (error.response.status === 400) {
+                // Handle validation errors here.
+                console.log('Validation errors', error.response.data.errors);
+                firstStepErrors.value = error.response.data.errors;
+            } else {
+                // Handle other types of errors.
+                console.log('Other errors', error.response.data);
+            }
+        } else if (error.request) {
+            // The request was made but no response was received
+            console.log('No response received', error.request);
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log('Error', error.message);
+        }
+    });
+  }
   form.post(route("register"), {
     onFinish: () => form.reset("password", "password_confirmation"),
   });
@@ -153,7 +191,8 @@ let submit = () => {
             pattern="[A-Za-z]{1,32}" 
             onkeyup="this.value=this.value.replace(/[0-9]/g,'');"
           />
-          <InputError class="mt-2" :message="form.errors.first_name" />
+          <!-- <InputError class="mt-2" :message="form.errors.first_name" /> -->
+          <div v-if="firstStepErrors.first_name" class="text-red-500" v-text="firstStepErrors.first_name[0]"></div>
         </div>
 
         <div class="mt-4">
@@ -169,7 +208,8 @@ let submit = () => {
             onkeyup="this.value=this.value.replace(/[0-9]/g,'');"
           />
 
-          <InputError class="mt-2" :message="form.errors.last_name" />
+          <!-- <InputError class="mt-2" :message="form.errors.last_name" /> -->
+          <div v-if="firstStepErrors.last_name" class="text-red-500" v-text="firstStepErrors.last_name[0]"></div>
         </div>
 
         <div class="mt-4">
@@ -184,7 +224,8 @@ let submit = () => {
             pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}"
           />
 
-          <InputError class="mt-2" :message="form.errors.email" />
+          <!-- <InputError class="mt-2" :message="form.errors.email" /> -->
+          <div v-if="firstStepErrors.email" class="text-red-500" v-text="firstStepErrors.email[0]"></div>
         </div>
 
         <div class="mt-4">
@@ -198,10 +239,10 @@ let submit = () => {
             minlength="10" 
             maxlength="10" 
             onkeyup="this.value=this.value.replace(/[^\d]/,&#39;&#39;)" 
-            pattern="^\(?([0-9]{3})\)?[-.●]?([0-9]{3})[-.●]?([0-9]{4})$"
           />
 
-          <InputError class="mt-2" :message="form.errors.phone" />
+          <!-- <InputError class="mt-2" :message="form.errors.phone" /> -->
+          <div v-if="firstStepErrors.phone" class="text-red-500" v-text="firstStepErrors.phone[0]"></div>
         </div>
 
         <div class="mt-4">
@@ -215,7 +256,8 @@ let submit = () => {
             autocomplete="new-password"
           />
 
-          <InputError class="mt-2" :message="form.errors.password" />
+          <!-- <InputError class="mt-2" :message="form.errors.password" /> -->
+          <div v-if="firstStepErrors.password" class="text-red-500" v-text="firstStepErrors.password[0]"></div>
         </div>
 
         <div class="mt-4">
@@ -236,7 +278,7 @@ let submit = () => {
         </div>
 
         <div class="flex items-center justify-end mt-4">
-          <PrimaryButton type="button" class="ml-4" @click.prevent="step = 1"
+          <PrimaryButton type="button" class="ml-4" @click.prevent="submit"
             >Next</PrimaryButton
           >
         </div>
