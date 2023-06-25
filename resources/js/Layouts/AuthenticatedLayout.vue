@@ -176,25 +176,31 @@ const showingNavigationDropdown = ref(false);
             <!-- Navigation Links -->
             <div class="grid grid-cols-5 max-w-screen-2xl mx-auto">
                 <div class="py-12 hidden sm:-my-px sm:ml-10 col-span-1 sm:flex sm:flex-col">
-                    <NavLink class="mb-10" :href="route('dashboard')" :active="route().current('dashboard')">
+                    <NavLink class="mb-10 gap-2" :href="route('dashboard')" :active="route().current('dashboard')">
+                        <img src="/img/dashboard.png" alt="">
                         Dashboard
                     </NavLink>
-                    <NavLink class="mb-10" href="#" :active="route().current('reporting')">
+                    <!-- <NavLink class="mb-10" href="#" :active="route().current('reporting')">
                         Reporting
-                    </NavLink>
-                    <NavLink class="mb-10" id="billing-nav-link" :href="route('billing.funds.index')" :active="route().current('billing.funds.index') || route().current('billing.cards.index')">
+                    </NavLink> -->
+                    <NavLink class="mb-10 gap-2" id="billing-nav-link" :href="route('billing.funds.index')" :active="route().current('billing.funds.index') || route().current('billing.cards.index')">
+                        <img src="/img/billing.png" alt="">
                         Billing
                     </NavLink>
-                    <NavLink class="mb-10" href="#" :active="route().current('clients')">
+                    <NavLink class="mb-10 gap-2" href="#" :active="route().current('clients')">
+                        <img src="/img/clients.png" alt="">
                         Clients
                     </NavLink>
-                    <NavLink class="mb-10" :href="route('transactions.index')" :active="route().current('transactions.index')">
+                    <NavLink class="mb-10 gap-2" :href="route('transactions.index')" :active="route().current('transactions.index')">
+                        <img src="/img/transactions.png" alt="">
                         Transactions
                     </NavLink>
-                    <NavLink class="mb-10" :href="route('activities.index')" :active="route().current('activities.index')">
+                    <NavLink class="mb-10 gap-2" :href="route('activities.index')" :active="route().current('activities.index')">
+                        <img src="/img/activity.png" alt="">
                         Activity
                     </NavLink>
-                    <NavLink class="mb-10" :href="route('profile.edit')" :active="route().current('profile.edit')">
+                    <NavLink class="mb-10 gap-2" :href="route('profile.edit')" :active="route().current('profile.edit')">
+                        <img src="/img/profile.png" alt="">
                         Profile
                     </NavLink>
                 </div>

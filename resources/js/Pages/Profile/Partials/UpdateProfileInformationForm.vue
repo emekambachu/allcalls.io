@@ -2,6 +2,7 @@
 import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import AuthenticatedButton from "@/Components/AuthenticatedButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import SelectInput from "@/Components/SelectInput.vue";
 import { Link, useForm, usePage } from "@inertiajs/vue3";
@@ -199,7 +200,7 @@ let optionsForStates = (callType) => {
       </div>
 
       <div class="flex items-center gap-4">
-        <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
+        <AuthenticatedButton :disabled="form.processing">Save</AuthenticatedButton>
 
         <Transition
           enter-from-class="opacity-0"

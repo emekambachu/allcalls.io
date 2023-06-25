@@ -25,8 +25,7 @@ import { Link } from '@inertiajs/vue3';
         >
 
             <div class="hidden lg:block flex flex-col items-center gap-1 ">
-                <div class="px-10 text-center text-4xl xl:text-5xl text-custom-white font-extrabold tracking-tighter">Start Receiving Live Calls Now!</div>
-                <div class="text-md text-blue-400 font-semibold text-center px-10 mb-6">No risk, no contracts, and no long-term commitment. Cancel anytime, hassle-free.</div>
+                <slot name="loadingText" />
                 <slot name="largeStepOneLoading" />
             </div>
         

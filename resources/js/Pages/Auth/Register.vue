@@ -3,7 +3,7 @@ import GuestLayout from "@/Layouts/GuestLayout.vue";
 import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import TextInput from "@/Components/TextInput.vue";
+import GuestTextInput from "@/Components/GuestTextInput.vue";
 import SelectInput from "@/Components/SelectInput.vue";
 import NewGuestLayout from "@/Layouts/NewGuestLayout.vue";
 import Footer from "@/Components/Footer.vue";
@@ -105,6 +105,11 @@ let submit = () => {
 
     <Head title="Register" />
 
+    <template v-slot:loadingText>
+      <div class="px-10 text-center text-4xl xl:text-5xl text-custom-white font-extrabold tracking-tighter">Start Receiving Live Calls Now!</div>
+      <div class="text-md text-blue-400 font-semibold text-center px-10 mb-6">No risk, no contracts, and no long-term commitment. Cancel anytime, hassle-free.</div>
+    </template>
+
     <template v-slot:smallStepOneLoading >
       <div v-show="step === 0" class="flex flex-col items-center w-full">
         <div class="w-[80%] max-w-xl bg-gray-200 rounded-full h-1.5 dark:bg-gray-700 mb-1">
@@ -143,7 +148,7 @@ let submit = () => {
         <div>
           <InputLabel for="first_name" value="First Name" />
 
-          <TextInput
+          <GuestTextInput
             id="first_name"
             type="text"
             class="mt-1 block w-full"
@@ -159,7 +164,7 @@ let submit = () => {
         <div class="mt-4">
           <InputLabel for="last_name" value="Last Name" />
 
-          <TextInput
+          <GuestTextInput
             id="last_name"
             type="text"
             class="mt-1 block w-full"
@@ -175,7 +180,7 @@ let submit = () => {
         <div class="mt-4">
           <InputLabel for="email" value="Email" />
 
-          <TextInput
+          <GuestTextInput
             id="email"
             type="email"
             class="mt-1 block w-full"
@@ -190,7 +195,7 @@ let submit = () => {
         <div class="mt-4">
           <InputLabel for="phone" value="Phone" />
 
-          <TextInput
+          <GuestTextInput
             id="phone"
             type="text"
             class="mt-1 block w-full"
@@ -207,7 +212,7 @@ let submit = () => {
         <div class="mt-4">
           <InputLabel for="password" value="Password" />
 
-          <TextInput
+          <GuestTextInput
             id="password"
             type="password"
             class="mt-1 block w-full"
@@ -221,7 +226,7 @@ let submit = () => {
         <div class="mt-4">
           <InputLabel for="password_confirmation" value="Confirm Password" />
 
-          <TextInput
+          <GuestTextInput
             id="password_confirmation"
             type="password"
             class="mt-1 block w-full"
