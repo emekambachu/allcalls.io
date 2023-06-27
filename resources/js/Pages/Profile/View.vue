@@ -25,12 +25,8 @@ defineProps({
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-                <div class="p-4 sm:p-8 bg-blue-900 shadow sm:rounded-lg">
-                    <UpdateProfileInformationForm
-                        :must-verify-email="mustVerifyEmail"
-                        :status="status"
-                        class="max-w-xl"
-                    />
+                <div class="p-4 sm:p-8 shadow-2xl sm:rounded-lg">
+                    <div class="text-3xl"></div>
                 </div>
 
                 <!-- <div class="p-4 sm:p-8 bg-blue-900 shadow sm:rounded-lg">
