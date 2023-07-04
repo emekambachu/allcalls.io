@@ -41,6 +41,7 @@ Route::delete('/transactions/{transaction}', [TransactionsController::class, 'de
 Route::middleware('auth')->group(function () {
     Route::get('/profile/view', [ProfileController::class, 'view'])->name('profile.view');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    // Route::post('/profile/upload', [ProfileController::class, 'uploadProfilePicture'])->name('profile.uploadProfilePicture');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });

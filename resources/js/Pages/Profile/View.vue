@@ -4,7 +4,7 @@ import AuthenticatedButton from '@/Components/AuthenticatedButton.vue';
 import DeleteUserForm from './Partials/DeleteUserForm.vue';
 import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 import { ref, toRef } from 'vue';
 
 defineProps({
@@ -25,6 +25,11 @@ let formatDate = date => {
 
     return formattedDate;
 }
+
+let getFirstLetter = str => {
+  return str.charAt(0);
+}
+
 </script>
 
 <template>
@@ -42,7 +47,9 @@ let formatDate = date => {
                     <hr class="mb-8">
 
                     <div class="flex flex-col items-start sm:flex-row sm:items-center sm:space-x-8 mb-4 lg:mb-10 relative">
-                        <img class="w-30 h-30 mb-6 rounded-full" src="/img/profile-picture.jpg" alt="">
+                        <div class="relative inline-flex items-center justify-center w-28 h-28 overflow-hidden rounded-full bg-gray-600">
+                            <span class="text-5xl font-medium text-center text-gray-300">{{ getFirstLetter(user.first_name) }}{{ getFirstLetter(user.last_name) }}</span>
+                        </div>
                         <div class="font-medium text-white">
                             <div class="text-4xl text-custom-white">{{ user.first_name }} {{ user.last_name }}</div>
                             <div class="text-lg text-gray-400">Joined on {{ formatDate(user.created_at)
@@ -54,9 +61,15 @@ let formatDate = date => {
                         </div>
                         <Link href="/profile/edit" class="border border-gray-400 ease-in cursor-pointer bg-white bg-opacity-5 hover:shadow-2xl hover:bg-white hover:text-custom-blue hover:bg-opacity-80 
                                     rounded px-3 py-3 font-bold text-md text-custom-white absolute right-0">Edit
-                            Profile</Link>
-                        </div>
-                        <hr class="sm:hidden mb-10">
+                        Profile</Link>
+                    </div>
+
+                    <!-- <div>
+                        <input class="text-white" type="file" ref="fileInput" accept="image/*" />
+                        <button class="py-3 px-4 rounded bg-sky-950 text-white text-sm font-bold" @click.prevent="uploadProfilePicture" type="submit">Upload Profile Picture</button>
+                    </div> -->
+
+                    <hr class="sm:hidden mb-10">
 
                     <div class="text-4xl text-custom-sky font-bold mb-6">Personal Information</div>
                     <hr class="mb-4">
