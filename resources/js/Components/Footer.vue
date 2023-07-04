@@ -1,9 +1,15 @@
+<script setup>
+import ApplicationLogo from "@/Components/ApplicationLogo.vue";
+
+</script>
+
 <template>
     <footer class="wrap">
       <div class="container">
         <div class="footer__wrap">
           <div class="footer__logo">
-            <img src="/img/logo.png" alt="">
+            <!-- <img src="/img/logo.png" alt=""> -->
+            <ApplicationLogo class="text-center" />
           </div>
   
           <div class="footer__list">

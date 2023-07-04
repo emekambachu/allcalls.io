@@ -2,6 +2,7 @@
 import { Head, Link } from "@inertiajs/vue3";
 import { ref } from 'vue';
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import Footer from "@/Components/Footer.vue";
 
 defineProps({
@@ -39,7 +40,8 @@ const showHamburger = ref(false);
 
         <header class="header">
           <div class="header__logo">
-            <img src="/img/logo.png" alt="">
+            <!-- <img src="/img/logo.png" alt=""> -->
+            <ApplicationLogo />
           </div>
 
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 sm:w-10 sm:h-10 text-white xl:hidden cursor-pointer transition hover:text-custom-green hamburger" @click="showHamburger = !showHamburger">
