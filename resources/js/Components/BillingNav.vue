@@ -4,14 +4,14 @@ import { Link } from "@inertiajs/vue3";
 
 <template>
   <ul
-    class="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400"
+    class="flex flex-wrap px-4 -mb-px text-sm sm:text-lg font-bold text-center text-gray-300"
   >
     <li class="mr-2">
       <Link
         href="/billing/funds"
-        class="inline-flex items-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 group"
+        class="inline-flex items-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-custom-green hover:border-gray-300 group"
         :class="{
-          'inline-flex p-4 items-center text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500 group': route().current('billing.funds.index'),
+          'inline-flex p-4 items-center text-custom-sky border-b-2 border-blue-500 rounded-t-lg active group': route().current('billing.funds.index'),
         }"
       >
         <svg
@@ -35,9 +35,9 @@ import { Link } from "@inertiajs/vue3";
     <li class="mr-2">
       <Link
         href="/billing/cards"
-        class="inline-flex items-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 group"
+        class="inline-flex items-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-custom-green hover:border-gray-300  group"
         :class="{
-          'inline-flex p-4 items-center text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500 group': route().current('billing.cards.index'),
+          'inline-flex p-4 items-center text-custom-sky border-b-2 border-blue-500 rounded-t-lg active group': route().current('billing.cards.index'),
         }"
         aria-current="page"
       >
@@ -62,9 +62,9 @@ import { Link } from "@inertiajs/vue3";
     <li class="mr-2">
       <Link
         aria-current="page"
-        class="inline-flex items-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 group"
+        class="inline-flex items-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-custom-green hover:border-gray-300 group"
         :class="{
-          'inline-flex p-4 items-center text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500 group': route().current('billing.autopay.index'),
+          'inline-flex p-4 items-center text-custom-sky border-b-2 border-blue-500 rounded-t-lg active group': route().current('billing.autopay.index'),
         }"
         href="/billing/autopay"
       >

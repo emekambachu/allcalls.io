@@ -4,6 +4,7 @@ import { Link } from "@inertiajs/vue3";
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
+import BillingNav from '@/Components/BillingNav.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 
 // import tippy from 'tippy.js';
@@ -45,7 +46,7 @@ const showingNavigationDropdown = ref(false);
 
                         </div>
 
-                        <div class="hidden sm:flex sm:self-start sm:pt-6 sm:ml-6">
+                        <div class="hidden md:flex md:self-start sm:pt-6 sm:ml-6">
                             <div class="flex flex-col justify-center items-center ">
                                 <div class="text-xs leading-4 font-medium rounded-md text-custom-white">Balance</div>
                                 <div class="text-xl font-bold text-gray-300">${{ $page.props.auth.user.balance }}</div>
@@ -87,7 +88,7 @@ const showingNavigationDropdown = ref(false);
                         </div>
 
                         <!-- Hamburger -->
-                        <div class="-mr-2 flex items-center sm:hidden">
+                        <div class="-mr-2 flex items-center md:hidden">
                             <button
                                 @click="showingNavigationDropdown = !showingNavigationDropdown"
                                 class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out"
@@ -124,17 +125,14 @@ const showingNavigationDropdown = ref(false);
                 <!-- Responsive Navigation Menu -->
                 <div
                     :class="{ block: showingNavigationDropdown, hidden: !showingNavigationDropdown }"
-                    class="sm:hidden"
+                    class="md:hidden"
                 >
                     <div class="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                             Dashboard
                         </ResponsiveNavLink>
 
-                        <ResponsiveNavLink href="#" :active="route().current('reporting')">
-                            Reporting
-                        </ResponsiveNavLink>
-                        <ResponsiveNavLink :href="route('billing.funds.index')" :active="route().current('billing.funds.index') || route().current('billing.cards.index')">
+                        <ResponsiveNavLink :href="route('billing.funds.index')" :active="route().current('billing.funds.index') || route().current('billing.cards.index') || route().current('billing.autopay.index')">
                             Billing
                         </ResponsiveNavLink>
                         <ResponsiveNavLink href="#" :active="route().current('clients')">
@@ -143,7 +141,10 @@ const showingNavigationDropdown = ref(false);
                         <ResponsiveNavLink :href="route('transactions.index')" :active="route().current('transactions.index')">
                             Transactions
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink :href="route('profile.edit')" :active="route().current('profile.edit')">
+                        <ResponsiveNavLink :href="route('activities.index')" :active="route().current('activities.index') || route().current('activities.index')">
+                            Activity
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('profile.view')" :active="route().current('profile.view') || route().current('profile.edit')">
                             Profile
                         </ResponsiveNavLink>
                     </div>
@@ -151,10 +152,10 @@ const showingNavigationDropdown = ref(false);
                     <!-- Responsive Settings Options -->
                     <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
                         <div class="px-4">
-                            <div class="font-medium text-base text-gray-800 dark:text-gray-200">
+                            <div class="font-medium text-base text-gray-200">
                                 {{ $page.props.auth.user.first_name + ' ' + $page.props.auth.user.last_name }}
                             </div>
-                            <div class="font-medium text-sm text-gray-500">{{ $page.props.auth.user.email }}</div>
+                            <div class="font-medium text-sm text-gray-400">{{ $page.props.auth.user.email }}</div>
                         </div>
 
                         <div class="mt-3 space-y-1">
@@ -174,8 +175,8 @@ const showingNavigationDropdown = ref(false);
             </header> -->
 
             <!-- Navigation Links -->
-            <div class="grid grid-cols-5 max-w-screen-2xl mx-auto">
-                <div class="py-12 hidden sm:-my-px sm:ml-10 col-span-1 sm:flex sm:flex-col">
+            <div class="w-full mx-auto md:grid md:grid-cols-5 md:gap-28 md:max-w-screen-2xl xl:gap-0">
+                <div class="py-12 hidden sm:-my-px sm:ml-10 col-span-1 md:flex md:flex-col">
                     <NavLink class="mb-10 gap-2" :href="route('dashboard')" :active="route().current('dashboard')">
                         <img src="/img/dashboard.png" alt="">
                         Dashboard
@@ -183,7 +184,7 @@ const showingNavigationDropdown = ref(false);
                     <!-- <NavLink class="mb-10" href="#" :active="route().current('reporting')">
                         Reporting
                     </NavLink> -->
-                    <NavLink class="mb-10 gap-2" id="billing-nav-link" :href="route('billing.funds.index')" :active="route().current('billing.funds.index') || route().current('billing.cards.index')">
+                    <NavLink class="mb-10 gap-2" id="billing-nav-link" :href="route('billing.funds.index')" :active="route().current('billing.funds.index') || route().current('billing.cards.index') || route().current('billing.autopay.index')">
                         <img src="/img/billing.png" alt="">
                         Billing
                     </NavLink>
@@ -199,13 +200,13 @@ const showingNavigationDropdown = ref(false);
                         <img src="/img/activity.png" alt="">
                         Activity
                     </NavLink>
-                    <NavLink class="mb-10 gap-2" :href="route('profile.edit')" :active="route().current('profile.edit')">
+                    <NavLink class="mb-10 gap-2" :href="route('profile.view')" :active="route().current('profile.edit') || route().current('profile.view')">
                         <img src="/img/profile.png" alt="">
                         Profile
                     </NavLink>
                 </div>
                 <!-- Page Content -->
-                <main class="col-span-4">
+                <main class="col-span-4 ">
                     <slot />
                 </main>
             </div>

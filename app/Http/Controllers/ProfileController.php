@@ -22,10 +22,9 @@ class ProfileController extends Controller
      */
     public function view(Request $request): Response
     {
-        return Inertia::render('Profile/View', [
-            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
-            'status' => session('status'),
-        ]);
+        $user = auth()->user();
+
+        return Inertia::render('Profile/View', compact('user'));
     }
 
     /**

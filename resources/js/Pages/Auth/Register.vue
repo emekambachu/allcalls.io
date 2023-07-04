@@ -307,17 +307,17 @@ let submit = () => {
               :value="callType.id"
             />
             <label
-              class="ml-2 text-md font-medium text-custom-white"
+              class="ml-2 text-md font-medium text-custom-indigo"
               :for="`insurance_type_${callType.id}`"
               v-text="callType.type"
             ></label>
 
             <div
               v-if="selectedTypes.includes(callType.id)"
-              class="py-2 dark:text-white"
+              class="py-2 "
             >
               <label
-                class="ml-2 text-xs font-medium text-custom-white"
+                class="ml-2 text-xs font-medium"
                 >States you're licensed in:</label
               >
               <Multiselect
