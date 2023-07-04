@@ -191,7 +191,7 @@ if (props.setting) {
               </div>
 
               <div v-else>
-                <p class="dark:text-gray-400 mt-6 mb-8">You haven't added any cards yet.</p>
+                <p class="text-gray-400 mt-6 mb-8">You haven't added any cards yet.</p>
               </div>
             </div>
           </section>
