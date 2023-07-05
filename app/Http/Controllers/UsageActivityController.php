@@ -11,8 +11,11 @@ class UsageActivityController extends Controller
 {
     public function index() 
     {
-        $activities = Activity::with('user')->get();
-        // dd($users->toArray());
+        // $activities = Activity::with('user')->get();
+        // // dd($users->toArray());
+        $user = auth()->user();
+        $activities = $user->activities()->with('user')->get();
+        
         return Inertia::render('Activities/Index', compact('activities'));
     }
 }
