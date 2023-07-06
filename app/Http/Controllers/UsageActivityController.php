@@ -26,7 +26,8 @@ class UsageActivityController extends Controller
             // dd($users->toArray());
             // return Inertia::render('Activities/Index', compact('activities'));
         } 
-        else {
+        else {            
+            $user = auth()->user();
             $activities = $user->activities()->with('user')->get();
             // abort(403);
         }
