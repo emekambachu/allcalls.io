@@ -15,6 +15,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         //
+        
     ];
 
     /**
@@ -22,6 +23,14 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        
+        // $this->registerPolicies();
+
+        Gate::define('view-activities', function ($user) {
+            // Check if the user has the "admin" role
+            return $user->roles->contains('name', 'admin');
+            // dd($user->roles->contains('name', 'admin'));
+
+            // dd($user->roles);
+        });
     }
 }
