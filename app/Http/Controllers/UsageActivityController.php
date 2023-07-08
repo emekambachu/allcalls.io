@@ -7,6 +7,8 @@ use App\Models\Activity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 
 class UsageActivityController extends Controller
@@ -14,13 +16,17 @@ class UsageActivityController extends Controller
     public function index() 
     {
         if (Gate::allows('view-activities')) {
-            $activities = Activity::with('user')->get();
+            $query = Activity::with('user')->orderBy('created_at', 'desc');
+
+            $activities = $query->paginate(10); 
         } 
         else {            
-            $user = auth()->user();
-            $activities = $user->activities()->with('user')->get();
+            $user = Auth::user();
+            $query = $user->activities()->with('user')->orderBy('created_at', 'desc');
+
+            $activities = $query->paginate(10);
         }
-        
+
         return Inertia::render('Activities/Index', compact('activities'));
     }
 }

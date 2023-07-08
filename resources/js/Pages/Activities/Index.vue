@@ -4,7 +4,7 @@ import { Head, router, usePage } from "@inertiajs/vue3";
 
 defineProps({
     activities: {
-        type: Array,
+        type: Object,
     },
 });
 
@@ -26,6 +26,15 @@ let formatDate = date => {
 
     return formattedDate;
 }
+
+let fetchActivities = page => {
+
+    console.log(route().current);
+    console.log(page);
+
+    router.visit (page, { method: 'get', });
+}
+
 </script>
 
 <template>
@@ -88,7 +97,7 @@ let formatDate = date => {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="activity in activities" :key="activity.id" class="border-b border-gray-500">
+                                <tr v-for="activity in activities.data" :key="activity.id" class="border-b border-gray-500">
                                     <th scope="row"
                                         class="px-4 py-3 font-medium text-custom-white whitespace-nowrap">{{
                                             activity.user.first_name }} {{ activity.user.last_name }}</th>
@@ -135,14 +144,17 @@ let formatDate = date => {
                         aria-label="Table navigation">
                         <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
                             Showing
-                            <span class="font-semibold text-white">1-10</span>
+                            <span class="font-semibold text-white">1</span>
                             of
-                            <span class="font-semibold text-white">1000</span>
+                            <span class="font-semibold text-white">{{ activities.last_page }}</span>
                         </span>
-                        <ul class="inline-flex items-stretch -space-x-px">
+                        <ul class="inline-flex items-stretch -space-x-px cursor-pointer">
                             <li>
-                                <a href="#"
-                                    class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                <a 
+                                    v-if="activities.prev_page_url"
+                                    @click="fetchActivities(activities.prev_page_url)"
+                                    class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-custom-white rounded-l-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white "
+                                    >
                                     <span class="sr-only">Previous</span>
                                     <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
                                         xmlns="http://www.w3.org/2000/svg">
@@ -152,29 +164,20 @@ let formatDate = date => {
                                     </svg>
                                 </a>
                             </li>
+                            
+                            
                             <li>
-                                <a href="#"
-                                    class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
+                                <a         
+                                    class="flex items-center justify-center text-sm py-2 px-3 leading-tight font-extrabold text-gray-500 bg-custom-white shadow-2xl hover:bg-sky-950 hover:shadow-2xl hover:text-white">{{ activities.current_page }}
+                                </a>
                             </li>
+
+
                             <li>
-                                <a href="#"
-                                    class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</a>
-                            </li>
-                            <li>
-                                <a href="#" aria-current="page"
-                                    class="flex items-center justify-center text-sm z-10 py-2 px-3 leading-tight text-custom-white bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700">3</a>
-                            </li>
-                            <li>
-                                <a href="#"
-                                    class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">...</a>
-                            </li>
-                            <li>
-                                <a href="#"
-                                    class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">100</a>
-                            </li>
-                            <li>
-                                <a href="#"
-                                    class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                <a 
+                                    v-if="activities.next_page_url"
+                                    @click="fetchActivities(activities.next_page_url)"
+                                    class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-custom-white rounded-r-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white">
                                     <span class="sr-only">Next</span>
                                     <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
                                         xmlns="http://www.w3.org/2000/svg">
@@ -185,6 +188,7 @@ let formatDate = date => {
                                 </a>
                             </li>
                         </ul>
+                        <!-- <pagination :data="activities" @pagination-change-page="fetchActivities"></pagination> -->
                     </nav>
                 </div>
             </div>
