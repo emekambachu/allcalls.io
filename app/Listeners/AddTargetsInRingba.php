@@ -36,6 +36,22 @@ class AddTargetsInRingba
         $selectedCallTypes = CallType::whereIn('id', $callTypeIds)->get();
         $allStates = State::all();
 
+        Log::debug([
+            'records' => $records
+        ]);
+
+        Log::debug(json_encode([
+            'callTypeIds' => $callTypeIds
+        ]));
+
+        Log::debug(json_encode([
+            'selectedCallTypes' => $selectedCallTypes
+        ]));
+
+        Log::debug(json_encode([
+            'allStates' => $allStates
+        ]));
+
         $selectedCallTypes = $selectedCallTypes->map(function($callType) use ($records, $allStates) {
             $currentCallTypeRecords = $records->filter(function($record) use ($callType) {
                 return $record->call_type_id === $callType->id;
