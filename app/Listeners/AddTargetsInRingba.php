@@ -26,6 +26,8 @@ class AddTargetsInRingba
 
     public function handle(Registered $event): void
     {
+        Log::debug('Add Targets In Ringba Called');
+
         $user = $event->user;
 
         // Fetch all call types associated with it, then fetch all states associated with them.
