@@ -26,17 +26,11 @@ class AddTargetsInRingba
 
     public function handle(Registered $event): void
     {
-        // Log::debug('Add targets now...');
-        // Log::debug(var_dump($event));
-
         $user = $event->user;
 
         // Fetch all call types associated with it, then fetch all states associated with them.
         $records = UserCallTypeState::forUser($user);
-
-
         $callTypeIds = array_values(array_unique(array_column($records->toArray(), 'call_type_id')));
-
         $selectedCallTypes = CallType::whereIn('id', $callTypeIds)->get();
         $allStates = State::all();
 
@@ -51,14 +45,12 @@ class AddTargetsInRingba
             });
 
             $selectedStates = $allStates->whereIn('id', $stateIds);
-
             $callType->selected_states = $selectedStates->toArray();
 
             return $callType;
         });
 
         $ringba = new Ringba();
-
         $faker = Factory::create('en_US');
 
         foreach ($selectedCallTypes as $type) {
@@ -79,13 +71,29 @@ class AddTargetsInRingba
         
             try {
                 $response = $ringba->createTarget($targetName, $phoneNumber, $targetStates);
+                $targetId = $response['target']['id']; // Fetch the target ID from the response
+
+                // Fetch all call plans
+                $responseCallPlans = $ringba->getCallPlans();
+                $callPlans = $responseCallPlans['callPlans'];
+
+                // Find the call plan that matches the current call type
+                $matchingCallPlan = collect($callPlans)->firstWhere('name', $type->type);
+
+                if ($matchingCallPlan) {
+                    // Add a route to the call plan
+                    try {
+                        $ringba->addRouteToCallPlan($matchingCallPlan['id'], $targetId, $phoneNumber, $targetStates);
+                    } catch (Exception $e) {
+                        echo 'Error adding route to call plan: ' . $e->getMessage();
+                    }
+                } else {
+                    echo "No matching call plan found for type: " . $type->type;
+                }
+
             } catch (Exception $e) {
                 echo 'Error creating target: ' . $e->getMessage();
             }
         }
-
-        // If the target needs to be associated with a call plan:
-            // 1. Use the Ringba API service to retrieve the call plan data.
-            // 2. Use the Ringba API service to add the new target to the desired call plan.
     }
 }
