@@ -101,6 +101,7 @@ class AddTargetsInRingba
                 // Find the call plan that matches the expected name
                 $matchingCallPlan = collect($callPlans)->firstWhere('name', $expectedCallPlanName);
 
+                Log::debug('matchingCallPlan', $matchingCallPlan);
 
                 if ($matchingCallPlan) {
                     // Add a route to the call plan
