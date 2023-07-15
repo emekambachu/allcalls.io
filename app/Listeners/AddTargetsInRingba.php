@@ -106,8 +106,8 @@ class AddTargetsInRingba
                 if ($matchingCallPlan) {
                     // Add a route to the call plan
                     try {
-                        $ringba->addRouteToCallPlan($matchingCallPlan['id'], $targetId, $phoneNumber, $targetStates);
-                        Log::debug('Added Route to Call Plan:', ['callPlanId' => $matchingCallPlan['id'], 'targetId' => $targetId, 'phoneNumber' => $phoneNumber, 'targetStates' => $targetStates]);
+                        $response = $ringba->addRouteToCallPlan($matchingCallPlan['id'], $targetId, $phoneNumber, $targetStates);
+                        Log::debug('Added Route to Call Plan:', ['callPlanId' => $matchingCallPlan['id'], 'targetId' => $targetId, 'phoneNumber' => $phoneNumber, 'targetStates' => $targetStates, 'response' => $response]);
                     } catch (Exception $e) {
                         Log::error('Error adding route to call plan: ' . $e->getMessage());
                     }
