@@ -44,13 +44,13 @@ class AddTargetsInRingba
         $allStates = State::all();
         Log::debug('All States:', ['allStates' => $allStates->toArray()]);
 
-        $selectedCallTypes = $selectedCallTypes->map(function($callType) use ($records, $allStates) {
-            $currentCallTypeRecords = $records->filter(function($record) use ($callType) {
+        $selectedCallTypes = $selectedCallTypes->map(function ($callType) use ($records, $allStates) {
+            $currentCallTypeRecords = $records->filter(function ($record) use ($callType) {
                 return $record->call_type_id === $callType->id;
             });
 
             // compile the state ids into a single array.
-            $stateIds = $currentCallTypeRecords->map(function($record) {
+            $stateIds = $currentCallTypeRecords->map(function ($record) {
                 return $record->state_id;
             });
 
@@ -75,7 +75,7 @@ class AddTargetsInRingba
 
             // Generate a unique phone number.
             $phoneNumber = $faker->phoneNumber;
-            while(in_array($phoneNumber, $usedPhoneNumbers)) {
+            while (in_array($phoneNumber, $usedPhoneNumbers)) {
                 $phoneNumber = $faker->phoneNumber;
             }
             Log::debug('Generated Phone Number:', ['phoneNumber' => $phoneNumber]);
@@ -95,8 +95,12 @@ class AddTargetsInRingba
                 $callPlans = $responseCallPlans['callPlans'];
                 Log::debug('Call Plans:', ['callPlans' => $callPlans]);
 
-                // Find the call plan that matches the current call type
-                $matchingCallPlan = collect($callPlans)->firstWhere('name', $type->type);
+                // Construct the expected call plan name
+                $expectedCallPlanName = $type->type . " - " . $type->id;
+
+                // Find the call plan that matches the expected name
+                $matchingCallPlan = collect($callPlans)->firstWhere('name', $expectedCallPlanName);
+
 
                 if ($matchingCallPlan) {
                     // Add a route to the call plan
