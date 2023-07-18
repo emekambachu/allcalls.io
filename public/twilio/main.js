@@ -49,8 +49,6 @@ $(function () {
                 $('.modal').modal('hide')
             });
 
-            device
-
             device.on("incoming", function (conn) {
                 console.log(conn.parameters)
                 log("Incoming connection from " + conn.parameters.From);
