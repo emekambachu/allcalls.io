@@ -8,6 +8,7 @@ use App\Http\Controllers\FundsController;
 use App\Http\Controllers\AutoPayController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CardsAPIController;
+use App\Http\Controllers\TwilioTokenController;
 use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\UsageActivityController;
 
@@ -57,5 +58,10 @@ Route::post('/billing/autopay', [AutoPayController::class, 'store'])->middleware
 Route::get('/usage-activities', [UsageActivityController::class, 'index'])->middleware(['auth', 'verified'])->name('activities.index');
 // Route::post('/billing/autopay', [AutoPayController::class, 'store'])->middleware(['auth', 'verified'])->name('billing.autopay.store');
 
+Route::get('/twiml-example', function() {
+    return view('twiml-example');
+});
+
+Route::get('/device/token', [TwilioTokenController::class, 'show'])->middleware('auth');
 
 require __DIR__.'/auth.php';
