@@ -40,24 +40,6 @@ Route::post('/sanctum/token', function (Request $request) {
     return $user->createToken($request->device_name)->plainTextToken;
 });
 
-Route::get('/twiml', function (Request $request) {
-    // The incoming phone number is stored in the "From" field
-    $caller = $request->input('From');
-
-    // Prepare the message
-    if ($caller) {
-        $message = "The caller's phone number is " . $caller;
-    } else {
-        $message = 'No caller phone number found.';
-    }
-
-    // Manually construct the TwiML
-    $twiml = '<?xml version="1.0" encoding="UTF-8"?>';
-    $twiml .= '<Response><Say>' . $message . '</Say></Response>';
-
-    return response($twiml, 200)->header('Content-Type', 'text/xml');
-});
-
 Route::post('/twiml', function (Request $request) {
     // The incoming phone number is stored in the "From" field
     $caller = $request->input('From');
@@ -69,9 +51,11 @@ Route::post('/twiml', function (Request $request) {
         $message = 'No caller phone number found.';
     }
 
+    $numberToDial = '+15736523170';
+
     // Manually construct the TwiML
     $twiml = '<?xml version="1.0" encoding="UTF-8"?>';
-    $twiml .= '<Response><Say>' . $message . '</Say></Response>';
+    $twiml .= '<Response><Dial callerId="' . $numberToDial . '"/></Response>';
 
     return response($twiml, 200)->header('Content-Type', 'text/xml');
 });
