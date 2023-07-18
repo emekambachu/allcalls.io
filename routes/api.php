@@ -52,7 +52,8 @@ Route::post('/api/twiml', function (Request $request) {
     }
 
     // Manually construct the TwiML
-    $twiml = '<Response><Say>' . $message . '</Say></Response>';
+    $twiml = '<?xml version="1.0" encoding="UTF-8"?>';
+    $twiml .= '<Response><Say>' . $message . '</Say></Response>';
 
     return response($twiml, 200)->header('Content-Type', 'text/xml');
 });
