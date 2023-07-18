@@ -63,5 +63,8 @@ Route::get('/twiml-example', function() {
 });
 
 Route::get('/device/token', [TwilioTokenController::class, 'show'])->middleware('auth');
+Route::get('/device/incoming', function() {
+    return view('incoming');
+})->middleware('auth');
 
 require __DIR__.'/auth.php';
