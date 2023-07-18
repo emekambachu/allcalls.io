@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class TwilioTokenController extends Controller
 {
-    public function getToken(Request $request)
+    public function show(Request $request)
     {
         $accountSid = env('TWILIO_SID');
         $apiKey = env('TWILIO_API_KEY_SID');
