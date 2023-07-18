@@ -20,7 +20,7 @@ class TwilioTokenController extends Controller
 
         // set the identity to the user's id
         // $identity = $user->id;
-        $identity = '+15736523170';
+        $identity = '5736523170';
 
         $accessToken = new AccessToken(
             $accountSid,
