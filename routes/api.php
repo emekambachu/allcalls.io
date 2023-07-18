@@ -42,14 +42,7 @@ Route::post('/sanctum/token', function (Request $request) {
 
 Route::post('/twiml', function (Request $request) {
     // The incoming phone number is stored in the "From" field
-    $caller = $request->input('From');
-
-    // Prepare the message
-    if ($caller) {
-        $message = "The caller's phone number is " . $caller;
-    } else {
-        $message = 'No caller phone number found.';
-    }
+    // $caller = $request->input('From');
 
     $numberToDial = '+15736523170';
 
