@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Twilio\Jwt\AccessToken;
 use Illuminate\Http\Request;
+use Twilio\Jwt\Grants\VoiceGrant;
 
 class TwilioTokenController extends Controller
 {
