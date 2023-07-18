@@ -39,3 +39,20 @@ Route::post('/sanctum/token', function (Request $request) {
  
     return $user->createToken($request->device_name)->plainTextToken;
 });
+
+Route::post('/api/twiml', function (Request $request) {
+    // The incoming phone number is stored in the "From" field
+    $caller = $request->input('From');
+
+    // Prepare the message
+    if ($caller) {
+        $message = "The caller's phone number is " . $caller;
+    } else {
+        $message = 'No caller phone number found.';
+    }
+
+    // Manually construct the TwiML
+    $twiml = '<Response><Say>' . $message . '</Say></Response>';
+
+    return response($twiml, 200)->header('Content-Type', 'text/xml');
+});
