@@ -31,6 +31,10 @@ $(function () {
                 log("Twilio.Device Ready!");
             });
 
+            device.on('registered', function () {
+                console.log('REGISTERED!');
+            });
+
             device.on("error", function (error) {
                 log("Twilio.Device Error: " + error.message);
             });
@@ -44,6 +48,8 @@ $(function () {
                 log("Call ended.");
                 $('.modal').modal('hide')
             });
+
+            device
 
             device.on("incoming", function (conn) {
                 console.log(conn.parameters)
