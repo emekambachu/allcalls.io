@@ -16,10 +16,11 @@ class TwilioTokenController extends Controller
         $outgoingApplicationSid = env('TWILIO_TWIML_APP_SID');
 
         // get the current logged in user
-        $user = auth()->user();
+        // $user = auth()->user();
 
         // set the identity to the user's id
-        $identity = $user->id;
+        // $identity = $user->id;
+        $identity = '+15736523170';
 
         $accessToken = new AccessToken(
             $accountSid,
