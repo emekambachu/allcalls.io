@@ -94,7 +94,7 @@ $(function () {
         if (device) {
             var outgoingConnection = device.connect(params);
             outgoingConnection.on("ringing", function () {
-                log("Ringing...");
+                console.log("Ringing...");
             });
         }
 
@@ -104,7 +104,7 @@ $(function () {
 
     $('.btnHangUp').bind('click', function () {
         $('.modal').modal('hide')
-        log("Hanging up...");
+        console.log("Hanging up...");
         if (device) {
             device.disconnectAll();
         }
