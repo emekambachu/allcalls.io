@@ -45,6 +45,28 @@ $(function () {
                 $('.modal').modal('hide')
             });
 
+            device.on("incoming", function (conn) {
+                console.log(conn.parameters)
+                log("Incoming connection from " + conn.parameters.From);
+                $("#callerNumber").text(conn.parameters.From)
+                $("#txtPhoneNumber").text(conn.parameters.From)
+            
+                $('#modal-incomming-call').modal('show')
+            
+                $('.btnReject').bind('click', function () {
+                    $('.modal').modal('hide')
+                    log("Rejected call ...");
+                    conn.reject();
+                })
+            
+                $('.btnAcceptCall').bind('click', function () {
+                    $('.modal').modal('hide')
+                    log("Accepted call ...");
+                    conn.accept();
+                })
+            
+            });            
+
         })
         .catch(function (err) {
             console.log(err);
