@@ -1,11 +1,11 @@
 $(function () {
     var device;
 
-    log("Requesting Access Token...");
+    console.log("Requesting Access Token...");
     // Using a relative link to access the Voice Token function
     $.getJSON("/device/token")
         .then(function (data) {
-            log("Got a token.");
+            console.log("Got a token.");
             console.log("Token: " + data.token);
 
             // Setup Twilio.Device
@@ -28,7 +28,7 @@ $(function () {
             });
 
             device.on("ready", function (device) {
-                log("Twilio.Device Ready!");
+                console.log("Twilio.Device Ready!");
             });
 
             device.on('registered', function () {
@@ -36,22 +36,22 @@ $(function () {
             });
 
             device.on("error", function (error) {
-                log("Twilio.Device Error: " + error.message);
+                console.log("Twilio.Device Error: " + error.message);
             });
 
             device.on("connect", function (conn) {
-                log('Successfully established call ! ');
+                console.log('Successfully established call ! ');
                 $('#modal-call-in-progress').modal('show')
             });
 
             device.on("disconnect", function (conn) {
-                log("Call ended.");
+                console.log("Call ended.");
                 $('.modal').modal('hide')
             });
 
             device.on("incoming", function (conn) {
                 console.log(conn.parameters)
-                log("Incoming connection from " + conn.parameters.From);
+                console.log("Incoming connection from " + conn.parameters.From);
                 $("#callerNumber").text(conn.parameters.From)
                 $("#txtPhoneNumber").text(conn.parameters.From)
             
@@ -65,7 +65,7 @@ $(function () {
             
                 $('.btnAcceptCall').bind('click', function () {
                     $('.modal').modal('hide')
-                    log("Accepted call ...");
+                    console.log("Accepted call ...");
                     conn.accept();
                 })
             
@@ -74,7 +74,7 @@ $(function () {
         })
         .catch(function (err) {
             console.log(err);
-            log("Could not get a token from server!");
+            console.log("Could not get a token from server!");
         });
 
     // Bind button to make call
