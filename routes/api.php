@@ -68,3 +68,5 @@ Route::get('/twiml', function (Request $request) {
 
     return response($twiml, 200)->header('Content-Type', 'text/xml');
 });
+
+Route::get('/device/token', [TwilioTokenController::class, 'show'])->middleware('auth:sanctum');
