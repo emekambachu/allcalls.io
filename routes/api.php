@@ -1,11 +1,12 @@
 <?php
 
-use App\Http\Controllers\TwilioTokenController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\ValidationException;
+use App\Http\Controllers\TwilioTokenController;
+use App\Http\Controllers\IncomingCallController;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,3 +71,6 @@ Route::get('/twiml', function (Request $request) {
 });
 
 Route::get('/device/token', [TwilioTokenController::class, 'show'])->middleware('auth:sanctum');
+
+
+Route::get('/call/incoming', [IncomingCallController::class, 'respond']);
