@@ -69,7 +69,7 @@ class IncomingCallController extends Controller
         $users = $this->getOnlineUsers($callType);
     
         // Select a user from this group
-        $selectedUser = $users;
+        $selectedUser = $users->first();
     
         Log::debug('Selected user: ' . $selectedUser->id);
     
@@ -87,10 +87,7 @@ class IncomingCallController extends Controller
 
     public function getOnlineUsers($callType)
     {
-        // This method should return all online users who have selected the same call type and state
-        // This is just a placeholder method. You will need to implement this logic based on your application.
-        // For now, just get the first user
-        return User::first();
+        return User::all();
     }
 
     public function getAvailableNumberForUser($user)
