@@ -54,6 +54,8 @@ class IncomingCallController extends Controller
         // Dial to a specific client in your Twilio client application with a specified callerId
         $twiml = '<Response><Dial callerId="+13186978047"><Client>' . $userId . '</Client></Dial></Response>';
 
+        Log::debug('TWIML sent: ' . $twiml);
+
         return $twiml;
     }
 
@@ -80,6 +82,8 @@ class IncomingCallController extends Controller
     
         // Return the available number in a <Dial> verb to forward the call to this number
         $twiml = '<Response><Dial><Number>' . $availableNumber->phone . '</Number></Dial></Response>';
+
+        Log::debug('TWIML sent: ' . $twiml);
     
         return $twiml;
     }
