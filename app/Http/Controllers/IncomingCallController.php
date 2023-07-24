@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Models\CallType;
 use Illuminate\Http\Request;
 use App\Models\CallTypeNumber;
 use App\Models\AvailableNumber;
-use App\Models\User;
 use Illuminate\Support\Facades\Log;
 
 class IncomingCallController extends Controller
@@ -60,9 +61,9 @@ class IncomingCallController extends Controller
     {
         // Determine the call type based on the 'To' number
         $callTypeNumber = CallTypeNumber::where('phone', $to)->first();
-        $callType = $callTypeNumber->call_type;
+        $callType = CallType::find($callTypeNumber->call_type_id);
     
-        Log::debug('Call type: ' . $callType);
+        Log::debug('Call type: ' . $callType->type);
     
         // Fetch all online users who have selected the same call type and state
         $users = $this->getOnlineUsers($callType);
