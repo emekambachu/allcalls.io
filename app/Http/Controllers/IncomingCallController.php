@@ -75,6 +75,8 @@ class IncomingCallController extends Controller
         // Find one of the available numbers and associate it with the selected user
         $availableNumber = $this->getAvailableNumberForUser($selectedUser);
 
+        Log::debug('Forwarding call to ' . $availableNumber->phone);
+
         // Return the available number in a <Dial> verb to forward the call to this number
         $twiml = '<Response><Dial><Number>' . $availableNumber->phone . '</Number></Dial></Response>';
 
