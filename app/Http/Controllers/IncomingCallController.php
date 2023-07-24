@@ -61,27 +61,28 @@ class IncomingCallController extends Controller
         // Determine the call type based on the 'To' number
         $callTypeNumber = CallTypeNumber::where('phone', $to)->first();
         $callType = $callTypeNumber->call_type;
-
+    
         Log::debug('Call type: ' . $callType);
-
+    
         // Fetch all online users who have selected the same call type and state
         $users = $this->getOnlineUsers($callType);
-
+    
         // Select a user from this group
         $selectedUser = $users;
-
+    
         Log::debug('Selected user: ' . $selectedUser->id);
-
+    
         // Find one of the available numbers and associate it with the selected user
         $availableNumber = $this->getAvailableNumberForUser($selectedUser);
-
+    
         Log::debug('Forwarding call to ' . $availableNumber->phone);
-
+    
         // Return the available number in a <Dial> verb to forward the call to this number
         $twiml = '<Response><Dial><Number>' . $availableNumber->phone . '</Number></Dial></Response>';
-
+    
         return $twiml;
     }
+    
 
     public function getOnlineUsers($callType)
     {
@@ -94,11 +95,19 @@ class IncomingCallController extends Controller
     public function getAvailableNumberForUser($user)
     {
         // This method should return one of the available numbers and associate it with the selected user
-        // This is just a placeholder method. You will need to implement this logic based on your application.
-        $availableNumber = AvailableNumber::first();
+        // Find the first available number where user_id is null
+        $availableNumber = AvailableNumber::whereNull('user_id')->first();
+    
+        // If there is no available number with user_id null, you might want to handle this scenario,
+        // For now, let's assume there is always an available number.
+        if (!$availableNumber) {
+            Log::error('No available number found');
+            return null;
+        }
+    
         $availableNumber->user_id = $user->id;
         $availableNumber->save();
-
+    
         return $availableNumber;
-    }
+    }    
 }
