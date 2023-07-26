@@ -3,9 +3,10 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 
 Echo.private('User.Status.Online.1')
-    .listen('OrderShipmentStatusUpdated', (e) => {
-        console.log(e.order.name);
-    });
+    .listenToAll((event, data) => {
+      console.log(event, data);
+   });
+
 </script>
 
 <template>
