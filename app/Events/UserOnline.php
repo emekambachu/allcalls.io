@@ -30,7 +30,7 @@ class UserOnline implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PresenceChannel('User.Status.Online.' . '1.1'),
+            new PresenceChannel('User.Status.Online.' . '1'),
         ];
     }
 }

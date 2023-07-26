@@ -19,6 +19,11 @@ use Illuminate\Support\Facades\Broadcast;
 // });
 
 Broadcast::channel('User.Status.Online.{callTypeId}', function ($user, $callTypeId) {
-    Log::debug($user->id . ' turned on call type' . $callTypeId);
+    Log::debug($user->id . ' turned on call type ' . $callTypeId);
+    return true;
+});
+
+Broadcast::channel('User.Status.Offline.{callTypeId}', function ($user, $callTypeId) {
+    Log::debug($user->id . ' turned off call type ' . $callTypeId);
     return true;
 });
