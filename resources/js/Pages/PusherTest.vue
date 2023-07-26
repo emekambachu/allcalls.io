@@ -2,7 +2,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 
-Echo.join('User.Status.Online.' + '1.1')
+Echo.join('User.Status.Online.' + '1')
     .here((users) => {
         console.log(users)
     })
