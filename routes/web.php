@@ -77,4 +77,8 @@ Route::post('pusher-webhook-example', function() {
     Log::debug(request()->all());
 });
 
+Route::get('allcalls-pusher-client', function() {
+    return view('allcalls-pusher-client');
+});
+
 require __DIR__.'/auth.php';
