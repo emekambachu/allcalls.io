@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\UserOnline;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
@@ -66,5 +67,14 @@ Route::get('/device/token', [TwilioTokenController::class, 'show'])->middleware(
 Route::get('/device/incoming', function() {
     return view('incoming');
 })->middleware('auth');
+
+Route::get('channel-test', function() {
+    UserOnline::dispatch();
+})->middleware('auth');
+
+Route::get('pusher-webhook-example', function() {
+    Log::debug('pusher webhook fired');
+    Log::debug(request()->all());
+});
 
 require __DIR__.'/auth.php';
