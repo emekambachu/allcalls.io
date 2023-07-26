@@ -72,7 +72,7 @@ Route::get('channel-test', function() {
     UserOnline::dispatch();
 })->middleware('auth');
 
-Route::get('pusher-webhook-example', function() {
+Route::post('pusher-webhook-example', function() {
     Log::debug('pusher webhook fired');
     Log::debug(request()->all());
 });
