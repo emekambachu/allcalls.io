@@ -78,7 +78,7 @@ Route::post('pusher-webhook-example', function() {
 });
 
 Route::get('allcalls-pusher-client', function() {
-    return view('allcalls-pusher-client');
-});
+    return Inertia::render('Pages/PusherTest');
+})->middleware('auth');
 
 require __DIR__.'/auth.php';
