@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\ValidationException;
+use App\Http\Controllers\OnlineUsersController;
 use App\Http\Controllers\TwilioTokenController;
 use App\Http\Controllers\IncomingCallController;
 
@@ -70,7 +71,10 @@ Route::get('/twiml', function (Request $request) {
     return response($twiml, 200)->header('Content-Type', 'text/xml');
 });
 
-Route::get('/device/token', [TwilioTokenController::class, 'show'])->middleware('auth:sanctum');
+Route::middleware('auth:sanctum')->get('/device/token', [TwilioTokenController::class, 'show']);
 
 
 Route::get('/call/incoming', [IncomingCallController::class, 'respond']);
+
+Route::middleware('auth:sanctum')->post('/online-users', [OnlineUsersController::class, 'store']);
+Route::middleware('auth:sanctum')->delete('/online-users', [OnlineUsersController::class, 'destroy']);

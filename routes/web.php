@@ -68,17 +68,17 @@ Route::get('/device/incoming', function() {
     return view('incoming');
 })->middleware('auth');
 
-Route::get('channel-test', function() {
-    UserOnline::dispatch();
-})->middleware('auth');
+// Route::get('channel-test', function() {
+//     UserOnline::dispatch();
+// })->middleware('auth');
 
-Route::post('pusher-webhook-example', function() {
-    Log::debug('pusher webhook fired');
-    Log::debug(request()->all());
-});
+// Route::post('pusher-webhook-example', function() {
+//     Log::debug('pusher webhook fired');
+//     Log::debug(request()->all());
+// });
 
-Route::get('allcalls-pusher-client', function() {
-    return Inertia::render('PusherTest');
-})->middleware('auth');
+// Route::get('allcalls-pusher-client', function() {
+//     return Inertia::render('PusherTest');
+// })->middleware('auth');
 
 require __DIR__.'/auth.php';
