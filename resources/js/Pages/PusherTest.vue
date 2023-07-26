@@ -2,10 +2,22 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 
-Echo.private('User.Status.Online.1')
-    .listenToAll((event, data) => {
-      console.log(event, data);
-   });
+Echo.join('User.Status.Online.' + '1.1')
+    .here((users) => {
+        console.log(users)
+    })
+    .joining((user) => {
+        console.log(user.name);
+    })
+    .leaving((user) => {
+        console.log(user.name);
+    })
+    .error((error) => {
+        console.error(error);
+    });
+
+
+
 
 </script>
 
