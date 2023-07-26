@@ -29,7 +29,7 @@ class UserOnline implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('User.Status.Online.' . 5),
+            new PrivateChannel('User.Status.Online.' . 1),
         ];
     }
 }

@@ -1,6 +1,11 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
+
+Echo.private('User.Status.Online.1')
+    .listen('OrderShipmentStatusUpdated', (e) => {
+        console.log(e.order.name);
+    });
 </script>
 
 <template>
