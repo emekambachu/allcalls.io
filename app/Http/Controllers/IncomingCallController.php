@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\CallType;
+use App\Models\OnlineUser;
 use Illuminate\Http\Request;
 use App\Models\CallTypeNumber;
 use App\Models\AvailableNumber;
@@ -91,7 +92,7 @@ class IncomingCallController extends Controller
 
     public function getOnlineUsers($callType)
     {
-        return User::all();
+        return OnlineUser::where('call_type_id', $callType->id)->get();
     }
 
     public function getAvailableNumberForUser($user)
