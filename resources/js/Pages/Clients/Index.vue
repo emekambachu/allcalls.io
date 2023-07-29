@@ -53,6 +53,12 @@ let formatTime = (duration) => {
     .toString()
     .padStart(2, "0")}`;
 };
+
+let formatMoney = (amount) => {
+  return parseFloat(amount)
+    .toFixed(2)
+    .replace(/\d(?=(\d{3})+\.)/g, "$&,");
+};
 </script>
 
 <template>
@@ -91,7 +97,7 @@ let formatTime = (duration) => {
       >
         <p class="mb-1 text-sm text-gray-400">Total Earned</p>
         <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
-          ${{ parseFloat(totalAmountSpent).toFixed(2) }}
+          ${{ formatMoney(totalAmountSpent) }}
         </h2>
       </div>
       <div
