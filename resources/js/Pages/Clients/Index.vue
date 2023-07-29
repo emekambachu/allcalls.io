@@ -9,16 +9,16 @@ let props = defineProps({
   },
 
   totalCalls: {
-    type: Number
+    type: Number,
   },
 
   totalAmountSpent: {
-    type: Number
+    type: Number,
   },
 
   averageCallDuration: {
-    type: Number
-  }
+    type: Number,
+  },
 });
 
 console.log(props);
@@ -68,23 +68,21 @@ let openClientModal = (client) => {
     </div>
 
     <div class="mx-auto px-16 py-8 grid grid-cols-3 gap-6">
-      <div
-        class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow"
-      >
+      <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow">
         <p class="mb-1 text-sm text-gray-300">Total Calls</p>
-        <h2 class="mb-2 text-4xl font-bold text-white">166</h2>
+        <h2 class="mb-2 text-4xl font-bold text-white">{{ totalCalls }}</h2>
       </div>
-      <div
-      class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow"
-      >
+      <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow">
         <p class="mb-1 text-sm text-gray-400">Total Earned</p>
-        <h2 class="mb-2 text-4xl font-bold text-white">$56.76</h2>
+        <h2 class="mb-2 text-4xl font-bold text-white">
+          ${{ totalAmountSpent.toFixed(2) }}
+        </h2>
       </div>
-      <div
-      class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow"
-      >
-        <p class="mb-1 text-sm text-gray-400">Total Spent</p>
-        <h2 class="mb-2 text-4xl font-bold text-white">$10.22</h2>
+      <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow">
+        <p class="mb-1 text-sm text-gray-400">Average Call Duration</p>
+        <h2 class="mb-2 text-4xl font-bold text-white">
+          {{ averageCallDuration.toFixed(2) }} s
+        </h2>
       </div>
     </div>
 

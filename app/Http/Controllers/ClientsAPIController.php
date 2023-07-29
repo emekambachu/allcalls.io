@@ -11,7 +11,7 @@ class ClientsAPIController extends Controller
     {
         $perPage = 10;
 
-        $clients = Client::whereUserId($request->user->id)->paginate($perPage);
+        $clients = Client::whereUserId($request->user()->id)->paginate($perPage);
 
         return [
             'clients' => $clients
