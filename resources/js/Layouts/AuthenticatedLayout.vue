@@ -26,6 +26,12 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 // });
 
 const showingNavigationDropdown = ref(false);
+
+let formatMoney = (amount) => {
+  return parseFloat(amount)
+    .toFixed(2)
+    .replace(/\d(?=(\d{3})+\.)/g, "$&,");
+};
 </script>
 
 <template>
@@ -49,7 +55,7 @@ const showingNavigationDropdown = ref(false);
                         <div class="hidden md:flex md:self-start sm:pt-6 sm:ml-6">
                             <div class="flex flex-col justify-center items-center ">
                                 <div class="text-xs leading-4 font-medium rounded-md text-custom-white">Balance</div>
-                                <div class="text-xl font-bold text-gray-300">${{ $page.props.auth.user.balance }}</div>
+                                <div class="text-xl font-bold text-gray-300">${{ formatMoney($page.props.auth.user.balance) }}</div>
                             </div>
                             <!-- Settings Dropdown -->
                             <div class="ml-3 relative">
