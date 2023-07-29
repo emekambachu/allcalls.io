@@ -1,9 +1,10 @@
 <script setup>
 import { Head, Link } from "@inertiajs/vue3";
-import { ref } from 'vue';
+import { onMounted, onBeforeUnmount, ref } from 'vue';
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import Footer from "@/Components/Footer.vue";
+import ScrollAnimation from "@/Components/ScrollAnimation.vue";
 
 defineProps({
   canLogin: {
@@ -218,6 +219,7 @@ const showHamburger = ref(false);
             </div>
           </div>
         </div>
+
 
       </div>
   </section>

@@ -142,7 +142,7 @@ const showingNavigationDropdown = ref(false);
                             Transactions
                         </ResponsiveNavLink>
                         <ResponsiveNavLink :href="route('activities.index')" :active="route().current('activities.index') || route().current('activities.index')">
-                            Activity
+                            Activities
                         </ResponsiveNavLink>
                         <ResponsiveNavLink :href="route('profile.view')" :active="route().current('profile.view') || route().current('profile.edit')">
                             Profile
@@ -198,7 +198,7 @@ const showingNavigationDropdown = ref(false);
                     </NavLink>
                     <NavLink class="mb-10 gap-2" :href="route('activities.index')" :active="route().current('activities.index')">
                         <img src="/img/activity.png" alt="">
-                        Activity
+                        Activities
                     </NavLink>
                     <NavLink class="mb-10 gap-2" :href="route('profile.view')" :active="route().current('profile.edit') || route().current('profile.view')">
                         <img src="/img/profile.png" alt="">
