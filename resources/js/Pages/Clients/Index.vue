@@ -55,19 +55,19 @@ let openClientModal = (client) => {
 
     <div class="mx-auto px-16 py-8 grid grid-cols-3 gap-6">
       <div
-        class="max-w-sm p-6 bg-gray-800 border border-gray-700 rounded-lg shadow"
+        class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow"
       >
-        <p class="mb-1 text-sm text-gray-400">Total Calls</p>
+        <p class="mb-1 text-sm text-gray-300">Total Calls</p>
         <h2 class="mb-2 text-4xl font-bold text-white">166</h2>
       </div>
       <div
-        class="max-w-sm p-6 bg-gray-800 border border-gray-700 rounded-lg shadow"
+      class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow"
       >
         <p class="mb-1 text-sm text-gray-400">Total Earned</p>
         <h2 class="mb-2 text-4xl font-bold text-white">$56.76</h2>
       </div>
       <div
-        class="max-w-sm p-6 bg-gray-800 border border-gray-700 rounded-lg shadow"
+      class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow"
       >
         <p class="mb-1 text-sm text-gray-400">Total Spent</p>
         <h2 class="mb-2 text-4xl font-bold text-white">$10.22</h2>
