@@ -83,9 +83,15 @@ let chartOptions = reactive({
       </div>
     </div>
 
-    <div>
-        <Bar id="spend-chart-id" :options="chartOptions" :data="spendChartData" />
-        <Bar id="call-chart-id" :options="chartOptions" :data="callChartData" />
+    <div class="px-16">
+        <div class="grid gap-2">
+            <div>
+                <Bar id="spend-chart-id" :options="chartOptions" :data="spendChartData" />
+            </div>
+            <div>
+                <Bar id="call-chart-id" :options="chartOptions" :data="callChartData" />
+            </div>
+        </div>
     </div>
   </AuthenticatedLayout>
 </template>
