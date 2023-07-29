@@ -81,3 +81,5 @@ Route::middleware('auth:sanctum')->post('/online-users', [OnlineUsersController:
 Route::middleware('auth:sanctum')->delete('/online-users/{callTypeId}', [OnlineUsersController::class, 'destroy']);
 
 Route::middleware('auth:sanctum')->get('/clients', [ClientsAPIController::class, 'index']);
+
+Route::middleware('auth:sanctum')->get('/callTypes', [CallTypesAPIController::class, 'index']);

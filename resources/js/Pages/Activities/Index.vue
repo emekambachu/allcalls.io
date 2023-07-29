@@ -149,7 +149,7 @@ let fetchActivities = page => {
                         aria-label="Table navigation">
                         <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
                             Showing
-                            <span class="font-semibold text-white">1</span>
+                            <span class="font-semibold text-white">{{ activities.current_page }}</span>
                             of
                             <span class="font-semibold text-white">{{ activities.last_page }}</span>
                         </span>
