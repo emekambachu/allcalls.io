@@ -11,6 +11,8 @@ class ClientsController extends Controller
     public function index(Request $request)
     {
         $clients = Client::where('user_id', $request->user()->id)->paginate(10);
+
+        dd($clients);
     
         return Inertia::render('Clients/Index', compact('clients'));
     }
