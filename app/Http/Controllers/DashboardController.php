@@ -13,21 +13,21 @@ class DashboardController extends Controller
     public function show(Request $request)
     {
         $sevenDaysAgo = Carbon::now()->subDays(7);
-    
+
         $spendData = Client::select(DB::raw('date(call_taken) as date'), DB::raw('sum(amount_spent) as sum'))
             ->where('call_taken', '>=', $sevenDaysAgo)
             ->where('user_id', $request->user()->id)
             ->groupBy('date')
             ->orderBy('date', 'ASC')
             ->get();
-    
-        $callData = Client::select(DB::raw('date(created_at) as date'), DB::raw('count(*) as count'))
-            ->where('created_at', '>=', $sevenDaysAgo)
+
+        $callData = Client::select(DB::raw('date(call_taken) as date'), DB::raw('count(*) as count'))
+            ->where('call_taken', '>=', $sevenDaysAgo)
             ->where('user_id', $request->user()->id)
             ->groupBy('date')
             ->orderBy('date', 'ASC')
             ->get();
-    
+
         return Inertia::render('Dashboard', [
             'spendData' => $spendData,
             'callData' => $callData
