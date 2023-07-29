@@ -45,7 +45,11 @@ let selectedCallTypesWithStates = computed(() => {
     });
 });
 
-console.log(selectedCallTypesWithStates.value);
+let formatMoney = (amount) => {
+  return parseFloat(amount)
+    .toFixed(2)
+    .replace(/\d(?=(\d{3})+\.)/g, "$&,");
+};
 </script>
 
 <template>
@@ -87,7 +91,7 @@ console.log(selectedCallTypesWithStates.value);
               <div class="flex items-center gap-2">
                 <!-- <div class="text-md text-gray-500">Balance: </div> -->
                 <div class="text-2xl text-custom-green">
-                  ${{ user.balance }}
+                  ${{ formatMoney(user.balance) }}
                 </div>
               </div>
             </div>
