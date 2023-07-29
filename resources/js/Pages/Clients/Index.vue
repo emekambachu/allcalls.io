@@ -75,28 +75,31 @@ let formatTime = (duration) => {
       </div>
     </div>
 
-    <div class="mx-auto px-16 py-8 grid grid-cols-3 gap-6">
-      <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow">
+    <div
+      class="mx-auto px-4 sm:px-8 md:px-16 py-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+    >
+      <div
+        class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto"
+      >
         <p class="mb-1 text-sm text-gray-300">Total Calls</p>
-        <h2 class="mb-2 text-4xl font-bold text-white">{{ totalCalls }}</h2>
+        <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
+          {{ totalCalls }}
+        </h2>
       </div>
-      <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow">
+      <div
+        class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto"
+      >
         <p class="mb-1 text-sm text-gray-400">Total Earned</p>
-        <h2 class="mb-2 text-4xl font-bold text-white">
+        <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
           ${{ parseFloat(totalAmountSpent).toFixed(2) }}
         </h2>
       </div>
-      <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow">
+      <div
+        class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto"
+      >
         <p class="mb-1 text-sm text-gray-400">Average Call Duration</p>
-        <h2 class="mb-2 text-4xl font-bold text-white">
+        <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
           {{ formatTime(averageCallDuration) }}
-        </h2>
-      </div>
-
-      <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow">
-        <p class="mb-1 text-sm text-gray-400">Average Call Duration</p>
-        <h2 class="mb-2 text-4xl font-bold text-white">
-          {{ parseFloat(averageCallDuration).toFixed(2) }} s
         </h2>
       </div>
     </div>
