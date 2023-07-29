@@ -6,8 +6,9 @@ use Illuminate\Foundation\Application;
 use App\Http\Controllers\CardsController;
 use App\Http\Controllers\FundsController;
 use App\Http\Controllers\AutoPayController;
+use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\CardsAPIController;
+use App\Http\Controllers\TwilioTokenController;
 use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\UsageActivityController;
 
@@ -41,7 +42,6 @@ Route::delete('/transactions/{transaction}', [TransactionsController::class, 'de
 Route::middleware('auth')->group(function () {
     Route::get('/profile/view', [ProfileController::class, 'view'])->name('profile.view');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    // Route::post('/profile/upload', [ProfileController::class, 'uploadProfilePicture'])->name('profile.uploadProfilePicture');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
@@ -55,7 +55,29 @@ Route::get('/billing/autopay', [AutoPayController::class, 'show'])->middleware([
 Route::post('/billing/autopay', [AutoPayController::class, 'store'])->middleware(['auth', 'verified'])->name('billing.autopay.store');
 
 Route::get('/usage-activities', [UsageActivityController::class, 'index'])->middleware(['auth', 'verified'])->name('activities.index');
-// Route::post('/billing/autopay', [AutoPayController::class, 'store'])->middleware(['auth', 'verified'])->name('billing.autopay.store');
 
+Route::get('/twiml-example', function() {
+    return view('twiml-example');
+});
+
+Route::get('/device/token', [TwilioTokenController::class, 'show'])->middleware('auth');
+Route::get('/device/incoming', function() {
+    return view('incoming');
+})->middleware('auth');
+
+Route::get('/clients', [ClientsController::class, 'index'])->middleware(['auth', 'verified'])->name('clients.index');
+
+// Route::get('channel-test', function() {
+//     UserOnline::dispatch();
+// })->middleware('auth');
+
+// Route::post('pusher-webhook-example', function() {
+//     Log::debug('pusher webhook fired');
+//     Log::debug(request()->all());
+// });
+
+// Route::get('allcalls-pusher-client', function() {
+//     return Inertia::render('PusherTest');
+// })->middleware('auth');
 
 require __DIR__.'/auth.php';

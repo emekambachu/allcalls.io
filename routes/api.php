@@ -4,7 +4,11 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ClientsAPIController;
 use Illuminate\Validation\ValidationException;
+use App\Http\Controllers\OnlineUsersController;
+use App\Http\Controllers\TwilioTokenController;
+use App\Http\Controllers\IncomingCallController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,3 +43,43 @@ Route::post('/sanctum/token', function (Request $request) {
  
     return $user->createToken($request->device_name)->plainTextToken;
 });
+
+Route::post('/twiml', function (Request $request) {
+    // The incoming phone number is stored in the "From" field
+    $caller = $request->input('From');
+
+    $numberToDial = '+15736523170';
+
+    // Manually construct the TwiML
+    $twiml = '<?xml version="1.0" encoding="UTF-8"?>';
+    // $twiml .= '<Response><Dial answerOnBridge="true" callerId="' . $numberToDial . '">' . '<Client>+15736523170</Client>' . '</Dial></Response>';
+    $twiml .= '<Response><Dial answerOnBridge="true"><Client callerId="+15736523170">5736523170</Client></Dial></Response>';
+
+    return response($twiml, 200)->header('Content-Type', 'text/xml');
+});
+
+Route::get('/twiml', function (Request $request) {
+    // The incoming phone number is stored in the "From" field
+    $caller = $request->input('From');
+
+    $numberToDial = '+15736523170';
+
+    // Manually construct the TwiML
+    $twiml = '<?xml version="1.0" encoding="UTF-8"?>';
+    // $twiml .= '<Response><Dial answerOnBridge="true" callerId="' . $numberToDial . '">' . '<Client>+15736523170</Client>' . '</Dial></Response>';
+    $twiml .= '<Response><Dial answerOnBridge="true"><Client callerId="+15736523170">5736523170</Client></Dial></Response>';
+
+    return response($twiml, 200)->header('Content-Type', 'text/xml');
+});
+
+Route::middleware('auth:sanctum')->get('/device/token', [TwilioTokenController::class, 'show']);
+
+
+Route::get('/call/incoming', [IncomingCallController::class, 'respond']);
+
+Route::middleware('auth:sanctum')->post('/online-users', [OnlineUsersController::class, 'store']);
+Route::middleware('auth:sanctum')->delete('/online-users/{callTypeId}', [OnlineUsersController::class, 'destroy']);
+
+Route::middleware('auth:sanctum')->get('/clients', [ClientsAPIController::class, 'index']);
+
+Route::middleware('auth:sanctum')->get('/callTypes', [CallTypesAPIController::class, 'index']);

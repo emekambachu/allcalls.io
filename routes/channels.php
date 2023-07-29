@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -13,6 +14,19 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
-Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
-    return (int) $user->id === (int) $id;
+// Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
+//     return (int) $user->id === (int) $id;
+// });
+
+Broadcast::channel('User.Status.Online.{callTypeId}', function ($user, $callTypeId) {
+    Log::debug($user->id . ' turned on call type ' . $callTypeId);
+    return ['user' => [
+        'first_name' => $user->first_name,
+        'last_name' => $user->last_name,
+    ]];
+});
+
+Broadcast::channel('User.Status.Offline.{callTypeId}', function ($user, $callTypeId) {
+    Log::debug($user->id . ' turned off call type ' . $callTypeId);
+    return ['user' => $user];
 });

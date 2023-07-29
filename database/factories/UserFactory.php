@@ -24,14 +24,11 @@ class UserFactory extends Factory
         return [
             'first_name' => $this->faker->firstName,
             'last_name' => $this->faker->lastName,
-            'username' => $this->faker->userName,
             'email' => $this->faker->unique()->safeEmail,
-            'insurance_type' => $this->faker->randomElement(['life', 'auto', 'home']),
-            'license_state' => $this->faker->stateAbbr,
             'email_verified_at' => now(),
             'password' => bcrypt('password'),
             'remember_token' => Str::random(10),
-            'states_info' => json_encode(['types' => $types]),
+            'phone' => $this->faker->phoneNumber,
         ];
     }
 

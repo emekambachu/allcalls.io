@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, router, usePage } from "@inertiajs/vue3";
+import { Head, router } from "@inertiajs/vue3";
 
 defineProps({
     activities: {
@@ -11,7 +11,7 @@ defineProps({
 
 let formatDate = date => {
     if (!date) {
-        return ''; // Return an empty string if there is no date/time input
+        return '';
     }
 
     const dateObj = new Date(date);
@@ -28,17 +28,24 @@ let formatDate = date => {
 }
 
 let fetchActivities = page => {
+    // Create URL object from page
+    let url = new URL(page);
 
-    console.log(route().current);
-    console.log(page);
+    // Ensure the protocol is https
+    if (url.protocol !== 'https:') {
+        url.protocol = 'https:';
+    }
 
-    router.visit (page, { method: 'get', });
+    // Get the https URL as a string
+    let httpsPage = url.toString();
+
+    router.visit(httpsPage, { method: 'get', });
 }
 
 </script>
 
 <template>
-    <Head title="Usage Activity" />
+    <Head title="Activities" />
     <AuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
@@ -46,18 +53,16 @@ let fetchActivities = page => {
             </h2>
         </template>
 
-        <!-- <template> -->
-
         <div class="pt-14">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
                 <div class="px-4 sm:px-8  sm:rounded-lg">
-                    <div class="text-4xl text-custom-sky font-bold mb-6">My Activities</div>
+                    <div class="text-4xl text-custom-sky font-bold mb-6">Activities</div>
                     <hr class="mb-4">
                 </div>
             </div>
         </div>
 
-        <section class="p-3 ">
+        <section v-if="activities.data.length" class="p-3 ">
             <div class="mx-auto max-w-screen-xl sm:px-12">
                 <div class="relative sm:rounded-lg overflow-hidden">
                     <div
@@ -144,7 +149,7 @@ let fetchActivities = page => {
                         aria-label="Table navigation">
                         <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
                             Showing
-                            <span class="font-semibold text-white">1</span>
+                            <span class="font-semibold text-white">{{ activities.current_page }}</span>
                             of
                             <span class="font-semibold text-white">{{ activities.last_page }}</span>
                         </span>
@@ -188,20 +193,14 @@ let fetchActivities = page => {
                                 </a>
                             </li>
                         </ul>
-                        <!-- <pagination :data="activities" @pagination-change-page="fetchActivities"></pagination> -->
                     </nav>
                 </div>
             </div>
         </section>
 
-
-        <!-- </template> -->
-
-        <!-- <tr v-for="activity in activities" :key="activity.id" class="border-b dark:border-gray-700">
-           <td>{{ activity.user.creat }}</td> 
-        </tr> -->
-
-
+        <section v-else class="p-3">
+            <p class="text-center text-gray-300">No activities yet.</p>
+        </section>
 
     </AuthenticatedLayout>
 </template>
