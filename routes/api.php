@@ -4,6 +4,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ClientsAPIController;
 use Illuminate\Validation\ValidationException;
 use App\Http\Controllers\OnlineUsersController;
 use App\Http\Controllers\TwilioTokenController;
@@ -78,3 +79,5 @@ Route::get('/call/incoming', [IncomingCallController::class, 'respond']);
 
 Route::middleware('auth:sanctum')->post('/online-users', [OnlineUsersController::class, 'store']);
 Route::middleware('auth:sanctum')->delete('/online-users/{callTypeId}', [OnlineUsersController::class, 'destroy']);
+
+Route::middleware('auth:sanctum')->get('/clients', [ClientsAPIController::class, 'index']);

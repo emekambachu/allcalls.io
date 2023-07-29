@@ -135,7 +135,7 @@ const showingNavigationDropdown = ref(false);
                         <ResponsiveNavLink :href="route('billing.funds.index')" :active="route().current('billing.funds.index') || route().current('billing.cards.index') || route().current('billing.autopay.index')">
                             Billing
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink href="#" :active="route().current('clients')">
+                        <ResponsiveNavLink :href="route('clients.index')" :active="route().current('clients.current')">
                             Clients
                         </ResponsiveNavLink>
                         <ResponsiveNavLink :href="route('transactions.index')" :active="route().current('transactions.index')">
@@ -188,7 +188,7 @@ const showingNavigationDropdown = ref(false);
                         <img src="/img/billing.png" alt="">
                         Billing
                     </NavLink>
-                    <NavLink class="mb-10 gap-2" href="#" :active="route().current('clients')">
+                    <NavLink class="mb-10 gap-2" :href="route('clients.index')" :active="route().current('clients.index')">
                         <img src="/img/clients.png" alt="">
                         Clients
                     </NavLink>

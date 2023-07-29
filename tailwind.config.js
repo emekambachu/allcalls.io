@@ -18,11 +18,13 @@ module.exports = {
             colors: {
                 'custom-blue': '#03243D',
                 'custom-indigo': '#031726',
+                'custom-lightindigo': '#031926',
                 'custom-lightblue': '#239DFA',
                 'custom-green': '#3CFA7A',
                 'custom-white': '#eeeeee',
                 'custom-gray': '#D7D7D7',
                 'custom-sky': '#239DFA',
+                'custom-darksky': '#0B4C73',
                 'custom-orange': '#FA702F',
                 'new-white': '#2200ff',
             },
