@@ -17,7 +17,7 @@ import { Head } from "@inertiajs/vue3";
     <div class="pt-14">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
         <div class="px-4 sm:px-8 sm:rounded-lg">
-          <div class="text-4xl text-custom-sky font-bold mb-6">Clients</div>
+          <div class="text-4xl text-custom-sky font-bold mb-6">Dashboard</div>
           <hr class="mb-4" />
         </div>
       </div>
