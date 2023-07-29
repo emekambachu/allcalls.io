@@ -75,13 +75,13 @@ let openClientModal = (client) => {
       <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow">
         <p class="mb-1 text-sm text-gray-400">Total Earned</p>
         <h2 class="mb-2 text-4xl font-bold text-white">
-          ${{ totalAmountSpent.toFixed(2) }}
+          ${{ parseFloat(totalAmountSpent).toFixed(2) }}
         </h2>
       </div>
       <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow">
         <p class="mb-1 text-sm text-gray-400">Average Call Duration</p>
         <h2 class="mb-2 text-4xl font-bold text-white">
-          {{ averageCallDuration.toFixed(2) }} s
+          {{ parseFloat(averageCallDuration).toFixed(2) }} s
         </h2>
       </div>
     </div>
