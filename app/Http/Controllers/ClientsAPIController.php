@@ -11,10 +11,21 @@ class ClientsAPIController extends Controller
     {
         $perPage = 10;
 
-        $clients = Client::whereUserId($request->user()->id)->paginate($perPage);
+        $user_id = $request->user()->id;
+
+        $clients = Client::whereUserId($user_id)->paginate($perPage);
+
+        $totalCalls = Client::where('user_id', $user_id)->count();
+    
+        $totalAmountSpent = Client::where('user_id', $user_id)->sum('amount_spent');
+    
+        $averageCallDuration = Client::where('user_id', $user_id)->average('call_duration_in_seconds');
 
         return [
-            'clients' => $clients
+            'clients' => $clients,
+            'totalCalls' => $totalCalls,
+            'totalAmountSpent' => $totalAmountSpent,
+            'averageCallDuration' => $averageCallDuration,
         ];
     }
 }
