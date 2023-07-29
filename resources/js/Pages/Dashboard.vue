@@ -117,7 +117,7 @@ let formatMoney = (amount) => {
 
     <div class="px-16">
       <div
-        class="mx-auto px-4 sm:px-8 md:px-16 py-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+        class="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
       >
         <div
           class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto"
