@@ -8,8 +8,8 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class ClientSeeder extends Seeder
 {
-    private $numberOfRecords = 100;
-    private $userId = 155;
+    private $numberOfRecords = 125;
+    private $userId = 39;
 
     /**
      * Run the database seeds.

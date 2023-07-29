@@ -30,7 +30,9 @@ class ClientFactory extends Factory
             'amount_spent' => ($callDurationInSeconds / 60) * $ratePerMinute, // Calculating the amount spent based on the call duration and rate per minute
             'call_id' => $faker->uuid,
             'call_type_id' => $faker->numberBetween(1, 6),
-            'user_id' => User::factory(), // assuming User model is related to Client model
+            'user_id' => function () {
+                return User::factory()->create()->id;
+            }
         ];
     }
 }
