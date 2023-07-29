@@ -21,9 +21,16 @@ class DashboardController extends Controller
             ->orderBy('date', 'ASC')
             ->get();
     
+        $callData = Client::select(DB::raw('date(created_at) as date'), DB::raw('count(*) as count'))
+            ->where('created_at', '>=', $sevenDaysAgo)
+            ->where('user_id', $request->user()->id)
+            ->groupBy('date')
+            ->orderBy('date', 'ASC')
+            ->get();
+    
         return Inertia::render('Dashboard', [
-            'spendData' => $spendData
+            'spendData' => $spendData,
+            'callData' => $callData
         ]);
     }
-    
 }
