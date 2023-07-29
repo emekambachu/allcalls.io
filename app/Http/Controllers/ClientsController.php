@@ -10,11 +10,21 @@ class ClientsController extends Controller
 {
     public function index(Request $request)
     {
-        $clients = Client::where('user_id', $request->user()->id)->paginate(10);
-
-        dd($clients->toArray());
+        $user_id = $request->user()->id;
     
-        return Inertia::render('Clients/Index', compact('clients'));
+        $clients = Client::where('user_id', $user_id)->paginate(10);
+        
+        $totalCalls = Client::where('user_id', $user_id)->count();
+    
+        $totalAmountSpent = Client::where('user_id', $user_id)->sum('amount_spent');
+    
+        $averageCallDuration = Client::where('user_id', $user_id)->average('call_duration_in_seconds');
+    
+        return Inertia::render('Clients/Index', [
+            'clients' => $clients,
+            'totalCalls' => $totalCalls,
+            'totalAmountSpent' => $totalAmountSpent,
+            'averageCallDuration' => $averageCallDuration,
+        ]);
     }
-    
 }

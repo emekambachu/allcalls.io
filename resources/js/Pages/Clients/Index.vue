@@ -3,11 +3,25 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, router } from "@inertiajs/vue3";
 import { ref } from "vue";
 
-defineProps({
+let props = defineProps({
   clients: {
     type: Object,
   },
+
+  totalCalls: {
+    type: Number
+  },
+
+  totalAmountSpent: {
+    type: Number
+  },
+
+  averageCallDuration: {
+    type: Number
+  }
 });
+
+console.log(props);
 
 let fetchClients = (page) => {
   // Create URL object from page
