@@ -87,7 +87,7 @@ class FundsController extends Controller
             'amount' => (float) $request->amount,
             'user_id' => $user->id,
             'sign' => true,
-            // 'card_id' => $card->id,
+            'card_id' => $card->id,
         ]);
 
         return redirect()->back()->with([
