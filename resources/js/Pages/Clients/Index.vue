@@ -10,10 +10,18 @@ defineProps({
 });
 
 let fetchClients = (page) => {
-  console.log(route().current);
-  console.log(page);
+  // Create URL object from page
+  let url = new URL(page);
 
-  router.visit(page, { method: "get" });
+  // Ensure the protocol is https
+  if (url.protocol !== "https:") {
+    url.protocol = "https:";
+  }
+
+  // Get the https URL as a string
+  let httpsPage = url.toString();
+
+  router.visit(httpsPage, { method: "get" });
 };
 
 let showModal = ref(false);
@@ -138,7 +146,9 @@ let openClientModal = (client) => {
                   class="text-sm font-normal text-gray-500 dark:text-gray-400"
                 >
                   Showing
-                  <span class="font-semibold text-white">{{ clients.current_page }}</span>
+                  <span class="font-semibold text-white">{{
+                    clients.current_page
+                  }}</span>
                   of
                   <span class="font-semibold text-white">{{
                     clients.last_page

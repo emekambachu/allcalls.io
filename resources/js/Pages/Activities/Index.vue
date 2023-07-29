@@ -28,8 +28,6 @@ let formatDate = date => {
 }
 
 let fetchActivities = page => {
-    console.log(route().current);
-
     // Create URL object from page
     let url = new URL(page);
 
@@ -41,10 +39,7 @@ let fetchActivities = page => {
     // Get the https URL as a string
     let httpsPage = url.toString();
 
-    console.log(httpsPage);
-
     router.visit(httpsPage, { method: 'get', });
-
 }
 
 </script>
