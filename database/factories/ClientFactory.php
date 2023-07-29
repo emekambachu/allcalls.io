@@ -24,7 +24,7 @@ class ClientFactory extends Factory
             'email' => $faker->unique()->safeEmail,
             'address' => $faker->address,
             'dob' => $faker->dateTimeBetween('-66 years', '-23 years')->format('Y-m-d'), // Generating dob for people aged between 23 to 66 years
-            'call_taken' => $faker->dateTimeBetween('-30 days', 'now')->setTime($faker->numberBetween(9, 17), 0),
+            'call_taken' => $faker->dateTimeBetween('-30 days', 'now')->setTime($faker->numberBetween(9, 17), $faker->numberBetween(0, 59), $faker->numberBetween(0, 59)),
             'call_duration_in_seconds' => $callDurationInSeconds,
             'hung_up_by' => $faker->randomElement(['Caller', 'Agent']),
             'amount_spent' => ($callDurationInSeconds / 60) * $ratePerMinute, // Calculating the amount spent based on the call duration and rate per minute
