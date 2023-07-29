@@ -12,7 +12,7 @@ class ClientsController extends Controller
     {
         $clients = Client::where('user_id', $request->user()->id)->paginate(10);
 
-        dd($clients);
+        dd($clients->toArray());
     
         return Inertia::render('Clients/Index', compact('clients'));
     }
