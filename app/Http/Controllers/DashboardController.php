@@ -28,9 +28,18 @@ class DashboardController extends Controller
             ->orderBy('date', 'ASC')
             ->get();
 
+        $totalCalls = Client::where('user_id', $request->user()->id)->count();
+
+        $totalAmountSpent = Client::where('user_id', $request->user()->id)->sum('amount_spent');
+    
+        $averageCallDuration = Client::where('user_id', $request->user()->id)->average('call_duration_in_seconds');
+
         return Inertia::render('Dashboard', [
             'spendData' => $spendData,
-            'callData' => $callData
+            'callData' => $callData,
+            'totalCalls' => $totalCalls,
+            'totalAmountSpent' => $totalAmountSpent,
+            'averageCallDuration' => $averageCallDuration,
         ]);
     }
 }

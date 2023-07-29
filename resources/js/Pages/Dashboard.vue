@@ -25,6 +25,9 @@ ChartJS.register(
 const props = defineProps({
   spendData: Array,
   callData: Array,
+  totalCalls: Number,
+  totalAmountSpent: Number,
+  averageCallDuration: Number,
 });
 
 let spendChartData = reactive({
@@ -76,6 +79,20 @@ let spendChartOptions = reactive({
     },
   },
 });
+
+let formatTime = (duration) => {
+  const minutes = Math.floor(duration / 60);
+  const seconds = Math.floor(duration % 60);
+  return `${minutes.toString().padStart(2, "0")}:${seconds
+    .toString()
+    .padStart(2, "0")}`;
+};
+
+let formatMoney = (amount) => {
+  return parseFloat(amount)
+    .toFixed(2)
+    .replace(/\d(?=(\d{3})+\.)/g, "$&,");
+};
 </script>
 
 <template>
@@ -99,6 +116,40 @@ let spendChartOptions = reactive({
     </div>
 
     <div class="px-16">
+      <div
+        class="mx-auto px-4 sm:px-8 md:px-16 py-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+      >
+        <div
+          class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto"
+        >
+          <p class="mb-1 text-sm text-gray-300">Total Calls</p>
+          <h2
+            class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white"
+          >
+            {{ totalCalls }}
+          </h2>
+        </div>
+        <div
+          class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto"
+        >
+          <p class="mb-1 text-sm text-gray-300">Total Earned</p>
+          <h2
+            class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white"
+          >
+            ${{ formatMoney(totalAmountSpent) }}
+          </h2>
+        </div>
+        <div
+          class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto"
+        >
+          <p class="mb-1 text-sm text-gray-300">Average Call Duration</p>
+          <h2
+            class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white"
+          >
+            {{ formatTime(averageCallDuration) }}
+          </h2>
+        </div>
+      </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <Bar
