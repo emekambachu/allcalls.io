@@ -57,7 +57,7 @@ let addFunds = () => {
 
     <div class="sm:py-10">
       <div class="mx-8 px-12 py-4 sm:p-8 sm:rounded-lg">
-      <h2 id="headline" class="text-4xl text-custom-sky font-bold mb-6">
+      <h2 id="headline" class="text-4xl text-custom-sky font-bold mb-6" style="padding-bottom: 0;">
         Add Funds
       </h2>
       <hr class="mb-8" />
@@ -69,7 +69,7 @@ let addFunds = () => {
 
         <div v-if="cards.length">
           <section class="mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 sm:rounded-lg">
+            <div class="p-4 sm:p-8 sm:rounded-lg" style="padding-top: 0;">
               <div
                 :class="{
                   'max-w-lg flex items-center px-2 py-4 mt-4 rounded-lg shadow hover:bg-gray-300 hover:font-medium mb-2 cursor-pointer select-none': true,
