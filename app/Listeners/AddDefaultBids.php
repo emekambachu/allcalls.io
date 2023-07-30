@@ -26,6 +26,7 @@ class AddDefaultBids
             Bid::create([
                 'user_id' => $event->user->id,
                 'call_type_id' => $callType->id,
+                20
             ]);
         }
     }

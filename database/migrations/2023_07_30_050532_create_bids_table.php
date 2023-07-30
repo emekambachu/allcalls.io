@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('call_type_id');
-            $table->decimal('amount', 8, 2)->default(20);
+            $table->decimal('amount', 8, 2);
             $table->timestamps();
         });
     }
