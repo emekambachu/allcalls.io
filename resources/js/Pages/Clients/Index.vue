@@ -244,12 +244,13 @@ let formatMoney = (amount) => {
     </section>
 
     <div
-      id="defaultModal"
-      :class="{ hidden: !showModal }"
-      tabindex="-1"
-      aria-hidden="!showModal"
-      class="flex items-center justify-center fixed inset-0 z-50 w-full h-full overflow-x-hidden overflow-y-auto max-h-full"
-    >
+  id="defaultModal"
+  :class="{ hidden: !showModal }"
+  tabindex="-1"
+  aria-hidden="!showModal"
+  class="flex items-center justify-center fixed inset-0 z-50 w-full h-full overflow-x-hidden overflow-y-auto max-h-full mx-4 sm:mx-0"
+>
+
       <div class="relative w-full max-w-4xl max-h-full mx-auto">
         <div
           class="relative bg-sky-950 border border-custom-darksky rounded-lg shadow-lg"
@@ -290,7 +291,7 @@ let formatMoney = (amount) => {
                 Personal Details
               </h4>
               <div
-                class="grid grid-cols-2 gap-2 text-gray-500 dark:text-gray-300 mb-10"
+                class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-500 dark:text-gray-300 mb-10"
               >
                 <div>
                   <strong class="text-lg">First Name: </strong>
@@ -310,7 +311,7 @@ let formatMoney = (amount) => {
                 Contact Information
               </h4>
               <div
-                class="grid grid-cols-2 gap-2 text-gray-500 dark:text-gray-300 mb-10"
+                class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-500 dark:text-gray-300 mb-10"
               >
                 <div>
                   <strong class="text-lg">Phone: </strong>
@@ -334,7 +335,7 @@ let formatMoney = (amount) => {
                 Call Details
               </h4>
               <div
-                class="grid grid-cols-2 gap-2 text-gray-500 dark:text-gray-300 mb-10"
+                class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-500 dark:text-gray-300 mb-10"
               >
                 <div>
                   <strong class="text-lg">Call Taken: </strong>
@@ -376,7 +377,7 @@ let formatMoney = (amount) => {
                 Financial Details
               </h4>
               <div
-                class="grid grid-cols-2 gap-2 text-gray-500 dark:text-gray-300 mb-6"
+                class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-500 dark:text-gray-300 mb-10"
               >
                 <div>
                   <strong class="text-lg">Amount Spent: </strong>
