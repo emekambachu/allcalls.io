@@ -243,6 +243,7 @@ let formatMoney = (amount) => {
       <p class="text-center text-gray-300">No clients yet.</p>
     </section>
 
+  <Transition appear>
     <div
       id="defaultModal"
       :class="{ hidden: !showModal }"
@@ -397,5 +398,6 @@ let formatMoney = (amount) => {
         </div>
       </div>
     </div>
+  </Transition>
   </AuthenticatedLayout>
 </template>
