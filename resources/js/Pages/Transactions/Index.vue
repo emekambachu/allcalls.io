@@ -60,9 +60,6 @@ let formatDate = (date) => {
                   <th scope="col" class="px-4 py-3">Amount</th>
                   <th scope="col" class="px-4 py-3">Date & Time</th>
                   <th scope="col" class="px-4 py-3">Direction</th>
-                  <th scope="col" class="px-4 py-3">
-                    <span class="sr-only">Actions</span>
-                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -96,30 +93,6 @@ let formatDate = (date) => {
                     >
                       Removed
                     </span>
-                  </td>
-
-                  <td
-                    class="text-gray-300 px-4 py-3 flex items-center justify-end"
-                  >
-                    <button
-                      id="apple-imac-27-dropdown-button"
-                      data-dropdown-toggle="apple-imac-27-dropdown"
-                      class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
-                      type="button"
-                    >
-                      <svg
-                        class="w-5 h-5"
-                        aria-hidden="true"
-                        fill="currentColor"
-                        viewbox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z"
-                        />
-                      </svg>
-                    </button>
-                    <!-- Add your dropdown content here -->
                   </td>
                 </tr>
               </tbody>
