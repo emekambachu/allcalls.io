@@ -264,7 +264,7 @@ let formatMoney = (amount) => {
                         Reporting
                     </NavLink> -->
           <NavLink
-            class="mb-5 gap-2"
+            class="mb-10 gap-2"
             id="billing-nav-link"
             :href="route('billing.funds.index')"
             :active="
@@ -272,19 +272,52 @@ let formatMoney = (amount) => {
               route().current('billing.cards.index') ||
               route().current('billing.autopay.index')
             "
+            :class="{
+              'mb-5':
+                route().current('billing.funds.index') ||
+                route().current('billing.cards.index') ||
+                route().current('billing.autopay.index'),
+            }"
           >
             <img src="/img/billing.png" alt="" />
             Billing
+
+            <svg
+              v-if="
+                route().current('billing.funds.index') ||
+                route().current('billing.cards.index') ||
+                route().current('billing.autopay.index')
+              "
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+              />
+            </svg>
           </NavLink>
 
-          <div class="pl-14 text-white text-sm mb-5">
+          <div
+            v-if="
+              route().current('billing.funds.index') ||
+              route().current('billing.cards.index') ||
+              route().current('billing.autopay.index')
+            "
+            class="pl-14 text-white text-sm mb-5"
+          >
             <ul>
               <li class="mb-3">
                 <Link
                   href="/billing/funds"
                   class="inline-flex items-center rounded-t-lg hover:text-custom-green"
                   :class="{
-                    'inline-flex p-4 items-center text-custom-sky border-b-2 border-blue-500 rounded-t-lg active group': false,
+                    'text-custom-green': route().current('billing.funds.index'),
                   }"
                 >
                   <svg
@@ -310,8 +343,7 @@ let formatMoney = (amount) => {
                   href="/billing/cards"
                   class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
                   :class="{
-                    'inline-flex p-4 items-center text-custom-sky border-b-2 border-blue-500 rounded-t-lg active group':
-                      false,
+                    'text-custom-green': route().current('billing.cards.index'),
                   }"
                   aria-current="page"
                 >
@@ -335,29 +367,31 @@ let formatMoney = (amount) => {
               </li>
               <li>
                 <Link
-        aria-current="page"
-        class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
-        :class="{
-          'inline-flex p-4 items-center text-custom-sky border-b-2 border-blue-500 rounded-t-lg active group': false,
-        }"
-        href="/billing/autopay"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          class="w-4 h-4 mr-2"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
-          />
-        </svg>
-        <span>Autopay</span>
-      </Link>
+                  aria-current="page"
+                  class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
+                  :class="{
+                    'text-custom-green': route().current(
+                      'billing.autopay.index'
+                    ),
+                  }"
+                  href="/billing/autopay"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-4 h-4 mr-2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+                    />
+                  </svg>
+                  <span>Autopay</span>
+                </Link>
               </li>
             </ul>
           </div>
