@@ -25,6 +25,12 @@ let formatDate = (date) => {
 
   return formattedDate;
 };
+
+let formatMoney = (amount) => {
+  return parseFloat(amount)
+    .toFixed(2)
+    .replace(/\d(?=(\d{3})+\.)/g, "$&,");
+};
 </script>
 
 <template>
@@ -75,7 +81,7 @@ let formatDate = (date) => {
                     {{ transaction.id }}
                   </th>
                   <td class="text-gray-300 px-4 py-3">
-                    {{ transaction.amount }}
+                    {{ formatMoney(transaction.amount) }}
                   </td>
                   <td class="text-gray-300 px-4 py-3">
                     {{ formatDate(transaction.created_at) }}
