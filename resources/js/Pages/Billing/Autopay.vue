@@ -88,9 +88,9 @@ if (props.setting) {
 
     <div class="sm:py-10">
       <div class="mx-auto max-w-7xl">
-        <div class="sm:pl-10 max-w-6xl">
+        <!-- <div class="sm:pl-10 max-w-6xl">
           <BillingNav></BillingNav>
-        </div>
+        </div> -->
 
         <div>
           <section class="mx-auto sm:px-6 lg:px-8 space-y-6">

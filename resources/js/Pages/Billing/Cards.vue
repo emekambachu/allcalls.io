@@ -62,9 +62,9 @@ let removeCard = (id) => {
 
     <div class="sm:py-10">
       <div class="mx-auto max-w-7xl">
-        <div class="sm:pl-10 max-w-6xl">
+        <!-- <div class="sm:pl-10 max-w-6xl">
           <BillingNav></BillingNav>
-        </div>
+        </div> -->
 
         <div>
           <section class="mx-auto sm:px-6 lg:px-8 space-y-6">
@@ -105,25 +105,25 @@ let removeCard = (id) => {
                     <select
                       name="month"
                       id="month"
-                      class="bg-transparent text-white py-4 border-[0.5px] border-gray-500 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       v-model="cardForm.month"
                       required
                     >
                       <option selected="" disabled="" value="">
                         Select Month
                       </option>
-                      <option class="text-black" value="01">January</option>
-                      <option class="text-black" value="02">February</option>
-                      <option class="text-black" value="03">March</option>
-                      <option class="text-black" value="04">April</option>
-                      <option class="text-black" value="05">May</option>
-                      <option class="text-black" value="06">June</option>
-                      <option class="text-black" value="07">July</option>
-                      <option class="text-black" value="08">August</option>
-                      <option class="text-black" value="09">September</option>
-                      <option class="text-black" value="10">October</option>
-                      <option class="text-black" value="11">November</option>
-                      <option class="text-black" value="12">December</option>
+                      <option value="01">January</option>
+                      <option value="02">February</option>
+                      <option value="03">March</option>
+                      <option value="04">April</option>
+                      <option value="05">May</option>
+                      <option value="06">June</option>
+                      <option value="07">July</option>
+                      <option value="08">August</option>
+                      <option value="09">September</option>
+                      <option value="10">October</option>
+                      <option value="11">November</option>
+                      <option value="12">December</option>
                     </select>
                   </div>
 
@@ -136,24 +136,24 @@ let removeCard = (id) => {
                     <select
                       name="year"
                       id="year"
-                      class="bg-transparent text-white py-4 border-[0.5px] border-gray-500 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       v-model="cardForm.year"
                       required
                     >
                       <option selected="" disabled="" value="">
                         Select Year
                       </option>
-                      <option class="text-black" value="2023">2023</option>
-                      <option class="text-black" value="2024">2024</option>
-                      <option class="text-black" value="2025">2025</option>
-                      <option class="text-black" value="2026">2026</option>
-                      <option class="text-black" value="2027">2027</option>
-                      <option class="text-black" value="2028">2028</option>
-                      <option class="text-black" value="2029">2029</option>
-                      <option class="text-black" value="2030">2030</option>
-                      <option class="text-black" value="2031">2031</option>
-                      <option class="text-black" value="2032">2032</option>
-                      <option class="text-black" value="2033">2033</option>
+                      <option value="2023">2023</option>
+                      <option value="2024">2024</option>
+                      <option value="2025">2025</option>
+                      <option value="2026">2026</option>
+                      <option value="2027">2027</option>
+                      <option value="2028">2028</option>
+                      <option value="2029">2029</option>
+                      <option value="2030">2030</option>
+                      <option value="2031">2031</option>
+                      <option value="2032">2032</option>
+                      <option value="2033">2033</option>
                     </select>
                   </div>
 
@@ -218,34 +218,34 @@ let removeCard = (id) => {
                     <select
                       name="state"
                       id="state"
-                      class="bg-transparent text-white py-4 border-[0.5px] border-gray-500 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       v-model="cardForm.state"
                       required
                     >
                       <option selected="" disabled="" value="">
                         Select State
                       </option>
-                      <option class="text-black" value="AL">Alabama</option>
-                      <option class="text-black" value="AK">Alaska</option>
-                      <option class="text-black" value="AZ">Arizona</option>
-                      <option class="text-black" value="AR">Arkansas</option>
-                      <option class="text-black" value="CA">California</option>
-                      <option class="text-black" value="CO">Colorado</option>
-                      <option class="text-black" value="CT">Connecticut</option>
-                      <option class="text-black" value="DE">Delaware</option>
-                      <option class="text-black" value="FL">Florida</option>
-                      <option class="text-black" value="GA">Georgia</option>
-                      <option class="text-black" value="HI">Hawaii</option>
-                      <option class="text-black" value="ID">Idaho</option>
-                      <option class="text-black" value="IL">Illinois</option>
-                      <option class="text-black" value="IN">Indiana</option>
-                      <option class="text-black" value="IA">Iowa</option>
-                      <option class="text-black" value="KS">Kansas</option>
-                      <option class="text-black" value="KY">Kentucky</option>
-                      <option class="text-black" value="LA">Louisiana</option>
-                      <option class="text-black" value="ME">Maine</option>
-                      <option class="text-black" value="MD">Maryland</option>
-                      <option class="text-black" value="MA">
+                      <option value="AL">Alabama</option>
+                      <option value="AK">Alaska</option>
+                      <option value="AZ">Arizona</option>
+                      <option value="AR">Arkansas</option>
+                      <option value="CA">California</option>
+                      <option value="CO">Colorado</option>
+                      <option value="CT">Connecticut</option>
+                      <option value="DE">Delaware</option>
+                      <option value="FL">Florida</option>
+                      <option value="GA">Georgia</option>
+                      <option value="HI">Hawaii</option>
+                      <option value="ID">Idaho</option>
+                      <option value="IL">Illinois</option>
+                      <option value="IN">Indiana</option>
+                      <option value="IA">Iowa</option>
+                      <option value="KS">Kansas</option>
+                      <option value="KY">Kentucky</option>
+                      <option value="LA">Louisiana</option>
+                      <option value="ME">Maine</option>
+                      <option value="MD">Maryland</option>
+                      <option value="MA">
                         Massachusetts
                       </option>
                       <option class="text-black" value="MI">Michigan</option>

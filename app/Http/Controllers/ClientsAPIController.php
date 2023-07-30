@@ -9,11 +9,9 @@ class ClientsAPIController extends Controller
 {
     public function index(Request $request)
     {
-        $perPage = 10;
-
         $user_id = $request->user()->id;
 
-        $clients = Client::whereUserId($user_id)->paginate($perPage);
+        $clients = Client::where('user_id', $user_id)->with('callType')->paginate(10);
 
         $totalCalls = Client::where('user_id', $user_id)->count();
     

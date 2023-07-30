@@ -57,9 +57,9 @@ let addFunds = () => {
 
     <div class="sm:py-10">
       <form class="mx-auto max-w-7xl">
-        <div class="sm:pl-10 max-w-6xl">
+        <!-- <div class="sm:pl-10 max-w-6xl">
           <BillingNav></BillingNav>
-        </div>
+        </div> -->
 
         <div v-if="cards.length">
           <section class="mx-auto sm:px-6 lg:px-8 space-y-6">
