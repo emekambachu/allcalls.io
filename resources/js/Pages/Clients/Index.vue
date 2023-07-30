@@ -368,8 +368,8 @@ let formatMoney = (amount) => {
                   }}</a>
                 </div>
                 <div>
-                  <strong class="text-lg">Call Type ID: </strong>
-                  {{ selectedClient.call_type_id }}
+                  <strong class="text-lg">Call Type: </strong>
+                  {{ selectedClient.call_type.type }}
                 </div>
               </div>
 
