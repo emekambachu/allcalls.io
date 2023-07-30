@@ -244,13 +244,12 @@ let formatMoney = (amount) => {
     </section>
 
     <div
-  id="defaultModal"
-  :class="{ hidden: !showModal }"
-  tabindex="-1"
-  aria-hidden="!showModal"
-  class="flex items-center justify-center fixed inset-0 z-50 w-full h-full overflow-x-hidden overflow-y-auto max-h-full mx-4 sm:mx-0"
->
-
+      id="defaultModal"
+      :class="{ hidden: !showModal }"
+      tabindex="-1"
+      aria-hidden="!showModal"
+      class="flex items-center justify-center fixed inset-0 z-50 w-full h-full overflow-x-hidden overflow-y-auto max-h-full mx-4 sm:mx-0"
+    >
       <div class="relative w-full max-w-4xl max-h-full mx-auto">
         <div
           class="relative bg-sky-950 border border-custom-darksky rounded-lg shadow-lg"
