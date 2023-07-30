@@ -152,7 +152,7 @@ let removeCard = (id) => {
                 </div>
                 <div class="flow-root">
                   <ul role="list" class="divide-y divide-gray-200">
-                    <li class="px-8 py-4 sm:px-12 rounded-lg sm:py-8 bg-custom-white" v-for="card in cards" :key="card.id">
+                    <li class="px-8 py-4 sm:px-12 rounded-lg sm:py-8 bg-custom-white mb-4" v-for="card in cards" :key="card.id">
                       <div class="flex items-center space-x-4">
                         <div class="flex-1 min-w-0">
                           <p class="text-sm font-medium text-custom-blue truncate ">
