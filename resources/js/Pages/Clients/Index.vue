@@ -243,7 +243,15 @@ let formatMoney = (amount) => {
       <p class="text-center text-gray-300">No clients yet.</p>
     </section>
 
-  <Transition appear>
+    <Transition
+    name="modal"
+    enter-active-class="transition ease-out duration-300 transform"
+    enter-from-class="opacity-0 translate-y-2"
+    enter-to-class="opacity-100 translate-y-0"
+    leave-active-class="transition ease-in duration-300 transform"
+    leave-from-class="opacity-100 translate-y-0"
+    leave-to-class="opacity-0 translate-y-2"
+>
     <div
       id="defaultModal"
       :class="{ hidden: !showModal }"
