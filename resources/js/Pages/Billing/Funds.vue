@@ -56,6 +56,12 @@ let addFunds = () => {
     </template>
 
     <div class="sm:py-10">
+      <div class="mx-8 px-12 py-4 sm:p-8 sm:rounded-lg">
+      <h2 id="headline" class="text-4xl text-custom-sky font-bold mb-6">
+        Add Funds
+      </h2>
+      <hr class="mb-8" />
+      </div>
       <form class="mx-auto max-w-7xl">
         <!-- <div class="sm:pl-10 max-w-6xl">
           <BillingNav></BillingNav>
