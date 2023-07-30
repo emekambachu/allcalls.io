@@ -70,9 +70,6 @@ let addFunds = () => {
         <div v-if="cards.length">
           <section class="mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-4 sm:p-8 sm:rounded-lg">
-              <h2 class="text-4xl text-custom-sky font-bold mb-6">Add funds</h2>
-              <hr class="mb-8" />
-
               <div
                 :class="{
                   'max-w-lg flex items-center px-2 py-4 mt-4 rounded-lg shadow hover:bg-gray-300 hover:font-medium mb-2 cursor-pointer select-none': true,
