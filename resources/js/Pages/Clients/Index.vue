@@ -248,7 +248,7 @@ let formatMoney = (amount) => {
       :class="{ hidden: !showModal }"
       tabindex="-1"
       aria-hidden="!showModal"
-      class="grid items-center fixed top-100 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full"
+      class="flex items-center justify-center fixed inset-0 z-50 w-full h-full overflow-x-hidden overflow-y-auto max-h-full"
     >
       <div class="relative w-full max-w-4xl max-h-full mx-auto">
         <div
