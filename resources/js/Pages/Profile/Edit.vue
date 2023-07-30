@@ -3,6 +3,9 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import DeleteUserForm from "./Partials/DeleteUserForm.vue";
 import UpdatePasswordForm from "./Partials/UpdatePasswordForm.vue";
 import UpdateProfileInformationForm from "./Partials/UpdateProfileInformationForm.vue";
+import TextInput from "@/Components/TextInput.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import AuthenticatedButton from "@/Components/AuthenticatedButton.vue";
 import { Head } from "@inertiajs/vue3";
 
 defineProps({
@@ -19,6 +22,17 @@ defineProps({
     type: Array,
   },
 });
+
+let bidsInput = ref(props.bids.map(bid => {
+    return { bid_id: bid.id, bid_amount: bid.amount, call_type_name: bid.call_type.type };
+}));
+
+let saveBids = () => {
+    router.visit('/bids', {
+        method: 'PATCH',
+        data: bidsInput.value
+    });
+}
 </script>
 
 <template>
@@ -45,7 +59,7 @@ defineProps({
         </div>
 
         <div>
-          <header>
+          <header class="pl-8">
             <h2 class="text-lg font-medium text-gray-100">Bids Setting</h2>
 
             <p class="mt-1 text-sm text-gray-400">
@@ -53,11 +67,26 @@ defineProps({
             </p>
           </header>
 
-          <div>
-            <div class="grid grid-cols-2 gap-10 mb-12">
-                <div class="text-white">
-                    
+          <div class="pl-8 mt-6">
+            <div class="grid grid-cols-2 gap-10 mb-8">
+              <div class="text-white" v-for="bid in bidsInput" :key="bid.bid_id">
+                <div>
+                  <InputLabel :for="`bid_${bid.bid_id}`" :value="`${bid.call_type_name}`" />
+
+                  <TextInput
+                    :id="`bid_${bid.bid_id}`"
+                    type="number"
+                    class="mt-1 block w-full"
+                    :value="bid.bid_amount"
+                    required
+                    autofocus
+                  />
                 </div>
+              </div>
+            </div>
+
+            <div>
+                <AuthenticatedButton @click="saveBids">Save</AuthenticatedButton>
             </div>
           </div>
         </div>
