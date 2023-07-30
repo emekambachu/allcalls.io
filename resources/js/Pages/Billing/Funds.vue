@@ -56,7 +56,7 @@ let addFunds = () => {
     </template>
 
     <div class="sm:py-10">
-      <div class="mx-8 px-12 py-4 sm:p-8 sm:rounded-lg">
+      <div class="mx-8 px-12 py-4 sm:p-8 sm:rounded-lg" style="padding-bottom: 0;">
       <h2 id="headline" class="text-4xl text-custom-sky font-bold mb-6" style="padding-bottom: 0;">
         Add Funds
       </h2>
