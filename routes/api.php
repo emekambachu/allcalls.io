@@ -8,6 +8,7 @@ use App\Http\Controllers\ClientsAPIController;
 use Illuminate\Validation\ValidationException;
 use App\Http\Controllers\OnlineUsersController;
 use App\Http\Controllers\TwilioTokenController;
+use App\Http\Controllers\CallTypesAPIController;
 use App\Http\Controllers\IncomingCallController;
 
 /*

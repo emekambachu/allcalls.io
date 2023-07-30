@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bid;
 use Inertia\Inertia;
 use App\Models\State;
 use Inertia\Response;
@@ -65,7 +66,9 @@ class ProfileController extends Controller
 
         });
 
-        return Inertia::render('Profile/View', compact('user', 'callTypes'));
+        $bids = Bid::whereUserId($request->user()->id)->with('callType')->get();
+
+        return Inertia::render('Profile/View', compact('user', 'callTypes', 'bids'));
     }
 
     /**

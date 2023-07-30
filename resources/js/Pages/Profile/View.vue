@@ -12,6 +12,10 @@ let props = defineProps({
   callTypes: {
     type: Array,
   },
+
+  bids: {
+    type: Array,
+  },
 });
 
 let formatDate = (date) => {
@@ -157,6 +161,18 @@ let formatMoney = (amount) => {
               </div>
               <div class="text-md sm:text-xl text-custom-white font-bold">
                 {{ callType.states.map((state) => state.name).join(", ") }}
+              </div>
+            </div>
+          </div>
+
+          <div class="text-4xl text-custom-sky font-bold mb-6">Bids</div>
+          <hr class="mb-4" />
+
+          <div class="grid grid-cols-2 gap-10 mb-12">
+            <div v-for="bid in bids" :key="bid.id">
+              <div class="flex flex-col space-y-2 h-full overflow-auto">
+                <div class="text-sm text-gray-400 font-bold" v-text="bid.call_type.type"></div>
+                <div class="text-md sm:text-xl text-custom-white font-bold">{{ formatMoney(bid.amount) }}</div>
               </div>
             </div>
           </div>
