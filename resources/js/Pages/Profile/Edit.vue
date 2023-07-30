@@ -6,9 +6,10 @@ import UpdateProfileInformationForm from "./Partials/UpdateProfileInformationFor
 import TextInput from "@/Components/TextInput.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import AuthenticatedButton from "@/Components/AuthenticatedButton.vue";
-import { Head } from "@inertiajs/vue3";
+import { Head, router } from "@inertiajs/vue3";
+import { ref } from 'vue';
 
-defineProps({
+let props = defineProps({
   mustVerifyEmail: {
     type: Boolean,
   },
@@ -30,7 +31,9 @@ let bidsInput = ref(props.bids.map(bid => {
 let saveBids = () => {
     router.visit('/bids', {
         method: 'PATCH',
-        data: bidsInput.value
+        data: {
+            bids: bidsInput.value
+        }
     });
 }
 </script>
@@ -77,7 +80,7 @@ let saveBids = () => {
                     :id="`bid_${bid.bid_id}`"
                     type="number"
                     class="mt-1 block w-full"
-                    :value="bid.bid_amount"
+                    v-model="bid.bid_amount"
                     required
                     autofocus
                   />
