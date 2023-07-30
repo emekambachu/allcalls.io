@@ -25,7 +25,7 @@ let props = defineProps({
 
 let cardForm = reactive({
   number: "",
-  month: "01",
+  month: "",
   year: "",
   cvv: "",
   address: "",
@@ -45,10 +45,6 @@ let removeCard = (id) => {
   router.visit(`/billing/cards/${id}`, {
     method: "delete",
   });
-};
-
-let changeColor = event => {
-  event.target.className = "bg-transparent text-white py-4 border-[0.5px] border-gray-500 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full";
 };
 </script>
 
@@ -109,24 +105,25 @@ let changeColor = event => {
                     <select
                       name="month"
                       id="month"
-                      class="bg-transparent text-black py-4 border-[0.5px] border-gray-500 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full"
+                      class="bg-transparent text-white py-4 border-[0.5px] border-gray-500 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full"
                       v-model="cardForm.month"
                       required
-                      @change="changeColor"
                     >
-                      <option selected disabled>Month</option>
-                      <option value="01">January</option>
-                      <option value="02">February</option>
-                      <option value="03">March</option>
-                      <option value="04">April</option>
-                      <option value="05">May</option>
-                      <option value="06">June</option>
-                      <option value="07">July</option>
-                      <option value="08">August</option>
-                      <option value="09">September</option>
-                      <option value="10">October</option>
-                      <option value="11">November</option>
-                      <option value="12">December</option>
+                      <option selected="" disabled="" value="">
+                        Select Month
+                      </option>
+                      <option class="text-black" value="01">January</option>
+                      <option class="text-black" value="02">February</option>
+                      <option class="text-black" value="03">March</option>
+                      <option class="text-black" value="04">April</option>
+                      <option class="text-black" value="05">May</option>
+                      <option class="text-black" value="06">June</option>
+                      <option class="text-black" value="07">July</option>
+                      <option class="text-black" value="08">August</option>
+                      <option class="text-black" value="09">September</option>
+                      <option class="text-black" value="10">October</option>
+                      <option class="text-black" value="11">November</option>
+                      <option class="text-black" value="12">December</option>
                     </select>
                   </div>
 
@@ -136,18 +133,30 @@ let changeColor = event => {
                       class="block mb-2 text-sm font-medium text-gray-300"
                       >Expiration year</label
                     >
-                    <TextInput
-                      type="number"
+                    <select
                       name="year"
                       id="year"
-                      class="w-full"
-                      placeholder="YYYY"
-                      required
-                      min="2023"
-                      max="2030"
+                      class="bg-transparent text-white py-4 border-[0.5px] border-gray-500 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full"
                       v-model="cardForm.year"
-                    />
+                      required
+                    >
+                      <option selected="" disabled="" value="">
+                        Select Year
+                      </option>
+                      <option class="text-black" value="2023">2023</option>
+                      <option class="text-black" value="2024">2024</option>
+                      <option class="text-black" value="2025">2025</option>
+                      <option class="text-black" value="2026">2026</option>
+                      <option class="text-black" value="2027">2027</option>
+                      <option class="text-black" value="2028">2028</option>
+                      <option class="text-black" value="2029">2029</option>
+                      <option class="text-black" value="2030">2030</option>
+                      <option class="text-black" value="2031">2031</option>
+                      <option class="text-black" value="2032">2032</option>
+                      <option class="text-black" value="2033">2033</option>
+                    </select>
                   </div>
+
                   <div class="w-full">
                     <label
                       for="cvv"
@@ -206,16 +215,87 @@ let changeColor = event => {
                       class="block mb-2 text-sm font-medium text-gray-300"
                       >State</label
                     >
-                    <TextInput
-                      type="text"
+                    <select
                       name="state"
                       id="state"
-                      class="w-full"
-                      placeholder="NY"
-                      required
+                      class="bg-transparent text-white py-4 border-[0.5px] border-gray-500 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full"
                       v-model="cardForm.state"
-                    />
+                      required
+                    >
+                      <option selected="" disabled="" value="">
+                        Select State
+                      </option>
+                      <option class="text-black" value="AL">Alabama</option>
+                      <option class="text-black" value="AK">Alaska</option>
+                      <option class="text-black" value="AZ">Arizona</option>
+                      <option class="text-black" value="AR">Arkansas</option>
+                      <option class="text-black" value="CA">California</option>
+                      <option class="text-black" value="CO">Colorado</option>
+                      <option class="text-black" value="CT">Connecticut</option>
+                      <option class="text-black" value="DE">Delaware</option>
+                      <option class="text-black" value="FL">Florida</option>
+                      <option class="text-black" value="GA">Georgia</option>
+                      <option class="text-black" value="HI">Hawaii</option>
+                      <option class="text-black" value="ID">Idaho</option>
+                      <option class="text-black" value="IL">Illinois</option>
+                      <option class="text-black" value="IN">Indiana</option>
+                      <option class="text-black" value="IA">Iowa</option>
+                      <option class="text-black" value="KS">Kansas</option>
+                      <option class="text-black" value="KY">Kentucky</option>
+                      <option class="text-black" value="LA">Louisiana</option>
+                      <option class="text-black" value="ME">Maine</option>
+                      <option class="text-black" value="MD">Maryland</option>
+                      <option class="text-black" value="MA">
+                        Massachusetts
+                      </option>
+                      <option class="text-black" value="MI">Michigan</option>
+                      <option class="text-black" value="MN">Minnesota</option>
+                      <option class="text-black" value="MS">Mississippi</option>
+                      <option class="text-black" value="MO">Missouri</option>
+                      <option class="text-black" value="MT">Montana</option>
+                      <option class="text-black" value="NE">Nebraska</option>
+                      <option class="text-black" value="NV">Nevada</option>
+                      <option class="text-black" value="NH">
+                        New Hampshire
+                      </option>
+                      <option class="text-black" value="NJ">New Jersey</option>
+                      <option class="text-black" value="NM">New Mexico</option>
+                      <option class="text-black" value="NY">New York</option>
+                      <option class="text-black" value="NC">
+                        North Carolina
+                      </option>
+                      <option class="text-black" value="ND">
+                        North Dakota
+                      </option>
+                      <option class="text-black" value="OH">Ohio</option>
+                      <option class="text-black" value="OK">Oklahoma</option>
+                      <option class="text-black" value="OR">Oregon</option>
+                      <option class="text-black" value="PA">
+                        Pennsylvania
+                      </option>
+                      <option class="text-black" value="RI">
+                        Rhode Island
+                      </option>
+                      <option class="text-black" value="SC">
+                        South Carolina
+                      </option>
+                      <option class="text-black" value="SD">
+                        South Dakota
+                      </option>
+                      <option class="text-black" value="TN">Tennessee</option>
+                      <option class="text-black" value="TX">Texas</option>
+                      <option class="text-black" value="UT">Utah</option>
+                      <option class="text-black" value="VT">Vermont</option>
+                      <option class="text-black" value="VA">Virginia</option>
+                      <option class="text-black" value="WA">Washington</option>
+                      <option class="text-black" value="WV">
+                        West Virginia
+                      </option>
+                      <option class="text-black" value="WI">Wisconsin</option>
+                      <option class="text-black" value="WY">Wyoming</option>
+                    </select>
                   </div>
+
                   <div class="w-full">
                     <label
                       for="zip"
