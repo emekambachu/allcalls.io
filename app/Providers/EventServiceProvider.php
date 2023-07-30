@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Transaction;
+use App\Listeners\AddDefaultBids;
 use App\Listeners\AddTargetsInRingba;
 use Illuminate\Support\Facades\Event;
 use App\Observers\TransactionObserver;
@@ -22,11 +23,10 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
-            AddTargetsInRingba::class,
+            AddDefaultBids::class,
         ],
 
         UserCallTypeStateUpdated::class => [
-            UpdateTargetsInRingba::class,
         ],
     ];
 
