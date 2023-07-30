@@ -25,7 +25,7 @@ let props = defineProps({
 
 let cardForm = reactive({
   number: "",
-  month: "",
+  month: "01",
   year: "",
   cvv: "",
   address: "",
@@ -47,16 +47,9 @@ let removeCard = (id) => {
   });
 };
 
-// onMounted(() => {
-// tippy('#step-one', {
-//   content: 'Step one',
-//   placement: 'bottom-start',
-//   trigger: 'manual',
-//   inertia: true,
-//   showOnCreate: true,
-//   allowHTML: true,
-// });
-// });
+let changeColor = event => {
+  event.target.className = "bg-transparent text-white py-4 border-[0.5px] border-gray-500 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full";
+};
 </script>
 
 <template>
@@ -116,10 +109,12 @@ let removeCard = (id) => {
                     <select
                       name="month"
                       id="month"
-                      class="bg-transparent text-white py-4 border-[0.5px] border-gray-500 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full"
+                      class="bg-transparent text-black py-4 border-[0.5px] border-gray-500 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full"
                       v-model="cardForm.month"
                       required
+                      @change="changeColor"
                     >
+                      <option selected disabled>Month</option>
                       <option value="01">January</option>
                       <option value="02">February</option>
                       <option value="03">March</option>
