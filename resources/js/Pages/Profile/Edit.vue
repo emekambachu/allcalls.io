@@ -29,6 +29,13 @@ let bidsInput = ref(props.bids.map(bid => {
 }));
 
 let saveBids = () => {
+    // Check if any bid amounts are below 20
+    if (bidsInput.value.some(bid => bid.bid_amount < 20)) {
+        alert("The minimum amount for a bid is $20.");
+        return; // Return early to prevent the router.visit from being called
+    }
+
+    // Continue to route if all bid amounts are 20 or greater
     router.visit('/bids', {
         method: 'PATCH',
         data: {
