@@ -95,7 +95,7 @@ let formatMoney = (amount) => {
       <div
         class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto"
       >
-        <p class="mb-1 text-sm text-gray-300">Total Earned</p>
+        <p class="mb-1 text-sm text-gray-300">Total Spent</p>
         <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
           ${{ formatMoney(totalAmountSpent) }}
         </h2>
