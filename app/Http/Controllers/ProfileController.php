@@ -119,10 +119,13 @@ class ProfileController extends Controller
 
         });
 
+        $bids = Bid::whereUserId($request->user()->id)->with('callType')->get();
+
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
             'callTypes' => $callTypes,
+            'bids' => $bids,
         ]);
     }
 
