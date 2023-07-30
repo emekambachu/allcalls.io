@@ -21,7 +21,7 @@ let props = defineProps({
   },
 });
 
-console.log(props);
+console.log(props.clients);
 
 let fetchClients = (page) => {
   // Create URL object from page
