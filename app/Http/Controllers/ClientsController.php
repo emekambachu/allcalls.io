@@ -12,7 +12,9 @@ class ClientsController extends Controller
     {
         $user_id = $request->user()->id;
     
-        $clients = Client::where('user_id', $user_id)->paginate(10);
+        // $clients = Client::where('user_id', $user_id)->paginate(10);
+        $clients = Client::where('user_id', $user_id)->with('callType')->paginate(10);
+
         
         $totalCalls = Client::where('user_id', $user_id)->count();
     
