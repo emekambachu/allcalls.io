@@ -411,8 +411,8 @@ let submit = () => {
 
               </p>
 
-              <div class="text-right mb-2">
-                <PrimaryButton type="button" @click.prevent="step = 2">Next</PrimaryButton>
+              <div class="text-center mt-4 mb-2">
+                <PrimaryButton type="button" @click.prevent="step = 2">Configure Call Types</PrimaryButton>
               </div>
 
             </div>

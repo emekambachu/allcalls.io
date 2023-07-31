@@ -83,14 +83,7 @@ class RegisteredUserController extends Controller
             return abort(400);
         }
         
-        // NOTE: ADD SOME VALIDATION FOR BIDS HERE
-        foreach($request->bids as $bid) {
-            Bid::updateOrCreate([
-                'call_type_id' => $bid['call_type_id'],
-                'amount' => $bid['amount'],
-                'user_id' => $request->user()->id,
-            ]);
-        }
+
 
 
         if (! $request->consent) {
@@ -104,6 +97,16 @@ class RegisteredUserController extends Controller
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
         ]);
+
+
+        // NOTE: ADD SOME VALIDATION FOR BIDS HERE
+        foreach($request->bids as $bid) {
+            Bid::updateOrCreate([
+                'call_type_id' => $bid['call_type_id'],
+                'amount' => $bid['amount'],
+                'user_id' => $user->id,
+            ]);
+        }
 
         $typesWithStates = $request->typesWithStates;
 
