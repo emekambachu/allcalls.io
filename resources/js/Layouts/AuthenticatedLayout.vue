@@ -180,7 +180,7 @@ let formatMoney = (amount) => {
             </ResponsiveNavLink>
             <ResponsiveNavLink
               :href="route('clients.index')"
-              :active="route().current('clients.current')"
+              :active="route().current('clients.index')"
             >
               Clients
             </ResponsiveNavLink>
