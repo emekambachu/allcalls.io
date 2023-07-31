@@ -391,10 +391,7 @@ let submit = () => {
 
           <Slide :key="2">
             <div class="p-12">
-              <h6 class="text-black text-xl text-left font-bold">
-                The Bidding Process
-              </h6>
-              <p class="text-gray-700 text-left">
+              <p class="text-gray-700 text-lg text-left leading-relaxed">
                 Each call type has a base bid of $20, but you can bid higher to
                 increase your chances of securing the call. The user with the
                 highest bid wins the call but pays only $1 more than the second
@@ -404,10 +401,7 @@ let submit = () => {
           </Slide>
           <Slide :key="3">
             <div class="p-12">
-              <h6 class="text-black text-xl text-left font-bold">
-                Getting Started
-              </h6>
-              <p class="text-gray-700 text-left">
+              <p class="text-gray-700 text-lg text-left leading-relaxed">
                 To start, select your desired call types and indicate your
                 maximum bid for each. Don't forget to select the states where
                 you're licensed to operate. Remember, banks will see your bid
