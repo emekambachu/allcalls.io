@@ -457,13 +457,13 @@ let submit = () => {
                 <label class="ml-2 text-xs font-medium">Your Bid</label>
                 <div class="relative mb-2">
                   <div
-                    class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-white"
+                    class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none"
                   >
                     $
                   </div>
                   <input
                     type="number"
-                    class="bg-custom-blue border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5"
+                    class="bg-custom-gray border-none focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm pl-8 w-full"
                     placeholder="20.00"
                     v-model="form.bids[index].amount"
                   />
@@ -589,7 +589,7 @@ input[type="number"] {
 }
 
 .multiselect-wrapper {
-  background-color: #03243d;
+  background-color: #D7D7D7;
   border-radius: 5px;
 }
 /* 

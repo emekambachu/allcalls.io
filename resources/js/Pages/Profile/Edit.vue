@@ -112,3 +112,18 @@ let saveBids = () => {
     </div>
   </AuthenticatedLayout>
 </template>
+
+<style>
+
+.multiselect {
+  color: black !important;
+  border: none;
+  border-radius: 10px;
+}
+
+.multiselect-wrapper {
+  background-color: #03243d;
+  border-radius: 5px;
+}
+
+</style>
