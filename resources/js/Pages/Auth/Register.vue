@@ -374,7 +374,7 @@ let submit = () => {
       </div>
 
       <div v-if="step === 1">
-        <h6 class="text-black text-2xl font-bold text-center mb-4">
+        <h6 class="text-black text-2xl font-extrabold text-center my-4">
           How It Works
         </h6>
 
@@ -463,6 +463,7 @@ let submit = () => {
                   </div>
                   <input
                     type="number"
+                    min="20"
                     class="bg-custom-gray border-none focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm pl-8 w-full"
                     placeholder="20.00"
                     v-model="form.bids[index].amount"
