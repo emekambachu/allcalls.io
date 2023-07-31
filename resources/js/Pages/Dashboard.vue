@@ -30,6 +30,10 @@ const props = defineProps({
   averageCallDuration: Number,
 });
 
+
+console.log('spendData', props.spendData);
+console.log('callData', props.callData);
+
 let spendChartData = reactive({
   labels: props.spendData.map((item) => item.date),
   datasets: [
