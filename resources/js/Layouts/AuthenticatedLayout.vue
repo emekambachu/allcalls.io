@@ -19,6 +19,19 @@ let formatMoney = (amount) => {
 <template>
   <div>
     <div class="min-h-screen bg-custom-indigo">
+      <div
+        class="bg-custom-sky text-gray-50 py-2 px-16 flex justify-center items-center"
+      >
+        <div>Download the mobile app and start listening to calls now!</div>
+        <div class="ml-6">
+          <button
+            type="button"
+            class="border border-gray-400 ease-in cursor-pointer bg-white bg-opacity-5 hover:shadow-2xl hover:bg-white hover:text-custom-blue hover:bg-opacity-80 rounded px-3 py-3 font-bold text-md text-custom-white absolute right-0"
+          >
+            Download App
+          </button>
+        </div>
+      </div>
       <nav
         class="bg-custom-indigo border-b border-gray-100 dark:border-gray-700"
       >
@@ -219,13 +232,6 @@ let formatMoney = (amount) => {
           </div>
         </div>
       </nav>
-
-      <!-- Page Heading -->
-      <!-- <header class="bg-white dark:bg-gray-800 shadow" v-if="$slots.header">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    <slot name="header" />
-                </div>
-            </header> -->
 
       <!-- Navigation Links -->
       <div
