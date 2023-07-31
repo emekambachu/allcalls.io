@@ -85,7 +85,7 @@ let form = useForm({
     return acc;
   }, {}),
   bids: props.callTypes.map((type) => {
-    return { call_type_id: type.id, bid: 20 };
+    return { call_type_id: type.id, amount: 20 };
   }),
 });
 
@@ -374,13 +374,13 @@ let submit = () => {
       </div>
 
       <div v-if="step === 1">
-        <h6 class="text-black text-2xl text-left font-bold mb-4">
+        <h6 class="text-black text-2xl font-bold text-center mb-4">
           How It Works
         </h6>
 
         <Carousel :items-to-show="1">
           <Slide :key="1">
-            <div class="p-12 bg-white rounded-lg">
+            <div class="px-12">
               <p class="text-gray-700 text-lg text-left leading-relaxed">
                 Our dynamic bidding system allows you to set a maximum bid for
                 each type of call you're interested in as you configure your
@@ -390,7 +390,7 @@ let submit = () => {
           </Slide>
 
           <Slide :key="2">
-            <div class="p-12">
+            <div class="px-12">
               <p class="text-gray-700 text-lg text-left leading-relaxed">
                 Each call type has a base bid of $20, but you can bid higher to
                 increase your chances of securing the call. The user with the
@@ -400,15 +400,21 @@ let submit = () => {
             </div>
           </Slide>
           <Slide :key="3">
-            <div class="p-12">
+            <div class="px-12">
               <p class="text-gray-700 text-lg text-left leading-relaxed">
                 To start, select your desired call types and indicate your
                 maximum bid for each. Don't forget to select the states where
                 you're licensed to operate. Remember, banks will see your bid
                 amounts as they set the prices they allow for payment
                 processing, so bid wisely!
-                <button @click="step = 2">Next</button>
+
+
               </p>
+
+              <div class="text-right mb-2">
+                <PrimaryButton type="button" @click.prevent="step = 2">Next</PrimaryButton>
+              </div>
+
             </div>
           </Slide>
 
@@ -457,9 +463,9 @@ let submit = () => {
                   </div>
                   <input
                     type="number"
-                    id="input-group-1"
-                    class="text-white bg-custom-blue border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5"
+                    class="bg-custom-blue border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5"
                     placeholder="20.00"
+                    v-model="form.bids[index].amount"
                   />
                 </div>
               </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use Exception;
+use App\Models\Bid;
 use App\Models\User;
 use Inertia\Inertia;
 use App\Models\State;
@@ -74,7 +75,23 @@ class RegisteredUserController extends Controller
             'typesWithStates' => 'required|array',
             'typesWithStates.*' => ['nullable', 'exists:call_types,id'],
             'typesWithStates.*.*' => ['nullable', 'exists:states,id'],
+
+            'bids' => 'required|array',
         ]);
+
+        if (sizeof($request->bids) !== CallType::count()) {
+            return abort(400);
+        }
+        
+        // NOTE: ADD SOME VALIDATION FOR BIDS HERE
+        foreach($request->bids as $bid) {
+            Bid::updateOrCreate([
+                'call_type_id' => $bid['call_type_id'],
+                'amount' => $bid['amount'],
+                'user_id' => $request->user()->id,
+            ]);
+        }
+
 
         if (! $request->consent) {
             return redirect()->back()->withErrors(['consent' => 'Consent is required.']);
