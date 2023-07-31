@@ -157,6 +157,7 @@ let formatMoney = (amount) => {
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <Bar
+            v-if="spendData.length"
             id="spend-chart-id"
             :options="spendChartOptions"
             :data="spendChartData"
@@ -164,6 +165,7 @@ let formatMoney = (amount) => {
         </div>
         <div>
           <Bar
+            v-if="callData.length"
             id="call-chart-id"
             :options="chartOptions"
             :data="callChartData"
