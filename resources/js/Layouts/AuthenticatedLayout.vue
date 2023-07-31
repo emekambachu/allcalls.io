@@ -7,24 +7,6 @@ import NavLink from "@/Components/NavLink.vue";
 import BillingNav from "@/Components/BillingNav.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 
-// import tippy from 'tippy.js';
-// import 'tippy.js/dist/tippy.css';
-
-// onMounted(() => {
-//   tippy('#billing-nav-link', {
-//     content: `
-//         <h1 class="text-gray-100 text-lg font-bold mb-2">Step 1</h1>
-
-//         <p class="text-gray-400 text-sm">Click here to manage your billing information.</p>
-//     `,
-//     allowHTML: true,
-//     showOnCreate: true,
-//     placement: "bottom",
-//     trigger: 'manual',
-//     theme: 'light',
-//   });
-// });
-
 const showingNavigationDropdown = ref(false);
 
 let formatMoney = (amount) => {
