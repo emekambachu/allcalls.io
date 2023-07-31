@@ -163,7 +163,7 @@ let formatMoney = (amount) => {
             :data="spendChartData"
           />
 
-          <div v-else class="text-center py-8 text-custom-gray text-lg">
+          <div v-else class="text-center py-20 text-custom-gray text-sm">
             No data to display.
           </div>
         </div>
