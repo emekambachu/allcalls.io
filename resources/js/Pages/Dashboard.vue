@@ -162,6 +162,10 @@ let formatMoney = (amount) => {
             :options="spendChartOptions"
             :data="spendChartData"
           />
+
+          <div v-else class="text-center py-8 text-custom-gray text-lg">
+            No data to display.
+          </div>
         </div>
         <div>
           <Bar
