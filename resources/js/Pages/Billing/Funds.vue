@@ -56,11 +56,18 @@ let addFunds = () => {
     </template>
 
     <div class="sm:py-10">
-      <div class="mx-8 px-12 py-4 sm:p-8 sm:rounded-lg" style="padding-bottom: 0;">
-      <h2 id="headline" class="text-4xl text-custom-sky font-bold mb-6" style="padding-bottom: 0;">
-        Add Funds
-      </h2>
-      <hr class="mb-8" />
+      <div
+        class="mx-8 px-12 py-4 sm:p-8 sm:rounded-lg"
+        style="padding-bottom: 0"
+      >
+        <h2
+          id="headline"
+          class="text-4xl text-custom-sky font-bold mb-6"
+          style="padding-bottom: 0"
+        >
+          Add Funds
+        </h2>
+        <hr class="mb-8" />
       </div>
       <form class="mx-auto max-w-7xl">
         <!-- <div class="sm:pl-10 max-w-6xl">
@@ -69,7 +76,7 @@ let addFunds = () => {
 
         <div v-if="cards.length">
           <section class="mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 sm:rounded-lg" style="padding-top: 0;">
+            <div class="p-4 sm:p-8 sm:rounded-lg" style="padding-top: 0">
               <div
                 :class="{
                   'max-w-lg flex items-center px-2 py-4 mt-4 rounded-lg shadow hover:bg-gray-300 hover:font-medium mb-2 cursor-pointer select-none': true,
@@ -93,19 +100,20 @@ let addFunds = () => {
                   class="block mb-2 text-sm font-medium text-custom-white"
                   >Amount</label
                 >
-                <div class="flex mt-2">
+                <div class="flex mt-2 bg-custom-blue">
                   <span
-                    class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md"
+                    class="inline-flex items-center px-3 text-sm text-white bg-custom-blue border-r-0 rounded-l-md"
                   >
                     $
                   </span>
-                  <TextInput
+
+                  <input
                     type="number"
                     id="amount"
-                    class="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5"
                     placeholder="500"
                     v-model="amount"
                     :disabled="selectedCardId === 0"
+                    class="bg-custom-blue text-sm rounded-lg focus:ring-transparent focus:border-blue-500 block w-full p-2.5 text-white outline-none border-none"
                   />
                 </div>
               </div>
