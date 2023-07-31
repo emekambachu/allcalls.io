@@ -374,20 +374,21 @@ let submit = () => {
       </div>
 
       <div v-if="step === 1">
+        <h6 class="text-black text-2xl text-left font-bold mb-4">
+          How It Works
+        </h6>
 
         <Carousel :items-to-show="1">
           <Slide :key="1">
-            <div class="p-12">
-              <h6 class="text-black text-xl text-left font-bold">
-                How It Works
-              </h6>
-              <p class="text-gray-700 text-left">
+            <div class="p-12 bg-white rounded-lg">
+              <p class="text-gray-700 text-lg text-left leading-relaxed">
                 Our dynamic bidding system allows you to set a maximum bid for
                 each type of call you're interested in as you configure your
                 account.
               </p>
             </div>
           </Slide>
+
           <Slide :key="2">
             <div class="p-12">
               <h6 class="text-black text-xl text-left font-bold">
@@ -422,12 +423,9 @@ let submit = () => {
             <pagination />
           </template>
         </Carousel>
-
       </div>
 
       <div v-if="step === 2">
-
-
         <div class="mt-4">
           <GuestInputLabel
             class="mb-3"
@@ -541,7 +539,6 @@ let submit = () => {
           </PrimaryButton>
         </div>
       </div>
-      
     </form>
 
     <template v-slot:titles>
