@@ -163,8 +163,10 @@ let formatMoney = (amount) => {
             :data="spendChartData"
           />
 
-          <div v-else class="text-center py-20 text-custom-gray text-sm">
-            No data to display.
+          <div v-else class="text-center py-10 text-custom-gray text-sm">
+            <div class="py-10 bg-sky-700 rounded">
+              No data to display for spenditure.
+            </div>
           </div>
         </div>
         <div>
@@ -175,8 +177,10 @@ let formatMoney = (amount) => {
             :data="callChartData"
           />
 
-          <div v-else class="text-center py-20 text-custom-gray text-sm">
-            No data to display.
+          <div v-else class="text-center py-10 text-custom-gray text-sm">
+            <div class="py-10 bg-sky-700 rounded">
+              No data to display for calls.
+            </div>
           </div>
         </div>
       </div>
