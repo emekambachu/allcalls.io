@@ -30,9 +30,8 @@ const props = defineProps({
   averageCallDuration: Number,
 });
 
-
-console.log('spendData', props.spendData);
-console.log('callData', props.callData);
+console.log("spendData", props.spendData);
+console.log("callData", props.callData);
 
 let spendChartData = reactive({
   labels: props.spendData.map((item) => item.date),
@@ -146,7 +145,9 @@ let formatMoney = (amount) => {
         <div
           class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto"
         >
-          <p class="mb-1 text-sm text-gray-300">Average Call Duration (Past 7 Days)</p>
+          <p class="mb-1 text-sm text-gray-300">
+            Average Call Duration (Past 7 Days)
+          </p>
           <h2
             class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white"
           >
@@ -163,8 +164,8 @@ let formatMoney = (amount) => {
             :data="spendChartData"
           />
 
-          <div v-else class="text-center py-10 text-custom-gray text-sm">
-            <div class="py-10 bg-sky-700 rounded">
+          <div v-else class="text-center py-10 text-gray-300 text-sm">
+            <div class="py-10 bg-sky-500 bg-opacity-5 rounded">
               No data to display for spenditure.
             </div>
           </div>
@@ -177,8 +178,8 @@ let formatMoney = (amount) => {
             :data="callChartData"
           />
 
-          <div v-else class="text-center py-10 text-custom-gray text-sm">
-            <div class="py-10 bg-sky-700 rounded">
+          <div v-else class="text-center py-10 text-gray-300 text-sm">
+            <div class="py-10 bg-sky-500 bg-opacity-5 rounded">
               No data to display for calls.
             </div>
           </div>
