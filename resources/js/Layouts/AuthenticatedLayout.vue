@@ -24,7 +24,12 @@ let formatMoney = (amount) => {
       >
         <div>Download the mobile app and start buying calls now!</div>
         <div class="ml-6">
-          <button type="button" class="px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">Download App</button>
+          <button
+            type="button"
+            class="px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
+          >
+            Download App
+          </button>
         </div>
       </div>
       <nav
@@ -402,6 +407,28 @@ let formatMoney = (amount) => {
           >
             <img src="/img/activity.png" alt="" />
             Activities
+          </NavLink>
+          <NavLink
+            class="mb-10 gap-2"
+            :href="route('support.index')"
+            :active="route().current('support.index')"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              style="height: 38px; width: 38px;"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+              />
+            </svg>
+
+            Support
           </NavLink>
           <NavLink
             class="mb-10 gap-2"
