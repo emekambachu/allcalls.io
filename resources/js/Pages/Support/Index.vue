@@ -59,5 +59,28 @@ const props = defineProps({});
         </div>
       </div>
     </div>
+
+
+    <div class="pt-14">
+      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+        <div class="px-4 sm:px-8 sm:rounded-lg">
+          <div class="text-4xl text-custom-sky font-bold mb-6">Contact Information</div>
+          <hr class="mb-4" />
+        </div>
+      </div>
+    </div>
+
+    <div class="px-16 text-custom-gray">
+        <div class="font-bold text-white mb-2 text-lg">AllCalls LLC</div>
+        <div>500 4th St NW Suite 102 NUM 1981, Albuquerque, NM 87102 USA</div>
+        <div>Toll Free Customer Service Phone: +1 (888) 482-9195</div>
+        <div>Support Hours: 24/7 Monday - Sunday</div>
+
+        <div class="font-bold text-white mt-4 text-lg">Returns</div>
+        <p>If you need to return your order please contact customer service to get an RMA number that you will need to include in the package you send back to us. All returns should be sent to this address:</p>
+
+        <p>12924 Pierce Street, Pacoima CA 91331, USA</p>
+        <p>Email: support@allcalls.io</p>
+    </div>
   </AuthenticatedLayout>
 </template>
