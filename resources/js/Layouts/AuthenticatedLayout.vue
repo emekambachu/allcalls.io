@@ -45,7 +45,8 @@ let formatMoney = (amount) => {
                   class="bg-clip-text text-4xl text-transparent bg-gradient-to-r from-blue-400 to-green-500 font-bold uppercase tracking-wider"
                   :href="route('dashboard')"
                 >
-                  AllCalls.io
+                  <!-- AllCalls.io -->
+                  <img src="/img/new-logo.png">
                 </Link>
               </div>
             </div>
