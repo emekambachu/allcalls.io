@@ -1,7 +1,7 @@
 <template>
     <div class="bg-clip-text text-4xl text-transparent bg-gradient-to-r from-custom-sky to-custom-green font-bold uppercase tracking-wider">
         <!-- AllCalls.io -->
-        <img src="/img/new-logo.png" alt="AllCalls.io">
+        <img src="/img/new-logo.png" alt="AllCalls.io" style="max-width: 200px;">
     </div>
 
     <!-- <svg viewBox="0 0 316 316" xmlns="http://www.w3.org/2000/svg">
