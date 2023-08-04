@@ -20,10 +20,12 @@ let formatMoney = (amount) => {
   <div>
     <div class="min-h-screen bg-custom-indigo">
       <div
-        class="bg-custom-sky text-gray-50 py-2 px-16 flex justify-center items-center"
+        class="bg-custom-sky text-gray-50 py-2 px-16 flex-col sm:flex-row flex justify-center items-center"
       >
-        <div>Download the mobile app and start buying calls now!</div>
-        <div class="ml-6">
+        <div class="mb-2 sm:mb-0 sm:mr-6 text-center sm:text-left">
+          Download the mobile app and start buying calls now!
+        </div>
+        <div>
           <button
             type="button"
             class="px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
@@ -32,6 +34,7 @@ let formatMoney = (amount) => {
           </button>
         </div>
       </div>
+
       <nav
         class="bg-custom-indigo border-b border-gray-100 dark:border-gray-700"
       >
@@ -46,7 +49,7 @@ let formatMoney = (amount) => {
                   :href="route('dashboard')"
                 >
                   <!-- AllCalls.io -->
-                  <img src="/img/new-logo.png">
+                  <img style="max-width: 200px" src="/img/new-logo.png" />
                 </Link>
               </div>
             </div>
@@ -420,7 +423,7 @@ let formatMoney = (amount) => {
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="currentColor"
-              style="height: 38px; width: 38px;"
+              style="height: 38px; width: 38px"
             >
               <path
                 stroke-linecap="round"
