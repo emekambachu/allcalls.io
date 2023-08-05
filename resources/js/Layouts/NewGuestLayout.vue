@@ -5,9 +5,9 @@ import { Link } from "@inertiajs/vue3";
 
 <template>
   <div class="min-h-screen flex flex-col items-center lg:block">
-    <div class="lg:hidden block py-4 flex flex-col items-center gap-1">
+    <div class="lg:hidden block py-4 flex flex-col items-center gap-1 w-full bg-custom-blue mb-6">
       <Link href="/" class="mb-2">
-        <ApplicationLogo class="w-fit" />
+        <ApplicationLogo :black="true" class="w-fit" />
       </Link>
     </div>
 
