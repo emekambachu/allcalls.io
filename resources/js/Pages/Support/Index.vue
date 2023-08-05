@@ -51,8 +51,8 @@ const props = defineProps({});
 
       <div class="flex flex-col bg-custom-darksky rounded p-4 text-center">
         <div class="mb-6">
-          <h2 class="text-xl text-white font-extrabold">Open a ticket</h2>
-          <p class="text-gray-300">Submit a ticket for a question or issue you are having.</p>
+          <h2 class="text-xl text-white font-extrabold">Live-chat support</h2>
+          <p class="text-gray-300">You can chat with our support staff if you have any issues or questions.</p>
         </div>
         <div class="mt-auto">
           <PrimaryButton>Submit Ticket</PrimaryButton>
