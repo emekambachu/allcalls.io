@@ -55,7 +55,7 @@ const props = defineProps({});
           <p class="text-gray-300">You can chat with our support staff if you have any issues or questions.</p>
         </div>
         <div class="mt-auto">
-          <PrimaryButton>Submit Ticket</PrimaryButton>
+          <PrimaryButton>Open Live Chat</PrimaryButton>
         </div>
       </div>
     </div>
