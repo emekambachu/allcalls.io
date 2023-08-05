@@ -4,6 +4,14 @@ import { Head } from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 const props = defineProps({});
+
+let openLiveChat = () => {
+  let iframe = document.querySelector('.widget-visible iframe')
+  let iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+  let iframeButton = iframeDoc.querySelector('button');
+
+  iframeButton.click();
+};
 </script>
 
 <template>
@@ -55,7 +63,7 @@ const props = defineProps({});
           <p class="text-gray-300">You can chat with our support staff if you have any issues or questions.</p>
         </div>
         <div class="mt-auto">
-          <PrimaryButton>Open Live Chat</PrimaryButton>
+          <PrimaryButton @click="openLiveChat">Open Live Chat</PrimaryButton>
         </div>
       </div>
     </div>
