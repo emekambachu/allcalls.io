@@ -164,7 +164,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
                       }"
                     >
                       <span
-                        class="w-2 h-2 mr-1 bg-yellow-500 rounded-full"
+                        class="w-2 h-2 mr-1 rounded-full"
                         :class="{
                           'bg-green-500': client.status === 'sold',
                           'bg-red-500': client.status === 'not_sold',
