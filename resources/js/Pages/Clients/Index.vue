@@ -153,7 +153,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
                   <td class="text-gray-300 px-4 py-3">{{ client.zipCode }}</td>
                   <td class="text-gray-300 px-4 py-3">{{ client.dob }}</td>
                   <td class="text-gray-300 px-4 py-3">
-                    {{ capitalizeAndReplaceUnderscore(client.status) }}
+                    
 
                     <span
                       class="inline-flex items-center text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full"
@@ -171,7 +171,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
                           'bg-yellow-500': client.status === 'follow_up_needed',
                         }"
                       ></span>
-                      Available
+                      {{ capitalizeAndReplaceUnderscore(client.status) }}
                     </span>
                   </td>
                   <td
