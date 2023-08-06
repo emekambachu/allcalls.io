@@ -10,6 +10,8 @@ class Client extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function callType()
     {
         return $this->belongsTo(CallType::class);

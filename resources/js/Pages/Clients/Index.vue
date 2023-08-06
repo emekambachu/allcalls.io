@@ -133,6 +133,7 @@ let formatDate = (inputDate) => {
                   <th scope="col" class="px-4 py-3">EMAIL</th>
                   <th scope="col" class="px-4 py-3">ZIP CODE</th>
                   <th scope="col" class="px-4 py-3">DOB</th>
+                  <th scope="col" class="px-4 py-3">Status</th>
                   <th scope="col" class="px-4 py-3">
                     <span class="sr-only">Actions</span>
                   </th>
@@ -151,6 +152,32 @@ let formatDate = (inputDate) => {
                   >
                     {{ client.first_name }} {{ client.last_name }}
                   </th>
+                  <td class="text-gray-300 px-4 py-3">{{ client.email }}</td>
+                  <td class="text-gray-300 px-4 py-3">{{ client.phone }}</td>
+                  <td class="text-gray-300 px-4 py-3">{{ client.zipCode }}</td>
+                  <td class="text-gray-300 px-4 py-3">{{ client.dob }}</td>
+                  <td class="text-gray-300 px-4 py-3">
+                    
+
+                    <span
+                      class="inline-flex items-center text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full"
+                      :class="{
+                        'bg-green-900 text-green-300': client.status === 'sold',
+                        'bg-red-900 text-red-300': client.status === 'not_sold',
+                        'bg-yellow-900 text-yellow-300': client.status === 'follow_up_needed',
+                      }"
+                    >
+                      <span
+                        class="w-2 h-2 mr-1 rounded-full"
+                        :class="{
+                          'bg-green-500': client.status === 'sold',
+                          'bg-red-500': client.status === 'not_sold',
+                          'bg-yellow-500': client.status === 'follow_up_needed',
+                        }"
+                      ></span>
+                      {{ capitalizeAndReplaceUnderscore(client.status) }}
+                    </span>
+                  </td>
                   <td class="text-gray-700 px-4 py-3">{{ client.phone }}</td>
                   <td class="text-gray-700 px-4 py-3">{{ client.email }}</td>
                   <td class="text-gray-700 px-4 py-3">{{ client.zipCode }}</td>
@@ -268,7 +295,8 @@ let formatDate = (inputDate) => {
         tabindex="-1"
         class="flex items-center justify-center fixed inset-0 z-50 w-full h-full overflow-x-hidden overflow-y-auto max-h-full mx-4 sm:mx-0"
       >
-        <div class="fixed inset-0 bg-black opacity-60"></div> <!-- This is the overlay -->
+        <div class="fixed inset-0 bg-black opacity-60"></div>
+        <!-- This is the overlay -->
 
         <div class="relative w-full max-w-4xl max-h-full mx-auto">
           <div

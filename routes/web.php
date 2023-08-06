@@ -9,6 +9,7 @@ use App\Http\Controllers\FundsController;
 use App\Http\Controllers\AutoPayController;
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SupportController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TwilioTokenController;
 use App\Http\Controllers\TransactionsController;
@@ -67,6 +68,8 @@ Route::get('/device/incoming', function() {
 })->middleware('auth');
 
 Route::get('/clients', [ClientsController::class, 'index'])->middleware(['auth', 'verified'])->name('clients.index');
+
+Route::get('/support', [SupportController::class, 'index'])->middleware(['auth', 'verified'])->name('support.index');
 
 // Route::get('channel-test', function() {
 //     UserOnline::dispatch();

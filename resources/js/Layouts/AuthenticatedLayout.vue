@@ -20,13 +20,21 @@ let formatMoney = (amount) => {
   <div>
     <div class="min-h-screen bg-custom-indigo">
       <div
-        class="bg-custom-sky text-gray-50 py-2 px-16 flex justify-center items-center"
+        class="bg-custom-sky text-gray-50 py-2 px-16 flex-col sm:flex-row flex justify-center items-center"
       >
-        <div>Download the mobile app and start buying calls now!</div>
-        <div class="ml-6">
-          <button type="button" class="px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">Download App</button>
+        <div class="mb-2 sm:mb-0 sm:mr-6 text-center sm:text-left">
+          Download the mobile app and start buying calls now!
+        </div>
+        <div>
+          <button
+            type="button"
+            class="px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
+          >
+            Download App
+          </button>
         </div>
       </div>
+
       <nav
         class="bg-custom-indigo border-b border-gray-100 dark:border-gray-700"
       >
@@ -40,7 +48,8 @@ let formatMoney = (amount) => {
                   class="bg-clip-text text-4xl text-transparent bg-gradient-to-r from-blue-400 to-green-500 font-bold uppercase tracking-wider"
                   :href="route('dashboard')"
                 >
-                  AllCalls.io
+                  <!-- AllCalls.io -->
+                  <img style="max-width: 200px" src="/img/new-logo.png" />
                 </Link>
               </div>
             </div>
@@ -415,6 +424,55 @@ let formatMoney = (amount) => {
 
           <NavLink
             class="mb-10 gap-2"
+<<<<<<< HEAD
+=======
+            :href="route('clients.index')"
+            :active="route().current('clients.index')"
+          >
+            <img src="/img/clients.png" alt="" />
+            Clients
+          </NavLink>
+          <NavLink
+            class="mb-10 gap-2"
+            :href="route('transactions.index')"
+            :active="route().current('transactions.index')"
+          >
+            <img src="/img/transactions.png" alt="" />
+            Transactions
+          </NavLink>
+          <NavLink
+            class="mb-10 gap-2"
+            :href="route('activities.index')"
+            :active="route().current('activities.index')"
+          >
+            <img src="/img/activity.png" alt="" />
+            Activities
+          </NavLink>
+          <NavLink
+            class="mb-10 gap-2"
+            :href="route('support.index')"
+            :active="route().current('support.index')"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              style="height: 38px; width: 38px"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+              />
+            </svg>
+
+            Support
+          </NavLink>
+          <NavLink
+            class="mb-10 gap-2"
+>>>>>>> 7868bcdd240e24e2f71c1b1942644560ea32c44f
             :href="route('profile.view')"
             :active="
               route().current('profile.edit') || route().current('profile.view')
