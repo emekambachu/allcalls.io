@@ -59,6 +59,11 @@ let formatMoney = (amount) => {
     .toFixed(2)
     .replace(/\d(?=(\d{3})+\.)/g, "$&,");
 };
+
+let capitalizeAndReplaceUnderscore = (str) => {
+  return str.replace(/(?:^|\s|_)\S/g, (a) => a.toUpperCase()).replace(/_/g, ' ');
+};
+
 </script>
 
 <template>
@@ -146,7 +151,7 @@ let formatMoney = (amount) => {
                   <td class="text-gray-300 px-4 py-3">{{ client.phone }}</td>
                   <td class="text-gray-300 px-4 py-3">{{ client.zipCode }}</td>
                   <td class="text-gray-300 px-4 py-3">{{ client.dob }}</td>
-                  <td class="text-gray-300 px-4 py-3">{{ client.status }}</td>
+                  <td class="text-gray-300 px-4 py-3">{{ capitalizeAndReplaceUnderscore(client.status) }}</td>
                   <td
                     class="text-gray-300 px-4 py-3 flex items-center justify-end"
                   >
