@@ -78,17 +78,17 @@ let openLiveChat = () => {
       </div>
     </div>
 
-    <div class="px-16 text-custom-gray">
-        <div class="font-bold text-white mb-2 text-lg">AllCalls LLC</div>
+    <div class="px-16 text-gray-700 mb-8">
+        <div class="font-bold text-gray-400 mb-2 text-lg">AllCalls LLC</div>
         <div>500 4th St NW Suite 102 NUM 1981, Albuquerque, NM 87102 USA</div>
-        <div><strong class="text-white">Toll Free Customer Service Phone:</strong> +1 (888) 482-9195</div>
-        <div><strong class="text-white">Support Hours:</strong> 24/7 Monday - Sunday</div>
+        <div><strong class="text-gray-400">Toll Free Customer Service Phone:</strong> +1 (888) 482-9195</div>
+        <div><strong class="text-gray-400">Support Hours:</strong> 24/7 Monday - Sunday</div>
 
-        <div class="font-bold text-white mt-4 text-lg mb-2">Returns</div>
+        <div class="font-bold text-gray-400 mt-4 text-lg mb-2">Returns</div>
         <p class="mb-3">If you need to return your order please contact customer service to get an RMA number that you will need to include in the package you send back to us. All returns should be sent to this address:</p>
 
         <p class="mb-1">12924 Pierce Street, Pacoima CA 91331, USA</p>
-        <p><strong class="text-white">Email:</strong> support@allcalls.io</p>
+        <p><strong class="text-gray-400">Email:</strong> support@allcalls.io</p>
     </div>
   </AuthenticatedLayout>
 </template>
