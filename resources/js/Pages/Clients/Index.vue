@@ -123,6 +123,7 @@ let formatMoney = (amount) => {
                   <th scope="col" class="px-4 py-3">PHONE</th>
                   <th scope="col" class="px-4 py-3">ZIP CODE</th>
                   <th scope="col" class="px-4 py-3">DOB</th>
+                  <th scope="col" class="px-4 py-3">Status</th>
                   <th scope="col" class="px-4 py-3">
                     <span class="sr-only">Actions</span>
                   </th>
@@ -145,6 +146,7 @@ let formatMoney = (amount) => {
                   <td class="text-gray-300 px-4 py-3">{{ client.phone }}</td>
                   <td class="text-gray-300 px-4 py-3">{{ client.zipCode }}</td>
                   <td class="text-gray-300 px-4 py-3">{{ client.dob }}</td>
+                  <td class="text-gray-300 px-4 py-3">{{ client.status }}</td>
                   <td
                     class="text-gray-300 px-4 py-3 flex items-center justify-end"
                   >
