@@ -70,6 +70,17 @@ let formatDate = (inputDate) => {
 
   return formattedDate;
 }
+
+
+let capitalizeAndReplaceUnderscore = (str) => {
+  // Replace underscores with spaces
+  let result = str.replace(/_/g, ' ');
+
+  // Capitalize the first letter of each word
+  result = result.replace(/\b(\w)/g, (match) => match.toUpperCase());
+
+  return result;
+};
 </script>
 
 <template>
