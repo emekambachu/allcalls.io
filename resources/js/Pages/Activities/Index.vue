@@ -79,12 +79,12 @@ let fetchActivities = page => {
                             <tbody>
                                 <tr v-for="activity in activities.data" :key="activity.id" class="border-b border-gray-500">
                                     <th scope="row"
-                                        class="px-4 py-3 font-medium text-custom-white whitespace-nowrap">{{
+                                        class="px-4 py-3 font-medium text-custom-blue font-semibold whitespace-nowrap">{{
                                             activity.user.first_name }} {{ activity.user.last_name }}</th>
-                                    <td class="text-gray-300 px-4 py-3">{{ activity.user.email }}</td>
-                                    <td class="text-gray-300 px-4 py-3">{{ formatDate(activity.last_activity_at) }}</td>
-                                    <td class="text-gray-300 px-4 py-3">{{ formatDate(activity.created_at) }}</td>
-                                    <td class="text-gray-300 px-4 py-3">{{ formatDate(activity.logout_time) }}</td>
+                                    <td class="text-gray-700 px-4 py-3">{{ activity.user.email }}</td>
+                                    <td class="text-gray-700 px-4 py-3">{{ formatDate(activity.last_activity_at) }}</td>
+                                    <td class="text-gray-700 px-4 py-3">{{ formatDate(activity.created_at) }}</td>
+                                    <td class="text-gray-700 px-4 py-3">{{ formatDate(activity.logout_time) }}</td>
                                 </tr>
 
                             </tbody>
@@ -92,11 +92,11 @@ let fetchActivities = page => {
                     </div>
                     <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
                         aria-label="Table navigation">
-                        <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
+                        <span class="text-sm font-normal text-gray-500">
                             Showing
-                            <span class="font-semibold text-white">{{ activities.current_page }}</span>
+                            <span class="font-semibold text-custom-blue">{{ activities.current_page }}</span>
                             of
-                            <span class="font-semibold text-white">{{ activities.last_page }}</span>
+                            <span class="font-semibold text-custom-blue">{{ activities.last_page }}</span>
                         </span>
                         <ul class="inline-flex items-stretch -space-x-px cursor-pointer">
                             <li>
@@ -144,7 +144,7 @@ let fetchActivities = page => {
         </section>
 
         <section v-else class="p-3">
-            <p class="text-center text-gray-300">No activities yet.</p>
+            <p class="text-center text-gray-700">No activities yet.</p>
         </section>
 
     </AuthenticatedLayout>

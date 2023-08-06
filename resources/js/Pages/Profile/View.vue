@@ -62,7 +62,7 @@ let formatMoney = (amount) => {
   <AuthenticatedLayout>
     <template #header>
       <h2
-        class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
+        class="font-semibold text-xl text-gray-800 leading-tight"
       >
         Profile
       </h2>
@@ -78,15 +78,15 @@ let formatMoney = (amount) => {
             class="flex flex-col items-start sm:flex-row sm:items-center sm:space-x-8 mb-4 lg:mb-10 relative"
           >
             <div
-              class="relative inline-flex items-center justify-center w-28 h-28 overflow-hidden rounded-full bg-gray-600"
+              class="relative inline-flex items-center justify-center w-28 h-28 overflow-hidden rounded-full bg-custom-blue"
             >
-              <span class="text-5xl font-medium text-center text-gray-300"
+              <span class="text-5xl font-medium text-center text-custom-white"
                 >{{ getFirstLetter(user.first_name)
                 }}{{ getFirstLetter(user.last_name) }}</span
               >
             </div>
             <div class="font-medium text-white">
-              <div class="text-4xl text-custom-white">
+              <div class="text-4xl text-sky-950">
                 {{ user.first_name }} {{ user.last_name }}
               </div>
               <div class="text-lg text-gray-400">
@@ -101,7 +101,7 @@ let formatMoney = (amount) => {
             </div>
             <Link
               href="/profile/edit"
-              class="border border-gray-400 ease-in cursor-pointer bg-white bg-opacity-5 hover:shadow-2xl hover:bg-white hover:text-custom-blue hover:bg-opacity-80 rounded px-3 py-3 font-bold text-md text-custom-white absolute right-0"
+              class="border border-gray-400 ease-in cursor-pointer bg-gray-400 bg-opacity-5 hover:shadow-2xl hover:bg-white hover:text-custom-blue hover:bg-opacity-80 rounded px-3 py-3 font-bold text-md text-gray-500 transition absolute right-0"
               >Edit Profile</Link
             >
           </div>
@@ -121,27 +121,27 @@ let formatMoney = (amount) => {
           <div class="grid grid-cols-2 gap-10 mb-12">
             <div class="flex flex-col space-y-2 h-full overflow-auto">
               <div class="text-sm text-gray-400 font-bold">First Name</div>
-              <div class="text-md sm:text-xl text-custom-white font-bold">
+              <div class="text-md sm:text-xl text-gray-600 font-bold">
                 {{ user.first_name }}
               </div>
             </div>
             <div class="flex flex-col space-y-2 h-full overflow-auto">
               <div class="text-sm text-gray-400 font-bold">Last Name</div>
-              <div class="text-md sm:text-xl text-custom-white font-bold">
+              <div class="text-md sm:text-xl text-gray-600 font-bold">
                 {{ user.last_name }}
               </div>
             </div>
             <div class="flex flex-col space-y-2 h-full overflow-auto">
               <div class="text-sm text-gray-400 font-bold">Email Address</div>
               <div
-                class="text-md sm:text-xl text-custom-white font-bold flex-grow"
+                class="text-md sm:text-xl text-gray-600 font-bold flex-grow"
               >
                 {{ user.email }}
               </div>
             </div>
             <div class="flex flex-col space-y-2 h-full overflow-auto">
               <div class="text-sm text-gray-400 font-bold">Phone</div>
-              <div class="text-md sm:text-xl text-custom-white font-bold">
+              <div class="text-md sm:text-xl text-gray-600 font-bold">
                 {{ user.phone }}
               </div>
             </div>
@@ -159,24 +159,28 @@ let formatMoney = (amount) => {
               <div class="text-sm text-gray-400 font-bold">
                 {{ callType.type }}
               </div>
-              <div class="text-md sm:text-xl text-custom-white font-bold">
+              <div class="text-md sm:text-xl text-gray-600 font-bold">
                 {{ callType.states.map((state) => state.name).join(", ") }}
               </div>
             </div>
           </div>
 
-          <div class="text-4xl text-custom-sky font-bold mb-6">Bids</div>
+          <div class="text-4xl text-custom-sky font-bold mb-2">Max Bids</div>
+          <div class="text-2xl font-bold text-gray-600 mb-6" >Verticals</div>
           <hr class="mb-4" />
 
           <div class="grid grid-cols-2 gap-10 mb-12">
             <div v-for="bid in bids" :key="bid.id">
               <div class="flex flex-col space-y-2 h-full overflow-auto">
                 <div class="text-sm text-gray-400 font-bold" v-text="bid.call_type.type"></div>
-                <div class="text-md sm:text-xl text-custom-white font-bold">${{ formatMoney(bid.amount) }}</div>
+                <div class="text-md sm:text-xl text-gray-600 font-bold">${{ formatMoney(bid.amount) }}</div>
               </div>
             </div>
+
           </div>
+
         </div>
+
 
         <div class="flex p-4 sm:p-8 sm:rounded-lg">
           <DeleteUserForm class="max-w-xl" />

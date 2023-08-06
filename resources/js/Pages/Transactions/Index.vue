@@ -38,7 +38,7 @@ let formatMoney = (amount) => {
   <AuthenticatedLayout>
     <template #header>
       <h2
-        class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
+        class="font-semibold text-xl text-gray-800 leading-tight"
       >
         Transactions
       </h2>
@@ -109,7 +109,7 @@ let formatMoney = (amount) => {
     </section>
 
     <section v-else class="p-3">
-      <p class="text-center text-gray-300">No transactions yet.</p>
+      <p class="text-center text-gray-600">No transactions yet.</p>
     </section>
   </AuthenticatedLayout>
 </template>
