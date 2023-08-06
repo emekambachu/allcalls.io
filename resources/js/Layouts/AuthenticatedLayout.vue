@@ -147,7 +147,7 @@ let formatMoney = (amount) => {
           </div>
 
           <p class="mt-10 mb-2 text-lg text-white font-bold">
-            Manage your team and preferences here.
+            Manage your business and preferences here.
           </p>
         </div>
 
@@ -255,6 +255,33 @@ let formatMoney = (amount) => {
           <!-- <NavLink class="mb-10" href="#" :active="route().current('reporting')">
                         Reporting
                     </NavLink> -->
+                    <NavLink
+            class="mb-10 gap-2"
+            :href="route('clients.index')"
+            :active="route().current('clients.index')"
+          >
+            <img src="/img/clients.png" alt="" />
+            Clients
+          </NavLink>
+
+          <NavLink
+            class="mb-10 gap-2"
+            :href="route('activities.index')"
+            :active="route().current('activities.index')"
+          >
+            <img src="/img/activity.png" alt="" />
+            Activities
+          </NavLink>
+
+          <NavLink
+            class="mb-10 gap-2"
+            :href="route('transactions.index')"
+            :active="route().current('transactions.index')"
+          >
+            <img src="/img/transactions.png" alt="" />
+            Transactions
+          </NavLink>
+
           <NavLink
             class="mb-10 gap-2"
             id="billing-nav-link"
@@ -388,30 +415,9 @@ let formatMoney = (amount) => {
             </ul>
           </div>
 
-          <NavLink
-            class="mb-10 gap-2"
-            :href="route('clients.index')"
-            :active="route().current('clients.index')"
-          >
-            <img src="/img/clients.png" alt="" />
-            Clients
-          </NavLink>
-          <NavLink
-            class="mb-10 gap-2"
-            :href="route('transactions.index')"
-            :active="route().current('transactions.index')"
-          >
-            <img src="/img/transactions.png" alt="" />
-            Transactions
-          </NavLink>
-          <NavLink
-            class="mb-10 gap-2"
-            :href="route('activities.index')"
-            :active="route().current('activities.index')"
-          >
-            <img src="/img/activity.png" alt="" />
-            Activities
-          </NavLink>
+
+
+
           <NavLink
             class="mb-10 gap-2"
             :href="route('support.index')"
@@ -446,7 +452,7 @@ let formatMoney = (amount) => {
           </NavLink>
         </div>
         <!-- Page Content -->
-        <main class="col-span-4">
+        <main class="col-span-4 bg-white rounded-xl mt-16 mb-8">
           <slot />
         </main>
       </div>

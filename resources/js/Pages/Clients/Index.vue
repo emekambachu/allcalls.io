@@ -143,7 +143,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
                   <th scope="col" class="px-4 py-3">FULL NAME</th>
                   <th scope="col" class="px-4 py-3">PHONE</th>
                   <th scope="col" class="px-4 py-3">EMAIL</th>
-                  <th scope="col" class="px-4 py-3">ZIP CODE</th>
+                  <th scope="col" class="px-4 py-3">STATE</th>
                   <th scope="col" class="px-4 py-3">DOB</th>
                   <th scope="col" class="px-4 py-3">Status</th>
                   <th scope="col" class="px-4 py-3">
@@ -157,18 +157,18 @@ let capitalizeAndReplaceUnderscore = (str) => {
                   :key="client.id"
                   class="border-b border-gray-500"
                 >
-                  <td class="text-gray-300 px-4 py-3">{{ client.id }}</td>
+                  <td class="text-gray-600 px-4 py-3">{{ client.id }}</td>
                   <th
                     scope="row"
                     class="px-4 py-3 font-medium text-custom-blue font-semibold whitespace-nowrap"
                   >
                     {{ client.first_name }} {{ client.last_name }}
                   </th>
-                  <td class="text-gray-300 px-4 py-3">{{ client.email }}</td>
-                  <td class="text-gray-300 px-4 py-3">{{ client.phone }}</td>
-                  <td class="text-gray-300 px-4 py-3">{{ client.zipCode }}</td>
-                  <td class="text-gray-300 px-4 py-3">{{ client.dob }}</td>
-                  <td class="text-gray-300 px-4 py-3">
+                  <td class="text-gray-600 px-4 py-3">{{ client.phone }}</td>
+                  <td class="text-gray-600 px-4 py-3">{{ client.email }}</td>
+                  <td class="text-gray-600 px-4 py-3">{{ client.state }}</td>
+                  <td class="text-gray-600 px-4 py-3">{{ formatDate(client.dob) }}</td>
+                  <td class="text-gray-600 px-4 py-3">
                     
 
                     <span
@@ -190,10 +190,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
                       {{ capitalizeAndReplaceUnderscore(client.status) }}
                     </span>
                   </td>
-                  <td class="text-gray-700 px-4 py-3">{{ client.phone }}</td>
-                  <td class="text-gray-700 px-4 py-3">{{ client.email }}</td>
-                  <td class="text-gray-700 px-4 py-3">{{ client.zipCode }}</td>
-                  <td class="text-gray-700 px-4 py-3">{{ formatDate(client.dob) }}</td>
+
                   <td
                     class="text-gray-700 px-4 py-3 flex items-center justify-end"
                   >

@@ -39,18 +39,18 @@ const close = () => {
         class="relative w-full max-w-4xl max-h-full mx-auto"
       >
         <div
-          class="relative bg-sky-950 border border-custom-darksky rounded-lg shadow-lg"
+          class="relative bg-white  rounded-lg shadow-lg"
         >
           <div
             class="flex items-start justify-between p-4 border-b rounded-t border-gray-600"
           >
-            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+            <h3 class="text-xl font-semibold text-custom-blue">
               Client Details
             </h3>
             <button
               @click="close"
               type="button"
-              class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-700 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+              class="text-gray-500 bg-transparent hover:bg-gray-200 hover:text-gray-700 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
               data-modal-hide="defaultModal"
             >
               <svg
@@ -185,7 +185,7 @@ const close = () => {
             <div class="flex justify-end">
               <button
                 @click="showModal = false"
-                class="border border-gray-400 ease-in cursor-pointer bg-white bg-opacity-5 hover:shadow-2xl hover:bg-white hover:text-custom-blue hover:bg-opacity-80 rounded px-3 py-3 font-bold text-md text-custom-white"
+                class="border border-gray-400 ease-in cursor-pointer bg-white bg-opacity-5 hover:shadow-2xl hover:bg-white hover:text-custom-blue hover:bg-opacity-80 rounded px-3 py-3 font-bold text-md text-gray-500 transition"
               >
                 Close
               </button>

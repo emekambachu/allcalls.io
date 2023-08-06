@@ -31,7 +31,8 @@ class ClientFactory extends Factory
             'call_type_id' => $faker->numberBetween(1, 6),
             'user_id' => function () {
                 return User::factory()->create()->id;
-            }
+            },
+            'state' => $faker->state(),
         ];
     }
 }

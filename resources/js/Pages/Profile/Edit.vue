@@ -70,7 +70,7 @@ let saveBids = () => {
 
         <div>
           <header class="pl-8">
-            <h2 class="text-lg font-medium text-gray-100">Bids Setting</h2>
+            <h2 class="text-lg font-medium text-gray-700">Bids Setting</h2>
 
             <p class="mt-1 text-sm text-gray-400">
               You can set a default bid for each call type here.
@@ -79,7 +79,7 @@ let saveBids = () => {
 
           <div class="pl-8 mt-6">
             <div class="grid grid-cols-2 gap-10 mb-8">
-              <div class="text-white" v-for="bid in bidsInput" :key="bid.bid_id">
+              <div class="text-gray-700" v-for="bid in bidsInput" :key="bid.bid_id">
                 <div>
                   <InputLabel :for="`bid_${bid.bid_id}`" :value="`${bid.call_type_name}`" />
 
