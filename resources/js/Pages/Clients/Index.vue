@@ -61,9 +61,10 @@ let formatMoney = (amount) => {
 };
 
 let capitalizeAndReplaceUnderscore = (str) => {
-  return str.replace(/(?:^|\s|_)\S/g, (a) => a.toUpperCase()).replace(/_/g, ' ');
+  return str
+    .replace(/(?:^|\s|_)\S/g, (a) => a.toUpperCase())
+    .replace(/_/g, " ");
 };
-
 </script>
 
 <template>
@@ -151,7 +152,28 @@ let capitalizeAndReplaceUnderscore = (str) => {
                   <td class="text-gray-300 px-4 py-3">{{ client.phone }}</td>
                   <td class="text-gray-300 px-4 py-3">{{ client.zipCode }}</td>
                   <td class="text-gray-300 px-4 py-3">{{ client.dob }}</td>
-                  <td class="text-gray-300 px-4 py-3">{{ capitalizeAndReplaceUnderscore(client.status) }}</td>
+                  <td class="text-gray-300 px-4 py-3">
+                    {{ capitalizeAndReplaceUnderscore(client.status) }}
+
+                    <span
+                      class="inline-flex items-center text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full"
+                      :class="{
+                        'bg-green-900 text-green-300': client.status === 'sold',
+                        'bg-red-900 text-red-300': client.status === 'not_sold',
+                        'bg-yellow-900 text-yellow-300': client.status === 'follow_up_needed',
+                      }"
+                    >
+                      <span
+                        class="w-2 h-2 mr-1 bg-yellow-500 rounded-full"
+                        :class="{
+                          'bg-green-500': client.status === 'sold',
+                          'bg-red-500': client.status === 'not_sold',
+                          'bg-yellow-500': client.status === 'follow_up_needed',
+                        }"
+                      ></span>
+                      Available
+                    </span>
+                  </td>
                   <td
                     class="text-gray-300 px-4 py-3 flex items-center justify-end"
                   >
@@ -265,7 +287,8 @@ let capitalizeAndReplaceUnderscore = (str) => {
         tabindex="-1"
         class="flex items-center justify-center fixed inset-0 z-50 w-full h-full overflow-x-hidden overflow-y-auto max-h-full mx-4 sm:mx-0"
       >
-        <div class="fixed inset-0 bg-black opacity-60"></div> <!-- This is the overlay -->
+        <div class="fixed inset-0 bg-black opacity-60"></div>
+        <!-- This is the overlay -->
 
         <div class="relative w-full max-w-4xl max-h-full mx-auto">
           <div
