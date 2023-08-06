@@ -79,7 +79,7 @@ let optionsForStates = (callType) => {
 <template>
   <section>
     <header>
-      <h2 class="text-lg font-medium text-gray-100">
+      <h2 class="text-lg font-medium text-gray-700">
         Profile Information
       </h2>
 
@@ -179,7 +179,7 @@ let optionsForStates = (callType) => {
 
         <div class="text-white">
           <label
-            class="ml-2 text-xs font-medium text-gray-300"
+            class="ml-2 text-xs font-medium text-gray-500"
           >
             States you're licensed in:
           </label>

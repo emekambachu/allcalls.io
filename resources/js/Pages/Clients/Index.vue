@@ -61,11 +61,15 @@ let formatMoney = (amount) => {
     .replace(/\d(?=(\d{3})+\.)/g, "$&,");
 };
 
-let capitalizeAndReplaceUnderscore = (str) => {
-  return str
-    .replace(/(?:^|\s|_)\S/g, (a) => a.toUpperCase())
-    .replace(/_/g, " ");
-};
+let formatDate = (inputDate) => {
+  // Split the input date by the hyphen ("-") to get year, month, and day
+  const [year, month, day] = inputDate.split("-");
+
+  // Rearrange the components in the "mm-dd-yyyy" format
+  const formattedDate = `${month}-${day}-${year}`;
+
+  return formattedDate;
+}
 </script>
 
 <template>
@@ -126,8 +130,8 @@ let capitalizeAndReplaceUnderscore = (str) => {
                 <tr>
                   <th scope="col" class="px-4 py-3">ID</th>
                   <th scope="col" class="px-4 py-3">FULL NAME</th>
-                  <th scope="col" class="px-4 py-3">EMAIL</th>
                   <th scope="col" class="px-4 py-3">PHONE</th>
+                  <th scope="col" class="px-4 py-3">EMAIL</th>
                   <th scope="col" class="px-4 py-3">ZIP CODE</th>
                   <th scope="col" class="px-4 py-3">DOB</th>
                   <th scope="col" class="px-4 py-3">Status</th>
@@ -145,7 +149,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
                   <td class="text-gray-300 px-4 py-3">{{ client.id }}</td>
                   <th
                     scope="row"
-                    class="px-4 py-3 font-medium text-custom-white whitespace-nowrap"
+                    class="px-4 py-3 font-medium text-custom-blue font-semibold whitespace-nowrap"
                   >
                     {{ client.first_name }} {{ client.last_name }}
                   </th>
@@ -175,8 +179,12 @@ let capitalizeAndReplaceUnderscore = (str) => {
                       {{ capitalizeAndReplaceUnderscore(client.status) }}
                     </span>
                   </td>
+                  <td class="text-gray-700 px-4 py-3">{{ client.phone }}</td>
+                  <td class="text-gray-700 px-4 py-3">{{ client.email }}</td>
+                  <td class="text-gray-700 px-4 py-3">{{ client.zipCode }}</td>
+                  <td class="text-gray-700 px-4 py-3">{{ formatDate(client.dob) }}</td>
                   <td
-                    class="text-gray-300 px-4 py-3 flex items-center justify-end"
+                    class="text-gray-700 px-4 py-3 flex items-center justify-end"
                   >
                     <button
                       @click="openClientModal(client)"
@@ -198,11 +206,11 @@ let capitalizeAndReplaceUnderscore = (str) => {
                   class="text-sm font-normal text-gray-500 dark:text-gray-400"
                 >
                   Showing
-                  <span class="font-semibold text-white">{{
+                  <span class="font-semibold text-custom-blue">{{
                     clients.current_page
                   }}</span>
                   of
-                  <span class="font-semibold text-white">{{
+                  <span class="font-semibold text-custom-blue">{{
                     clients.last_page
                   }}</span>
                 </span>
@@ -270,7 +278,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
     </section>
 
     <section v-else class="p-3">
-      <p class="text-center text-gray-300">No clients yet.</p>
+      <p class="text-center text-gray-600">No clients yet.</p>
     </section>
 
     <ClientDetailsModal

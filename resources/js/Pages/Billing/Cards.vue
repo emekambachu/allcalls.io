@@ -81,7 +81,7 @@ let removeCard = (id) => {
                   <div class="sm:col-span-2">
                     <label
                       for="number"
-                      class="block mb-2 text-sm font-medium text-gray-300"
+                      class="block mb-2 text-sm font-medium text-gray-700"
                       >Card number</label
                     >
                     <TextInput
@@ -99,7 +99,7 @@ let removeCard = (id) => {
                   <div class="w-full">
                     <label
                       for="month"
-                      class="block mb-2 text-sm font-medium text-gray-300"
+                      class="block mb-2 text-sm font-medium text-gray-700"
                       >Expiration month</label
                     >
                     <select
@@ -130,7 +130,7 @@ let removeCard = (id) => {
                   <div class="w-full">
                     <label
                       for="year"
-                      class="block mb-2 text-sm font-medium text-gray-300"
+                      class="block mb-2 text-sm font-medium text-gray-700"
                       >Expiration year</label
                     >
                     <select
@@ -160,7 +160,7 @@ let removeCard = (id) => {
                   <div class="w-full">
                     <label
                       for="cvv"
-                      class="block mb-2 text-sm font-medium text-gray-300"
+                      class="block mb-2 text-sm font-medium text-gray-700"
                       >CVV</label
                     >
                     <TextInput
@@ -180,7 +180,7 @@ let removeCard = (id) => {
                   <div class="w-full">
                     <label
                       for="street"
-                      class="block mb-2 text-sm font-medium text-gray-300"
+                      class="block mb-2 text-sm font-medium text-gray-700"
                       >Street address</label
                     >
                     <TextInput
@@ -196,7 +196,7 @@ let removeCard = (id) => {
                   <div class="w-full">
                     <label
                       for="city"
-                      class="block mb-2 text-sm font-medium text-gray-300"
+                      class="block mb-2 text-sm font-medium text-gray-700"
                       >City</label
                     >
                     <TextInput
@@ -212,7 +212,7 @@ let removeCard = (id) => {
                   <div class="w-full">
                     <label
                       for="state"
-                      class="block mb-2 text-sm font-medium text-gray-300"
+                      class="block mb-2 text-sm font-medium text-gray-700"
                       >State</label
                     >
                     <select
@@ -299,7 +299,7 @@ let removeCard = (id) => {
                   <div class="w-full">
                     <label
                       for="zip"
-                      class="block mb-2 text-sm font-medium text-gray-300"
+                      class="block mb-2 text-sm font-medium text-gray-700"
                       >ZIP code</label
                     >
                     <TextInput
@@ -326,25 +326,25 @@ let removeCard = (id) => {
 
               <div class="max-w-2xl">
                 <div class="flex items-center justify-between">
-                  <h2 class="mb-4 text-xl font-bold text-gray-300">
+                  <h2 class="mb-4 text-xl font-bold text-gray-700">
                     Your Cards
                   </h2>
                 </div>
                 <div class="flow-root">
                   <ul role="list" class="divide-y divide-gray-200">
                     <li
-                      class="px-8 py-4 sm:px-12 rounded-lg sm:py-8 bg-custom-white mb-4"
+                      class="px-8 py-4 sm:px-12 rounded-lg sm:py-8 bg-custom-blue mb-4"
                       v-for="card in cards"
                       :key="card.id"
                     >
                       <div class="flex items-center space-x-4">
                         <div class="flex-1 min-w-0">
                           <p
-                            class="text-sm font-medium text-custom-blue truncate"
+                            class="text-sm font-medium text-custom-white truncate"
                           >
                             Visa ending in {{ card.last4 }}
                           </p>
-                          <p class="text-sm text-custom-blue truncate">
+                          <p class="text-sm text-custom-white truncate">
                             Expiry date: {{ card.expiryDate }}
                           </p>
                         </div>
@@ -364,7 +364,7 @@ let removeCard = (id) => {
                   </ul>
 
                   <div v-if="!cards.length">
-                    <p class="text-gray-300">
+                    <p class="text-gray-600">
                       You haven't added any cards yet.
                     </p>
                   </div>

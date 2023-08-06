@@ -165,7 +165,7 @@ let formatMoney = (amount) => {
           />
 
           <div v-else class="text-center py-10 text-gray-300 text-sm">
-            <div class="py-10 bg-sky-500 bg-opacity-5 rounded">
+            <div class="py-10 bg-sky-950 rounded shadow-xl">
               No data to display for spenditure.
             </div>
           </div>
@@ -179,7 +179,7 @@ let formatMoney = (amount) => {
           />
 
           <div v-else class="text-center py-10 text-gray-300 text-sm">
-            <div class="py-10 bg-sky-500 bg-opacity-5 rounded">
+            <div class="py-10 bg-sky-950 rounded shadow-xl">
               No data to display for calls.
             </div>
           </div>

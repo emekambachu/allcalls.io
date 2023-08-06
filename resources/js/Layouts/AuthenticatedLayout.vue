@@ -147,7 +147,7 @@ let formatMoney = (amount) => {
           </div>
 
           <p class="mt-10 mb-2 text-lg text-white font-bold">
-            Manage your team and preferences here.
+            Manage your business and preferences here.
           </p>
         </div>
 
@@ -166,6 +166,31 @@ let formatMoney = (amount) => {
             >
               Dashboard
             </ResponsiveNavLink>
+            
+            <ResponsiveNavLink
+              :href="route('clients.index')"
+              :active="route().current('clients.index')"
+            >
+              Clients
+            </ResponsiveNavLink>
+
+            <ResponsiveNavLink
+              :href="route('activities.index')"
+              :active="
+                route().current('activities.index') ||
+                route().current('activities.index')
+              "
+            >
+              Activities
+            </ResponsiveNavLink>
+
+            <ResponsiveNavLink
+              :href="route('transactions.index')"
+              :active="route().current('transactions.index')"
+            >
+              Transactions
+            </ResponsiveNavLink>
+
 
             <ResponsiveNavLink
               :href="route('billing.funds.index')"
@@ -177,27 +202,7 @@ let formatMoney = (amount) => {
             >
               Billing
             </ResponsiveNavLink>
-            <ResponsiveNavLink
-              :href="route('clients.index')"
-              :active="route().current('clients.index')"
-            >
-              Clients
-            </ResponsiveNavLink>
-            <ResponsiveNavLink
-              :href="route('transactions.index')"
-              :active="route().current('transactions.index')"
-            >
-              Transactions
-            </ResponsiveNavLink>
-            <ResponsiveNavLink
-              :href="route('activities.index')"
-              :active="
-                route().current('activities.index') ||
-                route().current('activities.index')
-              "
-            >
-              Activities
-            </ResponsiveNavLink>
+
             <ResponsiveNavLink
               :href="route('profile.view')"
               :active="
@@ -255,6 +260,35 @@ let formatMoney = (amount) => {
           <!-- <NavLink class="mb-10" href="#" :active="route().current('reporting')">
                         Reporting
                     </NavLink> -->
+
+
+          <NavLink
+            class="mb-10 gap-2"
+            :href="route('clients.index')"
+            :active="route().current('clients.index')"
+          >
+            <img src="/img/clients.png" alt="" />
+            Clients
+          </NavLink>
+
+          <NavLink
+            class="mb-10 gap-2"
+            :href="route('activities.index')"
+            :active="route().current('activities.index')"
+          >
+            <img src="/img/activity.png" alt="" />
+            Activities
+          </NavLink>
+
+          <NavLink
+            class="mb-10 gap-2"
+            :href="route('transactions.index')"
+            :active="route().current('transactions.index')"
+          >
+            <img src="/img/transactions.png" alt="" />
+            Transactions
+          </NavLink>
+
           <NavLink
             class="mb-10 gap-2"
             id="billing-nav-link"
@@ -390,6 +424,8 @@ let formatMoney = (amount) => {
 
           <NavLink
             class="mb-10 gap-2"
+<<<<<<< HEAD
+=======
             :href="route('clients.index')"
             :active="route().current('clients.index')"
           >
@@ -436,6 +472,7 @@ let formatMoney = (amount) => {
           </NavLink>
           <NavLink
             class="mb-10 gap-2"
+>>>>>>> 7868bcdd240e24e2f71c1b1942644560ea32c44f
             :href="route('profile.view')"
             :active="
               route().current('profile.edit') || route().current('profile.view')
@@ -446,7 +483,7 @@ let formatMoney = (amount) => {
           </NavLink>
         </div>
         <!-- Page Content -->
-        <main class="col-span-4">
+        <main class="col-span-4 bg-white mt-16 mb-16 rounded-xl shadow-2xl">
           <slot />
         </main>
       </div>

@@ -97,7 +97,7 @@ let addFunds = () => {
               <div class="mt-4 max-w-lg">
                 <label
                   for="amount"
-                  class="block mb-2 text-sm font-medium text-custom-white"
+                  class="block mb-2 text-sm font-medium text-gray-500"
                   >Amount</label
                 >
                 <div class="flex mt-2 bg-custom-blue">
@@ -120,7 +120,7 @@ let addFunds = () => {
 
               <AuthenticatedButton
                 type="button"
-                class=""
+                class="mt-6"
                 @click.prevent="addFunds"
               >
                 Add funds
