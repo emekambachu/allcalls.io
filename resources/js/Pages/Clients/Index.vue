@@ -1,8 +1,19 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import ClientDetailsModal from "@/Components/ClientDetailsModal.vue";
-import { Head, router } from "@inertiajs/vue3";
+import { Head, router, usePage } from "@inertiajs/vue3";
 import { ref } from "vue";
+import { createToaster } from "@meforma/vue-toaster";
+
+let toaster = createToaster({
+  position: "top-right",
+});
+
+let page = usePage();
+
+if (page.props.flash.message) {
+  toaster.success(page.props.flash.message);
+}
 
 let props = defineProps({
   clients: {

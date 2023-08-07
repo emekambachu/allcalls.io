@@ -56,6 +56,8 @@ class ClientsController extends Controller
             "state" => $request->state,
         ]);
 
-        return redirect()->back();
+        return redirect()->back()->with([
+            'message' => 'Client updated.'
+        ]);
     }
 }
