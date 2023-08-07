@@ -1,6 +1,7 @@
 <script setup>
-import { ref, defineEmits } from "vue";
+import { ref, reactive, defineEmits } from "vue";
 import TextInput from "@/Components/TextInput.vue";
+import { router } from "@inertiajs/vue3"
 
 const { showModal, selectedClient } = defineProps([
   "showModal",
@@ -13,6 +14,15 @@ const close = () => {
   editScreen.value = false;
   emit("close");
 };
+
+let form = reactive(selectedClient)
+
+const saveChanges = () => {
+  router.visit(`/clients/${selectedClient.id}`, {
+    method: 'PATCH',
+    data: form,
+  });
+}
 </script>
 
 <template>
@@ -246,7 +256,7 @@ const close = () => {
                   class="w-full"
                   placeholder="John"
                   required
-                  v-model="selectedClient.first_name"
+                  v-model="form.first_name"
                 />
               </div>
               <div>
@@ -258,7 +268,7 @@ const close = () => {
                   class="w-full"
                   placeholder="Doe"
                   required
-                  v-model="selectedClient.last_name"
+                  v-model="form.last_name"
                 />
               </div>
               <div>
@@ -269,7 +279,7 @@ const close = () => {
                   id="dob"
                   class="w-full"
                   required
-                  v-model="selectedClient.dob"
+                  v-model="form.dob"
                 />
               </div>
             </div>
@@ -288,7 +298,7 @@ const close = () => {
                   id="phone"
                   class="w-full"
                   required
-                  v-model="selectedClient.phone"
+                  v-model="form.phone"
                 />
               </div>
               <div>
@@ -300,7 +310,7 @@ const close = () => {
                   class="w-full"
                   placeholder="john@example.com"
                   required
-                  v-model="selectedClient.email"
+                  v-model="form.email"
                 />
               </div>
               <div>
@@ -312,7 +322,7 @@ const close = () => {
                   class="w-full"
                   placeholder="10001"
                   required
-                  v-model="selectedClient.address"
+                  v-model="form.address"
                 />
               </div>
               <div class="w-full">
@@ -325,7 +335,7 @@ const close = () => {
                   name="state"
                   id="state"
                   class="bg-custom-blue text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 text-white outline-none border-none"
-                  v-model="cardForm.state"
+                  v-model="form.state"
                   required
                 >
                   <option selected="" disabled="" value="">Select State</option>
@@ -390,7 +400,7 @@ const close = () => {
                   class="w-full"
                   placeholder="10001"
                   required
-                  v-model="selectedClient.zipCode"
+                  v-model="form.zipCode"
                 />
               </div>
             </div>
@@ -401,6 +411,7 @@ const close = () => {
               <button
                 type="submit"
                 class="border border-gray-400 ease-in cursor-pointer bg-white bg-opacity-5 hover:shadow-2xl hover:bg-white hover:text-custom-blue hover:bg-opacity-80 rounded px-3 py-3 font-bold text-md text-custom-white"
+                @click.prevent="saveChanges"
               >
                 Save Changes
               </button>
