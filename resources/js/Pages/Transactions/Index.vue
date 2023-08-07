@@ -76,14 +76,14 @@ let formatMoney = (amount) => {
                 >
                   <th
                     scope="row"
-                    class="px-4 py-3 font-medium text-custom-white whitespace-nowrap"
+                    class="px-4 py-3 font-medium text-gray-700 whitespace-nowrap"
                   >
                     {{ transaction.id }}
                   </th>
-                  <td class="text-gray-300 px-4 py-3">
+                  <td class="text-gray-500 px-4 py-3">
                     ${{ formatMoney(transaction.amount) }}
                   </td>
-                  <td class="text-gray-300 px-4 py-3">
+                  <td class="text-gray-500 px-4 py-3">
                     {{ formatDate(transaction.created_at) }}
                   </td>
                   <td class="text-gray-300 px-4 py-3">

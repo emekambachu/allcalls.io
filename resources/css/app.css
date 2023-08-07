@@ -301,8 +301,8 @@ html, body {
     margin: auto;
     /* height: 80%; */
     padding: 48px;
-    width: 95%;
-    border-radius: 32px 0px;
+    /* width: 95%; */
+    /* border-radius: 32px 0px; */
     background-color: #239DFA;
 }
 
@@ -319,9 +319,9 @@ html, body {
     height: 100%;
 }
 
-.secFive__outer {
+/* .secFive__outer {
     padding: 20px 0;
-}
+} */
 
 .secFive__texts {
     margin: auto;

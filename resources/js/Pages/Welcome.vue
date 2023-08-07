@@ -224,9 +224,16 @@ const showHamburger = ref(false);
       </div>
   </section>
 
+  <!-- <section>
+    <div class="w-full">
+      <div class="h-80 bg-gray-400">Hello</div>
+
+    </div>
+  </section> -->
 
   <section id="resources"> 
     <div class="secFive" >
+
       <div class="secFive__outer">
         <div class="secFive__row">
           <div class="secFive__inner gap-8">
