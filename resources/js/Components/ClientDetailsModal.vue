@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineEmits } from "vue";
+import { ref, defineEmits, onMounted } from "vue";
 import TextInput from "@/Components/TextInput.vue";
 import { router } from "@inertiajs/vue3"
 
@@ -15,9 +15,17 @@ const close = () => {
   emit("close");
 };
 
-let form = ref(selectedClient)
+let form = ref(null);
+
+onMounted(() => {
+  form.value = selectedClient
+});
+
+
 
 const saveChanges = () => {
+  console.log('selectedClient save changes', selectedClient);
+  console.log('form upon save changes', form.value);
   router.visit(`/clients/${selectedClient.id}`, {
     method: 'PATCH',
     data: form.value,
