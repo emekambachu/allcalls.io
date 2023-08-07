@@ -38,9 +38,7 @@ const close = () => {
         v-if="!editScreen"
         class="relative w-full max-w-4xl max-h-full mx-auto"
       >
-        <div
-          class="relative bg-white  rounded-lg shadow-lg"
-        >
+        <div class="relative bg-white rounded-lg shadow-lg">
           <div
             class="flex items-start justify-between p-4 border-b rounded-t border-gray-600"
           >
@@ -120,6 +118,10 @@ const close = () => {
                 <div>
                   <strong class="text-lg">Address: </strong>
                   {{ selectedClient.address || "N/A" }}
+                </div>
+                <div>
+                  <strong class="text-lg">State: </strong>
+                  {{ selectedClient.state || "N/A" }}
                 </div>
                 <div>
                   <strong class="text-lg">Zip Code: </strong>
@@ -312,6 +314,72 @@ const close = () => {
                   required
                   v-model="selectedClient.address"
                 />
+              </div>
+              <div class="w-full">
+                <label
+                  for="state"
+                  class="block mb-2 text-sm font-medium text-gray-700"
+                  >State</label
+                >
+                <select
+                  name="state"
+                  id="state"
+                  class="bg-custom-blue text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 text-white outline-none border-none"
+                  v-model="cardForm.state"
+                  required
+                >
+                  <option selected="" disabled="" value="">Select State</option>
+                  <option value="AL">Alabama</option>
+                  <option value="AK">Alaska</option>
+                  <option value="AZ">Arizona</option>
+                  <option value="AR">Arkansas</option>
+                  <option value="CA">California</option>
+                  <option value="CO">Colorado</option>
+                  <option value="CT">Connecticut</option>
+                  <option value="DE">Delaware</option>
+                  <option value="FL">Florida</option>
+                  <option value="GA">Georgia</option>
+                  <option value="HI">Hawaii</option>
+                  <option value="ID">Idaho</option>
+                  <option value="IL">Illinois</option>
+                  <option value="IN">Indiana</option>
+                  <option value="IA">Iowa</option>
+                  <option value="KS">Kansas</option>
+                  <option value="KY">Kentucky</option>
+                  <option value="LA">Louisiana</option>
+                  <option value="ME">Maine</option>
+                  <option value="MD">Maryland</option>
+                  <option value="MA">Massachusetts</option>
+                  <option class="text-black" value="MI">Michigan</option>
+                  <option class="text-black" value="MN">Minnesota</option>
+                  <option class="text-black" value="MS">Mississippi</option>
+                  <option class="text-black" value="MO">Missouri</option>
+                  <option class="text-black" value="MT">Montana</option>
+                  <option class="text-black" value="NE">Nebraska</option>
+                  <option class="text-black" value="NV">Nevada</option>
+                  <option class="text-black" value="NH">New Hampshire</option>
+                  <option class="text-black" value="NJ">New Jersey</option>
+                  <option class="text-black" value="NM">New Mexico</option>
+                  <option class="text-black" value="NY">New York</option>
+                  <option class="text-black" value="NC">North Carolina</option>
+                  <option class="text-black" value="ND">North Dakota</option>
+                  <option class="text-black" value="OH">Ohio</option>
+                  <option class="text-black" value="OK">Oklahoma</option>
+                  <option class="text-black" value="OR">Oregon</option>
+                  <option class="text-black" value="PA">Pennsylvania</option>
+                  <option class="text-black" value="RI">Rhode Island</option>
+                  <option class="text-black" value="SC">South Carolina</option>
+                  <option class="text-black" value="SD">South Dakota</option>
+                  <option class="text-black" value="TN">Tennessee</option>
+                  <option class="text-black" value="TX">Texas</option>
+                  <option class="text-black" value="UT">Utah</option>
+                  <option class="text-black" value="VT">Vermont</option>
+                  <option class="text-black" value="VA">Virginia</option>
+                  <option class="text-black" value="WA">Washington</option>
+                  <option class="text-black" value="WV">West Virginia</option>
+                  <option class="text-black" value="WI">Wisconsin</option>
+                  <option class="text-black" value="WY">Wyoming</option>
+                </select>
               </div>
               <div>
                 <label class="text-lg">Zip Code:</label>
