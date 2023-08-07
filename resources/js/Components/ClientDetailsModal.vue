@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, defineEmits } from "vue";
+import { ref, defineEmits } from "vue";
 import TextInput from "@/Components/TextInput.vue";
 import { router } from "@inertiajs/vue3"
 
@@ -15,12 +15,12 @@ const close = () => {
   emit("close");
 };
 
-let form = reactive(selectedClient)
+let form = ref(selectedClient)
 
 const saveChanges = () => {
   router.visit(`/clients/${selectedClient.id}`, {
     method: 'PATCH',
-    data: form,
+    data: form.value,
   });
 }
 </script>
@@ -240,7 +240,7 @@ const saveChanges = () => {
               <span class="sr-only">Close modal</span>
             </button>
           </div>
-          <form class="p-6">
+          <form v-if="form" class="p-6">
             <h4 class="text-2xl font-semibold text-custom-sky mb-2">
               Personal Details
             </h4>
