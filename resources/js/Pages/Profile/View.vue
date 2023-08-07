@@ -172,7 +172,7 @@ let formatMoney = (amount) => {
           <div class="grid grid-cols-2 gap-10 mb-12">
             <div v-for="bid in bids" :key="bid.id">
               <div class="flex flex-col space-y-2 h-full overflow-auto">
-                <div class="text-sm text-gray-400 font-bold">Vertical: <span class="font-light text-gray-700"> {{ bid.call_type.type }}</span></div>
+                <div class="text-sm text-gray-400 font-bold">Vertical: <span class="font-light text-gray-700">{{ bid.call_type.type }}</span></div>
                 <div class="text-md sm:text-xl text-gray-600 font-bold">${{ formatMoney(bid.amount) }}</div>
               </div>
             </div>
