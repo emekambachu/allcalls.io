@@ -1,35 +1,42 @@
 <script setup>
-import { ref, defineEmits, onMounted } from "vue";
+import { ref, reactive, defineEmits, onMounted } from "vue";
 import TextInput from "@/Components/TextInput.vue";
 import { router } from "@inertiajs/vue3"
 
-const { showModal, selectedClient } = defineProps([
-  "showModal",
-  "selectedClient",
-]);
-const editScreen = ref(false);
-const emit = defineEmits(["close"]);
+let props = defineProps({
+  showModal: {
+    type: Boolean,
+  },
 
-const close = () => {
+  selectedClient: {
+    type: Object,
+  },
+});
+let editScreen = ref(false);
+let emit = defineEmits(["close"]);
+let originalClient = props.selectedClient;
+
+let close = () => {
   editScreen.value = false;
   emit("close");
+  form = originalClient
+  props.selectedClient = originalClient;
 };
 
-let form = ref(null);
+let form = reactive(null);
 
-onMounted(() => {
-  form.value = selectedClient
-});
-
-
-
-const saveChanges = () => {
-  console.log('selectedClient save changes', selectedClient);
-  console.log('form upon save changes', form.value);
-  router.visit(`/clients/${selectedClient.id}`, {
+let saveChanges = () => {
+  console.log('selectedClient save changes', props.selectedClient);
+  console.log('form upon save changes', form);
+  router.visit(`/clients/${form.id}`, {
     method: 'PATCH',
-    data: form.value,
+    data: form,
   });
+}
+
+let openEdit = () => {
+  editScreen.value = true;
+  form = JSON.parse(JSON.stringify(props.selectedClient));
 }
 </script>
 
@@ -95,7 +102,7 @@ const saveChanges = () => {
                 </h4>
 
                 <button
-                  @click="editScreen = true"
+                  @click="openEdit"
                   class="border border-gray-400 ease-in cursor-pointer bg-gray-400 bg-opacity-5 hover:shadow-2xl hover:bg-white hover:text-custom-blue hover:bg-opacity-80 rounded px-3 py-3 font-bold text-md text-gray-500 transition"
                 >
                   Edit Client
@@ -410,6 +417,29 @@ const saveChanges = () => {
                   required
                   v-model="form.zipCode"
                 />
+              </div>
+            </div>
+
+            <h4 class="text-2xl font-semibold text-custom-sky mb-2">
+              Other Information
+            </h4>
+            <div
+              class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-500 dark:text-gray-300 mb-10"
+            >
+            <div>
+              <label class="text-lg">Status:</label>
+              <select
+                  name="status"
+                  id="status"
+                  class="bg-custom-blue text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 text-white outline-none border-none"
+                  v-model="form.status"
+                  required
+                >
+                  <option selected="" disabled="" value="">Select status</option>
+                  <option value="not_sold">Not Sold</option>
+                  <option value="sold">Sold</option>
+                  <option value="follow_up_needed">Follow Up Needed</option>
+                </select>
               </div>
             </div>
 
