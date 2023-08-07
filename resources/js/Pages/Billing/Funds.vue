@@ -100,20 +100,20 @@ let addFunds = () => {
                   class="block mb-2 text-sm font-medium text-gray-500"
                   >Amount</label
                 >
-                <div class="flex mt-2 bg-custom-blue">
+                <div class="flex mt-2">
                   <span
-                    class="inline-flex items-center px-3 text-sm text-white bg-custom-blue border-r-0 rounded-l-md"
+                    class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md"
                   >
                     $
                   </span>
 
-                  <input
+                  <TextInput
                     type="number"
                     id="amount"
                     placeholder="500"
                     v-model="amount"
                     :disabled="selectedCardId === 0"
-                    class="bg-custom-blue text-sm rounded-lg focus:ring-transparent focus:border-blue-500 block w-full p-2.5 text-white outline-none border-none"
+                    class="rounded-none rounded-r-lg border focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5 border-gray-400 placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   />
                 </div>
               </div>
