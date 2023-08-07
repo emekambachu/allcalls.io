@@ -110,7 +110,7 @@ let openEdit = () => {
               </div>
 
               <div
-                class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-500 dark:text-gray-300 mb-10"
+                class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-10"
               >
                 <div>
                   <strong class="text-lg">First Name: </strong>
@@ -130,7 +130,7 @@ let openEdit = () => {
                 Contact Information
               </h4>
               <div
-                class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-500 dark:text-gray-300 mb-10"
+                class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-10"
               >
                 <div>
                   <strong class="text-lg">Phone: </strong>
@@ -158,7 +158,7 @@ let openEdit = () => {
                 Call Details
               </h4>
               <div
-                class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-500 dark:text-gray-300 mb-10"
+                class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-10"
               >
                 <div>
                   <strong class="text-lg">Call Taken: </strong>
@@ -200,7 +200,7 @@ let openEdit = () => {
                 Financial Details
               </h4>
               <div
-                class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-500 dark:text-gray-300 mb-10"
+                class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-10"
               >
                 <div>
                   <strong class="text-lg">Amount Spent: </strong>
@@ -223,18 +223,18 @@ let openEdit = () => {
 
       <div v-else class="relative w-full max-w-4xl max-h-full mx-auto">
         <div
-          class="relative bg-sky-950 border border-custom-darksky rounded-lg shadow-lg"
+          class="relative bg-white border border-gray-300 rounded-lg shadow-lg"
         >
           <div
-            class="flex items-start justify-between p-4 border-b rounded-t border-gray-600"
+            class="flex items-start justify-between p-4 border-b border-gray-300 rounded-t"
           >
-            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+            <h3 class="text-xl font-semibold text-gray-700">
               Edit Client Details
             </h3>
             <button
               @click="close"
               type="button"
-              class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-700 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+              class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-700 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
               data-modal-hide="defaultModal"
             >
               <svg
@@ -256,11 +256,11 @@ let openEdit = () => {
             </button>
           </div>
           <form v-if="form" class="p-6">
-            <h4 class="text-2xl font-semibold text-custom-sky mb-2">
+            <h4 class="text-2xl font-semibold text-gray-700 mb-2">
               Personal Details
             </h4>
             <div
-              class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-500 dark:text-gray-300 mb-10"
+              class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-10"
             >
               <div>
                 <label class="text-lg">First Name:</label>
@@ -303,7 +303,7 @@ let openEdit = () => {
               Contact Information
             </h4>
             <div
-              class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-500 dark:text-gray-300 mb-10"
+              class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-10"
             >
               <div>
                 <label class="text-lg">Phone:</label>
@@ -424,7 +424,7 @@ let openEdit = () => {
               Other Information
             </h4>
             <div
-              class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-500 dark:text-gray-300 mb-10"
+              class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-10"
             >
             <div>
               <label class="text-lg">Status:</label>
@@ -448,7 +448,7 @@ let openEdit = () => {
             <div class="flex justify-end mt-6">
               <button
                 type="submit"
-                class="border border-gray-400 ease-in cursor-pointer bg-white bg-opacity-5 hover:shadow-2xl hover:bg-white hover:text-custom-blue hover:bg-opacity-80 rounded px-3 py-3 font-bold text-md text-custom-white"
+                class="border border-gray-400 ease-in cursor-pointer bg-white hover:shadow-2xl hover:text-gray-700 rounded px-3 py-3 font-bold text-md text-gray-700"
                 @click.prevent="saveChanges"
               >
                 Save Changes
@@ -456,7 +456,7 @@ let openEdit = () => {
               <button
                 @click.prevent="close"
                 type="button"
-                class="ml-4 border border-gray-400 ease-in cursor-pointer bg-white bg-opacity-5 hover:shadow-2xl hover:bg-white hover:text-custom-blue hover:bg-opacity-80 rounded px-3 py-3 font-bold text-md text-custom-white"
+                class="ml-4 border border-gray-400 ease-in cursor-pointer bg-white hover:shadow-2xl hover:text-gray-700 rounded px-3 py-3 font-bold text-md text-gray-700"
               >
                 Close
               </button>

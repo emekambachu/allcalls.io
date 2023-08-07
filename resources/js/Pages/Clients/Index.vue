@@ -1,8 +1,19 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import ClientDetailsModal from "@/Components/ClientDetailsModal.vue";
-import { Head, router } from "@inertiajs/vue3";
+import { Head, router, usePage } from "@inertiajs/vue3";
 import { ref } from "vue";
+import { createToaster } from "@meforma/vue-toaster";
+
+let toaster = createToaster({
+  position: "top-right",
+});
+
+let page = usePage();
+
+if (page.props.flash.message) {
+  toaster.success(page.props.flash.message);
+}
 
 let props = defineProps({
   clients: {
@@ -196,7 +207,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
                   >
                     <button
                       @click="openClientModal(client)"
-                      class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
+                      class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
                       type="button"
                     >
                       View Client
