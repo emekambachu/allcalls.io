@@ -79,10 +79,10 @@ class IncomingCallController extends Controller
         // Select a user from this group
         $selectedUser = $users->first();
     
-        Log::debug('Selected user: ' . $selectedUser->id);
+        Log::debug('Selected user: ' . $selectedUser->user_id);
     
         // Find one of the available numbers and associate it with the selected user
-        $availableNumber = $this->getAvailableNumberForUser($selectedUser);
+        $availableNumber = $this->getAvailableNumberForUser($selectedUser->user_id);
     
         Log::debug('Forwarding call to ' . $availableNumber->phone);
     
@@ -100,7 +100,7 @@ class IncomingCallController extends Controller
         return OnlineUser::where('call_type_id', $callType->id)->get();
     }
 
-    public function getAvailableNumberForUser($user)
+    public function getAvailableNumberForUser($userId)
     {
         // This method should return one of the available numbers and associate it with the selected user
         // Find the first available number where user_id is null
@@ -113,7 +113,7 @@ class IncomingCallController extends Controller
             return null;
         }
     
-        $availableNumber->user_id = $user->id;
+        $availableNumber->user_id = $userId;
         $availableNumber->save();
     
         return $availableNumber;
