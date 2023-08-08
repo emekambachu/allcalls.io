@@ -22,7 +22,7 @@ class IncomingCallController extends Controller
             Log::debug('To attribute: ' . $to);
 
             // Remove the "+1" from the beginning of the "To" number
-            $to = substr($to, 2);
+            // $to = substr($to, 2);
 
             // Check if the number exists in the AvailableNumber model
             $availableNumber = AvailableNumber::where('phone', $to)->first();
