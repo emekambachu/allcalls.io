@@ -22,7 +22,7 @@ class IncomingCallController extends Controller
             Log::debug('To attribute: ' . $to);
 
             // Remove the "+1" from the beginning of the "To" number
-            $to = substr($to, 2);
+            // $to = substr($to, 2);
 
             // Check if the number exists in the AvailableNumber model
             $availableNumber = AvailableNumber::where('phone', $to)->first();
@@ -79,10 +79,10 @@ class IncomingCallController extends Controller
         // Select a user from this group
         $selectedUser = $users->first();
     
-        Log::debug('Selected user: ' . $selectedUser->id);
+        Log::debug('Selected user: ' . $selectedUser->user_id);
     
         // Find one of the available numbers and associate it with the selected user
-        $availableNumber = $this->getAvailableNumberForUser($selectedUser);
+        $availableNumber = $this->getAvailableNumberForUser($selectedUser->user_id, $from);
     
         Log::debug('Forwarding call to ' . $availableNumber->phone);
     
@@ -100,11 +100,14 @@ class IncomingCallController extends Controller
         return OnlineUser::where('call_type_id', $callType->id)->get();
     }
 
-    public function getAvailableNumberForUser($user)
+    public function getAvailableNumberForUser($userId, $from)
     {
         // This method should return one of the available numbers and associate it with the selected user
         // Find the first available number where user_id is null
         $availableNumber = AvailableNumber::whereNull('user_id')->first();
+
+        // THE FOLLOWING LINE IS TEMPORARY, WILL REMOVE AFTER TESTING PHASE:
+        $availableNumber = AvailableNumber::wherePhone('+441156471655')->first();
     
         // If there is no available number with user_id null, you might want to handle this scenario,
         // For now, let's assume there is always an available number.
@@ -113,7 +116,8 @@ class IncomingCallController extends Controller
             return null;
         }
     
-        $availableNumber->user_id = $user->id;
+        $availableNumber->user_id = $userId;
+        $availableNumber->from = $from;
         $availableNumber->save();
     
         return $availableNumber;
