@@ -28,6 +28,7 @@ html, body {
 
 #resources {
     min-height: 100vh;
+    background-color: #031726;
 }
 
 .main {
@@ -293,16 +294,11 @@ html, body {
 
 .secFive {
     min-height: 100%;
-    display: grid;
-    grid-template-rows: repeat(2, 1fr);
 }
 
 .secFive__row {
     margin: auto;
-    /* height: 80%; */
     padding: 48px;
-    /* width: 95%; */
-    /* border-radius: 32px 0px; */
     background-color: #239DFA;
 }
 
