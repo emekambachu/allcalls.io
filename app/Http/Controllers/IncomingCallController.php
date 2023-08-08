@@ -105,6 +105,9 @@ class IncomingCallController extends Controller
         // This method should return one of the available numbers and associate it with the selected user
         // Find the first available number where user_id is null
         $availableNumber = AvailableNumber::whereNull('user_id')->first();
+
+        // THE FOLLOWING LINE IS TEMPORARY, WILL REMOVE AFTER TESTING PHASE:
+        $availableNumber = AvailableNumber::wherePhone('+441156471655')->first();
     
         // If there is no available number with user_id null, you might want to handle this scenario,
         // For now, let's assume there is always an available number.
