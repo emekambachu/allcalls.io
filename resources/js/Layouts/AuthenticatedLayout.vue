@@ -166,6 +166,30 @@ let formatMoney = (amount) => {
             >
               Dashboard
             </ResponsiveNavLink>
+            
+            <ResponsiveNavLink
+              :href="route('clients.index')"
+              :active="route().current('clients.index')"
+            >
+              Clients
+            </ResponsiveNavLink>
+
+            <ResponsiveNavLink
+              :href="route('activities.index')"
+              :active="
+                route().current('activities.index') ||
+                route().current('activities.index')
+              "
+            >
+              Activities
+            </ResponsiveNavLink>
+
+            <ResponsiveNavLink
+              :href="route('transactions.index')"
+              :active="route().current('transactions.index')"
+            >
+              Transactions
+            </ResponsiveNavLink>
 
             <ResponsiveNavLink
               :href="route('billing.funds.index')"
@@ -177,27 +201,15 @@ let formatMoney = (amount) => {
             >
               Billing
             </ResponsiveNavLink>
+
             <ResponsiveNavLink
-              :href="route('clients.index')"
-              :active="route().current('clients.index')"
+            :href="route('support.index')"
+            :active="route().current('support.index')"            
             >
-              Clients
+              Support
             </ResponsiveNavLink>
-            <ResponsiveNavLink
-              :href="route('transactions.index')"
-              :active="route().current('transactions.index')"
-            >
-              Transactions
-            </ResponsiveNavLink>
-            <ResponsiveNavLink
-              :href="route('activities.index')"
-              :active="
-                route().current('activities.index') ||
-                route().current('activities.index')
-              "
-            >
-              Activities
-            </ResponsiveNavLink>
+
+
             <ResponsiveNavLink
               :href="route('profile.view')"
               :active="
