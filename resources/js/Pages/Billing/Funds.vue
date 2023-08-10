@@ -375,15 +375,22 @@ let addFunds = () => {
                     v-model="cardForm.amount"
                     step="1"
                     min="0"
-                    :disabled="selectedCardId === 0"
                     class="rounded-none rounded-r-lg border focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5 border-gray-400 placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   />
                 </div>
               </div>
 
+              <p class="text-gray-700 text-xs max-w-lg mt-6">
+                By clicking the "Add Funds" button below I authorize AllCalls
+                LLC to charge my card and agree to be billed for ${{ cardForm.amount }}. This is a
+                one-time purchase. Funds will be added to your account
+                immediately. Your credit card will be billed as "AllCalls.io" on
+                your billing statement.
+              </p>
+
               <AuthenticatedButton
                 type="button"
-                class="mt-6"
+                class="mt-3"
                 @click.prevent="addFunds"
               >
                 Add funds
