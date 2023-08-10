@@ -59,7 +59,7 @@ let formatMoney = (amount) => {
                 <div>
                   <Link
                     href="/billing/funds"
-                    class="mr-3 text-xs border border-gray-400 ease-in cursor-pointer bg-gray-400 bg-opacity-5 hover:shadow-2xl hover:bg-white hover:text-custom-blue hover:bg-opacity-80 rounded px-3 py-3 font-bold text-md text-gray-500 transition"
+                    class="mr-3 text-xs border border-gray-400 ease-in cursor-pointer bg-gray-400 bg-opacity-5 hover:shadow-2xl hover:bg-white hover:text-custom-blue hover:bg-opacity-80 rounded p-2 font-bold text-md text-gray-500 transition"
                     >
                       Add Funds
                     </Link
