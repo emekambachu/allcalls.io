@@ -20,6 +20,7 @@ class CardsController extends Controller
             $decryptedMonth = Crypt::decryptString($card->month);
             $decryptedYear = Crypt::decryptString($card->year);
             $card->expiryDate = sprintf('%02d/%02d', $decryptedMonth, substr($decryptedYear, -2));
+            $card->cardType = $this->getCardType($decryptedNumber);
 
             return $card;
         });
@@ -44,7 +45,7 @@ class CardsController extends Controller
         $encryptedMonth = Crypt::encryptString($request->month);
         $encryptedYear = Crypt::encryptString($request->year);
         $encryptedCvv = Crypt::encryptString($request->cvv);
-    
+
         Card::create([
             'number' => $encryptedNumber,
             'month' => $encryptedMonth,
@@ -67,4 +68,20 @@ class CardsController extends Controller
         $card->delete();
         return redirect()->back();
     }
+
+    private function getCardType($cardNumber)
+    {
+        if (str_starts_with($cardNumber, '4')) {
+            return 'visa';
+        } elseif (preg_match('/^5[1-5]/', $cardNumber) || preg_match('/^2[2-7][1-9][0-9]/', $cardNumber)) {
+            return 'mastercard';
+        } elseif (preg_match('/^3[47]/', $cardNumber)) {
+            return 'amex';
+        } elseif (preg_match('/^6(?:011|5)/', $cardNumber)) {
+            return 'discover';
+        } else {
+            return 'Unknown';
+        }
+    }
+
 }
