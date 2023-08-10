@@ -375,15 +375,15 @@ let getCardType = cardNumber => {
                     >
                       <img
                         class="h-8 max-h-full mr-4 bg-gray-200 border border-gray-300 rounded shadow"
-                        src="/img/visa.svg"
-                        alt="VISA"
+                        :src="`/img/${card.cardType}.svg`"
+                        :alt="card.cardType"
                       />
                       <div class="w-full flex justify-between items-center">
                         <div>
                           <h3
                             class="text-xs text-gray-800 font-bold tracking-wide"
                           >
-                            {{ getCardType(card.number) }} xxxx {{ card.last4 }}
+                            {{ card.cardType.charAt(0).toUpperCase() + card.cardType.slice(1) }} xxxx {{ card.last4 }}
                           </h3>
                           <p class="text-xs text-gray-700 tracking-wide">
                             Expires on {{ card.expiryDate }}
