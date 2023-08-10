@@ -11,7 +11,7 @@ import ApplicationLogo from "@/Components/ApplicationLogo.vue";
             <!-- <img src="/img/logo.png" alt=""> -->
             <ApplicationLogo class="text-center" />
           </div>
-  
+  <!--
           <div class="footer__list">
             <ul>
               <li class="footer__label">Platform</li>
@@ -40,7 +40,7 @@ import ApplicationLogo from "@/Components/ApplicationLogo.vue";
               <li>Careers</li>
               <li>Contact</li>
             </ul>
-          </div>
+          </div> -->
         </div>
       </div>
 

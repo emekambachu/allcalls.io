@@ -54,6 +54,7 @@ const showHamburger = ref(false);
               <a href="#getstarted" class="hover:text-custom-green"><li>Live Transfers</li></a>
               <a href="#solutions" class="hover:text-custom-green"><li>Why AllCalls.io</li></a>
               <a href="#resources" class="hover:text-custom-green"><li>How It Works</li></a>
+			  <a href="https://www.financialservicecareers.com" class="hover:text-custom-green"><li>Careers</li></a>
               <a href="/register" class="hover:text-custom-green"><li>Sign Up Now</li></a>
             </ul>
           </nav>
@@ -68,6 +69,7 @@ const showHamburger = ref(false);
             <a href="#getstarted"><li class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2">Live Transfers</li></a>
             <a href="#solutions"><li class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2" >Why AllCalls.io</li></a>
             <a href="#resources"><li class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2" >How It Works</li></a>
+			<a href="https://www.financialservicecareers.com"><li class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2" >Careers</li></a>
             <a href="/login"><li class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2" >Log In</li></a>
             <a href="/register"><li class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white" >Register</li></a>
           </ul>
