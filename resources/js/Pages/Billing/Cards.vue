@@ -62,19 +62,21 @@ let removeCard = (id) => {
 
     <div class="sm:py-10">
       <div class="mx-auto max-w-7xl">
-        <!-- <div class="sm:pl-10 max-w-6xl">
-          <BillingNav></BillingNav>
-        </div> -->
 
         <div>
           <section class="mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-4 sm:p-8 sm:rounded-lg">
-              <!-- <div class="py-8 px-4 mx-auto max-w-2xl lg:py-16"> -->
-              <!-- <hr> -->
               <h2 id="headline" class="text-4xl text-custom-sky font-bold mb-6">
                 Add a new card
               </h2>
               <hr class="mb-8" />
+
+              <div class="flex justify-center">
+                <img class="h-8 mr-3 border border-gray-300 shadow rounded" src="/img/visa.svg" alt="VISA">
+                <img class="h-8 mr-3 border border-gray-300 shadow rounded" src="/img/mastercard.svg" alt="MASTERCARD">
+                <img class="h-8 mr-3 border border-gray-300 shadow rounded" src="/img/amex.svg" alt="AMERICAN EXPRESS">
+                <img class="h-8 mr-3 border border-gray-300 shadow rounded" src="/img/discover.svg" alt="DISCOVER">
+              </div>
 
               <form @submit.prevent="addNewCard()" class="mb-12" autocomplete="on">
                 <div class="grid gap-4 sm:grid-cols-2 sm:gap-6 mb-6">
