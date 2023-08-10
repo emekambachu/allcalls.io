@@ -380,7 +380,7 @@ let addFunds = () => {
                 </div>
               </div>
 
-              <p class="text-gray-700 text-xs max-w-lg mt-6">
+              <p class="text-gray-700 text-xs max-w-lg mt-4">
                 By clicking the "Add Funds" button below I authorize AllCalls
                 LLC to charge my card and agree to be billed for ${{ cardForm.amount }}. This is a
                 one-time purchase. Funds will be added to your account
