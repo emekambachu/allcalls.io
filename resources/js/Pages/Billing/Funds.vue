@@ -36,7 +36,6 @@ let cardForm = reactive({
   zip: "",
 });
 
-
 let selectCard = (cardId) => {
   console.log("clicked", cardId);
   selectedCardId.value = Number(cardId);
@@ -45,10 +44,10 @@ let addFunds = () => {
   let cardId = selectedCardId.value;
 
   if (cardId === 0) {
-    router.visit('/billing/funds-with-card', {
+    router.visit("/billing/funds-with-card", {
       method: "post",
-      data: cardForm
-    })
+      data: cardForm,
+    });
 
     return;
   }
@@ -92,7 +91,6 @@ let addFunds = () => {
       <form class="mx-auto max-w-7xl">
         <div v-if="cards.length">
           <section class="mx-auto sm:px-6 lg:px-8 space-y-6">
-
             <div class="p-4 sm:p-8 sm:rounded-lg" style="padding-top: 0">
               <h2 class="text-xl">Choose from your cards</h2>
               <div
@@ -284,9 +282,7 @@ let addFunds = () => {
                       <option value="LA">Louisiana</option>
                       <option value="ME">Maine</option>
                       <option value="MD">Maryland</option>
-                      <option value="MA">
-                        Massachusetts
-                      </option>
+                      <option value="MA">Massachusetts</option>
                       <option class="text-black" value="MI">Michigan</option>
                       <option class="text-black" value="MN">Minnesota</option>
                       <option class="text-black" value="MS">Mississippi</option>
@@ -372,6 +368,8 @@ let addFunds = () => {
                     id="amount"
                     placeholder="500"
                     v-model="cardForm.amount"
+                    step="1"
+                    min="0"
                     :disabled="selectedCardId === 0"
                     class="rounded-none rounded-r-lg border focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5 border-gray-400 placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   />

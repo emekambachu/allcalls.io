@@ -21,7 +21,7 @@ class FundsWithCardController extends Controller
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
             'zip' => 'required|string|max:10',
-            'amount' => 'required|numeric'
+            'amount' => 'required|numeric|integer|min:1'
         ]);
 
         // 2. Set up and process payment

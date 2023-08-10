@@ -46,7 +46,7 @@ class FundsController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'amount' => 'required|numeric',
+            'amount' => 'required|numeric|integer|min:1',
             'cardId' => [
                 'required',
 
