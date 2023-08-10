@@ -352,7 +352,7 @@ let formatMoney = (amount) => {
               route().current('billing.cards.index') ||
               route().current('billing.autopay.index')
             "
-            class="pl-14 text-white text-sm mb-5"
+            class="pl-14 text-white text-xs mb-5"
           >
             <ul>
               <li class="mb-3">
@@ -378,7 +378,7 @@ let formatMoney = (amount) => {
                     />
                   </svg>
 
-                  <span>Funds</span>
+                  <span>Add Funds / Add New Card</span>
                 </Link>
               </li>
               <li class="mb-3">
@@ -405,7 +405,7 @@ let formatMoney = (amount) => {
                     />
                   </svg>
 
-                  <span>Cards</span>
+                  <span>Saved Cards</span>
                 </Link>
               </li>
               <li>

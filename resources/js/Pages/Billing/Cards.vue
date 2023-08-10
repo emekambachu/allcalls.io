@@ -72,7 +72,7 @@ let removeCard = (id) => {
               <!-- <div class="py-8 px-4 mx-auto max-w-2xl lg:py-16"> -->
               <!-- <hr> -->
               <h2 id="headline" class="text-4xl text-custom-sky font-bold mb-6">
-                Add a payment method
+                Add a new card
               </h2>
               <hr class="mb-8" />
 
@@ -320,7 +320,7 @@ let removeCard = (id) => {
               </form>
 
               <div class="text-4xl text-custom-sky font-bold mb-6">
-                Added Payment Methods
+                Saved Cards
               </div>
               <hr class="mb-8" />
 
