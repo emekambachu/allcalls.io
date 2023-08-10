@@ -41,6 +41,11 @@ let selectCard = (cardId) => {
   selectedCardId.value = Number(cardId);
 };
 let addFunds = () => {
+  if (cardForm.amount && cardForm.amount != Math.round(cardForm.amount)) {
+    alert("Only whole dollar amounts allowed.");
+    return;
+  }
+
   let cardId = selectedCardId.value;
 
   if (cardId === 0) {

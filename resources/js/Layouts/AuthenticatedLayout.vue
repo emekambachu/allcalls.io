@@ -60,10 +60,9 @@ let formatMoney = (amount) => {
                   <Link
                     href="/billing/funds"
                     class="mr-3 text-xs border border-gray-400 ease-in cursor-pointer bg-gray-400 bg-opacity-5 hover:shadow-2xl hover:bg-white hover:text-custom-blue hover:bg-opacity-80 rounded p-2 font-bold text-md text-gray-500 transition"
-                    >
-                      Add Funds
-                    </Link
                   >
+                    Add Funds
+                  </Link>
                 </div>
                 <div class="flex flex-col justify-center items-center">
                   <div
@@ -178,7 +177,7 @@ let formatMoney = (amount) => {
             >
               Dashboard
             </ResponsiveNavLink>
-            
+
             <ResponsiveNavLink
               :href="route('clients.index')"
               :active="route().current('clients.index')"
@@ -215,12 +214,11 @@ let formatMoney = (amount) => {
             </ResponsiveNavLink>
 
             <ResponsiveNavLink
-            :href="route('support.index')"
-            :active="route().current('support.index')"            
+              :href="route('support.index')"
+              :active="route().current('support.index')"
             >
               Support
             </ResponsiveNavLink>
-
 
             <ResponsiveNavLink
               :href="route('profile.view')"
@@ -381,34 +379,8 @@ let formatMoney = (amount) => {
                   <span>Add Funds / Add New Card</span>
                 </Link>
               </li>
-              <li class="mb-3">
-                <Link
-                  href="/billing/cards"
-                  class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
-                  :class="{
-                    'text-custom-green': route().current('billing.cards.index'),
-                  }"
-                  aria-current="page"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="w-4 h-4 mr-2"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"
-                    />
-                  </svg>
 
-                  <span>Saved Cards</span>
-                </Link>
-              </li>
-              <li>
+              <li class="mb-3">
                 <Link
                   aria-current="page"
                   class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
@@ -434,6 +406,34 @@ let formatMoney = (amount) => {
                     />
                   </svg>
                   <span>Autopay</span>
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="/billing/cards"
+                  class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
+                  :class="{
+                    'text-custom-green': route().current('billing.cards.index'),
+                  }"
+                  aria-current="page"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-4 h-4 mr-2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"
+                    />
+                  </svg>
+
+                  <span>Saved Cards</span>
                 </Link>
               </li>
             </ul>

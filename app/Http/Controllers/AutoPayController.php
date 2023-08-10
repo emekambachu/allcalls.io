@@ -50,8 +50,8 @@ class AutoPayController extends Controller
     {
         $request->validate([
             'enabled' => 'required',
-            'threshold' => 'required|numeric',
-            'amount' => 'required|numeric',
+            'threshold' => 'required|numeric|integer|min:20',
+            'amount' => 'required|numeric|integer|min:50',
             'card_id' => 'required|numeric',
         ]);
     

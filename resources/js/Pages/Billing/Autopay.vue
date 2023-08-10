@@ -27,7 +27,6 @@ let props = defineProps({
   },
 });
 
-
 let settings = ref({
   enabled: false,
   threshold: 500,
@@ -35,14 +34,28 @@ let settings = ref({
   card_id: null,
 });
 
-
-
-
-
-
 let chosenCard = ref(null);
 
 let saveChanges = () => {
+  if (
+    !settings.value.threshold ||
+    settings.value.threshold != Math.round(settings.value.threshold) ||
+    settings.value.threshold < 20
+  ) {
+    alert("Threshold should be a whole number and minimum 20.");
+    return;
+  }
+
+  // Check if amount is not a whole number or less than 50
+  if (
+    !settings.value.amount ||
+    settings.value.amount != Math.round(settings.value.amount) ||
+    settings.value.amount < 50
+  ) {
+    alert("Amount should be a whole number and minimum 50.");
+    return;
+  }
+
   router.visit("/billing/autopay", {
     method: "post",
     data: {
@@ -58,20 +71,18 @@ let chooseCard = (card) => {
   chosenCard.value = card;
 };
 
-
 if (props.setting) {
   settings.value = {
-    enabled: (props.setting.enabled === 1) ? true : false,
+    enabled: props.setting.enabled === 1 ? true : false,
     threshold: props.setting.threshold,
     amount: props.setting.amount,
     card_id: props.setting.card_id,
-  }
+  };
 
-  chosenCard.value = props.cards.filter(card => {
+  chosenCard.value = props.cards.filter((card) => {
     return card.id === props.setting.card_id;
   })[0];
 }
-
 </script>
 
 <template>
@@ -88,10 +99,6 @@ if (props.setting) {
 
     <div class="sm:py-10">
       <div class="mx-auto max-w-7xl">
-        <!-- <div class="sm:pl-10 max-w-6xl">
-          <BillingNav></BillingNav>
-        </div> -->
-
         <div>
           <section class="mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-4 sm:p-8 sm:rounded-lg">
@@ -99,7 +106,7 @@ if (props.setting) {
                 Add Autopay
               </h2>
               <hr class="mb-8" />
-            
+
               <div v-if="cards.length" class="max-w-lg">
                 <label
                   class="relative inline-flex items-center mb-4 cursor-pointer"
@@ -114,8 +121,7 @@ if (props.setting) {
                   <div
                     class="w-11 h-6 bg-custom-blue rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
                   ></div>
-                  <span
-                    class="ml-3 text-sm font-medium text-gray-500"
+                  <span class="ml-3 text-sm font-medium text-gray-500"
                     >Enable</span
                   >
                 </label>
@@ -174,11 +180,9 @@ if (props.setting) {
                   :key="card.id"
                   @click.prevent="chooseCard(card)"
                 >
-                  <div
-                    class="ml-2 text-sm flex items-center"
-                  >
-                    <span class="uppercase mr-4">{{ card.type }}</span> **** ****
-                    **** {{ card.last4 }}
+                  <div class="ml-2 text-sm flex items-center">
+                    <span class="uppercase mr-4">{{ card.type }}</span> ****
+                    **** **** {{ card.last4 }}
                   </div>
                 </div>
 
@@ -191,7 +195,9 @@ if (props.setting) {
               </div>
 
               <div v-else>
-                <p class="text-gray-400 mt-6 mb-8">You haven't added any cards yet.</p>
+                <p class="text-gray-400 mt-6 mb-8">
+                  You haven't added any cards yet.
+                </p>
               </div>
             </div>
           </section>
