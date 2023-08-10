@@ -62,7 +62,6 @@ let removeCard = (id) => {
 
     <div class="sm:py-10">
       <div class="mx-auto max-w-7xl">
-
         <div>
           <section class="mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-4 sm:p-8 sm:rounded-lg">
@@ -72,13 +71,33 @@ let removeCard = (id) => {
               <hr class="mb-8" />
 
               <div class="flex justify-center">
-                <img class="h-8 mr-3 border border-gray-300 shadow rounded" src="/img/visa.svg" alt="VISA">
-                <img class="h-8 mr-3 border border-gray-300 shadow rounded" src="/img/mastercard.svg" alt="MASTERCARD">
-                <img class="h-8 mr-3 border border-gray-300 shadow rounded" src="/img/amex.svg" alt="AMERICAN EXPRESS">
-                <img class="h-8 mr-3 border border-gray-300 shadow rounded" src="/img/discover.svg" alt="DISCOVER">
+                <img
+                  class="h-8 mr-3 border border-gray-300 shadow rounded"
+                  src="/img/visa.svg"
+                  alt="VISA"
+                />
+                <img
+                  class="h-8 mr-3 border border-gray-300 shadow rounded"
+                  src="/img/mastercard.svg"
+                  alt="MASTERCARD"
+                />
+                <img
+                  class="h-8 mr-3 border border-gray-300 shadow rounded"
+                  src="/img/amex.svg"
+                  alt="AMERICAN EXPRESS"
+                />
+                <img
+                  class="h-8 mr-3 border border-gray-300 shadow rounded"
+                  src="/img/discover.svg"
+                  alt="DISCOVER"
+                />
               </div>
 
-              <form @submit.prevent="addNewCard()" class="mb-12" autocomplete="on">
+              <form
+                @submit.prevent="addNewCard()"
+                class="mb-12"
+                autocomplete="on"
+              >
                 <div class="grid gap-4 sm:grid-cols-2 sm:gap-6 mb-6">
                   <div class="sm:col-span-2">
                     <label
@@ -247,9 +266,7 @@ let removeCard = (id) => {
                       <option value="LA">Louisiana</option>
                       <option value="ME">Maine</option>
                       <option value="MD">Maryland</option>
-                      <option value="MA">
-                        Massachusetts
-                      </option>
+                      <option value="MA">Massachusetts</option>
                       <option class="text-black" value="MI">Michigan</option>
                       <option class="text-black" value="MN">Minnesota</option>
                       <option class="text-black" value="MS">Mississippi</option>
@@ -326,36 +343,34 @@ let removeCard = (id) => {
               </div>
               <hr class="mb-8" />
 
-              <div class="max-w-2xl">
-                <div class="flex items-center justify-between">
-                  <h2 class="mb-4 text-xl font-bold text-gray-700">
-                    Your Cards
-                  </h2>
-                </div>
+              <div class="max-w-md">
                 <div class="flow-root">
-                  <ul role="list" class="divide-y divide-gray-200">
+                  <ul>
                     <li
-                      class="px-8 py-4 sm:px-12 rounded-lg sm:py-8 bg-custom-blue mb-4"
+                      class="p-3 rounded-lg border-2 border-gray-200 hover:border-gray-300 mb-4 flex items-center"
                       v-for="card in cards"
                       :key="card.id"
                     >
-                      <div class="flex items-center space-x-4">
-                        <div class="flex-1 min-w-0">
-                          <p
-                            class="text-sm font-medium text-custom-white truncate"
+                      <img
+                        class="h-8 max-h-full mr-4 bg-gray-200 border border-gray-300 rounded shadow"
+                        src="/img/visa.svg"
+                        alt="VISA"
+                      />
+                      <div class="w-full flex justify-between items-center">
+                        <div>
+                          <h3
+                            class="text-xs text-gray-800 font-bold tracking-wide"
                           >
-                            Visa ending in {{ card.last4 }}
-                          </p>
-                          <p class="text-sm text-custom-white truncate">
-                            Expiry date: {{ card.expiryDate }}
+                            Visa xxxx {{ card.last4 }}
+                          </h3>
+                          <p class="text-xs text-gray-700 tracking-wide">
+                            Expires on {{ card.expiryDate }}
                           </p>
                         </div>
-                        <div
-                          class="inline-flex items-center text-base font-semibold"
-                        >
+                        <div>
                           <button
                             type="button"
-                            class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg px-3 py-2 text-xs mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+                            class="text-white bg-red-700 hover:bg-red-800 font-medium rounded px-2 py-1 text-xs"
                             @click.prevent="removeCard(card.id)"
                           >
                             Remove Card
