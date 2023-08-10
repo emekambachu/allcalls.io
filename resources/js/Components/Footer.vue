@@ -45,7 +45,7 @@ import ApplicationLogo from "@/Components/ApplicationLogo.vue";
       </div>
 
       <div class="footer__copyrights text-lg">
-        <div class="footer__text">Copyright © 2023 Allcalls.io, Inc, All Rights Reserved</div>
+        <div class="footer__text">Copyright © 2023 AllCalls.io, Inc, All Rights Reserved</div>
 
         <div class="footer__links">
             <a href="/terms.php">Terms of Service</a>

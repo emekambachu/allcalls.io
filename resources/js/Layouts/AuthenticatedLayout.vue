@@ -4,7 +4,7 @@ import { Link } from "@inertiajs/vue3";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import NavLink from "@/Components/NavLink.vue";
-import BillingNav from "@/Components/BillingNav.vue";
+import DashboardFooter from "@/Components/DashboardFooter.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 
 const showingNavigationDropdown = ref(false);
@@ -475,8 +475,12 @@ let formatMoney = (amount) => {
         <!-- Page Content -->
         <main class="col-span-4 bg-white rounded-xl mt-16 mb-8">
           <slot />
+
         </main>
+
+
       </div>
+      <DashboardFooter></DashboardFooter>
     </div>
   </div>
 </template>
