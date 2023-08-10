@@ -141,6 +141,10 @@ let submit = () => {
     // onFinish: () => form.reset("password", "password_confirmation"),
   });
 };
+
+let goBack = () => {
+  step.value = 0;
+};
 </script>
 
 <template>
@@ -407,14 +411,13 @@ let submit = () => {
                 you're licensed to operate. Remember, banks will see your bid
                 amounts as they set the prices they allow for payment
                 processing, so bid wisely!
-
-
               </p>
 
               <div class="text-center mt-4 mb-2">
-                <PrimaryButton type="button" @click.prevent="step = 2">Configure Call Types</PrimaryButton>
+                <PrimaryButton type="button" @click.prevent="step = 2"
+                  >Configure Call Types</PrimaryButton
+                >
               </div>
-
             </div>
           </Slide>
 
@@ -523,21 +526,48 @@ let submit = () => {
 
         <InputError class="mt-2" :message="form.errors.consent" />
 
-        <div class="flex items-center justify-end mt-4">
-          <Link
-            :href="route('login')"
-            class="underline text-sm text-custom-blue hover:text-custom-green rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
-          >
-            Already registered?
-          </Link>
+        <div class="flex justify-between items-center">
+          <div class="mt-4">
+            <a
+              href="#"
+              @click.prevent="goBack"
+              class="border border-gray-500 inline-flex items-center px-3 py-2 bg-white rounded-md font-semibold text-md text-custom-blue uppercase tracking-widest hover:bg-custom-blue hover:drop-shadow-2xl hover:text-custom-green hover:ring-2 hover:ring-custom-sky focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-4 h-4 mr-2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"
+                />
+              </svg>
 
-          <PrimaryButton
-            class="ml-4"
-            :class="{ 'opacity-25': form.processing }"
-            :disabled="form.processing"
-          >
-            Register
-          </PrimaryButton>
+              Back</a
+            >
+          </div>
+
+          <div class="flex items-center justify-end mt-4">
+            <Link
+              :href="route('login')"
+              class="underline text-sm text-custom-blue hover:text-custom-green rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+            >
+              Already registered?
+            </Link>
+
+            <PrimaryButton
+              class="ml-4"
+              :class="{ 'opacity-25': form.processing }"
+              :disabled="form.processing"
+            >
+              Register
+            </PrimaryButton>
+          </div>
         </div>
       </div>
     </form>
@@ -590,7 +620,7 @@ input[type="number"] {
 }
 
 .multiselect-wrapper {
-  background-color: #D7D7D7;
+  background-color: #d7d7d7;
   border-radius: 5px;
 }
 /* 
