@@ -13,6 +13,7 @@ use App\Http\Controllers\SupportController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TwilioTokenController;
 use App\Http\Controllers\TransactionsController;
+use App\Http\Controllers\FundsWithCardController;
 use App\Http\Controllers\UsageActivityController;
 
 /*
@@ -50,6 +51,7 @@ Route::middleware('auth')->group(function () {
 Route::patch('/bids', [BidsController::class, 'update'])->middleware(['auth', 'verified'])->name('bids.update');
 Route::get('/billing/funds', [FundsController::class, 'index'])->middleware(['auth', 'verified'])->name('billing.funds.index');
 Route::post('/billing/funds', [FundsController::class, 'store'])->middleware(['auth', 'verified'])->name('billing.funds.store');
+Route::post('/billing/funds-with-card', [FundsWithCardController::class, 'store'])->middleware(['auth', 'verified'])->name('billing.funds-with-card.store');
 Route::get('/billing/cards', [CardsController::class, 'index'])->middleware(['auth', 'verified'])->name('billing.cards.index');
 Route::post('/billing/cards', [CardsController::class, 'store'])->middleware(['auth', 'verified'])->name('billing.cards.store');
 Route::delete('/billing/cards/{card}', [CardsController::class, 'destroy'])->middleware(['auth', 'verified'])->name('billing.cards.delete');

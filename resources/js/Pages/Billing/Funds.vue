@@ -70,10 +70,6 @@ let addFunds = () => {
         <hr class="mb-8" />
       </div>
       <form class="mx-auto max-w-7xl">
-        <!-- <div class="sm:pl-10 max-w-6xl">
-          <BillingNav></BillingNav>
-        </div> -->
-
         <div v-if="cards.length">
           <section class="mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-4 sm:p-8 sm:rounded-lg" style="padding-top: 0">
