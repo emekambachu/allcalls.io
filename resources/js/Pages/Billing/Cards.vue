@@ -76,7 +76,7 @@ let removeCard = (id) => {
               </h2>
               <hr class="mb-8" />
 
-              <form @submit.prevent="addNewCard()" class="mb-12">
+              <form @submit.prevent="addNewCard()" class="mb-12" autocomplete="on">
                 <div class="grid gap-4 sm:grid-cols-2 sm:gap-6 mb-6">
                   <div class="sm:col-span-2">
                     <label
