@@ -98,7 +98,7 @@ let addFunds = () => {
           <section class="mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-4 sm:p-8 sm:rounded-lg" style="padding-top: 0">
               <h2 class="text-xl">Choose from your cards</h2>
-              <div
+              <!-- <div
                 :class="{
                   'max-w-lg flex items-center px-2 py-4 mt-4 rounded-lg shadow hover:bg-gray-300 hover:font-medium mb-2 cursor-pointer select-none': true,
                   'border border-custom-indigo bg-custom-blue text-blue-600 shadow-2xl font-bold':
@@ -114,11 +114,30 @@ let addFunds = () => {
                   <span class="uppercase mr-4">{{ card.type }}</span> **** ****
                   **** {{ card.last4 }}
                 </div>
-              </div>
+              </div> -->
 
-              <h2 class="text-xl my-4">Or add a new card:</h2>
+              <select
+                v-model="selectedCardId"
+                class="bg-custom-blue text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 text-white outline-none border-none"
+              >
+                <option
+                  v-for="card in cards"
+                  :key="card.id"
+                  :value="card.id"
+                  :class="{
+                    'border-custom-indigo bg-custom-blue text-blue-600 shadow-2xl font-bold':
+                      selectedCardId === card.id,
+                    'border-gray-500 text-gray-500': selectedCardId !== card.id,
+                  }"
+                >
+                  {{ card.type }} **** **** **** {{ card.last4 }}
+                </option>
+                <option value="0">Add a new card</option>
+              </select>
 
-              <form @submit.prevent="" class="mb-12" autocomplete="on">
+              <!-- <h2 class="text-xl my-4">Or add a new card:</h2> -->
+
+              <form v-if="selectedCardId === '0'" @submit.prevent="" class="my-12" autocomplete="on">
                 <div class="grid gap-4 sm:grid-cols-2 sm:gap-6 mb-6">
                   <div class="sm:col-span-2">
                     <label
@@ -382,10 +401,11 @@ let addFunds = () => {
 
               <p class="text-gray-700 text-xs max-w-lg mt-4">
                 By clicking the "Add Funds" button below I authorize AllCalls
-                LLC to charge my card and agree to be billed for ${{ cardForm.amount }}. This is a
-                one-time purchase. Funds will be added to your account
-                immediately. Your credit card will be billed as "AllCalls.io" on
-                your billing statement.
+                LLC to charge my card and agree to be billed for ${{
+                  cardForm.amount
+                }}. This is a one-time purchase. Funds will be added to your
+                account immediately. Your credit card will be billed as
+                "AllCalls.io" on your billing statement.
               </p>
 
               <AuthenticatedButton

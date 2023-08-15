@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\CallType;
 use App\Models\OnlineUser;
+use App\Models\UserCallTypeState;
 use Illuminate\Http\Request;
 use App\Models\CallTypeNumber;
 use App\Models\AvailableNumber;
@@ -75,6 +76,9 @@ class IncomingCallController extends Controller
 
         // Fetch all online users who have selected the same call type and state
         $users = $this->getOnlineUsers($callType);
+
+        Log::debug('onlineUsers:');
+        Log::debug($users->toArray());
     
         // Select a user from this group
         $selectedUser = $users->first();
