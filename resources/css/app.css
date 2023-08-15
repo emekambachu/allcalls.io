@@ -413,6 +413,23 @@ html, body {
     color: #eeeeee;
 }
 
+.reg__title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 80.44px;
+    line-height: 109px;
+    color: #2e2e2e;
+    margin-bottom: 38px;
+}
+
+@media (max-width: 1276px) {
+    .reg__title {
+        font-size: 68px;
+        line-height: normal;
+    }
+
+}
+
 @media (max-width: 1050px) {
     .header {
         padding: 20px 0;
@@ -482,11 +499,33 @@ html, body {
     .secFive__title {
         font-size: 40px;
     }
+
+    .reg__title {
+        font-size: 54px;
+    }
+    
+    .reg__subtitle {
+        font-size: 24px;   
+    }
 }
 
 @media (max-height: 858px) {
     .main__getstarted {
         margin-top: 2rem;
+    }
+}
+
+@media (max-width: 858px) {
+    .sec__reg {
+        height: 550px;
+    }
+
+    .reg__title {
+        font-size: 46px;
+    }
+    
+    .reg__subtitle {
+        font-size: 20px;
     }
 }
 
@@ -580,8 +619,31 @@ html, body {
     .secFive__two .container {
         justify-content: space-around !important;
     }
+
+    .sec__reg {
+        height: 390px;
+    }
+
+    .reg__title {
+        font-size: 36px;
+    }
+    
+    .reg__subtitle {
+        font-size: 18px;
+        line-height: 24px;   
+    }
 }
 
+@media (max-width: 688px) {
+    .reg__title {
+        font-size: 26px;
+    }
+    
+    .reg__subtitle {
+        font-size: 16px;
+        line-height: normal;   
+    }
+}
 
 @media (max-width: 538px) {
 
@@ -676,6 +738,34 @@ html, body {
 
     .secFive__img {
         margin-top: 10px;
+    }
+
+    .sec__reg {
+        display: block;
+        height: 100%;
+        padding: 28px;
+    }
+
+    .reg__one {
+        margin: auto;
+    }
+
+    .reg__two {
+        width: 100%;
+    }
+
+    .reg__title {
+        font-size: 47px;
+        font-family: 'Inter', sans-serif;
+        font-weight: 700;
+        margin-top: 24px;
+    }
+
+    .reg__subtitle {
+        line-height: 39px;
+        font-size: 20px;
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
     }
 }
 
