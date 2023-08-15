@@ -226,12 +226,15 @@ const showHamburger = ref(false);
       </div>
   </section>
 
-  <!-- <section>
-    <div class="w-full">
-      <div class="h-80 bg-gray-400">Hello</div>
-
+  <section class="">
+    <div class="w-full h-128 flex items-center sec__reg ">
+        <div class="w-[44%] reg__one"><img class="w-[80%] m-auto" src="/img/regulation.png" alt=""></div>
+        <div class="w-[56%] reg__two px-4 xl:px-14">
+          <div class="reg__title drop-shadow-xl">TCPA and DNC Compliance</div>
+          <div class="reg__subtitle text-3xl text-gray-500 font-bold drop-shadow-lg max-w-3xl">At AllCalls.io we take Compliance very seriously.  All of our calls have opted in to be called with Jornaya and Trusted Form verification to keep the highest TCPA compliance. We also scrub all of our callers against the national DNC list.</div>
+        </div>
     </div>
-  </section> -->
+  </section>
 
   <section id="resources"> 
     <div class="secFive" >
