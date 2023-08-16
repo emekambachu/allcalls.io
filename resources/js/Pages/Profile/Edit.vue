@@ -122,7 +122,7 @@ let saveBids = () => {
 }
 
 .multiselect-wrapper {
-  background-color: #03243d;
+  background-color: #E8F0FE;
   border-radius: 5px;
 }
 
