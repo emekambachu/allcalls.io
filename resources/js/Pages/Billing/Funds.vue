@@ -71,6 +71,12 @@ let addFunds = () => {
 };
 
 onMounted(() => {
+  console.log(props.cards);
+  for(let i = 0; i < props.cards.length; i++) {
+    if (props.cards[i].default) {
+      selectedCardId.value = props.cards[i].id;
+    }
+  }
 });
 </script>
 
