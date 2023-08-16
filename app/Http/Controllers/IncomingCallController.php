@@ -110,8 +110,9 @@ class IncomingCallController extends Controller
         // Find the first available number where user_id is null
         $availableNumber = AvailableNumber::whereNull('user_id')->first();
 
-        // THE FOLLOWING LINE IS TEMPORARY, WILL REMOVE AFTER TESTING PHASE:
-        $availableNumber = AvailableNumber::wherePhone('+441146971410')->first();
+        // THE FOLLOWING LINE IS TEMPORARY, WILL REMOVE AFTER TESTING PHASE:+441156471655
+        $availableNumber = AvailableNumber::wherePhone('+441156471655')->first();
+        // $availableNumber = AvailableNumber::wherePhone('+441146971410')->first();
         // $availableNumber = AvailableNumber::wherePhone('7542270877')->first();
     
         // If there is no available number with user_id null, you might want to handle this scenario,
