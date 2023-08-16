@@ -18,7 +18,7 @@ let formatMoney = (amount) => {
 
 <template>
   <div>
-    <div class="min-h-screen bg-custom-indigo">
+    <div id="body-background-element" class="min-h-screen bg-custom-indigo">
       <div
         class="bg-custom-sky text-gray-50 py-2 px-16 flex-col sm:flex-row flex justify-center items-center"
       >

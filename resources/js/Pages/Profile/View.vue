@@ -101,7 +101,7 @@ let formatMoney = (amount) => {
             </div>
             <Link
               href="/profile/edit"
-              class="border border-gray-400 ease-in cursor-pointer bg-gray-400 bg-opacity-5 hover:shadow-2xl hover:bg-white hover:text-custom-blue hover:bg-opacity-80 rounded px-3 py-3 font-bold text-md text-gray-500 transition absolute right-0"
+              class="border border-gray-400 ease-in cursor-pointer bg-gray-400 bg-opacity-5 hover:shadow-2xl hover:bg-white hover:text-custom-blue hover:bg-opacity-80 rounded px-3 py-2 font-bold text-md text-gray-500 transition absolute right-0"
               >Edit Profile</Link
             >
           </div>

@@ -8,6 +8,7 @@ use App\Models\Transaction;
 use App\Services\NMIGateway;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 
@@ -68,13 +69,23 @@ class FundsController extends Controller
         $cardNumber = Crypt::decryptString($card->number);
         $cardMonth = Crypt::decryptString($card->month);
         $cardYear = Crypt::decryptString($card->year);
+
+        $subtotal = (float) $request->amount;
+
+        // Adding 3.15% processing fee to the subtotal
+        $totalWithFee = $subtotal * 1.0315;
         
-        $r = $gw->doSale($request->amount, $cardNumber, $cardMonth . substr($cardYear, -2));
+        // Format to two decimal places
+        $finalAmount = number_format($totalWithFee, 2, '.', '');
+
+        Log::debug('Final Amount: ' . $finalAmount);
+        
+        $r = $gw->doSale($finalAmount, $cardNumber, $cardMonth . substr($cardYear, -2));
         $response = $gw->responses['responsetext'];
         
         if ($response !== 'SUCCESS') {
             // The payment is declined:
-            dd('RESPNOSE IS NOT SUCCESS');
+            dd('RESPONSE IS NOT SUCCESS');
         }
 
         // The payment is approved:

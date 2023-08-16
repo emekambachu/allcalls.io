@@ -4,7 +4,7 @@ import TextInput from "@/Components/TextInput.vue";
 import AuthenticatedButton from "@/Components/AuthenticatedButton.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, router, usePage } from "@inertiajs/vue3";
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, onMounted, computed } from "vue";
 let props = defineProps({
   cards: {
     type: Array,
@@ -48,7 +48,7 @@ let addFunds = () => {
 
   let cardId = selectedCardId.value;
 
-  if (cardId === '0') {
+  if (cardId === "0") {
     router.visit("/billing/funds-with-card", {
       method: "post",
       data: cardForm,
@@ -72,11 +72,32 @@ let addFunds = () => {
 
 onMounted(() => {
   console.log(props.cards);
-  for(let i = 0; i < props.cards.length; i++) {
+  for (let i = 0; i < props.cards.length; i++) {
     if (props.cards[i].default) {
       selectedCardId.value = props.cards[i].id;
     }
   }
+});
+
+// let calculateTotalAfterFee = (subtotal) => {
+//   let fee = Number(subtotal) * 0.0315;
+//   return subtotal + fee;
+// };
+
+// let calculateFee = (subtotal) => {
+//   let fee = Number(subtotal) * 0.0315;
+//   return fee;
+// };
+
+let creditCardFee = computed(() => {
+  let fee = Number(cardForm.amount) * 0.0315;
+  return String(fee.toFixed(2));
+});
+
+let total = computed(() => {
+  let fee = Number(cardForm.amount) * 0.0315;
+
+  return String((Number(cardForm.amount) + fee).toFixed(2));
 });
 </script>
 
@@ -103,36 +124,14 @@ onMounted(() => {
         <hr class="mb-8" />
       </div>
       <form class="mx-auto max-w-7xl">
-        <div v-if="cards.length">
+        <div>
           <section class="mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-4 sm:p-8 sm:rounded-lg" style="padding-top: 0">
-              <!-- <h2 class="text-xl">Choose from your cards</h2> -->
-              <!-- <div
-                :class="{
-                  'max-w-lg flex items-center px-2 py-4 mt-4 rounded-lg shadow hover:bg-gray-300 hover:font-medium mb-2 cursor-pointer select-none': true,
-                  'border border-custom-indigo bg-custom-blue text-blue-600 shadow-2xl font-bold':
-                    selectedCardId === card.id,
-                  'border border-gray-500 text-gray-500':
-                    selectedCardId !== card.id,
-                }"
-                v-for="card in cards"
-                :key="card.id"
-                @click.prevent="selectCard(card.id)"
-              >
-                <div class="ml-2 text-sm font-medium flex items-center">
-                  <span class="uppercase mr-4">{{ card.type }}</span> **** ****
-                  **** {{ card.last4 }}
-                </div>
-              </div> -->
-
               <label class="block mb-2 text-sm font-medium text-gray-700"
                 >Select your card</label
               >
 
-              <select
-                v-model="selectedCardId"
-                class="select-custom"
-              >
+              <select v-model="selectedCardId" class="select-custom">
                 <option
                   v-for="card in cards"
                   :key="card.id"
@@ -156,7 +155,6 @@ onMounted(() => {
                 class="my-12"
                 autocomplete="on"
               >
-
                 <div class="flex justify-center">
                   <img
                     class="h-8 mr-3 border border-gray-300 shadow rounded"
@@ -416,7 +414,7 @@ onMounted(() => {
                 </div>
               </form>
 
-              <div class="mt-4 max-w-lg">
+              <div class="mt-4">
                 <label
                   for="amount"
                   class="block mb-2 text-sm font-medium text-gray-500"
@@ -436,39 +434,74 @@ onMounted(() => {
                     v-model="cardForm.amount"
                     step="1"
                     min="0"
-                    class="rounded-none rounded-r-lg border focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm p-2.5 border-gray-400 placeholder-gray-400 "
+                    class="rounded-none rounded-r-lg border focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm p-2.5 border-gray-400 placeholder-gray-400"
                   />
                 </div>
               </div>
 
-              <p class="text-gray-700 text-xs max-w-lg mt-4">
-                By clicking the "Add Funds" button below I authorize AllCalls
-                LLC to charge my card and agree to be billed for ${{
-                  cardForm.amount !== '' ? cardForm.amount : 0
-                }}. This is a one-time purchase. Funds will be added to your
-                account immediately. Your credit card will be billed as
-                "AllCalls.io" on your billing statement.
-              </p>
+              <div class="grid grid-cols-2 gap-6">
+                <div class="text-gray-700 text-xs mt-4">
+                  <p class="mb-2">Charge will include card processing fee of 3.15%</p>
+                  <p>
+                    By clicking the "Add Funds" button below I authorize
+                    AllCalls LLC to charge my card and agree to be billed for
+                    ${{ cardForm.amount !== "" ? cardForm.amount : 0 }}. This is
+                    a one-time purchase. Funds will be added to your account
+                    immediately. Your credit card will be billed as
+                    "AllCalls.io" on your billing statement.
+                  </p>
+                </div>
+                <div>
+                  <div class="space-y-2 text-gray-700 text-sm mt-4">
+                    <div class="flex justify-between">
+                      <span class="whitespace-nowrap text-gray-800 font-bold"
+                        >Sub Total:</span
+                      >
+                      <span v-if="cardForm.amount">${{ cardForm.amount }}</span>
+                    </div>
 
-              <AuthenticatedButton
-                type="button"
-                class="mt-3"
-                @click.prevent="addFunds"
-              >
-                Add funds
-              </AuthenticatedButton>
+                    <div class="flex justify-between">
+                      <span class="whitespace-nowrap text-gray-800 font-bold"
+                        >Credit Card Processing Fee:</span
+                      >
+                      <span>${{ creditCardFee }}</span>
+                    </div>
+
+                    <hr class="mb-8" />
+
+                    <div class="flex justify-between">
+                      <span class="whitespace-nowrap text-gray-800 font-bold"
+                        >Total:</span
+                      >
+                      <span
+                        >${{ total }}</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex justify-end mt-6">
+                <AuthenticatedButton
+                  type="button"
+                  class="mt-3"
+                  @click.prevent="addFunds"
+                >
+                  Add funds
+                </AuthenticatedButton>
+              </div>
             </div>
           </section>
         </div>
 
-        <div v-else class="text-center sm:px-6 lg:px-8">
+        <!-- <div v-else class="text-center sm:px-6 lg:px-8">
           <p class="text-gray-300 mt-6 mb-8">
             You haven't added any cards yet.
           </p>
           <AuthenticatedButton class="">
             <Link href="/billing/cards"> Add credit card </Link>
           </AuthenticatedButton>
-        </div>
+        </div> -->
       </form>
     </div>
   </AuthenticatedLayout>
