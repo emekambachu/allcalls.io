@@ -264,7 +264,8 @@ let total = computed(() => {
                       name="cvv"
                       id="cvv"
                       class="w-full"
-                      placeholder="XXX"
+                      placeholder="XXXX"
+                      maxlength="4"
                       required
                       pattern="[0-9]{4}"
                       v-model="cardForm.cvv"
