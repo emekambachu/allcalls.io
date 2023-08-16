@@ -7,8 +7,12 @@ use Illuminate\Http\Request;
 
 class DefaultCardController extends Controller
 {
-    public function update(Card $card)
+    public function update(Card $card, Request $request)
     {
+        if ($request->user()->id !== $card->user_id) {
+            return abort(401);
+        }
+
         $card->setAsDefault();
 
         return back()->with([
