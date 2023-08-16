@@ -20,9 +20,7 @@ const toaster = createToaster({
 });
 
 if (page.props.flash.message) {
-  toaster.success(page.props.flash.message, {
-    duration: false,
-  });
+  toaster.success(page.props.flash.message);
 }
 
 let selectedCardId = ref("0");
