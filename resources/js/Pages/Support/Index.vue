@@ -6,9 +6,9 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 const props = defineProps({});
 
 let openLiveChat = () => {
-  let iframe = document.querySelector('.widget-visible iframe')
+  let iframe = document.querySelector(".widget-visible iframe");
   let iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-  let iframeButton = iframeDoc.querySelector('button');
+  let iframeButton = iframeDoc.querySelector("button");
 
   iframeButton.click();
 };
@@ -39,8 +39,12 @@ let openLiveChat = () => {
     >
       <div class="flex flex-col bg-custom-darksky rounded p-4 text-center">
         <div class="mb-6">
-          <h2 class="text-xl text-white font-extrabold">Search our Help Center</h2>
-          <p class="text-gray-300">Find helpful how-to's and commonly asked questions.</p>
+          <h2 class="text-xl text-white font-extrabold">
+            Search our Help Center
+          </h2>
+          <p class="text-gray-300">
+            Find helpful how-to's and commonly asked questions.
+          </p>
         </div>
         <div class="mt-auto">
           <PrimaryButton>Visit Help Center</PrimaryButton>
@@ -49,7 +53,9 @@ let openLiveChat = () => {
 
       <div class="flex flex-col bg-custom-darksky rounded p-4 text-center">
         <div class="mb-6">
-          <h2 class="text-xl text-white font-extrabold">Live Calls User Guide</h2>
+          <h2 class="text-xl text-white font-extrabold">
+            Live Calls User Guide
+          </h2>
           <p class="text-gray-300">A detailed guide of the Live Calls page.</p>
         </div>
         <div class="mt-auto">
@@ -60,7 +66,10 @@ let openLiveChat = () => {
       <div class="flex flex-col bg-custom-darksky rounded p-4 text-center">
         <div class="mb-6">
           <h2 class="text-xl text-white font-extrabold">Live-chat support</h2>
-          <p class="text-gray-300">You can chat with our support staff if you have any issues or questions.</p>
+          <p class="text-gray-300">
+            You can chat with our support staff if you have any issues or
+            questions.
+          </p>
         </div>
         <div class="mt-auto">
           <PrimaryButton @click="openLiveChat">Open Live Chat</PrimaryButton>
@@ -68,27 +77,38 @@ let openLiveChat = () => {
       </div>
     </div>
 
-
     <div class="pt-14">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
         <div class="px-4 sm:px-8 sm:rounded-lg">
-          <div class="text-4xl text-custom-sky font-bold mb-6">Contact Information</div>
+          <div class="text-4xl text-custom-sky font-bold mb-6">
+            Contact Information
+          </div>
           <hr class="mb-4" />
         </div>
       </div>
     </div>
 
     <div class="px-16 text-gray-700 mb-8">
-        <div class="font-bold text-gray-400 mb-2 text-lg">AllCalls LLC</div>
-        <div>500 4th St NW Suite 102 NUM 1981, Albuquerque, NM 87102 USA</div>
-        <div><strong class="text-gray-400">Toll Free Customer Service Phone:</strong> +1 (888) 482-9195</div>
-        <div><strong class="text-gray-400">Support Hours:</strong> 24/7 Monday - Sunday</div>
+      <div class="font-bold text-gray-700 mb-2 text-lg">AllCalls LLC</div>
+      <div>500 4th St NW Suite 102 NUM 1981, Albuquerque, NM 87102 USA</div>
+      <div>
+        <strong class="text-gray-600">Toll Free Customer Service Phone:</strong>
+        +1 (888) 482-9195
+      </div>
+      <div>
+        <strong class="text-gray-600">Support Hours:</strong> 24/7 Monday -
+        Sunday
+      </div>
 
-        <div class="font-bold text-gray-400 mt-4 text-lg mb-2">Returns</div>
-        <p class="mb-3">If you need to return your order please contact customer service to get an RMA number that you will need to include in the package you send back to us. All returns should be sent to this address:</p>
+      <div class="font-bold text-gray-700 mt-4 text-lg mb-2">Returns</div>
+      <p class="mb-3">
+        If you need to return your order please contact customer service to get
+        an RMA number that you will need to include in the package you send back
+        to us. All returns should be sent to this address:
+      </p>
 
-        <p class="mb-1">12924 Pierce Street, Pacoima CA 91331, USA</p>
-        <p><strong class="text-gray-400">Email:</strong> support@allcalls.io</p>
+      <p class="mb-1">12924 Pierce Street, Pacoima CA 91331, USA</p>
+      <p><strong class="text-gray-500">Email:</strong> support@allcalls.io</p>
     </div>
   </AuthenticatedLayout>
 </template>
