@@ -349,7 +349,7 @@ let openEdit = () => {
                 <select
                   name="state"
                   id="state"
-                  class="bg-custom-blue text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 text-white outline-none border-none"
+                  class="select-custom"
                   v-model="form.state"
                   required
                 >
@@ -431,7 +431,7 @@ let openEdit = () => {
               <select
                   name="status"
                   id="status"
-                  class="bg-custom-blue text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 text-white outline-none border-none"
+                  class="select-custom"
                   v-model="form.status"
                   required
                 >

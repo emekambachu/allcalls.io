@@ -16,4 +16,14 @@ class Card extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function setAsDefault()
+    {
+        // Set all user's cards to non-default
+        self::where('user_id', $this->user_id)->update(['default' => false]);
+
+        // Set this card as default
+        $this->default = true;
+        $this->save();
+    }
 }

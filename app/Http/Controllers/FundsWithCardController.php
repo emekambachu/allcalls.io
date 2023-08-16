@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Card;
+use App\Models\Transaction;
 use App\Services\NMIGateway;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Crypt;
 
 class FundsWithCardController extends Controller
@@ -30,7 +32,17 @@ class FundsWithCardController extends Controller
 
         $gw->setBilling($request->user()->first_name, $request->user()->last_name, $request->address, $request->city, $request->state, $request->zip, 'US', $request->user()->phone, $request->user()->email);
 
-        $r = $gw->doSale($request->amount, $request->number, $request->month . substr($request->year, -2));
+        $subtotal = (float) $request->amount;
+
+        // Adding 3.15% processing fee to the subtotal
+        $totalWithFee = $subtotal * 1.0315;
+        
+        // Format to two decimal places
+        $finalAmount = number_format($totalWithFee, 2, '.', '');
+
+        Log::debug('Final Amount: ' . $finalAmount);
+
+        $r = $gw->doSale($finalAmount, $request->number, $request->month . substr($request->year, -2));
         $response = $gw->responses['responsetext'];
 
         // If the payment is not successful, redirect back with a failure message
@@ -46,7 +58,10 @@ class FundsWithCardController extends Controller
         $encryptedYear = Crypt::encryptString($request->year);
         $encryptedCvv = Crypt::encryptString($request->cvv);
 
-        Card::create([
+        // Check if the user already has a card
+        $isFirstCard = !Card::where('user_id', $request->user()->id)->exists();
+
+        $card = Card::create([
             'number' => $encryptedNumber,
             'month' => $encryptedMonth,
             'year' => $encryptedYear,
@@ -56,12 +71,24 @@ class FundsWithCardController extends Controller
             'state' => $request->state,
             'zip' => $request->zip,
             'user_id' => $request->user()->id,
+            'default' => $isFirstCard,
         ]);
 
-        // 4. Redirect back with a success message
+        // The payment is approved:
+        $request->user()->update([
+            'balance' => $request->user()->balance + (float) $request->amount,
+        ]);
+
+        // Add the transactions.
+        Transaction::create([
+            'amount' => (float) $request->amount,
+            'user_id' => $request->user()->id,
+            'sign' => true,
+            'card_id' => $card->id,
+        ]);
+
         return redirect()->back()->with([
             'message' => 'Payment successful and card added.'
         ]);
-
     }
 }

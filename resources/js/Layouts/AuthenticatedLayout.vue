@@ -18,7 +18,7 @@ let formatMoney = (amount) => {
 
 <template>
   <div>
-    <div class="min-h-screen bg-custom-indigo">
+    <div id="body-background-element" class="min-h-screen bg-custom-indigo">
       <div
         class="bg-custom-sky text-gray-50 py-2 px-16 flex-col sm:flex-row flex justify-center items-center"
       >
@@ -45,7 +45,7 @@ let formatMoney = (amount) => {
               <!-- Logo -->
               <div class="shrink-0 flex items-center">
                 <Link
-                  class="bg-clip-text text-4xl text-transparent bg-gradient-to-r from-blue-400 to-green-500 font-bold uppercase tracking-wider"
+                  class="mt-4 bg-clip-text text-4xl text-transparent bg-gradient-to-r from-blue-400 to-green-500 font-bold uppercase tracking-wider"
                   :href="route('dashboard')"
                 >
                   <!-- AllCalls.io -->
@@ -157,9 +157,10 @@ let formatMoney = (amount) => {
             </div>
           </div>
 
-          <p class="mt-10 mb-2 text-lg text-white font-bold">
+          <!-- <p class="mt-10 mb-2 text-lg text-white font-bold">
             Manage your business and preferences here.
-          </p>
+          </p> -->
+          <div class="mb-6"></div>
         </div>
 
         <!-- Responsive Navigation Menu -->
@@ -376,7 +377,7 @@ let formatMoney = (amount) => {
                     />
                   </svg>
 
-                  <span>Add Funds / Add New Card</span>
+                  <span>Add Funds</span>
                 </Link>
               </li>
 

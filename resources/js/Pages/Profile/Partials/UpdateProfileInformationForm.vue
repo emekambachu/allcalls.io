@@ -173,7 +173,7 @@ let optionsForStates = (callType) => {
           :id="`call-type-${callType.id}`"
           v-model="callType.selected"
         />
-        <label :for="`call-type-${callType.id}`" class="text-white ml-2">{{
+        <label :for="`call-type-${callType.id}`" class="ml-2">{{
           callType.type
         }}</label>
 

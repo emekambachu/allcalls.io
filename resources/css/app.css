@@ -784,3 +784,13 @@ html, body {
         font-size: 36px;
     }
 }
+
+.select-custom {
+    background-color: #E8F0FE;
+    @apply text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 text-black outline-none border-none;
+}
+
+
+.c-toast--success {
+    font-family: Figtree, Inter, sans-serif !important;
+}
