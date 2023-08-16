@@ -23,7 +23,7 @@ class IncomingCallController extends Controller
             Log::debug('To attribute: ' . $to);
 
             // Remove the "+1" from the beginning of the "To" number
-            // $to = substr($to, 2);
+            $to = substr($to, 2);
 
             // Check if the number exists in the AvailableNumber model
             $availableNumber = AvailableNumber::where('phone', $to)->first();
@@ -111,7 +111,7 @@ class IncomingCallController extends Controller
         $availableNumber = AvailableNumber::whereNull('user_id')->first();
 
         // THE FOLLOWING LINE IS TEMPORARY, WILL REMOVE AFTER TESTING PHASE:
-        $availableNumber = AvailableNumber::wherePhone('+441156471655')->first();
+        $availableNumber = AvailableNumber::wherePhone('7542270877')->first();
     
         // If there is no available number with user_id null, you might want to handle this scenario,
         // For now, let's assume there is always an available number.
