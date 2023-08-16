@@ -138,7 +138,7 @@ if (props.setting) {
                     <TextInput
                       type="number"
                       id="threshold"
-                      class="rounded-none rounded-r-lg border focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5 border-gray-400 placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      class="rounded-none rounded-r-lg border focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm p-2.5 border-gray-400 placeholder-gray-400"
                       placeholder="100.00"
                       v-model="settings.threshold"
                     />
@@ -157,7 +157,7 @@ if (props.setting) {
                     <TextInput
                       type="number"
                       id="amount"
-                      class="rounded-none rounded-r-lg border focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5 border-gray-400 placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      class="rounded-none rounded-r-lg border focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm p-2.5 border-gray-400 placeholder-gray-400"
                       placeholder="50.00"
                       v-model="settings.amount"
                     />

@@ -41,6 +41,9 @@ class CardsController extends Controller
             'zip' => 'required|string|max:10',
         ]);
 
+        // Check if the user already has a card
+        $isFirstCard = !Card::where('user_id', Auth::user()->id)->exists();
+
         $encryptedNumber = Crypt::encryptString($request->number);
         $encryptedMonth = Crypt::encryptString($request->month);
         $encryptedYear = Crypt::encryptString($request->year);
@@ -56,6 +59,7 @@ class CardsController extends Controller
             'state' => $request->state,
             'zip' => $request->zip,
             'user_id' => Auth::user()->id,
+            'default' => $isFirstCard,
         ]);
 
         return redirect()->back()->with([

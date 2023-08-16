@@ -4,7 +4,7 @@ import TextInput from "@/Components/TextInput.vue";
 import AuthenticatedButton from "@/Components/AuthenticatedButton.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, router, usePage } from "@inertiajs/vue3";
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
 let props = defineProps({
   cards: {
     type: Array,
@@ -20,10 +20,12 @@ const toaster = createToaster({
 });
 
 if (page.props.flash.message) {
-  toaster.success(page.props.flash.message);
+  toaster.success(page.props.flash.message, {
+    duration: false,
+  });
 }
 
-let selectedCardId = ref(0);
+let selectedCardId = ref("0");
 let cardForm = reactive({
   amount: 100,
   number: "",
@@ -48,7 +50,7 @@ let addFunds = () => {
 
   let cardId = selectedCardId.value;
 
-  if (cardId === 0) {
+  if (cardId === '0') {
     router.visit("/billing/funds-with-card", {
       method: "post",
       data: cardForm,
@@ -64,11 +66,14 @@ let addFunds = () => {
   router.visit("/billing/funds", {
     method: "post",
     data: {
-      amount: amount.value,
+      amount: cardForm.amount,
       cardId: cardId,
     },
   });
 };
+
+onMounted(() => {
+});
 </script>
 
 <template>
@@ -97,7 +102,7 @@ let addFunds = () => {
         <div v-if="cards.length">
           <section class="mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-4 sm:p-8 sm:rounded-lg" style="padding-top: 0">
-              <h2 class="text-xl">Choose from your cards</h2>
+              <!-- <h2 class="text-xl">Choose from your cards</h2> -->
               <!-- <div
                 :class="{
                   'max-w-lg flex items-center px-2 py-4 mt-4 rounded-lg shadow hover:bg-gray-300 hover:font-medium mb-2 cursor-pointer select-none': true,
@@ -116,9 +121,13 @@ let addFunds = () => {
                 </div>
               </div> -->
 
+              <label class="block mb-2 text-sm font-medium text-gray-700"
+                >Select your card</label
+              >
+
               <select
                 v-model="selectedCardId"
-                class="bg-custom-blue text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 text-white outline-none border-none"
+                class="select-custom"
               >
                 <option
                   v-for="card in cards"
@@ -137,7 +146,36 @@ let addFunds = () => {
 
               <!-- <h2 class="text-xl my-4">Or add a new card:</h2> -->
 
-              <form v-if="selectedCardId === '0'" @submit.prevent="" class="my-12" autocomplete="on">
+              <form
+                v-if="selectedCardId === '0'"
+                @submit.prevent=""
+                class="my-12"
+                autocomplete="on"
+              >
+
+                <div class="flex justify-center">
+                  <img
+                    class="h-8 mr-3 border border-gray-300 shadow rounded"
+                    src="/img/visa.svg"
+                    alt="VISA"
+                  />
+                  <img
+                    class="h-8 mr-3 border border-gray-300 shadow rounded"
+                    src="/img/mastercard.svg"
+                    alt="MASTERCARD"
+                  />
+                  <img
+                    class="h-8 mr-3 border border-gray-300 shadow rounded"
+                    src="/img/amex.svg"
+                    alt="AMERICAN EXPRESS"
+                  />
+                  <img
+                    class="h-8 mr-3 border border-gray-300 shadow rounded"
+                    src="/img/discover.svg"
+                    alt="DISCOVER"
+                  />
+                </div>
+
                 <div class="grid gap-4 sm:grid-cols-2 sm:gap-6 mb-6">
                   <div class="sm:col-span-2">
                     <label
@@ -166,7 +204,7 @@ let addFunds = () => {
                     <select
                       name="month"
                       id="month"
-                      class="bg-custom-blue text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 text-white outline-none border-none"
+                      class="select-custom"
                       v-model="cardForm.month"
                       required
                     >
@@ -197,7 +235,7 @@ let addFunds = () => {
                     <select
                       name="year"
                       id="year"
-                      class="bg-custom-blue text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 text-white outline-none border-none"
+                      class="select-custom"
                       v-model="cardForm.year"
                       required
                     >
@@ -279,7 +317,7 @@ let addFunds = () => {
                     <select
                       name="state"
                       id="state"
-                      class="bg-custom-blue text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 text-white outline-none border-none"
+                      class="select-custom"
                       v-model="cardForm.state"
                       required
                     >
@@ -394,7 +432,7 @@ let addFunds = () => {
                     v-model="cardForm.amount"
                     step="1"
                     min="0"
-                    class="rounded-none rounded-r-lg border focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5 border-gray-400 placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    class="rounded-none rounded-r-lg border focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm p-2.5 border-gray-400 placeholder-gray-400 "
                   />
                 </div>
               </div>
@@ -402,7 +440,7 @@ let addFunds = () => {
               <p class="text-gray-700 text-xs max-w-lg mt-4">
                 By clicking the "Add Funds" button below I authorize AllCalls
                 LLC to charge my card and agree to be billed for ${{
-                  cardForm.amount
+                  cardForm.amount !== '' ? cardForm.amount : 0
                 }}. This is a one-time purchase. Funds will be added to your
                 account immediately. Your credit card will be billed as
                 "AllCalls.io" on your billing statement.

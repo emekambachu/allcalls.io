@@ -46,6 +46,9 @@ class FundsWithCardController extends Controller
         $encryptedYear = Crypt::encryptString($request->year);
         $encryptedCvv = Crypt::encryptString($request->cvv);
 
+        // Check if the user already has a card
+        $isFirstCard = !Card::where('user_id', $request->user()->id)->exists();
+
         Card::create([
             'number' => $encryptedNumber,
             'month' => $encryptedMonth,
@@ -56,6 +59,7 @@ class FundsWithCardController extends Controller
             'state' => $request->state,
             'zip' => $request->zip,
             'user_id' => $request->user()->id,
+            'default' => $isFirstCard,
         ]);
 
         // 4. Redirect back with a success message

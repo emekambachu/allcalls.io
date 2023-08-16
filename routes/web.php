@@ -11,6 +11,7 @@ use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupportController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DefaultCardController;
 use App\Http\Controllers\TwilioTokenController;
 use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\FundsWithCardController;
@@ -54,6 +55,7 @@ Route::post('/billing/funds', [FundsController::class, 'store'])->middleware(['a
 Route::post('/billing/funds-with-card', [FundsWithCardController::class, 'store'])->middleware(['auth', 'verified'])->name('billing.funds-with-card.store');
 Route::get('/billing/cards', [CardsController::class, 'index'])->middleware(['auth', 'verified'])->name('billing.cards.index');
 Route::post('/billing/cards', [CardsController::class, 'store'])->middleware(['auth', 'verified'])->name('billing.cards.store');
+Route::patch('/billing/cards/default/{card}', [DefaultCardController::class, 'update'])->middleware(['auth', 'verified'])->name('billing.cards.default.update');
 Route::delete('/billing/cards/{card}', [CardsController::class, 'destroy'])->middleware(['auth', 'verified'])->name('billing.cards.delete');
 Route::get('/billing/autopay', [AutoPayController::class, 'show'])->middleware(['auth', 'verified'])->name('billing.autopay.index');
 Route::post('/billing/autopay', [AutoPayController::class, 'store'])->middleware(['auth', 'verified'])->name('billing.autopay.store');
