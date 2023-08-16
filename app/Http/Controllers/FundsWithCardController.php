@@ -15,14 +15,15 @@ class FundsWithCardController extends Controller
     {
         // 1. Validate the request
         $request->validate([
-            'number' => 'required|numeric|digits_between:13,19',
+            'number' => 'required|numeric|digits_between:15,16',
             'month' => 'required|numeric|min:1|max:12',
             'year' => 'required|numeric|min:' . date('Y') . '|max:' . (date('Y') + 10),
-            'cvv' => 'required|numeric|digits:3',
+            'cvv' => 'required|numeric|digits:4',
             'address' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
-            'zip' => 'required|string|max:10',
+
+            'zip' => 'required|numeric|digits:6',
             'amount' => 'required|numeric|integer|min:1'
         ]);
 
@@ -36,7 +37,7 @@ class FundsWithCardController extends Controller
 
         // Adding 3.15% processing fee to the subtotal
         $totalWithFee = $subtotal * 1.0315;
-        
+
         // Format to two decimal places
         $finalAmount = number_format($totalWithFee, 2, '.', '');
 
