@@ -2,20 +2,19 @@
 
 namespace App\Models;
 
-use App\Models\Call;
-use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\CallType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class Client extends Model
+class Call extends Model
 {
     use HasFactory;
-
+    protected $table = "calls";
     protected $guarded = ['id'];
 
-    public function call()
+    public function callType()
     {
-        return $this->belongsTo(Call::class);
+        return $this->belongsTo(CallType::class);
     }
 
     public function user()
