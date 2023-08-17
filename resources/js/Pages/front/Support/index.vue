@@ -86,7 +86,7 @@ const showHamburger = ref(false);
                 ><li>Careers</li></a
               >
               <a href="/clients/support" class="hover:text-custom-green"
-                ><li>Careers</li></a
+                ><li>Support</li></a
               >
               <a href="/register" class="hover:text-custom-green"><li>Sign Up Now</li></a>
             </ul>
