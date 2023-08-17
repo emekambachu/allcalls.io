@@ -74,13 +74,17 @@ let addFunds = () => {
 
 onMounted(() => {
   console.log(props.cards);
-  for (let i = 0; i < props.cards.length; i++) {
-    if (props.cards[i].default) {
-      selectedCardId.value = props.cards[i].id;
+  //   console.log(page.props.errors,);
+  if (Object.values(page.props.errors).length > 0) {
+    selectedCardId.value = "0";
+  } else {
+    for (let i = 0; i < props.cards.length; i++) {
+      if (props.cards[i].default) {
+        selectedCardId.value = props.cards[i].id;
+      }
     }
   }
 });
-
 // let calculateTotalAfterFee = (subtotal) => {
 //   let fee = Number(subtotal) * 0.0315;
 //   return subtotal + fee;
@@ -131,6 +135,7 @@ let total = computed(() => {
               >
 
               <select v-model="selectedCardId" class="select-custom">
+                <option value="0">Add a new card</option>
                 <option
                   v-for="card in cards"
                   :key="card.id"
@@ -143,9 +148,7 @@ let total = computed(() => {
                 >
                   {{ card.type }} **** **** **** {{ card.last4 }}
                 </option>
-                <option value="0">Add a new card</option>
               </select>
-
               <!-- <h2 class="text-xl my-4">Or add a new card:</h2> -->
 
               <form
