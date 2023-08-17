@@ -148,6 +148,7 @@ let setAsDefault = (cardId) => {
                             class="text-white bg-red-700 hover:bg-red-800 font-medium rounded px-2 py-2 text-xs flex items-center"
                             @click.prevent="removeCard(card.id)"
                           >
+
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               fill="none"
