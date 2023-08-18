@@ -5,11 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\CallType;
 use App\Models\OnlineUser;
-use App\Models\UserCallTypeState;
 use Illuminate\Http\Request;
 use App\Models\CallTypeNumber;
 use App\Models\AvailableNumber;
+use App\Models\UserCallTypeState;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 
 class IncomingCallController extends Controller
 {
@@ -225,4 +226,85 @@ class IncomingCallController extends Controller
             return null;
         }
     }
+
+    public function sendPushNotification(Request $request)
+    {
+        // $data = $request->json()->all();
+        echo "Hi";
+
+        // $deviceToken = $data['deviceToken'];
+        // $title = $data['title'];
+        // $message = $data['message'];
+        $deviceToken = 'eVdtP7p2RcqhGsTUp5ym-C:APA91bHNu18CJbmkq7Z-sBmvkpzgKe3_0xAc28tHhXZFIunXIMDX0c_1S4aLUhbwQ55MsnpLATEQO6vWsJpWKnZp7udVLImTr31Txj9l3oqSJMm1zfkScocwnUCQnK6zkZSU-w7cBldP';
+        $title = 'Hell yeahhhhhhh!';
+        $message = 'You get a high five! and YOU get a HIGH FIVE!';
+        
+        // $deviceToken = $request->query('deviceToken');
+        // $title = $request->query('title');
+        // $message = $request->query('message');
+
+        // $accessToken = 'AIzaSyBd2D6RjjX9d6yraIpheNUdgTqdmiJb3bc'; // Replace with your OAuth 2.0 access token
+        $serverKey = 'AIzaSyBd2D6RjjX9d6yraIpheNUdgTqdmiJb3bc'; // Replace with your OAuth 2.0 access token
+
+        // $notification = [
+        //     'message' => [
+        //         'token' => $deviceToken,
+        //         'notification' => [
+        //             'title' => $title,
+        //             'body' => $message,
+        //         ],
+        //         'android' => [
+        //             'direct_boot_ok' => true,
+        //         ],
+        //     ],
+        // ];
+
+        // $response = Http::withHeaders([
+        //     'Authorization' => 'Bearer ya29' . $accessToken,
+        //     'Content-Type' => 'application/json',
+        // ])->post('https://fcm.googleapis.com/v1/projects/allcalls-app/messages:send', $notification);
+
+        // if ($response->failed()) {
+        //     echo 'Error sending push notification: ' . $response->body();
+        // } else {
+        //     echo 'Push notification sent: ' . $response->body();
+        // }
+
+        // if ($response === false) {
+        //     echo 'Error sending push notification: ' . curl_error($ch);
+        // } else {
+        //     echo 'Push notification sent: ' . $response;
+        // }
+
+        $notification = [
+            'to' => $deviceToken,
+            'notification' => [
+                'title' => $title,
+                'body' => $message,
+            ],
+        ];
+
+        $headers = [
+            'Authorization: key=' . $serverKey,
+            'Content-Type: application/json',
+        ];
+
+        $ch = curl_init('https://fcm.googleapis.com/fcm/send');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($notification));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+
+        if ($response === false) {
+            echo 'Error sending push notification: ' . curl_error($ch);
+        } else {
+            echo 'Push notification sent: ' . $response;
+        }
+
+        curl_close($ch);
+    }
+
+    // }
 }
