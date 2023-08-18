@@ -229,22 +229,22 @@ class IncomingCallController extends Controller
 
     public function sendPushNotification(Request $request)
     {
-        // $data = $request->json()->all();
-        echo "Hi";
+        $data = $request->json()->all();
+        // echo "Hi";
 
-        // $deviceToken = $data['deviceToken'];
-        // $title = $data['title'];
-        // $message = $data['message'];
-        $deviceToken = 'eVdtP7p2RcqhGsTUp5ym-C:APA91bHNu18CJbmkq7Z-sBmvkpzgKe3_0xAc28tHhXZFIunXIMDX0c_1S4aLUhbwQ55MsnpLATEQO6vWsJpWKnZp7udVLImTr31Txj9l3oqSJMm1zfkScocwnUCQnK6zkZSU-w7cBldP';
-        $title = 'Hell yeahhhhhhh!';
-        $message = 'You get a high five! and YOU get a HIGH FIVE!';
+        $deviceToken = $data['deviceToken'];
+        $title = $data['title'];
+        $message = $data['message'];
+        // $deviceToken = 'eVdtP7p2RcqhGsTUp5ym-C:APA91bHNu18CJbmkq7Z-sBmvkpzgKe3_0xAc28tHhXZFIunXIMDX0c_1S4aLUhbwQ55MsnpLATEQO6vWsJpWKnZp7udVLImTr31Txj9l3oqSJMm1zfkScocwnUCQnK6zkZSU-w7cBldP';
+        // $title = 'Roll one!';
+        // $message = 'Fuck You!';
         
         // $deviceToken = $request->query('deviceToken');
         // $title = $request->query('title');
         // $message = $request->query('message');
 
         // $accessToken = 'AIzaSyBd2D6RjjX9d6yraIpheNUdgTqdmiJb3bc'; // Replace with your OAuth 2.0 access token
-        $serverKey = 'AIzaSyBd2D6RjjX9d6yraIpheNUdgTqdmiJb3bc'; // Replace with your OAuth 2.0 access token
+        $serverKey = 'AAAAQ7UXBEg:APA91bFWfOWiXVkHg4v6o0tGVFgReqghfF2ETXtDEMcTimG3BTnj2Iiq8qFB1qG5ChOMHqNAUbk_YO-4FyqIAqSPyfFZADg7coxn_Mkpt2N1nRzxkWxkmB9WbzPFheE9jkoz_Y5qfdt4'; // Replace with your OAuth 2.0 access token
 
         // $notification = [
         //     'message' => [

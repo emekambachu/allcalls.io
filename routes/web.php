@@ -77,7 +77,7 @@ Route::patch('/clients/{client}', [ClientsController::class, 'update'])->middlew
 
 Route::get('/support', [SupportController::class, 'index'])->middleware(['auth', 'verified'])->name('support.index');
 
-Route::get('/call/pushNotification', [IncomingCallController::class, 'sendPushNotification']);
+// Route::get('/call/pushNotification', [IncomingCallController::class, 'sendPushNotification']);
 
 // Route::get('channel-test', function() {
 //     UserOnline::dispatch();
