@@ -8,25 +8,25 @@ let props = defineProps({
     type: Boolean,
   },
 
-  selectedClient: {
+  callDetail: {
     type: Object,
   },
 });
 let editScreen = ref(false);
 let emit = defineEmits(["close"]);
-let originalClient = props.selectedClient;
+let originalClient = props.callDetail;
 
 let close = () => {
   editScreen.value = false;
   emit("close");
-  form = originalClient
-  props.selectedClient = originalClient;
+  form.value = originalClient
+  props.callDetail = originalClient;
 };
 
 let form = reactive(null);
 
 let saveChanges = () => {
-  console.log('selectedClient save changes', props.selectedClient);
+  console.log('callDetail save changes', props.callDetail);
   console.log('form upon save changes', form);
   router.visit(`/clients/${form.id}`, {
     method: 'PATCH',
@@ -36,7 +36,7 @@ let saveChanges = () => {
 
 let openEdit = () => {
   editScreen.value = true;
-  form = JSON.parse(JSON.stringify(props.selectedClient));
+  form = JSON.parse(JSON.stringify(props.callDetail.get_client));
 }
 </script>
 
@@ -70,6 +70,7 @@ let openEdit = () => {
             <h3 class="text-xl font-semibold text-custom-blue">
               Client Details
             </h3>
+
             <button
               @click="close"
               type="button"
@@ -95,7 +96,8 @@ let openEdit = () => {
             </button>
           </div>
           <div class="p-6">
-            <div v-if="selectedClient">
+            
+            <div v-if="callDetail">
               <div class="flex justify-between items-center">
                 <h4 class="text-2xl font-semibold text-custom-sky mb-2">
                   Personal Details
@@ -114,15 +116,15 @@ let openEdit = () => {
               >
                 <div>
                   <strong class="text-lg">First Name: </strong>
-                  {{ selectedClient.first_name }}
+                  {{ callDetail.get_client.first_name }}
                 </div>
                 <div>
                   <strong class="text-lg">Last Name: </strong>
-                  {{ selectedClient.last_name }}
+                  {{ callDetail.get_client.last_name }}
                 </div>
                 <div>
                   <strong class="text-lg">Date of Birth: </strong>
-                  {{ selectedClient.dob || "N/A" }}
+                  {{ callDetail.get_client.dob || "N/A" }}
                 </div>
               </div>
 
@@ -134,23 +136,23 @@ let openEdit = () => {
               >
                 <div>
                   <strong class="text-lg">Phone: </strong>
-                  {{ selectedClient.phone }}
+                  {{ callDetail.get_client.phone }}
                 </div>
                 <div>
                   <strong class="text-lg">Email: </strong>
-                  {{ selectedClient.email || "N/A" }}
+                  {{ callDetail.get_client.email || "N/A" }}
                 </div>
                 <div>
                   <strong class="text-lg">Address: </strong>
-                  {{ selectedClient.address || "N/A" }}
+                  {{ callDetail.get_client.address || "N/A" }}
                 </div>
                 <div>
                   <strong class="text-lg">State: </strong>
-                  {{ selectedClient.state || "N/A" }}
+                  {{ callDetail.get_client.state || "N/A" }}
                 </div>
                 <div>
                   <strong class="text-lg">Zip Code: </strong>
-                  {{ selectedClient.zipCode || "N/A" }}
+                  {{ callDetail.get_client.zipCode || "N/A" }}
                 </div>
               </div>
 
@@ -162,37 +164,37 @@ let openEdit = () => {
               >
                 <div>
                   <strong class="text-lg">Call Taken: </strong>
-                  {{ selectedClient.call_taken || "N/A" }}
+                  {{ callDetail.call_taken || "N/A" }}
                 </div>
                 <div>
                   <strong class="text-lg">Call Duration (Seconds): </strong>
                   {{
                     String(
-                      Math.floor(selectedClient.call_duration_in_seconds / 60)
+                      Math.floor(callDetail.call_duration_in_seconds / 60)
                     ).padStart(2, "0") +
                     ":" +
                     String(
-                      selectedClient.call_duration_in_seconds % 60
+                      callDetail.call_duration_in_seconds % 60
                     ).padStart(2, "0")
                   }}
                 </div>
                 <div>
                   <strong class="text-lg">Hung Up By: </strong>
-                  {{ selectedClient.hung_up_by }}
+                  {{ callDetail.hung_up_by }}
                 </div>
                 <div>
                   <strong class="text-lg">Call ID: </strong>
-                  {{ selectedClient.call_id }}
+                  {{ callDetail.id }}
                 </div>
                 <div>
                   <strong class="text-lg">Recording URL: </strong>
-                  <a :href="selectedClient.recording_url" target="_blank">{{
-                    selectedClient.recording_url || "N/A"
+                  <a :href="callDetail.recording_url" target="_blank">{{
+                    callDetail.recording_url || "N/A"
                   }}</a>
                 </div>
                 <div>
                   <strong class="text-lg">Call Type: </strong>
-                  {{ selectedClient.call_type.type }}
+                  {{ callDetail.call_type.type }}
                 </div>
               </div>
 
@@ -204,14 +206,14 @@ let openEdit = () => {
               >
                 <div>
                   <strong class="text-lg">Amount Spent: </strong>
-                  {{ "$" + (selectedClient.amount_spent / 100).toFixed(2) }}
+                  {{ "$" + (callDetail.amount_spent / 100).toFixed(2) }}
                 </div>
               </div>
             </div>
 
             <div class="flex justify-end">
               <button
-                @click="showModal = false"
+              @click="close"
                 class="border border-gray-400 ease-in cursor-pointer bg-white bg-opacity-5 hover:shadow-2xl hover:bg-white hover:text-custom-blue hover:bg-opacity-80 rounded px-3 py-3 font-bold text-md text-gray-500 transition"
               >
                 Close

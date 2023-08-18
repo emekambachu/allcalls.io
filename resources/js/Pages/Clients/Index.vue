@@ -16,7 +16,7 @@ if (page.props.flash.message) {
 }
 
 let props = defineProps({
-  clients: {
+  calls: {
     type: Object,
   },
 
@@ -33,7 +33,7 @@ let props = defineProps({
   },
 });
 
-console.log(props.clients);
+console.log(props.calls);
 
 let fetchClients = (page) => {
   // Create URL object from page
@@ -51,10 +51,10 @@ let fetchClients = (page) => {
 };
 
 let showModal = ref(false);
-let selectedClient = ref(null);
+let callDetail = ref(null);
 
-let openClientModal = (client) => {
-  selectedClient.value = client;
+let openClientModal = (call) => {
+  callDetail.value = call;
   showModal.value = true;
 };
 
@@ -143,7 +143,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
       </div>
     </div>
 
-    <section v-if="clients.data.length" class="p-3">
+    <section v-if="calls.data.length" class="p-3">
       <div class="mx-auto max-w-screen-xl sm:px-12">
         <div class="relative sm:rounded-lg overflow-hidden">
           <div class="overflow-x-auto">
@@ -151,67 +151,51 @@ let capitalizeAndReplaceUnderscore = (str) => {
               <thead class="text-xs text-gray-300 uppercase bg-sky-900">
                 <tr>
                   <th scope="col" class="px-4 py-3">ID</th>
-                  <th scope="col" class="px-4 py-3">FULL NAME</th>
-                  <th scope="col" class="px-4 py-3">PHONE</th>
-                  <th scope="col" class="px-4 py-3">EMAIL</th>
-                  <th scope="col" class="px-4 py-3">STATE</th>
-                  <th scope="col" class="px-4 py-3">DOB</th>
-                  <th scope="col" class="px-4 py-3">Status</th>
-                  <th scope="col" class="px-4 py-3">
-                    <span class="sr-only">Actions</span>
-                  </th>
+                  <th scope="col" class="px-4 py-3">HANG UP BY</th>
+                  <th scope="col" class="px-4 py-3">CALL DURATION</th>
+                  <th scope="col" class="px-4 py-3">CALL TAKEN</th>
+                  <th scope="col" class="px-4 py-3">AMMOUNT SPENT</th>
+                  <th scope="col" class="px-4 py-3">CALL TYPE</th>
+                  <th scope="col" class="px-4 py-3 text-end">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 <tr
-                  v-for="client in clients.data"
-                  :key="client.id"
+                  v-for="call in calls.data"
+                  :key="call.id"
                   class="border-b border-gray-500"
                 >
-                  <td class="text-gray-600 px-4 py-3">{{ client.id }}</td>
-                  <th
-                    scope="row"
-                    class="px-4 py-3 font-medium text-custom-blue font-semibold whitespace-nowrap"
-                  >
-                    {{ client.first_name }} {{ client.last_name }}
-                  </th>
-                  <td class="text-gray-600 px-4 py-3">{{ client.phone }}</td>
-                  <td class="text-gray-600 px-4 py-3">{{ client.email }}</td>
-                  <td class="text-gray-600 px-4 py-3">{{ client.state }}</td>
-                  <td class="text-gray-600 px-4 py-3">{{ formatDate(client.dob) }}</td>
+                 
+                  <td class="text-gray-600 px-4 py-3">{{ call.id }}</td>
+                  <td class="text-gray-600 px-4 py-3">{{ call.hung_up_by }}</td>
                   <td class="text-gray-600 px-4 py-3">
-                    
-
-                    <span
-                      class="inline-flex items-center text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full"
-                      :class="{
-                        'bg-green-900 text-green-300': client.status === 'sold',
-                        'bg-red-900 text-red-300': client.status === 'not_sold',
-                        'bg-yellow-900 text-yellow-300': client.status === 'follow_up_needed',
-                      }"
-                    >
-                      <span
-                        class="w-2 h-2 mr-1 rounded-full"
-                        :class="{
-                          'bg-green-500': client.status === 'sold',
-                          'bg-red-500': client.status === 'not_sold',
-                          'bg-yellow-500': client.status === 'follow_up_needed',
-                        }"
-                      ></span>
-                      {{ capitalizeAndReplaceUnderscore(client.status) }}
-                    </span>
+                    {{
+                    String(
+                      Math.floor(call.call_duration_in_seconds / 60)
+                    ).padStart(2, "0") +
+                    ":" +
+                    String(
+                      call.call_duration_in_seconds % 60
+                    ).padStart(2, "0")
+                  }}
                   </td>
-
-                  <td
+              
+                  <th class="text-gray-600 px-4 py-3">{{ call.call_taken }}</th>
+                  <td class="text-gray-600 px-4 py-3">{{ call.amount_spent }}</td>
+                  <td class="text-gray-600 px-4 py-3">{{ call.call_type.type }}</td>
+                  <td 
                     class="text-gray-700 px-4 py-3 flex items-center justify-end"
                   >
-                    <button
-                      @click="openClientModal(client)"
+
+                    <button v-if="call.get_client"
+                      @click="openClientModal(call)"
                       class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
                       type="button"
                     >
                       View Client
                     </button>
+                    <button v-else class="text-center"
+                      type="button">-</button>
                   </td>
                 </tr>
               </tbody>
@@ -226,11 +210,11 @@ let capitalizeAndReplaceUnderscore = (str) => {
                 >
                   Showing
                   <span class="font-semibold text-custom-blue">{{
-                    clients.current_page
+                    calls.current_page
                   }}</span>
                   of
                   <span class="font-semibold text-custom-blue">{{
-                    clients.last_page
+                    calls.last_page
                   }}</span>
                 </span>
                 <ul
@@ -238,8 +222,8 @@ let capitalizeAndReplaceUnderscore = (str) => {
                 >
                   <li>
                     <a
-                      v-if="clients.prev_page_url"
-                      @click="fetchClients(clients.prev_page_url)"
+                      v-if="calls.prev_page_url"
+                      @click="fetchClients(calls.prev_page_url)"
                       class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-custom-white rounded-l-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white"
                     >
                       <span class="sr-only">Previous</span>
@@ -262,14 +246,14 @@ let capitalizeAndReplaceUnderscore = (str) => {
                   <li>
                     <a
                       class="flex items-center justify-center text-sm py-2 px-3 leading-tight font-extrabold text-gray-500 bg-custom-white shadow-2xl hover:bg-sky-950 hover:shadow-2xl hover:text-white"
-                      >{{ clients.current_page }}
+                      >{{ calls.current_page }}
                     </a>
                   </li>
 
                   <li>
                     <a
-                      v-if="clients.next_page_url"
-                      @click="fetchClients(clients.next_page_url)"
+                      v-if="calls.next_page_url"
+                      @click="fetchClients(calls.next_page_url)"
                       class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-custom-white rounded-r-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white"
                     >
                       <span class="sr-only">Next</span>
@@ -302,7 +286,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
 
     <ClientDetailsModal
       :showModal="showModal"
-      :selectedClient="selectedClient"
+      :callDetail="callDetail"
       @close="showModal = false"
     ></ClientDetailsModal>
 
