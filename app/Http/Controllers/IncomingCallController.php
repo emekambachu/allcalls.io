@@ -243,31 +243,59 @@ class IncomingCallController extends Controller
         // $title = $request->query('title');
         // $message = $request->query('message');
 
-        $accessToken = '104486129110198298646'; // Replace with your OAuth 2.0 access token
+        // $accessToken = 'AIzaSyBd2D6RjjX9d6yraIpheNUdgTqdmiJb3bc'; // Replace with your OAuth 2.0 access token
+        $serverKey = 'AIzaSyBd2D6RjjX9d6yraIpheNUdgTqdmiJb3bc'; // Replace with your OAuth 2.0 access token
+
+        // $notification = [
+        //     'message' => [
+        //         'token' => $deviceToken,
+        //         'notification' => [
+        //             'title' => $title,
+        //             'body' => $message,
+        //         ],
+        //         'android' => [
+        //             'direct_boot_ok' => true,
+        //         ],
+        //     ],
+        // ];
+
+        // $response = Http::withHeaders([
+        //     'Authorization' => 'Bearer ya29' . $accessToken,
+        //     'Content-Type' => 'application/json',
+        // ])->post('https://fcm.googleapis.com/v1/projects/allcalls-app/messages:send', $notification);
+
+        // if ($response->failed()) {
+        //     echo 'Error sending push notification: ' . $response->body();
+        // } else {
+        //     echo 'Push notification sent: ' . $response->body();
+        // }
+
+        // if ($response === false) {
+        //     echo 'Error sending push notification: ' . curl_error($ch);
+        // } else {
+        //     echo 'Push notification sent: ' . $response;
+        // }
 
         $notification = [
-            'message' => [
-                'token' => $deviceToken,
-                'notification' => [
-                    'title' => $title,
-                    'body' => $message,
-                ],
-                'android' => [
-                    'direct_boot_ok' => true,
-                ],
+            'to' => $deviceToken,
+            'notification' => [
+                'title' => $title,
+                'body' => $message,
             ],
         ];
 
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $accessToken,
-            'Content-Type' => 'application/json',
-        ])->post('https://fcm.googleapis.com/v1/projects/allcalls-app/messages:send', $notification);
+        $headers = [
+            'Authorization: key=' . $serverKey,
+            'Content-Type: application/json',
+        ];
 
-        if ($response->failed()) {
-            echo 'Error sending push notification: ' . $response->body();
-        } else {
-            echo 'Push notification sent: ' . $response->body();
-        }
+        $ch = curl_init('https://fcm.googleapis.com/fcm/send');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($notification));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
 
         if ($response === false) {
             echo 'Error sending push notification: ' . curl_error($ch);
@@ -275,5 +303,8 @@ class IncomingCallController extends Controller
             echo 'Push notification sent: ' . $response;
         }
 
+        curl_close($ch);
     }
+
+    // }
 }
