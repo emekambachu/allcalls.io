@@ -233,7 +233,7 @@ class IncomingCallController extends Controller
         // $deviceToken = $data['deviceToken'];
         // $title = $data['title'];
         // $message = $data['message'];
-        $deviceToken = $request->query('deviceToken');
+        $deviceToken = 'eVdtP7p2RcqhGsTUp5ym-C:APA91bHNu18CJbmkq7Z-sBmvkpzgKe3_0xAc28tHhXZFIunXIMDX0c_1S4aLUhbwQ55MsnpLATEQO6vWsJpWKnZp7udVLImTr31Txj9l3oqSJMm1zfkScocwnUCQnK6zkZSU-w7cBldP';
         $title = 'Hell yeahhhhhhh!';
         $message = 'You get a high five! and YOU get a HIGH FIVE!';
 
