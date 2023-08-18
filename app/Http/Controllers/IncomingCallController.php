@@ -226,7 +226,7 @@ class IncomingCallController extends Controller
         }
     }
 
-    public function sendPushNotification(Request $request)
+    public function sendPushNotification()
     {
         // $data = $request->json()->all();
 
