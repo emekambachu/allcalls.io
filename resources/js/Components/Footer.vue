@@ -49,7 +49,7 @@ import ApplicationLogo from "@/Components/ApplicationLogo.vue";
       </div>
 
       <div class="footer__links">
-        <a href="/clients/support">Support</a>
+        <a href="/support">Support</a>
         |
         <a href="/terms.php">Terms of Service</a>
         |

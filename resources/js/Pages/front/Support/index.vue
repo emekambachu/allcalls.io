@@ -85,9 +85,7 @@ const showHamburger = ref(false);
                 class="hover:text-custom-green"
                 ><li>Careers</li></a
               >
-              <a href="/clients/support" class="hover:text-custom-green"
-                ><li>Support</li></a
-              >
+              <a href="/support" class="hover:text-custom-green"><li>Support</li></a>
               <a href="/register" class="hover:text-custom-green"><li>Sign Up Now</li></a>
             </ul>
           </nav>
@@ -130,7 +128,7 @@ const showHamburger = ref(false);
               Careers
             </li></a
           >
-          <a href="/clients/support"
+          <a href="/support"
             ><li
               class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2"
             >
