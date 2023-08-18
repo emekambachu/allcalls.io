@@ -228,14 +228,14 @@ class IncomingCallController extends Controller
 
     public function sendPushNotification(Request $request)
     {
-        $data = $request->json()->all();
+        // $data = $request->json()->all();
 
-        $deviceToken = $data['deviceToken'];
-        $title = $data['title'];
-        $message = $data['message'];
-        // $deviceToken = '';
-        // $title = 'Hell yeahhhhhhh!';
-        // $message = 'You get a high five! and YOU get a HIGH FIVE!';
+        // $deviceToken = $data['deviceToken'];
+        // $title = $data['title'];
+        // $message = $data['message'];
+        $deviceToken = $request->query('deviceToken');
+        $title = 'Hell yeahhhhhhh!';
+        $message = 'You get a high five! and YOU get a HIGH FIVE!';
 
         $accessToken = '104486129110198298646'; // Replace with your OAuth 2.0 access token
 
