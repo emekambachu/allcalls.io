@@ -1,5 +1,16 @@
 <script setup>
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
+import { onMounted } from 'vue';
+
+onMounted(() => {
+  setTimeout(() => {
+    document.querySelector('.widget-visible iframe').style.bottom = '70px';
+  }, 1000);
+
+  setTimeout(() => {
+    document.querySelector('.widget-visible iframe').style.bottom = '70px';
+  }, 2000);
+});
 </script>
 
 <template>
