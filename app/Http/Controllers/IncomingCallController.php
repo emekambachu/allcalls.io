@@ -139,36 +139,55 @@ class IncomingCallController extends Controller
         $highestBidderId = 0;
         $highestBidAmount = 0;
         $tiedBidderIds = [];
-
+    
+        Log::debug('Entered getHighestBidder');
+        Log::debug('Total users: ' . $users->count());
+        Log::debug('Call type ID: ' . $callType->id);
+    
         // Loop through each user and get their bids
         foreach ($users as $user) {
+            Log::debug('Checking user: ' . $user->user_id);
+            
             $bids = Bid::where('user_id', $user->user_id)
                 ->where('call_type_id', $callType->id)
                 ->get();
-
+    
+            Log::debug('Bids found for user ' . $user->user_id . ': ' . count($bids));
+    
             // Compare each bid to find the highest bidder
             foreach ($bids as $bid) {
+                Log::debug('Checking bid: ' . $bid->amount);
                 if ($bid->amount > $highestBidAmount) {
                     $highestBidderId = $bid->user_id;
                     $highestBidAmount = $bid->amount;
+                    Log::debug('New highest bid found: ' . $highestBidAmount . ' by user ' . $highestBidderId);
                 } elseif ($bid->amount == $highestBidAmount) {
                     $tiedBidderIds[] = $bid->user_id;
+                    Log::debug('Tie found for bid amount ' . $bid->amount . ' with user ' . $bid->user_id);
                 }
             }
         }
-
+    
         // Include the highest bidder in the tie-breakers list, if they exist
         if ($highestBidderId) {
             $tiedBidderIds[] = $highestBidderId;
+            Log::debug('Highest bidder added to tie-breakers list');
         }
-
+    
         // If there's a tie, select a random user from the tied bidders
         if (count($tiedBidderIds) > 0) {
             $highestBidderId = $tiedBidderIds[array_rand($tiedBidderIds)];
+            Log::debug('Tie-breaker selected. Chosen user ID: ' . $highestBidderId);
+        } else {
+            Log::debug('No bidders found matching the criteria');
         }
-
-        return User::find($highestBidderId);
+    
+        $user = User::find($highestBidderId);
+        Log::debug($user ? 'Returning user ID: ' . $user->user_id : 'User not found in database');
+    
+        return $user;
     }
+    
 
 
     public function getOnlineUsers($callType, $state)
