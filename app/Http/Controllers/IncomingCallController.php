@@ -649,7 +649,7 @@ class IncomingCallController extends Controller
         $title = 'Incoming Call...';
         $message = 'You have a client call incoming';
 
-        $serverKey = 'AAAAQ7UXBEg:APA91bFWfOWiXVkHg4v6o0tGVFgReqghfF2ETXtDEMcTimG3BTnj2Iiq8qFB1qG5ChOMHqNAUbk_YO-4FyqIAqSPyfFZADg7coxn_Mkpt2N1nRzxkWxkmB9WbzPFheE9jkoz_Y5qfdt4'; // Replace with your OAuth 2.0 access token
+        $serverKey = env('FCM_SERVER_KEY'); // Replace with your OAuth 2.0 access token
 
         $notification = [
             'to' => $deviceToken,
