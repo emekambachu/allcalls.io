@@ -40,7 +40,7 @@ class IncomingCallController extends Controller
             Log::debug('current user based on available number is: ' . $user);
 
             Log::debug('Number found in AvailableNumber model: ' . $to);
-            $twiml = $this->handleAvailableNumberCall($to);
+            $twiml .= $this->handleAvailableNumberCall($to);
 
             if ($user->device_token) {
                 $response = Http::post(route('call.pushNotification'), [
@@ -120,7 +120,7 @@ class IncomingCallController extends Controller
             $call_type_id = $availableNumber->call_type_id;
         
             // $twimlBody = '<Dial callerId="+441156471655" action="https://allcalls.io/api/handle-call-status?user_id=' . $user_id . '&call_type_id=' . $call_type_id . '&from=' . $availableNumber->from . '" timeout="20">' . '<Client>' . $user_id . '</Client></Dial>';
-            $twimlBody = '<Dial timeout="20"><Client>' . $user_id . '</Client></Dial>';
+            $twimlBody = '<Dial><Client>' . $user_id . '</Client></Dial>';
         }
 
         $twiml = $twimlStart . $twimlBody . $twimlEnd;
