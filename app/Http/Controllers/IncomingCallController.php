@@ -119,7 +119,7 @@ class IncomingCallController extends Controller
             $user_id = $firstBid->user_id;
             $call_type_id = $availableNumber->call_type_id;
         
-            $twimlBody = '<Response><Dial callerId="+441156471655" action="https://allcalls.io/api/handle-call-status?user_id=' . $user_id . '&call_type_id=' . $call_type_id . '&from=' . $availableNumber->from . '" timeout="20">' . '<Client>' . $user_id . '</Client></Dial></Response>';
+            $twimlBody = '<Dial callerId="+441156471655" action="https://allcalls.io/api/handle-call-status?user_id=' . $user_id . '&call_type_id=' . $call_type_id . '&from=' . $availableNumber->from . '" timeout="20">' . '<Client>' . $user_id . '</Client></Dial>';
         }
 
         $twiml = $twimlStart . $twimlBody . $twimlEnd;
@@ -230,7 +230,7 @@ class IncomingCallController extends Controller
         }
 
         $user = User::find($highestBidderId);
-        Log::debug($user ? 'Returning user ID: ' . $user->user_id : 'User not found in database');
+        Log::debug($user ? 'Returning user ID: ' . $user->id: 'User not found in database');
 
         return $user;
     }
