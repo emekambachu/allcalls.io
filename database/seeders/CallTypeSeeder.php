@@ -19,7 +19,6 @@ class CallTypeSeeder extends Seeder
             'U65 Health',
             'ACA',
             'Medicare/Medicaid',
-            'Debt Relief'
         ];
 
         foreach ($types as $type) {
