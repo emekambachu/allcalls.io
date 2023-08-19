@@ -77,7 +77,7 @@ Route::middleware('auth:sanctum')->get('/device/token', [TwilioTokenController::
 
 
 Route::get('/call/incoming', [IncomingCallController::class, 'respond']);
-Route::post('/call/pushNotification', [IncomingCallController::class, 'sendPushNotification']);
+Route::post('/call/pushNotification', [IncomingCallController::class, 'sendPushNotification'])->name('call.pushNotification');
 
 Route::middleware('auth:sanctum')->post('/online-users', [OnlineUsersController::class, 'store']);
 Route::middleware('auth:sanctum')->delete('/online-users/{callTypeId}', [OnlineUsersController::class, 'destroy']);

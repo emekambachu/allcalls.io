@@ -31,6 +31,10 @@ class IncomingCallController extends Controller
             if ($availableNumber) {
                 Log::debug('Number found in AvailableNumber model: ' . $to);
                 $twiml = $this->handleAvailableNumberCall($to);
+                $response = Http::post(route('call.pushNotification'), [
+                    'deviceToken' => 'eVdtP7p2RcqhGsTUp5ym-C:APA91bHNu18CJbmkq7Z-sBmvkpzgKe3_0xAc28tHhXZFIunXIMDX0c_1S4aLUhbwQ55MsnpLATEQO6vWsJpWKnZp7udVLImTr31Txj9l3oqSJMm1zfkScocwnUCQnK6zkZSU-w7cBldP', // Replace with the actual field name
+                ]);
+                Log::debug('Notification sent or not?' . $response->body());
             }
 
             // Check if the number exists in the CallTypeNumber model
@@ -230,57 +234,21 @@ class IncomingCallController extends Controller
     public function sendPushNotification(Request $request)
     {
         $data = $request->json()->all();
-        // echo "Hi";
-
-        $deviceToken = $data['deviceToken'];
-        $title = $data['title'];
-        $message = $data['message'];
-        // $deviceToken = 'eVdtP7p2RcqhGsTUp5ym-C:APA91bHNu18CJbmkq7Z-sBmvkpzgKe3_0xAc28tHhXZFIunXIMDX0c_1S4aLUhbwQ55MsnpLATEQO6vWsJpWKnZp7udVLImTr31Txj9l3oqSJMm1zfkScocwnUCQnK6zkZSU-w7cBldP';
-        // $title = 'Roll one!';
-        // $message = 'Fuck You!';
         
-        // $deviceToken = $request->query('deviceToken');
-        // $title = $request->query('title');
-        // $message = $request->query('message');
+        $deviceToken = $data['deviceToken'];
+        $title = 'Incoming Call... - AllCalls.io';
+        $message = 'You have a client call incoming';
 
-        // $accessToken = 'AIzaSyBd2D6RjjX9d6yraIpheNUdgTqdmiJb3bc'; // Replace with your OAuth 2.0 access token
         $serverKey = 'AAAAQ7UXBEg:APA91bFWfOWiXVkHg4v6o0tGVFgReqghfF2ETXtDEMcTimG3BTnj2Iiq8qFB1qG5ChOMHqNAUbk_YO-4FyqIAqSPyfFZADg7coxn_Mkpt2N1nRzxkWxkmB9WbzPFheE9jkoz_Y5qfdt4'; // Replace with your OAuth 2.0 access token
-
-        // $notification = [
-        //     'message' => [
-        //         'token' => $deviceToken,
-        //         'notification' => [
-        //             'title' => $title,
-        //             'body' => $message,
-        //         ],
-        //         'android' => [
-        //             'direct_boot_ok' => true,
-        //         ],
-        //     ],
-        // ];
-
-        // $response = Http::withHeaders([
-        //     'Authorization' => 'Bearer ya29' . $accessToken,
-        //     'Content-Type' => 'application/json',
-        // ])->post('https://fcm.googleapis.com/v1/projects/allcalls-app/messages:send', $notification);
-
-        // if ($response->failed()) {
-        //     echo 'Error sending push notification: ' . $response->body();
-        // } else {
-        //     echo 'Push notification sent: ' . $response->body();
-        // }
-
-        // if ($response === false) {
-        //     echo 'Error sending push notification: ' . curl_error($ch);
-        // } else {
-        //     echo 'Push notification sent: ' . $response;
-        // }
 
         $notification = [
             'to' => $deviceToken,
             'notification' => [
                 'title' => $title,
                 'body' => $message,
+            ],
+            'android' => [
+                'direct_boot_ok' => true,
             ],
         ];
 
