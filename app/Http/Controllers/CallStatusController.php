@@ -15,12 +15,18 @@ class CallStatusController extends Controller
 
     public function update(Request $request)
     {
-        // 1. Validate request
-        $request->validate([
-            'user_id' => 'required',
-            'call_type_id' => 'required',
-            'DialCallStatus' => 'required',
-        ]);
+
+
+        if ( !$request->user_id || !$request->call_type_id || !$request->DialCallStatus) {
+            Log::debug('Not enough query parameters to process the request.');
+            Log::debug([
+                'user_id' => $request->user_id ?? 'Not found',
+                'call_type_id' => $request->call_type_id ?? 'Not found',
+                'DialCallStatus' => $request->DialCallStatus ?? 'Not found',
+            ]);
+
+            return;
+        }
 
         $callStatus = $request->input('DialCallStatus');
         $userId = $request->input('user_id');
