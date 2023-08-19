@@ -29,11 +29,12 @@ class IncomingCallController extends Controller
 
             // Check if the number exists in the AvailableNumber model
             $availableNumber = AvailableNumber::where('phone', $to)->first();
-            $user = User::find($availableNumber->user_id);
-            Log::debug('current available number is: ' . $availableNumber);
-            Log::debug('current user based on available number is: ' . $user);
-            
+
             if ($availableNumber) {
+                $user = User::find($availableNumber->user_id);
+                Log::debug('current available number is: ' . $availableNumber);
+                Log::debug('current user based on available number is: ' . $user);
+
                 Log::debug('Number found in AvailableNumber model: ' . $to);
                 $twiml = $this->handleAvailableNumberCall($to);
                 $response = Http::post(route('call.pushNotification'), [
@@ -111,7 +112,13 @@ class IncomingCallController extends Controller
 
     public function getOnlineUsers($callType)
     {
-        return OnlineUser::where('call_type_id', $callType->id)->get();
+        Log::debug('GetOnlineUsersCalled');
+
+        $onlineUsers = OnlineUser::where('call_type_id', $callType->id)->get();
+
+        Log::debug($onlineUsers);
+
+        return $onlineUsers;
     }
 
     public function getAvailableNumberForUser($userId, $from)
