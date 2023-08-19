@@ -93,23 +93,27 @@ class IncomingCallController extends Controller
         Log::debug($stateModel->toArray());
 
         // Fetch all online users who have selected the same call type and state
-        $users = $this->getOnlineUsers($callType, $stateModel);
+        $onlineUsers = $this->getOnlineUsers($callType, $stateModel);
 
-        if (!$users->count()) {
+        if (!$onlineUsers->count()) {
             Log::debug('No online user found.');
             return '<Response><Say voice="alice" language="en-US">All agents are currently offline. Please try again later.</Say></Response>';
         }
 
-        Log::debug('onlineUsers:');
-        Log::debug($users->toArray());
+        $onlineUserIds = $onlineUsers->pluck('user_id')->toArray();
+        $users = User::whereIn('id', $onlineUserIds)->get();
+
+        Log::debug('Online users (User Model):');
+        Log::debug($users);
 
         // Select a user from this group
         $selectedUser = $users->first();
 
-        Log::debug('Selected user: ' . $selectedUser->user_id);
+        Log::debug('Selected user:');
+        Log::debug($selectedUser);
 
         // Find one of the available numbers and associate it with the selected user
-        $availableNumber = $this->getAvailableNumberForUser($selectedUser->user_id, $from);
+        $availableNumber = $this->getAvailableNumberForUser($selectedUser->id, $from);
 
         Log::debug('Forwarding call to ' . $availableNumber->phone);
 
