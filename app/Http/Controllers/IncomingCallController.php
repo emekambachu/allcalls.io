@@ -86,18 +86,36 @@ class IncomingCallController extends Controller
         Log::debug('onlineUserIds:');
         Log::debug($onlineUserIds);
 
-        // Next we fetch the bids of relevant call type but for only those users that are online
-        $relevantBids = Bid::whereIn('user_id', $onlineUserIds)->where('call_type_id', $availableNumber->call_type_id)->get();
+        // Order the relevantBids by the amount column in descending order
+        $relevantBids = Bid::whereIn('user_id', $onlineUserIds)
+            ->where('call_type_id', $availableNumber->call_type_id)
+            ->orderBy('amount', 'desc')
+            ->get();
 
-        Log::debug('Relevant Bids:');
-        Log::debug($relevantBids);
+        $twimlStart = '<Response>';
+        $twimlEnd = '</Response>';
+        $twimlBody = '';
 
-        // Dial to a specific client in your Twilio client application with a specified callerId
-        $twiml = '<Response><Dial callerId="+13186978047"><Client>' . $userId . '</Client></Dial></Response>';
+        foreach ($relevantBids as $bid) {
+            $user_id = $bid->user_id;
+            $call_type_id = $availableNumber->call_type_id;
+
+            $twimlBody .= <<<TWIML
+            <Dial 
+                callerId="+13186978047" 
+                action="https://allcalls.io/api/handle-call-status?user_id={$user_id}&call_type_id={$call_type_id}&from={$availableNumber->from}" 
+                timeout="20">
+                {$user_id}
+            </Dial>
+            TWIML;
+        }
+
+        $twiml = $twimlStart . $twimlBody . $twimlEnd;
 
         Log::debug('TWIML sent: ' . $twiml);
 
         return $twiml;
+
     }
 
     public function handleCallTypeNumberCall($to, $from)
