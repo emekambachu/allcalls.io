@@ -49,6 +49,9 @@ class IncomingCallController extends Controller
                 Log::debug('Number found in CallTypeNumber model: ' . $to);
                 $twiml = $this->handleCallTypeNumberCall($to, substr($request->input('From'), 2));
             }
+
+
+            Log::debug('The destination number not found.');
         } else {
             $twiml .= '<Response><Say voice="alice" language="en-US">Hello, this is a test of the Say verb. Hope you have a great day!</Say></Response>';
         }
