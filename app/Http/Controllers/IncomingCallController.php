@@ -100,11 +100,26 @@ class IncomingCallController extends Controller
         $twimlEnd = '</Response>';
         $twimlBody = '';
 
-        foreach ($relevantBids as $bid) {
-            $user_id = $bid->user_id;
-            $call_type_id = $availableNumber->call_type_id;
+        // foreach ($relevantBids as $bid) {
+        //     $user_id = $bid->user_id;
+        //     $call_type_id = $availableNumber->call_type_id;
 
-            $twimlBody .= <<<TWIML
+        //     $twimlBody .= <<<TWIML
+        //     <Dial 
+        //         callerId="+441156471655" 
+        //         action="https://allcalls.io/api/handle-call-status?user_id={$user_id}&call_type_id={$call_type_id}&from={$availableNumber->from}" 
+        //         timeout="20">
+        //         {$user_id}
+        //     </Dial>
+        //     TWIML;
+        // }
+
+        if (!empty($relevantBids)) {
+            $firstBid = $relevantBids[0];
+            $user_id = $firstBid->user_id;
+            $call_type_id = $availableNumber->call_type_id;
+        
+            $twimlBody = <<<TWIML
             <Dial 
                 callerId="+441156471655" 
                 action="https://allcalls.io/api/handle-call-status?user_id={$user_id}&call_type_id={$call_type_id}&from={$availableNumber->from}" 
