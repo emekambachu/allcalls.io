@@ -41,10 +41,14 @@ class IncomingCallController extends Controller
 
             Log::debug('Number found in AvailableNumber model: ' . $to);
             $twiml = $this->handleAvailableNumberCall($to);
-            $response = Http::post(route('call.pushNotification'), [
-                'deviceToken' => $user->device_token, // Replace with the actual field name
-            ]);
-            Log::debug('Notification sent or not?' . $response->body());
+
+            if ($user->device_token) {
+                $response = Http::post(route('call.pushNotification'), [
+                    'deviceToken' => $user->device_token, // Replace with the actual field name
+                ]);
+                Log::debug('Notification attempt:' . $response->body());
+            }
+
             return response($twiml, 200)->header('Content-Type', 'text/xml');
         }
 
