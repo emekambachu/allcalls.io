@@ -65,11 +65,26 @@ class IncomingCallController extends Controller
         // Assume that the user_id is associated with the number in AvailableNumber
         $availableNumber = AvailableNumber::where('phone', $to)->first();
         $userId = (string) $availableNumber->user_id; // Ensure user id is a string
-
         Log::debug('User ID associated with the number: ' . $userId);
 
-        // First we fetch all online user ids
-        $onlineUserIds = OnlineUser::whereCallTypeId($availableNumber->call_type_id)->get()->pluck('user_id')->toArray();
+        $phoneState = $this->getStateFromPhoneNumber($availableNumber->from);
+        Log::debug('Phone state:');
+        Log::debug($phoneState);
+
+        $stateModel = State::whereName($phoneState)->first();
+
+        // First we fetch all online user ids that matches the call type and state of the original FROM phone number
+        $onlineUsers = $this->getOnlineUsers(CallType::find($availableNumber->call_type_id), $stateModel);
+
+        if (!$onlineUsers->count()) {
+            Log::debug('No online user found.');
+            return '<Response><Say voice="alice" language="en-US">All agents are currently offline. Please try again later.</Say></Response>';
+        }
+
+        $onlineUserIds = $onlineUsers->pluck('user_id')->toArray();
+
+        Log::debug('onlineUserIds:');
+        Log::debug($onlineUserIds);
 
         // Next we fetch the bids of relevant call type but for only those users that are online
         $relevantBids = Bid::whereIn('user_id', $onlineUserIds)->where('call_type_id', $availableNumber->call_type_id)->get();
@@ -196,7 +211,8 @@ class IncomingCallController extends Controller
     {
         Log::debug('GetOnlineUsersCalled');
 
-        // Fetch user_ids for the specified call type and state
+        // Fetch the user IDs from the pivot table based on a specific call type and state.
+        // This retrieves all users associated with the given call type and state.
         $userIds = UserCallTypeState::where('call_type_id', $callType->id)
             ->where('state_id', $state->id)
             ->pluck('user_id'); // This will give an array of user_ids
