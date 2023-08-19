@@ -56,7 +56,7 @@ class IncomingCallController extends Controller
         $callTypeNumber = CallTypeNumber::where('phone', $to)->first();
         if ($callTypeNumber) {
             Log::debug('Number found in CallTypeNumber model: ' . $to);
-            $twiml = $this->handleCallTypeNumberCall($to, substr($request->input('From'), 2));
+            $twiml .= $this->handleCallTypeNumberCall($to, substr($request->input('From'), 2));
             return response($twiml, 200)->header('Content-Type', 'text/xml');
         }
 
