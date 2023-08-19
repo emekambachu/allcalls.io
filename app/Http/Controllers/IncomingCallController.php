@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use auth;
 use App\Models\User;
 use App\Models\CallType;
 use App\Models\OnlineUser;
@@ -28,11 +29,13 @@ class IncomingCallController extends Controller
 
             // Check if the number exists in the AvailableNumber model
             $availableNumber = AvailableNumber::where('phone', $to)->first();
+            $user = User::find($availableNumber->user_id);
+            
             if ($availableNumber) {
                 Log::debug('Number found in AvailableNumber model: ' . $to);
                 $twiml = $this->handleAvailableNumberCall($to);
                 $response = Http::post(route('call.pushNotification'), [
-                    'deviceToken' => 'eVdtP7p2RcqhGsTUp5ym-C:APA91bHNu18CJbmkq7Z-sBmvkpzgKe3_0xAc28tHhXZFIunXIMDX0c_1S4aLUhbwQ55MsnpLATEQO6vWsJpWKnZp7udVLImTr31Txj9l3oqSJMm1zfkScocwnUCQnK6zkZSU-w7cBldP', // Replace with the actual field name
+                    'deviceToken' => $user->device_token, // Replace with the actual field name
                 ]);
                 Log::debug('Notification sent or not?' . $response->body());
             }
@@ -274,5 +277,19 @@ class IncomingCallController extends Controller
         curl_close($ch);
     }
 
-    // }
+    public function saveDeviceToken(Request $request) 
+    {
+        $user = auth()->user(); // Get the authenticated user
+        $token = $request->input('token');
+
+        if ($user) {
+            $user->update([
+                'device_token' => $token,
+            ]);
+
+            return response()->json(['message' => 'Device token saved successfully.']);
+        } else {
+            return response()->json(['message' => 'User not found.'], 404);
+        }
+    }
 }
