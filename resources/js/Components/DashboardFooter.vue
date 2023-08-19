@@ -9,6 +9,8 @@ import ApplicationLogo from "@/Components/ApplicationLogo.vue";
         <h2 class="text-lg text-custom-green text-center">Important Links</h2>
       </div>
       <div class="flex justify-center items-center mb-6">
+        <a class="mr-2 text-xs hover:text-gray-300" href="/support">Support</a>
+        <span class="mr-2">|</span>
         <a class="mr-2 text-xs hover:text-gray-300" href="/terms.php">Terms of Service</a>
         <span class="mr-2">|</span>
         <a class="text-xs hover:text-gray-300" href="/privacy.php"> Privacy Policy</a>
