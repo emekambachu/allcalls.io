@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use auth;
+use App\Models\Bid;
 use App\Models\User;
 use App\Models\State;
 use App\Models\CallType;
@@ -107,9 +108,9 @@ class IncomingCallController extends Controller
         Log::debug($users);
 
         // Select a user from this group
-        $selectedUser = $users->first();
+        $selectedUser = $this->getHighestBidder($users, $callType);
 
-        Log::debug('Selected user:');
+        Log::debug('The highest bidder out of all online users:');
         Log::debug($selectedUser);
 
         // Find one of the available numbers and associate it with the selected user
@@ -124,6 +125,51 @@ class IncomingCallController extends Controller
 
         return $twiml;
     }
+
+    /**
+     * Get the user with the highest bid for a specific call type.
+     *
+     * @param Collection $users    Users to check bids for
+     * @param Model      $callType The type of call to match bids against
+     *
+     * @return User The user with the highest bid or a random user in case of a tie
+     */
+    public function getHighestBidder($users, $callType)
+    {
+        $highestBidderId = 0;
+        $highestBidAmount = 0;
+        $tiedBidderIds = [];
+
+        // Loop through each user and get their bids
+        foreach ($users as $user) {
+            $bids = Bid::where('user_id', $user->user_id)
+                ->where('call_type_id', $callType->id)
+                ->get();
+
+            // Compare each bid to find the highest bidder
+            foreach ($bids as $bid) {
+                if ($bid->amount > $highestBidAmount) {
+                    $highestBidderId = $bid->user_id;
+                    $highestBidAmount = $bid->amount;
+                } elseif ($bid->amount == $highestBidAmount) {
+                    $tiedBidderIds[] = $bid->user_id;
+                }
+            }
+        }
+
+        // Include the highest bidder in the tie-breakers list, if they exist
+        if ($highestBidderId) {
+            $tiedBidderIds[] = $highestBidderId;
+        }
+
+        // If there's a tie, select a random user from the tied bidders
+        if (count($tiedBidderIds) > 0) {
+            $highestBidderId = $tiedBidderIds[array_rand($tiedBidderIds)];
+        }
+
+        return User::find($highestBidderId);
+    }
+
 
     public function getOnlineUsers($callType, $state)
     {
