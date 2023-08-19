@@ -30,6 +30,8 @@ class IncomingCallController extends Controller
             // Check if the number exists in the AvailableNumber model
             $availableNumber = AvailableNumber::where('phone', $to)->first();
             $user = User::find($availableNumber->user_id);
+            Log::debug('current available number is: ' . $availableNumber);
+            Log::debug('current user based on available number is: ' . $user);
             
             if ($availableNumber) {
                 Log::debug('Number found in AvailableNumber model: ' . $to);
