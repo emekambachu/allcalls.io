@@ -17,18 +17,18 @@ class CallStatusController extends Controller
     {
 
 
-        if ( !$request->user_id || !$request->call_type_id || !$request->DialCallStatus) {
+        if ( !$request->user_id || !$request->call_type_id || !$request->CallStatus) {
             Log::debug('Not enough query parameters to process the request.');
             Log::debug([
                 'user_id' => $request->user_id ?? 'Not found',
                 'call_type_id' => $request->call_type_id ?? 'Not found',
-                'DialCallStatus' => $request->DialCallStatus ?? 'Not found',
+                'CallStatus' => $request->CallStatus ?? 'Not found',
             ]);
 
             return;
         }
 
-        $callStatus = $request->input('DialCallStatus');
+        $callStatus = $request->input('CallStatus');
         $userId = $request->input('user_id');
         $callTypeId = $request->input('call_type_id');
 
