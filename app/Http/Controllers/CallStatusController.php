@@ -15,6 +15,8 @@ class CallStatusController extends Controller
             'user_id' => 'required'
         ]);
 
+        Log::debug('Ringing event for user ' . $request->user_id);
+
         $user = User::findOrFail($request->user_id);
 
         if ($user->device_token) {
