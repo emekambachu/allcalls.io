@@ -90,6 +90,11 @@ class IncomingCallController extends Controller
         // Fetch all online users who have selected the same call type and state
         $users = $this->getOnlineUsers($callType);
 
+        if (!$users->count()) {
+            Log::debug('No online user found.');
+            return;
+        }
+
         Log::debug('onlineUsers:');
         Log::debug($users->toArray());
     
