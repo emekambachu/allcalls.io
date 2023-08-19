@@ -68,6 +68,15 @@ class IncomingCallController extends Controller
 
         Log::debug('User ID associated with the number: ' . $userId);
 
+        // First we fetch all online user ids
+        $onlineUserIds = OnlineUser::whereCallTypeId($availableNumber->call_type_id)->get()->pluck('user_id')->toArray();
+
+        // Next we fetch the bids of relevant call type but for only those users that are online
+        $relevantBids = Bid::whereIn('user_id', $onlineUserIds)->where('call_type_id', $availableNumber->call_type_id)->get();
+
+        Log::debug('Relevant Bids:');
+        Log::debug($relevantBids);
+
         // Dial to a specific client in your Twilio client application with a specified callerId
         $twiml = '<Response><Dial callerId="+13186978047"><Client>' . $userId . '</Client></Dial></Response>';
 
