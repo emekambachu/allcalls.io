@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientsAPIController;
@@ -77,6 +78,11 @@ Route::middleware('auth:sanctum')->get('/device/token', [TwilioTokenController::
 
 
 Route::get('/call/incoming', [IncomingCallController::class, 'respond']);
+Route::get('/handle-call-status', function(Request $request) {
+    Log::debug('Status callback fired!');
+    Log::debug($request->all());
+});
+
 Route::post('/call/pushNotification', [IncomingCallController::class, 'sendPushNotification'])->name('call.pushNotification');
 Route::middleware('auth:sanctum')->post('/userDeviceToken', [IncomingCallController::class, 'saveDeviceToken'])->name('userDeviceToken');
 
