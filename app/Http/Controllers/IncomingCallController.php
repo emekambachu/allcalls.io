@@ -114,14 +114,16 @@ class IncomingCallController extends Controller
         //     TWIML;
         // }
 
-        if (!empty($relevantBids)) {
-            $firstBid = $relevantBids[0];
-            $user_id = $firstBid->user_id;
-            $call_type_id = $availableNumber->call_type_id;
+        // if (!empty($relevantBids)) {
+        //     $firstBid = $relevantBids[0];
+        //     $user_id = $firstBid->user_id;
+        //     $call_type_id = $availableNumber->call_type_id;
         
-            // $twimlBody = '<Dial callerId="+441156471655" action="https://allcalls.io/api/handle-call-status?user_id=' . $user_id . '&call_type_id=' . $call_type_id . '&from=' . $availableNumber->from . '" timeout="20">' . '<Client>' . $user_id . '</Client></Dial>';
-            $twimlBody = '<Client statusCallbackEvent="initiated ringing answered completed" statusCallback="https://allcalls.io/api/handle-call-status" statusCallbackMethod="GET">' . $user_id . '</Client>';
-        }
+        //     // $twimlBody = '<Dial callerId="+441156471655" action="https://allcalls.io/api/handle-call-status?user_id=' . $user_id . '&call_type_id=' . $call_type_id . '&from=' . $availableNumber->from . '" timeout="20">' . '<Client>' . $user_id . '</Client></Dial>';
+        //     $twimlBody = '<Client statusCallbackEvent="initiated ringing answered completed no-answer" statusCallback="https://allcalls.io/api/handle-call-status" statusCallbackMethod="GET">' . $user_id . '</Client>';
+        // }
+
+        $twimlBody = '<Dial><Client>2</Client></Dial>';
 
         $twiml = $twimlStart . $twimlBody . $twimlEnd;
 
