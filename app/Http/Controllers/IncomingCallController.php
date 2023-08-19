@@ -92,7 +92,7 @@ class IncomingCallController extends Controller
 
         if (!$users->count()) {
             Log::debug('No online user found.');
-            return;
+            return '<Response><Say voice="alice" language="en-US">All agents are currently offline. Please try again later.</Say></Response>';
         }
 
         Log::debug('onlineUsers:');
