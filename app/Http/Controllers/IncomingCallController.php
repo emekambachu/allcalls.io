@@ -17,45 +17,45 @@ class IncomingCallController extends Controller
 {
     public function respond(Request $request)
     {
+        $request->validate([
+            'To' => 'required',
+        ]);
+
         $twiml = '<?xml version="1.0" encoding="UTF-8"?>';
 
-        // Check if the "To" attribute exists in the request and log it
-        if ($request->has('To')) {
-            $to = $request->input('To');
-            Log::debug('To attribute: ' . $to);
+        $to = $request->input('To');
+        Log::debug('To attribute: ' . $to);
 
-            // Remove the "+1" from the beginning of the "To" number
-            $to = substr($to, 2);
+        // Remove the "+1" from the beginning of the "To" number
+        $to = substr($to, 2);
 
-            // Check if the number exists in the AvailableNumber model
-            $availableNumber = AvailableNumber::where('phone', $to)->first();
+        // Check if the number exists in the AvailableNumber model
+        $availableNumber = AvailableNumber::where('phone', $to)->first();
 
-            if ($availableNumber) {
-                $user = User::find($availableNumber->user_id);
-                Log::debug('current available number is: ' . $availableNumber);
-                Log::debug('current user based on available number is: ' . $user);
+        if ($availableNumber) {
+            $user = User::find($availableNumber->user_id);
+            Log::debug('current available number is: ' . $availableNumber);
+            Log::debug('current user based on available number is: ' . $user);
 
-                Log::debug('Number found in AvailableNumber model: ' . $to);
-                $twiml = $this->handleAvailableNumberCall($to);
-                $response = Http::post(route('call.pushNotification'), [
-                    'deviceToken' => $user->device_token, // Replace with the actual field name
-                ]);
-                Log::debug('Notification sent or not?' . $response->body());
-            }
-
-            // Check if the number exists in the CallTypeNumber model
-            $callTypeNumber = CallTypeNumber::where('phone', $to)->first();
-            if ($callTypeNumber) {
-                Log::debug('Number found in CallTypeNumber model: ' . $to);
-                $twiml = $this->handleCallTypeNumberCall($to, substr($request->input('From'), 2));
-            }
-
-            Log::debug('The destination number not found.');
-        } else {
-            $twiml .= '<Response><Say voice="alice" language="en-US">Hello, this is a test of the Say verb. Hope you have a great day!</Say></Response>';
+            Log::debug('Number found in AvailableNumber model: ' . $to);
+            $twiml = $this->handleAvailableNumberCall($to);
+            $response = Http::post(route('call.pushNotification'), [
+                'deviceToken' => $user->device_token, // Replace with the actual field name
+            ]);
+            Log::debug('Notification sent or not?' . $response->body());
+            return response($twiml, 200)->header('Content-Type', 'text/xml');
         }
 
-        return response($twiml, 200)->header('Content-Type', 'text/xml');
+        // Check if the number exists in the CallTypeNumber model
+        $callTypeNumber = CallTypeNumber::where('phone', $to)->first();
+        if ($callTypeNumber) {
+            Log::debug('Number found in CallTypeNumber model: ' . $to);
+            $twiml = $this->handleCallTypeNumberCall($to, substr($request->input('From'), 2));
+            return response($twiml, 200)->header('Content-Type', 'text/xml');
+        }
+
+        Log::debug('The to attribute did not match any records in the database.');
+        return abort(400);
     }
 
     public function handleAvailableNumberCall($to)
