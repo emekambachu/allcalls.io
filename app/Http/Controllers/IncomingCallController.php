@@ -117,9 +117,14 @@ class IncomingCallController extends Controller
     }
 
 
-    public function getOnlineUsers($callType)
+    public function getOnlineUsers($callType, $state)
     {
         Log::debug('GetOnlineUsersCalled');
+
+        $userCallTypeStates = UserCallTypeState::where('call_type_id', $callType->id)->where('state_id', $state->id)->get();
+
+        Log::debug('Relevant user relations with this call_type and state');
+        Log::debug($userCallTypeStates);
 
         $onlineUsers = OnlineUser::where('call_type_id', $callType->id)->get();
 
