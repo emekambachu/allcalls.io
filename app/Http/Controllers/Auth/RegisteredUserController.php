@@ -19,7 +19,11 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Auth\Events\Registered;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
+use Carbon\Carbon;
+use App\Models\Client;
+use App\Models\Call;
 
 class RegisteredUserController extends Controller
 {
@@ -30,7 +34,6 @@ class RegisteredUserController extends Controller
     {
         $callTypes = CallType::all();
         $states = State::all();
-
         return Inertia::render('Auth/Register', compact('callTypes', 'states'));
     }
 
@@ -62,32 +65,21 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:'.User::class,
             'phone' => ['required', 'string', 'max:255', 'unique:'.User::class, 'regex:/^\+?1?[-.\s]?(\([2-9]\d{2}\)|[2-9]\d{2})[-.\s]?\d{3}[-.\s]?\d{4}$/'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'consent' => 'required',
-
-            'typesWithStates' => 'required|array',
-            'typesWithStates.*' => ['nullable', 'exists:call_types,id'],
-            'typesWithStates.*.*' => ['nullable', 'exists:states,id'],
-
-            'bids' => 'required|array',
+            'password' => ['required', 'confirmed', Password::defaults()],
         ]);
 
-        if (sizeof($request->bids) !== CallType::count()) {
-            return abort(400);
-        }
-        
-
-
-
-        if (! $request->consent) {
-            return redirect()->back()->withErrors(['consent' => 'Consent is required.']);
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors(),
+            ], 400);
         }
 
         $user = User::create([
@@ -98,18 +90,109 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        event(new Registered($user));
 
-        // NOTE: ADD SOME VALIDATION FOR BIDS HERE
-        foreach($request->bids as $bid) {
-            Bid::updateOrCreate([
-                'call_type_id' => $bid['call_type_id'],
-                'amount' => $bid['amount'],
-                'user_id' => $user->id,
-            ]);
+        Auth::login($user);
+
+        return redirect(RouteServiceProvider::HOME);
+    }
+
+    public function steps(Request $request) {
+
+
+        $sevenDaysAgo = Carbon::now()->subDays(7);
+
+        $spendData = Call::select(DB::raw('date(call_taken) as date'), DB::raw('sum(amount_spent) as sum'))
+            ->where('call_taken', '>=', $sevenDaysAgo)
+            ->where('user_id', $request->user()->id)
+            ->groupBy('date')
+            ->orderBy('date', 'ASC')
+            ->get();
+        $callTypes = CallType::get();
+        $callData = Call::select(DB::raw('date(call_taken) as date'), DB::raw('count(*) as count'))
+            ->where('call_taken', '>=', $sevenDaysAgo)
+            ->where('user_id', $request->user()->id)
+            ->groupBy('date')
+            ->orderBy('date', 'ASC')
+            ->get();
+
+        $totalCalls = Call::where('call_taken', '>=', $sevenDaysAgo)
+            ->where('user_id', $request->user()->id)
+            ->count();
+
+
+        $totalAmountSpent = Call::where('call_taken', '>=', $sevenDaysAgo)
+            ->where('user_id', $request->user()->id)
+            ->sum('amount_spent');
+
+        $averageCallDuration = Call::where('call_taken', '>=', $sevenDaysAgo)
+            ->where('user_id', $request->user()->id)
+            ->average('call_duration_in_seconds');
+
+
+            $callTypes = CallType::all();
+            $states = State::all();
+       
+        return Inertia::render('RegistrationSteps', [
+            'callTypes' => $callTypes,
+            'states' => $states,
+            'spendData' => $spendData,
+            'callData' => $callData,
+            'totalCalls' => $totalCalls,
+            'totalAmountSpent' => $totalAmountSpent,
+            'averageCallDuration' => $averageCallDuration,
+        ]);
+
+    }
+
+    public function storeSteps(Request $request) {
+
+        
+        $validator = Validator::make($request->all(), [
+            'consent' => 'required',
+            'typesWithStates' => [
+                'required',
+                'array',
+                function ($attribute, $value, $fail) {
+                    foreach ($value as $nestedArray) {
+                        if (!empty($nestedArray)) {
+                            return; // Validation passes if a non-empty nested array is found
+                        }
+                    }
+                    $fail('At least one States you are licensed in is required.');
+                },
+            ],
+            'typesWithStates.*' => ['nullable', 'exists:call_types,id'],
+            'typesWithStates.*.*' => ['nullable', 'exists:states,id'],
+            'bids' => 'required|array',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors(),
+            ], 400);
         }
 
-        $typesWithStates = $request->typesWithStates;
+        if (!$request->consent) {
+            return response()->json([
+                'success' => false,
+                'consent' => 'You must accept the terms and conditions..'
+            ], 400);
+        }
+        if (sizeof($request->bids) !== CallType::count()) {
+            return abort(400);
+        }
+    
+        $user = auth()->user();
 
+            foreach($request->bids as $bid) {
+                Bid::updateOrCreate([
+                    'call_type_id' => $bid['call_type_id'],
+                    'amount' => $bid['amount'],
+                    'user_id' => $user->id,
+                ]);
+            }
         // Initialize an empty array to hold the data
         $data = [];
         
@@ -117,7 +200,8 @@ class RegisteredUserController extends Controller
         $now = now()->toDateTimeString();
         
         // Build the data array
-        foreach($typesWithStates as $typeId => $stateIds) {
+        foreach($request->typesWithStates as $typeId => $stateIds) {
+        if(count($stateIds)) {
             foreach($stateIds as $stateId) {
                 $data[] = [
                     'user_id' => $user->id,  // assuming you have the $user available here
@@ -128,20 +212,18 @@ class RegisteredUserController extends Controller
                 ];
             }
         }
-        
-        DB::transaction(function () use ($user, $data) {
-            // Remove existing entries
-            DB::table('users_call_type_state')->where('user_id', $user->id)->delete();
-        
+           
+        }
+       if(count($data)) {
+        DB::transaction(function () use ($data) {        
             // Insert new entries
             DB::table('users_call_type_state')->insert($data);
         });
-
-        event(new Registered($user));
-
-        Auth::login($user);
-
-        return redirect(RouteServiceProvider::HOME);
+       }
+     
+       return response()->json([
+        'success' => true,
+    ], 200);
     }
 
     protected function saveCallTypeStates(array $data, User $user): void

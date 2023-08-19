@@ -15,6 +15,7 @@ import axios from "axios";
 // If you are using PurgeCSS, make sure to whitelist the carousel CSS classes
 import "vue3-carousel/dist/carousel.css";
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
+import { router } from "@inertiajs/vue3"
 
 let step = ref(0);
 let firstStepErrors = ref({});
@@ -76,53 +77,28 @@ let form = useForm({
   email: "",
   password: "",
   password_confirmation: "",
-  insurance_type: "Life Insurance",
-  license_state: "",
   phone: "",
-  consent: false,
-  typesWithStates: props.callTypes.reduce((acc, obj) => {
-    acc[obj.id] = [];
-    return acc;
-  }, {}),
-  bids: props.callTypes.map((type) => {
-    return { call_type_id: type.id, amount: 20 };
-  }),
 });
 
 let text = ref([]);
 
 let check = () => {};
-
-// next() {
-//   this.step = 1
-//   // alert ('its working though')
-// }
+let errors = ref(null);
 
 let submit = () => {
-  if (step.value === 0) {
-    // return form.post('/register-step-one', {
-    //   onFinish: () => step.value = 1,
-    // })
-
     return axios
-      .post("/register-step-one", form)
+      .post("/register", form)
       .then((response) => {
-        // This block handles the success case.
-        // console.log('Validation passed', response.data);
-        step.value = 1;
+        router.visit('/login')
       })
       .catch((error) => {
-        // This block handles the error case.
-        // Error details are in error.response.data.
-
         if (error.response) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
           console.log(error.response.data);
-
+          errors.value = error.response.data.errors;
           if (error.response.status === 400) {
             // Handle validation errors here.
-            console.log("Validation errors", error.response.data.errors);
             firstStepErrors.value = error.response.data.errors;
           } else {
             // Handle other types of errors.
@@ -136,15 +112,11 @@ let submit = () => {
           console.log("Error", error.message);
         }
       });
-  }
-  form.post(route("register"), {
-    // onFinish: () => form.reset("password", "password_confirmation"),
-  });
 };
 
-let goBack = () => {
-  step.value = 0;
-};
+// let goBack = () => {
+//   step.value = 0;
+// };
 </script>
 
 <template>
@@ -164,7 +136,7 @@ let goBack = () => {
       </div>
     </template>
 
-    <template v-slot:smallStepOneLoading>
+    <!-- <template v-slot:smallStepOneLoading>
       <div v-show="step === 0" class="flex flex-col items-center w-full">
         <div
           class="w-[80%] max-w-xl bg-gray-200 rounded-full h-1.5 dark:bg-gray-700 mb-1"
@@ -175,7 +147,7 @@ let goBack = () => {
           ></div>
         </div>
         <div class="text-sm text-gray-500">
-          Create Your Account: Step 1 of 3
+          Create Your Account
         </div>
       </div>
 
@@ -195,8 +167,7 @@ let goBack = () => {
 
       <div v-show="step === 2" class="flex flex-col items-center w-full">
         <div
-          class="w-[80%] max-w-xl bg-gray-200 rounded-full h-1.5 dark:bg-gray-700 mb-1"
-        >
+          class="w-[80%] max-w-xl bg-gray-200 rounded-full h-1.5 dark:bg-gray-700 mb-1">
           <div
             class="bg-blue-600 h-1.5 rounded-full dark:bg-blue-500"
             style="width: 95%"
@@ -244,7 +215,7 @@ let goBack = () => {
           Create Your Account: Step 3 of 3
         </div>
       </div>
-    </template>
+    </template> -->
 
     <form @submit.prevent="submit">
       <div v-show="step === 0">
@@ -372,12 +343,12 @@ let goBack = () => {
 
         <div class="flex items-center justify-end mt-4">
           <PrimaryButton type="button" class="ml-4" @click.prevent="submit"
-            >Next</PrimaryButton
+            >Submit</PrimaryButton
           >
         </div>
       </div>
 
-      <div v-if="step === 1">
+      <!-- <div v-if="step === 1">
         <h6 class="text-black text-2xl font-extrabold text-center my-4">
           How It Works
         </h6>
@@ -569,7 +540,7 @@ let goBack = () => {
             </PrimaryButton>
           </div>
         </div>
-      </div>
+      </div> -->
     </form>
 
     <template v-slot:titles>

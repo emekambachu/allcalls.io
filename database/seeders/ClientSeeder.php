@@ -16,16 +16,17 @@ class ClientSeeder extends Seeder
      */
     public function run()
     {
-        for ($i = 0; $i < $this->numberOfRecords; $i++) {
-            if ($this->userId) {
-                // If a user_id is specified, create a client with that user_id
-                Client::factory()->create([
-                    'user_id' => $this->userId,
-                ]);
-            } else {
-                // If no user_id is specified, create a client with a random user
-                Client::factory()->create();
-            }
-        }
+        Client::factory()->count(50)->create();
+        // for ($i = 0; $i < $this->numberOfRecords; $i++) {
+        //     if ($this->userId) {
+        //         // If a user_id is specified, create a client with that user_id
+        //         Client::factory()->create([
+        //             'user_id' => $this->userId,
+        //         ]);
+        //     } else {
+        //         // If no user_id is specified, create a client with a random user
+        //         Client::factory()->create();
+        //     }
+        // }
     }
 }

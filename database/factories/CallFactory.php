@@ -12,17 +12,14 @@ class CallFactory extends Factory
     public function definition()
     {
         $faker = \Faker\Factory::create('en_US');
-        $callDurationInSeconds = $faker->numberBetween(240, 600);
-
         return [
+            'user_id' =>  $faker->numberBetween(1, 50),
             'call_taken' => $faker->dateTimeBetween('-30 days', 'now')->setTime($faker->numberBetween(9, 17), $faker->numberBetween(0, 59), $faker->numberBetween(0, 59)),
-            'call_duration_in_seconds' => $callDurationInSeconds,
+            'call_duration_in_seconds' => $faker->numberBetween(240, 600),
             'hung_up_by' => $faker->randomElement(['Caller', 'Agent']),
             'amount_spent' => $faker->numberBetween(20, 60), // Generating a random number between 20 to 60 as the amount spent per call
+            'recording_url' => $faker->url,
             'call_type_id' => $faker->numberBetween(1, 6),
-            'user_id' => function () {
-                return User::factory()->create()->id;
-            },
         ];
     }
 }

@@ -11,7 +11,7 @@ class ClientsAPIController extends Controller
     {
         $user_id = $request->user()->id;
 
-        $clients = Client::where('user_id', $user_id)
+    $clients = Client::where('user_id', $user_id)
             ->whereHas('call')
             ->with('call.callType')->paginate(10);
 
