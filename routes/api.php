@@ -78,6 +78,7 @@ Route::middleware('auth:sanctum')->get('/device/token', [TwilioTokenController::
 
 
 Route::get('/call/incoming', [IncomingCallController::class, 'respond']);
+
 Route::get('/handle-call-status', function(Request $request) {
     Log::debug('Status callback fired!');
     Log::debug($request->all());
