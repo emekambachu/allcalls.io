@@ -74,7 +74,7 @@ class IncomingCallController extends Controller
         $stateModel = State::whereName($phoneState)->first();
 
         // First we fetch all online user ids that matches the call type and state of the original FROM phone number
-        $onlineUsers = $this->getOnlineUsers(CallType::find($availableNumber->call_type_id), $stateModel);
+        $onlineUsers = $this->getOnlineUsers(CallType::find(), $stateModel);
 
         if (!$onlineUsers->count()) {
             Log::debug('No online user found.');
@@ -87,10 +87,10 @@ class IncomingCallController extends Controller
         Log::debug($onlineUserIds);
 
         // Next we fetch the bids of relevant call type but for only those users that are online
-        $relevantBids = Bid::whereIn('user_id', $onlineUserIds)->where('call_type_id', $availableNumber->call_type_id)->get();
+        // $relevantBids = Bid::whereIn('user_id', $onlineUserIds)->where('call_type_id', $availableNumber->call_type_id)->get();
 
-        Log::debug('Relevant Bids:');
-        Log::debug($relevantBids);
+        // Log::debug('Relevant Bids:');
+        // Log::debug($relevantBids);
 
         // Dial to a specific client in your Twilio client application with a specified callerId
         $twiml = '<Response><Dial callerId="+13186978047"><Client>' . $userId . '</Client></Dial></Response>';
@@ -138,7 +138,7 @@ class IncomingCallController extends Controller
         Log::debug($selectedUser);
 
         // Find one of the available numbers and associate it with the selected user
-        $availableNumber = $this->getAvailableNumberForUser($selectedUser->id, $from);
+        $availableNumber = $this->getAvailableNumberForUser($selectedUser->id, $from, $callType->id);
 
         Log::debug('Forwarding call to ' . $availableNumber->phone);
 
@@ -231,7 +231,7 @@ class IncomingCallController extends Controller
         return $onlineUsers;
     }
 
-    public function getAvailableNumberForUser($userId, $from)
+    public function getAvailableNumberForUser($userId, $from, $callTypeId)
     {
         // This method should return one of the available numbers and associate it with the selected user
         // Find the first available number where user_id is null
@@ -250,6 +250,7 @@ class IncomingCallController extends Controller
 
         $availableNumber->user_id = $userId;
         $availableNumber->from = $from;
+        $availableNumber->call_type_id = $callTypeId;
         $availableNumber->save();
 
         return $availableNumber;
