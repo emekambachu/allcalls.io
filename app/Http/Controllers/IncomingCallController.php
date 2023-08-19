@@ -87,7 +87,7 @@ class IncomingCallController extends Controller
         Log::debug('From: ' . $from);
         Log::debug('State of the $from: ' . $phoneState);
 
-        $stateModel = State::whereName($phoneState);
+        $stateModel = State::whereName($phoneState)->first();
 
         Log::debug('State of model:');
         Log::debug($stateModel->toArray());
