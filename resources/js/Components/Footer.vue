@@ -10,8 +10,16 @@ import ApplicationLogo from "@/Components/ApplicationLogo.vue";
           <!-- <img src="/img/logo.png" alt=""> -->
           <ApplicationLogo class="text-center" />
         </div>
-        <!--
-          <div class="footer__list">
+        
+          <div class="text-white flex justify-center text-center lg:text-left mt-8 lg:mt-0">
+            <div>
+              <div class="mb-4 text-lg uppercase tracking-wider">AllCalls.io</div>
+              <div class="mb-4 text-gray-200">500 4th St NW Suite 102 NUM 1981, <br>Albuquerque, NM 87102 USA</div>
+              <div class="mb-4 text-gray-200">+1 (888) 482-9195</div>
+              <div class="mb-4 text-gray-200">support@allcalls.io</div>
+            </div>
+          </div>
+          <!-- <div class="footer__list">
             <ul>
               <li class="footer__label">Platform</li>
               <li>Overview</li>

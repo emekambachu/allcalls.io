@@ -17,7 +17,9 @@ import ApplicationLogo from "@/Components/ApplicationLogo.vue";
         <h2 class="text-lg text-custom-green text-center">Contact Information</h2>
       </div>
       <div class="flex flex-col items-center text-xs">
-        <p class="mb-1">12924 Pierce Street, Pacoima CA 91331, USA</p>
+        <p class="mt-1 uppercase tracking-wider">AllCalls.io</p>
+        <p>12924 Pierce Street, Pacoima CA 91331, USA</p>
+        <p>+1 (888) 482-9195</p>
         <p>support@allcalls.io</p>
       </div>
     </div>
