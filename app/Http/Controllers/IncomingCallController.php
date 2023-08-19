@@ -74,7 +74,7 @@ class IncomingCallController extends Controller
         $stateModel = State::whereName($phoneState)->first();
 
         // First we fetch all online user ids that matches the call type and state of the original FROM phone number
-        $onlineUsers = $this->getOnlineUsers(CallType::find(), $stateModel);
+        $onlineUsers = $this->getOnlineUsers(CallType::find($availableNumber->call_type_id), $stateModel);
 
         if (!$onlineUsers->count()) {
             Log::debug('No online user found.');
