@@ -121,18 +121,24 @@ class IncomingCallController extends Controller
         return $twiml;
     }
 
-
     public function getOnlineUsers($callType, $state)
     {
         Log::debug('GetOnlineUsersCalled');
 
-        $userCallTypeStates = UserCallTypeState::where('call_type_id', $callType->id)->where('state_id', $state->id)->get();
+        // Fetch user_ids for the specified call type and state
+        $userIds = UserCallTypeState::where('call_type_id', $callType->id)
+            ->where('state_id', $state->id)
+            ->pluck('user_id'); // This will give an array of user_ids
 
-        Log::debug('Relevant user relations with this call_type and state');
-        Log::debug($userCallTypeStates);
+        Log::debug('User Ids associated with this call_type and state');
+        Log::debug($userIds);
 
-        $onlineUsers = OnlineUser::where('call_type_id', $callType->id)->get();
+        // Get online users that match the fetched user_ids
+        $onlineUsers = OnlineUser::whereIn('user_id', $userIds)
+            ->where('call_type_id', $callType->id)
+            ->get();
 
+        Log::debug('Online users for the given call type and state');
         Log::debug($onlineUsers);
 
         return $onlineUsers;
