@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use auth;
 use App\Models\User;
+use App\Models\State;
 use App\Models\CallType;
 use App\Models\OnlineUser;
 use Illuminate\Http\Request;
@@ -83,12 +84,16 @@ class IncomingCallController extends Controller
         Log::debug('Call type: ' . $callType->type);
 
         $phoneState = $this->getStateFromPhoneNumber($from);
-
         Log::debug('From: ' . $from);
         Log::debug('State of the $from: ' . $phoneState);
 
+        $stateModel = State::whereName($phoneState);
+
+        Log::debug('State of model:');
+        Log::debug($stateModel->toArray());
+
         // Fetch all online users who have selected the same call type and state
-        $users = $this->getOnlineUsers($callType);
+        $users = $this->getOnlineUsers($callType, $stateModel);
 
         if (!$users->count()) {
             Log::debug('No online user found.');
