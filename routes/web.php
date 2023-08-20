@@ -80,21 +80,5 @@ Route::get('/clients', [ClientsController::class, 'index'])->middleware(['auth',
 Route::patch('/clients/{client}', [ClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.update');
 
 Route::get('/support', [SupportController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check'])->name('support.index');
-// Route::get('/clients/support', [SupportController::class, 'clientIndex'])->name('support.index');
-
-// Route::get('/call/pushNotification', [IncomingCallController::class, 'sendPushNotification']);
-
-// Route::get('channel-test', function() {
-//     UserOnline::dispatch();
-// })->middleware('auth');
-
-// Route::post('pusher-webhook-example', function() {
-//     Log::debug('pusher webhook fired');
-//     Log::debug(request()->all());
-// });
-
-// Route::get('allcalls-pusher-client', function() {
-//     return Inertia::render('PusherTest');
-// })->middleware('auth');
 
 require __DIR__.'/auth.php';
