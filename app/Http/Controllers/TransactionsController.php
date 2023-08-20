@@ -11,9 +11,9 @@ class TransactionsController extends Controller
 {
     public function index()
     {
-        $transactions = Auth::user()->transactions;
-
-        return Inertia::render('Transactions/Index', compact('transactions'));
+        $transactions = Transaction::where('user_id',auth()->user()->id)->paginate(10);
+        // dd($transactions);
+        return Inertia::render('Transactions/Index', ['transactions'=>$transactions]);
     }
 
     public function destroy(Transaction $transaction)

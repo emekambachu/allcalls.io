@@ -31,6 +31,7 @@ class User extends Authenticatable
         'password',
         'states_info',
         'balance',
+        'device_token',
     ];
 
     /**

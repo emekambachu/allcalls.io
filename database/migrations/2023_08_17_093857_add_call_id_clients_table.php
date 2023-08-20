@@ -12,9 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('clients', function (Blueprint $table) {
-            $table->foreignId('call_id')
-                ->after('user_id')
-                ->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            if (!Schema::hasColumn('clients', 'call_id')) {
+                $table->foreignId('call_id')
+                    ->after('user_id')
+                    ->constrained('calls')
+                    ->cascadeOnDelete()
+                    ->cascadeOnUpdate();
+            }
         });
     }
 
@@ -24,8 +28,10 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('clients', function (Blueprint $table) {
-            $table->dropForeign('call_id');
-            $table->dropColumn('call_id');
+            if (Schema::hasColumn('clients', 'call_id')) {
+                $table->dropForeign(['call_id']);
+                $table->dropColumn('call_id');
+            }
         });
     }
 };

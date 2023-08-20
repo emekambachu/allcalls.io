@@ -2,8 +2,10 @@
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CallStatusController;
 use App\Http\Controllers\ClientsAPIController;
 use Illuminate\Validation\ValidationException;
 use App\Http\Controllers\OnlineUsersController;
@@ -77,6 +79,11 @@ Route::middleware('auth:sanctum')->get('/device/token', [TwilioTokenController::
 
 
 Route::get('/call/incoming', [IncomingCallController::class, 'respond']);
+
+Route::get('/handle-call-status', [CallStatusController::class, 'update']);
+
+Route::post('/call/pushNotification', [IncomingCallController::class, 'sendPushNotification'])->name('call.pushNotification');
+Route::middleware('auth:sanctum')->post('/userDeviceToken', [IncomingCallController::class, 'saveDeviceToken'])->name('userDeviceToken');
 
 Route::middleware('auth:sanctum')->post('/online-users', [OnlineUsersController::class, 'store']);
 Route::middleware('auth:sanctum')->delete('/online-users/{callTypeId}', [OnlineUsersController::class, 'destroy']);

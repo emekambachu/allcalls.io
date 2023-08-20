@@ -13,6 +13,7 @@ use App\Http\Controllers\SupportController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DefaultCardController;
 use App\Http\Controllers\TwilioTokenController;
+use App\Http\Controllers\IncomingCallController;
 use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\FundsWithCardController;
 use App\Http\Controllers\UsageActivityController;
@@ -79,6 +80,9 @@ Route::get('/clients', [ClientsController::class, 'index'])->middleware(['auth',
 Route::patch('/clients/{client}', [ClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.update');
 
 Route::get('/support', [SupportController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check'])->name('support.index');
+// Route::get('/clients/support', [SupportController::class, 'clientIndex'])->name('support.index');
+
+// Route::get('/call/pushNotification', [IncomingCallController::class, 'sendPushNotification']);
 
 // Route::get('channel-test', function() {
 //     UserOnline::dispatch();

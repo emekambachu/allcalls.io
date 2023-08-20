@@ -4,6 +4,7 @@ import TextInput from "@/Components/TextInput.vue";
 import AuthenticatedButton from "@/Components/AuthenticatedButton.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, router, usePage } from "@inertiajs/vue3";
+
 import { ref, reactive, onMounted, computed } from "vue";
 let props = defineProps({
   cards: {
@@ -12,6 +13,7 @@ let props = defineProps({
 });
 
 import { createToaster } from "@meforma/vue-toaster";
+import InputError from "@/Components/InputError.vue";
 
 const page = usePage();
 
@@ -72,13 +74,17 @@ let addFunds = () => {
 
 onMounted(() => {
   console.log(props.cards);
-  for (let i = 0; i < props.cards.length; i++) {
-    if (props.cards[i].default) {
-      selectedCardId.value = props.cards[i].id;
+  //   console.log(page.props.errors,);
+  if (Object.values(page.props.errors).length > 0) {
+    selectedCardId.value = "0";
+  } else {
+    for (let i = 0; i < props.cards.length; i++) {
+      if (props.cards[i].default) {
+        selectedCardId.value = props.cards[i].id;
+      }
     }
   }
 });
-
 // let calculateTotalAfterFee = (subtotal) => {
 //   let fee = Number(subtotal) * 0.0315;
 //   return subtotal + fee;
@@ -110,10 +116,7 @@ let total = computed(() => {
     </template>
 
     <div class="sm:py-10">
-      <div
-        class="mx-8 px-12 py-4 sm:p-8 sm:rounded-lg"
-        style="padding-bottom: 0"
-      >
+      <div class="mx-8 px-12 py-4 sm:p-8 sm:rounded-lg" style="padding-bottom: 0">
         <h2
           id="headline"
           class="text-4xl text-custom-sky font-bold mb-6"
@@ -132,6 +135,7 @@ let total = computed(() => {
               >
 
               <select v-model="selectedCardId" class="select-custom">
+                <option value="0">Add a new card</option>
                 <option
                   v-for="card in cards"
                   :key="card.id"
@@ -144,9 +148,7 @@ let total = computed(() => {
                 >
                   {{ card.type }} **** **** **** {{ card.last4 }}
                 </option>
-                <option value="0">Add a new card</option>
               </select>
-
               <!-- <h2 class="text-xl my-4">Or add a new card:</h2> -->
 
               <form
@@ -194,8 +196,10 @@ let total = computed(() => {
                       required
                       v-model="cardForm.number"
                       maxlength="16"
-                      minlength="16"
+                      minlength="15"
                     />
+
+                    <InputError class="mt-2" :message="$page.props.errors.number" />
                   </div>
                   <div class="w-full">
                     <label
@@ -210,9 +214,7 @@ let total = computed(() => {
                       v-model="cardForm.month"
                       required
                     >
-                      <option selected="" disabled="" value="">
-                        Select Month
-                      </option>
+                      <option selected="" disabled="" value="">Select Month</option>
                       <option value="01">January</option>
                       <option value="02">February</option>
                       <option value="03">March</option>
@@ -226,12 +228,11 @@ let total = computed(() => {
                       <option value="11">November</option>
                       <option value="12">December</option>
                     </select>
+                    <InputError class="mt-2" :message="$page.props.errors.month" />
                   </div>
 
                   <div class="w-full">
-                    <label
-                      for="year"
-                      class="block mb-2 text-sm font-medium text-gray-700"
+                    <label for="year" class="block mb-2 text-sm font-medium text-gray-700"
                       >Expiration year</label
                     >
                     <select
@@ -241,9 +242,7 @@ let total = computed(() => {
                       v-model="cardForm.year"
                       required
                     >
-                      <option selected="" disabled="" value="">
-                        Select Year
-                      </option>
+                      <option selected="" disabled="" value="">Select Year</option>
                       <option value="2023">2023</option>
                       <option value="2024">2024</option>
                       <option value="2025">2025</option>
@@ -256,12 +255,11 @@ let total = computed(() => {
                       <option value="2032">2032</option>
                       <option value="2033">2033</option>
                     </select>
+                    <InputError class="mt-2" :message="$page.props.errors.year" />
                   </div>
 
                   <div class="w-full">
-                    <label
-                      for="cvv"
-                      class="block mb-2 text-sm font-medium text-gray-700"
+                    <label for="cvv" class="block mb-2 text-sm font-medium text-gray-700"
                       >CVV</label
                     >
                     <TextInput
@@ -269,11 +267,13 @@ let total = computed(() => {
                       name="cvv"
                       id="cvv"
                       class="w-full"
-                      placeholder="XXX"
+                      placeholder="XXXX"
+                      maxlength="4"
                       required
-                      pattern="[0-9]{3}"
+                      pattern="[0-9]{4}"
                       v-model="cardForm.cvv"
                     />
+                    <InputError class="mt-2" :message="$page.props.errors.cvv" />
                   </div>
                 </div>
 
@@ -293,11 +293,10 @@ let total = computed(() => {
                       required
                       v-model="cardForm.address"
                     />
+                    <InputError class="mt-2" :message="$page.props.errors.street" />
                   </div>
                   <div class="w-full">
-                    <label
-                      for="city"
-                      class="block mb-2 text-sm font-medium text-gray-700"
+                    <label for="city" class="block mb-2 text-sm font-medium text-gray-700"
                       >City</label
                     >
                     <TextInput
@@ -309,6 +308,7 @@ let total = computed(() => {
                       required
                       v-model="cardForm.city"
                     />
+                    <InputError class="mt-2" :message="$page.props.errors.city" />
                   </div>
                   <div class="w-full">
                     <label
@@ -323,9 +323,7 @@ let total = computed(() => {
                       v-model="cardForm.state"
                       required
                     >
-                      <option selected="" disabled="" value="">
-                        Select State
-                      </option>
+                      <option selected="" disabled="" value="">Select State</option>
                       <option value="AL">Alabama</option>
                       <option value="AK">Alaska</option>
                       <option value="AZ">Arizona</option>
@@ -354,51 +352,34 @@ let total = computed(() => {
                       <option class="text-black" value="MT">Montana</option>
                       <option class="text-black" value="NE">Nebraska</option>
                       <option class="text-black" value="NV">Nevada</option>
-                      <option class="text-black" value="NH">
-                        New Hampshire
-                      </option>
+                      <option class="text-black" value="NH">New Hampshire</option>
                       <option class="text-black" value="NJ">New Jersey</option>
                       <option class="text-black" value="NM">New Mexico</option>
                       <option class="text-black" value="NY">New York</option>
-                      <option class="text-black" value="NC">
-                        North Carolina
-                      </option>
-                      <option class="text-black" value="ND">
-                        North Dakota
-                      </option>
+                      <option class="text-black" value="NC">North Carolina</option>
+                      <option class="text-black" value="ND">North Dakota</option>
                       <option class="text-black" value="OH">Ohio</option>
                       <option class="text-black" value="OK">Oklahoma</option>
                       <option class="text-black" value="OR">Oregon</option>
-                      <option class="text-black" value="PA">
-                        Pennsylvania
-                      </option>
-                      <option class="text-black" value="RI">
-                        Rhode Island
-                      </option>
-                      <option class="text-black" value="SC">
-                        South Carolina
-                      </option>
-                      <option class="text-black" value="SD">
-                        South Dakota
-                      </option>
+                      <option class="text-black" value="PA">Pennsylvania</option>
+                      <option class="text-black" value="RI">Rhode Island</option>
+                      <option class="text-black" value="SC">South Carolina</option>
+                      <option class="text-black" value="SD">South Dakota</option>
                       <option class="text-black" value="TN">Tennessee</option>
                       <option class="text-black" value="TX">Texas</option>
                       <option class="text-black" value="UT">Utah</option>
                       <option class="text-black" value="VT">Vermont</option>
                       <option class="text-black" value="VA">Virginia</option>
                       <option class="text-black" value="WA">Washington</option>
-                      <option class="text-black" value="WV">
-                        West Virginia
-                      </option>
+                      <option class="text-black" value="WV">West Virginia</option>
                       <option class="text-black" value="WI">Wisconsin</option>
                       <option class="text-black" value="WY">Wyoming</option>
                     </select>
+                    <InputError class="mt-2" :message="$page.props.errors.state" />
                   </div>
 
                   <div class="w-full">
-                    <label
-                      for="zip"
-                      class="block mb-2 text-sm font-medium text-gray-700"
+                    <label for="zip" class="block mb-2 text-sm font-medium text-gray-700"
                       >ZIP code</label
                     >
                     <TextInput
@@ -407,17 +388,17 @@ let total = computed(() => {
                       id="zip"
                       class="w-full"
                       placeholder="10001"
+                      maxlength="6"
                       required
                       v-model="cardForm.zip"
                     />
+                    <InputError class="mt-2" :message="$page.props.errors.zip" />
                   </div>
                 </div>
               </form>
 
               <div class="mt-4">
-                <label
-                  for="amount"
-                  class="block mb-2 text-sm font-medium text-gray-500"
+                <label for="amount" class="block mb-2 text-sm font-medium text-gray-500"
                   >Amount</label
                 >
                 <div class="flex mt-2">
@@ -436,6 +417,7 @@ let total = computed(() => {
                     min="0"
                     class="rounded-none rounded-r-lg border focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm p-2.5 border-gray-400 placeholder-gray-400"
                   />
+                  <InputError class="mt-2" :message="$page.props.errors.amount" />
                 </div>
               </div>
 
@@ -443,12 +425,12 @@ let total = computed(() => {
                 <div class="text-gray-700 text-xs mt-4">
                   <p class="mb-2">Charge will include card processing fee of 3.15%</p>
                   <p>
-                    By clicking the "Add Funds" button below I authorize
-                    AllCalls LLC to charge my card and agree to be billed for
-                    ${{ cardForm.amount !== "" ? cardForm.amount : 0 }}. This is
-                    a one-time purchase. Funds will be added to your account
-                    immediately. Your credit card will be billed as
-                    "AllCalls.io" on your billing statement.
+                    By clicking the "Add Funds" button below I authorize AllCalls LLC to
+                    charge my card and agree to be billed for ${{
+                      cardForm.amount !== "" ? cardForm.amount : 0
+                    }}. This is a one-time purchase. Funds will be added to your account
+                    immediately. Your credit card will be billed as "AllCalls.io" on your
+                    billing statement.
                   </p>
                 </div>
                 <div>
@@ -473,20 +455,14 @@ let total = computed(() => {
                       <span class="whitespace-nowrap text-gray-800 font-bold"
                         >Total:</span
                       >
-                      <span
-                        >${{ total }}</span
-                      >
+                      <span>${{ total }}</span>
                     </div>
                   </div>
                 </div>
               </div>
 
               <div class="flex justify-end mt-6">
-                <AuthenticatedButton
-                  type="button"
-                  class="mt-3"
-                  @click.prevent="addFunds"
-                >
+                <AuthenticatedButton type="button" class="mt-3" @click.prevent="addFunds">
                   Add funds
                 </AuthenticatedButton>
               </div>
@@ -506,6 +482,3 @@ let total = computed(() => {
     </div>
   </AuthenticatedLayout>
 </template>
-  
-
-  

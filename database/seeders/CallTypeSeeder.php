@@ -14,6 +14,5 @@ class CallTypeSeeder extends Seeder
     public function run(): void
     {
         CallType::factory()->count(10)->create();
-    
     }
 }
