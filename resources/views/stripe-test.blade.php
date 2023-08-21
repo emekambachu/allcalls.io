@@ -23,7 +23,7 @@
     <script src="https://js.stripe.com/v3/"></script>
 
     <script>
-        const stripe = Stripe(env('STRIPE_PUBLIC_KEY'));
+        const stripe = Stripe('pk_test_51JUMhZF43egAbbxbdvc4FIRiALFxHyYECIknypspzMqjYBQ47Kvt8TBY3g44gfhIQHJLPQT4GMwcqlqN1KwKPsbc00UfQoy1mu');
 
         const elements = stripe.elements();
         const cardElement = elements.create('card');
