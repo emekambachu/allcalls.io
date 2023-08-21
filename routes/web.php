@@ -40,18 +40,35 @@ Route::get('/', function () {
     ]);
 });
 
-Route::middleware(['admin'])->prefix('admin')->group(function () {
+Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(function () {
     //Admin Routes
 });
 
+Route::middleware(['auth', 'verified', 'user', 'registration-step-check'])->prefix('customer')->group(function () {
+    //User Routes
+    Route::get('/dashboard', [DashboardController::class, 'show'])->name('dashboard');
+    Route::get('/transactions', [TransactionsController::class, 'index'])->name('transactions.index');
+    Route::delete('/transactions/{transaction}', [TransactionsController::class, 'destroy'])->name('transactions.destroy');
+    Route::patch('/bids', [BidsController::class, 'update'])->name('bids.update');
+    Route::get('/billing/funds', [FundsController::class, 'index'])->name('billing.funds.index');
+    Route::post('/billing/funds', [FundsController::class, 'store'])->name('billing.funds.store');
+    Route::post('/billing/funds-with-card', [FundsWithCardController::class, 'store'])->name('billing.funds-with-card.store');
+    Route::get('/billing/cards', [CardsController::class, 'index'])->name('billing.cards.index');
+    Route::post('/billing/cards', [CardsController::class, 'store'])->name('billing.cards.store');
+    Route::patch('/billing/cards/default/{card}', [DefaultCardController::class, 'update'])->name('billing.cards.default.update');
+    Route::delete('/billing/cards/{card}', [CardsController::class, 'destroy'])->name('billing.cards.delete');
+    Route::get('/billing/autopay', [AutoPayController::class, 'show'])->name('billing.autopay.index');
+    Route::post('/billing/autopay', [AutoPayController::class, 'store'])->name('billing.autopay.store');
+    Route::get('/usage-activities', [UsageActivityController::class, 'index'])->name('activities.index');
+    Route::get('/clients', [ClientsController::class, 'index'])->name('clients.index');
+    Route::patch('/clients/{client}', [ClientsController::class, 'update'])->name('clients.update');
+    Route::get('/support', [SupportController::class, 'index'])->name('support.index');
+});
 
-Route::get('/registration-steps', [RegisteredUserController::class, 'steps'])->middleware(['auth', 'verified'])->name('registration.steps');
-Route::post('/store-registration-steps', [RegisteredUserController::class, 'storeSteps'])->middleware(['auth', 'verified'])->name('store.registration.steps');
-
-Route::get('/dashboard', [DashboardController::class, 'show'])->middleware(['auth', 'verified', 'registration-step-check'])->name('dashboard');
-
-Route::get('/transactions', [TransactionsController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check'])->name('transactions.index');
-Route::delete('/transactions/{transaction}', [TransactionsController::class, 'destroy'])->middleware(['auth', 'verified', 'registration-step-check'])->name('transactions.destroy');
+Route::middleware(['auth', 'verified'])->prefix('auth')->group(function () {
+    Route::get('/registration-steps', [RegisteredUserController::class, 'steps'])->name('registration.steps');
+    Route::post('/store-registration-steps', [RegisteredUserController::class, 'storeSteps'])->name('store.registration.steps');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile/view', [ProfileController::class, 'view'])->name('profile.view');
@@ -60,18 +77,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::patch('/bids', [BidsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('bids.update');
-Route::get('/billing/funds', [FundsController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check'])->name('billing.funds.index');
-Route::post('/billing/funds', [FundsController::class, 'store'])->middleware(['auth', 'verified', 'registration-step-check'])->name('billing.funds.store');
-Route::post('/billing/funds-with-card', [FundsWithCardController::class, 'store'])->middleware(['auth', 'verified', 'registration-step-check'])->name('billing.funds-with-card.store');
-Route::get('/billing/cards', [CardsController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check'])->name('billing.cards.index');
-Route::post('/billing/cards', [CardsController::class, 'store'])->middleware(['auth', 'verified', 'registration-step-check'])->name('billing.cards.store');
-Route::patch('/billing/cards/default/{card}', [DefaultCardController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('billing.cards.default.update');
-Route::delete('/billing/cards/{card}', [CardsController::class, 'destroy'])->middleware(['auth', 'verified', 'registration-step-check'])->name('billing.cards.delete');
-Route::get('/billing/autopay', [AutoPayController::class, 'show'])->middleware(['auth', 'verified', 'registration-step-check'])->name('billing.autopay.index');
-Route::post('/billing/autopay', [AutoPayController::class, 'store'])->middleware(['auth', 'verified', 'registration-step-check'])->name('billing.autopay.store');
-
-Route::get('/usage-activities', [UsageActivityController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check'])->name('activities.index');
 
 Route::get('/twiml-example', function() {
     return view('twiml-example');
@@ -82,10 +87,6 @@ Route::get('/device/incoming', function() {
     return view('incoming');
 })->middleware('auth');
 
-Route::get('/clients', [ClientsController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.index');
-Route::patch('/clients/{client}', [ClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.update');
-
-Route::get('/support', [SupportController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check'])->name('support.index');
 // Route::get('/clients/support', [SupportController::class, 'clientIndex'])->name('support.index');
 
 // Route::get('/call/pushNotification', [IncomingCallController::class, 'sendPushNotification']);
