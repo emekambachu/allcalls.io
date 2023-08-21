@@ -152,7 +152,7 @@ const showHamburger = ref(false);
         </ul>
 
         <!-- Support Start -->
-        <div class="bg-white pt-14 rounded">
+        <div class="bg-white rounded">
           <div class="pt-14">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
               <div class="px-4 sm:px-8 sm:rounded-lg">
