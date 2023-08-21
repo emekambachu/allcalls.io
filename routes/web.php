@@ -42,7 +42,7 @@ Route::get('/', function () {
 
 require __DIR__.'/auth.php';
 
-Route::middleware(['auth', 'verified'])->prefix('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/registration-steps', [RegisteredUserController::class, 'steps'])->name('registration.steps');
     Route::post('/store-registration-steps', [RegisteredUserController::class, 'storeSteps'])->name('store.registration.steps');
 });
@@ -51,7 +51,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     //Admin Routes
 });
 
-Route::middleware(['auth', 'verified', 'user', 'registration-step-check'])->prefix('customer')->group(function () {
+Route::middleware(['auth', 'verified', 'user', 'registration-step-check'])->group(function () {
     //User Routes
     Route::get('/dashboard', [DashboardController::class, 'show'])->name('dashboard');
     Route::get('/transactions', [TransactionsController::class, 'index'])->name('transactions.index');
