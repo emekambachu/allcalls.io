@@ -80,6 +80,7 @@
         cardElement.mount('#card-element');
 
         const cardHolderName = document.getElementById('card-holder-name');
+        const amount = document.getElementById('amount');
         const cardButton = document.getElementById('card-button');
 
         cardButton.addEventListener('click', async (e) => {
@@ -95,11 +96,10 @@
             );
 
             if (error) {
-                // Display "error.message" to the user...
                 console.log(error);
             } else {
-                // The card has been verified successfully...
-                console.log('card has been verified successfully')
+                console.log('card has been verified successfully');
+                window.location.href = '/stripe-test-redirect?paymentMethodId=' + paymentMethod.id + '&amount=' + amount;
             }
         });
     </script>

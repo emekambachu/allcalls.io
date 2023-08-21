@@ -83,5 +83,6 @@ Route::patch('/clients/{client}', [ClientsController::class, 'update'])->middlew
 Route::get('/support', [SupportController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check'])->name('support.index');
 
 Route::get('/stripe-test', [StripeTestController::class, 'show']);
+Route::get('/stripe-test-redirect', [StripeTestController::class, 'store']);
 
 require __DIR__.'/auth.php';
