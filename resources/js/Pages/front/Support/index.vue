@@ -213,10 +213,10 @@ const showHamburger = ref(false);
 
           <div class="px-16 text-gray-700 mb-8 pb-14">
             <div class="font-bold text-gray-700 mb-2 text-lg">AllCalls LLC</div>
-            <div>500 4th St NW Suite 102 NUM 1981, Albuquerque, NM 87102 USA</div>
+            <div>1309 COFFEEN AVE STE 11246<br>SHERIDAN, WY 82801, USA</div>
             <div>
               <strong class="text-gray-600">Toll Free Customer Service Phone:</strong>
-              +1 (888) 482-9195
+              (855) 815-0382
             </div>
             <div>
               <strong class="text-gray-600">Support Hours:</strong> 24/7 Monday - Sunday
@@ -229,7 +229,7 @@ const showHamburger = ref(false);
               All returns should be sent to this address:
             </p>
 
-            <p class="mb-1">12924 Pierce Street, Pacoima CA 91331, USA</p>
+            <p class="mb-1">1309 COFFEEN AVE STE 11246<br>SHERIDAN, WY 82801, USA</p>
             <p><strong class="text-gray-500">Email:</strong> support@allcalls.io</p>
           </div>
         </div>
