@@ -47,8 +47,10 @@
 
             if (error) {
                 // Display "error.message" to the user...
+                console.log(error);
             } else {
                 // The card has been verified successfully...
+                console.log('card has been verified successfully')
             }
         });
     </script>
