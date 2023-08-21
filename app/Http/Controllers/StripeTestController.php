@@ -8,6 +8,6 @@ class StripeTestController extends Controller
 {
     public function show()
     {
-        return '';
+        return view('stripe-test');
     }
 }
