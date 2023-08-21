@@ -11,6 +11,7 @@ use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupportController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\StripeTestController;
 use App\Http\Controllers\DefaultCardController;
 use App\Http\Controllers\TwilioTokenController;
 use App\Http\Controllers\IncomingCallController;
