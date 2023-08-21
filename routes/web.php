@@ -40,6 +40,13 @@ Route::get('/', function () {
     ]);
 });
 
+require __DIR__.'/auth.php';
+
+Route::middleware(['auth', 'verified'])->prefix('auth')->group(function () {
+    Route::get('/registration-steps', [RegisteredUserController::class, 'steps'])->name('registration.steps');
+    Route::post('/store-registration-steps', [RegisteredUserController::class, 'storeSteps'])->name('store.registration.steps');
+});
+
 Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(function () {
     //Admin Routes
 });
@@ -65,11 +72,6 @@ Route::middleware(['auth', 'verified', 'user', 'registration-step-check'])->pref
     Route::get('/support', [SupportController::class, 'index'])->name('support.index');
 });
 
-Route::middleware(['auth', 'verified'])->prefix('auth')->group(function () {
-    Route::get('/registration-steps', [RegisteredUserController::class, 'steps'])->name('registration.steps');
-    Route::post('/store-registration-steps', [RegisteredUserController::class, 'storeSteps'])->name('store.registration.steps');
-});
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile/view', [ProfileController::class, 'view'])->name('profile.view');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -83,6 +85,7 @@ Route::get('/twiml-example', function() {
 });
 
 Route::get('/device/token', [TwilioTokenController::class, 'show'])->middleware('auth');
+
 Route::get('/device/incoming', function() {
     return view('incoming');
 })->middleware('auth');
@@ -103,5 +106,3 @@ Route::get('/device/incoming', function() {
 // Route::get('allcalls-pusher-client', function() {
 //     return Inertia::render('PusherTest');
 // })->middleware('auth');
-
-require __DIR__.'/auth.php';
