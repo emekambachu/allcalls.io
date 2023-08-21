@@ -23,7 +23,10 @@ class StripeTestController extends Controller
         $user = $request->user() ?? User::findOrFail(2);
 
         $stripeCharge = $user->charge(
-            (float) $request->amount, $request->paymentMethodId
+            (int) $request->amount, $request->paymentMethodId
         );
+
+        return $stripeCharge;
+        // dd($stripeCharge);
     }
 }

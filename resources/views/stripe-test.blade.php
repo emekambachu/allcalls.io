@@ -46,19 +46,20 @@
 <body>
 
     <div id="container">
-        <div>
+        <div style="margin-bottom: 20px;">
             <label for="card-holder-name">Your Full Name:</label>
             <input id="card-holder-name" type="text"
-                style="padding: 10px; margin: 10px 0; width: 100%; box-sizing: border-box;" placeholder="John Doe">
+                style="padding: 10px; margin-top: 10px; width: 100%; box-sizing: border-box;" placeholder="John Doe">
         </div>
 
-        <div>
+        <div style="margin-bottom: 20px;">
             <label for="amount">Amount:</label>
             <input id="amount" type="text"
                 style="padding: 10px; margin: 10px 0; width: 100%; box-sizing: border-box;" placeholder="100.00">
         </div>
 
         <!-- Stripe Elements Placeholder -->
+        <label for="amount">Card Information:</label>
         <div id="card-element"
             style="padding: 10px; margin: 10px 0; width: 100%; box-sizing: border-box; border: 1px solid #ccc;"></div>
 
@@ -80,7 +81,6 @@
         cardElement.mount('#card-element');
 
         const cardHolderName = document.getElementById('card-holder-name');
-        const amount = document.getElementById('amount');
         const cardButton = document.getElementById('card-button');
 
         cardButton.addEventListener('click', async (e) => {
@@ -99,7 +99,7 @@
                 console.log(error);
             } else {
                 console.log('card has been verified successfully');
-                window.location.href = '/stripe-test-redirect?paymentMethodId=' + paymentMethod.id + '&amount=' + amount;
+                window.location.href = '/stripe-test-redirect?paymentMethodId=' + paymentMethod.id + '&amount=' + document.getElementById('amount').value;
             }
         });
     </script>
