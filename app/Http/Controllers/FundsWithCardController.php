@@ -35,8 +35,8 @@ class FundsWithCardController extends Controller
 
         $subtotal = (float) $request->amount;
 
-        // Adding 3.15% processing fee to the subtotal
-        $totalWithFee = $subtotal * 1.0315;
+        // Adding 3% processing fee to the subtotal
+        $totalWithFee = $subtotal * 1.03;
 
         // Format to two decimal places
         $finalAmount = number_format($totalWithFee, 2, '.', '');

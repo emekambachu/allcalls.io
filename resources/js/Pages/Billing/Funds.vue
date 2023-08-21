@@ -96,12 +96,12 @@ onMounted(() => {
 // };
 
 let creditCardFee = computed(() => {
-  let fee = Number(cardForm.amount) * 0.0315;
+  let fee = Number(cardForm.amount) * 0.03;
   return String(fee.toFixed(2));
 });
 
 let total = computed(() => {
-  let fee = Number(cardForm.amount) * 0.0315;
+  let fee = Number(cardForm.amount) * 0.03;
 
   return String((Number(cardForm.amount) + fee).toFixed(2));
 });
@@ -423,7 +423,7 @@ let total = computed(() => {
 
               <div class="grid grid-cols-2 gap-6">
                 <div class="text-gray-700 text-xs mt-4">
-                  <p class="mb-2">Charge will include card processing fee of 3.15%</p>
+                  <p class="mb-2">Charge will include card processing fee of 3%</p>
                   <p>
                     By clicking the "Add Funds" button below I authorize AllCalls LLC to
                     charge my card and agree to be billed for ${{
