@@ -4,10 +4,9 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 
-class RegistrationStepCheckerMiddleware
+class AdminMiddleware
 {
     /**
      * Handle an incoming request.
@@ -16,9 +15,10 @@ class RegistrationStepCheckerMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(DB::table('users_call_type_state')->where('user_id', auth()->user()->id)->count()) {
-            return $next($request);
-        }
-        return redirect()->route('registration.steps');
+       if(auth()->user()->roles->contains('name', 'admin')) {
+           return $next($request);
+       }
+        return redirect()->back();
+
     }
 }

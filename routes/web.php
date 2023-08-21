@@ -39,6 +39,7 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+
 Route::get('/registration-steps', [RegisteredUserController::class, 'steps'])->middleware(['auth', 'verified'])->name('registration.steps');
 Route::post('/store-registration-steps', [RegisteredUserController::class, 'storeSteps'])->middleware(['auth', 'verified'])->name('store.registration.steps');
 
