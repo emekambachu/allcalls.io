@@ -44,8 +44,7 @@ let formatMoney = (amount) => {
               <div class="shrink-0 flex items-center">
                 <Link
                   class="mt-4 bg-clip-text text-4xl text-transparent bg-gradient-to-r from-blue-400 to-green-500 font-bold uppercase tracking-wider"
-                  :href="route('dashboard')"
-                >
+                  :href="route('dashboard')">
                   <!-- AllCalls.io -->
                   <img style="max-width: 200px" src="/img/new-logo.png" />
                 </Link>

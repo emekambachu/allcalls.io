@@ -57,7 +57,6 @@ class RegisteredUserController extends Controller
         return response()->json([
             'success' => true,
         ], 201);
-
     }
 
     /**
@@ -132,7 +131,7 @@ class RegisteredUserController extends Controller
 
             $callTypes = CallType::all();
             $states = State::all();
-       
+
         return Inertia::render('RegistrationSteps', [
             'callTypes' => $callTypes,
             'states' => $states,
@@ -147,7 +146,7 @@ class RegisteredUserController extends Controller
 
     public function storeSteps(Request $request) {
 
-        
+
         $validator = Validator::make($request->all(), [
             'consent' => 'required',
             'typesWithStates' => [
@@ -183,7 +182,7 @@ class RegisteredUserController extends Controller
         if (sizeof($request->bids) !== CallType::count()) {
             return abort(400);
         }
-    
+
         $user = auth()->user();
 
             foreach($request->bids as $bid) {
@@ -195,10 +194,10 @@ class RegisteredUserController extends Controller
             }
         // Initialize an empty array to hold the data
         $data = [];
-        
+
         // Get the current timestamp
         $now = now()->toDateTimeString();
-        
+
         // Build the data array
         foreach($request->typesWithStates as $typeId => $stateIds) {
         if(count($stateIds)) {
@@ -212,15 +211,15 @@ class RegisteredUserController extends Controller
                 ];
             }
         }
-           
+
         }
        if(count($data)) {
-        DB::transaction(function () use ($data) {        
+        DB::transaction(function () use ($data) {
             // Insert new entries
             DB::table('users_call_type_state')->insert($data);
         });
        }
-     
+
        return response()->json([
         'success' => true,
     ], 200);
@@ -230,23 +229,23 @@ class RegisteredUserController extends Controller
     {
         // begin a database transaction
         DB::beginTransaction();
-    
+
         try {
             // iterate over the data array
             foreach ($data as $callTypeId => $stateIds) {
                 // find the CallType
                 $callType = CallType::findOrFail($callTypeId);
-    
+
                 // iterate over the stateIds for this callType
                 foreach ($stateIds as $stateId) {
                     // find the State
                     $state = State::findOrFail($stateId);
-    
+
                     // create a new record in the pivot table
                     $user->callTypes()->attach($callType, ['state_id' => $state->id]);
                 }
             }
-    
+
             // if we made it this far without an exception, commit the transaction
             DB::commit();
         } catch (Exception $e) {
