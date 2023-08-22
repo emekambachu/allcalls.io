@@ -28,7 +28,7 @@ const props = defineProps({
   totalCalls: Number,
   totalAmountSpent: Number,
   averageCallDuration: Number,
-    role:string,
+  role:string,
 });
 
 console.log("spendData", props.spendData);
