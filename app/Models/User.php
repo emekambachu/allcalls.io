@@ -5,9 +5,10 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Card;
 use App\Models\State;
-use App\Models\CallType;
 use App\Models\Activity;
+use App\Models\CallType;
 use App\Models\Transaction;
+use Laravel\Cashier\Billable;
 use App\Models\UserCallTypeState;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
@@ -16,7 +17,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, Billable;
 
     /**
      * The attributes that are mass assignable.
@@ -57,7 +58,7 @@ class User extends Authenticatable
     {
         return json_decode($this->states_info, true);
     }
-    
+
     public function setStatesInfo(array $statesInfo)
     {
         $this->states_info = json_encode($statesInfo);
@@ -110,4 +111,7 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Role::class);
     }
+
+
+
 }

@@ -25,8 +25,8 @@ onMounted(() => {
           <div class="text-white flex justify-center text-center lg:text-left mt-8 lg:mt-0">
             <div>
               <div class="mb-4 text-lg uppercase tracking-wider">AllCalls.io</div>
-              <div class="mb-4 text-gray-200">500 4th St NW Suite 102 NUM 1981, <br>Albuquerque, NM 87102 USA</div>
-              <div class="mb-4 text-gray-200">+1 (888) 482-9195</div>
+              <div class="mb-4 text-gray-200">1309 COFFEEN AVE STE 11246<br>SHERIDAN, WY 82801, USA</div>
+              <div class="mb-4 text-gray-200">(855) 815-0382</div>
               <div class="mb-4 text-gray-200">support@allcalls.io</div>
             </div>
           </div>

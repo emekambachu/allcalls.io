@@ -20,8 +20,8 @@ import ApplicationLogo from "@/Components/ApplicationLogo.vue";
       </div>
       <div class="flex flex-col items-center text-xs">
         <p class="mt-1 uppercase tracking-wider">AllCalls.io</p>
-        <p>12924 Pierce Street, Pacoima CA 91331, USA</p>
-        <p>+1 (888) 482-9195</p>
+        <p>1309 COFFEEN AVE STE 11246<br>SHERIDAN, WY 82801, USA</p>
+        <p>(855) 815-0382</p>
         <p>support@allcalls.io</p>
       </div>
     </div>
