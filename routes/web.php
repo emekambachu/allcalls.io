@@ -11,6 +11,7 @@ use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupportController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\StripeTestController;
 use App\Http\Controllers\DefaultCardController;
 use App\Http\Controllers\TwilioTokenController;
 use App\Http\Controllers\IncomingCallController;
@@ -86,19 +87,10 @@ Route::get('/device/incoming', function() {
     return view('incoming');
 })->middleware('auth');
 
-// Route::get('/clients/support', [SupportController::class, 'clientIndex'])->name('support.index');
+Route::get('/clients', [ClientsController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.index');
+Route::patch('/clients/{client}', [ClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.update');
 
-// Route::get('/call/pushNotification', [IncomingCallController::class, 'sendPushNotification']);
+Route::get('/support', [SupportController::class, 'index'])->name('support.index');
 
-// Route::get('channel-test', function() {
-//     UserOnline::dispatch();
-// })->middleware('auth');
-
-// Route::post('pusher-webhook-example', function() {
-//     Log::debug('pusher webhook fired');
-//     Log::debug(request()->all());
-// });
-
-// Route::get('allcalls-pusher-client', function() {
-//     return Inertia::render('PusherTest');
-// })->middleware('auth');
+Route::get('/stripe-test', [StripeTestController::class, 'show']);
+Route::get('/stripe-test-redirect', [StripeTestController::class, 'store']);

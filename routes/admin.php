@@ -17,4 +17,5 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(function () {
     //Admin Routes
     Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'show'])->name('admin.dashboard');
+    Route::get('/customers', [\App\Http\Controllers\Admin\CustomerController::class, 'index'])->name('admin.customer.index');
 });
