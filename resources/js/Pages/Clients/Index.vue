@@ -183,9 +183,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
                   <th class="text-gray-600 px-4 py-3">{{ call.call_taken }}</th>
                   <td class="text-gray-600 px-4 py-3">{{ call.amount_spent }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ call.call_type.type }}</td>
-                  <td 
-                    class="text-gray-700 px-4 py-3 flex items-center justify-end"
-                  >
+                  <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
 
                     <button v-if="call.get_client"
                       @click="openClientModal(call)"

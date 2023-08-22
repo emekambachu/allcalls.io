@@ -14,6 +14,10 @@ let formatMoney = (amount) => {
     .toFixed(2)
     .replace(/\d(?=(\d{3})+\.)/g, "$&,");
 };
+const props = defineProps({
+  role: String,
+});
+
 </script>
 
 <template>
@@ -257,7 +261,7 @@ let formatMoney = (amount) => {
         <div class="py-12 hidden sm:-my-px sm:ml-10 col-span-1 md:flex md:flex-col">
           <NavLink class="mb-10 gap-2" :href="route('dashboard')" :active="route().current('dashboard')">
             <img src="/img/dashboard.png" alt="" />
-            Dashboard 
+            Dashboard
           </NavLink>
           <NavLink class="mb-10 gap-2" :href="route('clients.index')" :active="route().current('clients.index')">
             <img src="/img/clients.png" alt="" />
@@ -478,13 +482,18 @@ let formatMoney = (amount) => {
           </div>
         </div>
       </nav>
-     
+
       <div v-if="$page.props.auth.role  == 'admin'" class="w-full mx-auto md:grid md:grid-cols-5 md:gap-28 md:max-w-screen-2xl xl:gap-0">
         <div class="py-12 hidden sm:-my-px sm:ml-10 col-span-1 md:flex md:flex-col">
-          <NavLink class="mb-10 gap-2" :href="route('dashboard')" :active="route().current('dashboard')">
+          <NavLink class="mb-10 gap-2" :href="route('admin.dashboard')" :active="route().current('admin.dashboard')">
             <img src="/img/dashboard.png" alt="" />
             Dashboard
           </NavLink>
+
+            <NavLink class="mb-10 gap-2" :href="route('admin.customer.index')" :active="route().current('admin.customer.index')">
+                <img src="/img/clients.png" alt="" />
+                Customers
+            </NavLink>
         </div>
         <!-- Page Content -->
         <main class="col-span-4 bg-white rounded-xl mt-16 mb-8">

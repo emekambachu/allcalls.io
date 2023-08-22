@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
             CallTypeSeeder::class,
             CallSeeder::class,
             ClientSeeder::class,
+            ActivitySeeder::class,
+            TransactionSeeder::class,
         ]);
 
         // \App\Models\User::factory(10)->create();
