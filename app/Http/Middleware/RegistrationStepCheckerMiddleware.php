@@ -16,9 +16,13 @@ class RegistrationStepCheckerMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(DB::table('users_call_type_state')->where('user_id', auth()->user()->id)->count()) {
-            return $next($request);
+        if(auth()->user()->roles->contains('name', 'user')) {
+            if(DB::table('users_call_type_state')->where('user_id', auth()->user()->id)->count()) {
+                return $next($request);
+            }
+            return redirect()->route('registration.steps');
         }
-        return redirect()->route('registration.steps');
+        return redirect()->back();
+
     }
 }

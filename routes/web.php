@@ -43,7 +43,7 @@ Route::get('/', function () {
 require __DIR__.'/auth.php';
 require 'admin.php';
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', 'user'])->group(function () {
     Route::get('/registration-steps', [RegisteredUserController::class, 'steps'])->name('registration.steps');
     Route::post('/store-registration-steps', [RegisteredUserController::class, 'storeSteps'])->name('store.registration.steps');
 });
