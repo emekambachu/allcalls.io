@@ -24,7 +24,13 @@ class Call extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function getClient() {
+    public function getClient()
+    {
+        return $this->hasOne(Client::class);
+    }
+
+    public function client()
+    {
         return $this->hasOne(Client::class);
     }
 }

@@ -44,6 +44,7 @@ class DashboardController extends Controller
 
         return Inertia::render('Dashboard', [
             'spendData' => $spendData,
+            'role' => 'user',
             'callData' => $callData,
             'totalCalls' => $totalCalls,
             'totalAmountSpent' => $totalAmountSpent,

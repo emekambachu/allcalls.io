@@ -28,6 +28,7 @@ const props = defineProps({
   totalCalls: Number,
   totalAmountSpent: Number,
   averageCallDuration: Number,
+    role:string,
 });
 
 console.log("spendData", props.spendData);
@@ -100,7 +101,7 @@ let formatMoney = (amount) => {
 
 <template>
   <Head title="Dashboard" />
-  <AuthenticatedLayout>
+  <AuthenticatedLayout :role="role">
     <template #header>
       <h2
         class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
