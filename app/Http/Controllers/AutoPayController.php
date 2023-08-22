@@ -98,26 +98,7 @@ class AutoPayController extends Controller
         $stripe = new \Stripe\StripeClient(
             env('STRIPE_SECRET')
         );
-        // Create Token
-        $token = $stripe->tokens->create([
-            'card' => [
-                'number' => $cardNumber,
-                'exp_month' => $cardMonth,
-                'exp_year' => $cardYear,
-                'cvc' => $cvc,
-            ],
-        ]);
-        // Create Charge
-        $charge= $stripe->charges->create([
-            'amount' => $request->amount,
-            'currency' => 'usd',
-            'source' => $token,
-            'description' => 'Auto Play',
-        ]);
-        if ( $charge['status'] != 'succeeded') {
-              // The payment is declined:
-            dd('RESPONSE IS NOT SUCCESS');
-        }
+
         AutopaySetting::updateOrCreate(
             ['user_id' => Auth::user()->id],
             [
