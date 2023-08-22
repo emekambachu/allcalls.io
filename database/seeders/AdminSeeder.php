@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -15,7 +14,7 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
-       $admin = User::create([
+        $admin = User::create([
             'first_name' => 'system',
             'last_name' => 'admin',
             'email' => 'admin@admin.com',
@@ -23,7 +22,6 @@ class AdminSeeder extends Seeder
             'email_verified_at' => now(),
             'phone' => '000000000',
         ]);
-
 
 
         DB::table('role_user')->insert([
