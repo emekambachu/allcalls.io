@@ -11,15 +11,11 @@ use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupportController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\StripeTestController;
 use App\Http\Controllers\DefaultCardController;
 use App\Http\Controllers\TwilioTokenController;
-use App\Http\Controllers\IncomingCallController;
 use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\FundsWithCardController;
 use App\Http\Controllers\UsageActivityController;
-use App\Http\Controllers\Auth\RegisteredUserController;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -40,13 +36,11 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
-Route::get('/registration-steps', [RegisteredUserController::class, 'steps'])->middleware(['auth', 'verified'])->name('registration.steps');
-Route::post('/store-registration-steps', [RegisteredUserController::class, 'storeSteps'])->middleware(['auth', 'verified'])->name('store.registration.steps');
 
-Route::get('/dashboard', [DashboardController::class, 'show'])->middleware(['auth', 'verified', 'registration-step-check'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'show'])->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/transactions', [TransactionsController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check'])->name('transactions.index');
-Route::delete('/transactions/{transaction}', [TransactionsController::class, 'destroy'])->middleware(['auth', 'verified', 'registration-step-check'])->name('transactions.destroy');
+Route::get('/transactions', [TransactionsController::class, 'index'])->middleware(['auth', 'verified'])->name('transactions.index');
+Route::delete('/transactions/{transaction}', [TransactionsController::class, 'destroy'])->middleware(['auth', 'verified'])->name('transactions.destroy');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile/view', [ProfileController::class, 'view'])->name('profile.view');
@@ -55,18 +49,18 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::patch('/bids', [BidsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('bids.update');
-Route::get('/billing/funds', [FundsController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check'])->name('billing.funds.index');
-Route::post('/billing/funds', [FundsController::class, 'store'])->middleware(['auth', 'verified', 'registration-step-check'])->name('billing.funds.store');
-Route::post('/billing/funds-with-card', [FundsWithCardController::class, 'store'])->middleware(['auth', 'verified', 'registration-step-check'])->name('billing.funds-with-card.store');
-Route::get('/billing/cards', [CardsController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check'])->name('billing.cards.index');
-Route::post('/billing/cards', [CardsController::class, 'store'])->middleware(['auth', 'verified', 'registration-step-check'])->name('billing.cards.store');
-Route::patch('/billing/cards/default/{card}', [DefaultCardController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('billing.cards.default.update');
-Route::delete('/billing/cards/{card}', [CardsController::class, 'destroy'])->middleware(['auth', 'verified', 'registration-step-check'])->name('billing.cards.delete');
-Route::get('/billing/autopay', [AutoPayController::class, 'show'])->middleware(['auth', 'verified', 'registration-step-check'])->name('billing.autopay.index');
-Route::post('/billing/autopay', [AutoPayController::class, 'store'])->middleware(['auth', 'verified', 'registration-step-check'])->name('billing.autopay.store');
+Route::patch('/bids', [BidsController::class, 'update'])->middleware(['auth', 'verified'])->name('bids.update');
+Route::get('/billing/funds', [FundsController::class, 'index'])->middleware(['auth', 'verified'])->name('billing.funds.index');
+Route::post('/billing/funds', [FundsController::class, 'storeWithStripe'])->middleware(['auth', 'verified'])->name('billing.funds.store');
+Route::post('/billing/funds-with-card', [FundsWithCardController::class, 'storeWithStripe'])->middleware(['auth', 'verified'])->name('billing.funds-with-card.store');
+Route::get('/billing/cards', [CardsController::class, 'index'])->middleware(['auth', 'verified'])->name('billing.cards.index');
+Route::post('/billing/cards', [CardsController::class, 'store'])->middleware(['auth', 'verified'])->name('billing.cards.store');
+Route::patch('/billing/cards/default/{card}', [DefaultCardController::class, 'update'])->middleware(['auth', 'verified'])->name('billing.cards.default.update');
+Route::delete('/billing/cards/{card}', [CardsController::class, 'destroy'])->middleware(['auth', 'verified'])->name('billing.cards.delete');
+Route::get('/billing/autopay', [AutoPayController::class, 'show'])->middleware(['auth', 'verified'])->name('billing.autopay.index');
+Route::post('/billing/autopay', [AutoPayController::class, 'storeWithStripe'])->middleware(['auth', 'verified'])->name('billing.autopay.store');
 
-Route::get('/usage-activities', [UsageActivityController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check'])->name('activities.index');
+Route::get('/usage-activities', [UsageActivityController::class, 'index'])->middleware(['auth', 'verified'])->name('activities.index');
 
 Route::get('/twiml-example', function() {
     return view('twiml-example');
@@ -77,12 +71,23 @@ Route::get('/device/incoming', function() {
     return view('incoming');
 })->middleware('auth');
 
-Route::get('/clients', [ClientsController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.index');
-Route::patch('/clients/{client}', [ClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.update');
+Route::get('/clients', [ClientsController::class, 'index'])->middleware(['auth', 'verified'])->name('clients.index');
+Route::patch('/clients/{client}', [ClientsController::class, 'update'])->middleware(['auth', 'verified'])->name('clients.update');
 
-Route::get('/support', [SupportController::class, 'index'])->name('support.index');
+Route::get('/support', [SupportController::class, 'index'])->middleware(['auth', 'verified'])->name('support.index');
+Route::get('/clients/support', [SupportController::class, 'clientIndex'])->name('support.index');
 
-Route::get('/stripe-test', [StripeTestController::class, 'show']);
-Route::get('/stripe-test-redirect', [StripeTestController::class, 'store']);
+// Route::get('channel-test', function() {
+//     UserOnline::dispatch();
+// })->middleware('auth');
+
+// Route::post('pusher-webhook-example', function() {
+//     Log::debug('pusher webhook fired');
+//     Log::debug(request()->all());
+// });
+
+// Route::get('allcalls-pusher-client', function() {
+//     return Inertia::render('PusherTest');
+// })->middleware('auth');
 
 require __DIR__.'/auth.php';
