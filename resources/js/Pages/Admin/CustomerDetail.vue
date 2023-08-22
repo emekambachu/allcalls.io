@@ -13,8 +13,45 @@ const props = defineProps({
 
 <template>
   <Head title="Dashboard" />
-  <AuthenticatedLayout  :role="role">
-  
+  <AuthenticatedLayout  >
+    <div class="px-16 pt-14">
+      <div
+        class="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
+      >
+        <div
+          class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto" 
+        >
+          <p class="mb-1 text-sm text-gray-300">Total Calls (Past 7 Days)</p>
+          <h2
+            class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white"
+          >
+            55
+          </h2>
+        </div>
+        <div
+          class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto"
+        >
+          <p class="mb-1 text-sm text-gray-300">Total Spent (Past 7 Days)</p>
+          <h2
+            class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white"
+          >
+           200
+          </h2>
+        </div>
+        <div
+          class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto"
+        >
+          <p class="mb-1 text-sm text-gray-300">
+            Average Call Duration (Past 7 Days)
+          </p>
+          <h2
+            class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white"
+          >
+            587
+          </h2>
+        </div>
+      </div>
+    </div>
 
     <div class="pt-14">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
