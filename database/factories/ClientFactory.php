@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Call;
 use App\Models\User;
 use App\Models\Client;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -23,8 +24,12 @@ class ClientFactory extends Factory
             'email' => $faker->unique()->safeEmail,
             'address' => $faker->address,
             'dob' => $faker->dateTimeBetween('-66 years', '-23 years')->format('Y-m-d'), // Generating dob for people aged between 23 to 66 years
-            'user_id' => $faker->numberBetween(1,50),
-            'call_id' => $faker->numberBetween(1,50),
+            'user_id' => function() {
+                return User::factory()->create()->id;
+            },
+            'call_id' => function() {
+                return Call::factory()->create()->id;
+            },
             'state' => $faker->state(),
         ];
     }

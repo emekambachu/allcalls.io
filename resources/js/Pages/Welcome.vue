@@ -145,9 +145,9 @@ const showHamburger = ref(false);
         </ul>
 
         <div class="main__getstarted max-w-4xl">
-          <div class="main__title mb-5">Your Next Opportunity is Just a Call Away</div>
+          <div class="main__title mb-5">Your Next Sale is Just a Call Away</div>
           <div class="main__subtitle mb-12">
-            Instantly Connect with your prospects on demand.
+            Instantly Connect with new clients on demand.
             <span style="color: #3cfa7a"
               >Flexible, affordable, and tailored to your success.</span
             >
