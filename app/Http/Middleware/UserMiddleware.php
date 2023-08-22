@@ -18,6 +18,7 @@ class UserMiddleware
         if(auth()->user()->roles->contains('name', 'user')) {
             return $next($request);
         }
+
         return redirect()->back();
     }
 }
