@@ -9,13 +9,11 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 class SupportController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        if(Auth::check()){
-
+        if($request->user()){
             return Inertia::render('Support/Index');
         }else{
-            // dd('asdas');
             return Inertia::render('front/Support/index',[
                 'canLogin' => Route::has('login'),
                 'canRegister' => Route::has('register'),

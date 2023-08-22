@@ -35,7 +35,7 @@ const props = defineProps({
         </div>
       </div>
       <!-- User Navigation Menu -->
-      <nav v-if="role == 'user'" class="bg-custom-indigo border-b border-gray-800">
+      <nav v-if="$page.props.auth.role == 'user'" class="bg-custom-indigo border-b border-gray-800">
         <!-- Primary Navigation Menu -->
         <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="flex justify-between h-16">
@@ -257,11 +257,11 @@ const props = defineProps({
           </div>
         </div>
       </nav>
-      <div v-if="role == 'user'" class="w-full mx-auto md:grid md:grid-cols-5 md:gap-28 md:max-w-screen-2xl xl:gap-0">
+      <div  v-if="$page.props.auth.role == 'user'"  class="w-full mx-auto md:grid md:grid-cols-5 md:gap-28 md:max-w-screen-2xl xl:gap-0">
         <div class="py-12 hidden sm:-my-px sm:ml-10 col-span-1 md:flex md:flex-col">
           <NavLink class="mb-10 gap-2" :href="route('dashboard')" :active="route().current('dashboard')">
             <img src="/img/dashboard.png" alt="" />
-            Dashboard
+            Dashboard 
           </NavLink>
           <NavLink class="mb-10 gap-2" :href="route('clients.index')" :active="route().current('clients.index')">
             <img src="/img/clients.png" alt="" />
@@ -375,7 +375,7 @@ const props = defineProps({
       <!-- User Navigation Menu -->
 
       <!-- Admin Navigation Menu -->
-      <nav v-if="role == 'admin'" class="bg-custom-indigo border-b border-gray-800">
+      <nav v-if="$page.props.auth.role == 'admin'" class="bg-custom-indigo border-b border-gray-800">
         <!-- Primary Navigation Menu -->
         <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="flex justify-between h-16">
@@ -580,7 +580,8 @@ const props = defineProps({
           </div>
         </div>
       </nav>
-      <div v-if="role == 'admin'" class="w-full mx-auto md:grid md:grid-cols-5 md:gap-28 md:max-w-screen-2xl xl:gap-0">
+     
+      <div v-if="$page.props.auth.role  == 'admin'" class="w-full mx-auto md:grid md:grid-cols-5 md:gap-28 md:max-w-screen-2xl xl:gap-0">
         <div class="py-12 hidden sm:-my-px sm:ml-10 col-span-1 md:flex md:flex-col">
           <NavLink class="mb-10 gap-2" :href="route('dashboard')" :active="route().current('dashboard')">
             <img src="/img/dashboard.png" alt="" />
