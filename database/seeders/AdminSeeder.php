@@ -28,20 +28,5 @@ class AdminSeeder extends Seeder
             'user_id' => $admin->id,
             'role_id' => 1,
         ]);
-
-        $user = User::create([
-            'first_name' => 'system',
-            'last_name' => 'user',
-            'email' => 'user@user.com',
-            'password' => Hash::make('password'),
-            'email_verified_at' => now(),
-            'phone' => '000000000',
-        ]);
-
-
-        DB::table('role_user')->insert([
-            'user_id' => $user->id,
-            'role_id' => 2,
-        ]);
     }
 }
