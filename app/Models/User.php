@@ -58,7 +58,7 @@ class User extends Authenticatable
     {
         return json_decode($this->states_info, true);
     }
-    
+
     public function setStatesInfo(array $statesInfo)
     {
         $this->states_info = json_encode($statesInfo);
@@ -111,4 +111,7 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Role::class);
     }
+
+
+
 }

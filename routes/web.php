@@ -43,7 +43,7 @@ Route::get('/', function () {
 require __DIR__.'/auth.php';
 require 'admin.php';
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', 'user'])->group(function () {
     Route::get('/registration-steps', [RegisteredUserController::class, 'steps'])->name('registration.steps');
     Route::post('/store-registration-steps', [RegisteredUserController::class, 'storeSteps'])->name('store.registration.steps');
 });
@@ -86,6 +86,7 @@ Route::get('/device/token', [TwilioTokenController::class, 'show'])->middleware(
 Route::get('/device/incoming', function() {
     return view('incoming');
 })->middleware('auth');
+
 
 Route::get('/clients', [ClientsController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.index');
 Route::patch('/clients/{client}', [ClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.update');

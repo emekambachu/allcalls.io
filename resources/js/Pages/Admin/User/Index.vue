@@ -16,11 +16,11 @@
     }
 
     let props = defineProps({
-        calls: {
+        users: {
             type: Object,
         },
 
-        totalCalls: {
+        totalusers: {
             type: Number,
         },
 
@@ -28,12 +28,12 @@
             type: Number,
         },
 
-        averageCallDuration: {
+        averageuserDuration: {
             type: Number,
         },
     });
 
-    console.log(props.calls);
+    console.log(props.users);
 
     let fetchClients = (page) => {
         // Create URL object from page
@@ -51,10 +51,10 @@
     };
 
     let showModal = ref(false);
-    let callDetail = ref(null);
+    let userDetail = ref(null);
 
-    let openClientModal = (call) => {
-        callDetail.value = call;
+    let openClientModal = (user) => {
+        userDetail.value = user;
         showModal.value = true;
     };
 
@@ -99,20 +99,20 @@
     <AuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                Users
+                Customers
             </h2>
         </template>
 
         <div class="pt-14">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
                 <div class="px-4 sm:px-8 sm:rounded-lg">
-                    <div class="text-4xl text-custom-sky font-bold mb-6">Users</div>
+                    <div class="text-4xl text-custom-sky font-bold mb-6">Customers</div>
                     <hr class="mb-4" />
                 </div>
             </div>
         </div>
 
-        <section v-if="calls.data.length" class="p-3">
+        <section v-if="users.data.length" class="p-3">
             <div class="mx-auto max-w-screen-xl sm:px-12">
                 <div class="relative sm:rounded-lg overflow-hidden">
                     <div class="overflow-x-auto">
@@ -120,51 +120,28 @@
                             <thead class="text-xs text-gray-300 uppercase bg-sky-900">
                             <tr>
                                 <th scope="col" class="px-4 py-3">ID</th>
-                                <th scope="col" class="px-4 py-3">HANG UP BY</th>
-                                <th scope="col" class="px-4 py-3">CALL DURATION</th>
-                                <th scope="col" class="px-4 py-3">CALL TAKEN</th>
-                                <th scope="col" class="px-4 py-3">AMMOUNT SPENT</th>
-                                <th scope="col" class="px-4 py-3">CALL TYPE</th>
+                                <th scope="col" class="px-4 py-3">First Name</th>
+                                <th scope="col" class="px-4 py-3">Last Name</th>
+                                <th scope="col" class="px-4 py-3">Email</th>
+                                <th scope="col" class="px-4 py-3">Balance</th>
+                                <th scope="col" class="px-4 py-3">Phone</th>
                                 <th scope="col" class="px-4 py-3 text-end">Actions</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr
-                                v-for="call in calls.data"
-                                :key="call.id"
+                                v-for="user in users.data"
+                                :key="user.id"
                                 class="border-b border-gray-500"
                             >
-
-                                <td class="text-gray-600 px-4 py-3">{{ call.id }}</td>
-                                <td class="text-gray-600 px-4 py-3">{{ call.hung_up_by }}</td>
-                                <td class="text-gray-600 px-4 py-3">
-                                    {{
-                                    String(
-                                    Math.floor(call.call_duration_in_seconds / 60)
-                                    ).padStart(2, "0") +
-                                    ":" +
-                                    String(
-                                    call.call_duration_in_seconds % 60
-                                    ).padStart(2, "0")
-                                    }}
-                                </td>
-
-                                <th class="text-gray-600 px-4 py-3">{{ call.call_taken }}</th>
-                                <td class="text-gray-600 px-4 py-3">{{ call.amount_spent }}</td>
-                                <td class="text-gray-600 px-4 py-3">{{ call.call_type.type }}</td>
-                                <td
-                                    class="text-gray-700 px-4 py-3 flex items-center justify-end"
-                                >
-
-                                    <button v-if="call.get_client"
-                                            @click="openClientModal(call)"
-                                            class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
-                                            type="button"
-                                    >
-                                        View Client
-                                    </button>
-                                    <button v-else class="text-center"
-                                            type="button">-</button>
+                                <td class="text-gray-600 px-4 py-3">{{ user.id }}</td>
+                                <td class="text-gray-600 px-4 py-3">{{ user.first_name }}</td>
+                                <td class="text-gray-600 px-4 py-3">{{ user.last_name }}</td>
+                                <th class="text-gray-600 px-4 py-3">{{ user.email }}</th>
+                                <td class="text-gray-600 px-4 py-3">{{ user.balance }}</td>
+                                <td class="text-gray-600 px-4 py-3">{{ user.phone }}</td>
+                                <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
+                                    <a :href="route('admin.customer.detail', user.id)">View Detail</a>
                                 </td>
                             </tr>
                             </tbody>
@@ -179,11 +156,11 @@
                 >
                   Showing
                   <span class="font-semibold text-custom-blue">{{
-                    calls.current_page
+                    users.current_page
                   }}</span>
                   of
                   <span class="font-semibold text-custom-blue">{{
-                    calls.last_page
+                    users.last_page
                   }}</span>
                 </span>
                                 <ul
@@ -191,8 +168,8 @@
                                 >
                                     <li>
                                         <a
-                                            v-if="calls.prev_page_url"
-                                            @click="fetchClients(calls.prev_page_url)"
+                                            v-if="users.prev_page_url"
+                                            @click="fetchClients(users.prev_page_url)"
                                             class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-custom-white rounded-l-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white"
                                         >
                                             <span class="sr-only">Previous</span>
@@ -215,14 +192,14 @@
                                     <li>
                                         <a
                                             class="flex items-center justify-center text-sm py-2 px-3 leading-tight font-extrabold text-gray-500 bg-custom-white shadow-2xl hover:bg-sky-950 hover:shadow-2xl hover:text-white"
-                                        >{{ calls.current_page }}
+                                        >{{ users.current_page }}
                                         </a>
                                     </li>
 
                                     <li>
                                         <a
-                                            v-if="calls.next_page_url"
-                                            @click="fetchClients(calls.next_page_url)"
+                                            v-if="users.next_page_url"
+                                            @click="fetchClients(users.next_page_url)"
                                             class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-custom-white rounded-r-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white"
                                         >
                                             <span class="sr-only">Next</span>
@@ -255,7 +232,7 @@
 
         <ClientDetailsModal
             :showModal="showModal"
-            :callDetail="callDetail"
+            :userDetail="userDetail"
             @close="showModal = false"
         ></ClientDetailsModal>
 

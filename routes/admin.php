@@ -18,4 +18,5 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     //Admin Routes
     Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'show'])->name('admin.dashboard');
     Route::get('/customers', [\App\Http\Controllers\Admin\CustomerController::class, 'index'])->name('admin.customer.index');
+    Route::get('/customers/detail/{id}', [\App\Http\Controllers\Admin\CustomerController::class, 'view'])->name('admin.customer.detail');
 });

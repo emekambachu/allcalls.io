@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\Role;
 use Exception;
 use App\Models\Bid;
 use App\Models\User;
@@ -87,6 +88,15 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
+        ]);
+
+        $role = Role::whereName('user')->first();
+
+        DB::table('role_user')->insert([
+            'user_id' => $user->id,
+            'role_id' => $role->id,
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
         event(new Registered($user));

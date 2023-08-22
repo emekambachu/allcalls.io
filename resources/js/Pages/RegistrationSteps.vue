@@ -193,7 +193,7 @@ let goBack = () => {
 
 <template>
     <Head title="Dashboard" />
-    <AuthenticatedLayout>
+    <AuthenticatedLayout >
        
 
         <div class="pt-14">
