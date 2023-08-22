@@ -1,8 +1,19 @@
 <script setup>
-    import {BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip,} from "chart.js";
-    import {reactive} from "vue";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import { Head } from "@inertiajs/vue3";
+import { Bar } from "vue-chartjs";
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+} from "chart.js";
+import { reactive } from "vue";
 
-    ChartJS.register(
+ChartJS.register(
   Title,
   Tooltip,
   Legend,
@@ -17,7 +28,7 @@ const props = defineProps({
   totalCalls: Number,
   totalAmountSpent: Number,
   averageCallDuration: Number,
-    role: String,
+  role: String,
 });
 
 console.log("spendData", props.spendData);
