@@ -28,6 +28,8 @@ class UserSeeder extends Seeder
         DB::table('role_user')->insert([
             'user_id' => $user->id,
             'role_id' => 2,
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
         User::factory()->count(50)->create();

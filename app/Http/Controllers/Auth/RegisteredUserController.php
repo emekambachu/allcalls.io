@@ -95,6 +95,8 @@ class RegisteredUserController extends Controller
         DB::table('role_user')->insert([
             'user_id' => $user->id,
             'role_id' => $role->id,
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
         event(new Registered($user));
