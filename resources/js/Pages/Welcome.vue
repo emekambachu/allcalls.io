@@ -419,8 +419,7 @@ const showHamburger = ref(false);
               display: flex;
               flex-direction: column;
               justify-content: space-between;
-            "
-          >
+            ">
             <div class="secFive__subtitle custom-white">Access my Account</div>
             <div class="secFive__title text-white">
               Log In and Start Speaking with Prospects Now
