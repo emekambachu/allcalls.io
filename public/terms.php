@@ -139,6 +139,14 @@ effect with respect to your access and use of the Site.</p>
   <p>We reserve the right at any time and from time to time to modify or discontinue, temporarily or permanently,
 the Services (or any part thereof) with or without notice. You agree that we shall not be liable to you or
 to any third party for any modification, suspension or discontinuance of the Services.</p>
+<h4>Pricing and Billing</h4>
+	<p>
+	<ul>
+		<li>a. Calls reaching a duration of 60 seconds or more will be billed. Internally licensed agents are billed at a fixed rate of $35 per call. Other users are billed based on a bidding system, with a minimum bid of $25. Users will pay $1 more than the next highest bid.</li>
+		<li>b. The minimum deposit is $100. There is an autopay feature available. A mandatory 3% processing fee applies to all deposits.</li>
+		<li>c. Funds never expire, and unused funds can be refunded, which may take up to 10 business days.</li>
+	</ul>
+	</p>
   <h4>Agreement To Arbitrate; Class Action Waiver</h4>
   <p>Any dispute or claim relating in any way to this agreement shall be resolved by binding arbitration
 administered by the American Arbitration Association in accord with its Commercial Arbitration Rules (visit
