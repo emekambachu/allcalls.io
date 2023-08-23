@@ -2,10 +2,10 @@
 
 $settings = (object) [
   'companyName' => 'AllCalls.io',
-  'address' => 'Example address',
+  'address' => '1309 Coffeen Ave STE 11246, Sheridan, WY 82801, USA',
   'pageTitle' => 'AllCalls.io',
   'email' => 'support@allcalls.io',
-  'phone' => '(123) 456-7890',
+  'phone' => '(855) 815-0382',
   'descriptor' => 'ALLCALLS.IO'
 ];
 
