@@ -156,18 +156,19 @@ class FundsController extends Controller
                 env('STRIPE_SECRET')
             );
 
-            $token = $stripe->tokens->create([
-                'card' => [
-                    'number' => $cardNumber,
-                    'exp_month' => $cardMonth,
-                    'exp_year' => $cardYear,
-                    'cvc' => $cvc,
-                ],
-            ]);
+            // $token = $stripe->tokens->create([
+            //     'card' => [
+            //         'number' => $cardNumber,
+            //         'exp_month' => $cardMonth,
+            //         'exp_year' => $cardYear,
+            //         'cvc' => $cvc,
+            //     ],
+            // ]);
             $charge= $stripe->charges->create([
                 'amount' => $request->amount,
                 'currency' => 'usd',
-                'source' => $token,
+                // 'source' => $token,
+                'source' => 'tok_visa',
                 'description' => 'Add Fund',
             ]);
             if (empty($charge) && $charge['status'] != 'succeeded') {
