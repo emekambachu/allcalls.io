@@ -143,6 +143,10 @@ to any third party for any modification, suspension or discontinuance of the Ser
 <p>a. Users can deposit funds into their account. Unused portions of these deposits are refundable at any time. Refunds will be issued to customer credit card within 3 business days.</p>
 <p>b. Purchased leads are entitled to refunds under specific conditions. For example, if a customer receives a call where the prospect resides in a state that the customer did not list as one of their licensed states during signup.</p>
 <p>c. Technical issues, such as poor call quality, are also valid grounds for refunds.</p>
+<h4>Pricing and Billing</h4>
+<p>a. Calls reaching a duration of 60 seconds or more will be billed. Internally licensed agents are billed at a fixed rate of $35 per call. Other users are billed based on a bidding system, with a minimum bid of $25. Users will pay $1 more than the next highest bid.</p>
+<p>b. The minimum deposit is $100. There is an autopay feature available. A mandatory 3% processing fee applies to all deposits.</p>
+<p>c. Funds never expire, and unused funds can be refunded, which may take up to 10 business days.</p>
 <h4>User Account Funds</h4>
 <h5>Deposits:</h5>
 	<p><ul><li>Users can deposit funds into their AllCalls.io account at any time.</li><li>The minimum deposit amount is $100.</li><li>A mandatory 3% processing fee will be added to all deposits, including those made through the autopay function.</li></ul></p>
@@ -152,10 +156,6 @@ to any third party for any modification, suspension or discontinuance of the Ser
 <p><ul><li>Users can enable the autopay function to automatically replenish their account funds when their balance drops below a specified threshold.</li><li>For example, if a user's balance drops below $50, the system can be set to automatically charge their card and add an additional $100 (or any other specified amount) to their account balance.</li></ul></p>
 <h5>Account Statements:</h5>
 <p>Users can view their account balance, transaction history, and statements at any time through their AllCalls.io account dashboard. This includes details on deposits, calls billed, refunds, and any other transactions.</p>
-<h4>Pricing and Billing</h4>
-<p>a. Calls reaching a duration of 60 seconds or more will be billed. Internally licensed agents are billed at a fixed rate of $35 per call. Other users are billed based on a bidding system, with a minimum bid of $25. Users will pay $1 more than the next highest bid.</p>
-<p>b. The minimum deposit is $100. There is an autopay feature available. A mandatory 3% processing fee applies to all deposits.</p>
-<p>c. Funds never expire, and unused funds can be refunded, which may take up to 10 business days.</p>
   <h4>Data and Privacy</h4>
 	<p>Users' behaviors are tracked for analytics, and data might be shared with third parties for analytical or marketing purposes. Please refer to our Privacy Policy for more details.</p>
   <h4>Agreement To Arbitrate; Class Action Waiver</h4>
