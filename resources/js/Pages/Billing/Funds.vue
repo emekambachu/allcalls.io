@@ -10,6 +10,9 @@ let props = defineProps({
   cards: {
     type: Array,
   },
+  intent: {
+    type: Object,
+  },
 });
 
 import { createToaster } from "@meforma/vue-toaster";
@@ -20,6 +23,12 @@ const page = usePage();
 const toaster = createToaster({
   position: "top-right",
 });
+
+// Stripe Intregation Constant
+const token = ref(null);
+let stripe = ref(null);
+const elements = ref(null);
+let cardElement = ref(null);
 
 if (page.props.flash.message) {
   toaster.success(page.props.flash.message);
@@ -51,10 +60,35 @@ let addFunds = () => {
   let cardId = selectedCardId.value;
 
   if (cardId === "0") {
-    router.visit("/billing/funds-with-card", {
-      method: "post",
-      data: cardForm,
-    });
+    // Temporay Close
+    // router.visit("/billing/funds-with-card", {
+    //   method: "post",
+    //   data: cardForm,
+    // });
+
+    console.log(stripe);
+    console.log(cardElement);
+    stripe
+      .confirmCardSetup(props.intent.client_secret, {
+        payment_method: {
+          card: cardElement,
+          billing_details: "This is for testing purpose",
+        },
+      })
+      .then(function (result) {
+        if (result.error) {
+          console.log(result);
+        } else {
+          // Stripe Intregration
+          router.visit("/billing/funds-with-card", {
+            method: "post",
+            data: {
+              amount: cardForm.amount,
+              payment_method: result.setupIntent.payment_method,
+            },
+          });
+        }
+      });
 
     return;
   }
@@ -73,7 +107,7 @@ let addFunds = () => {
 };
 
 onMounted(() => {
-  console.log(props.cards);
+  //   console.log(props.cards);
   //   console.log(page.props.errors,);
   if (Object.values(page.props.errors).length > 0) {
     selectedCardId.value = "0";
@@ -84,6 +118,14 @@ onMounted(() => {
       }
     }
   }
+
+  // Stripe Element
+  stripe = Stripe(
+    "pk_test_51JUMhZF43egAbbxbdvc4FIRiALFxHyYECIknypspzMqjYBQ47Kvt8TBY3g44gfhIQHJLPQT4GMwcqlqN1KwKPsbc00UfQoy1mu"
+  );
+  const elements = stripe.elements();
+  cardElement = elements.create("card");
+  cardElement.mount("#payment-element");
 });
 // let calculateTotalAfterFee = (subtotal) => {
 //   let fee = Number(subtotal) * 0.0315;
@@ -130,7 +172,8 @@ let total = computed(() => {
         <div>
           <section class="mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-4 sm:p-8 sm:rounded-lg" style="padding-top: 0">
-              <label class="block mb-2 text-sm font-medium text-gray-700"
+              <!-- Temporary Close -->
+              <!-- <label class="block mb-2 text-sm font-medium text-gray-700"
                 >Select your card</label
               >
 
@@ -148,7 +191,7 @@ let total = computed(() => {
                 >
                   {{ card.type }} **** **** **** {{ card.last4 }}
                 </option>
-              </select>
+              </select> -->
               <!-- <h2 class="text-xl my-4">Or add a new card:</h2> -->
 
               <form
@@ -179,8 +222,17 @@ let total = computed(() => {
                     alt="DISCOVER"
                   />
                 </div>
+                <!-- Stripe Intregation -->
+                <div
+                  id="payment-element"
+                  class="grid gap-4 sm:grid-cols-2 sm:gap-6 mb-6 mt-6"
+                >
+                  <!-- Stripe will create form elements here -->
+                </div>
+                <div id="card-errors" role="alert"></div>
 
-                <div class="grid gap-4 sm:grid-cols-2 sm:gap-6 mb-6">
+                <!-- Temporary Changes -->
+                <!-- <div class="grid gap-4 sm:grid-cols-2 sm:gap- mt-6 mb-6">
                   <div class="sm:col-span-2">
                     <label
                       for="number"
@@ -394,7 +446,7 @@ let total = computed(() => {
                     />
                     <InputError class="mt-2" :message="$page.props.errors.zip" />
                   </div>
-                </div>
+                </div> -->
               </form>
 
               <div class="mt-4">

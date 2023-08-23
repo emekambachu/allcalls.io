@@ -98,6 +98,7 @@ class FundsWithCardController extends Controller
 
     public function storeWithStripe(Request $request)
     {
+        // dd($request);
         // Step 1: Validate incoming request data
         $request->validate([
             'number' => 'required|numeric|digits_between:13,16',
@@ -201,5 +202,44 @@ class FundsWithCardController extends Controller
             Log::error('General error: ' . $e->getMessage());
             return abort(500, $e->getMessage());  // Internal server error for general exceptions
         }
+    }
+    // Stripe through fronted integration
+    public function stripeStore(Request $request){
+        // Step 1: Validate incoming request data
+        $request->validate([
+            
+            'amount' => 'required|numeric|integer|min:1'
+        ]);
+
+        $user=auth()->user();
+        $paymentMethod = $request->input('payment_method');
+        // Step 2: Calculate final payment amount
+        $subtotal = (float) $request->amount;
+        $processingFee = $subtotal * 0.03;
+        $totalWithFee = $subtotal + $processingFee;
+        $finalAmount = number_format($totalWithFee, 2, '.', '');
+        // Step 3: Create Charge
+            $user->createOrGetStripeCustomer();
+            $user->updateDefaultPaymentMethod($paymentMethod);
+            $user->charge($request->amount, $paymentMethod);     
+             // Step 4: Update user's balance
+             $updatedBalance = $request->user()->balance + $subtotal;
+             $request->user()->update(['balance' => $updatedBalance]);
+             Log::debug('Updated user balance.', ['user_id' => $request->user()->id, 'new_balance' => $updatedBalance]);
+     
+             // Step 5: Log the transaction in the database
+             Transaction::create([
+                 'amount' => $subtotal,
+                 'user_id' => $user->id,
+                 'sign' => true,
+                 'card_id' => 1,
+             ]);  
+
+            return redirect()->back()->with(['message' => 'Payment successful and card added.']); 
+        // try {
+        // } catch (\Exception $exception) {
+        //     return back()->with('error', $exception->getMessage());
+        // }
+    
     }
 }
