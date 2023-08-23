@@ -171,7 +171,6 @@ $settings = (object) [
             Line:</strong> <a href="tel: <?php echo $settings->phone; ?>" class="link"><?php echo $settings->phone; ?></a>. Support Hours: 24 / 7 Monday - Sunday.<br draggable="true" data-highlightable="1" id="ibv1f-2">
             <br draggable="true" data-highlightable="1" id="iokas-2">
             Customer Support Email: <a draggable="true" data-highlightable="1" href="mailto:%20<?php echo $settings->email; ?>" id="i97y8-2"><?php echo $settings->email; ?></a> Expect a response within 6 hours if you email us according to the business hours listed above.</p>
-          <p>Product sold by <?php echo $settings->companyName; ?>.</p>
         </div>
         
 <!--Start of Tawk.to Script-->
