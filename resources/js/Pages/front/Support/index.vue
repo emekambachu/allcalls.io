@@ -154,7 +154,7 @@ const showHamburger = ref(false);
         <!-- Support Start -->
         <div class="bg-white rounded">
           <div class="pt-14">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            <div class="max-w-7xl px-8 space-y-6">
               <div class="px-4 sm:px-8 sm:rounded-lg">
                 <div class="text-4xl text-custom-sky font-bold mb-6">Support</div>
                 <hr class="mb-4" />
@@ -201,7 +201,7 @@ const showHamburger = ref(false);
           </div>
 
           <div class="pt-14">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            <div class="max-w-7xl px-8 space-y-6">
               <div class="px-4 sm:px-8 sm:rounded-lg">
                 <div class="text-4xl text-custom-sky font-bold mb-6">
                   Contact Information
