@@ -211,7 +211,6 @@ Agreement. To the extent allowed by applicable law, any claim or cause of action
 your access or use of the Site must be brought within two (2) years from the date on which such claim or
 action arose or accrued.</p>
   <p>This purchase will appear on your credit card statement as "<?php echo $settings->descriptor; ?>".</p>
-  <p>Product sold by <?php echo $settings->companyName; ?>.</p>
 </div>
 <div class="sf-submit-loader-container" style="background: rgba(0, 0, 0, .5);">
   <div class="sf-submit-loader-content">
