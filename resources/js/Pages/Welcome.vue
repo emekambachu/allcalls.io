@@ -385,7 +385,7 @@ const showHamburger = ref(false);
         </div>
       </div>
 
-  <!--    <div class="secFive__grid">
+<div class="secFive__grid">
         <div class="secFive__one">
           <div
             class="container"
@@ -396,7 +396,7 @@ const showHamburger = ref(false);
               justify-content: space-between;
             "
           >
-            <!-- <div class="secFive__one-hold"> -->
+            <div class="secFive__one-hold">
             <div class="secFive__subtitle">Start Receiving Calls Fast</div>
             <div class="secFive__title">
               Our technology allows you start taking calls in seconds
@@ -407,11 +407,11 @@ const showHamburger = ref(false);
                 <img class="w-10" src="/img/blue-arrow.png" alt="" />
               </PrimaryButton>
             </a>
-            <!-- </div> -->
+             </div> 
           </div>
-        </div> -->
+        </div>
 
-      <!--  <div class="secFive__two">
+      <div class="secFive__two">
           <div
             class="container"
             style="
@@ -431,7 +431,7 @@ const showHamburger = ref(false);
               </PrimaryButton>
             </a>
           </div>
-        </div> -->
+        </div>
       </div>
     </div>
   </section>
