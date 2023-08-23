@@ -2,10 +2,10 @@
 
 $settings = (object) [
   'companyName' => 'AllCalls.io',
-  'address' => 'Example address',
+  'address' => '1309 Coffeen Ave STE 11246, Sheridan, WY 82801, USA',
   'pageTitle' => 'AllCalls.io',
   'email' => 'support@allcalls.io',
-  'phone' => '(123) 456-7890',
+  'phone' => '(855) 815-0382',
   'descriptor' => 'ALLCALLS.IO'
 ];
 
@@ -112,6 +112,7 @@ transform: rotate(360deg);
   <h2><?php echo $settings->companyName; ?></h2>
   <p id="isgk"><?php echo $settings->address; ?></p>
   <h3 id="iiec"><?php echo $settings->pageTitle; ?> - Terms &amp; Conditions</h3>
+<p>Last updated: 8/22/2023</p>
   <p id="iqvz">Customer Service: Email Us 24/7 at <a href="mailto:<?php echo $settings->email; ?>"><?php echo $settings->email; ?></a>, we
 respond with frequently asked questions immediately and live operator response within 8-12 business hours. </p>
   <p id="if9zj">Customer Service Phone: <?php echo $settings->phone; ?>. Support Hours: 24 / 7 Monday - Sunday. By using, accessing or ordering products from this Website, you hereby agree to all of
@@ -119,44 +120,43 @@ the following terms.</p>
   <h4>Acceptance of Agreement</h4>
   <p id="iliw7">Your access to and use of our website (the 'Site') is subject to the following terms and conditions which may
 be updated by us from time to time without notice to you. You may review the most current version of the
-terms and conditions at any time by visiting the following website link here: https://<?php echo $_SERVER['HTTP_HOST']; ?> 
+terms and conditions at any time by visiting the following website link here: <a href="https://<?php echo $_SERVER['HTTP_HOST']; ?>/terms.php">https://<?php echo $_SERVER['HTTP_HOST']; ?>/terms.php</a> 
 as well as the Site's posted privacy policy found <a href="https://<?php echo $_SERVER['HTTP_HOST']; ?>/privacy.php" class="link">here</a>. By accessing and
 browsing the Site, you accept and agree to, without limitation or qualification, the terms and conditions,
 privacy policy, and acknowledge that any other agreements between you are superseded and of no force or
 effect with respect to your access and use of the Site.</p>
-  <h4>Shipping of Product(s)</h4>
-  <p>Your order will be processed and shipping should begin with USPS within about 1 business day. Shipment via USPS typically takes 3-5 business days to arrive from when your order ships out. If you feel you are experiencing any delay in the
-delivery of your product, you may contact our customer care department at <?php echo $settings->phone; ?>.</p>
-  <h4>Shipping and Handling Fee</h4>
-  <p>Shipping is $0.00.</p>
-  <h4>Returns and Refunds</h4>
-  <p id="ii5ma">We will credit one returned unopened product per customer if the received package is post marked within 30 days of the original order date and included with a RMA number obtained from customer service. Refunds will
-be issued to customer credit card within 3 business days. No returns are credited after 30 days of the
-original order date. Any merchandise must be returned at the customer's expense and must have an RMA number
-marked on it. No returns are credited if they are not accompanied by an RMA number. No refunds will be
-issued for any used product. You may request an RMA and instructions on how to submit a return by emailing <a draggable="true" href="mailto:%20<?php echo $settings->email; ?>"><?php echo $settings->email; ?></a> or
-calling <a draggable="true" href="tel: <?php echo $settings->phone; ?>" class="link"><?php echo $settings->phone; ?></a>. <br draggable="true">
-<br draggable="true" id="iru8g-3-2-2">
-Please send all returns to: <br draggable="true">
-12924 Pierce Street, Pacoima CA 91331, USA</p>
-  <h4>Did Not Receive and/or Lost Package</h4>
-  <p>All products are expected to arrive to the shipping address originally typed into the web form on the product
-webpage you ordered from within 7 business days after it ships. Your order will be processed and shipping should begin with USPS within about 1 business day. Shipment via USPS typically takes 3-5 business days to arrive from when your order ships out. For orders placed on a weekend date, packages will ship out the following Monday, assuming it is not a major holiday. If for some reason you do not receive the product
-after seven (7) business days of ordering it is recommended to contact customer support by email at <a href="mailto:%20<?php echo $settings->email; ?>"><?php echo $settings->email; ?></a>. All
-orders are shipped with delivery confirmation, if the order is shown as delivered we are to believe it has
-been delivered unless you call to state otherwise. There will be no refunds for product claimed to be
-undelivered and the package is shown as delivered with delivery confirmation obtained via the US Postal
-Service. There may be times when shipments are delayed a few extra days.</p>
-
-<?php foreach($products as $product): ?>
-  <h4 id="id6hb">Terms of <?php echo $product->title; ?> Sale</h4>
-  <div id="idnwd">By placing your order of <?php echo $settings->pageTitle; ?> <?php echo $product->title; ?> you will be charged the total price of $<?php echo $product->price; ?> + (free shipping) today.  Your order will be processed and shipping should begin with USPS within about 1 business day. Shipment via USPS typically takes 3-5 business days to arrive from when your order ships out. This purchase will appear on your credit card statement as "<?php echo $settings->descriptor; ?>".</div>
-<?php endforeach; ?>
-  
+  <h4>User Accounts</h4>
+  <p>a. Users must be at least 18 years old to create an account.</p>
+  <p>b. During account creation, we collect your First Name, Last Name, Email Address, Phone Number, Password, and State Insurance License Information.</p>
+  <p>c. AllCalls.io reserves the right to verify the accuracy of the information provided by users.</p>
+  <h4>Content Ownership</h4>
+  <p>All user-generated content, such as reviews and comments, is owned by AllCalls.io. Redistribution or reuse of this content by other users or third parties is prohibited.</p>
+  <h4>Prohibited Conduct</h4>
+  <p id="ii5ma">Users are prohibited from engaging in hate speech, harassment, and spamming. Intentionally terminating a call to avoid payment or any attempts to cheat the system is strictly forbidden.</p>
+  <h4>Termination of Service</h4>
+  <p>AllCalls.io reserves the right to terminate or suspend a user's account for any reason, including but not limited to violations of these ToS or engagement in fraudulent activities.</p>
   <h4 id="i7tqm">Modifications to Services</h4>
   <p>We reserve the right at any time and from time to time to modify or discontinue, temporarily or permanently,
 the Services (or any part thereof) with or without notice. You agree that we shall not be liable to you or
 to any third party for any modification, suspension or discontinuance of the Services.</p>
+<h4>Refund Policy</h4>
+<p>a. Users can deposit funds into their account. Unused portions of these deposits are refundable at any time. Refunds will be issued to customer credit card within 3 business days.</p>
+<p>b. Purchased leads are entitled to refunds under specific conditions. For example, if a customer receives a call where the prospect resides in a state that the customer did not list as one of their licensed states during signup.</p>
+<p>c. Technical issues, such as poor call quality, are also valid grounds for refunds.</p>
+<h4>Pricing and Billing</h4>
+<p>a. Calls reaching a duration of 60 seconds or more will be billed and deducted from your User Account Funds. Internally licensed agents are billed at a fixed rate of $35 per call. Other users are billed based on a bidding system, with a minimum bid of $25. Users will pay $1 more than the next highest bid.</p>
+<p>All purchases will appear on your credit card statement as "<?php echo $settings->descriptor; ?>".</p>
+<h4>User Account Funds</h4>
+<h5>Deposits:</h5>
+	<p><ul><li>Users can deposit funds into their AllCalls.io account at any time.</li><li>The minimum deposit amount is $100.</li><li>A mandatory 3% processing fee will be added to all deposits, including those made through the autopay function.</li><li>Funds never expire, and unused funds can be refunded, which may take up to 10 business days.</li></ul></p>
+<h5>Use of Funds:</h5>
+<p><ul><li>Funds in a user's account will be used to pay for calls based on the pricing structure outlined in the "Pricing and Billing" section.</li><li>Users will be billed for calls that reach or exceed 60 seconds in length. The specific cost is determined either by a fixed rate or a bidding system, as described previously.</li></ul></p>
+<h5>Autopay Function:</h5>
+<p><ul><li>Users can enable the autopay function to automatically replenish their account funds when their balance drops below a specified threshold.</li><li>For example, if a user's balance drops below $50, the system can be set to automatically charge their card and add an additional $100 (or any other specified amount) to their account balance.</li></ul></p>
+<h5>Account Statements:</h5>
+<p>Users can view their account balance, transaction history, and statements at any time through their AllCalls.io account dashboard. This includes details on deposits, calls billed, refunds, and any other transactions.</p>
+  <h4>Data and Privacy</h4>
+	<p>Users' behaviors are tracked for analytics, and data might be shared with third parties for analytical or marketing purposes. Please refer to our Privacy Policy for more details.</p>
   <h4>Agreement To Arbitrate; Class Action Waiver</h4>
   <p>Any dispute or claim relating in any way to this agreement shall be resolved by binding arbitration
 administered by the American Arbitration Association in accord with its Commercial Arbitration Rules (visit
@@ -172,11 +172,15 @@ advice, and the information provided on the Site is not intended to replace medi
 health care provider. We strongly recommend that you promptly consult a physician or professional health
 care provider prior to use of any product. Neither the product nor the ingredients in the product have been
 approved or endorsed by the FDA or any regulatory agency for treatment of obesity or to cause weight loss. </p>
-  <h4>Product Information</h4>
-  <p>The products advertised on this site have not been approved or cleared by a government regulatory body. You
-should not construe anything on the Site as a promotion or solicitation for any product or service or for
-the use of any product or service that is not authorized by the laws and regulations of the country where
-you are located, including the United States.</p>
+  <h4>Limitation of Liability & Disclaimer</h4>
+  <p>AllCalls.io does not guarantee the website or app's error-free operation or the validity of any information provided. We also don't guarantee successful sales from our leads or genuine interest from prospects on calls.</p><p>In no event shall AllCalls.io, its directors, employees, or affiliates be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation loss of profits, data, use, goodwill, or other intangible losses resulting from:
+<ul>
+<li>Your access to or use of or inability to access or use the Service.</li>
+<li>Any unauthorized access to or use of our servers and/or any personal information stored therein.</li>
+<li>Any bugs, viruses, or similar that may be transmitted to or through our Service by any third party.</li>
+<li>Any content posted on our Service.</li>
+<li>Any other matter related to the Service.</li>
+</ul></p>
   <h4>Exclusion of Warranty</h4>
   <p>While we use reasonable efforts to include accurate and up-to-date information in the Site, we no warranties
 or representations as to its accuracy. We assume no liability or responsibility for any errors or omissions
@@ -189,11 +193,15 @@ warranties.</p>
   <h4>User Submissions</h4>
   <p>Any 'personally identifiable information' in electronic communications to the Site is governed by the Site's
 Privacy Policy which is posted on the site.</p>
-  <h4>Links From Other Sites</h4>
-  <p>We have not reviewed all of the sites linked to this Site and are not responsible for the content of any
-off-site pages or any other sites linked to the Site. We do not take any responsibility for any information
+  <h4>Third-Party Links</h4>
+  <p>Our Service may contain links to third-party websites or services that are not owned or controlled by AllCalls.io. We have no control over and assume no responsibility for the content, privacy policies, or practices of any third-party websites or services. We do not take any responsibility for any information
 or claims that were made by other websites and encourage you to alert us if a website is making false claims
 and linking to our site or product at <a href="mailto:<?php echo $settings->email; ?>"><?php echo $settings->email; ?></a></p>
+  <h4>Intellectual Property</h4>
+	<p>The content, layout, design, data, databases, and graphics on this website are protected by U.S. intellectual property laws. Unless expressly stated otherwise, no content may be copied, reproduced, republished, uploaded, posted, publicly displayed, encoded, translated, transmitted, or distributed in any way to any other computer, server, website, or other medium for publication or distribution without our prior written consent.</p>
+  <h4>No Waiver</h4>
+	<p>No waiver by AllCalls.io of any term or condition set out in these Terms shall be deemed a further or continuing waiver of such term or condition or a waiver of any other term or condition, and any failure by us to assert a right or provision under these Terms shall not constitute a waiver of such right or provision.</p>
+  <h4>If any provision of these Terms is held to be invalid or unenforceable by a court, the remaining provisions of these Terms will remain in effect.</h4>
   <h4>Governing Law</h4>
   <p id="i9hoo">This agreement and its performance shall be governed by the laws of the state of Wyoming, United States of
 America, without regard to its conflict of laws provisions. You consent and submit to the exclusive
@@ -201,8 +209,6 @@ jurisdiction of the state and federal courts located in Wyoming, in all question
 Agreement. To the extent allowed by applicable law, any claim or cause of action arising from or relating to
 your access or use of the Site must be brought within two (2) years from the date on which such claim or
 action arose or accrued.</p>
-  <p>This purchase will appear on your credit card statement as "<?php echo $settings->descriptor; ?>".</p>
-  <p>Product sold by <?php echo $settings->companyName; ?>.</p>
 </div>
 <div class="sf-submit-loader-container" style="background: rgba(0, 0, 0, .5);">
   <div class="sf-submit-loader-content">

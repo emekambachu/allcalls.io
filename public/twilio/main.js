@@ -28,19 +28,19 @@ $(function () {
             });
 
             device.on("ready", function (device) {
-                console.log("Twilio.Device Ready!");
+                log("Twilio.Device Ready!");
             });
 
             device.on('registered', function () {
-                console.log('REGISTERED!');
+                log('REGISTERED!');
             });
 
             device.on("error", function (error) {
-                console.log("Twilio.Device Error: " + error.message);
+                log("Twilio.Device Error: " + error.message);
             });
 
             device.on("connect", function (conn) {
-                console.log('Successfully established call ! ');
+                log('Successfully established call ! ');
                 $('#modal-call-in-progress').modal('show')
             });
 
@@ -54,27 +54,27 @@ $(function () {
                 console.log("Incoming connection from " + conn.parameters.From);
                 $("#callerNumber").text(conn.parameters.From)
                 $("#txtPhoneNumber").text(conn.parameters.From)
-            
+
                 $('#modal-incomming-call').modal('show')
-            
+
                 $('.btnReject').bind('click', function () {
                     $('.modal').modal('hide')
                     log("Rejected call ...");
                     conn.reject();
                 })
-            
+
                 $('.btnAcceptCall').bind('click', function () {
                     $('.modal').modal('hide')
-                    console.log("Accepted call ...");
+                    log("Accepted call ...");
                     conn.accept();
                 })
-            
-            });            
+
+            });
 
         })
         .catch(function (err) {
-            console.log(err);
-            console.log("Could not get a token from server!");
+            log(err);
+            log("Could not get a token from server!");
         });
 
     // Bind button to make call
@@ -88,13 +88,13 @@ $(function () {
 
         // output destination number
         $("#txtPhoneNumber").text(params.To)
-        
 
-        console.log("Calling " + params.To + "...");
+
+        log("Calling " + params.To + "...");
         if (device) {
             var outgoingConnection = device.connect(params);
             outgoingConnection.on("ringing", function () {
-                console.log("Ringing...");
+                log("Ringing...");
             });
         }
 
@@ -104,7 +104,7 @@ $(function () {
 
     $('.btnHangUp').bind('click', function () {
         $('.modal').modal('hide')
-        console.log("Hanging up...");
+        log("Hanging up...");
         if (device) {
             device.disconnectAll();
         }

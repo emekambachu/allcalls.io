@@ -154,7 +154,7 @@ const showHamburger = ref(false);
         <!-- Support Start -->
         <div class="bg-white rounded">
           <div class="pt-14">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            <div class="max-w-7xl px-8 space-y-6">
               <div class="px-4 sm:px-8 sm:rounded-lg">
                 <div class="text-4xl text-custom-sky font-bold mb-6">Support</div>
                 <hr class="mb-4" />
@@ -165,7 +165,7 @@ const showHamburger = ref(false);
           <div
             class="px-16 mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
           >
-            <div class="flex flex-col bg-custom-darksky rounded p-4 text-center">
+            <!-- <div class="flex flex-col bg-custom-darksky rounded p-4 text-center">
               <div class="mb-6">
                 <h2 class="text-xl text-white font-extrabold">Search our Help Center</h2>
                 <p class="text-gray-300">
@@ -185,7 +185,7 @@ const showHamburger = ref(false);
               <div class="mt-auto">
                 <PrimaryButton>Download</PrimaryButton>
               </div>
-            </div>
+            </div> -->
 
             <div class="flex flex-col bg-custom-darksky rounded p-4 text-center">
               <div class="mb-6">
@@ -201,7 +201,7 @@ const showHamburger = ref(false);
           </div>
 
           <div class="pt-14">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            <div class="max-w-7xl px-8 space-y-6">
               <div class="px-4 sm:px-8 sm:rounded-lg">
                 <div class="text-4xl text-custom-sky font-bold mb-6">
                   Contact Information
@@ -221,13 +221,6 @@ const showHamburger = ref(false);
             <div>
               <strong class="text-gray-600">Support Hours:</strong> 24/7 Monday - Sunday
             </div>
-
-            <div class="font-bold text-gray-700 mt-4 text-lg mb-2">Returns</div>
-            <p class="mb-3">
-              If you need to return your order please contact customer service to get an
-              RMA number that you will need to include in the package you send back to us.
-              All returns should be sent to this address:
-            </p>
 
             <p class="mb-1">1309 COFFEEN AVE STE 11246<br>SHERIDAN, WY 82801, USA</p>
             <p><strong class="text-gray-500">Email:</strong> support@allcalls.io</p>

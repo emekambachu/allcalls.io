@@ -78,8 +78,12 @@ const showHamburger = ref(false);
                 class="hover:text-custom-green"
                 ><li>Careers</li></a
               >
-              <a href="/support" class="hover:text-custom-green"><li>Support</li></a>
-              <a href="/register" class="hover:text-custom-green"><li>Sign Up Now</li></a>
+              <a href="/support" class="hover:text-custom-green"
+                ><li>Support</li></a
+              >
+              <a href="/register" class="hover:text-custom-green"
+                ><li>Sign Up Now</li></a
+              >
             </ul>
           </nav>
           <a href="/login" class="hidden xl:flex">
@@ -164,7 +168,9 @@ const showHamburger = ref(false);
                 </div>
                 <img class="w-10 lg:w-20" src="/img/green-arrow.png" alt="" />
               </div>
-              <div class="text-sm lg:text-lg text-gray-400 drop-shadow-wxl mt-2">
+              <div
+                class="text-sm lg:text-lg text-gray-400 drop-shadow-wxl mt-2"
+              >
                 Starting as Low as $25 / Call
               </div>
             </a>
@@ -180,31 +186,45 @@ const showHamburger = ref(false);
   <section id="solutions">
     <div class="container">
       <div class="secTwo">
-        <div class="secTwo__title">We help businesses get connected with clients</div>
+        <div class="secTwo__title">
+          We help businesses get connected with clients
+        </div>
         <div class="secTwo__verticals">
           <div class="secTwo__verticals-i flex flex-col items-center gap-2">
             <img src="/img/auto.png" alt="" />
-            <div class="text-sm font-bold text-gray-600 text-center">Auto Insurance</div>
+            <div class="text-sm font-bold text-gray-600 text-center">
+              Auto Insurance
+            </div>
           </div>
 
           <div class="secTwo__verticals-i flex flex-col items-center gap-2">
             <img src="/img/debt-relief.png" alt="" />
-            <div class="text-sm font-bold text-gray-600 text-center">Life Insurance</div>
+            <div class="text-sm font-bold text-gray-600 text-center">
+              Life Insurance
+            </div>
           </div>
 
           <div class="secTwo__verticals-i flex flex-col items-center gap-2">
             <img src="/img/health.png" alt="" />
-            <div class="text-sm font-bold text-gray-600 text-center">Medicare</div>
+            <div class="text-sm font-bold text-gray-600 text-center">
+              Medicare
+            </div>
           </div>
 
           <div class="secTwo__verticals-i flex flex-col items-center gap-2">
             <img src="/img/life.png" alt="" />
-            <div class="text-sm font-bold text-gray-600 text-center">ACA Health</div>
+            <div class="text-sm font-bold text-gray-600 text-center">
+              ACA Health
+            </div>
           </div>
 
-          <div class="secTwo__verticals-i last-i flex flex-col items-center gap-2">
+          <div
+            class="secTwo__verticals-i last-i flex flex-col items-center gap-2"
+          >
             <img src="/img/medicare.png" alt="" />
-            <div class="text-sm font-bold text-gray-600 text-center">U65 Health</div>
+            <div class="text-sm font-bold text-gray-600 text-center">
+              U65 Health
+            </div>
           </div>
         </div>
 
@@ -215,9 +235,9 @@ const showHamburger = ref(false);
           <div class="secTwo__why-r">
             <div class="secTwo__title">Why Choose AllCalls.io</div>
             <div class="secTwo__para">
-              Leave prospecting behind and let us do the heavy lifting for you and your
-              business. Experience the Power of On-Demand Calls and start talking with
-              potential clients Today!
+              Leave prospecting behind and let us do the heavy lifting for you
+              and your business. Experience the Power of On-Demand Calls and
+              start talking with potential clients Today!
             </div>
             <a href="/register">
               <PrimaryButton class="my-4">
@@ -235,7 +255,9 @@ const showHamburger = ref(false);
     <div class="container">
       <div class="secThree">
         <div class="secThree__subtitle">The AllCalls.io Lead Solution</div>
-        <div class="secThree__title">Simplify your Sales with AllCalls.io Mobile App</div>
+        <div class="secThree__title">
+          Simplify your Sales with AllCalls.io Mobile App
+        </div>
 
         <div class="secThree__layer">
           <img src="/img/second-layer.png" alt="" />
@@ -255,10 +277,11 @@ const showHamburger = ref(false);
             <div class="secFour__subtitle">Stay Connected</div>
             <div class="secFour__title">Talk To New Client's On-Demand</div>
             <div class="secFour__para">
-              With AllCalls.io, you decide when to receive calls based on your schedule.
-              Turn on the mobile app when you're ready to connect, and turn it off when
-              you're busy. We give you the flexibility to manage your calls on your terms,
-              ensuring you never miss an opportunity.
+              With AllCalls.io, you decide when to receive calls based on your
+              schedule. Turn on the mobile app when you're ready to connect, and
+              turn it off when you're busy. We give you the flexibility to
+              manage your calls on your terms, ensuring you never miss an
+              opportunity.
             </div>
             <a href="/register">
               <PrimaryButton class="my-4">
@@ -279,10 +302,10 @@ const showHamburger = ref(false);
             <div class="secFour__subtitle">Boost Efficiency</div>
             <div class="secFour__title">Seamless Integration</div>
             <div class="secFour__para">
-              AllCalls.io fits smoothly into your existing workflow. Our web and mobile
-              apps ensure you can manage your calls from anywhere, on any device. Plus,
-              with our intuitive interface and straightforward setup, you'll be up and
-              running in no time.
+              AllCalls.io fits smoothly into your existing workflow. Our web and
+              mobile apps ensure you can manage your calls from anywhere, on any
+              device. Plus, with our intuitive interface and straightforward
+              setup, you'll be up and running in no time.
             </div>
             <a href="/register">
               <PrimaryButton class="my-4">
@@ -303,11 +326,12 @@ const showHamburger = ref(false);
             <div class="secFour__subtitle">Increase Revenue</div>
             <div class="secFour__title">More Calls = More Sales</div>
             <div class="secFour__para">
-              At AllCalls.io, we believe quality calls shouldn't break the bank. And if we
-              can put you in front of more potential clients for your money, we know we
-              can help increase your sales. We offer competitive pricing to fit your
-              companies needs and budget. Whether you're a small startup or a large
-              enterprise, we have a solution for you!
+              At AllCalls.io, we believe quality calls shouldn't break the bank.
+              And if we can put you in front of more potential clients for your
+              money, we know we can help increase your sales. We offer
+              competitive pricing to fit your companies needs and budget.
+              Whether you're a small startup or a large enterprise, we have a
+              solution for you!
             </div>
             <a href="/register">
               <PrimaryButton class="my-4">
@@ -331,9 +355,10 @@ const showHamburger = ref(false);
         <div
           class="reg__subtitle text-3xl text-gray-500 font-bold drop-shadow-lg max-w-3xl"
         >
-          At AllCalls.io we take Compliance very seriously. All of our calls have opted in
-          to be called with Jornaya and Trusted Form verification to keep the highest TCPA
-          compliance. We also scrub all of our callers against the national DNC list.
+          At AllCalls.io we take Compliance very seriously. All of our calls
+          have opted in to be called with Jornaya and Trusted Form verification
+          to keep the highest TCPA compliance. We also scrub all of our callers
+          against the national DNC list.
         </div>
       </div>
     </div>
@@ -345,10 +370,14 @@ const showHamburger = ref(false);
         <div class="secFive__row">
           <div class="secFive__inner gap-8">
             <div class="secFive__texts">
-              <div class="text-6xl font-semibold text-white mb-5 secFive__texts-t">
+              <div
+                class="text-6xl font-semibold text-white mb-5 secFive__texts-t"
+              >
                 Streamlined Process for On-Demand Calls
               </div>
-              <ul class="text-sm font-semibold text-custom-sky space-y-2 lg:text-lg">
+              <ul
+                class="text-sm font-semibold text-custom-sky space-y-2 lg:text-lg"
+              >
                 <li
                   class="w-full bg-white py-1 px-2 rounded drop-shadow-xl lg:bg-transparent lg:text-white"
                 >
@@ -377,7 +406,11 @@ const showHamburger = ref(false);
                   <div class="font-semibold 2xl:text-4xl text-center">
                     Get Started Now
                   </div>
-                  <img src="/img/green-arrow.png" class="w-10 2xl:w-20" alt="" />
+                  <img
+                    src="/img/green-arrow.png"
+                    class="w-10 2xl:w-20"
+                    alt=""
+                  />
                 </PrimaryButton>
               </a>
             </div>
@@ -396,22 +429,22 @@ const showHamburger = ref(false);
               justify-content: space-between;
             "
           >
-            <!-- <div class="secFive__one-hold"> -->
-            <div class="secFive__subtitle">Start Receiving Calls Fast</div>
-            <div class="secFive__title">
-              Our technology allows you start taking calls in seconds
+            <div class="secFive__one-hold">
+              <div class="secFive__subtitle">Start Receiving Calls Fast</div>
+              <div class="secFive__title">
+                Our technology allows you start taking calls in seconds
+              </div>
+              <a href="#">
+                <PrimaryButton class="my-4">
+                  <div class="text-custom-sky">Download Our Mobile App</div>
+                  <img class="w-10" src="/img/blue-arrow.png" alt="" />
+                </PrimaryButton>
+              </a>
             </div>
-            <a href="#">
-              <PrimaryButton class="my-4">
-                <div class="text-custom-sky">Download Our Mobile App</div>
-                <img class="w-10" src="/img/blue-arrow.png" alt="" />
-              </PrimaryButton>
-            </a>
-            <!-- </div> -->
           </div>
         </div>
 
-        <div class="secFive__two">
+        <!-- <div class="secFive__two">
           <div
             class="container"
             style="
@@ -432,7 +465,7 @@ const showHamburger = ref(false);
               </PrimaryButton>
             </a>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </section>
