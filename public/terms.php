@@ -144,9 +144,17 @@ to any third party for any modification, suspension or discontinuance of the Ser
 <p>b. Purchased leads are entitled to refunds under specific conditions. For example, if a customer receives a call where the prospect resides in a state that the customer did not list as one of their licensed states during signup.</p>
 <p>c. Technical issues, such as poor call quality, are also valid grounds for refunds.</p>
 <h4>Pricing and Billing</h4>
-	<p>a. Calls reaching a duration of 60 seconds or more will be billed and deducted from your user account balance. Internally licensed agents are billed at a fixed rate of $35 per call. Other users are billed based on a bidding system, with a minimum bid of $25. Users will pay $1 more than the next highest bid.</p>
-	<p>b. The minimum deposit to fund your account is $100. There is an autopay feature available. A mandatory 3% processing fee applies to all deposits.</p>
-	<p>c. Funds never expire, and unused funds can be refunded, which may take up to 3 business days.</p>
+<p>a. Calls reaching a duration of 60 seconds or more will be billed and deducted from your User Account Funds. Internally licensed agents are billed at a fixed rate of $35 per call. Other users are billed based on a bidding system, with a minimum bid of $25. Users will pay $1 more than the next highest bid.</p>
+<p>All purchases will appear on your credit card statement as "<?php echo $settings->descriptor; ?>".</p>
+<h4>User Account Funds</h4>
+<h5>Deposits:</h5>
+	<p><ul><li>Users can deposit funds into their AllCalls.io account at any time.</li><li>The minimum deposit amount is $100.</li><li>A mandatory 3% processing fee will be added to all deposits, including those made through the autopay function.</li><li>Funds never expire, and unused funds can be refunded, which may take up to 10 business days.</li></ul></p>
+<h5>Use of Funds:</h5>
+<p><ul><li>Funds in a user's account will be used to pay for calls based on the pricing structure outlined in the "Pricing and Billing" section.</li><li>Users will be billed for calls that reach or exceed 60 seconds in length. The specific cost is determined either by a fixed rate or a bidding system, as described previously.</li></ul></p>
+<h5>Autopay Function:</h5>
+<p><ul><li>Users can enable the autopay function to automatically replenish their account funds when their balance drops below a specified threshold.</li><li>For example, if a user's balance drops below $50, the system can be set to automatically charge their card and add an additional $100 (or any other specified amount) to their account balance.</li></ul></p>
+<h5>Account Statements:</h5>
+<p>Users can view their account balance, transaction history, and statements at any time through their AllCalls.io account dashboard. This includes details on deposits, calls billed, refunds, and any other transactions.</p>
   <h4>Data and Privacy</h4>
 	<p>Users' behaviors are tracked for analytics, and data might be shared with third parties for analytical or marketing purposes. Please refer to our Privacy Policy for more details.</p>
   <h4>Agreement To Arbitrate; Class Action Waiver</h4>
@@ -201,8 +209,6 @@ jurisdiction of the state and federal courts located in Wyoming, in all question
 Agreement. To the extent allowed by applicable law, any claim or cause of action arising from or relating to
 your access or use of the Site must be brought within two (2) years from the date on which such claim or
 action arose or accrued.</p>
-  <p>This purchase will appear on your credit card statement as "<?php echo $settings->descriptor; ?>".</p>
-  <p>Product sold by <?php echo $settings->companyName; ?>.</p>
 </div>
 <div class="sf-submit-loader-container" style="background: rgba(0, 0, 0, .5);">
   <div class="sf-submit-loader-content">

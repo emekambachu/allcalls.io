@@ -2,10 +2,10 @@
 
 $settings = (object) [
   'companyName' => 'AllCalls.io',
-  'address' => 'Example address',
+  'address' => '1309 Coffeen Ave STE 11246, Sheridan, WY 82801, USA',
   'pageTitle' => 'AllCalls.io',
   'email' => 'support@allcalls.io',
-  'phone' => '(123) 456-7890',
+  'phone' => '(855) 815-0382',
   'descriptor' => 'ALLCALLS.IO'
 ];
 
@@ -44,6 +44,7 @@ $settings = (object) [
           <h2 class="page-title"><?php echo $settings->companyName; ?></h2>
           <p id="iv3m"><?php echo $settings->address; ?></p>
           <h3>Privacy Policy</h3>
+			<p>Last updated: 8/22/2023</p>
           <p id="i0t5">Welcome to the <?php echo $settings->pageTitle; ?> website (<span class="red-text">https://<?php echo $_SERVER['HTTP_HOST']; ?> or the "Website"). This written
             policy (the "Privacy Policy") is designed to tell you about our practices regarding collection, use, and
             disclosure of information that you may provide via this Website and certain related services. Please be sure
