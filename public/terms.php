@@ -144,9 +144,9 @@ to any third party for any modification, suspension or discontinuance of the Ser
 <p>b. Purchased leads are entitled to refunds under specific conditions. For example, if a customer receives a call where the prospect resides in a state that the customer did not list as one of their licensed states during signup.</p>
 <p>c. Technical issues, such as poor call quality, are also valid grounds for refunds.</p>
 <h4>Pricing and Billing</h4>
-	<p>a. Calls reaching a duration of 60 seconds or more will be billed. Internally licensed agents are billed at a fixed rate of $35 per call. Other users are billed based on a bidding system, with a minimum bid of $25. Users will pay $1 more than the next highest bid.</p>
-	<p>b. The minimum deposit is $100. There is an autopay feature available. A mandatory 3% processing fee applies to all deposits.</p>
-	<p>c. Funds never expire, and unused funds can be refunded, which may take up to 10 business days.</p>
+	<p>a. Calls reaching a duration of 60 seconds or more will be billed and deducted from your user account balance. Internally licensed agents are billed at a fixed rate of $35 per call. Other users are billed based on a bidding system, with a minimum bid of $25. Users will pay $1 more than the next highest bid.</p>
+	<p>b. The minimum deposit to fund your account is $100. There is an autopay feature available. A mandatory 3% processing fee applies to all deposits.</p>
+	<p>c. Funds never expire, and unused funds can be refunded, which may take up to 3 business days.</p>
   <h4>Data and Privacy</h4>
 	<p>Users' behaviors are tracked for analytics, and data might be shared with third parties for analytical or marketing purposes. Please refer to our Privacy Policy for more details.</p>
   <h4>Agreement To Arbitrate; Class Action Waiver</h4>
