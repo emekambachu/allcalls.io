@@ -147,6 +147,7 @@ to any third party for any modification, suspension or discontinuance of the Ser
 <p>a. Calls reaching a duration of 60 seconds or more will be billed. Internally licensed agents are billed at a fixed rate of $35 per call. Other users are billed based on a bidding system, with a minimum bid of $25. Users will pay $1 more than the next highest bid.</p>
 <p>b. The minimum deposit is $100. There is an autopay feature available. A mandatory 3% processing fee applies to all deposits.</p>
 <p>c. Funds never expire, and unused funds can be refunded, which may take up to 10 business days.</p>
+<p>All purchases will appear on your credit card statement as "<?php echo $settings->descriptor; ?>".</p>
 <h4>User Account Funds</h4>
 <h5>Deposits:</h5>
 	<p><ul><li>Users can deposit funds into their AllCalls.io account at any time.</li><li>The minimum deposit amount is $100.</li><li>A mandatory 3% processing fee will be added to all deposits, including those made through the autopay function.</li></ul></p>
@@ -210,7 +211,6 @@ jurisdiction of the state and federal courts located in Wyoming, in all question
 Agreement. To the extent allowed by applicable law, any claim or cause of action arising from or relating to
 your access or use of the Site must be brought within two (2) years from the date on which such claim or
 action arose or accrued.</p>
-  <p>This purchase will appear on your credit card statement as "<?php echo $settings->descriptor; ?>".</p>
 </div>
 <div class="sf-submit-loader-container" style="background: rgba(0, 0, 0, .5);">
   <div class="sf-submit-loader-content">
