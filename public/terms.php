@@ -139,6 +139,10 @@ effect with respect to your access and use of the Site.</p>
   <p>We reserve the right at any time and from time to time to modify or discontinue, temporarily or permanently,
 the Services (or any part thereof) with or without notice. You agree that we shall not be liable to you or
 to any third party for any modification, suspension or discontinuance of the Services.</p>
+<h4>Refund Policy</h4>
+<p>a. Users can deposit funds into their account. Unused portions of these deposits are refundable at any time. Refunds will be issued to customer credit card within 3 business days.</p>
+<p>b. Purchased leads are entitled to refunds under specific conditions. For example, if a customer receives a call where the prospect resides in a state that the customer did not list as one of their licensed states during signup.</p>
+<p>c. Technical issues, such as poor call quality, are also valid grounds for refunds.</p>
 <h4>Pricing and Billing</h4>
 	<p>a. Calls reaching a duration of 60 seconds or more will be billed. Internally licensed agents are billed at a fixed rate of $35 per call. Other users are billed based on a bidding system, with a minimum bid of $25. Users will pay $1 more than the next highest bid.</p>
 	<p>b. The minimum deposit is $100. There is an autopay feature available. A mandatory 3% processing fee applies to all deposits.</p>
