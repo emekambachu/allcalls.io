@@ -490,7 +490,7 @@ const props = defineProps({
             Dashboard
           </NavLink>
 
-            <NavLink class="mb-10 gap-2" :href="route('admin.customer.index')" :active="route().current('admin.customer.index')">
+            <NavLink class="mb-10 gap-2" :href="route('admin.customer.index')" :active="route().current('admin.customer.index') || route().current('admin.customer.detail') ">
                 <img src="/img/clients.png" alt="" />
                 Customers
             </NavLink>

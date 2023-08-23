@@ -49,21 +49,21 @@ let openTransactionModal = (type) => {
     <div class="px-16 pt-14">
       <div class="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <div @click="openTransactionModal('transactions')"
-          class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto">
+          class="max-w-sm p-6 bg-custom-darksky cursor-pointer rounded-lg shadow overflow-auto">
           <p class="mb-1 text-sm text-gray-300">Total Transactions</p>
           <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
             {{ transactionsCount }}
           </h2>
         </div>
         <div @click="openTransactionModal('calls')"
-          class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto">
+          class="max-w-sm p-6 cursor-pointer bg-custom-darksky rounded-lg shadow overflow-auto">
           <p class="mb-1 text-sm text-gray-300">Total Calls</p>
           <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
             {{ callsCount }}
           </h2>
         </div>
         <div @click="openTransactionModal('activities')"
-          class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto">
+          class="max-w-sm cursor-pointer p-6 bg-custom-darksky rounded-lg shadow overflow-auto">
           <p class="mb-1 text-sm text-gray-300">
             Total Activities
           </p>
