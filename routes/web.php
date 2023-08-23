@@ -44,12 +44,12 @@ require 'admin.php';
 Route::get('/transactions', [TransactionsController::class, 'index'])->middleware(['auth', 'verified'])->name('transactions.index');
 Route::delete('/transactions/{transaction}', [TransactionsController::class, 'destroy'])->middleware(['auth', 'verified'])->name('transactions.destroy');
 
-Route::middleware(['auth', 'verified', 'user'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/registration-steps', [RegisteredUserController::class, 'steps'])->name('registration.steps');
     Route::post('/store-registration-steps', [RegisteredUserController::class, 'storeSteps'])->name('store.registration.steps');
 });
 
-Route::middleware(['auth', 'verified', 'user', 'registration-step-check'])->group(function () {
+Route::middleware(['auth', 'verified', 'registration-step-check'])->group(function () {
     //User Routes
     Route::get('/dashboard', [DashboardController::class, 'show'])->name('dashboard');
     Route::get('/transactions', [TransactionsController::class, 'index'])->name('transactions.index');
