@@ -61,7 +61,13 @@ class IncomingCallController extends Controller
         }
 
         Log::debug('The to attribute did not match any records in the database.');
-        return abort(400);
+
+        $twimlResponse = '<?xml version="1.0" encoding="UTF-8"?>';
+        $twimlResponse .= '<Response>';
+        $twimlResponse .= '<Say>The to attribute did not match any records in the database.</Say>';
+        $twimlResponse .= '</Response>';
+        
+        return response($twimlResponse, 200)->header('Content-Type', 'text/xml');
     }
 
     public function handleAvailableNumberCall($to)

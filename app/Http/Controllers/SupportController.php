@@ -7,14 +7,15 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+
 class SupportController extends Controller
 {
     public function index(Request $request)
     {
-        if($request->user()){
+        if ($request->user()) {
             return Inertia::render('Support/Index');
-        }else{
-            return Inertia::render('front/Support/index',[
+        } else {
+            return Inertia::render('front/Support/index', [
                 'canLogin' => Route::has('login'),
                 'canRegister' => Route::has('register'),
                 'laravelVersion' => Application::VERSION,
@@ -22,5 +23,5 @@ class SupportController extends Controller
             ]);
         }
     }
-    
+
 }
