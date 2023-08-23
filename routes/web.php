@@ -75,7 +75,6 @@ Route::get('/clients', [ClientsController::class, 'index'])->middleware(['auth',
 Route::patch('/clients/{client}', [ClientsController::class, 'update'])->middleware(['auth', 'verified'])->name('clients.update');
 
 Route::get('/support', [SupportController::class, 'index'])->name('support.index');
-Route::get('/clients/support', [SupportController::class, 'clientIndex'])->name('support.index');
 
 // Route::get('channel-test', function() {
 //     UserOnline::dispatch();
