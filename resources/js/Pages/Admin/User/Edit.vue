@@ -5,6 +5,7 @@ import { router } from "@inertiajs/vue3"
 import GuestTextInput from "@/Components/GuestTextInput.vue";
 import GuestInputLabel from "@/Components/GuestInputLabel.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
+import { createToaster } from "@meforma/vue-toaster";
 import axios from "axios";
 let props = defineProps({
   showModal: {
@@ -14,6 +15,7 @@ let props = defineProps({
   userDetail: {
     type: Object,
   },
+  currentPage:Number,
 });
 let emit = defineEmits(["close"]);
 let originalClient = props.userDetail;
@@ -45,48 +47,34 @@ watch(() => props.showModal, async (newValue) => {
 let validateEmail = (email) => {
   return /\S+@\S+\.\S+/.test(email); // Simple regex for email validation
 }
+let successMessage = ref(null);
+let toaster = createToaster({
+    position: "top-right",
+});
 let saveChanges = () => {
 
   if (validateEmail(form.email)) {
-
     return axios
       .post(`/admin/customer/${form.id}`, form)
       .then((response) => {
-      router.visit('/admin/customers')
+        toaster.success(response.data.message);
+        router.visit(`/admin/customers?page=${props.currentPage}`);
       })
       .catch((error) => {
         if (error.response) {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
           firstStepErrors.value = error.response.data.errors;
           if (error.response.status === 400) {
             uiEmailValidation.value.isValid = false;
-            // Handle validation errors here.
             console.log(error.response.data);
             firstStepErrors.value = error.response.data.errors;
-          } else {
-            // Handle other types of errors.
-            console.log("Other errors", error.response.data);
-          }
-        } else if (error.request) {
-          // The request was made but no response was received
-          console.log("No response received", error.request);
-        } else {
-          // Something happened in setting up the request that triggered an Error
-          console.log("Error", error.message);
-        }
+          } 
+        } 
       });
   }
   else {
     uiEmailValidation.value.isValid = true;
   }
 
-  // console.log('userDetail save changes', props.userDetail);
-  // console.log('form upon save changes', form);
-  // router.visit(`/admin/customer/${form.id}`, {
-  //   method: 'PATCH',
-  //   data: form,
-  // });
 }
 
 </script>
@@ -154,37 +142,9 @@ let saveChanges = () => {
 
               <GuestTextInput id="phone" type="text" class="mt-1 block w-full" v-model="form.phone" minlength="10"
                 maxlength="10" onkeyup="this.value=this.value.replace(/[^\d]/,&#39;&#39;)" />
-
-              <!-- <InputError class="mt-2" :message="form.errors.phone" /> -->
               <div v-if="firstStepErrors.phone" class="text-red-500" v-text="firstStepErrors.phone[0]"></div>
             </div>
-            <!-- <h4 class="text-2xl font-semibold text-custom-sky mb-2">
-              Contact Information
-            </h4>
-            <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-10">
-              <div>
-                <label class="text-lg">Phone:</label>
-                <TextInput type="text" name="phone" id="phone" class="w-full" required v-model="form.phone" />
-              </div>
-              <div>
-                <label class="text-lg">Email:</label>
-                <TextInput type="email" name="email" id="email" class="w-full" placeholder="john@example.com" required
-                  v-model="form.email" readonly/>
-              </div>
-            </div>
-
-            <h4 class="text-2xl font-semibold text-custom-sky mb-2">
-              Other Information
-            </h4>
-            <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-10">
-              <div>
-                <label class="text-lg">Balance:</label>
-                <TextInput type="number" step="any" name="balance" id="balance" class="w-full" placeholder="0.0"
-                  v-model="form.balance" />
-              </div>
-            </div> -->
-
-            <!-- (The rest of your sections would follow a similar structure) -->
+            
 
             <div class="flex justify-end mt-6">
               <button type="submit"

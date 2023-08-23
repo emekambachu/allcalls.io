@@ -52,10 +52,11 @@
 
     let showModal = ref(false);
     let userDetail = ref(null);
+    let currentPage = ref(null);
 
-    let openClientModal = (user) => {
-        console.log(user);
+    let openClientModal = (user, page) => {
         userDetail.value = user;
+        currentPage.value = page;
         showModal.value = true;
     };
 
@@ -144,7 +145,7 @@
                                 <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
                                     <a :href="route('admin.customer.detail', user.id)">View Detail</a>
                                     <button 
-                                    @click="openClientModal(user)"
+                                    @click="openClientModal(user, users.current_page)"
                                     class="inline-flex items-center mx-2 p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
                                     type="button"
                                     >
@@ -241,6 +242,7 @@
         <Edit
             :showModal="showModal"
             :userDetail="userDetail"
+            :currentPage="currentPage"
             @close="showModal = false"
         ></Edit>
 

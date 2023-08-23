@@ -100,8 +100,10 @@ class CustomerController extends Controller
             'phone' => $request->phone,
             'balance' => $request->balance,
         ]);
-        return redirect()->back()->with([
-            'message' => 'Customer updated sussessfully.'
-        ]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Customer updated successfully.',
+        ], 200);
+
     }
 }
