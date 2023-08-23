@@ -54,14 +54,14 @@ class AutoPayController extends Controller
             'amount' => 'required|numeric|integer|min:50',
             'card_id' => 'required|numeric',
         ]);
-    
+
         $card = Card::find($request->card_id);
-    
+
         // Check if the card belongs to the user
         if (! $card || $card->user_id !== Auth::user()->id) {
             return redirect()->back();
         }
-    
+
         AutopaySetting::updateOrCreate(
             ['user_id' => Auth::user()->id],
             [
@@ -71,9 +71,56 @@ class AutoPayController extends Controller
                 'card_id' => $request->card_id,
             ]
         );
-    
+
         return redirect()->back()->with([
             'message' => 'Autopay settings saved.'
         ]);
+    }
+    public function storeWithStripe(Request $request){
+        $request->validate([
+            'enabled' => 'required',
+            'threshold' => 'required|numeric|integer|min:20',
+            'amount' => 'required|numeric|integer|min:50',
+            'card_id' => 'required|numeric',
+        ]);
+        try{
+        $card = Card::find($request->card_id);
+
+        // Check if the card belongs to the user
+        if (! $card || $card->user_id !== Auth::user()->id) {
+            return redirect()->back();
+        }
+        $cardNumber = Crypt::decryptString($card->number);
+        $cardMonth = Crypt::decryptString($card->month);
+        $cardYear = Crypt::decryptString($card->year);
+        $cvc = Crypt::decryptString($card->cvv);
+
+        $stripe = new \Stripe\StripeClient(
+            env('STRIPE_SECRET')
+        );
+
+        AutopaySetting::updateOrCreate(
+            ['user_id' => Auth::user()->id],
+            [
+                'enabled' => $request->enabled,
+                'threshold' => $request->threshold,
+                'amount' => $request->amount,
+                'card_id' => $request->card_id,
+            ]
+        );
+
+        return redirect()->back()->with([
+            'message' => 'Autopay settings saved.'
+        ]);
+    } catch (\Stripe\Exception\CardException $e) {
+        // Handle card-related errors
+        dd($e->getMessage());
+    } catch (\Stripe\Exception\ApiErrorException $e) {
+        dd($e->getMessage());
+        // Handle other API errors
+        //  echo 'API Error: ' . $e->getMessage();
+    }catch(Exception $e){
+        dd($e->getMessage());
+    }
     }
 }
