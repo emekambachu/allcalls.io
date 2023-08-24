@@ -19,6 +19,9 @@ import { router } from "@inertiajs/vue3"
 
 let step = ref(0);
 let firstStepErrors = ref({});
+let uiEmailValidation = ref({
+    "isValid": false
+});
 
 let insuranceTypes = ref([
   "Auto Insurance",
@@ -80,38 +83,53 @@ let form = useForm({
   phone: "",
 });
 
+
 let text = ref([]);
 
-let check = () => {};
+let check = () => {
+
+};
+
 let errors = ref(null);
 
+let validateEmail = (email) => {
+    return /\S+@\S+\.\S+/.test(email); // Simple regex for email validation
+}
+
 let submit = () => {
-    return axios
-      .post("/register", form)
-      .then((response) => {
-        router.visit('/login')
-      })
-      .catch((error) => {
-        if (error.response) {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
-          console.log(error.response.data);
-          errors.value = error.response.data.errors;
-          if (error.response.status === 400) {
-            // Handle validation errors here.
-            firstStepErrors.value = error.response.data.errors;
-          } else {
-            // Handle other types of errors.
-            console.log("Other errors", error.response.data);
-          }
-        } else if (error.request) {
-          // The request was made but no response was received
-          console.log("No response received", error.request);
-        } else {
-          // Something happened in setting up the request that triggered an Error
-          console.log("Error", error.message);
-        }
-      });
+    if(validateEmail(form.email)) {
+
+        return axios
+          .post("/register", form)
+          .then((response) => {
+            router.visit('/login')
+          })
+          .catch((error) => {
+            if (error.response) {
+              // The request was made and the server responded with a status code
+              // that falls out of the range of 2xx
+              console.log(error.response.data);
+              errors.value = error.response.data.errors;
+              if (error.response.status === 400) {
+                  uiEmailValidation.value.isValid = false;
+                  // Handle validation errors here.
+                firstStepErrors.value = error.response.data.errors;
+              } else {
+                // Handle other types of errors.
+                console.log("Other errors", error.response.data);
+              }
+            } else if (error.request) {
+              // The request was made but no response was received
+              console.log("No response received", error.request);
+            } else {
+              // Something happened in setting up the request that triggered an Error
+              console.log("Error", error.message);
+            }
+          });
+    }
+    else {
+        uiEmailValidation.value.isValid = true;
+    }
 };
 
 // let goBack = () => {
@@ -135,87 +153,6 @@ let submit = () => {
         hassle-free.
       </div>
     </template>
-
-    <!-- <template v-slot:smallStepOneLoading>
-      <div v-show="step === 0" class="flex flex-col items-center w-full">
-        <div
-          class="w-[80%] max-w-xl bg-gray-200 rounded-full h-1.5 dark:bg-gray-700 mb-1"
-        >
-          <div
-            class="bg-blue-600 h-1.5 rounded-full dark:bg-blue-500"
-            style="width: 15%"
-          ></div>
-        </div>
-        <div class="text-sm text-gray-500">
-          Create Your Account
-        </div>
-      </div>
-
-      <div v-show="step === 1" class="flex flex-col items-center w-full">
-        <div
-          class="w-[80%] max-w-xl bg-gray-200 rounded-full h-1.5 dark:bg-gray-700 mb-1"
-        >
-          <div
-            class="bg-blue-600 h-1.5 rounded-full dark:bg-blue-500"
-            style="width: 50%"
-          ></div>
-        </div>
-        <div class="text-sm text-gray-500">
-          Create Your Account: Step 2 of 3
-        </div>
-      </div>
-
-      <div v-show="step === 2" class="flex flex-col items-center w-full">
-        <div
-          class="w-[80%] max-w-xl bg-gray-200 rounded-full h-1.5 dark:bg-gray-700 mb-1">
-          <div
-            class="bg-blue-600 h-1.5 rounded-full dark:bg-blue-500"
-            style="width: 95%"
-          ></div>
-        </div>
-        <div class="text-sm text-gray-500">
-          Create Your Account: Step 3 of 3
-        </div>
-      </div>
-    </template>
-
-    <template v-slot:largeStepOneLoading>
-      <div v-show="step === 0" class="flex flex-col items-center w-full">
-        <div class="w-full bg-gray-300 rounded-full h-1.5 mb-1">
-          <div
-            class="bg-blue-600 h-1.5 rounded-full dark:bg-blue-500"
-            style="width: 15%"
-          ></div>
-        </div>
-        <div class="text-sm text-gray-300">
-          Create Your Account: Step 1 of 3
-        </div>
-      </div>
-
-      <div v-show="step === 1" class="flex flex-col items-center w-full">
-        <div class="w-full bg-gray-300 rounded-full h-1.5 mb-1">
-          <div
-            class="bg-blue-600 h-1.5 rounded-full dark:bg-blue-500"
-            style="width: 50%"
-          ></div>
-        </div>
-        <div class="text-sm text-gray-300">
-          Create Your Account: Step 2 of 3
-        </div>
-      </div>
-
-      <div v-show="step === 2" class="flex flex-col items-center w-full">
-        <div class="w-full bg-gray-300 rounded-full h-1.5 mb-1">
-          <div
-            class="bg-blue-600 h-1.5 rounded-full dark:bg-blue-500"
-            style="width: 95%"
-          ></div>
-        </div>
-        <div class="text-sm text-gray-300">
-          Create Your Account: Step 3 of 3
-        </div>
-      </div>
-    </template> -->
 
     <form @submit.prevent="submit">
       <div v-show="step === 0">
@@ -272,7 +209,9 @@ let submit = () => {
             required
             pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}"
           />
-
+            <div
+                v-if="uiEmailValidation.isValid"
+                class="text-red-500">Please enter valid email address.</div>
           <!-- <InputError class="mt-2" :message="form.errors.email" /> -->
           <div
             v-if="firstStepErrors.email"
@@ -347,200 +286,6 @@ let submit = () => {
           >
         </div>
       </div>
-
-      <!-- <div v-if="step === 1">
-        <h6 class="text-black text-2xl font-extrabold text-center my-4">
-          How It Works
-        </h6>
-
-        <Carousel :items-to-show="1">
-          <Slide :key="1">
-            <div class="px-12">
-              <p class="text-gray-700 text-lg text-left leading-relaxed">
-                Our dynamic bidding system allows you to set a maximum bid for
-                each type of call you're interested in as you configure your
-                account.
-              </p>
-            </div>
-          </Slide>
-
-          <Slide :key="2">
-            <div class="px-12">
-              <p class="text-gray-700 text-lg text-left leading-relaxed">
-                Each call type has a base bid of $20, but you can bid higher to
-                increase your chances of securing the call. The user with the
-                highest bid wins the call but pays only $1 more than the second
-                highest bid.
-              </p>
-            </div>
-          </Slide>
-          <Slide :key="3">
-            <div class="px-12">
-              <p class="text-gray-700 text-lg text-left leading-relaxed">
-                To start, select your desired call types and indicate your
-                maximum bid for each. Don't forget to select the states where
-                you're licensed to operate. Remember, banks will see your bid
-                amounts as they set the prices they allow for payment
-                processing, so bid wisely!
-              </p>
-
-              <div class="text-center mt-4 mb-2">
-                <PrimaryButton type="button" @click.prevent="step = 2"
-                  >Configure Call Types</PrimaryButton
-                >
-              </div>
-            </div>
-          </Slide>
-
-          <template #addons>
-            <navigation />
-            <pagination />
-          </template>
-        </Carousel>
-      </div>
-
-      <div v-if="step === 2">
-        <div class="mt-4">
-          <GuestInputLabel
-            class="mb-3"
-            for="insurance_type"
-            value="What types of calls do you want to receive?"
-          />
-
-          <div
-            v-for="(callType, index) in callTypes"
-            :key="callType.id"
-            class="mb-4"
-          >
-            <input
-              :id="`insurance_type_${callType.id}`"
-              type="checkbox"
-              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-              @change="onTypeUpdate"
-              :value="callType.id"
-            />
-
-            <label
-              class="ml-2 text-md font-medium text-custom-indigo"
-              :for="`insurance_type_${callType.id}`"
-              v-text="callType.type"
-            ></label>
-
-            <div v-if="selectedTypes.includes(callType.id)" class="pt-2 mb-8">
-              <div>
-                <label class="ml-2 text-xs font-medium">Your Bid</label>
-                <div class="relative mb-2">
-                  <div
-                    class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none"
-                  >
-                    $
-                  </div>
-                  <input
-                    type="number"
-                    min="20"
-                    class="bg-custom-gray border-none focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm pl-8 w-full"
-                    placeholder="20.00"
-                    v-model="form.bids[index].amount"
-                  />
-                </div>
-              </div>
-              <label class="ml-2 text-xs font-medium"
-                >States you're licensed in:</label
-              >
-              <Multiselect
-                :options="stateOptions"
-                v-model="form.typesWithStates[callType.id]"
-                track-by="value"
-                label="label"
-                mode="tags"
-                :close-on-select="false"
-                placeholder="Select a state"
-              >
-              </Multiselect>
-            </div>
-          </div>
-
-          <InputError class="mt-2" :message="form.errors.insurance_type" />
-        </div>
-
-        <div class="flex mt-10">
-          <input
-            id="checked-checkbox"
-            type="checkbox"
-            v-model="form.consent"
-            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-          />
-          <label
-            for="checked-checkbox"
-            class="ml-2 text-xs font-medium text-gray-900 dark:text-gray-400"
-          >
-            By clicking Continue, I agree to email marketing, the Terms and
-            Conditions (which include mandatory arbitration), Privacy Policy,
-            and site visit recordation by Trusted Form and Jornaya. I provide my
-            express written consent and electronic signature to receive
-            monitored or recorded phone sales calls and text messages from
-            AllCalls.io regarding products and services including Medicare
-            Supplement, Medicare Advantage, and Prescription Drug Plans on the
-            landline or mobile number I provided even if I am on a federal or
-            State do not call registry. I confirm that the phone number set
-            forth above is accurate and I am the regular user of the phone. I
-            understand these calls may be generated using an automated dialing
-            system and may contain pre-recorded and artificial voice messages
-            and that consenting is not required to receive a quote or speak with
-            an agent and that I can revoke my consent at any time by any
-            reasonable means. To receive a quote without providing consent,
-            please call (866) 523-1718. For SMS message campaigns: Text STOP to
-            stop and HELP for help. Msg and data rates may apply. Periodic
-            messages; max. 30/month.
-          </label>
-        </div>
-
-        <InputError class="mt-2" :message="form.errors.consent" />
-
-        <div class="flex justify-between items-center">
-          <div class="mt-4">
-            <a
-              href="#"
-              @click.prevent="goBack"
-              class="border border-gray-500 inline-flex items-center px-3 py-2 bg-white rounded-md font-semibold text-md text-custom-blue uppercase tracking-widest hover:bg-custom-blue hover:drop-shadow-2xl hover:text-custom-green hover:ring-2 hover:ring-custom-sky focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="w-4 h-4 mr-2"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"
-                />
-              </svg>
-
-              Back</a
-            >
-          </div>
-
-          <div class="flex items-center justify-end mt-4">
-            <Link
-              :href="route('login')"
-              class="underline text-sm text-custom-blue hover:text-custom-green rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
-            >
-              Already registered?
-            </Link>
-
-            <PrimaryButton
-              class="ml-4"
-              :class="{ 'opacity-25': form.processing }"
-              :disabled="form.processing"
-            >
-              Register
-            </PrimaryButton>
-          </div>
-        </div>
-      </div> -->
     </form>
 
     <template v-slot:titles>
@@ -594,7 +339,7 @@ input[type="number"] {
   background-color: #d7d7d7;
   border-radius: 5px;
 }
-/* 
+/*
 .carousel__item {
   min-height: 200px;
   width: 100%;

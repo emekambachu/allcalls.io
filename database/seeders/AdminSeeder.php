@@ -3,22 +3,21 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
-class UserSeeder extends Seeder
+class AdminSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        $user = User::create([
+        $admin = User::create([
             'first_name' => 'system',
-            'last_name' => 'user',
-            'email' => 'user@user.com',
+            'last_name' => 'admin',
+            'email' => 'admin@admin.com',
             'password' => Hash::make('password'),
             'email_verified_at' => now(),
             'phone' => '000000000',
@@ -26,13 +25,8 @@ class UserSeeder extends Seeder
 
 
         DB::table('role_user')->insert([
-            'user_id' => $user->id,
-            'role_id' => 2,
-            'created_at' => now(),
-            'updated_at' => now(),
+            'user_id' => $admin->id,
+            'role_id' => 1,
         ]);
-
-        User::factory()->count(50)->create();
-
     }
 }

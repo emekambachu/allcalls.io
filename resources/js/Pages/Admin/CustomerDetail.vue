@@ -1,156 +1,78 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import ClientDetailsModal from "@/Components/ClientDetailsModal.vue";
-import { Head, router, usePage } from "@inertiajs/vue3";
-import { ref } from "vue";
-import { createToaster } from "@meforma/vue-toaster";
+import { Head } from "@inertiajs/vue3";
+import { Bar } from "vue-chartjs";
 
-let toaster = createToaster({
-  position: "top-right",
+
+const props = defineProps({
+  role: String,
+  transactions: Array,
+  user: Object,
 });
-
-let page = usePage();
-
-if (page.props.flash.message) {
-  toaster.success(page.props.flash.message);
-}
-
-let props = defineProps({
-  calls: {
-    type: Object,
-  },
-
-  totalCalls: {
-    type: Number,
-  },
-
-  totalAmountSpent: {
-    type: Number,
-  },
-
-  averageCallDuration: {
-    type: Number,
-  },
-});
-
-console.log(props.calls);
-
-let fetchClients = (page) => {
-  // Create URL object from page
-  let url = new URL(page);
-
-  // Ensure the protocol is https
-  if (url.protocol !== "https:") {
-    url.protocol = "https:";
-  }
-
-  // Get the https URL as a string
-  let httpsPage = url.toString();
-
-  router.visit(httpsPage, { method: "get" });
-};
-
-let showModal = ref(false);
-let callDetail = ref(null);
-
-let openClientModal = (call) => {
-  callDetail.value = call;
-  showModal.value = true;
-};
-
-let formatTime = (duration) => {
-  const minutes = Math.floor(duration / 60);
-  const seconds = Math.floor(duration % 60);
-  return `${minutes.toString().padStart(2, "0")}:${seconds
-    .toString()
-    .padStart(2, "0")}`;
-};
-
-let formatMoney = (amount) => {
-  return parseFloat(amount)
-    .toFixed(2)
-    .replace(/\d(?=(\d{3})+\.)/g, "$&,");
-};
-
-let formatDate = (inputDate) => {
-  // Split the input date by the hyphen ("-") to get year, month, and day
-  const [year, month, day] = inputDate.split("-");
-
-  // Rearrange the components in the "mm-dd-yyyy" format
-  const formattedDate = `${month}-${day}-${year}`;
-
-  return formattedDate;
-}
-
-
-let capitalizeAndReplaceUnderscore = (str) => {
-  // Replace underscores with spaces
-  let result = str.replace(/_/g, ' ');
-
-  // Capitalize the first letter of each word
-  result = result.replace(/\b(\w)/g, (match) => match.toUpperCase());
-
-  return result;
-};
 </script>
 
 <template>
-  <Head title="Client Information" />
-  <AuthenticatedLayout>
-    <template #header>
-      <h2
-        class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
+  <Head title="Dashboard" />
+  <AuthenticatedLayout  >
+    <div class="px-16 pt-14">
+      <div
+        class="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
       >
-        Clients
-      </h2>
-    </template>
+        <div
+          class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto" 
+        >
+          <p class="mb-1 text-sm text-gray-300">Total Calls (Past 7 Days)</p>
+          <h2
+            class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white"
+          >
+            55
+          </h2>
+        </div>
+        <div
+          class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto"
+        >
+          <p class="mb-1 text-sm text-gray-300">Total Spent (Past 7 Days)</p>
+          <h2
+            class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white"
+          >
+           200
+          </h2>
+        </div>
+        <div
+          class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto"
+        >
+          <p class="mb-1 text-sm text-gray-300">
+            Average Call Duration (Past 7 Days)
+          </p>
+          <h2
+            class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white"
+          >
+            587
+          </h2>
+        </div>
+      </div>
+    </div>
 
     <div class="pt-14">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
         <div class="px-4 sm:px-8 sm:rounded-lg">
-          <div class="text-4xl text-custom-sky font-bold mb-6">Clients</div>
+          <div class="text-4xl text-custom-sky font-bold mb-6">
+              {{ user.first_name }} {{ user.last_name }}</div>
           <hr class="mb-4" />
         </div>
       </div>
     </div>
 
-    <div
-      class="mx-auto px-4 sm:px-8 md:px-16 py-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-    >
-      <div
-        class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto"
-      >
-        <p class="mb-1 text-sm text-gray-300">Total Calls</p>
-        <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
-          {{ totalCalls }}
-        </h2>
-      </div>
-      <div
-        class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto"
-      >
-        <p class="mb-1 text-sm text-gray-300">Total Spent</p>
-        <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
-          ${{ formatMoney(totalAmountSpent) }}
-        </h2>
-      </div>
-      <div
-        class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto"
-      >
-        <p class="mb-1 text-sm text-gray-300">Average Call Duration</p>
-        <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
-          {{ formatTime(averageCallDuration) }}
-        </h2>
-      </div>
-    </div>
+    
 
-    <section v-if="calls.data.length" class="p-3">
+    <section v-if="transactions.data.length" class="p-3">
       <div class="mx-auto max-w-screen-xl sm:px-12">
         <div class="relative sm:rounded-lg overflow-hidden">
           <div class="overflow-x-auto">
             <table class="w-full text-sm text-left text-gray-400">
               <thead class="text-xs text-gray-300 uppercase bg-sky-900">
                 <tr>
-                  <th scope="col" class="px-4 py-3">ID</th>
+                  <th scope="col" class="px-4 py-3">#</th>
                   <th scope="col" class="px-4 py-3">HANG UP BY</th>
                   <th scope="col" class="px-4 py-3">CALL DURATION</th>
                   <th scope="col" class="px-4 py-3">CALL TAKEN</th>
@@ -161,12 +83,13 @@ let capitalizeAndReplaceUnderscore = (str) => {
               </thead>
               <tbody>
                 <tr
-                  v-for="call in calls.data"
-                  :key="call.id"
+                  v-for="(transaction, index) in transactions.data"
+                  :key="transaction.id"
                   class="border-b border-gray-500"
                 >
-                 
-                  <td class="text-gray-600 px-4 py-3">{{ call.id }}</td>
+                <th class="text-gray-600 px-4 py-3">{{ index + 1 }}</th>
+                {{transaction  }}
+                  <!-- <td class="text-gray-600 px-4 py-3">{{ call.id }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ call.hung_up_by }}</td>
                   <td class="text-gray-600 px-4 py-3">
                     {{
@@ -183,7 +106,9 @@ let capitalizeAndReplaceUnderscore = (str) => {
                   <th class="text-gray-600 px-4 py-3">{{ call.call_taken }}</th>
                   <td class="text-gray-600 px-4 py-3">{{ call.amount_spent }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ call.call_type.type }}</td>
-                  <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
+                  <td 
+                    class="text-gray-700 px-4 py-3 flex items-center justify-end"
+                  >
 
                     <button v-if="call.get_client"
                       @click="openClientModal(call)"
@@ -194,7 +119,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
                     </button>
                     <button v-else class="text-center"
                       type="button">-</button>
-                  </td>
+                  </td> -->
                 </tr>
               </tbody>
             </table>
@@ -208,11 +133,11 @@ let capitalizeAndReplaceUnderscore = (str) => {
                 >
                   Showing
                   <span class="font-semibold text-custom-blue">{{
-                    calls.current_page
+                    transactions.current_page
                   }}</span>
                   of
                   <span class="font-semibold text-custom-blue">{{
-                    calls.last_page
+                    transactions.last_page
                   }}</span>
                 </span>
                 <ul
@@ -220,8 +145,8 @@ let capitalizeAndReplaceUnderscore = (str) => {
                 >
                   <li>
                     <a
-                      v-if="calls.prev_page_url"
-                      @click="fetchClients(calls.prev_page_url)"
+                      v-if="transactions.prev_page_url"
+                      @click="fetchClients(transactions.prev_page_url)"
                       class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-custom-white rounded-l-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white"
                     >
                       <span class="sr-only">Previous</span>
@@ -244,14 +169,14 @@ let capitalizeAndReplaceUnderscore = (str) => {
                   <li>
                     <a
                       class="flex items-center justify-center text-sm py-2 px-3 leading-tight font-extrabold text-gray-500 bg-custom-white shadow-2xl hover:bg-sky-950 hover:shadow-2xl hover:text-white"
-                      >{{ calls.current_page }}
+                      >{{ transactions.current_page }}
                     </a>
                   </li>
 
                   <li>
                     <a
-                      v-if="calls.next_page_url"
-                      @click="fetchClients(calls.next_page_url)"
+                      v-if="transactions.next_page_url"
+                      @click="fetchClients(transactions.next_page_url)"
                       class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-custom-white rounded-r-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white"
                     >
                       <span class="sr-only">Next</span>
@@ -281,12 +206,5 @@ let capitalizeAndReplaceUnderscore = (str) => {
     <section v-else class="p-3">
       <p class="text-center text-gray-600">No clients yet.</p>
     </section>
-
-    <ClientDetailsModal
-      :showModal="showModal"
-      :callDetail="callDetail"
-      @close="showModal = false"
-    ></ClientDetailsModal>
-
   </AuthenticatedLayout>
 </template>

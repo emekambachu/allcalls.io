@@ -40,6 +40,10 @@ class AuthenticatedSessionController extends Controller
             'session_id' => session()->getId(),
         ]);
 
+        if(auth()->user()->roles->contains('name', 'admin')) {
+            return redirect()->intended(RouteServiceProvider::AdminHome);
+        }
+        
         return redirect()->intended(RouteServiceProvider::HOME);
     }
 
