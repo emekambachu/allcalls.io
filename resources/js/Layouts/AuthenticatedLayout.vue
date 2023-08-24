@@ -63,9 +63,7 @@ let formatMoney = (amount) => {
                   </Link>
                 </div>
                 <div class="flex flex-col justify-center items-center">
-                  <div
-                    class="text-xs leading-4 font-medium rounded-md text-custom-white"
-                  >
+                  <div class="text-xs leading-4 font-medium rounded-md text-custom-white">
                     Balance
                   </div>
                   <div class="text-xl font-bold text-gray-300">
@@ -106,11 +104,7 @@ let formatMoney = (amount) => {
                   </template>
 
                   <template #content>
-                    <DropdownLink
-                      :href="route('logout')"
-                      method="post"
-                      as="button"
-                    >
+                    <DropdownLink :href="route('logout')" method="post" as="button">
                       Log Out
                     </DropdownLink>
                   </template>
@@ -187,8 +181,7 @@ let formatMoney = (amount) => {
             <ResponsiveNavLink
               :href="route('activities.index')"
               :active="
-                route().current('activities.index') ||
-                route().current('activities.index')
+                route().current('activities.index') || route().current('activities.index')
               "
             >
               Activities
@@ -247,9 +240,7 @@ let formatMoney = (amount) => {
                       href="/billing/funds"
                       class="inline-flex items-center rounded-t-lg hover:text-custom-green"
                       :class="{
-                        'text-custom-green': route().current(
-                          'billing.funds.index'
-                        ),
+                        'text-custom-green': route().current('billing.funds.index'),
                       }"
                     >
                       <svg
@@ -276,11 +267,9 @@ let formatMoney = (amount) => {
                       aria-current="page"
                       class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
                       :class="{
-                        'text-custom-green': route().current(
-                          'billing.autopay.index'
-                        ),
+                        'text-custom-green': route().current('billing.autopay.index'),
                       }"
-                      href="/billing/autopay"
+                      href=""
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -297,6 +286,12 @@ let formatMoney = (amount) => {
                         />
                       </svg>
                       <span>Autopay</span>
+                      <div class="p-2">
+                        <span
+                          class="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20"
+                          >Coming soon</span
+                        >
+                      </div>
                     </Link>
                   </li>
 
@@ -305,9 +300,7 @@ let formatMoney = (amount) => {
                       href="/billing/cards"
                       class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
                       :class="{
-                        'text-custom-green': route().current(
-                          'billing.cards.index'
-                        ),
+                        'text-custom-green': route().current('billing.cards.index'),
                       }"
                       aria-current="page"
                     >
@@ -342,10 +335,7 @@ let formatMoney = (amount) => {
 
             <ResponsiveNavLink
               :href="route('profile.view')"
-              :active="
-                route().current('profile.view') ||
-                route().current('profile.edit')
-              "
+              :active="route().current('profile.view') || route().current('profile.edit')"
             >
               Profile
             </ResponsiveNavLink>
@@ -356,9 +346,7 @@ let formatMoney = (amount) => {
             <div class="px-4">
               <div class="font-medium text-base text-gray-200">
                 {{
-                  $page.props.auth.user.first_name +
-                  " " +
-                  $page.props.auth.user.last_name
+                  $page.props.auth.user.first_name + " " + $page.props.auth.user.last_name
                 }}
               </div>
               <div class="font-medium text-sm text-gray-400">
@@ -367,11 +355,7 @@ let formatMoney = (amount) => {
             </div>
 
             <div class="mt-3 space-y-1">
-              <ResponsiveNavLink
-                :href="route('logout')"
-                method="post"
-                as="button"
-              >
+              <ResponsiveNavLink :href="route('logout')" method="post" as="button">
                 Log Out
               </ResponsiveNavLink>
             </div>
@@ -383,9 +367,7 @@ let formatMoney = (amount) => {
       <div
         class="w-full mx-auto md:grid md:grid-cols-5 md:gap-28 md:max-w-screen-2xl xl:gap-0"
       >
-        <div
-          class="py-12 hidden sm:-my-px sm:ml-10 col-span-1 md:flex md:flex-col"
-        >
+        <div class="py-12 hidden sm:-my-px sm:ml-10 col-span-1 md:flex md:flex-col">
           <NavLink
             class="mb-10 gap-2"
             :href="route('dashboard')"
@@ -502,11 +484,9 @@ let formatMoney = (amount) => {
                   aria-current="page"
                   class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
                   :class="{
-                    'text-custom-green': route().current(
-                      'billing.autopay.index'
-                    ),
+                    'text-custom-green': route().current('billing.autopay.index'),
                   }"
-                  href="/billing/autopay"
+                  href=""
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -523,6 +503,12 @@ let formatMoney = (amount) => {
                     />
                   </svg>
                   <span>Autopay</span>
+                  <div class="p-2">
+                    <span
+                      class="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20"
+                      >Coming soon</span
+                    >
+                  </div>
                 </Link>
               </li>
 
@@ -581,9 +567,7 @@ let formatMoney = (amount) => {
           <NavLink
             class="mb-10 gap-2"
             :href="route('profile.view')"
-            :active="
-              route().current('profile.edit') || route().current('profile.view')
-            "
+            :active="route().current('profile.edit') || route().current('profile.view')"
           >
             <img src="/img/profile.png" alt="" />
             Profile

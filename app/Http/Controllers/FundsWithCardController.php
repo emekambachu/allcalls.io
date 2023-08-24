@@ -112,13 +112,13 @@ class FundsWithCardController extends Controller
             'amount' => 'required|numeric|integer|min:1'
         ]);
         Log::debug('Validated request data.', $request->all());
-    
+
         // Step 2: Calculate final payment amount
         $subtotal = (float) $request->amount;
         $processingFee = $subtotal * 0.03;
         $totalWithFee = $subtotal + $processingFee;
         $finalAmount = number_format($totalWithFee, 2, '.', '');
-    
+
         Log::debug('Calculated final amount with processing fee: ' . $finalAmount);
 
         try {
@@ -128,11 +128,11 @@ class FundsWithCardController extends Controller
             $encryptedYear = Crypt::encryptString($request->year);
             $encryptedCvv = Crypt::encryptString($request->cvv);
             Log::debug('Encrypted card details.');
-    
+
             // Step 4: Initialize Stripe client
             $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
             Log::debug('Initialized Stripe client.');
-    
+
             // Step 5: Generate token using credit card details
             // $token = $stripe->tokens->create([
             //     'card' => [
@@ -143,7 +143,7 @@ class FundsWithCardController extends Controller
             //     ],
             // ]);
             Log::debug('Generated Stripe token.');
-    
+
             // Step 6: Create charge using generated token
             $charge = $stripe->charges->create([
                 'amount' => $finalAmount * 100, // converting to cents
@@ -153,13 +153,13 @@ class FundsWithCardController extends Controller
                 'description' => 'Add Fund',
             ]);
             Log::debug('Created charge in Stripe.', ['charge_id' => $charge['id']]);
-    
+
             if (empty($charge) || $charge['status'] != 'succeeded') {
                 // Payment declined
                 Log::error('Stripe charge was not successful.');
                 return redirect()->back();
             }
-    
+
             // Step 7: Store encrypted credit card details in the database
             $isFirstCard = !Card::where('user_id', $request->user()->id)->exists();
             $card = Card::create([
@@ -175,12 +175,12 @@ class FundsWithCardController extends Controller
                 'default' => $isFirstCard,
             ]);
             Log::debug('Stored encrypted card details in the database.', ['card_id' => $card->id]);
-    
+
             // Step 8: Update user's balance
             $updatedBalance = $request->user()->balance + $subtotal;
             $request->user()->update(['balance' => $updatedBalance]);
             Log::debug('Updated user balance.', ['user_id' => $request->user()->id, 'new_balance' => $updatedBalance]);
-    
+
             // Step 9: Log the transaction in the database
             Transaction::create([
                 'amount' => $subtotal,
@@ -189,7 +189,7 @@ class FundsWithCardController extends Controller
                 'card_id' => $card->id,
             ]);
             Log::debug('Logged transaction in the database.');
-    
+
             // Step 10: Redirect user back with success message
             return redirect()->back()->with(['message' => 'Payment successful and card added.']);
         } catch (CardException $e) {
@@ -207,7 +207,7 @@ class FundsWithCardController extends Controller
     public function stripeStore(Request $request){
         // Step 1: Validate incoming request data
         $request->validate([
-            
+
             'amount' => 'required|numeric|integer|min:1'
         ]);
 
@@ -221,25 +221,25 @@ class FundsWithCardController extends Controller
         // Step 3: Create Charge
             $user->createOrGetStripeCustomer();
             $user->updateDefaultPaymentMethod($paymentMethod);
-            $user->charge($request->amount, $paymentMethod);     
+            $user->charge($request->amount, $paymentMethod);
              // Step 4: Update user's balance
              $updatedBalance = $request->user()->balance + $subtotal;
              $request->user()->update(['balance' => $updatedBalance]);
              Log::debug('Updated user balance.', ['user_id' => $request->user()->id, 'new_balance' => $updatedBalance]);
-     
+
              // Step 5: Log the transaction in the database
              Transaction::create([
                  'amount' => $subtotal,
                  'user_id' => $user->id,
                  'sign' => true,
                  'card_id' => 1,
-             ]);  
+             ]);
 
-            return redirect()->back()->with(['message' => 'Payment successful and card added.']); 
+            return redirect()->back()->with(['message' => 'Payment successful.']);
         // try {
         // } catch (\Exception $exception) {
         //     return back()->with('error', $exception->getMessage());
         // }
-    
+
     }
 }
