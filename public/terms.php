@@ -141,7 +141,7 @@ the Services (or any part thereof) with or without notice. You agree that we sha
 to any third party for any modification, suspension or discontinuance of the Services.</p>
 <h4>Refund Policy</h4>
 <p>a. Users can deposit funds into their account. Unused portions of these deposits are refundable within 3 months of purchase. Refunds will be issued to customer credit card within 3 business days.</p>
-<p>b. Purchased leads are entitled to refunds under specific conditions.
+<p>b. Purchased leads are entitled to refunds under specific conditions:
 	<ul><li>If a customer receives a call where the prospect resides in a state that the customer did not list as one of their licensed states during signup.</li>
 	<li>Technical issues, such as poor call quality, are also valid grounds for refunds.</li><li>Circumstances where prospects main purpose for talking is to get in touch with someone to request to be added to our Do Not Call list.</li></ul></p>
 <h4>Pricing and Billing</h4>
