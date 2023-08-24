@@ -36,6 +36,9 @@
         })();
     </script>
     <!--End of Tawk.to Script-->
+
+    {{-- Strat Stripe Integration --}}
+    <script src="https://js.stripe.com/v3/"></script>
 </body>
 
 </html>
