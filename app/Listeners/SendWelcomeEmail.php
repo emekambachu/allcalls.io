@@ -24,8 +24,6 @@ class SendWelcomeEmail
      */
     public function handle(Registered $event): void
     {
-        Log::debug('Fire the welcome email now.');
-        Log::debug($event->user);
         Mail::to($event->user)->send(new Welcome());
     }
 }
