@@ -95,14 +95,16 @@ let errors = ref(null);
 let validateEmail = (email) => {
     return /\S+@\S+\.\S+/.test(email); // Simple regex for email validation
 }
-
+let spinner = ref(false);
+const isLoading = ref(false);
 let submit = () => {
+  isLoading.value = true
     if(validateEmail(form.email)) {
-
         return axios
           .post("/register", form)
           .then((response) => {
             router.visit('/login')
+            isLoading.value = false
           })
           .catch((error) => {
             if (error.response) {
@@ -110,10 +112,12 @@ let submit = () => {
               // that falls out of the range of 2xx
               console.log(error.response.data);
               errors.value = error.response.data.errors;
+              isLoading.value = false
               if (error.response.status === 400) {
                   uiEmailValidation.value.isValid = false;
                   // Handle validation errors here.
                 firstStepErrors.value = error.response.data.errors;
+                isLoading.value = false
               } else {
                 // Handle other types of errors.
                 console.log("Other errors", error.response.data);
@@ -129,6 +133,7 @@ let submit = () => {
     }
     else {
         uiEmailValidation.value.isValid = true;
+        isLoading.value = false
     }
 };
 
@@ -281,8 +286,10 @@ let submit = () => {
         </div>
 
         <div class="flex items-center justify-end mt-4">
-          <PrimaryButton type="button" class="ml-4" @click.prevent="submit"
-            >Submit</PrimaryButton
+          <PrimaryButton :class="{ 'opacity-25':   isLoading }" :disabled="isLoading" type="button" class="ml-4" @click.prevent="submit"
+            > 
+            <global-spinner :spinner="isLoading" />
+            Submit</PrimaryButton
           >
         </div>
       </div>

@@ -6,6 +6,7 @@ use App\Models\Transaction;
 use App\Listeners\AddDefaultBids;
 use App\Listeners\AddTargetsInRingba;
 use Illuminate\Support\Facades\Event;
+use App\Listeners\SendWelcomeEmail;
 use App\Observers\TransactionObserver;
 use Illuminate\Auth\Events\Registered;
 use App\Events\UserCallTypeStateUpdated;
@@ -23,7 +24,7 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
-            // AddDefaultBids::class,
+            SendWelcomeEmail::class,
         ],
 
         UserCallTypeStateUpdated::class => [

@@ -13,6 +13,16 @@ class CallTypeSeeder extends Seeder
      */
     public function run(): void
     {
-        CallType::factory()->count(10)->create();
+        $types = [
+            'Auto Insurance',
+            'Final Expense',
+            'U65 Health',
+            'ACA',
+            'Medicare/Medicaid',
+        ];
+
+        foreach ($types as $type) {
+            CallType::create(['type' => $type]);
+        }
     }
 }

@@ -1,14 +1,17 @@
-<script setup>
+<script async setup>
 import BillingNav from "@/Components/BillingNav.vue";
 import TextInput from "@/Components/TextInput.vue";
 import AuthenticatedButton from "@/Components/AuthenticatedButton.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, router, usePage } from "@inertiajs/vue3";
 
-import { ref, reactive, onMounted, computed } from "vue";
+import { ref, reactive, onMounted, watchEffect, computed } from "vue";
 let props = defineProps({
   cards: {
     type: Array,
+  },
+  intent: {
+    type: Object,
   },
 });
 
@@ -20,6 +23,15 @@ const page = usePage();
 const toaster = createToaster({
   position: "top-right",
 });
+
+// Stripe Intregation Constant
+const token = ref(null);
+let stripe = Stripe(
+  "pk_test_51JUMhZF43egAbbxbdvc4FIRiALFxHyYECIknypspzMqjYBQ47Kvt8TBY3g44gfhIQHJLPQT4GMwcqlqN1KwKPsbc00UfQoy1mu"
+);
+const elements = stripe.elements();
+let cardElement = elements.create("card");
+let shouldMount = ref(false);
 
 if (page.props.flash.message) {
   toaster.success(page.props.flash.message);
@@ -42,7 +54,9 @@ let selectCard = (cardId) => {
   console.log("clicked", cardId);
   selectedCardId.value = Number(cardId);
 };
+const isLoading = ref(false)
 let addFunds = () => {
+  isLoading.value = true
   if (cardForm.amount && cardForm.amount != Math.round(cardForm.amount)) {
     alert("Only whole dollar amounts allowed.");
     return;
@@ -51,11 +65,43 @@ let addFunds = () => {
   let cardId = selectedCardId.value;
 
   if (cardId === "0") {
+
     router.visit("/billing/funds-with-card", {
       method: "post",
       data: cardForm,
     });
+  
 
+    // Temporay Close
+    // router.visit("/billing/funds-with-card", {
+    //   method: "post",
+    //   data: cardForm,
+    // });
+
+    console.log(stripe);
+    console.log(cardElement);
+    stripe
+      .confirmCardSetup(props.intent.client_secret, {
+        payment_method: {
+          card: cardElement,
+          billing_details: "This is for testing purpose",
+        },
+      })
+      .then(function (result) {
+        if (result.error) {
+          console.log(result);
+        } else {
+          // Stripe Intregration
+          router.visit("/billing/funds-with-card", {
+            method: "post",
+            data: {
+              amount: cardForm.amount,
+              payment_method: result.setupIntent.payment_method,
+            },
+          });
+        }
+      });
+      isLoading.value = false
     return;
   }
 
@@ -70,11 +116,12 @@ let addFunds = () => {
       cardId: cardId,
     },
   });
+  isLoading.value = false
 };
-
 onMounted(() => {
-  console.log(props.cards);
-  //   console.log(page.props.errors,);
+  // Stripe Element
+
+  mountCardElement();
   if (Object.values(page.props.errors).length > 0) {
     selectedCardId.value = "0";
   } else {
@@ -85,15 +132,12 @@ onMounted(() => {
     }
   }
 });
-// let calculateTotalAfterFee = (subtotal) => {
-//   let fee = Number(subtotal) * 0.0315;
-//   return subtotal + fee;
-// };
 
-// let calculateFee = (subtotal) => {
-//   let fee = Number(subtotal) * 0.0315;
-//   return fee;
-// };
+function mountCardElement() {
+  if (cardElement) {
+    cardElement.mount("#payment-element");
+  }
+}
 
 let creditCardFee = computed(() => {
   let fee = Number(cardForm.amount) * 0.03;
@@ -105,8 +149,14 @@ let total = computed(() => {
 
   return String((Number(cardForm.amount) + fee).toFixed(2));
 });
+// After flash message page reload
+if (page.props.flash.message) {
+  page.props.flash.message = null;
+  setInterval(() => {
+    location.reload();
+  }, 2000);
+}
 </script>
-
 <template>
   <Head title="Funds" />
 
@@ -130,7 +180,8 @@ let total = computed(() => {
         <div>
           <section class="mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-4 sm:p-8 sm:rounded-lg" style="padding-top: 0">
-              <label class="block mb-2 text-sm font-medium text-gray-700"
+              <!-- Temporary Close -->
+              <!-- <label class="block mb-2 text-sm font-medium text-gray-700"
                 >Select your card</label
               >
 
@@ -148,7 +199,7 @@ let total = computed(() => {
                 >
                   {{ card.type }} **** **** **** {{ card.last4 }}
                 </option>
-              </select>
+              </select> -->
               <!-- <h2 class="text-xl my-4">Or add a new card:</h2> -->
 
               <form
@@ -179,8 +230,15 @@ let total = computed(() => {
                     alt="DISCOVER"
                   />
                 </div>
+                <!-- Stripe Intregation -->
+                <div class="payment-element border-gray-300 shadow rounded p-3">
+                  <div id="payment-element" class=""></div>
+                  <!-- Stripe will create form elements here -->
+                  <div id="card-errors" role="alert"></div>
+                </div>
 
-                <div class="grid gap-4 sm:grid-cols-2 sm:gap-6 mb-6">
+                <!-- Temporary Changes -->
+                <!-- <div class="grid gap-4 sm:grid-cols-2 sm:gap- mt-6 mb-6">
                   <div class="sm:col-span-2">
                     <label
                       for="number"
@@ -394,7 +452,7 @@ let total = computed(() => {
                     />
                     <InputError class="mt-2" :message="$page.props.errors.zip" />
                   </div>
-                </div>
+                </div> -->
               </form>
 
               <div class="mt-4">
@@ -463,7 +521,7 @@ let total = computed(() => {
 
               <div class="flex justify-end mt-6">
                 <AuthenticatedButton type="button" class="mt-3" @click.prevent="addFunds">
-                  Add funds
+                  <global-spinner :spinner="isLoading" />  Add funds
                 </AuthenticatedButton>
               </div>
             </div>
@@ -482,3 +540,27 @@ let total = computed(() => {
     </div>
   </AuthenticatedLayout>
 </template>
+<style>
+.payment-element {
+  margin: auto;
+  margin-top: 3rem;
+  width: 25rem;
+}
+
+@media screen and (max-width: 992px) {
+  .payment-element {
+    margin-left: 0rem;
+    margin-top: 3rem;
+    width: 100%;
+  }
+}
+
+/* On screens that are 600px or less, set the background color to olive */
+@media screen and (max-width: 600px) {
+  .payment-element {
+    margin-left: 0rem;
+    margin-top: 3rem;
+    width: 100%;
+  }
+}
+</style>

@@ -24,14 +24,14 @@ let close = () => {
 };
 
 let form = reactive(null);
-
+let isLoading = ref(false);
 let saveChanges = () => {
-  console.log('callDetail save changes', props.callDetail);
-  console.log('form upon save changes', form);
+  isLoading.value = true
   router.visit(`/clients/${form.id}`, {
     method: 'PATCH',
     data: form,
   });
+  isLoading.value = false
 }
 
 let openEdit = () => {
@@ -450,10 +450,10 @@ let openEdit = () => {
             <div class="flex justify-end mt-6">
               <button
                 type="submit"
-                class="border border-gray-400 ease-in cursor-pointer bg-white hover:shadow-2xl hover:text-gray-700 rounded px-3 py-3 font-bold text-md text-gray-700"
+                class="border flex border-gray-400 ease-in cursor-pointer bg-white hover:shadow-2xl hover:text-gray-700 rounded px-3 py-3 font-bold text-md text-gray-700"
                 @click.prevent="saveChanges"
               >
-                Save Changes
+              <global-spinner :spinner="isLoading" />  Save Changes
               </button>
               <button
                 @click.prevent="close"

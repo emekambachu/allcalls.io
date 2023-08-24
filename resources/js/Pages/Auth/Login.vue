@@ -8,7 +8,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import GuestTextInput from '@/Components/GuestTextInput.vue';
 import Footer from '@/Components/Footer.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-
+import { ref } from "vue";
 defineProps({
     canResetPassword: {
         type: Boolean,
@@ -23,10 +23,14 @@ const form = useForm({
     password: '',
     remember: false,
 });
-
+const isLoading = ref(false)
 const submit = () => {
+    isLoading.value = true
     form.post(route('login'), {
-        onFinish: () => form.reset('password'),
+        onFinish: () => { 
+            form.reset('password')
+            isLoading.value = false
+        },
     });
 };
 </script>
@@ -83,8 +87,8 @@ const submit = () => {
 
 
             <div class="flex flex-col items-start mt-6">
-                <PrimaryButton class="mb-6" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Log in
+                <PrimaryButton class="mb-6" :class="{ 'opacity-25': form.processing ||  isLoading}" :disabled="form.processing">
+                    <global-spinner :spinner="isLoading" />  Log in
                 </PrimaryButton>
                 
                 <Link

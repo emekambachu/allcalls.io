@@ -51,28 +51,33 @@ let successMessage = ref(null);
 let toaster = createToaster({
     position: "top-right",
 });
+const isLoading = ref(false)
 let saveChanges = () => {
-
+  isLoading.value = true
   if (validateEmail(form.email)) {
     return axios
       .post(`/admin/customer/${form.id}`, form)
       .then((response) => {
         toaster.success(response.data.message);
         router.visit(`/admin/customers?page=${props.currentPage}`);
+        isLoading.value = false
       })
       .catch((error) => {
         if (error.response) {
           firstStepErrors.value = error.response.data.errors;
+          isLoading.value = false
           if (error.response.status === 400) {
             uiEmailValidation.value.isValid = false;
             console.log(error.response.data);
             firstStepErrors.value = error.response.data.errors;
+            isLoading.value = false
           } 
         } 
       });
   }
   else {
     uiEmailValidation.value.isValid = true;
+    isLoading.value = false
   }
 
 }
@@ -148,9 +153,9 @@ let saveChanges = () => {
 
             <div class="flex justify-end mt-6">
               <button type="submit"
-                class="border border-gray-400 ease-in cursor-pointer bg-white hover:shadow-2xl hover:text-gray-700 rounded px-3 py-3 font-bold text-md text-gray-700"
+                class="border border-gray-400 flex ease-in cursor-pointer bg-white hover:shadow-2xl hover:text-gray-700 rounded px-3 py-3 font-bold text-md text-gray-700"
                 @click.prevent="saveChanges">
-                Save Changes
+                <global-spinner :spinner="isLoading" />  Save Changes
               </button>
               <button @click.prevent="close" type="button"
                 class="ml-4 border border-gray-400 ease-in cursor-pointer bg-white hover:shadow-2xl hover:text-gray-700 rounded px-3 py-3 font-bold text-md text-gray-700">
