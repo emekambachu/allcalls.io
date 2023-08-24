@@ -20,7 +20,6 @@ class FundsController extends Controller
     public function index()
     {
         $cards = Auth::user()->cards;
-
         $cards = $cards->map(function ($card) {
             $decryptedNumber = Crypt::decryptString($card->number);
             $card->last4 = substr($decryptedNumber, -4);
@@ -43,9 +42,12 @@ class FundsController extends Controller
 
             return $card;
         });
+        // Cashier Intend 
+        $intent = auth()->user()->createSetupIntent();
 
-        return Inertia::render('Billing/Funds', compact('cards'));
+        return Inertia::render('Billing/Funds', compact('cards','intent'));
     }
+   
 
     public function store(Request $request)
     {
@@ -210,4 +212,5 @@ class FundsController extends Controller
 
 
     }
+    
 }
