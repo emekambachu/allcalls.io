@@ -95,7 +95,8 @@ let errors = ref(null);
 let validateEmail = (email) => {
     return /\S+@\S+\.\S+/.test(email); // Simple regex for email validation
 }
-
+const consentError = ref(false)
+const consentErro = ref('')
 let submit = () => {
     if(validateEmail(form.email)) {
 
@@ -103,6 +104,7 @@ let submit = () => {
           .post("/register", form)
           .then((response) => {
             router.visit('/login')
+            consentError.value = false
           })
           .catch((error) => {
             if (error.response) {
@@ -110,10 +112,14 @@ let submit = () => {
               // that falls out of the range of 2xx
               console.log(error.response.data);
               errors.value = error.response.data.errors;
+              consentErro.value = error.response.data.consent;
+                consentError.value = true
               if (error.response.status === 400) {
                   uiEmailValidation.value.isValid = false;
                   // Handle validation errors here.
                 firstStepErrors.value = error.response.data.errors;
+                consentErro.value = error.response.data.consent;
+                consentError.value = true
               } else {
                 // Handle other types of errors.
                 console.log("Other errors", error.response.data);
@@ -279,7 +285,31 @@ let submit = () => {
             :message="form.errors.password_confirmation"
           />
         </div>
-
+        <div   class="flex py-12 box-shadow">
+                    <input id="checked-checkbox" type="checkbox" v-model="form.consent"
+                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+                    <label for="checked-checkbox" class="ml-2 text-xs font-medium text-gray-900 dark:text-gray-400">
+                        By clicking Continue, I agree to email marketing, the Terms and
+                        Conditions (which include mandatory arbitration), Privacy Policy,
+                        and site visit recordation by Trusted Form and Jornaya. I provide my
+                        express written consent and electronic signature to receive
+                        monitored or recorded phone sales calls and text messages from
+                        AllCalls.io regarding products and services including Medicare
+                        Supplement, Medicare Advantage, and Prescription Drug Plans on the
+                        landline or mobile number I provided even if I am on a federal or
+                        State do not call registry. I confirm that the phone number set
+                        forth above is accurate and I am the regular user of the phone. I
+                        understand these calls may be generated using an automated dialing
+                        system and may contain pre-recorded and artificial voice messages
+                        and that consenting is not required to receive a quote or speak with
+                        an agent and that I can revoke my consent at any time by any
+                        reasonable means. To receive a quote without providing consent,
+                        please call (866) 523-1718. For SMS message campaigns: Text STOP to
+                        stop and HELP for help. Msg and data rates may apply. Periodic
+                        messages; max. 30/month.
+                    </label>
+                </div>
+          <p class="p-5" v-if="consentError == true" style="color: red;">{{ consentErro }}</p><p class="p-5" v-if="consentError == true" style="color: red;">{{ consentErro }}</p>
         <div class="flex items-center justify-end mt-4">
           <PrimaryButton type="button" class="ml-4" @click.prevent="submit"
             >Submit</PrimaryButton
