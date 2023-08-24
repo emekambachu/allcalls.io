@@ -1,3 +1,1 @@
-<div>
-    Welcome user!
-</div>
+Welcome user!
