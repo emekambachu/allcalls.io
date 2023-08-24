@@ -1,7 +1,7 @@
 <x-mail::message>
 Dear {{ $user->first_name }},
 
-We're thrilled to have you onboard! Welcome to **AllCalls.io**, the ultimate platform designed specifically for licensed insurance agents like you. Our aim is to bridge the gap between passionate agents and prospective clients, making sure everyone finds their perfect match.
+We're thrilled to have you onboard! Welcome to **AllCalls.io**.
 
 **Here's a quick rundown of what awaits you:**
 
@@ -16,8 +16,11 @@ We're thrilled to have you onboard! Welcome to **AllCalls.io**, the ultimate pla
 **Getting Started:**
 
 1. Log into the web app and complete your profile.
+
 2. Add funds to your balance.
+
 3. Select the type of calls you’re interested in.
+
 4. Download our mobile app and manage your availability on-the-go.
 
 Our dedicated support team is always on hand to assist you, should you have any questions or need help along the way. Remember, at AllCalls.io, we're all about fostering connections that matter.

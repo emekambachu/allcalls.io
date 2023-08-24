@@ -30,7 +30,7 @@ class Welcome extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Welcome',
+            subject: 'Welcome to AllCalls.io',
         );
     }
 
