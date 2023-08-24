@@ -97,8 +97,11 @@ class RegisteredUserController extends Controller
         return redirect(route('verification.notice'));
     }
 
-    public function steps(Request $request) {
-
+    public function steps(Request $request)
+    {
+        if (DB::table('users_call_type_state')->where('user_id', auth()->user()->id)->count()) {
+            return redirect()->route('dashboard');
+        }
 
         $sevenDaysAgo = Carbon::now()->subDays(7);
 
@@ -130,10 +133,10 @@ class RegisteredUserController extends Controller
             ->average('call_duration_in_seconds');
 
 
-            $callTypes = CallType::all();
-            $states = State::all();
+        $callTypes = CallType::all();
+        $states = State::all();
 
-        return Inertia::render('RegistrationSteps', [
+        return Inertia::render('Auth/RegistrationSteps', [
             'callTypes' => $callTypes,
             'states' => $states,
             'spendData' => $spendData,
@@ -142,12 +145,10 @@ class RegisteredUserController extends Controller
             'totalAmountSpent' => $totalAmountSpent,
             'averageCallDuration' => $averageCallDuration,
         ]);
-
     }
 
-    public function storeSteps(Request $request) {
-
-
+    public function storeSteps(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'consent' => 'required',
             'typesWithStates' => [
@@ -177,7 +178,7 @@ class RegisteredUserController extends Controller
         if (!$request->consent) {
             return response()->json([
                 'success' => false,
-                'consent' => 'You must accept the terms and conditions..'
+                'consent' => 'You must accept the terms and conditions.'
             ], 400);
         }
         if (sizeof($request->bids) !== CallType::count()) {
@@ -185,14 +186,13 @@ class RegisteredUserController extends Controller
         }
 
         $user = auth()->user();
-
-            foreach($request->bids as $bid) {
-                Bid::updateOrCreate([
-                    'call_type_id' => $bid['call_type_id'],
-                    'amount' => $bid['amount'],
-                    'user_id' => $user->id,
-                ]);
-            }
+        foreach ($request->bids as $bid) {
+            Bid::updateOrCreate([
+                'call_type_id' => $bid['call_type_id'],
+                'amount' => $bid['amount'],
+                'user_id' => $user->id,
+            ]);
+        }
         // Initialize an empty array to hold the data
         $data = [];
 
@@ -200,30 +200,29 @@ class RegisteredUserController extends Controller
         $now = now()->toDateTimeString();
 
         // Build the data array
-        foreach($request->typesWithStates as $typeId => $stateIds) {
-        if(count($stateIds)) {
-            foreach($stateIds as $stateId) {
-                $data[] = [
-                    'user_id' => $user->id,  // assuming you have the $user available here
-                    'call_type_id' => $typeId,
-                    'state_id' => $stateId,
-                    'created_at' => $now,  // if you are using timestamps in your pivot table
-                    'updated_at' => $now,  // if you are using timestamps in your pivot table
-                ];
+        foreach ($request->typesWithStates as $typeId => $stateIds) {
+            if (count($stateIds)) {
+                foreach ($stateIds as $stateId) {
+                    $data[] = [
+                        'user_id' => $user->id,  // assuming you have the $user available here
+                        'call_type_id' => $typeId,
+                        'state_id' => $stateId,
+                        'created_at' => $now,  // if you are using timestamps in your pivot table
+                        'updated_at' => $now,  // if you are using timestamps in your pivot table
+                    ];
+                }
             }
         }
-
+        if (count($data)) {
+            DB::transaction(function () use ($data) {
+                // Insert new entries
+                DB::table('users_call_type_state')->insert($data);
+            });
         }
-       if(count($data)) {
-        DB::transaction(function () use ($data) {
-            // Insert new entries
-            DB::table('users_call_type_state')->insert($data);
-        });
-       }
 
-       return response()->json([
-        'success' => true,
-    ], 200);
+        return response()->json([
+            'success' => true,
+        ], 200);
     }
 
     protected function saveCallTypeStates(array $data, User $user): void
