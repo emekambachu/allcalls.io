@@ -209,8 +209,6 @@ class FundsController extends Controller
         //     // The payment is declined:
         //     dd('RESPONSE IS NOT SUCCESS');
         // }
-
-
     }
     
 }
