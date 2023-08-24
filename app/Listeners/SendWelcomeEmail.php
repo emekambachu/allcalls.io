@@ -2,10 +2,12 @@
 
 namespace App\Listeners;
 
+use App\Mail\Welcome;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
 class SendWelcomeEmail
 {
@@ -24,5 +26,6 @@ class SendWelcomeEmail
     {
         Log::debug('Fire the welcome email now.');
         Log::debug($event->user);
+        Mail::to($event->user)->send(new Welcome());
     }
 }
