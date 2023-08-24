@@ -90,11 +90,11 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        event(new Registered($user));
-
         Auth::login($user);
 
-        return redirect(RouteServiceProvider::HOME);
+        event(new Registered($user));
+
+        return redirect(route('verification.notice'));
     }
 
     public function steps(Request $request) {
