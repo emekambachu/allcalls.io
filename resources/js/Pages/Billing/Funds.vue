@@ -42,7 +42,9 @@ let selectCard = (cardId) => {
   console.log("clicked", cardId);
   selectedCardId.value = Number(cardId);
 };
+const isLoading = ref(false)
 let addFunds = () => {
+  isLoading.value = true
   if (cardForm.amount && cardForm.amount != Math.round(cardForm.amount)) {
     alert("Only whole dollar amounts allowed.");
     return;
@@ -55,7 +57,7 @@ let addFunds = () => {
       method: "post",
       data: cardForm,
     });
-
+    isLoading.value = false
     return;
   }
 
@@ -70,6 +72,7 @@ let addFunds = () => {
       cardId: cardId,
     },
   });
+  isLoading.value = false
 };
 
 onMounted(() => {
@@ -463,7 +466,7 @@ let total = computed(() => {
 
               <div class="flex justify-end mt-6">
                 <AuthenticatedButton type="button" class="mt-3" @click.prevent="addFunds">
-                  Add funds
+                  <global-spinner :spinner="isLoading" />  Add funds
                 </AuthenticatedButton>
               </div>
             </div>
