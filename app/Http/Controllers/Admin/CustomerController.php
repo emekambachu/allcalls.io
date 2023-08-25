@@ -44,7 +44,7 @@ class CustomerController extends Controller
 
     public function getUserCall($id)
     {
-        $calls = Call::whereUserId($id)->with('user', 'callType')->paginate(5);
+        $calls = Call::whereUserId($id)->with('user', 'callType')->paginate(10);
         return response()->json([
             'calls' => $calls
         ]);
@@ -52,7 +52,7 @@ class CustomerController extends Controller
 
     public function getTransaction($id)
     {
-        $transactions = Transaction::whereUserId($id)->with('card')->paginate(5);
+        $transactions = Transaction::whereUserId($id)->with('card')->paginate(10);
         return response()->json([
             'transactions' => $transactions
         ]);
@@ -60,7 +60,7 @@ class CustomerController extends Controller
 
     public function getActivity($id)
     {
-        $activities = Activity::whereUserId($id)->paginate(5);
+        $activities = Activity::whereUserId($id)->paginate(10);
         return response()->json([
             'activities' => $activities
         ]);
@@ -104,6 +104,5 @@ class CustomerController extends Controller
             'success' => true,
             'message' => 'Customer updated successfully.',
         ], 200);
-
     }
 }
