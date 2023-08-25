@@ -7,6 +7,7 @@ import TextInput from "@/Components/TextInput.vue";
 import { router } from "@inertiajs/vue3"
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import { toaster }   from '@/helper.js';
 let props = defineProps({
     StepsModal: {
         type: Boolean,
@@ -89,6 +90,7 @@ let submit = () => {
         .then((response) => {
             consentError.value = false
             close()
+            toaster('success', response.data.message)
             router.visit('/dashboard')
             isLoading.value = false
         })
@@ -103,6 +105,7 @@ let submit = () => {
                     consentErro.value = error.response.data.consent;
                     consentError.value = true
                     isLoading.value = false
+                    toaster('error', response.data.message)
                 } else {
                     console.log("Other errors", error.response.data);
                 }

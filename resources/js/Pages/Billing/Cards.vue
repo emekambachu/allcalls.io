@@ -6,15 +6,10 @@ import { createToaster } from "@meforma/vue-toaster";
 import BillingNav from "@/Components/BillingNav.vue";
 import TextInput from "@/Components/TextInput.vue";
 import AuthenticatedButton from "@/Components/AuthenticatedButton.vue";
-
-const page = usePage();
-
-const toaster = createToaster({
-  position: "top-right",
-});
-
+import { toaster }   from '@/helper.js';
+let page = usePage();
 if (page.props.flash.message) {
-  toaster.success(page.props.flash.message);
+  toaster('success', page.props.flash.message)
 }
 
 let props = defineProps({
@@ -94,7 +89,7 @@ let setAsDefault = (cardId) => {
         <div>
           <section class="mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-4 sm:p-8 sm:rounded-lg">
-              <div class="text-4xl text-custom-sky font-bold mb-6">
+              <div class="text-4xl text-custom-sky font-small mb-6">
                 Saved Cards
               </div>
               <hr class="mb-8" />
@@ -109,7 +104,7 @@ let setAsDefault = (cardId) => {
                     >
                       <span
                         v-if="card.default"
-                        class="bg-blue-100 tracking-wide uppercase text-blue-500 text-xs font-bold mr-2 px-2 py-0.5 rounded-md border-2 border-blue-300 absolute -top-4 -right-8"
+                        class="bg-blue-100 tracking-wide uppercase text-blue-500 text-xs font-small mr-2 px-2 py-0.5 rounded-md border-2 border-blue-300 absolute -top-4 -right-8"
                         style="font-size:10px;"
                         >Default</span
                       >
@@ -122,7 +117,7 @@ let setAsDefault = (cardId) => {
                       <div class="w-full flex justify-between items-center">
                         <div>
                           <h3
-                            class="text-xs text-gray-800 font-bold tracking-wide"
+                            class="text-xs text-gray-800 font-small tracking-wide"
                           >
                             {{
                               card.cardType.charAt(0).toUpperCase() +

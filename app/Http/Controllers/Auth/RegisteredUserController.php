@@ -217,6 +217,7 @@ class RegisteredUserController extends Controller
 
         return response()->json([
             'success' => true,
+            'message' => 'Registration completed successfully',
         ], 200);
     }
 

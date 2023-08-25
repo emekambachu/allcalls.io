@@ -1,12 +1,16 @@
 <script setup>
 import { ref, reactive, defineEmits, onMounted, watch } from "vue";
 import TextInput from "@/Components/TextInput.vue";
-import { router } from "@inertiajs/vue3"
+import { router, usePage } from "@inertiajs/vue3"
 import GuestTextInput from "@/Components/GuestTextInput.vue";
 import GuestInputLabel from "@/Components/GuestInputLabel.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
-import { createToaster } from "@meforma/vue-toaster";
+import { toaster }   from '@/helper.js';
 import axios from "axios";
+let page = usePage();
+if (page.props.flash.message) {
+  toaster('success', page.props.flash.message)
+}
 let props = defineProps({
   showModal: {
     type: Boolean,
@@ -47,10 +51,7 @@ watch(() => props.showModal, async (newValue) => {
 let validateEmail = (email) => {
   return /\S+@\S+\.\S+/.test(email); // Simple regex for email validation
 }
-let successMessage = ref(null);
-let toaster = createToaster({
-    position: "top-right",
-});
+
 const isLoading = ref(false)
 let saveChanges = () => {
   isLoading.value = true
@@ -58,15 +59,17 @@ let saveChanges = () => {
     return axios
       .post(`/admin/customer/${form.id}`, form)
       .then((response) => {
-        toaster.success(response.data.message);
+        toaster('success', response.data.message)
         router.visit(`/admin/customers?page=${props.currentPage}`);
         isLoading.value = false
       })
       .catch((error) => {
         if (error.response) {
+          toaster('error', response.data.message)
           firstStepErrors.value = error.response.data.errors;
           isLoading.value = false
           if (error.response.status === 400) {
+            toaster('error', response.data.message)
             uiEmailValidation.value.isValid = false;
             console.log(error.response.data);
             firstStepErrors.value = error.response.data.errors;
@@ -99,7 +102,7 @@ let saveChanges = () => {
       <div class="relative w-full max-w-4xl max-h-full mx-auto">
         <div class="relative bg-white border border-gray-300 rounded-lg shadow-lg">
           <div class="flex items-start justify-between p-4 border-b border-gray-300 rounded-t">
-            <h3 class="text-xl font-semibold text-gray-700">
+            <h3 class="text-xl font-small text-gray-700">
               Edit Customer Details
             </h3>
             <button @click="close" type="button"

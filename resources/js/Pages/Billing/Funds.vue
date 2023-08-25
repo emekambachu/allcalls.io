@@ -15,14 +15,14 @@ let props = defineProps({
   },
 });
 
-import { createToaster } from "@meforma/vue-toaster";
 import InputError from "@/Components/InputError.vue";
 
-const page = usePage();
+import { toaster }   from '@/helper.js';
+let page = usePage();
+if (page.props.flash.message) {
+  toaster('success', page.props.flash.message)
+}
 
-const toaster = createToaster({
-  position: "top-right",
-});
 
 // Stripe Intregation Constant
 const token = ref(null);
@@ -33,9 +33,6 @@ const elements = stripe.elements();
 let cardElement = elements.create("card");
 let shouldMount = ref(false);
 
-if (page.props.flash.message) {
-  toaster.success(page.props.flash.message);
-}
 
 let selectedCardId = ref("0");
 let cardForm = reactive({
@@ -169,7 +166,7 @@ if (page.props.flash.message) {
       <div class="mx-8 px-12 py-4 sm:p-8 sm:rounded-lg" style="padding-bottom: 0">
         <h2
           id="headline"
-          class="text-4xl text-custom-sky font-bold mb-6"
+          class="text-4xl text-custom-sky font-small mb-6"
           style="padding-bottom: 0"
         >
           Add Funds
@@ -192,7 +189,7 @@ if (page.props.flash.message) {
                   :key="card.id"
                   :value="card.id"
                   :class="{
-                    'border-custom-indigo bg-custom-blue text-blue-600 shadow-2xl font-bold':
+                    'border-custom-indigo bg-custom-blue text-blue-600 shadow-2xl font-small':
                       selectedCardId === card.id,
                     'border-gray-500 text-gray-500': selectedCardId !== card.id,
                   }"
@@ -494,14 +491,14 @@ if (page.props.flash.message) {
                 <div>
                   <div class="space-y-2 text-gray-700 text-sm mt-4">
                     <div class="flex justify-between">
-                      <span class="whitespace-nowrap text-gray-800 font-bold"
+                      <span class="whitespace-nowrap text-gray-800 font-small"
                         >Sub Total:</span
                       >
                       <span v-if="cardForm.amount">${{ cardForm.amount }}</span>
                     </div>
 
                     <div class="flex justify-between">
-                      <span class="whitespace-nowrap text-gray-800 font-bold"
+                      <span class="whitespace-nowrap text-gray-800 font-small"
                         >Credit Card Processing Fee:</span
                       >
                       <span>${{ creditCardFee }}</span>
@@ -510,7 +507,7 @@ if (page.props.flash.message) {
                     <hr class="mb-8" />
 
                     <div class="flex justify-between">
-                      <span class="whitespace-nowrap text-gray-800 font-bold"
+                      <span class="whitespace-nowrap text-gray-800 font-small"
                         >Total:</span
                       >
                       <span>${{ total }}</span>

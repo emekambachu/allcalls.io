@@ -5,17 +5,10 @@ import AuthenticatedButton from "@/Components/AuthenticatedButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import { ref, onMounted } from "vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
-
-import { createToaster } from "@meforma/vue-toaster";
-
+import { toaster }   from '@/helper.js';
 let page = usePage();
-
-let toaster = createToaster({
-  position: "top-right",
-});
-
 if (page.props.flash.message) {
-  toaster.success(page.props.flash.message);
+  toaster('success', page.props.flash.message)
 }
 
 let props = defineProps({
@@ -102,7 +95,7 @@ if (props.setting) {
         <div>
           <section class="mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-4 sm:p-8 sm:rounded-lg">
-              <h2 id="headline" class="text-4xl text-custom-sky font-bold mb-6">
+              <h2 id="headline" class="text-4xl text-custom-sky font-small mb-6">
                 Add Autopay
               </h2>
               <hr class="mb-8" />
@@ -171,7 +164,7 @@ if (props.setting) {
                 <div
                   :class="{
                     'flex items-center px-2 py-4 mt-4 rounded-lg shadow hover:bg-gray-300 hover:font-medium mb-2 cursor-pointer select-none': true,
-                    'border border-custom-indigo bg-custom-blue text-blue-600 shadow-2xl font-bold':
+                    'border border-custom-indigo bg-custom-blue text-blue-600 shadow-2xl font-small':
                       chosenCard && chosenCard.id === card.id,
                     'border border-gray-500 text-gray-500':
                       !chosenCard || chosenCard.id !== card.id,

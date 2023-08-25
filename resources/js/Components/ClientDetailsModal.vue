@@ -67,7 +67,7 @@ let openEdit = () => {
           <div
             class="flex items-start justify-between p-4 border-b rounded-t border-gray-600"
           >
-            <h3 class="text-xl font-semibold text-custom-blue">
+            <h3 class="text-xl font-small text-custom-blue">
               Client Details
             </h3>
 
@@ -99,7 +99,7 @@ let openEdit = () => {
             
             <div v-if="callDetail">
               <div class="flex justify-between items-center">
-                <h4 class="text-2xl font-semibold text-custom-sky mb-2">
+                <h4 class="text-2xl font-small text-custom-sky mb-2">
                   Personal Details
                 </h4>
 
@@ -128,7 +128,7 @@ let openEdit = () => {
                 </div>
               </div>
 
-              <h4 class="text-2xl font-semibold text-custom-sky mb-2">
+              <h4 class="text-2xl font-small text-custom-sky mb-2">
                 Contact Information
               </h4>
               <div
@@ -156,7 +156,7 @@ let openEdit = () => {
                 </div>
               </div>
 
-              <h4 class="text-2xl font-semibold text-custom-sky mb-2">
+              <h4 class="text-2xl font-small text-custom-sky mb-2">
                 Call Details
               </h4>
               <div
@@ -198,7 +198,7 @@ let openEdit = () => {
                 </div>
               </div>
 
-              <h4 class="text-2xl font-semibold text-custom-sky mb-2">
+              <h4 class="text-2xl font-small text-custom-sky mb-2">
                 Financial Details
               </h4>
               <div
@@ -230,7 +230,7 @@ let openEdit = () => {
           <div
             class="flex items-start justify-between p-4 border-b border-gray-300 rounded-t"
           >
-            <h3 class="text-xl font-semibold text-gray-700">
+            <h3 class="text-xl font-small text-gray-700">
               Edit Client Details
             </h3>
             <button
@@ -258,7 +258,7 @@ let openEdit = () => {
             </button>
           </div>
           <form v-if="form" class="p-6">
-            <h4 class="text-2xl font-semibold text-gray-700 mb-2">
+            <h4 class="text-2xl font-small text-gray-700 mb-2">
               Personal Details
             </h4>
             <div
@@ -301,7 +301,7 @@ let openEdit = () => {
               </div>
             </div>
 
-            <h4 class="text-2xl font-semibold text-custom-sky mb-2">
+            <h4 class="text-2xl font-small text-custom-sky mb-2">
               Contact Information
             </h4>
             <div
@@ -422,7 +422,7 @@ let openEdit = () => {
               </div>
             </div>
 
-            <h4 class="text-2xl font-semibold text-custom-sky mb-2">
+            <h4 class="text-2xl font-small text-custom-sky mb-2">
               Other Information
             </h4>
             <div

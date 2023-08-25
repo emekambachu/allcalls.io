@@ -62,7 +62,7 @@ class ClientsController extends Controller
         ]);
 
         return redirect()->back()->with([
-            'message' => 'Client updated.'
+            'message' => 'Client updated successfully.'
         ]);
     }
 }

@@ -151,7 +151,7 @@ let ChangeTab = (val) => {
       <section v-if="tab == 0" class="px-16 pt-14 sliding-section" :class="{ show: tab == 0 }">
         <div v-if="user">
           <div class="flex justify-between items-center">
-            <h4 class="text-2xl font-semibold text-custom-sky mb-2">
+            <h4 class="text-2xl font-small text-custom-sky mb-2">
               Personal Details
             </h4>
           </div>
@@ -167,7 +167,7 @@ let ChangeTab = (val) => {
             </div>
           </div>
 
-          <h4 class="text-2xl font-semibold text-custom-sky mb-2">
+          <h4 class="text-2xl font-small text-custom-sky mb-2">
             Contact Information
           </h4>
           <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-10">
@@ -182,7 +182,7 @@ let ChangeTab = (val) => {
           </div>
 
 
-          <h4 class="text-2xl font-semibold text-custom-sky mb-2">
+          <h4 class="text-2xl font-small text-custom-sky mb-2">
             Other Information
           </h4>
           <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-10">

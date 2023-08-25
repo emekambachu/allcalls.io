@@ -4,6 +4,9 @@ let props = defineProps({
 
 });
 </script>
+<style>
+
+</style>
 <template>
     <div v-if="slidingLoader" class="animate-pulse flex space-x-4 px-12">
         <div class="flex-1 space-y-6 py-1">

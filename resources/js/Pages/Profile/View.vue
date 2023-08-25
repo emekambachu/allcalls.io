@@ -71,7 +71,7 @@ let formatMoney = (amount) => {
     <div class="py-6">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
         <div class="p-4 sm:p-8 sm:rounded-lg">
-          <div class="text-4xl text-custom-sky font-bold mb-6">My Profile</div>
+          <div class="text-4xl text-custom-sky font-small mb-6">My Profile</div>
           <hr class="mb-8" />
 
           <div
@@ -113,7 +113,7 @@ let formatMoney = (amount) => {
 
           <hr class="sm:hidden mb-10" />
 
-          <div class="text-4xl text-custom-sky font-bold mb-6">
+          <div class="text-4xl text-custom-sky font-small mb-6">
             Personal Information
           </div>
           <hr class="mb-4" />
@@ -147,7 +147,7 @@ let formatMoney = (amount) => {
             </div>
           </div>
 
-          <div class="text-4xl text-custom-sky font-bold mb-6">Licences</div>
+          <div class="text-4xl text-custom-sky font-small mb-6">Licences</div>
           <hr class="mb-4" />
 
           <div class="grid grid-cols-2 gap-10 mb-12">
@@ -165,7 +165,7 @@ let formatMoney = (amount) => {
             </div>
           </div>
 
-          <div class="text-4xl text-custom-sky font-bold mb-2">Max Bids</div>
+          <div class="text-4xl text-custom-sky font-small mb-2">Max Bids</div>
           <!-- <div class="text-2xl font-bold text-gray-600 mb-6" >Verticals</div> -->
           <hr class="mb-4" />
 
