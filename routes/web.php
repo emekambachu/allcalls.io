@@ -99,10 +99,6 @@ Route::post('/billing/autopay', [AutoPayController::class, 'storeWithStripe'])->
 
 Route::get('/usage-activities', [UsageActivityController::class, 'index'])->middleware(['auth', 'verified'])->name('activities.index');
 
-Route::get('/twiml-example', function() {
-    return view('twiml-example');
-});
-
 Route::get('/device/token', [TwilioTokenController::class, 'show'])->middleware('auth');
 
 Route::get('/device/incoming', function() {
