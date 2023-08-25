@@ -56,6 +56,7 @@ class IncomingCallController extends Controller
         $callTypeNumber = CallTypeNumber::where('phone', $to)->first();
         if ($callTypeNumber) {
             Log::debug('Number found in CallTypeNumber model: ' . $to);
+            $fromAttribute = $this->getFromAttribute($request->input('From'));
             $twiml .= $this->handleCallTypeNumberCall($to, substr($request->input('From'), 2));
             return response($twiml, 200)->header('Content-Type', 'text/xml');
         }
@@ -70,6 +71,22 @@ class IncomingCallController extends Controller
         return response($twimlResponse, 200)->header('Content-Type', 'text/xml');
     }
 
+    private function getFromAttribute($fromString)
+    {
+        // Check if the string starts with 'client:'
+        if (strpos($fromString, 'client:') === 0) {
+            return '+1234567890';  // Return a dummy number
+        }
+    
+        // If it's a phone number
+        if (strpos($fromString, '+1') === 0) {
+            // Remove the +1 prefix
+            return substr($fromString, 2);
+        }
+        
+        return $fromString;  // Return as-is
+    }
+    
     public function handleAvailableNumberCall($to)
     {
         // Assume that the user_id is associated with the number in AvailableNumber
