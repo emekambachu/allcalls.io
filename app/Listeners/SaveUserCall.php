@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Models\Call;
 use App\Events\RingingCallEvent;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\InteractsWithQueue;
@@ -25,5 +26,11 @@ class SaveUserCall
         Log::debug('Save the call now');
         Log::debug($event->user->id);
         Log::debug($event->callSid);
+
+        Call::create([
+            'user_id' => $event->user->id,
+            'call_type_id' => $event->callTypeId,
+            'sid' => $event->callSid,
+        ]);
     }
 }

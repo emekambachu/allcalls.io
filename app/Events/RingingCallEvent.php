@@ -17,14 +17,16 @@ class RingingCallEvent
 
     public User $user;
     public $callSid;
+    public $callTypeId;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(User $user, $callSid)
+    public function __construct(User $user, $callSid, $callTypeId)
     {
         $this->user = $user;
         $this->callSid = $callSid;
+        $this->callTypeId = $callTypeId;
     }
 
     /**

@@ -34,7 +34,7 @@ class EventServiceProvider extends ServiceProvider
         ],
 
         RingingCallEvent::class => [
-            SaveUserCall::class
+            SaveUserCall::class,
         ],
 
         MissedCallEvent::class => [
