@@ -2,34 +2,11 @@
 import TextInput from "@/Components/TextInput.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-<<<<<<< HEAD
-import { Head, Link, router, usePage } from "@inertiajs/vue3";
-
-import { ref, reactive, onMounted, watchEffect, computed } from "vue";
-let props = defineProps({
-  cards: {
-    type: Array,
-  },
-  intent: {
-    type: Object,
-  },
-});
-
-=======
 import { Head, router, usePage } from "@inertiajs/vue3";
 import { ref, onMounted, computed } from 'vue';
->>>>>>> 8619a8332ddaa025cf06f98a81057cf872ac1757
 import InputError from "@/Components/InputError.vue";
-import { createToaster } from "@meforma/vue-toaster";
+import { toaster } from '@/helper.js';
 
-<<<<<<< HEAD
-import { toaster }   from '@/helper.js';
-let page = usePage();
-if (page.props.flash.message) {
-  toaster('success', page.props.flash.message)
-}
-
-=======
 let page = usePage();
 let stripeAPIKey = 'pk_test_51JUMhZF43egAbbxbdvc4FIRiALFxHyYECIknypspzMqjYBQ47Kvt8TBY3g44gfhIQHJLPQT4GMwcqlqN1KwKPsbc00UfQoy1mu';
 let stripe = Stripe(stripeAPIKey);
@@ -38,28 +15,28 @@ let amount = ref('50');
 let name = ref('');
 let cardContainer = ref(null);
 let isLoading = ref(false);
-let toaster = createToaster({
-    position: "top-right",
-});
->>>>>>> 8619a8332ddaa025cf06f98a81057cf872ac1757
 
 onMounted(() => {
-    cardElement.mount(cardContainer.value);
+    mountStripeElements();
+    showSuccessNotificationIfAvailable();
 });
 
-<<<<<<< HEAD
-=======
-if (page.props.flash.message) {
-    toaster.success(page.props.flash.message);
-}
->>>>>>> 8619a8332ddaa025cf06f98a81057cf872ac1757
+let mountStripeElements = () => {
+    cardElement.mount(cardContainer.value);
+};
+
+let showSuccessNotificationIfAvailable = () => {
+    if (page.props.flash.message) {
+        toaster('success', page.props.flash.message)
+    }
+};
 
 let addFunds = async () => {
     isLoading.value = true;
 
     const { paymentMethod, error } = await stripe.createPaymentMethod(
         'card', cardElement, {
-        billing_details: { name: 'John Doe' }
+        billing_details: { name: name.value }
     }
     );
 
@@ -71,9 +48,6 @@ let addFunds = async () => {
         return;
     }
 
-    // The card has been verified successfully...
-    console.log('Card verified.');
-    console.log(paymentMethod.id)
     router.visit('/billing/funds', {
         method: 'POST',
         data: {
@@ -194,7 +168,8 @@ let total = computed(() => {
                                 </div>
 
                                 <div class="flex justify-end mt-6">
-                                    <PrimaryButton type="button" class="mt-3 flex items-center" @click.prevent="addFunds" :disabled="isLoading">
+                                    <PrimaryButton type="button" class="mt-3 flex items-center" @click.prevent="addFunds"
+                                        :disabled="isLoading">
                                         <GlobalSpinner :spinner="isLoading" class="mr-2" /> Add funds
                                     </PrimaryButton>
                                 </div>
