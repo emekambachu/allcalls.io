@@ -127,26 +127,12 @@ class IncomingCallController extends Controller
             $user_id = $bid->user_id;
             $call_type_id = $availableNumber->call_type_id;
             $uniqueCallId = uniqid();
-            $twimlBody .= '<Dial record="record-from-answer" recordingStatusCallbackMethod="GET" recordingStatusCallbackEvent="completed" recordingStatusCallback="https://allcalls.io/api/handle-call-recording?user_id=' . $user_id . '&amp;call_type_id=' . $call_type_id . '&amp;unique_call_id=' . $uniqueCallId . '" callerId="+441156471655" timeout="20"><Client statusCallbackMethod="GET" statusCallbackEvent="initiated ringing answered completed" statusCallback="https://allcalls.io/api/handle-call-status?user_id=' . $user_id . '&amp;call_type_id=' . $call_type_id . '&amp;from=' . $availableNumber->from . '&amp;unique_call_id=' . $uniqueCallId . '">' . $user_id . '</Client></Dial>';
+            $twimlBody .= '<Dial record="record-from-answer" recordingStatusCallbackMethod="GET" recordingStatusCallbackEvent="completed" recordingStatusCallback="https://allcalls.io/api/handle-call-recording?user_id=' . $user_id . '&amp;call_type_id=' . $call_type_id . '&amp;unique_call_id=' . $uniqueCallId . '&amp;from=' . urlencode($availableNumber->from) . '" callerId="+441156471655" timeout="20"><Client statusCallbackMethod="GET" statusCallbackEvent="initiated ringing answered completed" statusCallback="https://allcalls.io/api/handle-call-status?user_id=' . $user_id . '&amp;call_type_id=' . $call_type_id . '&amp;from=' . urlencode($availableNumber->from) . '&amp;unique_call_id=' . $uniqueCallId . '">' . $user_id . '</Client></Dial>';
         }
 
-        // if (!empty($relevantBids)) {
-        //     $firstBid = $relevantBids[0];
-        //     $user_id = $firstBid->user_id;
-        //     $call_type_id = $availableNumber->call_type_id;
-        
-        //     // $twimlBody = '<Dial callerId="+441156471655" action="https://allcalls.io/api/handle-call-status?user_id=' . $user_id . '&call_type_id=' . $call_type_id . '&from=' . $availableNumber->from . '" timeout="20">' . '<Client>' . $user_id . '</Client></Dial>';
-        //     $twimlBody = '<Client statusCallbackEvent="initiated ringing answered completed no-answer" statusCallback="https://allcalls.io/api/handle-call-status" statusCallbackMethod="GET">' . $user_id . '</Client>';
-        // }
-
-        // $twimlBody = '<Dial callerId="+441156471655"><Client>2</Client></Dial>';
-
         $twiml = $twimlStart . $twimlBody . $twimlEnd;
-
         Log::debug('TWIML sent: ' . $twiml);
-
         return $twiml;
-
     }
 
     public function handleCallTypeNumberCall($to, $from)
