@@ -15,7 +15,7 @@ class CallStatusController extends Controller
 
     public function update(Request $request)
     {
-        if ( !$request->user_id || !$request->call_type_id || !$request->CallStatus) {
+        if (!$request->user_id || !$request->call_type_id || !$request->CallStatus) {
             Log::debug('Not enough query parameters to process the request.');
             Log::debug([
                 'user_id' => $request->user_id ?? 'Not found',
@@ -63,12 +63,17 @@ class CallStatusController extends Controller
             case 'completed':
                 Log::debug('completed event for user ' . $request->user_id);
                 $callDuration = $request->input('DialCallDuration');
+                $dialCallStatus = $request->input('DialCallStatus'); // Fetch DialCallStatus
 
-                if ($callDuration > 60) {
+                Log::debug('Call duration: ' . $callDuration);
+
+                // Check if DialCallStatus is available and if callDuration is greater than 60
+                if ($dialCallStatus && $callDuration > 60) {
                     // Dispatch CompletedCallEvent
                     CompletedCallEvent::dispatch($user, CallType::find($callTypeId), $callDuration);
                 }
                 break;
+
 
             default:
                 Log::debug('Unhandled call status: ' . $callStatus);

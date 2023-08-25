@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Events\CompletedCallEvent;
 use App\Events\MissedCallEvent;
 use App\Models\Transaction;
 use App\Listeners\AddDefaultBids;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\Event;
 use App\Observers\TransactionObserver;
 use Illuminate\Auth\Events\Registered;
 use App\Events\UserCallTypeStateUpdated;
+use App\Listeners\ChargeUserForCompletedCall;
 use App\Listeners\UpdateTargetsInRingba;
 use App\Listeners\ChargeUserForMissedCall;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -31,6 +33,10 @@ class EventServiceProvider extends ServiceProvider
 
         MissedCallEvent::class => [
             ChargeUserForMissedCall::class,
+        ],
+
+        CompletedCallEvent::class => [
+            ChargeUserForCompletedCall::class,
         ],
     ];
 
