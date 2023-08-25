@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Events\MissedCallEvent;
 use App\Models\Transaction;
 use App\Listeners\AddDefaultBids;
 use App\Listeners\SendWelcomeEmail;
@@ -28,8 +29,8 @@ class EventServiceProvider extends ServiceProvider
             SendWelcomeEmail::class,
         ],
 
-        ChargeUserForMissedCall::class => [
-            
+        MissedCallEvent::class => [
+            ChargeUserForMissedCall::class,
         ],
     ];
 
