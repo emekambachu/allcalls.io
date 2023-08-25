@@ -240,23 +240,17 @@ class FundsWithCardController extends Controller
                 'amount' => $subtotal,
                 'user_id' => $user->id,
                 'sign' => true,
-                'card_id' => 1, // Consider making this dynamic
             ]);
     
             DB::commit();
     
             return redirect()->back()->with(['message' => 'Payment successful.']);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollback();
             // Log the error for debugging
             Log::error('Payment failed: ' . $e->getMessage());
     
             return redirect()->back()->with(['error' => 'Payment failed.']);
         }
-    
-
-
-
-
     }
 }

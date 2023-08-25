@@ -96,7 +96,7 @@ let addFunds = () => {
             method: "post",
             data: {
               amount: cardForm.amount,
-              payment_method: result.setupIntent.payment_method,
+              paymentMethod: result.setupIntent.payment_method,
             },
           });
         }
