@@ -41,6 +41,7 @@ class CallStatusController extends Controller
         switch ($callStatus) {
             case 'ringing':
                 Log::debug('Ringing event for user ' . $userId);
+                Log::debug($request->all());
 
                 if ($user->device_token) {
                     $response = Http::post(route('call.pushNotification'), [
