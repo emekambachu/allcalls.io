@@ -109,7 +109,6 @@ Route::get('/device/incoming', function() {
     return view('incoming');
 })->middleware('auth');
 
-
 Route::get('/clients', [ClientsController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.index');
 Route::patch('/clients/{client}', [ClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.update');
 
