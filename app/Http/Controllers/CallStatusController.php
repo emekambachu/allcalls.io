@@ -62,12 +62,11 @@ class CallStatusController extends Controller
             case 'completed':
                 Log::debug('completed event for user ' . $request->user_id);
                 $callDuration = (int) $request->input('CallDuration');
-                $dialCallStatus = $request->input('DialCallStatus'); // Fetch DialCallStatus
 
                 Log::debug('Call duration: ' . $callDuration);
 
                 // Check if DialCallStatus is available and if callDuration is greater than 60
-                if ($dialCallStatus && $callDuration > 60) {
+                if ($callDuration && $callDuration > 60) {
                     // Dispatch CompletedCallEvent
                     CompletedCallEvent::dispatch($user, CallType::find($callTypeId));
                 }
