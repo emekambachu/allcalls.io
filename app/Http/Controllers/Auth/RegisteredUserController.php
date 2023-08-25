@@ -152,7 +152,6 @@ class RegisteredUserController extends Controller
     public function storeSteps(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'consent' => 'required',
             'typesWithStates' => [
                 'required',
                 'array',
@@ -177,12 +176,6 @@ class RegisteredUserController extends Controller
             ], 400);
         }
 
-        if (!$request->consent) {
-            return response()->json([
-                'success' => false,
-                'consent' => 'You must accept the terms and conditions.'
-            ], 400);
-        }
         if (sizeof($request->bids) !== CallType::count()) {
             return abort(400);
         }

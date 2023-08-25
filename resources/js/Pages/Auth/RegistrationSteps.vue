@@ -194,13 +194,9 @@ let goBack = () => {
 
 <template>
     <Head title="Dashboard" />
-    <AuthenticatedLayout >
-            <StepsModalView 
-                :StepsModal="StepsModal"
-                :callTypes="callTypes"
-                :states="states"
-                @close="StepsModal = false"
-        ></StepsModalView>
+    <AuthenticatedLayout>
+        <StepsModalView :StepsModal="StepsModal" :callTypes="callTypes" :states="states" @close="StepsModal = false">
+        </StepsModalView>
     </AuthenticatedLayout>
 </template>
 
@@ -226,9 +222,10 @@ input[type="number"] {
     background-color: #d7d7d7;
     border-radius: 5px;
 }
+
 .box-shadow {
-    padding: 50px;
-    width: 90%;
+    padding: 20px;
+    width: 97%;
     margin: auto;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
