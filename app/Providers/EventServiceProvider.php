@@ -4,13 +4,14 @@ namespace App\Providers;
 
 use App\Models\Transaction;
 use App\Listeners\AddDefaultBids;
+use App\Listeners\SendWelcomeEmail;
 use App\Listeners\AddTargetsInRingba;
 use Illuminate\Support\Facades\Event;
-use App\Listeners\SendWelcomeEmail;
 use App\Observers\TransactionObserver;
 use Illuminate\Auth\Events\Registered;
 use App\Events\UserCallTypeStateUpdated;
 use App\Listeners\UpdateTargetsInRingba;
+use App\Listeners\ChargeUserForMissedCall;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -27,7 +28,8 @@ class EventServiceProvider extends ServiceProvider
             SendWelcomeEmail::class,
         ],
 
-        UserCallTypeStateUpdated::class => [
+        ChargeUserForMissedCall::class => [
+            
         ],
     ];
 
