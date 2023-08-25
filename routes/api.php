@@ -12,6 +12,7 @@ use App\Http\Controllers\OnlineUsersController;
 use App\Http\Controllers\TwilioTokenController;
 use App\Http\Controllers\CallTypesAPIController;
 use App\Http\Controllers\IncomingCallController;
+use App\Http\Controllers\CallRecordingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -81,6 +82,7 @@ Route::middleware('auth:sanctum')->get('/device/token', [TwilioTokenController::
 Route::get('/call/incoming', [IncomingCallController::class, 'respond']);
 
 Route::get('/handle-call-status', [CallStatusController::class, 'update']);
+Route::get('/handle-call-recording', [CallRecordingController::class, 'store']);
 
 Route::post('/call/pushNotification', [IncomingCallController::class, 'sendPushNotification'])->name('call.pushNotification');
 Route::middleware('auth:sanctum')->post('/userDeviceToken', [IncomingCallController::class, 'saveDeviceToken'])->name('userDeviceToken');
