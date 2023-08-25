@@ -54,7 +54,9 @@ let selectCard = (cardId) => {
   console.log("clicked", cardId);
   selectedCardId.value = Number(cardId);
 };
+const isLoading = ref(false)
 let addFunds = () => {
+  isLoading.value = true
   if (cardForm.amount && cardForm.amount != Math.round(cardForm.amount)) {
     alert("Only whole dollar amounts allowed.");
     return;
@@ -63,6 +65,13 @@ let addFunds = () => {
   let cardId = selectedCardId.value;
 
   if (cardId === "0") {
+
+    router.visit("/billing/funds-with-card", {
+      method: "post",
+      data: cardForm,
+    });
+  
+
     // Temporay Close
     // router.visit("/billing/funds-with-card", {
     //   method: "post",
@@ -87,12 +96,12 @@ let addFunds = () => {
             method: "post",
             data: {
               amount: cardForm.amount,
-              payment_method: result.setupIntent.payment_method,
+              paymentMethod: result.setupIntent.payment_method,
             },
           });
         }
       });
-
+      isLoading.value = false
     return;
   }
 
@@ -107,6 +116,7 @@ let addFunds = () => {
       cardId: cardId,
     },
   });
+  isLoading.value = false
 };
 onMounted(() => {
   // Stripe Element
@@ -511,7 +521,7 @@ if (page.props.flash.message) {
 
               <div class="flex justify-end mt-6">
                 <AuthenticatedButton type="button" class="mt-3" @click.prevent="addFunds">
-                  Add funds
+                  <global-spinner :spinner="isLoading" />  Add funds
                 </AuthenticatedButton>
               </div>
             </div>

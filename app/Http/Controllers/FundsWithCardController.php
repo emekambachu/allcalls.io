@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use Exception;
 use App\Models\Card;
 use App\Models\Transaction;
@@ -203,43 +204,53 @@ class FundsWithCardController extends Controller
             return abort(500, $e->getMessage());  // Internal server error for general exceptions
         }
     }
-    // Stripe through fronted integration
-    public function stripeStore(Request $request){
+
+
+    public function stripeStore(Request $request)
+    {
         // Step 1: Validate incoming request data
         $request->validate([
-
-            'amount' => 'required|numeric|integer|min:1'
+            'amount' => 'required|numeric|integer|min:1',
+            'paymentMethod' => 'required'
         ]);
 
-        $user=auth()->user();
+        $user = $request->user();
+
         $paymentMethod = $request->input('payment_method');
+
         // Step 2: Calculate final payment amount
         $subtotal = (float) $request->amount;
         $processingFee = $subtotal * 0.03;
         $totalWithFee = $subtotal + $processingFee;
         $finalAmount = number_format($totalWithFee, 2, '.', '');
-        // Step 3: Create Charge
-            $user->createOrGetStripeCustomer();
-            $user->updateDefaultPaymentMethod($paymentMethod);
-            $user->charge($request->amount, $paymentMethod);
-             // Step 4: Update user's balance
-             $updatedBalance = $request->user()->balance + $subtotal;
-             $request->user()->update(['balance' => $updatedBalance]);
-             Log::debug('Updated user balance.', ['user_id' => $request->user()->id, 'new_balance' => $updatedBalance]);
 
-             // Step 5: Log the transaction in the database
-             Transaction::create([
-                 'amount' => $subtotal,
-                 'user_id' => $user->id,
-                 'sign' => true,
-                 'card_id' => 1,
-             ]);
 
+        DB::beginTransaction();
+
+        try {
+            // Step 3: Create Charge
+            $user->charge($totalWithFee, $paymentMethod);
+    
+            // Step 4: Update user's balance
+            $updatedBalance = $request->user()->balance + $subtotal;
+            $request->user()->update(['balance' => $updatedBalance]);
+    
+            // Step 5: Log the transaction in the database
+            Transaction::create([
+                'amount' => $subtotal,
+                'user_id' => $user->id,
+                'sign' => true,
+            ]);
+    
+            DB::commit();
+    
             return redirect()->back()->with(['message' => 'Payment successful.']);
-        // try {
-        // } catch (\Exception $exception) {
-        //     return back()->with('error', $exception->getMessage());
-        // }
-
+        } catch (Exception $e) {
+            DB::rollback();
+            // Log the error for debugging
+            Log::error('Payment failed: ' . $e->getMessage());
+    
+            return redirect()->back()->with(['error' => 'Payment failed.']);
+        }
     }
 }

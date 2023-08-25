@@ -81,7 +81,6 @@ let onTypeUpdate = (event) => {
         );
     }
 };
-console.log('call types here', props.callTypes);
 let form = useForm({
     consent: false,
     typesWithStates: props.callTypes.reduce((acc, obj) => {
