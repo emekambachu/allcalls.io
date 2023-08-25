@@ -40,7 +40,7 @@ class Welcome extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.welcome',
+        html: 'emails.welcome',
             with: [
                 'user' => $this->user,
             ],
