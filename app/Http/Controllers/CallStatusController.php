@@ -62,7 +62,7 @@ class CallStatusController extends Controller
 
             case 'completed':
                 Log::debug('completed event for user ' . $request->user_id);
-                $callDuration = $request->input('DialCallDuration');
+                $callDuration = $request->input('CallDuration');
                 $dialCallStatus = $request->input('DialCallStatus'); // Fetch DialCallStatus
 
                 Log::debug('Call duration: ' . $callDuration);
