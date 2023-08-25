@@ -83,7 +83,7 @@ const consentErro = ref('')
 const isLoading = ref(false)
 let submit = () => {
     isLoading.value = true
-    
+
     return axios
         .post("/store-registration-steps", form)
         .then((response) => {
@@ -123,6 +123,7 @@ let submit = () => {
     background-color: white;
     color: black;
 }
+
 .button-custom {
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 150ms;
@@ -137,11 +138,13 @@ let submit = () => {
     color: #3cfa7a;
     cursor: pointer;
 }
+
 .button-custom:hover {
     transition-duration: 150ms;
     background-color: white;
     color: black;
 }
+
 .button-custom-back {
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 150ms;
@@ -159,6 +162,13 @@ let submit = () => {
     color: #3cfa7a;
     transition-duration: 150ms;
 }
+
+.blurred-overlay {
+    backdrop-filter: blur(10px);
+    /* Adjust the blur intensity as needed */
+    background-color: rgba(0, 0, 0, 0.6);
+    /* Adjust the background color and opacity as needed */
+}
 </style>
 <template>
     <Transition name="modal" enter-active-class="transition ease-out duration-300 transform"
@@ -169,46 +179,14 @@ let submit = () => {
         leave-to-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
         <div id="defaultModal" v-if="StepsModal" tabindex="-1"
             class="flex items-center justify-center fixed inset-0 z-50 w-full h-full overflow-x-hidden overflow-y-auto max-h-full mx-4 sm:mx-0">
-            <div class="fixed inset-0 bg-black opacity-60"></div>
+            <div class="fixed inset-0 bg-black opacity-90   blurred-overlay"></div>
             <!-- This is the overlay -->
-            <div class="relative w-full max-w-5xl max-h-full mx-auto">
+            <div class="relative w-full max-w-md max-h-full mx-auto">
                 <div class="relative bg-white rounded-lg shadow-lg">
-                    <div class="flex items-start justify-between p-4 border-b rounded-t border-gray-600">
-                        <h3 class="text-xl font-semibold text-custom-blue">
-                            Steps
-                        </h3>
-                    </div>
+
                     <div>
                         <div v-if="step === 0" class="pt-6 ">
-                            <div class="flex p-12 box-shadow">
-                                <input id="checked-checkbox" type="checkbox" v-model="form.consent"
-                                    @change="TermAndConditons"
-                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                                <label for="checked-checkbox"
-                                    class="ml-2 text-xs font-medium text-gray-900 dark:text-gray-400">
-                                    By clicking Continue, I agree to email marketing, the Terms and
-                                    Conditions (which include mandatory arbitration), Privacy Policy,
-                                    and site visit recordation by Trusted Form and Jornaya. I provide my
-                                    express written consent and electronic signature to receive
-                                    monitored or recorded phone sales calls and text messages from
-                                    AllCalls.io regarding products and services including Medicare
-                                    Supplement, Medicare Advantage, and Prescription Drug Plans on the
-                                    landline or mobile number I provided even if I am on a federal or
-                                    State do not call registry. I confirm that the phone number set
-                                    forth above is accurate and I am the regular user of the phone. I
-                                    understand these calls may be generated using an automated dialing
-                                    system and may contain pre-recorded and artificial voice messages
-                                    and that consenting is not required to receive a quote or speak with
-                                    an agent and that I can revoke my consent at any time by any
-                                    reasonable means. To receive a quote without providing consent,
-                                    please call (866) 523-1718. For SMS message campaigns: Text STOP to
-                                    stop and HELP for help. Msg and data rates may apply. Periodic
-                                    messages; max. 30/month.
-                                </label>
-                            </div>
-                        </div>
-                        <div v-if="step === 1" class="pt-6 ">
-                            <div class="p-12 box-shadow">
+                            <div class="px-12 py-2 ">
                                 <p class="text-gray-700 text-lg text-left leading-relaxed">
                                     Our dynamic bidding system allows you to set a maximum bid for
                                     each type of call you're interested in as you configure your
@@ -216,8 +194,8 @@ let submit = () => {
                                 </p>
                             </div>
                         </div>
-                        <div v-if="step === 2" class="pt-6 ">
-                            <div class="p-12 box-shadow">
+                        <div v-if="step === 1" class="pt-6 ">
+                            <div class="px-12 py-2 ">
                                 <p class="text-gray-700 text-lg text-left leading-relaxed">
                                     Each call type has a base bid of $20, but you can bid higher to
                                     increase your chances of securing the call. The user with the
@@ -226,8 +204,8 @@ let submit = () => {
                                 </p>
                             </div>
                         </div>
-                        <div v-if="step === 3" class="pt-6 ">
-                            <div class="p-12 box-shadow ">
+                        <div v-if="step === 2" class="pt-6 ">
+                            <div class="px-12 py-2  ">
                                 <p class="text-gray-700 text-lg text-left leading-relaxed">
                                     To start, select your desired call types and indicate your
                                     maximum bid for each. Don't forget to select the states where
@@ -238,8 +216,8 @@ let submit = () => {
                             </div>
                         </div>
 
-                        <div v-if="step === 4" class="pt-6 ">
-                            <div class="px-20 box-shadow">
+                        <div v-if="step === 3" class="pt-6 ">
+                            <div class="px-12 ">
                                 <div class="mt-4">
                                     <GuestInputLabel class="mb-3" for="insurance_type"
                                         value="What types of calls do you want to receive?" />
@@ -286,7 +264,7 @@ let submit = () => {
                         </div>
 
 
-                        <div class="p-6">
+                        <div class="px-12 pb-6">
                             <div class="flex justify-between">
                                 <div class="mt-4">
                                     <a v-if="step != 0" href="#" @click.prevent="goBack"
@@ -299,17 +277,14 @@ let submit = () => {
                                         Back</a>
                                 </div>
                                 <div class="mt-4">
-                                    <button v-if="step != 4" type="button"  @click.prevent="NextStep"
-                                        class="button-custom px-3 py-2 rounded-md "
-                                        :class="{ 'opacity-25': termsAndConditons }" :disabled="termsAndConditons"
-                                        >
+                                    <button v-if="step != 3" type="button" @click.prevent="NextStep"
+                                        class="button-custom px-3 py-2 rounded-md ">
                                         Next</button>
-                                        <button @click="submit" type="button" v-if="step === 4"
+                                    <button @click="submit" type="button" v-if="step === 3"
                                         class="button-custom px-3 py-2 rounded-md "
                                         :class="{ 'opacity-25': areAllArraysEmpty || isLoading }"
-                                        :disabled="areAllArraysEmpty || isLoading"
-                                        >
-                                        <global-spinner :spinner="isLoading" />  Register</button>
+                                        :disabled="areAllArraysEmpty || isLoading">
+                                        <global-spinner :spinner="isLoading" /> Register</button>
                                 </div>
                             </div>
                         </div>
