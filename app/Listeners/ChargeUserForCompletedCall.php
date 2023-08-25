@@ -28,15 +28,15 @@ class ChargeUserForCompletedCall
         Log::debug($event->user);
 
         // Check if the user has sufficient balance
-        if ($event->user->balance >= 5) {
+        if ($event->user->balance >= 35) {
             // Deduct $5 from the user's balance
             DB::transaction(function () use ($event) {
-                $event->user->decrement('balance', 5);
+                $event->user->decrement('balance', 35);
             });
 
-            Log::debug('Deducted $5 from user balance');
+            Log::debug('Deducted $25 from user balance after completed call');
         } else {
-            Log::warning('Insufficient balance to charge for missed call');
+            Log::warning('Insufficient balance to charge for completed call');
             return;
         }
     }
