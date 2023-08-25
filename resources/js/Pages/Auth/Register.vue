@@ -95,8 +95,6 @@ let errors = ref(null);
 let validateEmail = (email) => {
   return /\S+@\S+\.\S+/.test(email); // Simple regex for email validation
 }
-const consentError = ref(false)
-const consentErro = ref('')
 const isLoading = ref(false);
 let submit = () => {
   isLoading.value = true
@@ -105,24 +103,20 @@ let submit = () => {
       .post("/register", form)
       .then((response) => {
         router.visit('/login')
-        consentError.value = false
         isLoading.value = false
       })
       .catch((error) => {
         if (error.response) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
-          console.log(error.response.data);
           errors.value = error.response.data.errors;
-          consentErro.value = error.response.data.consent;
-          consentError.value = true
           isLoading.value = false
+
+          firstStepErrors.value = error.response.data.errors;
           if (error.response.status === 400) {
             uiEmailValidation.value.isValid = false;
             // Handle validation errors here.
             firstStepErrors.value = error.response.data.errors;
-            consentErro.value = error.response.data.consent;
-            consentError.value = true
             isLoading.value = false
           } else {
             // Handle other types of errors.
@@ -248,13 +242,8 @@ let submit = () => {
           </label>
         </div>
         <div v-if="firstStepErrors.consent" class="text-red-500 ml-5" v-text="firstStepErrors.consent[0]"></div>
-        <p class="p-5" v-if="consentError == true" style="color: red;">{{ consentErro }}</p>
         <div class="flex items-center justify-end mt-4">
-          <PrimaryButton :class="{ 'opacity-25': isLoading }" :disabled="isLoading" type="button" class="ml-4"
-            @click.prevent="submit">
-            <global-spinner :spinner="isLoading" />
-            Submit
-          </PrimaryButton>
+          <PrimaryButton type="button" class="ml-4" @click.prevent="submit">Submit</PrimaryButton>
         </div>
       </div>
     </form>
