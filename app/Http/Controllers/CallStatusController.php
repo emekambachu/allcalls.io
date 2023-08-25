@@ -53,7 +53,7 @@ class CallStatusController extends Controller
                 }
 
                 Log::debug('Device token was not found for user_id ' . $user->id);
-                RingingCallEvent::dispatch($user, $request->CallSid, $request->call_type_id);
+                RingingCallEvent::dispatch($user, $request->unique_call_id, $request->call_type_id);
                 break;
 
             case 'no-answer':

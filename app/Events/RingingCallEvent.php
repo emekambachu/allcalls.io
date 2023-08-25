@@ -16,16 +16,16 @@ class RingingCallEvent
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public User $user;
-    public $callSid;
+    public $uniqueCallId;
     public $callTypeId;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(User $user, $callSid, $callTypeId)
+    public function __construct(User $user, $uniqueCallId, $callTypeId)
     {
         $this->user = $user;
-        $this->callSid = $callSid;
+        $this->uniqueCallId = $uniqueCallId;
         $this->callTypeId = $callTypeId;
     }
 

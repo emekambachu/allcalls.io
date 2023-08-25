@@ -25,12 +25,12 @@ class SaveUserCall
     {
         Log::debug('Save the call now');
         Log::debug($event->user->id);
-        Log::debug($event->callSid);
+        Log::debug($event->uniqueCallId);
 
         Call::create([
             'user_id' => $event->user->id,
             'call_type_id' => $event->callTypeId,
-            'sid' => $event->callSid,
+            'unique_call_id' => $event->uniqueCallId,
         ]);
     }
 }

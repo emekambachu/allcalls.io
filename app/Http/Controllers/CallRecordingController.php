@@ -12,7 +12,7 @@ class CallRecordingController extends Controller
     {
         Log::debug('Recording callback fired');
         Log::debug($request->all());
-        $call = Call::whereUserId($request->user_id)->whereSid($request->CallSid)->first();
+        $call = Call::whereUserId($request->user_id)->whereUniqueCallId($request->unique_call_id)->first();
         $call->recording_url = $request->RecordingUrl;
         $call->save();
     }
