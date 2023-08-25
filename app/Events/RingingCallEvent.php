@@ -18,15 +18,17 @@ class RingingCallEvent
     public User $user;
     public $uniqueCallId;
     public $callTypeId;
+    public $from;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(User $user, $uniqueCallId, $callTypeId)
+    public function __construct(User $user, $uniqueCallId, $callTypeId, $from)
     {
         $this->user = $user;
         $this->uniqueCallId = $uniqueCallId;
         $this->callTypeId = $callTypeId;
+        $this->from = $from;
     }
 
     /**

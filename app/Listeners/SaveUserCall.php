@@ -27,17 +27,20 @@ class SaveUserCall
     {
         Log::debug('Save the call now');
         Log::debug($event->user->id);
-        Log::debug($event->uniqueCallId);
 
         $call = Call::create([
             'user_id' => $event->user->id,
             'call_type_id' => $event->callTypeId,
             'unique_call_id' => $event->uniqueCallId,
+            'from' => $event->from,
         ]);
 
-        // Query the external database
-        $results = DB::connection('mysql2')->select("SELECT * FROM users WHERE phone = ? LIMIT 1", [$event->phone]);
+        Log::debug($call->toArray());
 
+        // Query the external database
+        $results = DB::connection('mysql2')->select("SELECT * FROM users WHERE phone = ? LIMIT 1", [$event->from]);
+
+        Log::debug('Results from external database.');
         Log::debug($results);
 
         // Client::create([
