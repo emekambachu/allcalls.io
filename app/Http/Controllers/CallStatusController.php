@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\CallType;
 use Illuminate\Http\Request;
 use App\Events\MissedCallEvent;
+use App\Events\RingingCallEvent;
 use App\Events\CompletedCallEvent;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
@@ -52,6 +53,7 @@ class CallStatusController extends Controller
                 }
 
                 Log::debug('Device token was not found for user_id ' . $user->id);
+                RingingCallEvent::dispatch($user, $request->CallSid);
                 break;
 
             case 'no-answer':

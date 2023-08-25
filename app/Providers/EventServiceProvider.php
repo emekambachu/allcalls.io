@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Events\CompletedCallEvent;
 use App\Events\MissedCallEvent;
+use App\Events\RingingCallEvent;
 use App\Models\Transaction;
 use App\Listeners\AddDefaultBids;
 use App\Listeners\SendWelcomeEmail;
@@ -29,6 +30,10 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
             SendWelcomeEmail::class,
+        ],
+
+        RingingCallEvent::class => [
+            SaveUserCall::class
         ],
 
         MissedCallEvent::class => [
