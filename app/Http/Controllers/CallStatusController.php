@@ -15,8 +15,6 @@ class CallStatusController extends Controller
 
     public function update(Request $request)
     {
-
-
         if ( !$request->user_id || !$request->call_type_id || !$request->CallStatus) {
             Log::debug('Not enough query parameters to process the request.');
             Log::debug([
@@ -31,6 +29,13 @@ class CallStatusController extends Controller
         $callStatus = $request->input('CallStatus');
         $userId = $request->input('user_id');
         $callTypeId = $request->input('call_type_id');
+
+        Log::debug('Webhook triggered.');
+        Log::debug([
+            'callStatus' => $callStatus,
+            'userId' => $userId,
+            'callTypeId' => $callTypeId,
+        ]);
 
         $user = User::findOrFail($userId);
 

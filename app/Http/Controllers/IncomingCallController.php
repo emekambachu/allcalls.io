@@ -128,7 +128,7 @@ class IncomingCallController extends Controller
             $call_type_id = $availableNumber->call_type_id;
 
             // $twimlBody .= '<Dial callerId="+441156471655" timeout="20"><Client statusCallbackMethod="GET" statusCallbackEvent="initiated ringing answered completed" statusCallback="https://allcalls.io/api/handle-call-status?user_id=' . $user_id . '&call_type_id=' . $call_type_id . '&from=' . $availableNumber->from . '">' . $user_id . '</Client></Dial>';
-            $twimlBody .= '<Dial callerId="+441156471655" timeout="20"><Client statusCallbackMethod="GET" statusCallbackEvent="initiated ringing failed no-answer busy failed" statusCallback="https://allcalls.io/api/handle-call-status?user_id=' . $user_id . '&amp;call_type_id=' . $call_type_id . '&amp;from=' . $availableNumber->from . '">' . $user_id . '</Client></Dial>';
+            $twimlBody .= '<Dial callerId="+441156471655" timeout="20"><Client statusCallbackMethod="GET" statusCallbackEvent="initiated ringing answered completed" statusCallback="https://allcalls.io/api/handle-call-status?user_id=' . $user_id . '&amp;call_type_id=' . $call_type_id . '&amp;from=' . $availableNumber->from . '">' . $user_id . '</Client></Dial>';
         }
 
         // if (!empty($relevantBids)) {
