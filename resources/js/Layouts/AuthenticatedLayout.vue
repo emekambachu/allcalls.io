@@ -365,13 +365,13 @@ const props = defineProps({
                       <div class="p-2">
                         <span
                           class="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20"
-                          >Coming soon</span
+                          >Soon</span
                         >
                       </div>
                     </Link>
                   </li>
 
-                  <li>
+                  <!-- <li>
                     <Link
                       href="/billing/cards"
                       class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
@@ -398,7 +398,7 @@ const props = defineProps({
 
                       <span>Saved Cards</span>
                       </Link>
-                    </li>
+                    </li> -->
                   </ul>
                 </div>
               </ResponsiveNavLink>
@@ -531,13 +531,13 @@ const props = defineProps({
                   <div class="p-2">
                     <span
                       class="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20"
-                      >Coming soon</span
+                      >Soon</span
                     >
                   </div>
                 </Link>
               </li>
 
-              <li>
+              <!-- <li>
                 <Link
                   href="/billing/cards"
                   class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
@@ -564,7 +564,8 @@ const props = defineProps({
 
                   <span>Saved Cards</span>
                   </Link>
-                </li>
+                </li> -->
+
               </ul>
             </div>
 

@@ -12,12 +12,9 @@ use Illuminate\Support\Facades\Http;
 
 class CallStatusController extends Controller
 {
-
     public function update(Request $request)
     {
-
-
-        if ( !$request->user_id || !$request->call_type_id || !$request->CallStatus) {
+        if (!$request->user_id || !$request->call_type_id || !$request->CallStatus) {
             Log::debug('Not enough query parameters to process the request.');
             Log::debug([
                 'user_id' => $request->user_id ?? 'Not found',
@@ -31,6 +28,13 @@ class CallStatusController extends Controller
         $callStatus = $request->input('CallStatus');
         $userId = $request->input('user_id');
         $callTypeId = $request->input('call_type_id');
+
+        Log::debug('Webhook triggered.');
+        Log::debug([
+            'callStatus' => $callStatus,
+            'userId' => $userId,
+            'callTypeId' => $callTypeId,
+        ]);
 
         $user = User::findOrFail($userId);
 
@@ -57,13 +61,17 @@ class CallStatusController extends Controller
 
             case 'completed':
                 Log::debug('completed event for user ' . $request->user_id);
-                $callDuration = $request->input('DialCallDuration');
+                $callDuration = (int) $request->input('CallDuration');
 
-                if ($callDuration > 60) {
+                Log::debug('Call duration: ' . $callDuration);
+
+                // Check if DialCallStatus is available and if callDuration is greater than 60
+                if ($callDuration && $callDuration > 60) {
                     // Dispatch CompletedCallEvent
-                    CompletedCallEvent::dispatch($user, CallType::find($callTypeId), $callDuration);
+                    CompletedCallEvent::dispatch($user, CallType::find($callTypeId));
                 }
                 break;
+
 
             default:
                 Log::debug('Unhandled call status: ' . $callStatus);
@@ -72,26 +80,4 @@ class CallStatusController extends Controller
 
         return;
     }
-
-    // public function update(Request $request)
-    // {
-    //     $request->validate([
-    //         'user_id' => 'required'
-    //     ]);
-
-    //     Log::debug('Ringing event for user ' . $request->user_id);
-
-    //     $user = User::findOrFail($request->user_id);
-
-    //     if ($user->device_token) {
-    //         $response = Http::post(route('call.pushNotification'), [
-    //             'deviceToken' => $user->device_token,
-    //         ]);
-    //         Log::debug('Notification attempt from status callback:' . $response->body());
-    //         return;
-    //     }
-
-    //     Log::debug('Device token was not found for user_id ' . $user->id);
-    //     return;
-    // }
 }

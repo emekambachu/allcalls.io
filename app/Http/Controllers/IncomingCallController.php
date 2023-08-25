@@ -56,7 +56,8 @@ class IncomingCallController extends Controller
         $callTypeNumber = CallTypeNumber::where('phone', $to)->first();
         if ($callTypeNumber) {
             Log::debug('Number found in CallTypeNumber model: ' . $to);
-            $twiml .= $this->handleCallTypeNumberCall($to, substr($request->input('From'), 2));
+            $fromAttribute = $this->getFromAttribute($request->input('From'));
+            $twiml .= $this->handleCallTypeNumberCall($to, $fromAttribute);
             return response($twiml, 200)->header('Content-Type', 'text/xml');
         }
 
@@ -70,6 +71,22 @@ class IncomingCallController extends Controller
         return response($twimlResponse, 200)->header('Content-Type', 'text/xml');
     }
 
+    private function getFromAttribute($fromString)
+    {
+        // Check if the string starts with 'client:'
+        if (strpos($fromString, 'client:') === 0) {
+            return '2055551234';  // Return a dummy number
+        }
+    
+        // If it's a phone number
+        if (strpos($fromString, '+1') === 0) {
+            // Remove the +1 prefix
+            return substr($fromString, 2);
+        }
+        
+        return $fromString;  // Return as-is
+    }
+    
     public function handleAvailableNumberCall($to)
     {
         // Assume that the user_id is associated with the number in AvailableNumber
@@ -111,7 +128,7 @@ class IncomingCallController extends Controller
             $call_type_id = $availableNumber->call_type_id;
 
             // $twimlBody .= '<Dial callerId="+441156471655" timeout="20"><Client statusCallbackMethod="GET" statusCallbackEvent="initiated ringing answered completed" statusCallback="https://allcalls.io/api/handle-call-status?user_id=' . $user_id . '&call_type_id=' . $call_type_id . '&from=' . $availableNumber->from . '">' . $user_id . '</Client></Dial>';
-            $twimlBody .= '<Dial callerId="+441156471655" timeout="20"><Client statusCallbackMethod="GET" statusCallbackEvent="initiated ringing failed no-answer busy failed" statusCallback="https://allcalls.io/api/handle-call-status?user_id=' . $user_id . '&amp;call_type_id=' . $call_type_id . '&amp;from=' . $availableNumber->from . '">' . $user_id . '</Client></Dial>';
+            $twimlBody .= '<Dial callerId="+441156471655" timeout="20"><Client statusCallbackMethod="GET" statusCallbackEvent="initiated ringing answered completed" statusCallback="https://allcalls.io/api/handle-call-status?user_id=' . $user_id . '&amp;call_type_id=' . $call_type_id . '&amp;from=' . $availableNumber->from . '">' . $user_id . '</Client></Dial>';
         }
 
         // if (!empty($relevantBids)) {
@@ -176,7 +193,7 @@ class IncomingCallController extends Controller
         Log::debug('Forwarding call to ' . $availableNumber->phone);
 
         // Return the available number in a <Dial> verb to forward the call to this number
-        $twiml = '<Response><Dial><Number>' . $availableNumber->phone . '</Number></Dial></Response>';
+        $twiml = '<Response><Dial callerId="+441146971410"><Number>' . $availableNumber->phone . '</Number></Dial></Response>';
 
         Log::debug('TWIML sent: ' . $twiml);
 

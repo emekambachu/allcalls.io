@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Auth\RegisteredUserController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
@@ -13,10 +12,12 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupportController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DefaultCardController;
+use App\Http\Controllers\StripeFundsController;
 use App\Http\Controllers\TwilioTokenController;
 use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\FundsWithCardController;
 use App\Http\Controllers\UsageActivityController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,9 +56,10 @@ Route::middleware(['auth', 'verified', 'registration-step-check'])->group(functi
     Route::get('/transactions', [TransactionsController::class, 'index'])->name('transactions.index');
     Route::delete('/transactions/{transaction}', [TransactionsController::class, 'destroy'])->name('transactions.destroy');
     Route::patch('/bids', [BidsController::class, 'update'])->name('bids.update');
+
     Route::get('/billing/funds', [FundsController::class, 'index'])->name('billing.funds.index');
-    Route::post('/billing/funds', [FundsController::class, 'store'])->name('billing.funds.store');
-    Route::post('/billing/funds-with-card', [FundsWithCardController::class, 'store'])->name('billing.funds-with-card.store');
+    Route::post('/billing/funds', [StripeFundsController::class, 'store'])->name('billing.funds.store');
+
     Route::get('/billing/cards', [CardsController::class, 'index'])->name('billing.cards.index');
     Route::post('/billing/cards', [CardsController::class, 'store'])->name('billing.cards.store');
     Route::patch('/billing/cards/default/{card}', [DefaultCardController::class, 'update'])->name('billing.cards.default.update');
@@ -78,12 +80,13 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::patch('/bids', [BidsController::class, 'update'])->middleware(['auth', 'verified'])->name('bids.update');
-Route::get('/billing/funds', [FundsController::class, 'index'])->middleware(['auth', 'verified'])->name('billing.funds.index');
-Route::post('/billing/funds', [FundsController::class, 'storeWithStripe'])->middleware(['auth', 'verified'])->name('billing.funds.store');
 
-// Temporary close
+
+
+// Old billing routes:
+// Route::post('/billing/funds', [FundsController::class, 'storeWithStripe'])->middleware(['auth', 'verified'])->name('billing.funds.store');
 // Route::post('/billing/funds-with-card', [FundsWithCardController::class, 'storeWithStripe'])->middleware(['auth', 'verified'])->name('billing.funds-with-card.store');
-Route::post('/billing/funds-with-card', [FundsWithCardController::class, 'stripeStore'])->middleware(['auth', 'verified'])->name('billing.funds-with-card.store');
+// Route::post('/billing/funds-with-card', [FundsWithCardController::class, 'stripeStore'])->middleware(['auth', 'verified'])->name('billing.funds-with-card.store');
 
 
 
@@ -105,7 +108,6 @@ Route::get('/device/token', [TwilioTokenController::class, 'show'])->middleware(
 Route::get('/device/incoming', function() {
     return view('incoming');
 })->middleware('auth');
-
 
 Route::get('/clients', [ClientsController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.index');
 Route::patch('/clients/{client}', [ClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.update');
