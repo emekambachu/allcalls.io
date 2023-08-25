@@ -75,7 +75,7 @@ class IncomingCallController extends Controller
     {
         // Check if the string starts with 'client:'
         if (strpos($fromString, 'client:') === 0) {
-            return '+1234567890';  // Return a dummy number
+            return '+12055551234';  // Return a dummy number
         }
     
         // If it's a phone number
