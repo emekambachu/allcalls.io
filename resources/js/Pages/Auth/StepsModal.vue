@@ -200,8 +200,8 @@ let submit = () => {
                         <div v-if="step === 1" class="pt-6 ">
                             <div class="px-12 py-2 ">
                                 <p class="text-gray-700 text-lg text-left leading-relaxed">
-                                    Each call type has a base bid of $20, but you can bid higher to
-                                    increase your chances of securing the call. The user with the
+                                    Each call type has minimum price of $25, but you can bid higher
+                                    to increase your chances of receiving a call. The user with the
                                     highest bid wins the call but pays only $1 more than the second
                                     highest bid.
                                 </p>
@@ -210,11 +210,9 @@ let submit = () => {
                         <div v-if="step === 2" class="pt-6 ">
                             <div class="px-12 py-2  ">
                                 <p class="text-gray-700 text-lg text-left leading-relaxed">
-                                    To start, select your desired call types and indicate your
-                                    maximum bid for each. Don't forget to select the states where
-                                    you're licensed to operate. Remember, banks will see your bid
-                                    amounts as they set the prices they allow for payment
-                                    processing, so bid wisely!
+                                    To start, select your desired call types and indicate the
+                                    maximum price you are willing to pay for each call. Don't 
+									forget to select the states where you're licensed to operate. 
                                 </p>
                             </div>
                         </div>
