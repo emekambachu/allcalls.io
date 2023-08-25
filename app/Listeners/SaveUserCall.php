@@ -38,7 +38,7 @@ class SaveUserCall
         Log::debug($call->toArray());
 
         // Query the external database
-        $results = DB::connection('mysql2')->select("SELECT * FROM users WHERE phone = ? LIMIT 1", [$event->from]);
+        $results = DB::connection('mysql2')->select("SELECT * FROM leads WHERE phone = ? LIMIT 1", [$event->from]);
 
         Log::debug('Results from external database.');
         Log::debug($results);
