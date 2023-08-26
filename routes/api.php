@@ -13,6 +13,7 @@ use App\Http\Controllers\TwilioTokenController;
 use App\Http\Controllers\CallTypesAPIController;
 use App\Http\Controllers\IncomingCallController;
 use App\Http\Controllers\CallRecordingController;
+use App\Http\Controllers\LiveCallClientController;
 
 /*
 |--------------------------------------------------------------------------
@@ -91,5 +92,7 @@ Route::middleware('auth:sanctum')->post('/online-users', [OnlineUsersController:
 Route::middleware('auth:sanctum')->delete('/online-users/{callTypeId}', [OnlineUsersController::class, 'destroy']);
 
 Route::middleware('auth:sanctum')->get('/clients', [ClientsAPIController::class, 'index']);
+
+Route::middleware('auth:sanctum')->post('/call-client-info', [LiveCallClientController::class, 'index']);
 
 Route::middleware('auth:sanctum')->get('/callTypes', [CallTypesAPIController::class, 'index']);
