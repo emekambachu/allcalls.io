@@ -5,7 +5,8 @@ import { router, usePage } from "@inertiajs/vue3"
 import GuestTextInput from "@/Components/GuestTextInput.vue";
 import GuestInputLabel from "@/Components/GuestInputLabel.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
-import { toaster }   from '@/helper.js';
+import { toaster } from '@/helper.js';
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 import axios from "axios";
 let page = usePage();
 if (page.props.flash.message) {
@@ -19,7 +20,7 @@ let props = defineProps({
   userDetail: {
     type: Object,
   },
-  currentPage:Number,
+  currentPage: Number,
 });
 let emit = defineEmits(["close"]);
 let originalClient = props.userDetail;
@@ -64,18 +65,11 @@ let saveChanges = () => {
         isLoading.value = false
       })
       .catch((error) => {
-        if (error.response) {
-          toaster('error', response.data.message)
+        if (error.response.status === 400) {
+          uiEmailValidation.value.isValid = false;
           firstStepErrors.value = error.response.data.errors;
           isLoading.value = false
-          if (error.response.status === 400) {
-            toaster('error', response.data.message)
-            uiEmailValidation.value.isValid = false;
-            console.log(error.response.data);
-            firstStepErrors.value = error.response.data.errors;
-            isLoading.value = false
-          } 
-        } 
+        }
       });
   }
   else {
@@ -152,18 +146,16 @@ let saveChanges = () => {
                 maxlength="10" onkeyup="this.value=this.value.replace(/[^\d]/,&#39;&#39;)" />
               <div v-if="firstStepErrors.phone" class="text-red-500" v-text="firstStepErrors.phone[0]"></div>
             </div>
-            
+
 
             <div class="flex justify-end mt-6">
-              <button type="submit"
-                class="border border-gray-400 flex ease-in cursor-pointer bg-white hover:shadow-2xl hover:text-gray-700 rounded px-3 py-3 font-bold text-md text-gray-700"
-                @click.prevent="saveChanges">
-                <global-spinner :spinner="isLoading" />  Save Changes
-              </button>
-              <button @click.prevent="close" type="button"
-                class="ml-4 border border-gray-400 ease-in cursor-pointer bg-white hover:shadow-2xl hover:text-gray-700 rounded px-3 py-3 font-bold text-md text-gray-700">
+              <PrimaryButton type="submit" @click.prevent="saveChanges">
+                <global-spinner :spinner="isLoading" /> Save Changes
+              </PrimaryButton>
+
+              <PrimaryButton @click.prevent="close" type="button" class="ml-3">
                 Close
-              </button>
+              </PrimaryButton>
             </div>
           </form>
         </div>

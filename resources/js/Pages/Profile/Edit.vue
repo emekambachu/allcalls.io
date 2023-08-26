@@ -8,7 +8,7 @@ import InputLabel from "@/Components/InputLabel.vue";
 import AuthenticatedButton from "@/Components/AuthenticatedButton.vue";
 import { Head, router } from "@inertiajs/vue3";
 import { ref } from 'vue';
-
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 let props = defineProps({
   mustVerifyEmail: {
     type: Boolean,
@@ -96,7 +96,7 @@ let saveBids = () => {
             </div>
 
             <div>
-                <AuthenticatedButton @click="saveBids">Save</AuthenticatedButton>
+                <PrimaryButton @click="saveBids">Save</PrimaryButton>
             </div>
           </div>
         </div>
@@ -125,5 +125,24 @@ let saveBids = () => {
   background-color: #E8F0FE;
   border-radius: 5px;
 }
+.button-custom {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 600;
+    border-width: 1px;
+    align-items: center;
+    display: inline-flex;
+    border-color: rgb(107 114 128 / var(--tw-border-opacity));
+    background-color: #03243d;
+    color: #3cfa7a;
+    cursor: pointer;
+}
 
+.button-custom:hover {
+    transition-duration: 150ms;
+    background-color: white;
+    color: black;
+}
 </style>

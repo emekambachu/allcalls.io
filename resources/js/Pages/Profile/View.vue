@@ -3,7 +3,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import DeleteUserForm from "./Partials/DeleteUserForm.vue";
 import { reactive, computed } from "vue";
 import { Link, Head } from "@inertiajs/vue3";
-
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 let props = defineProps({
   user: {
     type: Object,
@@ -55,7 +55,28 @@ let formatMoney = (amount) => {
     .replace(/\d(?=(\d{3})+\.)/g, "$&,");
 };
 </script>
+<style scoped>
+.button-custom {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 600;
+    border-width: 1px;
+    align-items: center;
+    display: inline-flex;
+    border-color: rgb(107 114 128 / var(--tw-border-opacity));
+    background-color: #03243d;
+    color: #3cfa7a;
+    cursor: pointer;
+}
 
+.button-custom:hover {
+    transition-duration: 150ms;
+    background-color: white;
+    color: black;
+}
+</style>
 <template>
   <Head title="Profile" />
 
@@ -99,9 +120,9 @@ let formatMoney = (amount) => {
                 </div>
               </div>
             </div>
-            <Link
+            <Link 
               href="/profile/edit"
-              class="border border-gray-400 ease-in cursor-pointer bg-gray-400 bg-opacity-5 hover:shadow-2xl hover:bg-white hover:text-custom-blue hover:bg-opacity-80 rounded px-3 py-2 font-bold text-md text-gray-500 transition absolute right-0"
+              class="button-custom px-4 py-3 rounded-md  absolute right-0"
               >Edit Profile</Link
             >
           </div>

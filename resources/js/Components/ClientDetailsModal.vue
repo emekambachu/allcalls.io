@@ -2,7 +2,7 @@
 import { ref, reactive, defineEmits, onMounted } from "vue";
 import TextInput from "@/Components/TextInput.vue";
 import { router } from "@inertiajs/vue3"
-
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 let props = defineProps({
   showModal: {
     type: Boolean,
@@ -103,12 +103,12 @@ let openEdit = () => {
                   Personal Details
                 </h4>
 
-                <button
+                <PrimaryButton
                   @click="openEdit"
-                  class="border border-gray-400 ease-in cursor-pointer bg-gray-400 bg-opacity-5 hover:shadow-2xl hover:bg-white hover:text-custom-blue hover:bg-opacity-80 rounded px-3 py-3 font-bold text-md text-gray-500 transition"
+                  
                 >
                   Edit Client
-                </button>
+                </PrimaryButton>
               </div>
 
               <div
@@ -212,12 +212,12 @@ let openEdit = () => {
             </div>
 
             <div class="flex justify-end">
-              <button
+              <PrimaryButton
               @click="close"
-                class="border border-gray-400 ease-in cursor-pointer bg-white bg-opacity-5 hover:shadow-2xl hover:bg-white hover:text-custom-blue hover:bg-opacity-80 rounded px-3 py-3 font-bold text-md text-gray-500 transition"
+                
               >
                 Close
-              </button>
+              </PrimaryButton>
             </div>
           </div>
         </div>
@@ -448,20 +448,20 @@ let openEdit = () => {
             <!-- (The rest of your sections would follow a similar structure) -->
 
             <div class="flex justify-end mt-6">
-              <button
+              <PrimaryButton
                 type="submit"
-                class="border flex border-gray-400 ease-in cursor-pointer bg-white hover:shadow-2xl hover:text-gray-700 rounded px-3 py-3 font-bold text-md text-gray-700"
+                
                 @click.prevent="saveChanges"
               >
               <global-spinner :spinner="isLoading" />  Save Changes
-              </button>
-              <button
+              </PrimaryButton>
+              <PrimaryButton
                 @click.prevent="close"
                 type="button"
-                class="ml-4 border border-gray-400 ease-in cursor-pointer bg-white hover:shadow-2xl hover:text-gray-700 rounded px-3 py-3 font-bold text-md text-gray-700"
+                class="ml-3"
               >
                 Close
-              </button>
+              </PrimaryButton>
             </div>
           </form>
         </div>
