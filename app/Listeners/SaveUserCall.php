@@ -54,9 +54,11 @@ class SaveUserCall
             'address' => $potentialLead->address,
             'dob' => $potentialLead->dob,
             'call_id' => $call->id,
+            'user_id' => $event->user->id,
+            'call_type_id' => $event->callTypeId,
         ]);
 
         Log::debug('Client saved.');
-        Log::debug($client->all());
+        Log::debug($client->toArray());
     }
 }
