@@ -18,9 +18,7 @@ let openLiveChat = () => {
   <Head title="Support" />
   <AuthenticatedLayout>
     <template #header>
-      <h2
-        class="font-small text-xl text-gray-800 dark:text-gray-200 leading-tight"
-      >
+      <h2 class="font-small text-xl text-gray-800 dark:text-gray-200 leading-tight">
         Support
       </h2>
     </template>
@@ -34,9 +32,7 @@ let openLiveChat = () => {
       </div>
     </div>
 
-    <div
-      class="px-16 mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
-    >
+    <div class="px-16 mx-auto  grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
       <!-- <div class="flex flex-col bg-custom-darksky rounded p-4 text-center">
         <div class="mb-6">
           <h2 class="text-xl text-white font-extrabold">
@@ -88,20 +84,46 @@ let openLiveChat = () => {
       </div>
     </div>
 
+   
+      <!-- <div class="px-16 text-gray-700 mb-8">
+        <div class="font-bold text-gray-700 mb-2 text-lg">AllCalls LLC</div>
+        <div>1309 COFFEEN AVE STE 11246<br>SHERIDAN, WY 82801, USA</div>
+        <div>
+          <strong class="text-gray-600">Toll Free Customer Service Phone:</strong>
+          (855) 815-0382
+        </div>
+        <div>
+          <strong class="text-gray-600">Support Hours:</strong> 24/7 Monday -
+          Sunday
+        </div>
+
+        <p class="mb-1">1309 COFFEEN AVE STE 11246<br>SHERIDAN, WY 82801, USA</p>
+        <p><strong class="text-gray-500">Email:</strong> support@allcalls.io</p>
+      </div> -->
+ 
+
     <div class="px-16 text-gray-700 mb-8">
       <div class="font-bold text-gray-700 mb-2 text-lg">AllCalls LLC</div>
-      <div>1309 COFFEEN AVE STE 11246<br>SHERIDAN, WY 82801, USA</div>
-      <div>
-        <strong class="text-gray-600">Toll Free Customer Service Phone:</strong>
-        (855) 815-0382
-      </div>
-      <div>
-        <strong class="text-gray-600">Support Hours:</strong> 24/7 Monday -
-        Sunday
+      <div class="flex justify-between">
+            <div>1309 COFFEEN AVE STE 11246<br>SHERIDAN, WY 82801, USA</div>
+          <div style="width: 50%;">
+            <strong class="text-gray-600">Toll Free Customer Service Phone: <br> </strong>
+            (855) 815-0382
+          </div>
       </div>
 
-      <p class="mb-1">1309 COFFEEN AVE STE 11246<br>SHERIDAN, WY 82801, USA</p>
+      <div class="flex justify-between">
+        <div>
+        <strong class="text-gray-600">Support Hours: <br> </strong> 24/7 Monday -
+        Sunday
+      </div>
+          <div style="width: 50%;">
+            <p class="mb-1">1309 COFFEEN AVE STE 11246<br>SHERIDAN, WY 82801, USA</p>
+          </div>
+      </div>
+     
       <p><strong class="text-gray-500">Email:</strong> support@allcalls.io</p>
     </div>
+
   </AuthenticatedLayout>
 </template>

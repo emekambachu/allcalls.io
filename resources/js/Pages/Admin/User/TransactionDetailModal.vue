@@ -18,7 +18,6 @@ let FetehTransactions = async (id) => {
   try {
     const response = await axios.get(`/admin/customer/transactions/${id}`);
     const data = response.data; // Assuming your API response provides relevant data
-    console.log('what is data', data.transactions);
     transactions.value = data.transactions
     slidingLoader.value = false
   } catch (error) {
@@ -31,7 +30,6 @@ let fetchTransactionsBypage = async (page) => {
   try {
     const response = await axios.get(`/admin/customer/transactions/${props.user.id}${url.search}`);
     const data = response.data; // Assuming your API response provides relevant data
-    console.log('what is data', data.transactions);
     transactions.value = data.transactions
     slidingLoader.value = false
   } catch (error) {

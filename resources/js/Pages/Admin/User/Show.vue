@@ -35,7 +35,6 @@ const tab = ref(0);
 
 let ChangeTab = (val) => {
   tab.value = val
-  console.log(tab.value);
 }
 </script>
 <style>
