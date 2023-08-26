@@ -7,6 +7,8 @@ import BillingNav from "@/Components/BillingNav.vue";
 import TextInput from "@/Components/TextInput.vue";
 import AuthenticatedButton from "@/Components/AuthenticatedButton.vue";
 import { toaster }   from '@/helper.js';
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+
 let page = usePage();
 if (page.props.flash.message) {
   toaster('success', page.props.flash.message)
@@ -130,14 +132,14 @@ let setAsDefault = (cardId) => {
                           </p>
                         </div>
                         <div class="flex items-center">
-                          <button
+                          <PrimaryButton
                             type="button"
-                            class="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded px-2 py-2 text-xs flex items-center mr-2"
+                            
                             @click.prevent="setAsDefault(card.id)"
                             v-if="!card.default"
                           >
                             Set As Default
-                          </button>
+                          </PrimaryButton>
                           <button
                             type="button"
                             class="text-white bg-red-700 hover:bg-red-800 font-medium rounded px-2 py-2 text-xs flex items-center"

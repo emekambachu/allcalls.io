@@ -6,6 +6,8 @@ import TextInput from "@/Components/TextInput.vue";
 import { ref, onMounted } from "vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import { toaster }   from '@/helper.js';
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+
 let page = usePage();
 if (page.props.flash.message) {
   toaster('success', page.props.flash.message)
@@ -179,12 +181,12 @@ if (props.setting) {
                   </div>
                 </div>
 
-                <AuthenticatedButton
+                <PrimaryButton
                   @click.prevent="saveChanges()"
                   type="button"
                 >
                   Save Changes
-                </AuthenticatedButton>
+                </PrimaryButton>
               </div>
 
               <div v-else>

@@ -89,7 +89,7 @@ const updatePassword = () => {
             </div>
 
             <div class="flex items-center gap-4">
-                <AuthenticatedButton :disabled="form.processing">Save</AuthenticatedButton>
+                <AuthenticatedButton class="button-custom px-4 py-3 rounded-md " :disabled="form.processing">Save</AuthenticatedButton>
 
                 <Transition enter-from-class="opacity-0" leave-to-class="opacity-0" class="transition ease-in-out">
                     <p v-if="form.recentlySuccessful" class="text-sm text-gray-400">Saved.</p>
