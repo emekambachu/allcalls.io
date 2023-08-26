@@ -80,7 +80,7 @@ Route::get('/twiml', function (Request $request) {
 Route::middleware('auth:sanctum')->get('/device/token', [TwilioTokenController::class, 'show']);
 
 
-Route::get('/call/incoming', [IncomingCallController::class, 'respond']);
+Route::get('/call/incoming', [IncomingCallController::class, 'respond'])->middleware('twilio');
 
 Route::get('/handle-call-status', [CallStatusController::class, 'update']);
 Route::get('/handle-call-recording', [CallRecordingController::class, 'store']);

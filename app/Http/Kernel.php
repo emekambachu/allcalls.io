@@ -45,6 +45,7 @@ class Kernel extends HttpKernel
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\TwilioRequestValidator::class,
         ],
     ];
 
@@ -69,5 +70,6 @@ class Kernel extends HttpKernel
         'registration-step-check' => \App\Http\Middleware\RegistrationStepCheckerMiddleware::class,
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
         'user' => \App\Http\Middleware\UserMiddleware::class,
+        'twilio' => \App\Http\Middleware\TwilioRequestValidator::class,
     ];
 }
