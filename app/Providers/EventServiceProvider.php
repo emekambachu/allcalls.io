@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Events\FundsAdded;
 use App\Models\Transaction;
 use App\Events\MissedCallEvent;
 use App\Listeners\SaveUserCall;
@@ -14,7 +15,9 @@ use Illuminate\Support\Facades\Event;
 use App\Observers\TransactionObserver;
 use Illuminate\Auth\Events\Registered;
 use App\Events\UserCallTypeStateUpdated;
+use App\Listeners\SendFundsReceiptEmail;
 use App\Listeners\UpdateTargetsInRingba;
+use App\Http\Controllers\FundsController;
 use App\Listeners\ChargeUserForMissedCall;
 use App\Listeners\ChargeUserForCompletedCall;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -44,6 +47,10 @@ class EventServiceProvider extends ServiceProvider
         CompletedCallEvent::class => [
             ChargeUserForCompletedCall::class,
         ],
+
+        FundsAdded::class => [
+            SendFundsReceiptEmail::class,
+        ]
     ];
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use App\Events\FundsAdded;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -44,6 +45,8 @@ class StripeFundsController extends Controller
             ]);
     
             DB::commit();
+
+            FundsAdded::dispatch($request->user(), $subtotal, $totalWithFee);
     
             return redirect()->back()->with(['message' => 'Payment successful.']);
         } catch (Exception $e) {
