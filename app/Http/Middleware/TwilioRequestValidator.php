@@ -18,7 +18,7 @@ class TwilioRequestValidator
     public function handle(Request $request, Closure $next): Response
     {
         $token = env("TWILIO_AUTH_TOKEN");
-        $signature = $request->header("X-Twilio-Signature");
+        $signature = $request->header("HTTP_X_TWILIO_SIGNATURE");
         $url = $request->url();
         $postVars = $request->all();
 
