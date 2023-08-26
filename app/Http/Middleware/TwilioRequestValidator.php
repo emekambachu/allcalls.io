@@ -18,7 +18,7 @@ class TwilioRequestValidator
     public function handle(Request $request, Closure $next): Response
     {
         $token = env("TWILIO_AUTH_TOKEN");
-        $signature = $request->header("HTTP_X_TWILIO_SIGNATURE");
+        $signature = $request->header("X-Twilio-Signature");
         $url = $request->url();
         $postVars = $request->all();
 
@@ -27,7 +27,7 @@ class TwilioRequestValidator
         if ($validator->validate($signature, $url, $postVars)) {
             Log::debug('The request to url ' . $url . ' came from twilio indeed.');
         } else {
-            Log::debug('The request to url ' . $url . ' did NOT come from twilio.');
+            Log::debug('The request to url ' . $url . ' DID NOT came from twilio indeed.');
         }
 
         return $next($request);
