@@ -17,18 +17,18 @@ class TwilioRequestValidator
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $token = env("TWILIO_AUTH_TOKEN");
-        $signature = $request->header("X-Twilio-Signature");
-        $url = $request->url();
-        $postVars = $request->all();
+        // $token = env("TWILIO_AUTH_TOKEN");
+        // $signature = $request->header("X-Twilio-Signature");
+        // $url = $request->url();
+        // $postVars = $request->all();
 
-        $validator = new RequestValidator($token);
+        // $validator = new RequestValidator($token);
 
-        if ($validator->validate($signature, $url, $postVars)) {
-            Log::debug('The request to url ' . $url . ' came from twilio indeed.');
-        } else {
-            Log::debug('The request to url ' . $url . ' DID NOT came from twilio indeed.');
-        }
+        // if ($validator->validate($signature, $url, $postVars)) {
+        //     Log::debug('The request to url ' . $url . ' came from twilio indeed.');
+        // } else {
+        //     Log::debug('The request to url ' . $url . ' DID NOT came from twilio indeed.');
+        // }
 
         return $next($request);
     }
