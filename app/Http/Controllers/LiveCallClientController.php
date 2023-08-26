@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Call;
 use Illuminate\Http\Request;
 
 class LiveCallClientController extends Controller
