@@ -24,7 +24,7 @@ let Fetehcalls = async (id) => {
   try {
     const response = await axios.get(`/admin/customer/calls/${id}`);
     const data = response.data; // Assuming your API response provides relevant data
-    console.log('what is data', data.calls);
+    // console.log('what is data', data.calls);
     calls.value = data.calls
     slidingLoader.value = false
   } catch (error) {
@@ -37,7 +37,7 @@ let fetchcallsBypage = async (page) => {
   try {
     const response = await axios.get(`/admin/customer/calls/${props.user.id}${url.search}`);
     const data = response.data; // Assuming your API response provides relevant data
-    console.log('what is data', data.calls);
+    // console.log('what is data', data.calls);
     calls.value = data.calls
     slidingLoader.value = false
   } catch (error) {
@@ -72,12 +72,13 @@ let formatMoney = (amount) => {
                 <th scope="col" class="px-4 py-3">CALL TAKEN</th>
                 <th scope="col" class="px-4 py-3">AMMOUNT SPENT</th>
                 <th scope="col" class="px-4 py-3">CALL TYPE</th>
+                <th scope="col" class="px-4 py-3">URL</th>
               </tr>
             </thead>
             <tbody>
 
               <tr v-for="call in calls.data" :key="call.id" class="border-b border-gray-500">
-
+               
                 <td class="text-gray-600 px-4 py-3">{{ call.id }}</td>
                 <td class="text-gray-600 px-4 py-3">{{ call.hung_up_by }}</td>
                 <td class="text-gray-600 px-4 py-3">
@@ -91,14 +92,12 @@ let formatMoney = (amount) => {
                     ).padStart(2, "0")
                   }}
                 </td>
-
+                
                 <th class="text-gray-600 px-4 py-3">{{ call.call_taken }}</th>
                 <td class="text-gray-600 px-4 py-3">{{ call.amount_spent }}</td>
                 <td class="text-gray-600 px-4 py-3">{{ call.call_type.type }}</td>
-
-
-
-
+                <td class="text-gray-600 px-4 py-3"> <a v-if="call.recording_url" target="_blank"
+                      :href="call.recording_url">{{ call.recording_url }}</a> <span v-else>_</span> </td>
               </tr>
             </tbody>
           </table>

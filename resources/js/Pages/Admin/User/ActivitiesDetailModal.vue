@@ -18,7 +18,6 @@ let Fetehactivities = async (id) => {
   try {
     const response = await axios.get(`/admin/customer/activities/${id}`);
     const data = response.data; // Assuming your API response provides relevant data
-    console.log('what is data', data.activities);
     activities.value = data.activities
     slidingLoader.value = false
   } catch (error) {
@@ -31,7 +30,6 @@ let fetchactivitiesBypage = async (page) => {
   try {
     const response = await axios.get(`/admin/customer/activities/${props.user.id}${url.search}`);
     const data = response.data; // Assuming your API response provides relevant data
-    console.log('what is data', data.activities);
     activities.value = data.activities
     slidingLoader.value = false
   } catch (error) {
