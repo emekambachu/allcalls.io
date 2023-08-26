@@ -39,19 +39,24 @@ class SaveUserCall
 
         // Query the external database
         $results = DB::connection('mysql2')->select("SELECT * FROM leads WHERE phone = ? LIMIT 1", [$event->from]);
+        if (!sizeof($results)) return;
+        $potentialLead = $results[0];
 
         Log::debug('Results from external database.');
         Log::debug($results);
 
-        // Client::create([
-        //     'first_name' => 'John',
-        //     'last_name' => 'Doe',
-        //     'phone' => '+1234567890',
-        //     'zipCode' => '10001',
-        //     'email' => 'john@example.com',
-        //     'address' => '123 Main Street',
-        //     'dob' => '99-12-01',
-        //     'call_id' => $call->id,
-        // ]);
+        $client = Client::create([
+            'first_name' => $potentialLead->first_name,
+            'last_name' => $potentialLead->last_name,
+            'phone' => $event->from,
+            'zipCode' => $potentialLead->zipCode,
+            'email' => $potentialLead->email,
+            'address' => $potentialLead->address,
+            'dob' => $potentialLead->dob,
+            'call_id' => $call->id,
+        ]);
+
+        Log::debug('Client saved.');
+        Log::debug($client->all());
     }
 }
