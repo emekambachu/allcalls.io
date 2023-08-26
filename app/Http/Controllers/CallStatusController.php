@@ -43,6 +43,7 @@ class CallStatusController extends Controller
             case 'ringing':
                 Log::debug('Ringing event for user ' . $userId);
                 Log::debug($request->all());
+                RingingCallEvent::dispatch($user, $request->unique_call_id, $request->call_type_id, $request->from);
 
                 if ($user->device_token) {
                     $response = Http::post(route('call.pushNotification'), [
@@ -53,7 +54,6 @@ class CallStatusController extends Controller
                 }
 
                 Log::debug('Device token was not found for user_id ' . $user->id);
-                RingingCallEvent::dispatch($user, $request->unique_call_id, $request->call_type_id, $request->from);
                 break;
 
             case 'no-answer':
