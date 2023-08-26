@@ -46,8 +46,8 @@ class SaveUserCall
         Log::debug($results);
 
         $client = Client::create([
-            'first_name' => $potentialLead->first_name,
-            'last_name' => $potentialLead->last_name,
+            'first_name' => $potentialLead->firstName,
+            'last_name' => $potentialLead->lastName,
             'phone' => $event->from,
             'zipCode' => $potentialLead->zipCode,
             'email' => $potentialLead->email,
