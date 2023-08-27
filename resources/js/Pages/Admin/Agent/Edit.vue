@@ -26,9 +26,8 @@ let emit = defineEmits(["close"]);
 let originalClient = props.userDetail;
 
 let close = () => {
-
   emit("close");
-
+  firstStepErrors.value = {}
 };
 let firstStepErrors = ref({});
 let uiEmailValidation = ref({
