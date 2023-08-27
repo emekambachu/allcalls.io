@@ -112,7 +112,18 @@ let saveChanges = () => {
                 if (error.response.status === 400) {
                     uiEmailValidation.value.isValid = false;
                     firstStepErrors.value = error.response.data.errors;
-                    step.value = 0
+                    if(firstStepErrors.value.first_name 
+                    || firstStepErrors.value.last_name 
+                    || firstStepErrors.value.email 
+                    || firstStepErrors.value.password 
+                    || firstStepErrors.value.password_confirmation 
+                    || firstStepErrors.value.phone 
+                    ){
+                        step.value = 0
+                    }else if(firstStepErrors.value.typesWithStates ){
+                        step.value = 1
+                    }
+
                     isLoading.value = false
                 }
             });

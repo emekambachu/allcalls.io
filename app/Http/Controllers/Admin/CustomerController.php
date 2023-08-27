@@ -14,6 +14,12 @@ use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use App\Models\Transaction;
 use App\Models\User;
+use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use App\Models\Bid;
+
+
 
 class CustomerController extends Controller
 {
@@ -58,7 +64,75 @@ class CustomerController extends Controller
         ]);
     }
     public function internelAgentStore(Request $request){
-        dd($request);
+        $validator = Validator::make($request->all(), [
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:' . User::class,
+            'phone' => ['required', 'string', 'max:255', 'unique:' . User::class, 'regex:/^\+?1?[-.\s]?(\([2-9]\d{2}\)|[2-9]\d{2})[-.\s]?\d{3}[-.\s]?\d{4}$/'],
+            'password' => ['required', 'confirmed', Password::defaults()],
+            'typesWithStates' => [
+                'required',
+                'array',
+                function ($attribute, $value, $fail) {
+                    foreach ($value as $nestedArray) {
+                        if (!empty($nestedArray)) {
+                            return; // Validation passes if a non-empty nested array is found
+                        }
+                    }
+                    $fail('At least one States you are licensed in is required.');
+                },
+            ],
+            'typesWithStates.*' => ['nullable', 'exists:call_types,id'],
+            'typesWithStates.*.*' => ['nullable', 'exists:states,id'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors(),
+            ], 400);
+        }
+       
+        $user = User::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'password' => Hash::make($request->password),
+        ]);
+       
+    
+        // Initialize an empty array to hold the data
+        $data = [];
+
+        // Get the current timestamp
+        $now = now()->toDateTimeString();
+
+        // Build the data array
+        foreach ($request->typesWithStates as $typeId => $stateIds) {
+            if (count($stateIds)) {
+                foreach ($stateIds as $stateId) {
+                    $data[] = [
+                        'user_id' => $user->id,  // assuming you have the $user available here
+                        'call_type_id' => $typeId,
+                        'state_id' => $stateId,
+                        'created_at' => $now,  // if you are using timestamps in your pivot table
+                        'updated_at' => $now,  // if you are using timestamps in your pivot table
+                    ];
+                }
+            }
+        }
+        if (count($data)) {
+            DB::transaction(function () use ($data) {
+                // Insert new entries
+                DB::table('users_call_type_state')->insert($data);
+            });
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Agent added successfully',
+        ], 200);
+       
     }
     public function getUserCall($id)
     {
