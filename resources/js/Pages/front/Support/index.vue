@@ -191,7 +191,20 @@ const showHamburger = ref(false);
             </div>
           </div>
 
-          <div class="px-16 text-gray-700 mb-8">
+          <div class="px-16 text-gray-700 mb-8 pb-14">
+            <!-- <div class="font-bold text-gray-700 mb-2 text-lg">AllCalls LLC</div>
+            <div>1309 COFFEEN AVE STE 11246<br>SHERIDAN, WY 82801, USA</div>
+            <div>
+              <strong class="text-gray-600">Toll Free Customer Service Phone:</strong>
+              (855) 815-0382
+            </div>
+            <div>
+              <strong class="text-gray-600">Support Hours:</strong> 24/7 Monday - Sunday
+            </div>
+
+            <p class="mb-1">1309 COFFEEN AVE STE 11246<br>SHERIDAN, WY 82801, USA</p>
+            <p><strong class="text-gray-500">Email:</strong> support@allcalls.io</p> -->
+            
             <div class="font-bold text-gray-700 mb-2 text-lg">AllCalls LLC</div>
             <div class="flex justify-between">
               <div>1309 COFFEEN AVE STE 11246<br>SHERIDAN, WY 82801, USA</div>
