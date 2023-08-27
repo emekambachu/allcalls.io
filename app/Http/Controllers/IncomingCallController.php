@@ -14,6 +14,7 @@ use App\Models\AvailableNumber;
 use App\Models\UserCallTypeState;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use Twilio\Security\RequestValidator;
 
 class IncomingCallController extends Controller
 {
@@ -27,6 +28,16 @@ class IncomingCallController extends Controller
         $twilioSignature = $request->header('X-Twilio-Signature');
         if ($twilioSignature) {
             Log::debug('X-Twilio-Signature header exists: ' . $twilioSignature);
+            $validator = new RequestValidator(env('TWILIO_AUTH_TOKEN'));
+            $url = $_SERVER['SCRIPT_URI'];
+            $variables = $request->all();
+
+            // Check if the incoming signature is valid for your application URL and the incoming parameters
+            if ($validator->validate($twilioSignature, $url, $variables)) {
+                Log::debug('Confirmed to have come from Twilio.');
+            } else {
+                Log::debug('NOT VALID. It might have been spoofed!');
+            }
         } else {
             Log::debug('X-Twilio-Signature header not found.');
         }
