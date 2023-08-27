@@ -19,7 +19,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'show'])->name('admin.dashboard');
     Route::get('/customers', [\App\Http\Controllers\Admin\CustomerController::class, 'index'])->name('admin.customer.index');
     Route::post('/customer/{id}', [\App\Http\Controllers\Admin\CustomerController::class, 'update'])->name('admin.customer.update');
-    Route::get('/customers/detail/{id}', [\App\Http\Controllers\Admin\CustomerController::class, 'show'])->name('admin.customer.detail');
+    Route::get('/customer/detail/{id}', [\App\Http\Controllers\Admin\CustomerController::class, 'show'])->name('admin.customer.detail');
 
     Route::get('/customer/transactions/{id}', [\App\Http\Controllers\Admin\CustomerController::class, 'getTransaction']);
 
