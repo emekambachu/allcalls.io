@@ -105,6 +105,8 @@ class IncomingCallController extends Controller
             ->withSufficientBalance()
             ->get();
 
+        $onlineUsers = OnlineUser::prioritizeInternalAgents($onlineUsers);
+
         if (!$onlineUsers->count()) {
             Log::debug('No online user found.');
             return '<Response><Say voice="alice" language="en-US">All agents are currently offline. Please try again later.</Say></Response>';
@@ -169,6 +171,7 @@ class IncomingCallController extends Controller
             ->withSufficientBalance()
             ->get();
 
+        $onlineUsers = OnlineUser::prioritizeInternalAgents($onlineUsers);
 
         if (!$onlineUsers->count()) {
             Log::debug('No online user found.');

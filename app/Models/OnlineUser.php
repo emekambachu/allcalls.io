@@ -58,4 +58,17 @@ class OnlineUser extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Reorder the collection to put internal-agent users at the top.
+     *
+     * @param  \Illuminate\Database\Eloquent\Collection  $onlineUsers
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function prioritizeInternalAgents(Collection $onlineUsers)
+    {
+        return $onlineUsers->sortByDesc(function ($onlineUser, $key) {
+            return $onlineUser->user->roles->contains('id', 3) ? 1 : 0;
+        })->values();
+    }
 }
