@@ -29,8 +29,11 @@ class IncomingCallController extends Controller
         if ($twilioSignature) {
             Log::debug('X-Twilio-Signature header exists: ' . $twilioSignature);
             $validator = new RequestValidator(env('TWILIO_AUTH_TOKEN'));
-            $url = $_SERVER['SCRIPT_URI'];
+            $url = url()->current();
             $variables = $request->all();
+
+            Log::debug('URL: ' . $url);
+            Log::debug($variables);
 
             // Check if the incoming signature is valid for your application URL and the incoming parameters
             if ($validator->validate($twilioSignature, $url, $variables)) {
