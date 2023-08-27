@@ -99,9 +99,9 @@ class IncomingCallController extends Controller
         Log::debug($phoneState);
 
         $stateModel = State::whereName($phoneState)->first();
+        $callType = CallType::find($availableNumber->call_type_id);
 
-        // First we fetch all online user ids that matches the call type and state of the original FROM phone number
-        $onlineUsers = $this->getOnlineUsers(CallType::find($availableNumber->call_type_id), $stateModel);
+        $onlineUsers = OnlineUser::byCallTypeAndState($callType, $stateModel)->get();
 
         if (!$onlineUsers->count()) {
             Log::debug('No online user found.');
@@ -163,7 +163,7 @@ class IncomingCallController extends Controller
         Log::debug($stateModel->toArray());
 
         // Fetch all online users who have selected the same call type and state
-        $onlineUsers = $this->getOnlineUsers($callType, $stateModel);
+        $onlineUsers = OnlineUser::byCallTypeAndState($callType, $stateModel)->get();
 
         if (!$onlineUsers->count()) {
             Log::debug('No online user found.');
@@ -248,32 +248,6 @@ class IncomingCallController extends Controller
         Log::debug($user ? 'Returning user ID: ' . $user->id: 'User not found in database');
 
         return $user;
-    }
-
-
-
-    public function getOnlineUsers($callType, $state)
-    {
-        Log::debug('GetOnlineUsersCalled');
-
-        // Fetch the user IDs from the pivot table based on a specific call type and state.
-        // This retrieves all users associated with the given call type and state.
-        $userIds = UserCallTypeState::where('call_type_id', $callType->id)
-            ->where('state_id', $state->id)
-            ->pluck('user_id'); // This will give an array of user_ids
-
-        Log::debug('User Ids associated with this call_type and state');
-        Log::debug($userIds);
-
-        // Get online users that match the fetched user_ids
-        $onlineUsers = OnlineUser::whereIn('user_id', $userIds)
-            ->where('call_type_id', $callType->id)
-            ->get();
-
-        Log::debug('Online users for the given call type and state');
-        Log::debug($onlineUsers);
-
-        return $onlineUsers;
     }
 
     public function getAvailableNumberForUser($userId, $from, $callTypeId)
