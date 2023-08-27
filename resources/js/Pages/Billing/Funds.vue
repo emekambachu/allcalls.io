@@ -16,6 +16,8 @@ let name = ref('');
 let cardContainer = ref(null);
 let isLoading = ref(false);
 
+// console.log(isInternalAgent);
+
 onMounted(() => {
     mountStripeElements();
     showSuccessNotificationIfAvailable();
@@ -28,6 +30,10 @@ let mountStripeElements = () => {
 let showSuccessNotificationIfAvailable = () => {
     if (page.props.flash.message) {
         toaster('success', page.props.flash.message)
+    }
+
+    if (page.props.flash.bonus) {
+        toaster('success', page.props.flash.bonus)
     }
 };
 

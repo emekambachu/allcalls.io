@@ -25,35 +25,48 @@ class StripeFundsController extends Controller
         $totalWithFee = $subtotal + $processingFee;
         $finalAmount = number_format($totalWithFee, 2, '.', '');
 
-
         DB::beginTransaction();
 
         try {
             // Step 3: Create Charge
             $totalWithFeeInCents = round($totalWithFee * 100);
             $request->user()->charge($totalWithFeeInCents, $request->paymentMethodId);
-    
+
+            if($request->user()->roles->contains('name', 'internal-agent')) {
+                $isInternalAgent = true;
+            }
             // Step 4: Update user's balance
-            $updatedBalance = $request->user()->balance + $subtotal;
+            $updatedBalance = $request->user()->balance + $subtotal*(isset($isInternalAgent)?2:1);
             $request->user()->update(['balance' => $updatedBalance]);
-    
+
             // Step 5: Log the transaction in the database
             Transaction::create([
                 'amount' => $subtotal,
                 'user_id' => $request->user()->id,
                 'sign' => true,
             ]);
-    
+
             DB::commit();
 
-            FundsAdded::dispatch($request->user(), $subtotal, $totalWithFee);
-    
-            return redirect()->back()->with(['message' => 'Payment successful.']);
+            FundsAdded::dispatch($request->user(), $subtotal, $processingFee,$finalAmount);
+
+            if(isset($isInternalAgent)) {
+                $returnMsg = [
+                    'message' => 'Payment successful.',
+                    'bonus' => 'Added $'.$subtotal.' bonus to the account',
+                ];
+            }
+            else {
+                $returnMsg = [
+                    'message' => 'Payment successful.'
+                ];
+            }
+
+            return redirect()->back()->with($returnMsg);
         } catch (Exception $e) {
             DB::rollback();
             // Log the error for debugging
             Log::error('Payment failed: ' . $e->getMessage());
-    
             return redirect()->back()->with(['error' => 'Payment failed.']);
         }
     }

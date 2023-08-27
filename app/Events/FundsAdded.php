@@ -16,13 +16,19 @@ class FundsAdded
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public User $user;
+    public $subTotal;
+    public $processingFee;
+    public $total;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(User $user)
+    public function __construct(User $user, $subTotal, $processingFee, $total)
     {
         $this->user = $user;
+        $this->subTotal = $subTotal;
+        $this->processingFee = $processingFee;
+        $this->total = $total;
     }
 
     /**
