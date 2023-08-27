@@ -96,6 +96,8 @@ let submit = () => {
         })
         .catch((error) => {
             if (error.response) {
+                console.log('ERROR was received.');
+                console.log(error.response);
                 firstStepErrors.value = error.response.data.errors;
                 consentErro.value = error.response.data.consent;
                 consentError.value = true
