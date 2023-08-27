@@ -142,8 +142,7 @@ let saveChanges = () => {
             <div class="mt-4">
               <GuestInputLabel for="phone" value="Phone" />
 
-              <GuestTextInput id="phone" type="text" class="mt-1 block w-full" v-model="form.phone" minlength="10"
-                maxlength="10" onkeyup="this.value=this.value.replace(/[^\d]/,&#39;&#39;)" />
+              <GuestTextInput id="phone" type="text" class="mt-1 block w-full" v-model="form.phone" />
               <div v-if="firstStepErrors.phone" class="text-red-500" v-text="firstStepErrors.phone[0]"></div>
             </div>
             <div class="mt-4">
