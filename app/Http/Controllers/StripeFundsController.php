@@ -48,8 +48,6 @@ class StripeFundsController extends Controller
 
             DB::commit();
 
-            FundsAdded::dispatch($request->user(), $subtotal, $processingFee,$finalAmount);
-
             if(isset($isInternalAgent)) {
                 $returnMsg = [
                     'message' => 'Payment successful.',
@@ -61,6 +59,8 @@ class StripeFundsController extends Controller
                     'message' => 'Payment successful.'
                 ];
             }
+
+            FundsAdded::dispatch($request->user(), $subtotal, $processingFee,$finalAmount);
 
             return redirect()->back()->with($returnMsg);
         } catch (Exception $e) {

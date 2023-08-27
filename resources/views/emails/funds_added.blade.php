@@ -1,11 +1,14 @@
 <x-mail::message>
     Dear {{ $user->first_name }},
-    <x-mail::table>
+    notify you about your recent deposit fund.
+    @component('mail::table', ['table-header-align' => 'center', 'table-align' => 'right'])
+
         | Description | Amount |
         | --- | --- |
         | Sub Total | ${{ $subTotal }} |
-        | Card Processing Fee | ${{ $processingFee }} |
+        | Credit Card Processing Fee | ${{ $processingFee }} |
+        | --- | --- |
         | Total | ${{ $total }} |
-    </x-mail::table>
-    Notify you about your recent deposit fund.
+
+    @endcomponent
 </x-mail::message>
