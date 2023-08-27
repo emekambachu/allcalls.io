@@ -42,12 +42,12 @@ class FundsController extends Controller
 
             return $card;
         });
-        // Cashier Intend 
+        // Cashier Intend
         $intent = auth()->user()->createSetupIntent();
 
         return Inertia::render('Billing/Funds', compact('cards','intent'));
     }
-   
+
 
     public function store(Request $request)
     {
@@ -210,5 +210,5 @@ class FundsController extends Controller
         //     dd('RESPONSE IS NOT SUCCESS');
         // }
     }
-    
+
 }

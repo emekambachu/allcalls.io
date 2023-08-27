@@ -677,7 +677,7 @@ class IncomingCallController extends Controller
 
     public function saveDeviceToken(Request $request)
     {
-        $user = auth()->user(); // Get the authenticated user
+        $user = auth()->user();
         $token = $request->input('token');
 
         if ($user) {

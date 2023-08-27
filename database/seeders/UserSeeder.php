@@ -15,19 +15,33 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $user = User::create([
+        $user = User::updateOrCreate([ 'email' => 'user@user.com'],[
             'first_name' => 'system',
             'last_name' => 'user',
-            'email' => 'user@user.com',
             'password' => Hash::make('password'),
             'email_verified_at' => now(),
-            'phone' => '000000000',
+            'phone' => '111111111',
         ]);
 
 
         DB::table('role_user')->insert([
             'user_id' => $user->id,
             'role_id' => 2,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $agent = User::updateOrCreate([ 'email' => 'agent@agent.com'],[
+            'first_name' => 'system',
+            'last_name' => 'agent',
+            'password' => Hash::make('password'),
+            'email_verified_at' => now(),
+            'phone' => '111111111',
+        ]);
+
+        DB::table('role_user')->insert([
+            'user_id' => $agent->id,
+            'role_id' => 3,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
