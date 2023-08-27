@@ -193,7 +193,7 @@ class InternalAgentController extends Controller
         ]);
         return response()->json([
             'success' => true,
-            'message' => 'Customer updated successfully.',
+            'message' => 'Agent updated successfully.',
         ], 200);
     }
 }
