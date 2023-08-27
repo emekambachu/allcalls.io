@@ -181,11 +181,15 @@ class RegisteredUserController extends Controller
             return abort(400);
         }
 
-        $user = auth()->user();
+        $user = $request->user();
+
         foreach ($request->bids as $bid) {
+            // Ensure that the bid amount is greater than or equal to 35
+            $amount = max((float) $bid['amount'], 35.0);
+
             Bid::updateOrCreate([
                 'call_type_id' => $bid['call_type_id'],
-                'amount' => $bid['amount'],
+                'amount' => $amount,
                 'user_id' => $user->id,
             ]);
         }

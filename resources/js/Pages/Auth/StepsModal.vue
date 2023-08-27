@@ -31,7 +31,7 @@ let form = useForm({
         return acc;
     }, {}),
     bids: props.callTypes.map((type) => {
-        return { call_type_id: type.id, amount: 20 };
+        return { call_type_id: type.id, amount: 35.00 };
     }),
 });
 
@@ -228,7 +228,7 @@ let submit = () => {
                                                     </div>
                                                     <input type="number" min="20"
                                                         class="bg-custom-gray border-none focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm pl-8 w-full"
-                                                        placeholder="20.00" v-model="form.bids[index].amount" />
+                                                        placeholder="35.00" v-model="form.bids[index].amount" disabled />
                                                 </div>
                                             </div>
                                             <label class="ml-2 text-xs font-medium">States you're licensed in:</label>
