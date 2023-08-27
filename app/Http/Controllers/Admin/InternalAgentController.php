@@ -87,7 +87,7 @@ class InternalAgentController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
-            'balance' => $request->balance,
+            'balance' => isset($request->balance)?$request->balance:0,
         ]);
 
         $agentRole = Role::whereName('internal-agent')->first();
@@ -186,7 +186,7 @@ class InternalAgentController extends Controller
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'phone' => $request->phone,
-            'balance' => $request->balance,
+            'balance' => isset($request->balance)?$request->balance:0,
         ]);
         return response()->json([
             'success' => true,
