@@ -67,7 +67,7 @@ class IncomingCallController extends Controller
         $twimlResponse .= '<Response>';
         $twimlResponse .= '<Say>The to attribute did not match any records in the database.</Say>';
         $twimlResponse .= '</Response>';
-        
+
         return response($twimlResponse, 200)->header('Content-Type', 'text/xml');
     }
 
@@ -77,16 +77,16 @@ class IncomingCallController extends Controller
         if (strpos($fromString, 'client:') === 0) {
             return '2055551234';  // Return a dummy number
         }
-    
+
         // If it's a phone number
         if (strpos($fromString, '+1') === 0) {
             // Remove the +1 prefix
             return substr($fromString, 2);
         }
-        
+
         return $fromString;  // Return as-is
     }
-    
+
     public function handleAvailableNumberCall($to)
     {
         // Assume that the user_id is associated with the number in AvailableNumber
@@ -101,7 +101,9 @@ class IncomingCallController extends Controller
         $stateModel = State::whereName($phoneState)->first();
         $callType = CallType::find($availableNumber->call_type_id);
 
-        $onlineUsers = OnlineUser::byCallTypeAndState($callType, $stateModel)->get();
+        $onlineUsers = OnlineUser::byCallTypeAndState($callType, $stateModel)
+            ->withSufficientBalance()
+            ->get();
 
         if (!$onlineUsers->count()) {
             Log::debug('No online user found.');
@@ -163,7 +165,10 @@ class IncomingCallController extends Controller
         Log::debug($stateModel->toArray());
 
         // Fetch all online users who have selected the same call type and state
-        $onlineUsers = OnlineUser::byCallTypeAndState($callType, $stateModel)->get();
+        $onlineUsers = OnlineUser::byCallTypeAndState($callType, $stateModel)
+            ->withSufficientBalance()
+            ->get();
+
 
         if (!$onlineUsers->count()) {
             Log::debug('No online user found.');
@@ -245,7 +250,7 @@ class IncomingCallController extends Controller
         }
 
         $user = User::find($highestBidderId);
-        Log::debug($user ? 'Returning user ID: ' . $user->id: 'User not found in database');
+        Log::debug($user ? 'Returning user ID: ' . $user->id : 'User not found in database');
 
         return $user;
     }

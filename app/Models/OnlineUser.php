@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use App\Models\State;
 use App\Models\CallType;
 use Illuminate\Support\Facades\Log;
@@ -14,6 +15,7 @@ class OnlineUser extends Model
     use HasFactory;
 
     protected $guarded = [];
+    protected static $minimumBalance = 35.0;
 
     /**
      * Scope a query to only include online users based on a specific call type and state.
@@ -35,6 +37,25 @@ class OnlineUser extends Model
         Log::debug($userIds);
 
         return $query->whereIn('user_id', $userIds)
-                     ->where('call_type_id', $callType->id);
+            ->where('call_type_id', $callType->id);
+    }
+
+    /**
+     * Scope a query to include online users who have a sufficient minimum balance.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWithSufficientBalance($query)
+    {
+        return $query->whereHas('user', function ($query) {
+            $query->where('balance', '>=', self::$minimumBalance);
+        });
+    }
+
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
