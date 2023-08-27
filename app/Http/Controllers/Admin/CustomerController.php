@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Models\Call;
+use App\Models\CallType;
 use App\Models\Role;
+use App\Models\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -42,6 +44,22 @@ class CustomerController extends Controller
         ]);
     }
 
+    public function InternelAgents()  {
+        $admin = Role::whereName('admin')->first();
+        $users = User::whereDoesntHave('roles', function ($query) use ($admin) {
+            $query->where('role_id', $admin->id);
+        })->paginate(10);
+        $callTypes = CallType::all();
+        $states = State::all();
+        return Inertia::render('Admin/User/InternelAgents', [
+            'users' => $users,
+            'callTypes' => $callTypes,
+            'states' => $states,
+        ]);
+    }
+    public function internelAgentStore(Request $request){
+        dd($request);
+    }
     public function getUserCall($id)
     {
         $calls = Call::whereUserId($id)->with('user', 'callType')->paginate(10);

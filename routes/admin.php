@@ -21,6 +21,8 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::post('/customer/{id}', [\App\Http\Controllers\Admin\CustomerController::class, 'update'])->name('admin.customer.update');
     Route::get('/customers/detail/{id}', [\App\Http\Controllers\Admin\CustomerController::class, 'show'])->name('admin.customer.detail');
 
+    Route::get('/internel-agents', [\App\Http\Controllers\Admin\CustomerController::class, 'InternelAgents'])->name('admin.internel-agents');
+    Route::post('/internel-agent-store', [\App\Http\Controllers\Admin\CustomerController::class, 'internelAgentStore'])->name('admin.internel-agent-store');
 
     Route::get('/customer/transactions/{id}', [\App\Http\Controllers\Admin\CustomerController::class, 'getTransaction']);
 

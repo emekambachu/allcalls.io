@@ -116,8 +116,14 @@ const props = defineProps({
             hidden: !showingNavigationDropdown,
           }" class="md:hidden">
             <div class="pt-2 pb-3 space-y-1">
-              <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
+              <ResponsiveNavLink :href="route('admin.dashboard')" :active="route().current('admin.dashboard')">
                 Dashboard
+              </ResponsiveNavLink>
+            </div>
+            <div class="pt-2 pb-3 space-y-1">
+              
+              <ResponsiveNavLink :href="route('admin.customer.index')" :active="route().current('admin.customer.index') || route().current('admin.customer.detail') ">
+                Customers
               </ResponsiveNavLink>
             </div>
 
@@ -155,6 +161,10 @@ const props = defineProps({
               <NavLink class="mb-10 gap-2" :href="route('admin.customer.index')" :active="route().current('admin.customer.index') || route().current('admin.customer.detail') ">
                   <img src="/img/clients.png" alt="" />
                   Customers
+              </NavLink>
+              <NavLink class="mb-10 gap-2" :href="route('admin.internel-agents')" :active="route().current('admin.internel-agents') ">
+                  <img src="/img/clients.png" alt="" />
+                  Internal Agents
               </NavLink>
           </div>
           <!-- Page Content -->
