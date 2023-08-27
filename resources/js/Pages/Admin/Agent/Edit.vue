@@ -39,6 +39,7 @@ let form = useForm({
   email: "",
   password: "",
   phone: "",
+  balance:0,
 });
 
 form = JSON.parse(JSON.stringify(props.userDetail));
@@ -132,7 +133,7 @@ let saveChanges = () => {
               <GuestInputLabel for="email" value="Email" />
 
               <GuestTextInput id="email" type="email" class="mt-1 block w-full" v-model="form.email" required
-                pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}" />
+                pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}"  />
               <div v-if="uiEmailValidation.isValid" class="text-red-500">Please enter valid email address.</div>
               <!-- <InputError class="mt-2" :message="form.errors.email" /> -->
               <div v-if="firstStepErrors.email" class="text-red-500" v-text="firstStepErrors.email[0]"></div>
@@ -145,6 +146,14 @@ let saveChanges = () => {
                 maxlength="10" onkeyup="this.value=this.value.replace(/[^\d]/,&#39;&#39;)" />
               <div v-if="firstStepErrors.phone" class="text-red-500" v-text="firstStepErrors.phone[0]"></div>
             </div>
+            <div class="mt-4">
+                  <GuestInputLabel for="balance" value="balance" />
+
+                  <GuestTextInput id="balance" type="text" class="mt-1 block w-full" v-model="form.balance"
+                      />
+                  <div v-if="firstStepErrors.balance" class="text-red-500" v-text="firstStepErrors.balance[0]">
+                  </div>
+              </div>
 
 
             <div class="flex justify-end mt-6">
