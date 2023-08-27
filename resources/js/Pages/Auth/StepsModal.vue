@@ -25,12 +25,7 @@ let stateOptions = computed(() => {
     });
 });
 let form = useForm({
-    first_name: "",
-    last_name: "",
-    email: "",
-    password: "",
-    phone: "",
-    consent: false,
+    
     typesWithStates: props.callTypes.reduce((acc, obj) => {
         acc[obj.id] = [];
         return acc;
@@ -79,16 +74,14 @@ const areAllArraysEmpty = computed(() => {
     const arrays = Object.values(form.typesWithStates); // Get all arrays
     return arrays.every(array => array.length === 0); // Check if all arrays are empty
 });
-const consentError = ref(false)
-const consentErro = ref('')
 const isLoading = ref(false)
+let firstStepErrors = ref({});
 let submit = () => {
     isLoading.value = true
 
     return axios
         .post("/store-registration-steps", form)
         .then((response) => {
-            consentError.value = false
             close()
             toaster('success', response.data.message)
             router.visit('/dashboard')
@@ -96,18 +89,9 @@ let submit = () => {
         })
         .catch((error) => {
             if (error.response) {
-                console.log('ERROR was received.');
-                console.log(error.response);
-                firstStepErrors.value = error.response.data.errors;
-                consentErro.value = error.response.data.consent;
-                consentError.value = true
-                isLoading.value = false
                 if (error.response.status === 400) {
                     firstStepErrors.value = error.response.data.errors;
-                    consentErro.value = error.response.data.consent;
-                    consentError.value = true
                     isLoading.value = false
-                    toaster('error', response.data.message)
                 } else {
                     console.log("Other errors", error.response.data);
                 }
@@ -263,7 +247,6 @@ let submit = () => {
 
                                 </div>
                             </div>
-                            <p class="p-5" v-if="consentError == true" style="color: red;">{{ consentErro }}</p>
                         </div>
 
 
