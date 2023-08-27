@@ -74,6 +74,7 @@ watch(() => [form.first_name, form.last_name, form.email, form.password, form.pa
 let NextTab = (val) => {
     if (validateEmail(form.email)) {
     step.value = val
+    uiEmailValidation.value.isValid = false;
     }else {
         uiEmailValidation.value.isValid = true;
     }
