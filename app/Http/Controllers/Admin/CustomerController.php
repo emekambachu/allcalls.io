@@ -25,9 +25,11 @@ class CustomerController extends Controller
 {
     public function index()
     {
-        $admin = Role::whereName('admin')->first();
-        $users = User::whereDoesntHave('roles', function ($query) use ($admin) {
-            $query->where('role_id', $admin->id);
+        $excludeRoles = Role::whereIn('name', ['admin', 'internal-agent'])->pluck('id');
+        $users = User::whereDoesntHave('roles', function ($query) use ($excludeRoles) {
+            if(count($excludeRoles)) {
+                $query->whereIn('role_id', $excludeRoles);
+            }
         })->paginate(10);
 
         return Inertia::render('Admin/User/Index', [
