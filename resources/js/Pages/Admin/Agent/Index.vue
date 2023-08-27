@@ -16,7 +16,7 @@
             type: Object,
         },
 
-       
+
         callTypes:Array,
         states: Array,
     });
@@ -137,7 +137,7 @@
                                 <td class="text-gray-600 px-4 py-3">{{ agent.phone }}</td>
                                 <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
                                     <a :href="route('admin.agent.detail', agent.id)">View Detail</a>
-                                    <button 
+                                    <button
                                     @click="openAgentModal(agent, agents.current_page)"
                                     class="inline-flex items-center mx-2 p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
                                     type="button"
@@ -238,7 +238,7 @@
             :currentPage="currentPage"
             @close="showModal = false"
         ></Edit>
-        <Create 
+        <Create
             :agentModal="agentModal"
             :currentPage="currentPage"
             :callTypes="callTypes"
