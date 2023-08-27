@@ -3,7 +3,7 @@
 
 **Dear {{ $user->first_name }},**
 
-We are pleased to confirm that your recent deposit has been successfully processed. Below are the details of your transaction:
+We are pleased to confirm that the total funds added to your account have been successfully processed. Below are the details of your transaction:
 
 ## Date of Transaction: {{ now()->format('F j, Y, g:i a') }}
 
