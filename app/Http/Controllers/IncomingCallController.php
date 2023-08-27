@@ -134,8 +134,11 @@ class IncomingCallController extends Controller
             $twimlBody .= '<Parameter name="unique_call_id" value="' . $uniqueCallId . '"/>';
             $twimlBody .= '</Client>';
             $twimlBody .= '</Dial>';
-            
         }
+
+        // If nobody picks up, forward the call to an external number.
+        // $twimlBody .= '<Dial callerId="+441156471655">+18449831955</Dial>';
+
 
         $twiml = $twimlStart . $twimlBody . $twimlEnd;
         Log::debug('TWIML sent: ' . $twiml);
