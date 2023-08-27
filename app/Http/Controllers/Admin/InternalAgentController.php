@@ -23,12 +23,13 @@ class InternalAgentController extends Controller
     public function index()
     {
         $agent = Role::whereName('internal-agent')->first();
-        $users = User::whereHas('roles', function ($query) use ($agent) {
+
+        $agents = User::whereHas('roles', function ($query) use ($agent) {
             $query->where('role_id', $agent->id);
         })->paginate(10);
 
         return Inertia::render('Admin/Agent/Index', [
-            'agents' => $users,
+            'agents' => $agents,
         ]);
     }
 
