@@ -88,6 +88,7 @@ class InternalAgentController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
+            'balance' => $request->balance,
         ]);
 
 

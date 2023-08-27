@@ -106,7 +106,6 @@ class CustomerController extends Controller
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'phone' => $request->phone,
-            'balance' => $request->balance,
         ]);
         return response()->json([
             'success' => true,
