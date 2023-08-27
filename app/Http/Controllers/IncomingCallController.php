@@ -23,6 +23,15 @@ class IncomingCallController extends Controller
             'To' => 'required',
         ]);
 
+        // Check for X-Twilio-Signature header
+        $twilioSignature = $request->header('X-Twilio-Signature');
+        if ($twilioSignature) {
+            Log::debug('X-Twilio-Signature header exists: ' . $twilioSignature);
+        } else {
+            Log::debug('X-Twilio-Signature header not found.');
+        }
+
+
         $twiml = '<?xml version="1.0" encoding="UTF-8"?>';
 
         $to = $request->input('To');
