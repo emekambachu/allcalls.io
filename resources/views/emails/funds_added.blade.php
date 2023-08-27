@@ -28,5 +28,5 @@ Your account balance is now **${{ number_format($user->balance, 2) }}**.
 If you have any questions or concerns, feel free to reach out to our support team.
 
 **Best regards,**  
-AllCalls.io
+AllCalls.io Support Team
 </x-mail::message>
