@@ -17,16 +17,26 @@ class AdminSeeder extends Seeder
         $admin = User::updateOrCreate(
             ['email' => 'admin@admin.com'],
             [
-            'first_name' => 'system',
-            'last_name' => 'admin',
-            'password' => Hash::make('password'),
-            'email_verified_at' => now(),
-            'phone' => '000000000',
-        ]);
+                'first_name' => 'system',
+                'last_name' => 'admin',
+                'password' => Hash::make('password'),
+                'email_verified_at' => now(),
+                'phone' => '000000000',
+            ]);
 
-        DB::table('role_user')->insert([
-            'user_id' => $admin->id,
-            'role_id' => 1,
-        ]);
+        $adminAlreadySet = DB::table('role_user')
+            ->where('user_id', $admin->id)
+            ->where('role_id', 1)
+            ->first();
+
+        if(!$adminAlreadySet) {
+            DB::table('role_user')->insert([
+                'user_id' => $admin->id,
+                'role_id' => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
     }
 }

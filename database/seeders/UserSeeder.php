@@ -23,13 +23,20 @@ class UserSeeder extends Seeder
             'phone' => '111111111',
         ]);
 
+        $userAlreadySet = DB::table('role_user')
+            ->where('user_id', $user->id)
+            ->where('role_id', 2)
+            ->first();
 
-        DB::table('role_user')->insert([
-            'user_id' => $user->id,
-            'role_id' => 2,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        if(!$userAlreadySet) {
+            DB::table('role_user')->insert([
+                'user_id' => $user->id,
+                'role_id' => 2,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
 
         $agent = User::updateOrCreate([ 'email' => 'agent@agent.com'],[
             'first_name' => 'system',
@@ -39,12 +46,19 @@ class UserSeeder extends Seeder
             'phone' => '111111111',
         ]);
 
-        DB::table('role_user')->insert([
-            'user_id' => $agent->id,
-            'role_id' => 3,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        $agentAlreadySet = DB::table('role_user')
+            ->where('user_id', $user->id)
+            ->where('role_id', 3)
+            ->first();
+
+        if(!$agentAlreadySet) {
+            DB::table('role_user')->insert([
+                'user_id' => $agent->id,
+                'role_id' => 3,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
 
         User::factory()->count(50)->create();
 
