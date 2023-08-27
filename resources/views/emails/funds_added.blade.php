@@ -20,7 +20,7 @@ We are pleased to confirm that your recent deposit has been successfully process
 | Funds Added                   | ${{ number_format($subTotal, 2) }}  |
 | Processing Fee                | ${{ number_format($processingFee, 2) }} |
 | ----------------------------- | ---------------|
-| **Total Amount Deposited**    | **${{ number_format($total, 2) }}** |
+| **Total Amount Charged**    | **${{ number_format($total, 2) }}** |
 @endcomponent
 
 Your account balance is now **${{ number_format($user->balance, 2) }}**.
