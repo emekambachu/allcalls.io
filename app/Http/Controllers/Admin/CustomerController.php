@@ -5,21 +5,31 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Models\Call;
+use App\Models\CallType;
 use App\Models\Role;
+use App\Models\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use App\Models\Transaction;
 use App\Models\User;
+use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use App\Models\Bid;
+
+
 
 class CustomerController extends Controller
 {
     public function index()
     {
-        $admin = Role::whereName('admin')->first();
-        $users = User::whereDoesntHave('roles', function ($query) use ($admin) {
-            $query->where('role_id', $admin->id);
+        $excludeRoles = Role::whereIn('name', ['admin', 'internal-agent'])->pluck('id');
+        $users = User::whereDoesntHave('roles', function ($query) use ($excludeRoles) {
+            if(count($excludeRoles)) {
+                $query->whereIn('role_id', $excludeRoles);
+            }
         })->paginate(10);
 
         return Inertia::render('Admin/User/Index', [
@@ -98,7 +108,6 @@ class CustomerController extends Controller
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'phone' => $request->phone,
-            'balance' => $request->balance,
         ]);
         return response()->json([
             'success' => true,

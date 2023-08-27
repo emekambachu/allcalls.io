@@ -19,8 +19,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'show'])->name('admin.dashboard');
     Route::get('/customers', [\App\Http\Controllers\Admin\CustomerController::class, 'index'])->name('admin.customer.index');
     Route::post('/customer/{id}', [\App\Http\Controllers\Admin\CustomerController::class, 'update'])->name('admin.customer.update');
-    Route::get('/customers/detail/{id}', [\App\Http\Controllers\Admin\CustomerController::class, 'show'])->name('admin.customer.detail');
-
+    Route::get('/customer/detail/{id}', [\App\Http\Controllers\Admin\CustomerController::class, 'show'])->name('admin.customer.detail');
 
     Route::get('/customer/transactions/{id}', [\App\Http\Controllers\Admin\CustomerController::class, 'getTransaction']);
 
@@ -29,4 +28,18 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::get('/customer/activities/{id}', [\App\Http\Controllers\Admin\CustomerController::class, 'getActivity']);
 
 
+    //Agents
+    Route::get('/agents', [\App\Http\Controllers\Admin\InternalAgentController::class, 'index'])->name('admin.agent.index');
+
+    Route::post('/agent', [\App\Http\Controllers\Admin\InternalAgentController::class, 'store'])->name('admin.agent.store');
+
+    Route::post('/agent/{id}', [\App\Http\Controllers\Admin\InternalAgentController::class, 'update'])->name('admin.agent.update');
+
+    Route::get('/agent/detail/{id}', [\App\Http\Controllers\Admin\InternalAgentController::class, 'show'])->name('admin.agent.detail');
+
+    Route::get('/agent/transactions/{id}', [\App\Http\Controllers\Admin\InternalAgentController::class, 'getTransaction']);
+
+    Route::get('/agent/calls/{id}', [\App\Http\Controllers\Admin\InternalAgentController::class, 'getCall']);
+
+    Route::get('/agent/activities/{id}', [\App\Http\Controllers\Admin\InternalAgentController::class, 'getActivity']);
 });

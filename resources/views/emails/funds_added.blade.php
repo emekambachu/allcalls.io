@@ -1,16 +1,14 @@
 <x-mail::message>
     Dear {{ $user->first_name }},
+    notify you about your recent deposit fund.
+    @component('mail::table', ['table-header-align' => 'center', 'table-align' => 'right'])
 
-    Notify you about your recent deposit fund.
+        | Description | Amount |
+        | --- | --- |
+        | Sub Total | ${{ $subTotal }} |
+        | Credit Card Processing Fee | ${{ $processingFee }} |
+        | --- | --- |
+        | Total | ${{ $total }} |
 
-    | Sub Total: | ${{$subTotal}} |
-    | Credit Card Processing Fee: | ${{$processingFee}} |
-    ---
-    | Total | ${{$total}} |
-
-    ---
-
-    P.S. If you have any questions or need assistance, don't hesitate to reach out to our support team at
-    [support@allcalls.io](mailto:support@allcalls.io) or visit our [Help Center](http://help.allcalls.io). We're here to
-    help!
+    @endcomponent
 </x-mail::message>

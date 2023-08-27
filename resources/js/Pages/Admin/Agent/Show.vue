@@ -1,8 +1,8 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import TransactionDetailModal from '@/Pages/Admin/User/TransactionDetailModal.vue'
-import CallsDetailModal from '@/Pages/Admin/User/CallsDetailModal.vue'
-import ActivitiesDetailModal from '@/Pages/Admin/User/ActivitiesDetailModal.vue'
+import Transactions from '@/Pages/Admin/Agent/Transactions.vue'
+import Calls from '@/Pages/Admin/Agent/Calls.vue'
+import Activities from '@/Pages/Admin/Agent/Activities.vue'
 import { Head } from "@inertiajs/vue3";
 import { Bar } from "vue-chartjs";
 import { ref } from "vue";
@@ -216,24 +216,24 @@ let ChangeTab = (val) => {
     </transition>
     <transition name="slide">
       <section v-if="tab == 1" class=" sliding-section" :class="{ show: tab == 1 }">
-        <TransactionDetailModal :user="user"></TransactionDetailModal>
+        <Transactions :user="user"></Transactions>
       </section>
     </transition>
     <transition name="slide">
       <section v-if="tab == 2" class=" sliding-section" :class="{ show: tab == 1 }">
-        <CallsDetailModal :user="user"></CallsDetailModal>
+        <Calls :user="user"></Calls>
       </section>
     </transition>
     <transition name="slide">
       <section v-if="tab == 3" class=" sliding-section" :class="{ show: tab == 1 }">
-        <ActivitiesDetailModal :user="user"></ActivitiesDetailModal>
+        <Activities :user="user"></Activities>
       </section>
     </transition>
-    <!-- <TransactionDetailModal :showTransactionModal="showTransactionModal" :detailType="detailType" :user="user"
-      @close="showTransactionModal = false"></TransactionDetailModal> -->
+    <!-- <Transaction :showTransactionModal="showTransactionModal" :detailType="detailType" :user="user"
+      @close="showTransactionModal = false"></Transaction> -->
 
-    <!-- <CallsDetailModal :showCallsModal="showCallsModal" :detailType="detailType" :user="user"
-      @close="showCallsModal = false"></CallsDetailModal> -->
+    <!-- <Calls :showCallsModal="showCallsModal" :detailType="detailType" :user="user"
+      @close="showCallsModal = false"></Calls> -->
 
 
   </AuthenticatedLayout>
