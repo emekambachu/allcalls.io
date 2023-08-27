@@ -125,6 +125,8 @@ let saveChanges = () => {
 }
 let emit = defineEmits(["close"]);
 let close = () => {
+    form.reset()
+    step.value = 0
     emit("close");
 };
 let goBack = () => {
