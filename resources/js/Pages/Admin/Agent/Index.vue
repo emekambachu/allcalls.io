@@ -1,7 +1,7 @@
 <script setup>
     import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-    import Edit from "@//Pages/Admin/User/Edit.vue";
-    import AddAgent from "@//Pages/Admin/User/AddAgent.vue";
+    import Edit from "@//Pages/Admin/Agent/Edit.vue";
+    import Create from "@//Pages/Admin/Agent/Create.vue";
     import { Head, router, usePage } from "@inertiajs/vue3";
     import { ref } from "vue";
     import { toaster }   from '@/helper.js';
@@ -12,21 +12,11 @@
     }
 
     let props = defineProps({
-        users: {
+        agents: {
             type: Object,
         },
 
-        totalusers: {
-            type: Number,
-        },
-
-        totalAmountSpent: {
-            type: Number,
-        },
-
-        averageuserDuration: {
-            type: Number,
-        },
+       
         callTypes:Array,
         states: Array,
     });
@@ -98,7 +88,7 @@
 </script>
 
 <template>
-    <Head title="Client Information" />
+    <Head title="Agent Information" />
     <AuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
@@ -115,9 +105,9 @@
             </div>
         </div>
         <div class="text-end pr-16">
-            <PrimaryButton @click="addAgentModal(users.current_page)" >Add New</PrimaryButton>
+            <PrimaryButton @click="addAgentModal(agents.current_page)" >Add New</PrimaryButton>
         </div>
-        <section v-if="users.data.length" class="p-3">
+        <section v-if="agents.data.length" class="p-3">
             <div class="mx-auto max-w-screen-xl sm:px-12">
                 <div class="relative sm:rounded-lg overflow-hidden">
                     <div class="overflow-x-auto">
@@ -135,20 +125,20 @@
                             </thead>
                             <tbody>
                             <tr
-                                v-for="user in users.data"
-                                :key="user.id"
+                                v-for="agent in agents.data"
+                                :key="agent.id"
                                 class="border-b border-gray-500"
                             >
-                                <td class="text-gray-600 px-4 py-3">{{ user.id }}</td>
-                                <td class="text-gray-600 px-4 py-3">{{ user.first_name }}</td>
-                                <td class="text-gray-600 px-4 py-3">{{ user.last_name }}</td>
-                                <th class="text-gray-600 px-4 py-3">{{ user.email }}</th>
-                                <td class="text-gray-600 px-4 py-3">{{ user.balance }}</td>
-                                <td class="text-gray-600 px-4 py-3">{{ user.phone }}</td>
+                                <td class="text-gray-600 px-4 py-3">{{ agent.id }}</td>
+                                <td class="text-gray-600 px-4 py-3">{{ agent.first_name }}</td>
+                                <td class="text-gray-600 px-4 py-3">{{ agent.last_name }}</td>
+                                <th class="text-gray-600 px-4 py-3">{{ agent.email }}</th>
+                                <td class="text-gray-600 px-4 py-3">{{ agent.balance }}</td>
+                                <td class="text-gray-600 px-4 py-3">{{ agent.phone }}</td>
                                 <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
-                                    <a :href="route('admin.customer.detail', user.id)">View Detail</a>
+                                    <a :href="route('admin.agent.detail', agent.id)">View Detail</a>
                                     <button 
-                                    @click="openAgentModal(user, users.current_page)"
+                                    @click="openAgentModal(agent, agents.current_page)"
                                     class="inline-flex items-center mx-2 p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
                                     type="button"
                                     >
@@ -168,11 +158,11 @@
                 >
                   Showing
                   <span class="font-semibold text-custom-blue">{{
-                    users.current_page
+                    agents.current_page
                   }}</span>
                   of
                   <span class="font-semibold text-custom-blue">{{
-                    users.last_page
+                    agents.last_page
                   }}</span>
                 </span>
                                 <ul
@@ -180,8 +170,8 @@
                                 >
                                     <li>
                                         <a
-                                            v-if="users.prev_page_url"
-                                            @click="fetchAgents(users.prev_page_url)"
+                                            v-if="agents.prev_page_url"
+                                            @click="fetchAgents(agents.prev_page_url)"
                                             class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-custom-white rounded-l-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white"
                                         >
                                             <span class="sr-only">Previous</span>
@@ -204,14 +194,14 @@
                                     <li>
                                         <a
                                             class="flex items-center justify-center text-sm py-2 px-3 leading-tight font-extrabold text-gray-500 bg-custom-white shadow-2xl hover:bg-sky-950 hover:shadow-2xl hover:text-white"
-                                        >{{ users.current_page }}
+                                        >{{ agents.current_page }}
                                         </a>
                                     </li>
 
                                     <li>
                                         <a
-                                            v-if="users.next_page_url"
-                                            @click="fetchAgents(users.next_page_url)"
+                                            v-if="agents.next_page_url"
+                                            @click="fetchAgents(agents.next_page_url)"
                                             class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-custom-white rounded-r-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white"
                                         >
                                             <span class="sr-only">Next</span>
@@ -248,13 +238,13 @@
             :currentPage="currentPage"
             @close="showModal = false"
         ></Edit>
-        <AddAgent 
+        <Create 
             :agentModal="agentModal"
             :currentPage="currentPage"
             :callTypes="callTypes"
             :states="states"
             @close="agentModal = false"
-        ></AddAgent>
+        ></Create>
 
     </AuthenticatedLayout>
 </template>

@@ -162,7 +162,7 @@ const props = defineProps({
                   <img src="/img/clients.png" alt="" />
                   Customers
               </NavLink>
-              <NavLink class="mb-10 gap-2" :href="route('admin.agent.index')" :active="route().current('admin.internel-agents') ">
+              <NavLink class="mb-10 gap-2" :href="route('admin.agent.index')" :active="route().current('admin.agent.index') || route().current('admin.agent.detail') ">
                   <img src="/img/clients.png" alt="" />
                   Internal Agents
               </NavLink>

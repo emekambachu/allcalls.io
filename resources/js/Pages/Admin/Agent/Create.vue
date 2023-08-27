@@ -102,10 +102,10 @@ let saveChanges = () => {
     isLoading.value = true
     if (validateEmail(form.email)) {
         return axios
-            .post(`/admin/internel-agent-store`, form)
+            .post(`/admin/agent`, form)
             .then((response) => {
                 toaster('success', response.data.message)
-                router.visit(`/admin/internel-agents?page=${props.currentPage}`);
+                router.visit(`/admin/agents?page=${props.currentPage}`);
                 isLoading.value = false
             })
             .catch((error) => {

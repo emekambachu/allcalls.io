@@ -27,9 +27,12 @@ class InternalAgentController extends Controller
         $agents = User::whereHas('roles', function ($query) use ($agent) {
             $query->where('role_id', $agent->id);
         })->paginate(10);
-
+       $callTypes = CallType::all();
+       $states = State::all();
         return Inertia::render('Admin/Agent/Index', [
             'agents' => $agents,
+            'callTypes' => $callTypes,
+            'states' => $states,
         ]);
     }
 
