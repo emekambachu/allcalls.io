@@ -33,6 +33,7 @@ let form = useForm({
     password: "",
     password_confirmation: '',
     phone: "",
+    balance:0,
     typesWithStates: props.callTypes.reduce((acc, obj) => {
         acc[obj.id] = [];
         return acc;
@@ -118,6 +119,7 @@ let saveChanges = () => {
                     || firstStepErrors.value.password 
                     || firstStepErrors.value.password_confirmation 
                     || firstStepErrors.value.phone 
+                    || firstStepErrors.value.balance 
                     ){
                         step.value = 0
                     }else if(firstStepErrors.value.typesWithStates ){
@@ -141,6 +143,7 @@ let close = () => {
     step.value = 0
     emit("close");
     firstStepErrors.value = {}
+    isLoading.value = false
 };
 let goBack = () => {
     step.value -= 1;
@@ -266,6 +269,15 @@ let goBack = () => {
                                 </div>
                                 <!-- <InputError class="mt-2" :message="form.errors.email" /> -->
                                 <div v-if="firstStepErrors.email" class="text-red-500" v-text="firstStepErrors.email[0]">
+                                </div>
+                            </div>
+
+                            <div class="mt-4">
+                                <GuestInputLabel for="balance" value="balance" />
+
+                                <GuestTextInput id="balance" type="text" class="mt-1 block w-full" v-model="form.balance"
+                                    />
+                                <div v-if="firstStepErrors.balance" class="text-red-500" v-text="firstStepErrors.balance[0]">
                                 </div>
                             </div>
 

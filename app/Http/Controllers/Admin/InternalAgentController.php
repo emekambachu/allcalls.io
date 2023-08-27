@@ -81,7 +81,6 @@ class InternalAgentController extends Controller
                 'errors' => $validator->errors(),
             ], 400);
         }
-
         $user = User::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
