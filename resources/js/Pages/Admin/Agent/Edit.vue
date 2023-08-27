@@ -26,9 +26,8 @@ let emit = defineEmits(["close"]);
 let originalClient = props.userDetail;
 
 let close = () => {
-
   emit("close");
-
+  firstStepErrors.value = {}
 };
 let firstStepErrors = ref({});
 let uiEmailValidation = ref({
@@ -97,7 +96,7 @@ let saveChanges = () => {
         <div class="relative bg-white border border-gray-300 rounded-lg shadow-lg">
           <div class="flex items-start justify-between p-4 border-b border-gray-300 rounded-t">
             <h3 class="text-xl font-small text-gray-700">
-              Edit Customer Details
+              Edit Agent Details
             </h3>
             <button @click="close" type="button"
               class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-700 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"

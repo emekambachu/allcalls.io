@@ -140,6 +140,7 @@ let close = () => {
     form.reset()
     step.value = 0
     emit("close");
+    firstStepErrors.value = {}
 };
 let goBack = () => {
     step.value -= 1;
