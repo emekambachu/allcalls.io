@@ -29,19 +29,17 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
 
     //Agents
-    Route::get('/agents', [\App\Http\Controllers\Admin\InternalAgentController::class, 'index'])->name('admin.customer.index');
+    Route::get('/agents', [\App\Http\Controllers\Admin\InternalAgentController::class, 'index'])->name('admin.agent.index');
 
-    Route::post('/agent', [\App\Http\Controllers\Admin\InternalAgentController::class, 'store'])->name('admin.customer.store');
+    Route::post('/agent', [\App\Http\Controllers\Admin\InternalAgentController::class, 'store'])->name('admin.agent.store');
 
-    Route::post('/agent/{id}', [\App\Http\Controllers\Admin\InternalAgentController::class, 'update'])->name('admin.customer.update');
+    Route::post('/agent/{id}', [\App\Http\Controllers\Admin\InternalAgentController::class, 'update'])->name('admin.agent.update');
 
-    Route::get('/agent/detail/{id}', [\App\Http\Controllers\Admin\InternalAgentController::class, 'show'])->name('admin.customer.detail');
+    Route::get('/agent/detail/{id}', [\App\Http\Controllers\Admin\InternalAgentController::class, 'show'])->name('admin.agent.detail');
 
     Route::get('/agent/transactions/{id}', [\App\Http\Controllers\Admin\InternalAgentController::class, 'getTransaction']);
 
     Route::get('/agent/calls/{id}', [\App\Http\Controllers\Admin\InternalAgentController::class, 'getCall']);
 
     Route::get('/agent/activities/{id}', [\App\Http\Controllers\Admin\InternalAgentController::class, 'getActivity']);
-
-
 });
