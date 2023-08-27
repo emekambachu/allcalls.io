@@ -193,7 +193,7 @@ let submit = () => {
           <GuestInputLabel for="phone" value="Phone" />
 
           <GuestTextInput id="phone" type="text" class="mt-1 block w-full" v-model="form.phone" minlength="10"
-            maxlength="10" onkeyup="this.value=this.value.replace(/[^\d]/,&#39;&#39;)" />
+            maxlength="10" />
 
           <!-- <InputError class="mt-2" :message="form.errors.phone" /> -->
           <div v-if="firstStepErrors.phone" class="text-red-500" v-text="firstStepErrors.phone[0]"></div>
