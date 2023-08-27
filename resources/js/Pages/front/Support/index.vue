@@ -40,8 +40,7 @@ const showHamburger = ref(false);
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&family=Nunito+Sans:wght@300;400;500;600;700;800;900&display=swap"
-      rel="stylesheet"
-    />
+      rel="stylesheet" />
   </Head>
 
   <section id="getstarted">
@@ -53,40 +52,32 @@ const showHamburger = ref(false);
             <ApplicationLogo />
           </div>
 
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
             class="w-6 h-6 sm:w-10 sm:h-10 text-white xl:hidden cursor-pointer transition hover:text-custom-green hamburger"
-            @click="showHamburger = !showHamburger"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-            />
+            @click="showHamburger = !showHamburger">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
           </svg>
 
           <nav class="header__nav hidden xl:flex items-end">
             <ul class="">
-              <a href="/#getstarted" class="hover:text-custom-green"
-                ><li>Live Transfers</li></a
-              >
-              <a href="/#solutions" class="hover:text-custom-green"
-                ><li>Why AllCalls.io</li></a
-              >
-              <a href="/#resources" class="hover:text-custom-green"
-                ><li>How It Works</li></a
-              >
-              <a
-                href="https://www.financialservicecareers.com"
-                class="hover:text-custom-green"
-                ><li>Careers</li></a
-              >
-              <a href="/support" class="hover:text-custom-green"><li>Support</li></a>
-              <a href="/register" class="hover:text-custom-green"><li>Sign Up Now</li></a>
+              <a href="/#getstarted" class="hover:text-custom-green">
+                <li>Live Transfers</li>
+              </a>
+              <a href="/#solutions" class="hover:text-custom-green">
+                <li>Why AllCalls.io</li>
+              </a>
+              <a href="/#resources" class="hover:text-custom-green">
+                <li>How It Works</li>
+              </a>
+              <a href="https://www.financialservicecareers.com" class="hover:text-custom-green">
+                <li>Careers</li>
+              </a>
+              <a href="/support" class="hover:text-custom-green">
+                <li>Support</li>
+              </a>
+              <a href="/register" class="hover:text-custom-green">
+                <li>Sign Up Now</li>
+              </a>
             </ul>
           </nav>
           <a href="/login" class="hidden xl:flex">
@@ -96,59 +87,50 @@ const showHamburger = ref(false);
           <!-- hamburger -->
         </header>
 
-        <ul
-          class="text-white transition-all delay-700 duration-800 w-full relative z-20 text-center"
-          v-show="showHamburger"
-        >
-          <a href="/#getstarted"
-            ><li
-              class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2"
-            >
+        <ul class="text-white transition-all delay-700 duration-800 w-full relative z-20 text-center"
+          v-show="showHamburger">
+          <a href="/#getstarted">
+            <li
+              class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2">
               Live Transfers
-            </li></a
-          >
-          <a href="/#solutions"
-            ><li
-              class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2"
-            >
+            </li>
+          </a>
+          <a href="/#solutions">
+            <li
+              class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2">
               Why AllCalls.io
-            </li></a
-          >
-          <a href="/#resources"
-            ><li
-              class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2"
-            >
+            </li>
+          </a>
+          <a href="/#resources">
+            <li
+              class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2">
               How It Works
-            </li></a
-          >
-          <a href="https://www.financialservicecareers.com"
-            ><li
-              class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2"
-            >
+            </li>
+          </a>
+          <a href="https://www.financialservicecareers.com">
+            <li
+              class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2">
               Careers
-            </li></a
-          >
-          <a href="/support"
-            ><li
-              class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2"
-            >
+            </li>
+          </a>
+          <a href="/support">
+            <li
+              class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2">
               Support
-            </li></a
-          >
-          <a href="/login"
-            ><li
-              class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2"
-            >
+            </li>
+          </a>
+          <a href="/login">
+            <li
+              class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2">
               Log In
-            </li></a
-          >
-          <a href="/register"
-            ><li
-              class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white"
-            >
+            </li>
+          </a>
+          <a href="/register">
+            <li
+              class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white">
               Register
-            </li></a
-          >
+            </li>
+          </a>
         </ul>
 
         <!-- Support Start -->
@@ -162,9 +144,7 @@ const showHamburger = ref(false);
             </div>
           </div>
 
-          <div
-            class="px-16 mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
-          >
+          <div class="px-16 mx-auto  grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             <!-- <div class="flex flex-col bg-custom-darksky rounded p-4 text-center">
               <div class="mb-6">
                 <h2 class="text-xl text-white font-extrabold">Search our Help Center</h2>
@@ -211,18 +191,26 @@ const showHamburger = ref(false);
             </div>
           </div>
 
-          <div class="px-16 text-gray-700 mb-8 pb-14">
+          <div class="px-16 text-gray-700 mb-8">
             <div class="font-bold text-gray-700 mb-2 text-lg">AllCalls LLC</div>
-            <div>1309 COFFEEN AVE STE 11246<br>SHERIDAN, WY 82801, USA</div>
-            <div>
-              <strong class="text-gray-600">Toll Free Customer Service Phone:</strong>
-              (855) 815-0382
-            </div>
-            <div>
-              <strong class="text-gray-600">Support Hours:</strong> 24/7 Monday - Sunday
+            <div class="flex justify-between">
+              <div>1309 COFFEEN AVE STE 11246<br>SHERIDAN, WY 82801, USA</div>
+              <div style="width: 50%;">
+                <strong class="text-gray-600">Toll Free Customer Service Phone: <br> </strong>
+                (855) 815-0382
+              </div>
             </div>
 
-            <p class="mb-1">1309 COFFEEN AVE STE 11246<br>SHERIDAN, WY 82801, USA</p>
+            <div class="flex justify-between">
+              <div>
+                <strong class="text-gray-600">Support Hours: <br> </strong> 24/7 Monday -
+                Sunday
+              </div>
+              <div style="width: 50%;">
+                <p class="mb-1">1309 COFFEEN AVE STE 11246<br>SHERIDAN, WY 82801, USA</p>
+              </div>
+            </div>
+
             <p><strong class="text-gray-500">Email:</strong> support@allcalls.io</p>
           </div>
         </div>
@@ -241,6 +229,7 @@ const showHamburger = ref(false);
 .bg-dots-darker {
   background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.22676 0C1.91374 0 2.45351 0.539773 2.45351 1.22676C2.45351 1.91374 1.91374 2.45351 1.22676 2.45351C0.539773 2.45351 0 1.91374 0 1.22676C0 0.539773 0.539773 0 1.22676 0Z' fill='rgba(0,0,0,0.07)'/%3E%3C/svg%3E");
 }
+
 @media (prefers-color-scheme: dark) {
   .dark\:bg-dots-lighter {
     background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.22676 0C1.91374 0 2.45351 0.539773 2.45351 1.22676C2.45351 1.91374 1.91374 2.45351 1.22676 2.45351C0.539773 2.45351 0 1.91374 0 1.22676C0 0.539773 0.539773 0 1.22676 0Z' fill='rgba(255,255,255,0.07)'/%3E%3C/svg%3E");
