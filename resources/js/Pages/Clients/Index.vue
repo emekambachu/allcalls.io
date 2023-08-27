@@ -138,7 +138,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
                   <th scope="col" class="px-4 py-3">HANG UP BY</th>
                   <th scope="col" class="px-4 py-3">CALL DURATION</th>
                   <th scope="col" class="px-4 py-3">CALL TAKEN</th>
-                  <th scope="col" class="px-4 py-3">AMMOUNT SPENT</th>
+                  <th scope="col" class="px-4 py-3">AMOUNT SPENT</th>
                   <th scope="col" class="px-4 py-3">CALL TYPE</th>
                   <th scope="col" class="px-4 py-3">URL</th>
                   <th scope="col" class="px-4 py-3 text-end">Actions</th>
