@@ -3,22 +3,10 @@
 
     Notify you about your recent deposit fund.
 
-    <table>
-        <tr>
-            <td>Sub Total:</td>
-            <td>${{$subTotal}}</td>
-        </tr>
-
-        <tr>
-            <td>Credit Card Processing Fee:</td>
-            <td>${{$processingFee}}</td>
-        </tr>
-        ---
-        <tr>
-            <td>Total</td>
-            <td>${{$total}}</td>
-        </tr>
-    </table>
+    | Sub Total: | ${{$subTotal}} |
+    | Credit Card Processing Fee: | ${{$processingFee}} |
+    ---
+    | Total | ${{$total}} |
 
     ---
 
