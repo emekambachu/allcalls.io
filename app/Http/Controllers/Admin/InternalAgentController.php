@@ -90,6 +90,8 @@ class InternalAgentController extends Controller
             'balance' => isset($request->balance)?$request->balance:0,
         ]);
 
+        $user->markEmailAsVerified();
+
         $agentRole = Role::whereName('internal-agent')->first();
         DB::table('role_user')->insert([
             'user_id' => $user->id,
