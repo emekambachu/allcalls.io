@@ -207,10 +207,8 @@ class IncomingCallController extends Controller
         Log::debug('Online users (User Model):');
         Log::debug($users);
 
-        // Select a user from this group
-        $selectedUser = $this->getHighestBidder($users, $callType);
-
-        Log::debug('The highest bidder out of all online users:');
+        // Select the first user from this array of sorted online users based on who should receive the call first
+        $selectedUser = $onlineUsers[0];
         Log::debug($selectedUser);
 
         // Find one of the available numbers and associate it with the selected user
@@ -281,30 +279,63 @@ class IncomingCallController extends Controller
         return $user;
     }
 
+    // public function getAvailableNumberForUser($userId, $from, $callTypeId)
+    // {
+    //     // This method should return one of the available numbers and associate it with the selected user
+    //     // Find the first available number where user_id is null
+    //     $availableNumber = AvailableNumber::whereNull('user_id')->first();
+
+    //     // THE FOLLOWING LINE IS TEMPORARY, WILL REMOVE AFTER TESTING PHASE:+441156471655
+    //     // $availableNumber = AvailableNumber::wherePhone('+441156471655')->first();
+    //     // $availableNumber = AvailableNumber::wherePhone('+441146971410')->first();
+    //     // $availableNumber = AvailableNumber::wherePhone('7542270877')->first();
+
+    //     // If there is no available number with user_id null
+    //     if (!$availableNumber) {
+    //         Log::error('No available number found');
+    //         return '<Response><Say voice="alice" language="en-US">All of our agents are currently busy. Please try again later.</Say></Response>';
+    //     }
+
+    //     $availableNumber->user_id = $userId;
+    //     $availableNumber->from = $from;
+    //     $availableNumber->call_type_id = $callTypeId;
+    //     $availableNumber->save();
+
+    //     return $availableNumber;
+    // }
+
     public function getAvailableNumberForUser($userId, $from, $callTypeId)
     {
         // This method should return one of the available numbers and associate it with the selected user
-        // Find the first available number where user_id is null
-        $availableNumber = AvailableNumber::whereNull('user_id')->first();
-
-        // THE FOLLOWING LINE IS TEMPORARY, WILL REMOVE AFTER TESTING PHASE:+441156471655
+    
+        // First, try to find an available number already associated with the user
+        $availableNumber = AvailableNumber::where('user_id', $userId)
+                                          ->orWhere(function ($query) {
+                                              $query->whereNull('user_id');
+                                          })
+                                          ->first();
+    
+        // Uncomment the lines below for temporary testing as needed
         // $availableNumber = AvailableNumber::wherePhone('+441156471655')->first();
         // $availableNumber = AvailableNumber::wherePhone('+441146971410')->first();
-        $availableNumber = AvailableNumber::wherePhone('7542270877')->first();
-
-        // If there is no available number with user_id null
+        // $availableNumber = AvailableNumber::wherePhone('7542270877')->first();
+    
+        // If there is no available number
         if (!$availableNumber) {
             Log::error('No available number found');
             return '<Response><Say voice="alice" language="en-US">All of our agents are currently busy. Please try again later.</Say></Response>';
         }
-
-        $availableNumber->user_id = $userId;
-        $availableNumber->from = $from;
-        $availableNumber->call_type_id = $callTypeId;
-        $availableNumber->save();
-
+    
+        // If this is a new available number, associate it with the user
+        if (is_null($availableNumber->user_id)) {
+            $availableNumber->user_id = $userId;
+            $availableNumber->from = $from;
+            $availableNumber->call_type_id = $callTypeId;
+            $availableNumber->save();
+        }
+    
         return $availableNumber;
-    }
+    }    
 
     private function getStateFromPhoneNumber($phoneNumber)
     {

@@ -60,15 +60,29 @@ class OnlineUser extends Model
     }
 
     /**
-     * Reorder the collection to put internal-agent users at the top.
+     * Prioritize internal agents and sort by last_called_at.
      *
-     * @param  \Illuminate\Database\Eloquent\Collection  $onlineUsers
-     * @return \Illuminate\Database\Eloquent\Collection
+     * This function sorts a collection of online users such that internal agents
+     * come first, and within those, they are sorted by the "last_called_at" field
+     * in ascending order (oldest date comes first). Non-internal agents will remain
+     * in the original order.
+     *
+     * @param  \Illuminate\Support\Collection $onlineUsers Collection of online users.
+     * @return \Illuminate\Support\Collection Sorted collection of online users.
      */
     public static function prioritizeInternalAgents(Collection $onlineUsers)
     {
-        return $onlineUsers->sortByDesc(function ($onlineUser, $key) {
-            return $onlineUser->user->roles->contains('id', 3) ? 1 : 0;
+        return $onlineUsers->sortBy(function ($onlineUser, $key) {
+            // Determine if the user is an internal agent (1 for yes, 0 for no)
+            $isInternalAgent = $onlineUser->user->roles->contains('id', 3) ? 1 : 0;
+
+            // Flip 1 and 0 to sort internal agents first
+            $priorityForInternal = 1 - $isInternalAgent;
+
+            // Handle nullable "last_called_at" by replacing it with a future date to ensure it comes last
+            $lastCalledAt = $onlineUser->last_called_at ?? now()->addYears(10);
+
+            return [$priorityForInternal, $lastCalledAt];
         })->values();
     }
 }
