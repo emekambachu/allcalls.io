@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Models\Transaction;
 use Exception;
 use App\Models\User;
 use App\Events\MissedCallEvent;
@@ -30,7 +31,7 @@ class ChargeUserForMissedCall
 
         Log::debug('Tempoarily charging for missed calls are paused until are bugs are worked out.');
         return;
-        
+
         try {
             // Retrieve user_id from the event data
             $userId = $event->user->id;
@@ -40,12 +41,18 @@ class ChargeUserForMissedCall
 
             if ($user) {
                 Log::debug("Found user with ID $userId");
-                
+
                 // Check if the user has sufficient balance
                 if ($user->balance >= 5) {
                     // Deduct $5 from the user's balance
                     DB::transaction(function () use ($user) {
                         $user->decrement('balance', 5);
+
+                        Transaction::create([
+                            'amount'=>5,
+                            'sign'=>0,
+                            'user_id'=>$user->id,
+                        ]);
                     });
 
                     Log::debug('Deducted $5 from user balance');
