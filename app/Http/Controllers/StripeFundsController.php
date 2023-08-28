@@ -15,7 +15,7 @@ class StripeFundsController extends Controller
     {
         // Step 1: Validate incoming request data
         $request->validate([
-            'amount' => 'required|numeric|integer|min:100',
+            'amount' => 'required|numeric|integer|min:1',
             'paymentMethodId' => 'required'
         ]);
 
