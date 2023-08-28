@@ -130,8 +130,6 @@ class IncomingCallController extends Controller
 
         $onlineUsers = OnlineUser::prioritizeInternalAgents($onlineUsers);
 
-        $onlineUsers = $onlineUsers->values();
-
         if (!$onlineUsers->count()) {
             Log::debug('No online user found.');
             return '<Response><Say voice="alice" language="en-US">All agents are currently offline. Please try again later.</Say></Response>';
@@ -197,8 +195,6 @@ class IncomingCallController extends Controller
             ->get();
 
         $onlineUsers = OnlineUser::prioritizeInternalAgents($onlineUsers);
-
-        $onlineUsers = $onlineUsers->values();
 
         if (!$onlineUsers->count()) {
             Log::debug('No online user found.');
