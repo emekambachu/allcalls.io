@@ -18,6 +18,10 @@ use Illuminate\Support\Facades\Broadcast;
 //     return (int) $user->id === (int) $id;
 // });
 
+Broadcast::channel('user.{userId}.callStatus', function ($user, $userId) {
+    return (int) $user->id === (int) $userId;
+});
+
 Broadcast::channel('User.Status.Online.{callTypeId}', function ($user, $callTypeId) {
     Log::debug($user->id . ' turned on call type ' . $callTypeId);
     return ['user' => [

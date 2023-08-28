@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Events\CallStatusUpdated;
 use App\Events\FundsAdded;
 use App\Models\Transaction;
 use App\Events\MissedCallEvent;
@@ -50,7 +51,11 @@ class EventServiceProvider extends ServiceProvider
 
         FundsAdded::class => [
             SendFundsReceiptEmail::class,
-        ]
+        ],
+
+        CallStatusUpdated::class => [
+            LogCallStatusChange::class,
+        ],
     ];
 
     /**

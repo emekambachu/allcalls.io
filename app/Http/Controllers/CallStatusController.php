@@ -7,6 +7,7 @@ use App\Models\CallType;
 use Illuminate\Http\Request;
 use App\Events\MissedCallEvent;
 use App\Events\RingingCallEvent;
+use App\Events\CallStatusUpdated;
 use App\Events\CompletedCallEvent;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
@@ -38,6 +39,8 @@ class CallStatusController extends Controller
         ]);
 
         $user = User::findOrFail($userId);
+
+        CallStatusUpdated::dispatch($user, $request->all());
 
         switch ($callStatus) {
             case 'ringing':
