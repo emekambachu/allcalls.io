@@ -52,6 +52,8 @@ class ChargeUserForMissedCall
                             'amount'=>5,
                             'sign'=>0,
                             'user_id'=>$user->id,
+                            'created_at'=>now(),
+                            'updated_at'=>now(),
                         ]);
                     });
 

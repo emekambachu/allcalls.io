@@ -38,6 +38,8 @@ class ChargeUserForCompletedCall
                     'amount'=>35,
                     'sign'=>0,
                     'user_id'=>$event->user->id,
+                    'created_at'=>now(),
+                    'updated_at'=>now(),
                 ]);
             });
 
