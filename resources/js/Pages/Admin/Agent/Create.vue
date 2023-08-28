@@ -33,7 +33,7 @@ let form = useForm({
     password: "",
     password_confirmation: '',
     phone: "",
-    balance:0,
+    balance: 0,
     typesWithStates: props.callTypes.reduce((acc, obj) => {
         acc[obj.id] = [];
         return acc;
@@ -74,9 +74,9 @@ watch(() => [form.first_name, form.last_name, form.email, form.password, form.pa
 
 let NextTab = (val) => {
     if (validateEmail(form.email)) {
-    step.value = val
-    uiEmailValidation.value.isValid = false;
-    }else {
+        step.value = val
+        uiEmailValidation.value.isValid = false;
+    } else {
         uiEmailValidation.value.isValid = true;
     }
 }
@@ -113,16 +113,16 @@ let saveChanges = () => {
                 if (error.response.status === 400) {
                     uiEmailValidation.value.isValid = false;
                     firstStepErrors.value = error.response.data.errors;
-                    if(firstStepErrors.value.first_name 
-                    || firstStepErrors.value.last_name 
-                    || firstStepErrors.value.email 
-                    || firstStepErrors.value.password 
-                    || firstStepErrors.value.password_confirmation 
-                    || firstStepErrors.value.phone 
-                    || firstStepErrors.value.balance 
-                    ){
+                    if (firstStepErrors.value.first_name
+                        || firstStepErrors.value.last_name
+                        || firstStepErrors.value.email
+                        || firstStepErrors.value.password
+                        || firstStepErrors.value.password_confirmation
+                        || firstStepErrors.value.phone
+                        || firstStepErrors.value.balance
+                    ) {
                         step.value = 0
-                    }else if(firstStepErrors.value.typesWithStates ){
+                    } else if (firstStepErrors.value.typesWithStates) {
                         step.value = 1
                     }
 
@@ -236,7 +236,7 @@ let goBack = () => {
                         </button>
                     </div>
 
-                    <div v-if="step == 0"  class="p-6">
+                    <div v-if="step == 0" class="p-6">
                         <div>
                             <div>
                                 <GuestInputLabel for="first_name" value="First Name" />
@@ -275,18 +275,16 @@ let goBack = () => {
                             <div class="mt-4">
                                 <GuestInputLabel for="balance" value="balance" />
 
-                                <GuestTextInput id="balance" type="text" class="mt-1 block w-full" v-model="form.balance"
-                                    />
-                                <div v-if="firstStepErrors.balance" class="text-red-500" v-text="firstStepErrors.balance[0]">
+                                <GuestTextInput id="balance" type="text" class="mt-1 block w-full" v-model="form.balance" />
+                                <div v-if="firstStepErrors.balance" class="text-red-500"
+                                    v-text="firstStepErrors.balance[0]">
                                 </div>
                             </div>
 
                             <div class="mt-4">
                                 <GuestInputLabel for="phone" value="Phone" />
 
-                                <GuestTextInput id="phone" type="text" class="mt-1 block w-full" v-model="form.phone"
-                                    minlength="10" maxlength="10"
-                                    onkeyup="this.value=this.value.replace(/[^\d]/,&#39;&#39;)" />
+                                <GuestTextInput id="phone" type="text" class="mt-1 block w-full" v-model="form.phone" />
                                 <div v-if="firstStepErrors.phone" class="text-red-500" v-text="firstStepErrors.phone[0]">
                                 </div>
                             </div>
@@ -369,15 +367,16 @@ let goBack = () => {
                                         Back</a>
                                 </div>
                                 <div class="flex justify-end my-6">
-                                    <PrimaryButton type="button" @click="saveChanges" :class="{ 'opacity-25': areAllArraysEmpty ||  isLoading }"
-                                        :disabled="  areAllArraysEmpty || isLoading">
+                                    <PrimaryButton type="button" @click="saveChanges"
+                                        :class="{ 'opacity-25': areAllArraysEmpty || isLoading }"
+                                        :disabled="areAllArraysEmpty || isLoading">
                                         <global-spinner :spinner="isLoading" /> Submit
                                     </PrimaryButton>
 
                                     <PrimaryButton @click.prevent="close" type="button" class="ml-3">
                                         Close
                                     </PrimaryButton>
-                                </div>  
+                                </div>
                             </div>
 
                         </div>
