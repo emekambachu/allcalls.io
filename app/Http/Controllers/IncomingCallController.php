@@ -141,17 +141,17 @@ class IncomingCallController extends Controller
         Log::debug($onlineUserIds);
 
         // Order the relevantBids by the amount column in descending order
-        $relevantBids = Bid::whereIn('user_id', $onlineUserIds)
-            ->where('call_type_id', $availableNumber->call_type_id)
-            ->orderBy('amount', 'desc')
-            ->get();
+        // $relevantBids = Bid::whereIn('user_id', $onlineUserIds)
+        //     ->where('call_type_id', $availableNumber->call_type_id)
+        //     ->orderBy('amount', 'desc')
+        //     ->get();
 
         $twimlStart = '<Response>';
         $twimlEnd = '</Response>';
         $twimlBody = '';
 
-        foreach ($relevantBids as $bid) {
-            $user_id = $bid->user_id;
+        foreach ($onlineUserIds as $onlineUserId) {
+            $user_id = $onlineUserId;
             $call_type_id = $availableNumber->call_type_id;
             $uniqueCallId = uniqid();
 
@@ -164,7 +164,7 @@ class IncomingCallController extends Controller
         }
 
         // If nobody picks up, forward the call to an external number.
-        // $twimlBody .= '<Dial callerId="+441156471655">+18449831955</Dial>';
+        $twimlBody .= '<Dial callerId="+441156471655">+18449831955</Dial>';
 
 
         $twiml = $twimlStart . $twimlBody . $twimlEnd;
