@@ -2,17 +2,18 @@
 
 namespace App\Providers;
 
-use App\Events\CallStatusUpdated;
 use App\Events\FundsAdded;
 use App\Models\Transaction;
 use App\Events\MissedCallEvent;
 use App\Listeners\SaveUserCall;
 use App\Events\RingingCallEvent;
+use App\Events\CallStatusUpdated;
 use App\Listeners\AddDefaultBids;
 use App\Events\CompletedCallEvent;
 use App\Listeners\SendWelcomeEmail;
 use App\Listeners\AddTargetsInRingba;
 use Illuminate\Support\Facades\Event;
+use App\Listeners\LogCallStatusChange;
 use App\Observers\TransactionObserver;
 use Illuminate\Auth\Events\Registered;
 use App\Events\UserCallTypeStateUpdated;
