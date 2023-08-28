@@ -2,7 +2,7 @@
     {{-- Header --}}
     <x-slot:header>
         <x-mail::header :url="config('app.url')">
-            <img src="{{ asset('img/new-logo-black.png') }}" width="20%" alt="">
+            <img src="https://allcalls.io/img/new-logo-black.png" width="20%" alt="">
         </x-mail::header>
     </x-slot:header>
 
