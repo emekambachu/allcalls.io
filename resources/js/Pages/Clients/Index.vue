@@ -1,12 +1,13 @@
 <script setup>
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import ClientDetailsModal from "@/Components/ClientDetailsModal.vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import { ref } from "vue";
-import { toaster } from '@/helper.js';
+import { toaster } from "@/helper.js";
 let page = usePage();
 if (page.props.flash.message) {
-  toaster('success', page.props.flash.message)
+  toaster("success", page.props.flash.message);
 }
 
 let props = defineProps({
@@ -55,9 +56,7 @@ let openClientModal = (call) => {
 let formatTime = (duration) => {
   const minutes = Math.floor(duration / 60);
   const seconds = Math.floor(duration % 60);
-  return `${minutes.toString().padStart(2, "0")}:${seconds
-    .toString()
-    .padStart(2, "0")}`;
+  return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
 };
 
 let formatMoney = (amount) => {
@@ -74,12 +73,11 @@ let formatDate = (inputDate) => {
   const formattedDate = `${month}-${day}-${year}`;
 
   return formattedDate;
-}
-
+};
 
 let capitalizeAndReplaceUnderscore = (str) => {
   // Replace underscores with spaces
-  let result = str.replace(/_/g, ' ');
+  let result = str.replace(/_/g, " ");
 
   // Capitalize the first letter of each word
   result = result.replace(/\b(\w)/g, (match) => match.toUpperCase());
@@ -106,7 +104,9 @@ let capitalizeAndReplaceUnderscore = (str) => {
       </div>
     </div>
 
-    <div class="mx-auto px-4 sm:px-8 md:px-16 py-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div
+      class="mx-auto px-4 sm:px-8 md:px-16 py-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+    >
       <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto">
         <p class="mb-1 text-sm text-gray-300">Total Calls</p>
         <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
@@ -145,32 +145,54 @@ let capitalizeAndReplaceUnderscore = (str) => {
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="call in calls.data" :key="call.id" class="border-b border-gray-500">
-
+                <tr
+                  v-for="call in calls.data"
+                  :key="call.id"
+                  class="border-b border-gray-500"
+                >
                   <td class="text-gray-600 px-4 py-3">{{ call.id }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ call.hung_up_by }}</td>
                   <td class="text-gray-600 px-4 py-3">
                     {{
-                      String(
-                        Math.floor(call.call_duration_in_seconds / 60)
-                      ).padStart(2, "0") +
+                      String(Math.floor(call.call_duration_in_seconds / 60)).padStart(
+                        2,
+                        "0"
+                      ) +
                       ":" +
-                      String(
-                        call.call_duration_in_seconds % 60
-                      ).padStart(2, "0")
+                      String(call.call_duration_in_seconds % 60).padStart(2, "0")
                     }}
                   </td>
 
                   <th class="text-gray-600 px-4 py-3">{{ call.call_taken }}</th>
                   <td class="text-gray-600 px-4 py-3">{{ call.amount_spent }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ call.call_type.type }}</td>
-                  <td class="text-gray-600 px-4 py-3"> <a v-if="call.recording_url" target="_blank"
-                      :href="call.recording_url">{{ call.recording_url }}</a> <span v-else>_</span> </td>
+                  <td class="text-gray-600 px-4 py-3">
+                    <a
+                      v-if="call.recording_url"
+                      target="_blank"
+                      :href="call.recording_url"
+                      class="flex"
+                      ><svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="1.5em"
+                        class="pr-1"
+                        viewBox="0 0 512 512"
+                      >
+                        <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                        <path
+                          d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm256-96a96 96 0 1 1 0 192 96 96 0 1 1 0-192zm0 224a128 128 0 1 0 0-256 128 128 0 1 0 0 256zm0-96a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"
+                        /></svg
+                      >Open Recording
+                    </a>
+                    <span v-else>_</span>
+                  </td>
                   <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
-
-                    <button v-if="call.get_client" @click="openClientModal(call)"
+                    <button
+                      v-if="call.get_client"
+                      @click="openClientModal(call)"
                       class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
-                      type="button">
+                      type="button"
+                    >
                       View Client
                     </button>
                     <button v-else class="text-center" type="button">-</button>
@@ -181,7 +203,8 @@ let capitalizeAndReplaceUnderscore = (str) => {
             <div class="p-4">
               <nav
                 class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
-                aria-label="Table navigation">
+                aria-label="Table navigation"
+              >
                 <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
                   Showing
                   <span class="font-semibold text-custom-blue">{{
@@ -194,34 +217,54 @@ let capitalizeAndReplaceUnderscore = (str) => {
                 </span>
                 <ul class="inline-flex items-stretch -space-x-px cursor-pointer">
                   <li>
-                    <a v-if="calls.prev_page_url" @click="fetchClients(calls.prev_page_url)"
-                      class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-custom-white rounded-l-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white">
+                    <a
+                      v-if="calls.prev_page_url"
+                      @click="fetchClients(calls.prev_page_url)"
+                      class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-custom-white rounded-l-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white"
+                    >
                       <span class="sr-only">Previous</span>
-                      <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
+                      <svg
+                        class="w-5 h-5"
+                        aria-hidden="true"
+                        fill="currentColor"
+                        viewbox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill-rule="evenodd"
                           d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                          clip-rule="evenodd" />
+                          clip-rule="evenodd"
+                        />
                       </svg>
                     </a>
                   </li>
 
                   <li>
                     <a
-                      class="flex items-center justify-center text-sm py-2 px-3 leading-tight font-extrabold text-gray-500 bg-custom-white shadow-2xl hover:bg-sky-950 hover:shadow-2xl hover:text-white">{{
-                        calls.current_page }}
+                      class="flex items-center justify-center text-sm py-2 px-3 leading-tight font-extrabold text-gray-500 bg-custom-white shadow-2xl hover:bg-sky-950 hover:shadow-2xl hover:text-white"
+                      >{{ calls.current_page }}
                     </a>
                   </li>
 
                   <li>
-                    <a v-if="calls.next_page_url" @click="fetchClients(calls.next_page_url)"
-                      class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-custom-white rounded-r-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white">
+                    <a
+                      v-if="calls.next_page_url"
+                      @click="fetchClients(calls.next_page_url)"
+                      class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-custom-white rounded-r-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white"
+                    >
                       <span class="sr-only">Next</span>
-                      <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
+                      <svg
+                        class="w-5 h-5"
+                        aria-hidden="true"
+                        fill="currentColor"
+                        viewbox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill-rule="evenodd"
                           d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                          clip-rule="evenodd" />
+                          clip-rule="evenodd"
+                        />
                       </svg>
                     </a>
                   </li>
@@ -237,7 +280,10 @@ let capitalizeAndReplaceUnderscore = (str) => {
       <p class="text-center text-gray-600">No clients yet.</p>
     </section>
 
-    <ClientDetailsModal :showModal="showModal" :callDetail="callDetail" @close="showModal = false"></ClientDetailsModal>
-
+    <ClientDetailsModal
+      :showModal="showModal"
+      :callDetail="callDetail"
+      @close="showModal = false"
+    ></ClientDetailsModal>
   </AuthenticatedLayout>
 </template>
