@@ -19,16 +19,18 @@ class FundsAdded
     public $subTotal;
     public $processingFee;
     public $total;
+    public $bonus;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(User $user, $subTotal, $processingFee, $total)
+    public function __construct(User $user, $subTotal, $processingFee, $total, $bonus)
     {
         $this->user = $user;
         $this->subTotal = $subTotal;
         $this->processingFee = $processingFee;
         $this->total = $total;
+        $this->bonus = $bonus;
     }
 
     /**

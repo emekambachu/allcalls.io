@@ -17,16 +17,18 @@ class FundTransaction extends Mailable
     public $subTotal;
     public $processingFee;
     public $total;
+    public $bonus;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(User $user, $subTotal, $processingFee, $total)
+    public function __construct(User $user, $subTotal, $processingFee, $total, $bonus)
     {
         $this->user = $user;
         $this->subTotal = $subTotal;
         $this->processingFee = $processingFee;
         $this->total = $total;
+        $this->bonus = $bonus;
     }
 
     /**
@@ -51,6 +53,7 @@ class FundTransaction extends Mailable
                 'subTotal' => $this->subTotal,
                 'processingFee' => $this->processingFee,
                 'total' => $this->total,
+                'bonus' => $this->bonus,
             ],
         );
     }

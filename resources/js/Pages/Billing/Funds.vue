@@ -8,7 +8,7 @@ import InputError from "@/Components/InputError.vue";
 import { toaster } from '@/helper.js';
 
 let page = usePage();
-let stripeAPIKey = 'pk_live_51JUMhZF43egAbbxbEk6CghT5vfjV7M9IpSwm9IolpY3oLt5owsTwQHNir6zJoMS8JJldPbikiBXU3QhjJEIhKDq300orW8vBnD';
+let stripeAPIKey = 'pk_test_51JUMhZF43egAbbxbdvc4FIRiALFxHyYECIknypspzMqjYBQ47Kvt8TBY3g44gfhIQHJLPQT4GMwcqlqN1KwKPsbc00UfQoy1mu';
 let stripe = Stripe(stripeAPIKey);
 let cardElement = stripe.elements().create('card');
 let amount = ref('50');
