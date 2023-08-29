@@ -100,6 +100,6 @@ Route::middleware('auth:sanctum')->get('/callTypes', [CallTypesAPIController::cl
 
 // Route::middleware('auth:sanctum')->patch('/active-users', [ActiveUsersController::class, 'update']);
 Route::patch('/active-users', [ActiveUsersController::class, 'update']);
-Route::get('/active-users-pusher-webhook', function(Request $request) {
+Route::post('/active-users-pusher-webhook', function(Request $request) {
     Log::debug($request->all());
 });
