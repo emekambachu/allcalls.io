@@ -5,7 +5,7 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import Footer from "@/Components/Footer.vue";
 import ScrollAnimation from "@/Components/ScrollAnimation.vue";
-
+import DownloadAppModal from "@/Components/DownloadAppModal.vue";
 defineProps({
   canLogin: {
     type: Boolean,
@@ -22,7 +22,7 @@ defineProps({
     required: true,
   },
 });
-
+let appDownloadModal = ref(false)
 // Define a reactive property for v-show
 const showHamburger = ref(false);
 </script>
@@ -434,16 +434,16 @@ const showHamburger = ref(false);
               <div class="secFive__title">
                 Our technology allows you start taking calls in seconds
               </div>
-              <a href="#">
+              <div  @click="appDownloadModal = true">
                 <PrimaryButton class="my-4">
                   <div class="text-custom-sky">Download Our Mobile App</div>
                   <img class="w-10" src="/img/blue-arrow.png" alt="" />
                 </PrimaryButton>
-              </a>
+              </div>
             </div>
           </div>
         </div>
-
+        <DownloadAppModal :appDownloadModal="appDownloadModal" @close="appDownloadModal = false" />
         <!-- <div class="secFive__two">
           <div
             class="container"

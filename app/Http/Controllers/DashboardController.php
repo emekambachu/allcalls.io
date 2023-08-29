@@ -50,4 +50,11 @@ class DashboardController extends Controller
             'averageCallDuration' => $averageCallDuration,
         ]);
     }
+    public function DestopUser(Request $request)
+    {
+       
+        return Inertia::render('DestopDevice/DestopDevice', [
+            
+        ]);
+    }
 }
