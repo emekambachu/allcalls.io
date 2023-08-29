@@ -37,7 +37,7 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-});
+})->name('home');
 
 require __DIR__.'/auth.php';
 require 'admin.php';
