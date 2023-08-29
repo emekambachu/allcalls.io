@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Broadcast;
 
@@ -33,4 +34,8 @@ Broadcast::channel('User.Status.Online.{callTypeId}', function ($user, $callType
 Broadcast::channel('User.Status.Offline.{callTypeId}', function ($user, $callTypeId) {
     Log::debug($user->id . ' turned off call type ' . $callTypeId);
     return ['user' => $user];
+});
+
+Broadcast::channel('active-users', function (User $user) {
+    return ['id' => $user->id, 'email' => $user->email ];
 });

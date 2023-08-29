@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActiveUsersController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -96,3 +97,9 @@ Route::middleware('auth:sanctum')->get('/clients', [ClientsAPIController::class,
 Route::middleware('auth:sanctum')->post('/call-client-info', [LiveCallClientController::class, 'index']);
 
 Route::middleware('auth:sanctum')->get('/callTypes', [CallTypesAPIController::class, 'index']);
+
+// Route::middleware('auth:sanctum')->patch('/active-users', [ActiveUsersController::class, 'update']);
+Route::patch('/active-users', [ActiveUsersController::class, 'update']);
+Route::get('/active-users-pusher-webhook', function(Request $request) {
+    Log::debug($request->all());
+});
