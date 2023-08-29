@@ -8,7 +8,7 @@ import axios from "axios";
 
 Echo.join(`active-users`)
     .here((users) => {
-        // ...
+        console.log('The total active users');
         console.log(users);
     })
     .joining((user) => {
