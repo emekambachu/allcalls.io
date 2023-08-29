@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\CompletedCallEvent;
+use App\Models\Transaction;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\InteractsWithQueue;
@@ -32,6 +33,14 @@ class ChargeUserForCompletedCall
             // Deduct $5 from the user's balance
             DB::transaction(function () use ($event) {
                 $event->user->decrement('balance', 35);
+
+                Transaction::create([
+                    'amount'=>35,
+                    'sign'=>0,
+                    'user_id'=>$event->user->id,
+                    'created_at'=>now(),
+                    'updated_at'=>now(),
+                ]);
             });
 
             Log::debug('Deducted $25 from user balance after completed call');

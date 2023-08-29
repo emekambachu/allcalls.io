@@ -20,7 +20,7 @@ class TransactionFactory extends Factory
     {
         return [
             'amount' => $this->faker->numberBetween(1, 5),
-            'sign' => $this->faker->numberBetween(1, 5),
+            'sign' => $this->faker->boolean,
             'card_id' => $this->faker->numberBetween(1, 5),
             'user_id' =>  function() {
                 return User::factory()->create()->id;
