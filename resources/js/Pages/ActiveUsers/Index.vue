@@ -1,0 +1,64 @@
+<script setup>
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import { ref } from "vue";
+
+const activeUsers = ref([
+    { id: 1, firstName: "John", lastName: "Doe", email: "john@example.com", status: "Listening for calls" },
+    { id: 2, firstName: "Jane", lastName: "Doe", email: "jane@example.com", status: "Ringing" },
+    { id: 3, firstName: "Emily", lastName: "Smith", email: "emily@example.com", status: "On-going call" },
+    // Add more users
+]);
+</script>
+
+<template>
+    <AuthenticatedLayout>
+        <template #header>
+            <h2 class="text-2xl font-semibold">Active Users</h2>
+        </template>
+        <div class="py-14">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+                <div class="px-4 sm:px-8 sm:rounded-lg">
+                    <div class="text-4xl text-custom-sky font-bold mb-6">Active Users</div>
+                    <hr class="mb-4" />
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        <template v-for="user in activeUsers" :key="user.id">
+                            <div class="rounded-lg shadow-lg border p-4">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-lg font-semibold">{{ user.firstName }} {{ user.lastName }}</span>
+                                    <span :class="getStatusBadge(user.status)" class="text-white text-xs px-2 py-1 rounded">
+                                        {{ user.status }}
+                                    </span>
+                                </div>
+                                <div class="text-sm mt-2">
+                                    <div><strong>ID:</strong> {{ user.id }}</div>
+                                    <div><strong>Email:</strong> {{ user.email }}</div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </AuthenticatedLayout>
+</template>
+
+<script>
+export default {
+    methods: {
+        getStatusBadge(status) {
+            switch (status) {
+                case "Listening for calls":
+                    return "bg-green-400";
+                case "Ringing":
+                    return "bg-yellow-400";
+                case "On-going call":
+                    return "bg-red-400";
+                default:
+                    return "bg-gray-400";
+            }
+        },
+    },
+};
+</script>
+
+<style scoped></style>

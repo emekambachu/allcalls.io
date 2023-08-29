@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ActiveUsersController;
 
 
 /*
@@ -42,4 +43,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::get('/agent/calls/{id}', [\App\Http\Controllers\Admin\InternalAgentController::class, 'getCall']);
 
     Route::get('/agent/activities/{id}', [\App\Http\Controllers\Admin\InternalAgentController::class, 'getActivity']);
+
+    Route::get('/active-users', [ActiveUsersController::class, 'index']);
+    Route::get('/active-users/join', [ActiveUserChannel::class, 'join']);
 });
