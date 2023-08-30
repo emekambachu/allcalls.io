@@ -1,13 +1,29 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { ref } from "vue";
+import { router } from '@inertiajs/vue3';
+import { onMounted } from "vue";
 
-const activeUsers = ref([
-    { id: 1, firstName: "John", lastName: "Doe", email: "john@example.com", status: "Listening for calls" },
-    { id: 2, firstName: "Jane", lastName: "Doe", email: "jane@example.com", status: "Ringing" },
-    { id: 3, firstName: "Emily", lastName: "Smith", email: "emily@example.com", status: "On-going call" },
-    // Add more users
-]);
+let props = defineProps({
+    activeUsers: {
+        type: Array,
+    }
+});
+
+console.log('Active users: ');
+console.log(props.activeUsers);
+
+let refreshPage = () => {
+    router.visit('/admin/active-users');
+}
+
+onMounted(() => {
+    console.log('Registering event listener');
+    window.Echo.channel('active-user-events')
+        .listen('ActiveUserListUpdated', e => {
+            console.log('ActiveUserListUpdated fired, refreshing...');
+            refreshPage();
+        });
+});
 </script>
 
 <template>
@@ -21,17 +37,16 @@ const activeUsers = ref([
                     <div class="text-4xl text-custom-sky font-bold mb-6">Active Users</div>
                     <hr class="mb-4" />
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        <template v-for="user in activeUsers" :key="user.id">
+                        <template v-for="activeUser in activeUsers" :key="activeUser.id">
                             <div class="rounded-lg shadow-lg border p-4">
                                 <div class="flex items-center justify-between">
-                                    <span class="text-lg font-semibold">{{ user.firstName }} {{ user.lastName }}</span>
-                                    <span :class="getStatusBadge(user.status)" class="text-white text-xs px-2 py-1 rounded">
-                                        {{ user.status }}
+                                    <span class="text-lg font-semibold">{{ activeUser.user.first_name }} {{ activeUser.user.last_name }}</span>
+                                    <span :class="getStatusBadge(activeUser.status)" class="text-white text-xs px-2 py-1 rounded">
+                                        {{ activeUser.status }}
                                     </span>
                                 </div>
                                 <div class="text-sm mt-2">
-                                    <div><strong>ID:</strong> {{ user.id }}</div>
-                                    <div><strong>Email:</strong> {{ user.email }}</div>
+                                    <div><strong>User ID:</strong> {{ activeUser.user.id }}</div>
                                 </div>
                             </div>
                         </template>

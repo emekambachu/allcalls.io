@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Models\ActiveUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
@@ -8,12 +9,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CallStatusController;
 use App\Http\Controllers\ClientsAPIController;
 use Illuminate\Validation\ValidationException;
+use App\Http\Controllers\ActiveUsersController;
 use App\Http\Controllers\OnlineUsersController;
 use App\Http\Controllers\TwilioTokenController;
 use App\Http\Controllers\CallTypesAPIController;
 use App\Http\Controllers\IncomingCallController;
 use App\Http\Controllers\CallRecordingController;
 use App\Http\Controllers\LiveCallClientController;
+use App\Http\Controllers\ActiveUsersPusherWebhookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -96,3 +99,7 @@ Route::middleware('auth:sanctum')->get('/clients', [ClientsAPIController::class,
 Route::middleware('auth:sanctum')->post('/call-client-info', [LiveCallClientController::class, 'index']);
 
 Route::middleware('auth:sanctum')->get('/callTypes', [CallTypesAPIController::class, 'index']);
+
+// Route::middleware('auth:sanctum')->patch('/active-users', [ActiveUsersController::class, 'update']);
+// Route::patch('/active-users', [ActiveUsersController::class, 'update']);
+Route::post('/active-users-pusher-webhook', [ActiveUsersPusherWebhookController::class, 'store']);
