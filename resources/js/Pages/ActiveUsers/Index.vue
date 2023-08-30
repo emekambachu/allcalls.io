@@ -9,19 +9,18 @@ let props = defineProps({
     }
 });
 
-
-console.log('Registering event listener');
-window.Echo.channel('ActiveUserListUpdated')
-    .listen('ActiveUserListUpdated', e => {
-        console.log('ActiveUserListUpdated fired');
-        console.log(e);
-    });
-
-
-console.log(props.activeUsers);
 let refreshPage = () => {
     router.visit('/admin/active-users');
 }
+
+onMounted(() => {
+    console.log('Registering event listener');
+    window.Echo.channel('ActiveUserListUpdated')
+        .listen('ActiveUserListUpdated', e => {
+            console.log('ActiveUserListUpdated fired, refreshing...');
+            refreshPage();
+        });
+});
 </script>
 
 <template>
