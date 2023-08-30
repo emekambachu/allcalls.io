@@ -25,6 +25,8 @@ class UpdateActiveUserStatus
         // Here, $event->user and $event->info will contain the user and call status info.
         $newStatus = $event->info['CallStatus'];  // Extracting the new CallStatus
 
+        Log::debug('Call Status from updateActiveUserStatus');
+
         // Update the status in the ActiveUser table
         // Assuming that you might want to map Twilio statuses to your own set of statuses
         $mappedStatus = $this->mapCallStatusToActiveUserStatus($newStatus);
@@ -37,6 +39,7 @@ class UpdateActiveUserStatus
             ]);
 
             Log::debug('Status changed for user ' . $event->user->id . ' ' . $mappedStatus);
+            return;
         }
     }
 

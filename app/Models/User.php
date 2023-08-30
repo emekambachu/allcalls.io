@@ -2,16 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Card;
 use App\Models\State;
 use App\Models\Activity;
 use App\Models\CallType;
+use App\Models\ActiveUser;
 use App\Models\Transaction;
 use Laravel\Cashier\Billable;
 use App\Models\UserCallTypeState;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -112,6 +113,8 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(Role::class);
     }
 
-
-
+    public function activeUser()
+    {
+        return $this->hasOne(ActiveUser::class, 'user_id');
+    }
 }
