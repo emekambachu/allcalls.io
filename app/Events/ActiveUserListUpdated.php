@@ -32,7 +32,7 @@ class ActiveUserListUpdated implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PresenceChannel('active-user'),
+            new Channel('active-user-events'),
         ];
     }
 }
