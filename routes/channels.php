@@ -37,5 +37,5 @@ Broadcast::channel('User.Status.Offline.{callTypeId}', function ($user, $callTyp
 });
 
 Broadcast::channel('active-users', function ($user) {
-    return ['user_id' => $user->id];
+    return [ 'user_id' => $user->id ];
 });
