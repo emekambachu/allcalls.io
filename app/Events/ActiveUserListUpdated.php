@@ -10,7 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class ActiveUserListUpdated
+class ActiveUserListUpdated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -32,7 +32,7 @@ class ActiveUserListUpdated
     public function broadcastOn(): array
     {
         return [
-            new Channel('active-user-list-updated'),
+            new Channel('ActiveUserListUpdated'),
         ];
     }
 }
