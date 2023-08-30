@@ -36,7 +36,7 @@ class UpdateActiveUserStatus
                 'status' => $mappedStatus
             ]);
 
-            Log::debug('Status changed for user ' . $activeUser->user_id . ' ' . $mappedStatus);
+            Log::debug('Status changed for user ' . $event->user->id . ' ' . $mappedStatus);
         }
     }
 
