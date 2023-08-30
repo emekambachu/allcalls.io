@@ -32,7 +32,7 @@ class ActiveUserListUpdated
     public function broadcastOn(): array
     {
         return [
-            new Channel('active-user-list-updated'),
+            new PrivateChannel('active-user-list-updated'),
         ];
     }
 }
