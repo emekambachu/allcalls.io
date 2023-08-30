@@ -1,8 +1,8 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { ref } from "vue";
 import { router } from '@inertiajs/vue3';
 import Echo from "laravel-echo";
+import { onMounted } from "vue";
 
 let props = defineProps({
     activeUsers: {
@@ -10,9 +10,12 @@ let props = defineProps({
     }
 });
 
-window.Echo.channel('active-user-list-updated').listen('ActiveUserListUpdated', e => {
-    console.log(e);
+onMounted(() => {
+    window.Echo.channel('active-user-list-updated').listen('ActiveUserListUpdated', e => {
+        console.log(e);
+    });
 });
+
 
 console.log(props.activeUsers);
 let refreshPage = () => {
