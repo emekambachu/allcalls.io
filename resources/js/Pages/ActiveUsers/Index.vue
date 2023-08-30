@@ -18,7 +18,7 @@ let refreshPage = () => {
 
 onMounted(() => {
     console.log('Registering event listener');
-    window.Echo.channel('ActiveUserListUpdated')
+    window.Echo.join('active-user')
         .listen('ActiveUserListUpdated', e => {
             console.log('ActiveUserListUpdated fired, refreshing...');
             refreshPage();
