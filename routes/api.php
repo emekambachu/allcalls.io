@@ -101,5 +101,5 @@ Route::middleware('auth:sanctum')->post('/call-client-info', [LiveCallClientCont
 Route::middleware('auth:sanctum')->get('/callTypes', [CallTypesAPIController::class, 'index']);
 
 // Route::middleware('auth:sanctum')->patch('/active-users', [ActiveUsersController::class, 'update']);
-Route::patch('/active-users', [ActiveUsersController::class, 'update']);
+// Route::patch('/active-users', [ActiveUsersController::class, 'update']);
 Route::post('/active-users-pusher-webhook', [ActiveUsersPusherWebhookController::class, 'store']);
