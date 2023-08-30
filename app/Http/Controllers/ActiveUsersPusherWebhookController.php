@@ -36,6 +36,7 @@ class ActiveUsersPusherWebhookController extends Controller
             ]);
 
             ActiveUserListUpdated::dispatch($userId);
+            Log::debug('After dispatching ActiveUserListUpdated');
         }
         // If it's 'member_removed'
         else if ($eventName === 'member_removed') {
@@ -43,8 +44,11 @@ class ActiveUsersPusherWebhookController extends Controller
             Log::debug('member removing');
             $activeUser = ActiveUser::where('user_id', $userId)->first();
             if ($activeUser) {
+                Log::debug('Attempting to delete user');
                 $activeUser->delete();
+                Log::debug('Deleted the active user');
                 ActiveUserListUpdated::dispatch($userId);
+                Log::debug('After dispatching ActiveUserListUpdated');
             }
         }
 
