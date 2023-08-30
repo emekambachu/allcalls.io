@@ -1,13 +1,23 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { ref } from "vue";
+import { router } from '@inertiajs/vue3';
+import Echo from "laravel-echo";
 
-const activeUsers = ref([
-    { id: 1, firstName: "John", lastName: "Doe", email: "john@example.com", status: "Listening for calls" },
-    { id: 2, firstName: "Jane", lastName: "Doe", email: "jane@example.com", status: "Ringing" },
-    { id: 3, firstName: "Emily", lastName: "Smith", email: "emily@example.com", status: "On-going call" },
-    // Add more users
-]);
+let props = defineProps({
+    activeUsers: {
+        type: Array,
+    }
+});
+
+window.Echo.channel('active-user-list-updated').listen('ActiveUserListUpdated', e => {
+    console.log(e);
+});
+
+console.log(props.activeUsers);
+let refreshPage = () => {
+    router.visit('/admin/active-users');
+}
 </script>
 
 <template>
@@ -30,8 +40,7 @@ const activeUsers = ref([
                                     </span>
                                 </div>
                                 <div class="text-sm mt-2">
-                                    <div><strong>ID:</strong> {{ user.id }}</div>
-                                    <div><strong>Email:</strong> {{ user.email }}</div>
+                                    <div><strong>User ID:</strong> {{ user.id }}</div>
                                 </div>
                             </div>
                         </template>

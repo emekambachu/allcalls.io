@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ActiveUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\Events\ActiveUserListUpdated;
 
 class ActiveUsersPusherWebhookController extends Controller
 {
@@ -33,6 +34,8 @@ class ActiveUsersPusherWebhookController extends Controller
                 'user_id' => $userId,
                 'status'  => 'Waiting'
             ]);
+
+            ActiveUserListUpdated::dispatch($userId);
         }
         // If it's 'member_removed'
         else if ($eventName === 'member_removed') {
@@ -41,6 +44,7 @@ class ActiveUsersPusherWebhookController extends Controller
             $activeUser = ActiveUser::where('user_id', $userId)->first();
             if ($activeUser) {
                 $activeUser->delete();
+                ActiveUserListUpdated::dispatch($userId);
             }
         }
 

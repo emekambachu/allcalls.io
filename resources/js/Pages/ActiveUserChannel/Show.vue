@@ -52,7 +52,7 @@ let updateStatus = async () => {
 
                     <div class="mb-4">
                         <select class="select-custom" v-model="status">
-                            <option value="Waiting">Listening</option>
+                            <option value="Waiting">Waiting</option>
                             <option value="Ringing">Ringing</option>
                             <option value="Talking">Talking</option>
                         </select>
