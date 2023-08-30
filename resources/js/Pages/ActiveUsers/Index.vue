@@ -9,6 +9,9 @@ let props = defineProps({
     }
 });
 
+console.log('Active users: ');
+console.log(props.activeUsers);
+
 let refreshPage = () => {
     router.visit('/admin/active-users');
 }

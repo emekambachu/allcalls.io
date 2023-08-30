@@ -11,7 +11,7 @@ class ActiveUsersController extends Controller
 {
     public function index()
     {
-        $activeUsers = ActiveUser::all();
+        $activeUsers = ActiveUser::with('user')->all();
 
         return Inertia::render('ActiveUsers/Index', compact('activeUsers'));
     }
