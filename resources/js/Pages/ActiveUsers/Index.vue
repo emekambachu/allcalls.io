@@ -13,7 +13,7 @@ let props = defineProps({
 onMounted(() => {
     console.log('Mounted attaching event listeners');
     console.log(window.Echo);
-    window.Echo.private('active-user-list-updated').listen('ActiveUserListUpdated', e => {
+    Echo.private('active-user-list-updated').listen('ActiveUserListUpdated', e => {
         console.log('active-user-list-updated fired');
         console.log(e);
     });
