@@ -1,7 +1,6 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { router } from '@inertiajs/vue3';
-import Echo from "laravel-echo";
 import { onMounted } from "vue";
 
 let props = defineProps({
@@ -13,7 +12,7 @@ let props = defineProps({
 onMounted(() => {
     console.log('Mounted attaching event listeners');
     console.log(window.Echo);
-    Echo.private('active-user-list-updated').listen('ActiveUserListUpdated', e => {
+    window.Echo.private('active-user-list-updated').listen('ActiveUserListUpdated', e => {
         console.log('active-user-list-updated fired');
         console.log(e);
     });
