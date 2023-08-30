@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\ActiveUsersController;
 use App\Models\User;
+use App\Models\ActiveUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
@@ -9,12 +9,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CallStatusController;
 use App\Http\Controllers\ClientsAPIController;
 use Illuminate\Validation\ValidationException;
+use App\Http\Controllers\ActiveUsersController;
 use App\Http\Controllers\OnlineUsersController;
 use App\Http\Controllers\TwilioTokenController;
 use App\Http\Controllers\CallTypesAPIController;
 use App\Http\Controllers\IncomingCallController;
 use App\Http\Controllers\CallRecordingController;
 use App\Http\Controllers\LiveCallClientController;
+use App\Http\Controllers\ActiveUsersPusherWebhookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -100,16 +102,4 @@ Route::middleware('auth:sanctum')->get('/callTypes', [CallTypesAPIController::cl
 
 // Route::middleware('auth:sanctum')->patch('/active-users', [ActiveUsersController::class, 'update']);
 Route::patch('/active-users', [ActiveUsersController::class, 'update']);
-Route::post('/active-users-pusher-webhook', function(Request $request) {
-    // Log::debug($request->all());
-    $eventName = $request['events'][0]['name'];
-    $userId = $request['events'][0]['user_id'];
-
-    Log::debug('Event name: ');
-    Log::debug($eventName ?? 'N/A');
-
-    Log::debug('User ID: ');
-    Log::debug($userId ?? 'N/A');
-
-    return 'OK!';
-});
+Route::post('/active-users-pusher-webhook', [ActiveUsersPusherWebhookController::class, 'store']);
