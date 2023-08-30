@@ -7,16 +7,16 @@ import { AxiosError } from "axios";
 import axios from "axios";
 
 Echo.join(`active-users`)
-    // .here((users) => {
-    //     console.log('The total active users');
-    //     console.log(users);
-    // })
-    // .joining((user) => {
-    //     console.log(user.name);
-    // })
-    // .leaving((user) => {
-    //     console.log(user.name);
-    // })
+    .here((users) => {
+        console.log('The total active users');
+        console.log(users);
+    })
+    .joining((user) => {
+        console.log(user.name);
+    })
+    .leaving((user) => {
+        console.log(user.name);
+    })
     .error((error) => {
         console.error(error);
     });
