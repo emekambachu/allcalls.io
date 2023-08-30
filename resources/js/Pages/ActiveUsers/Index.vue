@@ -11,9 +11,9 @@ let props = defineProps({
 
 
 console.log('Registering event listener');
-window.Echo.channel('active-user-list-updated')
+window.Echo.channel('ActiveUserListUpdated')
     .listen('ActiveUserListUpdated', e => {
-        console.log('active-user-list-updated fired');
+        console.log('ActiveUserListUpdated fired');
         console.log(e);
     });
 
