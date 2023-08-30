@@ -37,16 +37,16 @@ onMounted(() => {
                     <div class="text-4xl text-custom-sky font-bold mb-6">Active Users</div>
                     <hr class="mb-4" />
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        <template v-for="user in activeUsers" :key="user.id">
+                        <template v-for="activeUser in activeUsers" :key="activeUser.id">
                             <div class="rounded-lg shadow-lg border p-4">
                                 <div class="flex items-center justify-between">
-                                    <span class="text-lg font-semibold">{{ user.firstName }} {{ user.lastName }}</span>
-                                    <span :class="getStatusBadge(user.status)" class="text-white text-xs px-2 py-1 rounded">
-                                        {{ user.status }}
+                                    <span class="text-lg font-semibold">{{ activeUser.user.first_name }} {{ activeUser.user.last_name }}</span>
+                                    <span :class="getStatusBadge(activeUser.status)" class="text-white text-xs px-2 py-1 rounded">
+                                        {{ activeUser.status }}
                                     </span>
                                 </div>
                                 <div class="text-sm mt-2">
-                                    <div><strong>User ID:</strong> {{ user.id }}</div>
+                                    <div><strong>User ID:</strong> {{ activeUser.user.id }}</div>
                                 </div>
                             </div>
                         </template>
