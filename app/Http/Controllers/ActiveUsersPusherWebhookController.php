@@ -28,6 +28,7 @@ class ActiveUsersPusherWebhookController extends Controller
         // If it's 'member_added'
         if ($eventName === 'member_added') {
             // Add a new record to the database, if it doesn't already exist
+            Log::debug('member adding');
             ActiveUser::firstOrCreate([
                 'user_id' => $userId,
                 'status'  => 'Waiting'
@@ -36,6 +37,7 @@ class ActiveUsersPusherWebhookController extends Controller
         // If it's 'member_removed'
         else if ($eventName === 'member_removed') {
             // If exists, delete it.
+            Log::debug('member removing');
             $activeUser = ActiveUser::where('user_id', $userId)->first();
             if ($activeUser) {
                 $activeUser->delete();
