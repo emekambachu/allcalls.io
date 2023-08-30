@@ -11,6 +11,7 @@ let props = defineProps({
 });
 
 onMounted(() => {
+    console.log('Mounted attaching event listeners');
     window.Echo.channel('active-user-list-updated').listen('ActiveUserListUpdated', e => {
         console.log(e);
     });
