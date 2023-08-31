@@ -22,6 +22,11 @@ onMounted(() => {
         .listen('ActiveUserListUpdated', e => {
             console.log('ActiveUserListUpdated fired, refreshing...');
             refreshPage();
+        })
+
+        .listen('ActiveUserStatusUpdated', e => {
+            console.log('ActiveUserStatusUpdated fired, refreshing...');
+            refreshPage();
         });
 });
 </script>

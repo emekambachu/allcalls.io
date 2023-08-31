@@ -36,7 +36,7 @@ class ActiveUserStatusUpdated implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PresenceChannel('active-users'),
+            new Channel('active-user-events'),
         ];
     }
 }
