@@ -32,6 +32,8 @@ onMounted(() => {
 </script>
 
 <template>
+    <Head title="Active Users" />
+
     <AuthenticatedLayout>
         <template #header>
             <h2 class="text-2xl font-semibold">Active Users</h2>
