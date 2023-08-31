@@ -2,6 +2,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { router } from '@inertiajs/vue3';
 import { onMounted } from "vue";
+import { Head } from "@inertiajs/vue3";
 
 let props = defineProps({
     activeUsers: {
