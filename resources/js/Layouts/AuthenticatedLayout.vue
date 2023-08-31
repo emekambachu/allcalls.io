@@ -166,6 +166,10 @@ const props = defineProps({
                   <img src="/img/clients.png" alt="" />
                   Internal Agents
               </NavLink>
+              <NavLink class="mb-10 gap-2" :href="route('admin.active-users.index')" :active="route().current('admin.active-users.index')">
+                  <img src="/img/clients.png" alt="" />
+                  Active Users
+              </NavLink>
           </div>
           <!-- Page Content -->
           <main class="col-span-4 bg-white rounded-xl mt-16 mb-8">

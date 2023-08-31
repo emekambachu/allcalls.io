@@ -45,6 +45,6 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
     Route::get('/agent/activities/{id}', [\App\Http\Controllers\Admin\InternalAgentController::class, 'getActivity']);
 
-    Route::get('/active-users', [ActiveUsersController::class, 'index']);
+    Route::get('/active-users', [ActiveUsersController::class, 'index'])->name('admin.active-users.index');
     Route::get('/active-users/join', [ActiveUserChannelController::class, 'join']);
 });
