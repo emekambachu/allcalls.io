@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Events\ActiveUserStatusUpdated;
 use App\Models\ActiveUser;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\InteractsWithQueue;
@@ -38,6 +39,8 @@ class UpdateActiveUserStatus
                 'status' => $mappedStatus
             ]);
 
+
+            ActiveUserStatusUpdated::dispatch($activeUser);
             Log::debug('Status changed for user ' . $event->user->id . ' ' . $mappedStatus);
             return;
         }
