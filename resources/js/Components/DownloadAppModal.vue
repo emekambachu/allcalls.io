@@ -65,11 +65,6 @@ let close = () => {
                     <div class="text-center mt-2">
                         <a href="#"><img style="max-width: 200px;margin: auto; " src="/img/google-store.png" /></a>
                         <a href="#"><img style="max-width: 200px;margin: auto; " src="/img/app-store.png" /></a>
-                        <a :href="route('destop.device')"
-                            class="px-9 py-4 mb-7 mt-3 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
-                            type="button">
-                            Desktop Devices
-                        </a>
                     </div>
                 </div>
             </div>
