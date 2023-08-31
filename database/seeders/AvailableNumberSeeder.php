@@ -18,6 +18,8 @@ class AvailableNumberSeeder extends Seeder
             '2178292289',
             '4327555268',
             '7542270877',
+
+            // new numbers:
         ];
 
         foreach ($phones as $phone) {
