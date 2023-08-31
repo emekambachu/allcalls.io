@@ -6,9 +6,10 @@ let props = defineProps({
   transactions: {
     type: Object,
   },
+  isInternalAgent: Boolean
 });
 
-console.log(props.transactions);
+
 let formatDate = (date) => {
   if (!date) {
     return "";
@@ -46,6 +47,7 @@ let fetchTransactions = (page) => {
 
   router.visit(httpsPage, { method: "get" });
 };
+
 </script>
 
 <template>
@@ -96,18 +98,24 @@ let fetchTransactions = (page) => {
                     {{ formatDate(transaction.created_at) }}
                   </td>
                   <td class="text-gray-300 px-4 py-3">
-                    <span
-                      v-if="transaction.sign"
-                      class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
-                    >
-                      Deposited
-                    </span>
-                    <span
-                      v-else
-                      class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800"
-                    >
-                      Deducted
-                    </span>
+                      <div v-if="isInternalAgent && transaction.bonus">
+                        <span
+                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                        Bonus
+                        </span>
+                      </div>
+
+                      <div v-else>
+                          <span v-if="transaction.sign"
+                                 class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                              Deposited
+                          </span>
+
+                          <span v-else
+                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                              Deducted
+                          </span>
+                      </div>
                   </td>
                 </tr>
               </tbody>
