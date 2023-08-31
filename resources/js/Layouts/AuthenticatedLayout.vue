@@ -6,7 +6,7 @@ import DropdownLink from "@/Components/DropdownLink.vue";
 import NavLink from "@/Components/NavLink.vue";
 import DashboardFooter from "@/Components/DashboardFooter.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
-
+import DownloadAppModal from "@/Components/DownloadAppModal.vue";
 const showingNavigationDropdown = ref(false);
 
 let formatMoney = (amount) => {
@@ -17,7 +17,7 @@ let formatMoney = (amount) => {
 const props = defineProps({
   role: String,
 });
-
+let appDownloadModal = ref(false)
 </script>
 
 <template>
@@ -28,7 +28,7 @@ const props = defineProps({
           Download the mobile app and start buying calls now!
         </div>
         <div>
-          <button type="button"
+          <button type="button" @click="appDownloadModal = true"
             class="px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
             Download App
           </button>
@@ -44,9 +44,9 @@ const props = defineProps({
               <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                  <Link
+                  <Link 
                     class="mt-4 bg-clip-text text-4xl text-transparent bg-gradient-to-r from-blue-400 to-green-500 font-bold uppercase tracking-wider"
-                    :href="route('dashboard')">
+                    :href="route('admin.dashboard')">
                   <!-- AllCalls.io -->
                   <img style="max-width: 200px" src="/img/new-logo.png" />
                   </Link>
@@ -608,7 +608,7 @@ const props = defineProps({
       </div>
       <!-- User Navigation Menu -->
 
-
+      <DownloadAppModal :appDownloadModal="appDownloadModal" @close="appDownloadModal = false" />
 
       <DashboardFooter></DashboardFooter>
     </div>
