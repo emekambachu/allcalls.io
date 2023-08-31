@@ -67,11 +67,11 @@ export default {
     methods: {
         getStatusBadge(status) {
             switch (status) {
-                case "Listening for calls":
+                case "Waiting":
                     return "bg-green-400";
                 case "Ringing":
                     return "bg-yellow-400";
-                case "On-going call":
+                case "Talking":
                     return "bg-red-400";
                 default:
                     return "bg-gray-400";
