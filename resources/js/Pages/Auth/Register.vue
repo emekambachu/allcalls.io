@@ -241,8 +241,10 @@ let submit = () => {
           </label>
         </div>
         <div v-if="firstStepErrors.consent" class="text-red-500 ml-5" v-text="firstStepErrors.consent[0]"></div>
-        <div class="flex items-center justify-end mt-4">
-          <PrimaryButton type="button" class="ml-4" @click.prevent="submit">Submit</PrimaryButton>
+        <div class="flex items-center justify-end mt-4" :class="{ 'opacity-25': form.processing ||  isLoading}" :disabled="form.processing">
+          <PrimaryButton type="button" class="ml-4" @click.prevent="submit">
+              <global-spinner :spinner="isLoading" />Submit
+          </PrimaryButton>
         </div>
       </div>
     </form>
