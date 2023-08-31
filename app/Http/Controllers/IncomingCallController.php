@@ -126,6 +126,7 @@ class IncomingCallController extends Controller
 
         $onlineUsers = OnlineUser::byCallTypeAndState($callType, $stateModel)
             ->withSufficientBalance()
+            ->withActiveUserWaitingStatus()
             ->get();
 
         $onlineUsers = OnlineUser::prioritizeInternalAgents($onlineUsers);
@@ -192,6 +193,7 @@ class IncomingCallController extends Controller
         // Fetch all online users who have selected the same call type and state
         $onlineUsers = OnlineUser::byCallTypeAndState($callType, $stateModel)
             ->withSufficientBalance()
+            ->withActiveUserWaitingStatus()
             ->get();
 
         $onlineUsers = OnlineUser::prioritizeInternalAgents($onlineUsers);
@@ -307,25 +309,25 @@ class IncomingCallController extends Controller
     public function getAvailableNumberForUser($userId, $from, $callTypeId)
     {
         // This method should return one of the available numbers and associate it with the selected user
-    
+
         // First, try to find an available number already associated with the user
         $availableNumber = AvailableNumber::where('user_id', $userId)
-                                          ->orWhere(function ($query) {
-                                              $query->whereNull('user_id');
-                                          })
-                                          ->first();
-    
+            ->orWhere(function ($query) {
+                $query->whereNull('user_id');
+            })
+            ->first();
+
         // Uncomment the lines below for temporary testing as needed
         // $availableNumber = AvailableNumber::wherePhone('+441156471655')->first();
         // $availableNumber = AvailableNumber::wherePhone('+441146971410')->first();
         // $availableNumber = AvailableNumber::wherePhone('7542270877')->first();
-    
+
         // If there is no available number
         if (!$availableNumber) {
             Log::error('No available number found');
             return '<Response><Say voice="alice" language="en-US">All of our agents are currently busy. Please try again later.</Say></Response>';
         }
-    
+
         // If this is a new available number, associate it with the user
         if (is_null($availableNumber->user_id)) {
             $availableNumber->user_id = $userId;
@@ -333,9 +335,9 @@ class IncomingCallController extends Controller
             $availableNumber->call_type_id = $callTypeId;
             $availableNumber->save();
         }
-    
+
         return $availableNumber;
-    }    
+    }
 
     private function getStateFromPhoneNumber($phoneNumber)
     {
