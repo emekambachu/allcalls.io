@@ -21,7 +21,7 @@ class AvailableNumberSeeder extends Seeder
         ];
 
         foreach ($phones as $phone) {
-            AvailableNumber::create(['phone' => $phone]);
+            AvailableNumber::firstOrCreate(['phone' => $phone]);
         }
     }
 }
