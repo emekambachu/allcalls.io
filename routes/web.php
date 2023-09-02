@@ -45,7 +45,6 @@ require 'admin.php';
 
 Route::get('/transactions', [TransactionsController::class, 'index'])->middleware(['auth', 'verified'])->name('transactions.index');
 Route::delete('/transactions/{transaction}', [TransactionsController::class, 'destroy'])->middleware(['auth', 'verified'])->name('transactions.destroy');
-Route::get('/destop-device', [DashboardController::class, 'DestopUser'])->name('destop.device');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/registration-steps', [RegisteredUserController::class, 'steps'])->name('registration.steps');
@@ -103,24 +102,9 @@ Route::get('/usage-activities', [UsageActivityController::class, 'index'])->midd
 
 Route::get('/device/token', [TwilioTokenController::class, 'show'])->middleware('auth');
 
-// Route::get('/device/incoming', function() {
-//     return view('incoming');
-// })->middleware('auth');
-
 Route::get('/device/incoming', function() {
-    $clientIdentity = 'Alice';
-    $twiml = <<<XML
-    <?xml version="1.0" encoding="UTF-8"?>
-    <Response>
-        <Dial callerId="Your-Twilio-Number-Here">
-            <Client>{$clientIdentity}</Client>
-        </Dial>
-    </Response>
-    XML;
-    return response($twiml, 200)
-    ->header('Content-Type', 'text/xml');
+    return view('incoming');
 })->middleware('auth');
-
 
 Route::get('/clients', [ClientsController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.index');
 Route::patch('/clients/{client}', [ClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.update');
