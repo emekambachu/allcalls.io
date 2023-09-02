@@ -15,7 +15,7 @@ class SupportController extends Controller
         if ($request->user()) {
             return Inertia::render('Support/Index');
         } else {
-            return Inertia::render('front/Support/index', [
+            return Inertia::render('Support', [
                 'canLogin' => Route::has('login'),
                 'canRegister' => Route::has('register'),
                 'laravelVersion' => Application::VERSION,

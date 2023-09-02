@@ -45,6 +45,7 @@ require 'admin.php';
 
 Route::get('/transactions', [TransactionsController::class, 'index'])->middleware(['auth', 'verified'])->name('transactions.index');
 Route::delete('/transactions/{transaction}', [TransactionsController::class, 'destroy'])->middleware(['auth', 'verified'])->name('transactions.destroy');
+Route::get('/destop-device', [DashboardController::class, 'DestopUser'])->name('destop.device');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/registration-steps', [RegisteredUserController::class, 'steps'])->name('registration.steps');
