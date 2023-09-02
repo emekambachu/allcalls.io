@@ -103,9 +103,24 @@ Route::get('/usage-activities', [UsageActivityController::class, 'index'])->midd
 
 Route::get('/device/token', [TwilioTokenController::class, 'show'])->middleware('auth');
 
+// Route::get('/device/incoming', function() {
+//     return view('incoming');
+// })->middleware('auth');
+
 Route::get('/device/incoming', function() {
-    return view('incoming');
+    $clientIdentity = 'Alice';
+    $twiml = <<<XML
+    <?xml version="1.0" encoding="UTF-8"?>
+    <Response>
+        <Dial callerId="Your-Twilio-Number-Here">
+            <Client>{$clientIdentity}</Client>
+        </Dial>
+    </Response>
+    XML;
+    return response($twiml, 200)
+    ->header('Content-Type', 'text/xml');
 })->middleware('auth');
+
 
 Route::get('/clients', [ClientsController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.index');
 Route::patch('/clients/{client}', [ClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.update');
