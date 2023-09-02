@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head } from "@inertiajs/vue3";
+import { Head, router } from "@inertiajs/vue3";
 import { Bar } from "vue-chartjs";
 import {
   Chart as ChartJS,
@@ -11,7 +11,7 @@ import {
   CategoryScale,
   LinearScale,
 } from "chart.js";
-import { reactive } from "vue";
+import { reactive, ref, watch } from "vue";
 
 ChartJS.register(
   Title,
@@ -29,7 +29,57 @@ const props = defineProps({
   totalAmountSpent: Number,
   averageCallDuration: Number,
 });
+import { endOfMonth, endOfYear, startOfMonth, subDays, startOfYear, subMonths, startOfWeek, endOfWeek, subWeeks, startOfQuarter, endOfQuarter, subQuarters } from 'date-fns';
+import axios from "axios";
 
+const presetDates = ref([
+  { label: 'Today', value: [new Date(), new Date()] },
+  {
+    label: 'Today (Slot)',
+    value: [new Date(), new Date()],
+    slot: 'preset-date-range-button'
+  },
+  { label: 'This month', value: [startOfMonth(new Date()), endOfMonth(new Date())] },
+  {
+    label: 'Last month',
+    value: [startOfMonth(subMonths(new Date(), 1)), endOfMonth(subMonths(new Date(), 1))],
+  },
+  { label: 'This year', value: [startOfYear(new Date()), endOfYear(new Date())] },
+  {
+    label: 'Last 7 Days',
+    value: [subDays(new Date(), 6), new Date()],
+  },
+  {
+    label: 'Last 14 Days',
+    value: [subDays(new Date(), 13), new Date()],
+  },
+  {
+    label: 'Last 30 Days',
+    value: [subDays(new Date(), 29), new Date()],
+  },
+  {
+    label: 'This Week',
+    value: [startOfWeek(new Date()), endOfWeek(new Date())],
+  },
+  {
+    label: 'Last Week',
+    value: [startOfWeek(subWeeks(new Date(), 1)), endOfWeek(subWeeks(new Date(), 1))],
+  },
+  {
+    label: 'This Quarter',
+    value: [startOfQuarter(new Date()), endOfQuarter(new Date())],
+  },
+  {
+    label: 'Last Quarter',
+    value: [startOfQuarter(subQuarters(new Date(), 1)), endOfQuarter(subQuarters(new Date(), 1))],
+  },
+]);
+let dateRange = ref([])
+watch(dateRange, (newVal) => {
+  if (newVal) {
+    fetechDashboard();
+  }
+});
 console.log("spendData", props.spendData);
 console.log("callData", props.callData);
 
@@ -96,14 +146,27 @@ let formatMoney = (amount) => {
     .toFixed(2)
     .replace(/\d(?=(\d{3})+\.)/g, "$&,");
 };
+let fetechDashboard = async (val) => {
+  try {
+    const queryParams = {
+      from: dateRange.value[0],
+      to: dateRange.value[1],
+    };
+    const response = await axios.get('/dashboard', {
+      params: queryParams,
+    });
+    console.log(response);
+  } catch (error) {
+    console.log(error);
+  }
+}
 </script>
 
 <template>
   <Head title="Dashboard" />
   <AuthenticatedLayout>
     <template #header>
-      <h2
-      >
+      <h2>
         Dashboard
       </h2>
     </template>
@@ -116,52 +179,59 @@ let formatMoney = (amount) => {
         </div>
       </div>
     </div>
-
     <div class="px-16">
-      <div
-        class="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
-      >
-        <div
-          class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto"
-        >
+      <div class="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
+        <VueDatePicker v-model="dateRange" range :preset-dates="presetDates" placeholder="Picker date range"
+          format="dd-MMM-yyyy" :multi-calendars="{ solo: true }" />
+      </div>
+    </div>
+    <div class="px-16">
+      <div class="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow relative">
           <p class="mb-1 text-sm text-gray-300">Total Calls (Past 7 Days)</p>
-          <h2
-            class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white"
-          >
+          <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
             {{ totalCalls }}
           </h2>
+          <button class="absolute right-2 bottom-3 px-3 py-1 flex"
+            style="background: #ecfef3; border-radius: 10px;color: #168054;"> <svg
+              class="w-3 h-3  mr-2 text-gray-800 dark:text-white" style="margin-top: 6px;color: #168054;"
+              aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M5 13V1m0 0L1 5m4-4 4 4" />
+            </svg> 60%</button>
         </div>
-        <div
-          class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto"
-        >
+        <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative">
           <p class="mb-1 text-sm text-gray-300">Total Spent (Past 7 Days)</p>
-          <h2
-            class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white"
-          >
+          <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
             ${{ formatMoney(totalAmountSpent) }}
           </h2>
+          <button class="absolute right-2 bottom-3 px-3 py-1 flex"
+            style="background: #fef4f3; border-radius: 10px;color: #ba3228;"> <svg
+              class="w-3 h-3 text-gray-800 mr-2 dark:text-white" style="margin-top: 6px;color: #ba3228;"
+              aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M5 1v12m0 0 4-4m-4 4L1 9" />
+            </svg> -10%</button>
         </div>
-        <div
-          class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto"
-        >
+        <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative">
           <p class="mb-1 text-sm text-gray-300">
             Average Call Duration (Past 7 Days)
           </p>
-          <h2
-            class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white"
-          >
+          <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
             {{ formatTime(averageCallDuration) }}
           </h2>
+          <button class="absolute right-2 bottom-3 px-3 py-1 flex"
+            style="background: #ecfef3; border-radius: 10px;color: #168054;"> <svg
+              class="w-3 h-3  mr-2 text-gray-800 dark:text-white" style="margin-top: 6px;color: #168054;"
+              aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M5 13V1m0 0L1 5m4-4 4 4" />
+            </svg> 90%</button>
         </div>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <Bar
-            v-if="spendData.length"
-            id="spend-chart-id"
-            :options="spendChartOptions"
-            :data="spendChartData"
-          />
+          <Bar v-if="spendData.length" id="spend-chart-id" :options="spendChartOptions" :data="spendChartData" />
 
           <div v-else class="text-center py-10 text-gray-300 text-sm">
             <div class="py-10 bg-sky-950 rounded shadow-xl">
@@ -170,12 +240,7 @@ let formatMoney = (amount) => {
           </div>
         </div>
         <div>
-          <Bar
-            v-if="callData.length"
-            id="call-chart-id"
-            :options="chartOptions"
-            :data="callChartData"
-          />
+          <Bar v-if="callData.length" id="call-chart-id" :options="chartOptions" :data="callChartData" />
 
           <div v-else class="text-center py-10 text-gray-300 text-sm">
             <div class="py-10 bg-sky-950 rounded shadow-xl">

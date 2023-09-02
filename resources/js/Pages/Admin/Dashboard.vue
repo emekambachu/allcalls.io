@@ -11,7 +11,55 @@ import {
   CategoryScale,
   LinearScale,
 } from "chart.js";
-import { reactive } from "vue";
+import { ref, watch, reactive, computed } from "vue";
+import axios from "axios";
+import { router, usePage } from "@inertiajs/vue3"
+
+// import { endOfMonth, endOfYear, startOfMonth, startOfYear, subMonths } from 'date-fns';
+import { endOfMonth, endOfYear, startOfMonth, subDays, startOfYear, subMonths, startOfWeek, endOfWeek, subWeeks, startOfQuarter, endOfQuarter, subQuarters } from 'date-fns';
+
+const presetDates = ref([
+  { label: 'Today', value: [new Date(), new Date()] },
+  {
+    label: 'Today (Slot)',
+    value: [new Date(), new Date()],
+    slot: 'preset-date-range-button'
+  },
+  { label: 'This month', value: [startOfMonth(new Date()), endOfMonth(new Date())] },
+  {
+    label: 'Last month',
+    value: [startOfMonth(subMonths(new Date(), 1)), endOfMonth(subMonths(new Date(), 1))],
+  },
+  { label: 'This year', value: [startOfYear(new Date()), endOfYear(new Date())] },
+  {
+    label: 'Last 7 Days',
+    value: [subDays(new Date(), 6), new Date()],
+  },
+  {
+    label: 'Last 14 Days',
+    value: [subDays(new Date(), 13), new Date()],
+  },
+  {
+    label: 'Last 30 Days',
+    value: [subDays(new Date(), 29), new Date()],
+  },
+  {
+    label: 'This Week',
+    value: [startOfWeek(new Date()), endOfWeek(new Date())],
+  },
+  {
+    label: 'Last Week',
+    value: [startOfWeek(subWeeks(new Date(), 1)), endOfWeek(subWeeks(new Date(), 1))],
+  },
+  {
+    label: 'This Quarter',
+    value: [startOfQuarter(new Date()), endOfQuarter(new Date())],
+  },
+  {
+    label: 'Last Quarter',
+    value: [startOfQuarter(subQuarters(new Date(), 1)), endOfQuarter(subQuarters(new Date(), 1))],
+  },
+]);
 
 ChartJS.register(
   Title,
@@ -28,11 +76,17 @@ const props = defineProps({
   totalCalls: Number,
   totalAmountSpent: Number,
   averageCallDuration: Number,
+  totalUserCount: Number,
+  activeUsersCount: Number
 });
 
-console.log("spendData", props.spendData);
-console.log("callData", props.callData);
 
+let dateRange = ref([])
+watch(dateRange, (newVal) => {
+  if (newVal) {
+    fetechDashboard();
+  }
+});
 let spendChartData = reactive({
   labels: props.spendData.map((item) => item.date),
   datasets: [
@@ -96,15 +150,33 @@ let formatMoney = (amount) => {
     .toFixed(2)
     .replace(/\d(?=(\d{3})+\.)/g, "$&,");
 };
+let locale = ref({
+  lang: 'fr', // or 'en', 'es', 'de',
+  weekDays: ['L', 'M', 'M', 'J', 'V', 'S', 'D'], // you can surcharge weekDays too
+})
+
+let fetechDashboard = async (val) => {
+  try {
+
+    const queryParams = {
+      from: dateRange.value[0],
+      to: dateRange.value[1],
+    };
+   const response =  await axios.get('/admin/dashboard', {
+      params: queryParams,
+    });
+    console.log(response);
+  } catch (error) {
+    console.log(error);
+  }
+}
 </script>
 
 <template>
   <Head title="Dashboard" />
   <AuthenticatedLayout>
     <template #header>
-      <h2
-        class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
-      >
+      <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
         Dashboard
       </h2>
     </template>
@@ -118,51 +190,40 @@ let formatMoney = (amount) => {
       </div>
     </div>
 
+
     <div class="px-16">
-      <div
-        class="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
-      >
-        <div
-          class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto"
-        >
-          <p class="mb-1 text-sm text-gray-300">Total Calls (Past 7 Days)</p>
-          <h2
-            class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white"
-          >
-            {{ totalCalls }}
+      <div class="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
+        <VueDatePicker v-model="dateRange" range :preset-dates="presetDates" placeholder="Picker date range"
+          format="dd-MMM-yyyy" :multi-calendars="{ solo: true }" />
+      </div>
+    </div>
+    <div class="px-16">
+      <div class="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto">
+          <p class="mb-1 text-sm text-gray-300">Total Users</p>
+          <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
+            {{ totalUserCount }}
           </h2>
         </div>
-        <div
-          class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto"
-        >
-          <p class="mb-1 text-sm text-gray-300">Total Spent (Past 7 Days)</p>
-          <h2
-            class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white"
-          >
+        <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto">
+          <p class="mb-1 text-sm text-gray-300">
+            Active Users
+          </p>
+          <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
+            {{ activeUsersCount }}
+          </h2>
+        </div>
+        <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto">
+          <p class="mb-1 text-sm text-gray-300">Total Revenue</p>
+          <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
             ${{ formatMoney(totalAmountSpent) }}
           </h2>
         </div>
-        <div
-          class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto"
-        >
-          <p class="mb-1 text-sm text-gray-300">
-            Average Call Duration (Past 7 Days)
-          </p>
-          <h2
-            class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white"
-          >
-            {{ formatTime(averageCallDuration) }}
-          </h2>
-        </div>
+
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <Bar
-            v-if="spendData.length"
-            id="spend-chart-id"
-            :options="spendChartOptions"
-            :data="spendChartData"
-          />
+          <Bar v-if="spendData.length" id="spend-chart-id" :options="spendChartOptions" :data="spendChartData" />
 
           <div v-else class="text-center py-10 text-gray-300 text-sm">
             <div class="py-10 bg-sky-950 rounded shadow-xl">
@@ -171,12 +232,7 @@ let formatMoney = (amount) => {
           </div>
         </div>
         <div>
-          <Bar
-            v-if="callData.length"
-            id="call-chart-id"
-            :options="chartOptions"
-            :data="callChartData"
-          />
+          <Bar v-if="callData.length" id="call-chart-id" :options="chartOptions" :data="callChartData" />
 
           <div v-else class="text-center py-10 text-gray-300 text-sm">
             <div class="py-10 bg-sky-950 rounded shadow-xl">
