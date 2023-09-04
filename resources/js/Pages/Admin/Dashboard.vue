@@ -11,7 +11,7 @@ import {
   CategoryScale,
   LinearScale,
 } from "chart.js";
-import { ref, watch, reactive, computed } from "vue";
+import { ref, watch, reactive, computed, onMounted } from "vue";
 import axios from "axios";
 import { router, usePage } from "@inertiajs/vue3"
 
@@ -77,15 +77,43 @@ const props = defineProps({
   totalAmountSpent: Number,
   averageCallDuration: Number,
   totalUserCount: Number,
-  activeUsersCount: Number
+  activeUsersCount: Number,
+  userDiffInPercentage: Number,
+  activeUsersDiffInPercentage: Number,
+  diffInRevenuePercentage: Number,
+  from: String,
+  to: String,
 });
 
-
+console.log('from', props.from);
+console.log('to', props.to);
 let dateRange = ref([])
 watch(dateRange, (newVal) => {
   if (newVal) {
     fetechDashboard();
   }
+});
+const formatDate = (date) => {
+  return date.toLocaleString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    timeZoneName: 'short',
+  });
+};
+const watchFromTo = () => {
+  if (props.from && props.to) {
+    const fromDate = new Date(props.from);
+    const toDate = new Date(props.to);
+    dateRange.value.push(formatDate(fromDate), formatDate(toDate));
+  }
+};
+onMounted(() => {
+  watchFromTo();
 });
 let spendChartData = reactive({
   labels: props.spendData.map((item) => item.date),
@@ -162,12 +190,22 @@ let fetechDashboard = async (val) => {
       from: dateRange.value[0],
       to: dateRange.value[1],
     };
-   const response =  await axios.get('/admin/dashboard', {
-      params: queryParams,
-    });
-    console.log(response);
+    router.visit('/admin/dashboard', {
+      data: queryParams,
+    })
+    //  const response =  await axios.get('/admin/dashboard', {
+    //     params: queryParams,
+    //   });
+    //   console.log(response);
   } catch (error) {
     console.log(error);
+  }
+}
+let formatNumberWith5DecimalPlaces = (number) =>  {
+  if (Number.isInteger(number)) {
+    return number.toString(); // Convert to string without decimal places for integers
+  } else {
+    return number.toFixed(3).replace(/\.?0+$/, ''); // Format with 5 decimal places and remove trailing zeros
   }
 }
 </script>
@@ -199,25 +237,67 @@ let fetechDashboard = async (val) => {
     </div>
     <div class="px-16">
       <div class="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto">
+        <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative">
           <p class="mb-1 text-sm text-gray-300">Total Users</p>
           <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
-            {{ totalUserCount }}
+            {{ totalUserCount }} 
           </h2>
+          <button v-if="userDiffInPercentage && userDiffInPercentage > 0" class="absolute right-2 bottom-3 px-3 py-1 flex"
+            style="background: #ecfef3; border-radius: 10px;color: #168054;"> <svg
+              class="w-3 h-3  mr-2 text-gray-800 dark:text-white" style="margin-top: 6px;color: #168054;"
+              aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M5 13V1m0 0L1 5m4-4 4 4" />
+          </svg> {{ formatNumberWith5DecimalPlaces(userDiffInPercentage)  }}%</button>
+          <button v-if="userDiffInPercentage && userDiffInPercentage > 0" class="absolute right-2 bottom-3 px-3 py-1 flex"
+            style="background: #fef4f3; border-radius: 10px;color: #ba3228;"> <svg
+              class="w-3 h-3 text-gray-800 mr-2 dark:text-white" style="margin-top: 6px;color: #ba3228;"
+              aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M5 1v12m0 0 4-4m-4 4L1 9" />
+            </svg> {{ formatNumberWith5DecimalPlaces(userDiffInPercentage)   }}%</button>
         </div>
-        <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto">
+        <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative">
           <p class="mb-1 text-sm text-gray-300">
             Active Users
           </p>
           <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
             {{ activeUsersCount }}
           </h2>
+          <button v-if="activeUsersDiffInPercentage && activeUsersDiffInPercentage > 0" class="absolute right-2 bottom-3 px-3 py-1 flex"
+            style="background: #ecfef3; border-radius: 10px;color: #168054;"> <svg
+              class="w-3 h-3  mr-2 text-gray-800 dark:text-white" style="margin-top: 6px;color: #168054;"
+              aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M5 13V1m0 0L1 5m4-4 4 4" />
+          </svg> {{ formatNumberWith5DecimalPlaces(activeUsersDiffInPercentage)    }}%</button>
+          <button v-if="activeUsersDiffInPercentage && activeUsersDiffInPercentage > 0" class="absolute right-2 bottom-3 px-3 py-1 flex"
+            style="background: #fef4f3; border-radius: 10px;color: #ba3228;"> <svg
+              class="w-3 h-3 text-gray-800 mr-2 dark:text-white" style="margin-top: 6px;color: #ba3228;"
+              aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M5 1v12m0 0 4-4m-4 4L1 9" />
+            </svg> {{ formatNumberWith5DecimalPlaces(activeUsersDiffInPercentage)   }}%</button>
         </div>
-        <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto">
+        <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative">
           <p class="mb-1 text-sm text-gray-300">Total Revenue</p>
           <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
-            ${{ formatMoney(totalAmountSpent) }}
+            ${{ formatMoney(totalAmountSpent) }} 
           </h2>
+          <button v-if="diffInRevenuePercentage && diffInRevenuePercentage > 0" class="absolute right-2 bottom-3 px-3 py-1 flex"
+            style="background: #ecfef3; border-radius: 10px;color: #168054;"> <svg
+              class="w-3 h-3  mr-2 text-gray-800 dark:text-white" style="margin-top: 6px;color: #168054;"
+              aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M5 13V1m0 0L1 5m4-4 4 4" />
+          </svg> {{ formatNumberWith5DecimalPlaces(diffInRevenuePercentage)   }}%</button>
+          <button v-if="diffInRevenuePercentage && diffInRevenuePercentage < 0" class="absolute right-2 bottom-3 px-3 py-1 flex"
+            style="background: #fef4f3; border-radius: 10px;color: #ba3228;"> <svg
+              class="w-3 h-3 text-gray-800 mr-2 dark:text-white" style="margin-top: 6px;color: #ba3228;"
+              aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M5 1v12m0 0 4-4m-4 4L1 9" />
+            </svg> {{ formatNumberWith5DecimalPlaces(diffInRevenuePercentage)   }}%</button>
         </div>
 
       </div>

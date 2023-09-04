@@ -107,13 +107,12 @@ class DashboardController extends Controller
             ->groupBy('date')
             ->orderBy('date', 'ASC')
             ->get();
-
         return Inertia::render('Admin/Dashboard', [
             'from' => isset($request->from)?$request->from:'',
             'to' => isset($request->to)?$request->to:'',
             'userDiffInPercentage' => isset($userDiffInPercentage)?$userDiffInPercentage:0,
             'activeUsersDiffInPercentage' => isset($activeUsersDiffInPercentage)?$activeUsersDiffInPercentage:0,
-            'diffInRevenue' => isset($diffInRevenue)?$diffInRevenue:0,
+            'diffInRevenuePercentage' => isset($diffInRevenue)?$diffInRevenue:0,
             'totalUserCount' => $totalUserCount,
             'activeUsersCount' => $activeUsersCount,
             'totalAmountSpent' => $totalRevenue,

@@ -11,7 +11,7 @@ import {
   CategoryScale,
   LinearScale,
 } from "chart.js";
-import { reactive, ref, watch } from "vue";
+import { reactive, ref, watch, onMounted } from "vue";
 
 ChartJS.register(
   Title,
@@ -79,6 +79,28 @@ watch(dateRange, (newVal) => {
   if (newVal) {
     fetechDashboard();
   }
+});
+const formatDate = (date) => {
+  return date.toLocaleString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    timeZoneName: 'short',
+  });
+};
+const watchFromTo = () => {
+  if (props.from && props.to) {
+    const fromDate = new Date(props.from);
+    const toDate = new Date(props.to);
+    dateRange.value.push(formatDate(fromDate), formatDate(toDate));
+  }
+};
+onMounted(() => {
+  watchFromTo();
 });
 console.log("spendData", props.spendData);
 console.log("callData", props.callData);
@@ -152,10 +174,13 @@ let fetechDashboard = async (val) => {
       from: dateRange.value[0],
       to: dateRange.value[1],
     };
-    const response = await axios.get('/dashboard', {
-      params: queryParams,
-    });
-    console.log(response);
+    router.visit('/dashboard', {
+      data: queryParams,
+    })
+    // const response = await axios.get('/dashboard', {
+    //   params: queryParams,
+    // });
+    // console.log(response);
   } catch (error) {
     console.log(error);
   }
