@@ -106,13 +106,13 @@ class DashboardController extends Controller
 
         //Graphs
         $spendData = Call::select(DB::raw('date(call_taken) as date'), DB::raw('sum(amount_spent) as sum'))
-            ->whereBetween('call_taken', '>=', $fromTo)
+            ->whereBetween('call_taken', $fromTo)
             ->groupBy('date')
             ->orderBy('date', 'ASC')
             ->get();
 
         $callData = Call::select(DB::raw('date(call_taken) as date'), DB::raw('count(*) as count'))
-            ->whereBetween('call_taken', '>=', $fromTo)
+            ->whereBetween('call_taken', $fromTo)
             ->groupBy('date')
             ->orderBy('date', 'ASC')
             ->get();
