@@ -19,6 +19,7 @@ class DashboardController extends Controller
         $fromTo = [];
         $previousTo = [];
         $excludeRoles = Role::whereIn('name', ['admin'])->pluck('id');
+        $sevenDaysAgo = Carbon::now()->subDays(7);
 
         if (isset($request->from) && $request->from != '' && isset($request->to) && $request->to != '') {
             $fromDate = Carbon::parse($request->from);
@@ -60,9 +61,11 @@ class DashboardController extends Controller
             if (count($excludeRoles)) {
                 $query->whereIn('role_id', $excludeRoles);
             }
-        })->where(function ($query) use ($fromTo) {
+        })->where(function ($query) use ($fromTo, $sevenDaysAgo) {
             if (count($fromTo)) {
                 $query->whereBetween('created_at', $fromTo);
+            } else {
+                $query->where('created_at', '>=', $sevenDaysAgo);
             }
         })->count();
 
@@ -72,9 +75,11 @@ class DashboardController extends Controller
         }
 
 
-        $activeUsersCount = ActiveUser::where(function ($query) use ($fromTo) {
+        $activeUsersCount = ActiveUser::where(function ($query) use ($fromTo, $sevenDaysAgo) {
             if (count($fromTo)) {
                 $query->whereBetween('created_at', $fromTo);
+            } else {
+                $query->where('created_at', '>=', $sevenDaysAgo);
             }
         })->count();
 
@@ -82,10 +87,11 @@ class DashboardController extends Controller
             $activeUsersDiffInPercentage = (($activeUsersCount - $previousActiveUsers) / $previousActiveUsers) * 100;
         }
 
-
-        $totalRevenue = Call::where(function ($query) use ($fromTo) {
+        $totalRevenue = Call::where(function ($query) use ($fromTo, $sevenDaysAgo) {
             if (count($fromTo)) {
                 $query->whereBetween('call_taken', $fromTo);
+            } else {
+                $query->where('call_taken', '>=', $sevenDaysAgo);
             }
         })->sum('amount_spent');
 
@@ -94,8 +100,6 @@ class DashboardController extends Controller
         }
 
         //Graphs
-        $sevenDaysAgo = Carbon::now()->subDays(7);
-
         $spendData = Call::select(DB::raw('date(call_taken) as date'), DB::raw('sum(amount_spent) as sum'))
             ->where('call_taken', '>=', $sevenDaysAgo)
             ->groupBy('date')
@@ -108,11 +112,11 @@ class DashboardController extends Controller
             ->orderBy('date', 'ASC')
             ->get();
         return Inertia::render('Admin/Dashboard', [
-            'from' => isset($request->from)?$request->from:'',
-            'to' => isset($request->to)?$request->to:'',
-            'userDiffInPercentage' => isset($userDiffInPercentage)?$userDiffInPercentage:0,
-            'activeUsersDiffInPercentage' => isset($activeUsersDiffInPercentage)?$activeUsersDiffInPercentage:0,
-            'diffInRevenuePercentage' => isset($diffInRevenue)?$diffInRevenue:0,
+            'from' => isset($request->from) ? $request->from : '',
+            'to' => isset($request->to) ? $request->to : '',
+            'userDiffInPercentage' => isset($userDiffInPercentage) ? $userDiffInPercentage : 0,
+            'activeUsersDiffInPercentage' => isset($activeUsersDiffInPercentage) ? $activeUsersDiffInPercentage : 0,
+            'diffInRevenuePercentage' => isset($diffInRevenue) ? $diffInRevenue : 0,
             'totalUserCount' => $totalUserCount,
             'activeUsersCount' => $activeUsersCount,
             'totalAmountSpent' => $totalRevenue,

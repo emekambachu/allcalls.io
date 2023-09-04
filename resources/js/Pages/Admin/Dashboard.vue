@@ -240,7 +240,7 @@ let formatNumberWith5DecimalPlaces = (number) =>  {
         <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative">
           <p class="mb-1 text-sm text-gray-300">Total Users</p>
           <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
-            {{ totalUserCount }} 
+            {{ totalUserCount }}
           </h2>
           <button v-if="userDiffInPercentage && userDiffInPercentage > 0" class="absolute right-2 bottom-3 px-3 py-1 flex"
             style="background: #ecfef3; border-radius: 10px;color: #168054;"> <svg
@@ -249,7 +249,7 @@ let formatNumberWith5DecimalPlaces = (number) =>  {
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M5 13V1m0 0L1 5m4-4 4 4" />
           </svg> {{ formatNumberWith5DecimalPlaces(userDiffInPercentage)  }}%</button>
-          <button v-if="userDiffInPercentage && userDiffInPercentage > 0" class="absolute right-2 bottom-3 px-3 py-1 flex"
+          <button v-if="userDiffInPercentage && userDiffInPercentage < 0" class="absolute right-2 bottom-3 px-3 py-1 flex"
             style="background: #fef4f3; border-radius: 10px;color: #ba3228;"> <svg
               class="w-3 h-3 text-gray-800 mr-2 dark:text-white" style="margin-top: 6px;color: #ba3228;"
               aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
@@ -271,7 +271,7 @@ let formatNumberWith5DecimalPlaces = (number) =>  {
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M5 13V1m0 0L1 5m4-4 4 4" />
           </svg> {{ formatNumberWith5DecimalPlaces(activeUsersDiffInPercentage)    }}%</button>
-          <button v-if="activeUsersDiffInPercentage && activeUsersDiffInPercentage > 0" class="absolute right-2 bottom-3 px-3 py-1 flex"
+          <button v-if="activeUsersDiffInPercentage && activeUsersDiffInPercentage < 0" class="absolute right-2 bottom-3 px-3 py-1 flex"
             style="background: #fef4f3; border-radius: 10px;color: #ba3228;"> <svg
               class="w-3 h-3 text-gray-800 mr-2 dark:text-white" style="margin-top: 6px;color: #ba3228;"
               aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
@@ -282,7 +282,7 @@ let formatNumberWith5DecimalPlaces = (number) =>  {
         <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative">
           <p class="mb-1 text-sm text-gray-300">Total Revenue</p>
           <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
-            ${{ formatMoney(totalAmountSpent) }} 
+            ${{ formatMoney(totalAmountSpent) }}
           </h2>
           <button v-if="diffInRevenuePercentage && diffInRevenuePercentage > 0" class="absolute right-2 bottom-3 px-3 py-1 flex"
             style="background: #ecfef3; border-radius: 10px;color: #168054;"> <svg
