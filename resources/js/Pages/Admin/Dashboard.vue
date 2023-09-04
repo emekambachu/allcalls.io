@@ -120,7 +120,6 @@ const watchFromTo = () => {
     // Calculate last 7 days if props.from and props.to are not set
     const last7Days = calculateLast7Days();
     dateRange.value.push(last7Days.from, last7Days.to);
-    fetechDashboard()
   }
 };
 
