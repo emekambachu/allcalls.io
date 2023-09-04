@@ -97,18 +97,35 @@ const formatDate = (date) => {
     timeZoneName: 'short',
   });
 };
+
+const calculateLast7Days = () => {
+  const toDate = new Date(); // Today's date
+  const fromDate = new Date();
+  fromDate.setDate(toDate.getDate() - 6); // Subtract 7 days from today
+
+  return {
+    from: formatDate(fromDate),
+    to: formatDate(toDate),
+  };
+};
+
 const watchFromTo = () => {
   if (props.from && props.to) {
     const fromDate = new Date(props.from);
     const toDate = new Date(props.to);
     dateRange.value.push(formatDate(fromDate), formatDate(toDate));
+  } else {
+    // Calculate last 7 days if props.from and props.to are not set
+    const last7Days = calculateLast7Days();
+    dateRange.value.push(last7Days.from, last7Days.to);
+    fetechDashboard()
   }
 };
+
 onMounted(() => {
   watchFromTo();
 });
-console.log("spendData", props.spendData);
-console.log("callData", props.callData);
+
 
 let spendChartData = reactive({
   labels: props.spendData.map((item) => item.date),
@@ -173,15 +190,36 @@ let formatMoney = (amount) => {
     .toFixed(2)
     .replace(/\d(?=(\d{3})+\.)/g, "$&,");
 };
+
+
 let fetechDashboard = async (val) => {
   try {
+    console.log('api call');
+    const from = new Date(dateRange.value[0]);
+    const to = new Date(dateRange.value[1]);
+
+    // Extract month, date, and year components
+    const fromMonth = from.getMonth() + 1; // Add 1 because months are zero-based
+    const fromDate = from.getDate();
+    const fromYear = from.getFullYear();
+
+    const toMonth = to.getMonth() + 1;
+    const toDate = to.getDate();
+    const toYear = to.getFullYear();
+
+    // Format the components as desired (e.g., as "MM-DD-YYYY")
+    const formattedFrom = `${fromMonth}/${fromDate}/${fromYear}`;
+    const formattedTo = `${toMonth}/${toDate}/${toYear}`;
+
     const queryParams = {
-      from: dateRange.value[0],
-      to: dateRange.value[1],
+      from: formattedFrom,
+      to: formattedTo,
     };
+
     router.visit('/dashboard', {
       data: queryParams,
-    })
+    });
+
     // const response = await axios.get('/dashboard', {
     //   params: queryParams,
     // });
@@ -218,14 +256,15 @@ let formatNumberWith5DecimalPlaces = (number) => {
     </div>
     <div class="px-16">
       <div class="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
-        <VueDatePicker v-model="dateRange" range :preset-dates="presetDates" placeholder="Picker date range"
-          format="dd-MMM-yyyy" :multi-calendars="{ solo: true }" />
+        <VueDatePicker v-model="dateRange" range 
+          :preset-dates="presetDates" placeholder="Picker date range" format="dd-MMM-yyyy"
+          :multi-calendars="{ solo: true }" />
       </div>
     </div>
     <div class="px-16">
       <div class="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow relative">
-          <p class="mb-1 text-sm text-gray-300">Total Calls (Past 7 Days)</p>
+          <p class="mb-1 text-sm text-gray-300">Total Calls </p>
           <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
             {{ totalCalls }}
           </h2>
@@ -245,7 +284,7 @@ let formatNumberWith5DecimalPlaces = (number) => {
             </svg> {{ formatNumberWith5DecimalPlaces(callDiffInPercentage) }}%</button>
         </div>
         <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative">
-          <p class="mb-1 text-sm text-gray-300">Total Spent (Past 7 Days)</p>
+          <p class="mb-1 text-sm text-gray-300">Total Spent </p>
           <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
             ${{ formatMoney(totalAmountSpent) }}
           </h2>
@@ -268,7 +307,7 @@ let formatNumberWith5DecimalPlaces = (number) => {
         </div>
         <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative">
           <p class="mb-1 text-sm text-gray-300">
-            Average Call Duration (Past 7 Days)
+            Average Call Duration 
           </p>
           <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
             {{ formatTime(averageCallDuration) }}
@@ -312,4 +351,5 @@ let formatNumberWith5DecimalPlaces = (number) => {
         </div>
       </div>
     </div>
-</AuthenticatedLayout></template>
+  </AuthenticatedLayout>
+</template>

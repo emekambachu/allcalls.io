@@ -99,16 +99,36 @@ const formatDate = (date) => {
     timeZoneName: 'short',
   });
 };
+
+const calculateLast7Days = () => {
+  const toDate = new Date(); // Today's date
+  const fromDate = new Date();
+  fromDate.setDate(toDate.getDate() - 6); // Subtract 7 days from today
+
+  return {
+    from: formatDate(fromDate),
+    to: formatDate(toDate),
+  };
+};
+
 const watchFromTo = () => {
   if (props.from && props.to) {
     const fromDate = new Date(props.from);
     const toDate = new Date(props.to);
     dateRange.value.push(formatDate(fromDate), formatDate(toDate));
+  } else {
+    // Calculate last 7 days if props.from and props.to are not set
+    const last7Days = calculateLast7Days();
+    dateRange.value.push(last7Days.from, last7Days.to);
+    fetechDashboard()
   }
 };
+
 onMounted(() => {
   watchFromTo();
 });
+
+
 let spendChartData = reactive({
   labels: props.spendData.map((item) => item.date),
   datasets: [
@@ -176,43 +196,15 @@ let locale = ref({
   lang: 'fr', // or 'en', 'es', 'de',
   weekDays: ['L', 'M', 'M', 'J', 'V', 'S', 'D'], // you can surcharge weekDays too
 })
-const selectedLabel = ref(''); // Initialize with an empty string
 
-const handleDateRangeChange = (selectedRange) => {
-      // Find the selected label based on the selected range
-      const matchingPreset = presetDates.value.find((preset) => {
-        return (
-          preset.value[0].getTime() === selectedRange[0].getTime() &&
-          preset.value[1].getTime() === selectedRange[1].getTime()
-        );
-      });
+const fetchData = () => {
+  // Fetch data from the API using dateRange.value
+  const from = dateRange.value[0];
+  const to = dateRange.value[1];
 
-      if (matchingPreset) {
-        selectedLabel.value = matchingPreset.label;
-      } else {
-        selectedLabel.value = ''; // Reset the label if no matching preset is found
-      }
-      if(selectedLabel.value == 'This month'){
-        selectedLabel.value = 'this_month'
-      }else if(selectedLabel.value == 'This year'){
-        selectedLabel.value = 'this_year'
-      }else if(selectedLabel.value == 'Last month'){
-        selectedLabel.value = 'last_month'
-      }else{
-        selectedLabel.value = ''
-      }
-      console.log('Selected label:', selectedLabel.value);
- 
-    };
-
-    const fetchData = () => {
-      // Fetch data from the API using dateRange.value
-      const from = dateRange.value[0];
-      const to = dateRange.value[1];
-
-      // Make an API request here with the selected date range
-      console.log('Making API request with date range:', from, to);
-    };
+  // Make an API request here with the selected date range
+  console.log('Making API request with date range:', from, to);
+};
 let fetechDashboard = async (val) => {
   try {
 
@@ -236,7 +228,6 @@ let fetechDashboard = async (val) => {
     const queryParams = {
       from: formattedFrom,
       to: formattedTo,
-      type : selectedLabel.value
     };
 
     router.visit('/admin/dashboard', {
@@ -290,8 +281,8 @@ let formatNumberWith5DecimalPlaces = (number) => {
 
     <div class="px-16">
       <div class="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
-        <VueDatePicker v-model="dateRange" range @internal-model-change="handleDateRangeChange"  :preset-dates="presetDates"
-          placeholder="Picker date range" format="dd-MMM-yyyy" :multi-calendars="{ solo: true }" />
+        <VueDatePicker v-model="dateRange" range :preset-dates="presetDates" placeholder="Picker date range"
+          format="dd-MMM-yyyy" :multi-calendars="{ solo: true }" />
       </div>
     </div>
     <div class="px-16">
@@ -385,4 +376,5 @@ let formatNumberWith5DecimalPlaces = (number) => {
         </div>
       </div>
     </div>
-</AuthenticatedLayout></template>
+  </AuthenticatedLayout>
+</template>
