@@ -70,14 +70,6 @@ const presetDates = ref([
     label: 'Last Week',
     value: [startOfWeek(subWeeks(new Date(), 1)), endOfWeek(subWeeks(new Date(), 1))],
   },
-  {
-    label: 'This Quarter',
-    value: [startOfQuarter(new Date()), endOfQuarter(new Date())],
-  },
-  {
-    label: 'Last Quarter',
-    value: [startOfQuarter(subQuarters(new Date(), 1)), endOfQuarter(subQuarters(new Date(), 1))],
-  },
 ]);
 let dateRange = ref([])
 watch(dateRange, (newVal) => {
