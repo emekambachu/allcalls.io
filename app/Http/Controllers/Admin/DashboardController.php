@@ -22,76 +22,72 @@ class DashboardController extends Controller
         $excludeRoles = Role::whereIn('name', ['admin'])->pluck('id');
         $sevenDaysAgo = Carbon::now()->subDays(7);
 
-        if (isset($request->from) && $request->from != '' && isset($request->to) && $request->to != '') {
+        if (isset($request->from) && $request->from != '' && isset($request->to) && $request->to != '' ) {
             $fromDate = Carbon::parse($request->from);
             $toDate = Carbon::parse($request->to);
-
-            // Check if the two dates are not the same day
-            if (!$fromDate->isSameDay($toDate)) {
-                $diffInDays = $fromDate->diffInDays($toDate) + 1;
-            } else {
-                $diffInDays = 1; // The two dates are the same day
-            }
-
             $subDayKey = Carbon::parse($request->from);
-
-            $previousDays = $subDayKey->subDays($diffInDays);
-
-            $fromTo = [$fromDate->format('Y-m-d 00:00:00'), $toDate->format('Y-m-d 23:59:59')];
-
-            if( $fromDate->format('m') == $toDate->format('m') && $fromDate->format('d') == '01' && $toDate->format('Y-m-d') == $toDate->format('Y-m-t')){
-                $previousTo = [$fromDate->subMonth()->format('Y-m-d 00:00:00'), $fromDate->format('Y-m-t 23:59:59')];
-            }else{
-                $previousTo = [$previousDays->format('Y-m-d 00:00:00'), $fromDate->subDay()->format('Y-m-d 23:59:59')];
-            }
-
-            $previousDaysUsers = User::whereDoesntHave('roles', function ($query) use ($excludeRoles) {
-                if (count($excludeRoles)) {
-                    $query->whereIn('role_id', $excludeRoles);
-                }
-            })->where(function ($query) use ($previousTo) {
-                if (count($previousTo)) {
-                    $query->whereBetween('created_at', $previousTo);
-                }
-            })->count();
-
-            $previousActiveUsers = ActiveUser::where(function ($query) use ($previousTo) {
-                if (count($previousTo)) {
-                    $query->whereBetween('created_at', $previousTo);
-                }
-            })->count();
-
-            $previousRevenue = Call::where(function ($query) use ($previousTo) {
-                if (count($previousTo)) {
-                    $query->whereBetween('call_taken', $previousTo);
-                }
-            })->count();
-
+        }else {
+            $toDate = Carbon::now();
+            $fromDate = Carbon::now()->subDays(7);
+            $subDayKey = Carbon::now()->subDays(7);
         }
+
+        // Check if the two dates are not the same day
+        if (!$fromDate->isSameDay($toDate)) {
+            $diffInDays = $fromDate->diffInDays($toDate) + 1;
+        } else {
+            $diffInDays = 1; // The two dates are the same day
+        }
+
+        $previousDays = $subDayKey->subDays($diffInDays);
+
+        $fromTo = [$fromDate->format('Y-m-d 00:00:00'), $toDate->format('Y-m-d 23:59:59')];
+
+        if( $fromDate->format('m') == $toDate->format('m') && $fromDate->format('d') == '01' && $toDate->format('Y-m-d') == $toDate->format('Y-m-t')){
+            $previousTo = [$fromDate->subMonth()->format('Y-m-d 00:00:00'), $fromDate->format('Y-m-t 23:59:59')];
+        }else{
+            $previousTo = [$previousDays->format('Y-m-d 00:00:00'), $fromDate->subDay()->format('Y-m-d 23:59:59')];
+        }
+        $previousDaysUsers = User::whereDoesntHave('roles', function ($query) use ($excludeRoles) {
+            if (count($excludeRoles)) {
+                $query->whereIn('role_id', $excludeRoles);
+            }
+        })->where(function ($query) use ($previousTo) {
+            if (count($previousTo)) {
+                $query->whereBetween('created_at', $previousTo);
+            }
+        })->count();
+
+        $previousActiveUsers = ActiveUser::where(function ($query) use ($previousTo) {
+            if (count($previousTo)) {
+                $query->whereBetween('created_at', $previousTo);
+            }
+        })->count();
+
+        $previousRevenue = Call::where(function ($query) use ($previousTo) {
+            if (count($previousTo)) {
+                $query->whereBetween('call_taken', $previousTo);
+            }
+        })->count();
+
 
         $totalUserCount = User::whereDoesntHave('roles', function ($query) use ($excludeRoles) {
             if (count($excludeRoles)) {
                 $query->whereIn('role_id', $excludeRoles);
             }
-        })->where(function ($query) use ($fromTo, $sevenDaysAgo) {
+        })->where(function ($query) use ($fromTo) {
             if (count($fromTo)) {
                 $query->whereBetween('created_at', $fromTo);
-            } else {
-                $query->where('created_at', '>=', $sevenDaysAgo);
             }
         })->count();
-
 
         if (isset($previousDaysUsers) && $previousDaysUsers > 0) {
             $userDiffInPercentage = (($totalUserCount - $previousDaysUsers) / $previousDaysUsers) * 100;
         }
 
-
-        $activeUsersCount = ActiveUser::where(function ($query) use ($fromTo, $sevenDaysAgo) {
+        $activeUsersCount = ActiveUser::where(function ($query) use ($fromTo) {
             if (count($fromTo)) {
                 $query->whereBetween('created_at', $fromTo);
-            } else {
-                $query->where('created_at', '>=', $sevenDaysAgo);
             }
         })->count();
 
@@ -99,11 +95,9 @@ class DashboardController extends Controller
             $activeUsersDiffInPercentage = (($activeUsersCount - $previousActiveUsers) / $previousActiveUsers) * 100;
         }
 
-        $totalRevenue = Call::where(function ($query) use ($fromTo, $sevenDaysAgo) {
+        $totalRevenue = Call::where(function ($query) use ($fromTo) {
             if (count($fromTo)) {
                 $query->whereBetween('call_taken', $fromTo);
-            } else {
-                $query->where('call_taken', '>=', $sevenDaysAgo);
             }
         })->sum('amount_spent');
 
