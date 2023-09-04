@@ -133,7 +133,7 @@ let spendChartData = reactive({
   labels: props.spendData.map((item) => item.date),
   datasets: [
     {
-      label: "Amount Spent (Last 7 Days)",
+      label: "Amount Spent",
       data: props.spendData.map((item) => item.sum),
       backgroundColor: "rgba(75, 192, 192, 0.2)",
       borderColor: "rgba(75, 192, 192, 1)",
@@ -146,7 +146,7 @@ let callChartData = reactive({
   labels: props.callData.map((item) => item.date),
   datasets: [
     {
-      label: "Clients per Day (Last 7 Days)",
+      label: "Clients per Day",
       data: props.callData.map((item) => item.count),
       backgroundColor: "rgba(153, 102, 255, 0.2)",
       borderColor: "rgba(153, 102, 255, 1)",

@@ -131,7 +131,7 @@ let spendChartData = reactive({
   labels: props.spendData.map((item) => item.date),
   datasets: [
     {
-      label: "Amount Spent (Last 7 Days)",
+      label: "Amount Spent",
       data: props.spendData.map((item) => item.sum),
       backgroundColor: "rgba(75, 192, 192, 0.2)",
       borderColor: "rgba(75, 192, 192, 1)",
@@ -144,7 +144,7 @@ let callChartData = reactive({
   labels: props.callData.map((item) => item.date),
   datasets: [
     {
-      label: "Clients per Day (Last 7 Days)",
+      label: "Clients per Day",
       data: props.callData.map((item) => item.count),
       backgroundColor: "rgba(153, 102, 255, 0.2)",
       borderColor: "rgba(153, 102, 255, 1)",
@@ -256,7 +256,7 @@ let formatNumberWith5DecimalPlaces = (number) => {
     </div>
     <div class="px-16">
       <div class="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
-        <VueDatePicker v-model="dateRange" range 
+        <VueDatePicker v-model="dateRange" range
           :preset-dates="presetDates" placeholder="Picker date range" format="dd-MMM-yyyy"
           :multi-calendars="{ solo: true }" />
       </div>
@@ -307,7 +307,7 @@ let formatNumberWith5DecimalPlaces = (number) => {
         </div>
         <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative">
           <p class="mb-1 text-sm text-gray-300">
-            Average Call Duration 
+            Average Call Duration
           </p>
           <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
             {{ formatTime(averageCallDuration) }}
