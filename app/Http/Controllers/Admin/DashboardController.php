@@ -67,7 +67,7 @@ class DashboardController extends Controller
         })->count();
 
 
-        if (isset($previousDaysUsers)) {
+        if (isset($previousDaysUsers) && $previousDaysUsers > 0) {
             $userDiffInPercentage = (($totalUserCount - $previousDaysUsers) / $previousDaysUsers) * 100;
         }
 
@@ -78,7 +78,7 @@ class DashboardController extends Controller
             }
         })->count();
 
-        if (isset($previousActiveUsers)) {
+        if (isset($previousActiveUsers) && $previousActiveUsers > 0) {
             $activeUsersDiffInPercentage = (($activeUsersCount - $previousActiveUsers) / $previousActiveUsers) * 100;
         }
 
@@ -89,7 +89,7 @@ class DashboardController extends Controller
             }
         })->sum('amount_spent');
 
-        if (isset($previousRevenue)) {
+        if (isset($previousRevenue) && $previousRevenue > 0) {
             $diffInRevenue = (($totalRevenue - $previousRevenue) / $previousRevenue) * 100;
         }
 
