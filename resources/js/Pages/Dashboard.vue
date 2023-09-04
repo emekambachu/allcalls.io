@@ -28,6 +28,11 @@ const props = defineProps({
   totalCalls: Number,
   totalAmountSpent: Number,
   averageCallDuration: Number,
+  callDiffInPercentage: Number,
+  totalAmountSpentPercentage: Number,
+  averageCallDurationPercentage: Number,
+  from: String,
+  to: String,
 });
 import { endOfMonth, endOfYear, startOfMonth, subDays, startOfYear, subMonths, startOfWeek, endOfWeek, subWeeks, startOfQuarter, endOfQuarter, subQuarters } from 'date-fns';
 import axios from "axios";
@@ -185,6 +190,13 @@ let fetechDashboard = async (val) => {
     console.log(error);
   }
 }
+let formatNumberWith5DecimalPlaces = (number) => {
+  if (Number.isInteger(number)) {
+    return number.toString(); // Convert to string without decimal places for integers
+  } else {
+    return number.toFixed(3).replace(/\.?0+$/, ''); // Format with 5 decimal places and remove trailing zeros
+  }
+}
 </script>
 
 <template>
@@ -217,26 +229,42 @@ let fetechDashboard = async (val) => {
           <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
             {{ totalCalls }}
           </h2>
-          <button class="absolute right-2 bottom-3 px-3 py-1 flex"
+          <button v-if="callDiffInPercentage && callDiffInPercentage > 0" class="absolute right-2 bottom-3 px-3 py-1 flex"
             style="background: #ecfef3; border-radius: 10px;color: #168054;"> <svg
               class="w-3 h-3  mr-2 text-gray-800 dark:text-white" style="margin-top: 6px;color: #168054;"
               aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M5 13V1m0 0L1 5m4-4 4 4" />
-            </svg> 60%</button>
+            </svg> {{ formatNumberWith5DecimalPlaces(callDiffInPercentage) }}%</button>
+          <button v-if="callDiffInPercentage <= 0" class="absolute right-2 bottom-3 px-3 py-1 flex"
+            style="background: #fef4f3; border-radius: 10px;color: #ba3228;"> <svg
+              class="w-3 h-3 text-gray-800 mr-2 dark:text-white" style="margin-top: 6px;color: #ba3228;"
+              aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M5 1v12m0 0 4-4m-4 4L1 9" />
+            </svg> {{ formatNumberWith5DecimalPlaces(callDiffInPercentage) }}%</button>
         </div>
         <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative">
           <p class="mb-1 text-sm text-gray-300">Total Spent (Past 7 Days)</p>
           <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
             ${{ formatMoney(totalAmountSpent) }}
           </h2>
-          <button class="absolute right-2 bottom-3 px-3 py-1 flex"
+          <button v-if="totalAmountSpentPercentage && totalAmountSpentPercentage > 0"
+            class="absolute right-2 bottom-3 px-3 py-1 flex"
+            style="background: #ecfef3; border-radius: 10px;color: #168054;"> <svg
+              class="w-3 h-3  mr-2 text-gray-800 dark:text-white" style="margin-top: 6px;color: #168054;"
+              aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M5 13V1m0 0L1 5m4-4 4 4" />
+            </svg> {{ formatNumberWith5DecimalPlaces(totalAmountSpentPercentage) }}%</button>
+          <button v-if="totalAmountSpentPercentage && totalAmountSpentPercentage < 0"
+            class="absolute right-2 bottom-3 px-3 py-1 flex"
             style="background: #fef4f3; border-radius: 10px;color: #ba3228;"> <svg
               class="w-3 h-3 text-gray-800 mr-2 dark:text-white" style="margin-top: 6px;color: #ba3228;"
               aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M5 1v12m0 0 4-4m-4 4L1 9" />
-            </svg> -10%</button>
+            </svg> {{ formatNumberWith5DecimalPlaces(totalAmountSpentPercentage) }}%</button>
         </div>
         <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative">
           <p class="mb-1 text-sm text-gray-300">
@@ -245,13 +273,22 @@ let fetechDashboard = async (val) => {
           <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
             {{ formatTime(averageCallDuration) }}
           </h2>
-          <button class="absolute right-2 bottom-3 px-3 py-1 flex"
+          <button v-if="averageCallDurationPercentage && averageCallDurationPercentage > 0"
+            class="absolute right-2 bottom-3 px-3 py-1 flex"
             style="background: #ecfef3; border-radius: 10px;color: #168054;"> <svg
               class="w-3 h-3  mr-2 text-gray-800 dark:text-white" style="margin-top: 6px;color: #168054;"
               aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M5 13V1m0 0L1 5m4-4 4 4" />
-            </svg> 90%</button>
+            </svg> {{ formatNumberWith5DecimalPlaces(averageCallDurationPercentage) }}%</button>
+          <button v-if="averageCallDurationPercentage && averageCallDurationPercentage < 0"
+            class="absolute right-2 bottom-3 px-3 py-1 flex"
+            style="background: #fef4f3; border-radius: 10px;color: #ba3228;"> <svg
+              class="w-3 h-3 text-gray-800 mr-2 dark:text-white" style="margin-top: 6px;color: #ba3228;"
+              aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M5 1v12m0 0 4-4m-4 4L1 9" />
+            </svg> {{ formatNumberWith5DecimalPlaces(averageCallDurationPercentage) }}%</button>
         </div>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -275,5 +312,4 @@ let fetechDashboard = async (val) => {
         </div>
       </div>
     </div>
-  </AuthenticatedLayout>
-</template>
+</AuthenticatedLayout></template>
