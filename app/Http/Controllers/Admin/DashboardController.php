@@ -109,6 +109,8 @@ class DashboardController extends Controller
             ->get();
 
         return Inertia::render('Admin/Dashboard', [
+            'from' => isset($request->from)?$request->from:'',
+            'to' => isset($request->to)?$request->to:'',
             'userDiffInPercentage' => isset($userDiffInPercentage)?$userDiffInPercentage:0,
             'activeUsersDiffInPercentage' => isset($activeUsersDiffInPercentage)?$activeUsersDiffInPercentage:0,
             'diffInRevenue' => isset($diffInRevenue)?$diffInRevenue:0,
