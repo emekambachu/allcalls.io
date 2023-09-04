@@ -219,11 +219,6 @@ let fetechDashboard = async (val) => {
     router.visit('/dashboard', {
       data: queryParams,
     });
-
-    // const response = await axios.get('/dashboard', {
-    //   params: queryParams,
-    // });
-    // console.log(response);
   } catch (error) {
     console.log(error);
   }
@@ -274,14 +269,14 @@ let formatNumberWith5DecimalPlaces = (number) => {
               aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M5 13V1m0 0L1 5m4-4 4 4" />
-            </svg> {{ formatNumberWith5DecimalPlaces(callDiffInPercentage) }}%</button>
+            </svg> {{ formatNumberWith5DecimalPlaces(Math.abs(callDiffInPercentage)) }}%</button>
           <button v-if="callDiffInPercentage <= 0" class="absolute right-2 bottom-3 px-3 py-1 flex"
             style="background: #fef4f3; border-radius: 10px;color: #ba3228;"> <svg
               class="w-3 h-3 text-gray-800 mr-2 dark:text-white" style="margin-top: 6px;color: #ba3228;"
               aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M5 1v12m0 0 4-4m-4 4L1 9" />
-            </svg> {{ formatNumberWith5DecimalPlaces(callDiffInPercentage) }}%</button>
+            </svg> {{ formatNumberWith5DecimalPlaces(Math.abs(callDiffInPercentage)) }}%</button>
         </div>
         <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative">
           <p class="mb-1 text-sm text-gray-300">Total Spent </p>
@@ -295,7 +290,7 @@ let formatNumberWith5DecimalPlaces = (number) => {
               aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M5 13V1m0 0L1 5m4-4 4 4" />
-            </svg> {{ formatNumberWith5DecimalPlaces(totalAmountSpentPercentage) }}%</button>
+            </svg> {{ formatNumberWith5DecimalPlaces(Math.abs(totalAmountSpentPercentage)) }}%</button>
           <button v-if="totalAmountSpentPercentage && totalAmountSpentPercentage < 0"
             class="absolute right-2 bottom-3 px-3 py-1 flex"
             style="background: #fef4f3; border-radius: 10px;color: #ba3228;"> <svg
@@ -303,7 +298,7 @@ let formatNumberWith5DecimalPlaces = (number) => {
               aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M5 1v12m0 0 4-4m-4 4L1 9" />
-            </svg> {{ formatNumberWith5DecimalPlaces(totalAmountSpentPercentage) }}%</button>
+            </svg> {{ formatNumberWith5DecimalPlaces(Math.abs(totalAmountSpentPercentage)) }}%</button>
         </div>
         <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative">
           <p class="mb-1 text-sm text-gray-300">
@@ -319,7 +314,7 @@ let formatNumberWith5DecimalPlaces = (number) => {
               aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M5 13V1m0 0L1 5m4-4 4 4" />
-            </svg> {{ formatNumberWith5DecimalPlaces(averageCallDurationPercentage) }}%</button>
+            </svg> {{ formatNumberWith5DecimalPlaces(Math.abs(averageCallDurationPercentage)) }}%</button>
           <button v-if="averageCallDurationPercentage && averageCallDurationPercentage < 0"
             class="absolute right-2 bottom-3 px-3 py-1 flex"
             style="background: #fef4f3; border-radius: 10px;color: #ba3228;"> <svg
@@ -327,7 +322,7 @@ let formatNumberWith5DecimalPlaces = (number) => {
               aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M5 1v12m0 0 4-4m-4 4L1 9" />
-            </svg> {{ formatNumberWith5DecimalPlaces(averageCallDurationPercentage) }}%</button>
+            </svg> {{ formatNumberWith5DecimalPlaces(Math.abs(averageCallDurationPercentage)) }}%</button>
         </div>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

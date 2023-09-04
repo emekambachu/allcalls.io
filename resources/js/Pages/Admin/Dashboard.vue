@@ -233,20 +233,6 @@ let fetechDashboard = async (val) => {
     router.visit('/admin/dashboard', {
       data: queryParams,
     });
-
-
-    // const queryParams = {
-    //   from: dateRange.value[0],
-    //   to: dateRange.value[1],
-    // };
-
-    // router.visit('/admin/dashboard', {
-    //   data: queryParams,
-    // })
-    //  const response =  await axios.get('/admin/dashboard', {
-    //     params: queryParams,
-    //   });
-    //   console.log(response);
   } catch (error) {
     console.log(error);
   }
@@ -298,14 +284,14 @@ let formatNumberWith5DecimalPlaces = (number) => {
               aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M5 13V1m0 0L1 5m4-4 4 4" />
-            </svg> {{ formatNumberWith5DecimalPlaces(userDiffInPercentage) }}%</button>
+            </svg> {{ formatNumberWith5DecimalPlaces(Math.abs(userDiffInPercentage)) }}%</button>
           <button v-if="userDiffInPercentage && userDiffInPercentage < 0" class="absolute right-2 bottom-3 px-3 py-1 flex"
             style="background: #fef4f3; border-radius: 10px;color: #ba3228;"> <svg
               class="w-3 h-3 text-gray-800 mr-2 dark:text-white" style="margin-top: 6px;color: #ba3228;"
               aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M5 1v12m0 0 4-4m-4 4L1 9" />
-            </svg> {{ formatNumberWith5DecimalPlaces(userDiffInPercentage) }}%</button>
+            </svg> {{ formatNumberWith5DecimalPlaces(Math.abs(userDiffInPercentage)) }}%</button>
         </div>
         <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative">
           <p class="mb-1 text-sm text-gray-300">
@@ -321,7 +307,7 @@ let formatNumberWith5DecimalPlaces = (number) => {
               aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M5 13V1m0 0L1 5m4-4 4 4" />
-            </svg> {{ formatNumberWith5DecimalPlaces(activeUsersDiffInPercentage) }}%</button>
+            </svg> {{ formatNumberWith5DecimalPlaces(Math.abs(activeUsersDiffInPercentage)) }}%</button>
           <button v-if="activeUsersDiffInPercentage && activeUsersDiffInPercentage < 0"
             class="absolute right-2 bottom-3 px-3 py-1 flex"
             style="background: #fef4f3; border-radius: 10px;color: #ba3228;"> <svg
@@ -329,7 +315,7 @@ let formatNumberWith5DecimalPlaces = (number) => {
               aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M5 1v12m0 0 4-4m-4 4L1 9" />
-            </svg> {{ formatNumberWith5DecimalPlaces(activeUsersDiffInPercentage) }}%</button>
+            </svg> {{ formatNumberWith5DecimalPlaces(Math.abs(activeUsersDiffInPercentage)) }}%</button>
         </div>
         <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative">
           <p class="mb-1 text-sm text-gray-300">Total Revenue</p>
@@ -343,7 +329,7 @@ let formatNumberWith5DecimalPlaces = (number) => {
               aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M5 13V1m0 0L1 5m4-4 4 4" />
-            </svg> {{ formatNumberWith5DecimalPlaces(diffInRevenuePercentage) }}%</button>
+            </svg> {{ formatNumberWith5DecimalPlaces(Math.abs(diffInRevenuePercentage)) }}%</button>
           <button v-if="diffInRevenuePercentage && diffInRevenuePercentage < 0"
             class="absolute right-2 bottom-3 px-3 py-1 flex"
             style="background: #fef4f3; border-radius: 10px;color: #ba3228;"> <svg
@@ -351,7 +337,7 @@ let formatNumberWith5DecimalPlaces = (number) => {
               aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M5 1v12m0 0 4-4m-4 4L1 9" />
-            </svg> {{ formatNumberWith5DecimalPlaces(diffInRevenuePercentage) }}%</button>
+            </svg> {{ formatNumberWith5DecimalPlaces(Math.abs(diffInRevenuePercentage)) }}%</button>
         </div>
 
       </div>
