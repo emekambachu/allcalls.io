@@ -16,11 +16,12 @@ class DashboardController extends Controller
 {
     public function show(Request $request)
     {
+         // Change the format here
         $fromTo = [];
         $previousTo = [];
         $excludeRoles = Role::whereIn('name', ['admin'])->pluck('id');
         $sevenDaysAgo = Carbon::now()->subDays(7);
-
+        
         if (isset($request->from) && $request->from != '' && isset($request->to) && $request->to != '') {
             $fromDate = Carbon::parse($request->from);
             $toDate = Carbon::parse($request->to);

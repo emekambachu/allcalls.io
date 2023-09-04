@@ -51,14 +51,8 @@ const presetDates = ref([
     label: 'Last Week',
     value: [startOfWeek(subWeeks(new Date(), 1)), endOfWeek(subWeeks(new Date(), 1))],
   },
-  {
-    label: 'This Quarter',
-    value: [startOfQuarter(new Date()), endOfQuarter(new Date())],
-  },
-  {
-    label: 'Last Quarter',
-    value: [startOfQuarter(subQuarters(new Date(), 1)), endOfQuarter(subQuarters(new Date(), 1))],
-  },
+
+
 ]);
 
 ChartJS.register(
@@ -182,17 +176,82 @@ let locale = ref({
   lang: 'fr', // or 'en', 'es', 'de',
   weekDays: ['L', 'M', 'M', 'J', 'V', 'S', 'D'], // you can surcharge weekDays too
 })
+const selectedLabel = ref(''); // Initialize with an empty string
 
+const handleDateRangeChange = (selectedRange) => {
+      // Find the selected label based on the selected range
+      const matchingPreset = presetDates.value.find((preset) => {
+        return (
+          preset.value[0].getTime() === selectedRange[0].getTime() &&
+          preset.value[1].getTime() === selectedRange[1].getTime()
+        );
+      });
+
+      if (matchingPreset) {
+        selectedLabel.value = matchingPreset.label;
+      } else {
+        selectedLabel.value = ''; // Reset the label if no matching preset is found
+      }
+      if(selectedLabel.value == 'This month'){
+        selectedLabel.value = 'this_month'
+      }else if(selectedLabel.value == 'This year'){
+        selectedLabel.value = 'this_year'
+      }else if(selectedLabel.value == 'Last month'){
+        selectedLabel.value = 'last_month'
+      }else{
+        selectedLabel.value = ''
+      }
+      console.log('Selected label:', selectedLabel.value);
+ 
+    };
+
+    const fetchData = () => {
+      // Fetch data from the API using dateRange.value
+      const from = dateRange.value[0];
+      const to = dateRange.value[1];
+
+      // Make an API request here with the selected date range
+      console.log('Making API request with date range:', from, to);
+    };
 let fetechDashboard = async (val) => {
   try {
 
+
+    const from = new Date(dateRange.value[0]);
+    const to = new Date(dateRange.value[1]);
+
+    // Extract month, date, and year components
+    const fromMonth = from.getMonth() + 1; // Add 1 because months are zero-based
+    const fromDate = from.getDate();
+    const fromYear = from.getFullYear();
+
+    const toMonth = to.getMonth() + 1;
+    const toDate = to.getDate();
+    const toYear = to.getFullYear();
+
+    // Format the components as desired (e.g., as "MM-DD-YYYY")
+    const formattedFrom = `${fromMonth}/${fromDate}/${fromYear}`;
+    const formattedTo = `${toMonth}/${toDate}/${toYear}`;
+
     const queryParams = {
-      from: dateRange.value[0],
-      to: dateRange.value[1],
+      from: formattedFrom,
+      to: formattedTo,
+      type : selectedLabel.value
     };
+
     router.visit('/admin/dashboard', {
       data: queryParams,
-    })
+    });
+
+
+    // const queryParams = {
+    //   from: dateRange.value[0],
+    //   to: dateRange.value[1],
+    // };
+
+    // router.visit('/admin/dashboard', {
+    //   data: queryParams,
+    // })
     //  const response =  await axios.get('/admin/dashboard', {
     //     params: queryParams,
     //   });
@@ -201,7 +260,7 @@ let fetechDashboard = async (val) => {
     console.log(error);
   }
 }
-let formatNumberWith5DecimalPlaces = (number) =>  {
+let formatNumberWith5DecimalPlaces = (number) => {
   if (Number.isInteger(number)) {
     return number.toString(); // Convert to string without decimal places for integers
   } else {
@@ -231,8 +290,8 @@ let formatNumberWith5DecimalPlaces = (number) =>  {
 
     <div class="px-16">
       <div class="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
-        <VueDatePicker v-model="dateRange" range :preset-dates="presetDates" placeholder="Picker date range"
-          format="dd-MMM-yyyy" :multi-calendars="{ solo: true }" />
+        <VueDatePicker v-model="dateRange" range @internal-model-change="handleDateRangeChange"  :preset-dates="presetDates"
+          placeholder="Picker date range" format="dd-MMM-yyyy" :multi-calendars="{ solo: true }" />
       </div>
     </div>
     <div class="px-16">
@@ -248,14 +307,14 @@ let formatNumberWith5DecimalPlaces = (number) =>  {
               aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M5 13V1m0 0L1 5m4-4 4 4" />
-          </svg> {{ formatNumberWith5DecimalPlaces(userDiffInPercentage)  }}%</button>
+            </svg> {{ formatNumberWith5DecimalPlaces(userDiffInPercentage) }}%</button>
           <button v-if="userDiffInPercentage && userDiffInPercentage < 0" class="absolute right-2 bottom-3 px-3 py-1 flex"
             style="background: #fef4f3; border-radius: 10px;color: #ba3228;"> <svg
               class="w-3 h-3 text-gray-800 mr-2 dark:text-white" style="margin-top: 6px;color: #ba3228;"
               aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M5 1v12m0 0 4-4m-4 4L1 9" />
-            </svg> {{ formatNumberWith5DecimalPlaces(userDiffInPercentage)   }}%</button>
+            </svg> {{ formatNumberWith5DecimalPlaces(userDiffInPercentage) }}%</button>
         </div>
         <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative">
           <p class="mb-1 text-sm text-gray-300">
@@ -264,40 +323,44 @@ let formatNumberWith5DecimalPlaces = (number) =>  {
           <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
             {{ activeUsersCount }}
           </h2>
-          <button v-if="activeUsersDiffInPercentage && activeUsersDiffInPercentage > 0" class="absolute right-2 bottom-3 px-3 py-1 flex"
+          <button v-if="activeUsersDiffInPercentage && activeUsersDiffInPercentage > 0"
+            class="absolute right-2 bottom-3 px-3 py-1 flex"
             style="background: #ecfef3; border-radius: 10px;color: #168054;"> <svg
               class="w-3 h-3  mr-2 text-gray-800 dark:text-white" style="margin-top: 6px;color: #168054;"
               aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M5 13V1m0 0L1 5m4-4 4 4" />
-          </svg> {{ formatNumberWith5DecimalPlaces(activeUsersDiffInPercentage)    }}%</button>
-          <button v-if="activeUsersDiffInPercentage && activeUsersDiffInPercentage < 0" class="absolute right-2 bottom-3 px-3 py-1 flex"
+            </svg> {{ formatNumberWith5DecimalPlaces(activeUsersDiffInPercentage) }}%</button>
+          <button v-if="activeUsersDiffInPercentage && activeUsersDiffInPercentage < 0"
+            class="absolute right-2 bottom-3 px-3 py-1 flex"
             style="background: #fef4f3; border-radius: 10px;color: #ba3228;"> <svg
               class="w-3 h-3 text-gray-800 mr-2 dark:text-white" style="margin-top: 6px;color: #ba3228;"
               aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M5 1v12m0 0 4-4m-4 4L1 9" />
-            </svg> {{ formatNumberWith5DecimalPlaces(activeUsersDiffInPercentage)   }}%</button>
+            </svg> {{ formatNumberWith5DecimalPlaces(activeUsersDiffInPercentage) }}%</button>
         </div>
         <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative">
           <p class="mb-1 text-sm text-gray-300">Total Revenue</p>
           <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
             ${{ formatMoney(totalAmountSpent) }}
           </h2>
-          <button v-if="diffInRevenuePercentage && diffInRevenuePercentage > 0" class="absolute right-2 bottom-3 px-3 py-1 flex"
+          <button v-if="diffInRevenuePercentage && diffInRevenuePercentage > 0"
+            class="absolute right-2 bottom-3 px-3 py-1 flex"
             style="background: #ecfef3; border-radius: 10px;color: #168054;"> <svg
               class="w-3 h-3  mr-2 text-gray-800 dark:text-white" style="margin-top: 6px;color: #168054;"
               aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M5 13V1m0 0L1 5m4-4 4 4" />
-          </svg> {{ formatNumberWith5DecimalPlaces(diffInRevenuePercentage)   }}%</button>
-          <button v-if="diffInRevenuePercentage && diffInRevenuePercentage < 0" class="absolute right-2 bottom-3 px-3 py-1 flex"
+            </svg> {{ formatNumberWith5DecimalPlaces(diffInRevenuePercentage) }}%</button>
+          <button v-if="diffInRevenuePercentage && diffInRevenuePercentage < 0"
+            class="absolute right-2 bottom-3 px-3 py-1 flex"
             style="background: #fef4f3; border-radius: 10px;color: #ba3228;"> <svg
               class="w-3 h-3 text-gray-800 mr-2 dark:text-white" style="margin-top: 6px;color: #ba3228;"
               aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M5 1v12m0 0 4-4m-4 4L1 9" />
-            </svg> {{ formatNumberWith5DecimalPlaces(diffInRevenuePercentage)   }}%</button>
+            </svg> {{ formatNumberWith5DecimalPlaces(diffInRevenuePercentage) }}%</button>
         </div>
 
       </div>
@@ -322,5 +385,4 @@ let formatNumberWith5DecimalPlaces = (number) =>  {
         </div>
       </div>
     </div>
-  </AuthenticatedLayout>
-</template>
+</AuthenticatedLayout></template>
