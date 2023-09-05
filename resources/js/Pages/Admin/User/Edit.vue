@@ -82,14 +82,7 @@ let saveChanges = () => {
 </script>
 
 <template>
-  <Transition name="modal" enter-active-class="transition ease-out duration-300 transform"
-    enter-from-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-    enter-to-class="opacity-100 translate-y-0 sm:scale-100" leave-active-class="transition ease-in duration-200 transform"
-    leave-from-class="opacity-100 translate-y-0 sm:scale-100"
-    leave-to-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
-    <div id="defaultModal" v-if="showModal" tabindex="-1"
-      class="flex items-center justify-center fixed inset-0 z-50 w-full h-full overflow-x-hidden overflow-y-auto max-h-full mx-4 sm:mx-0">
-      <div class="fixed inset-0 bg-black opacity-60"></div>
+
       <!-- This is the overlay -->
 
 
@@ -160,6 +153,5 @@ let saveChanges = () => {
           </form>
         </div>
       </div>
-    </div>
-  </Transition>
+ 
 </template>
