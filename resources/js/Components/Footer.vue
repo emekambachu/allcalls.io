@@ -26,7 +26,7 @@ onMounted(() => {
             <div>
               <div class="mb-4 text-lg uppercase tracking-wider">AllCalls.io</div>
               <div class="mb-4 text-gray-200">1309 COFFEEN AVE STE 11246<br>SHERIDAN, WY 82801, USA</div>
-              <div class="mb-4 text-gray-200">(855) 815-0382</div>
+              <div class="mb-4 text-gray-200">(866) 756-0307</div>
               <div class="mb-4 text-gray-200">support@allcalls.io</div>
             </div>
           </div>
