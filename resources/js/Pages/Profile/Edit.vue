@@ -68,7 +68,7 @@ let saveBids = () => {
           />
         </div>
 
-        <div>
+        <div style="display:none;">
           <header class="pl-8">
             <h2 class="text-lg font-medium text-gray-700">Bids Setting</h2>
 
