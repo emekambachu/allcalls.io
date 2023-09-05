@@ -73,6 +73,8 @@ onMounted(() => {
         <a href="/terms.php">Terms of Service</a>
         |
         <a href="/privacy.php"> Privacy Policy</a>
+        |
+        <a href="/eula.php"> EULA</a>
       </div>
     </div>
   </footer>
