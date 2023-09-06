@@ -2,48 +2,64 @@
 
 namespace App\Http\Controllers;
 
+use Twilio\Jwt\AccessToken;
 use Illuminate\Http\Request;
+use Twilio\Jwt\Grants\VoiceGrant;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Class TwilioIOSAccessTokenController
+ *
+ * This controller handles generating a Twilio Access Token for iOS applications.
+ *
+ * @package App\Http\Controllers
+ */
 class TwilioIOSAccessTokenController extends Controller
 {
+    /**
+     * Generate and return a Twilio Access Token.
+     *
+     * This method generates a Twilio Access Token for the logged-in user.
+     * The token is JSON-encoded and returned in the HTTP response.
+     *
+     * @param Request $request The incoming HTTP request.
+     *
+     * @return \Illuminate\Http\JsonResponse The JSON-encoded Access Token and the user's identity.
+     */
     public function show(Request $request)
     {
-    
-        // Use the user's ID as the identity
-        // $identity = $request->user()->id;
-        $identity = 1;
+        // Load Twilio account settings from environment variables.
+        $accountSid = env('TWILIO_SID');
+        $apiKey = env('TWILIO_API_KEY_SID');
+        $apiKeySecret = env('TWILIO_API_KEY_SECRET');
+        $outgoingApplicationSid = env('TWILIO_TWIML_APP_SID');
+        $pushCredentialSid = env('TWILIO_IOS_PUSH_CREDENTIAL_SID');
 
-        // Retrieve the appSid and pushCredentialSid from the environment file
-        $appSid = env('TWILIO_TWIML_APP_SID');
-        $pushCredentialSid = env('TWILIO_PUSH_CREDENTIAL_SID');
+        // Use the ID of the logged-in user as the identity for this Access Token.
+        $identity = $request->user()->id;
 
-        // The command to run
-        $command = "twilio token:voice --identity=$identity --voice-app-sid=$appSid --push-credential-sid=$pushCredentialSid";
-        
-        // Run the command
-        exec($command, $output, $returnVar);
+        // Initialize a new Twilio Access Token.
+        $accessToken = new AccessToken(
+            $accountSid,
+            $apiKey,
+            $apiKeySecret,
+            3600,
+            $identity
+        );
 
-        // Check if the command was successful
-        if ($returnVar === 0) {
-            // Log success
-            Log::info('Successfully generated Twilio token for user', ['userId' => $identity, 'output' => $output]);
+        // Initialize a new Voice Grant for the Access Token.
+        $voiceGrant = new VoiceGrant();
+        $voiceGrant->setOutgoingApplicationSid($outgoingApplicationSid);
+        $voiceGrant->setIncomingAllow(true);
+        $voiceGrant->setPushCredentialSid($pushCredentialSid);
 
-            // Return success response
-            return response()->json([
-                'status' => 'success',
-                'data' => $output
-            ]);
-        } else {
-            // Log failure
-            Log::error('Failed to generate Twilio token', ['command' => $command, 'returnVar' => $returnVar]);
+        // Add the Voice Grant to the Access Token.
+        $accessToken->addGrant($voiceGrant);
 
-            // Return error response
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Failed to generate token.'
-            ], 500);
-        }
- 
+        // Return the Access Token and the user's identity as a JSON-encoded response.
+        return response()->json([
+            'token' => $accessToken->toJWT(),
+            'identity' => $identity
+        ]);
     }
 }
