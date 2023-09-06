@@ -51,7 +51,7 @@ let stateOptions = computed(() => {
   return props.states.map((state) => {
     return {
       value: state.id,
-      label: state.name,
+      label: state.full_name,
     };
   });
 });
