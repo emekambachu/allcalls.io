@@ -165,7 +165,7 @@ class RegisteredUserController extends Controller
                     $fail('At least one States you are licensed in is required.');
                 },
             ],
-            'typesWithStates.*' => ['nullable', 'exists:call_types,id'],
+            // 'typesWithStates.*' => ['nullable', 'exists:call_types,id'],
             'typesWithStates.*.*' => ['nullable', 'exists:states,id'],
             'bids' => 'required|array',
         ]);
