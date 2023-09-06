@@ -39,6 +39,10 @@ class HandleInertiaRequests extends Middleware
             $role = 'user';
         }
 
+        if(auth()->user() && auth()->user()->roles->contains('name', 'internal-agent')) {
+            $role = 'internal-agent';
+        }
+
         return array_merge(parent::share($request), [
             'auth' => [
                 'user' => $request->user(),
