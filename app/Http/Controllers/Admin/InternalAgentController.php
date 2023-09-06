@@ -10,6 +10,7 @@ use App\Models\Role;
 use App\Models\State;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Rules\CallTypeIdEixst;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -53,6 +54,7 @@ class InternalAgentController extends Controller
 
 
     public function store(Request $request){
+        // dd($request);
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -70,8 +72,10 @@ class InternalAgentController extends Controller
                     }
                     $fail('At least one States you are licensed in is required.');
                 },
+                new CallTypeIdEixst('call_types', 'id'),
             ],
-            'typesWithStates.*.*' => ['nullable', 'exists:states,id'],
+            'typesWithStates.*' => ['nullable', 'exists:states,id'],
+
         ]);
 
         if ($validator->fails()) {

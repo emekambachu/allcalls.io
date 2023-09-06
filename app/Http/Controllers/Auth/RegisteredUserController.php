@@ -25,6 +25,7 @@ use Illuminate\Validation\Rules\Password;
 use Carbon\Carbon;
 use App\Models\Client;
 use App\Models\Call;
+use App\Rules\CallTypeIdEixst;
 
 class RegisteredUserController extends Controller
 {
@@ -164,9 +165,9 @@ class RegisteredUserController extends Controller
                     }
                     $fail('At least one States you are licensed in is required.');
                 },
+                new CallTypeIdEixst('call_types', 'id')
             ],
-            // 'typesWithStates.*' => ['nullable', 'exists:call_types,id'],
-            'typesWithStates.*.*' => ['nullable', 'exists:states,id'],
+            'typesWithStates.*' => ['nullable','array', 'exists:states,id'],
             'bids' => 'required|array',
         ]);
 
