@@ -11,7 +11,8 @@ class TwilioIOSAccessTokenController extends Controller
     {
     
         // Use the user's ID as the identity
-        $identity = $request->user()->id;
+        // $identity = $request->user()->id;
+        $identity = 1;
 
         // Retrieve the appSid and pushCredentialSid from the environment file
         $appSid = env('TWILIO_TWIML_APP_SID');
