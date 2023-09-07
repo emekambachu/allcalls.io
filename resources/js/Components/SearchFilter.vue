@@ -110,7 +110,7 @@ onMounted(() => {
         <div>
             <InputLabel for="card" value="card" />
 
-            <TextInput id="card" type="text" placeholder="first 6 or last 4 of  card number" class="mt-1 block w-full"
+            <TextInput id="card" type="text" placeholder="first 6 or last 4 of  card no" class="mt-1 block w-full"
                 v-model="formData.card_no" required />
 
         </div>
@@ -118,9 +118,6 @@ onMounted(() => {
             <PrimaryButton type="button" class="ml-2" @click.prevent="fetchData">
                 <global-spinner :spinner="isLoading" /> Filter
             </PrimaryButton>
-            <!-- <PrimaryButton type="button" class="ml-2" @click.prevent="ClearFilter()">
-                <global-spinner :spinner="isLoadingReset" /> Reset
-            </PrimaryButton> -->
             <button  @click.prevent="ClearFilter()" type="button" 
                 class="button-custom-back px-4 py-3 rounded-md ml-2">
                 <global-spinner :spinner="isLoadingReset" />  Reset
