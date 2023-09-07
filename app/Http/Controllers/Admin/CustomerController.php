@@ -8,6 +8,7 @@ use App\Models\Call;
 use App\Models\CallType;
 use App\Models\Role;
 use App\Models\State;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -104,14 +105,29 @@ class CustomerController extends Controller
             ], 400);
         }
 
-        $user = User::whereId($id)->update([
-            'first_name' => $request->first_name,
+        try{
+            $user= User::find($id);
+            if($user->balance!=$request->balance){
+                Transaction::create([
+                    'amount'=>$request->balance-$user->balance,
+                    'sign'=> 1,
+                    'bonus'=>0,
+                    'user_id'=>$id,
+                    'comment'=>$request->comment
+                ]);
+            }
+            $user->update([
+                'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'phone' => $request->phone,
+            'balance' => isset($request->balance)?$request->balance:0,
         ]);
         return response()->json([
             'success' => true,
             'message' => 'Customer updated successfully.',
         ], 200);
+    }catch(Exception $e){
+        return response()->json(['error'=>$e], 500);
+    }
     }
 }
