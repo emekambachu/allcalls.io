@@ -7,6 +7,7 @@ import { ref } from "vue";
 import { toaster } from "@/helper.js";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Modal from "@/Components/Modal.vue";
+import SearchFilter from "@/Components/SearchFilter.vue";
 let page = usePage();
 if (page.props.flash.message) {
   toaster("success", page.props.flash.message);
@@ -19,11 +20,32 @@ let props = defineProps({
 
   callTypes: Array,
   states: Array,
+  requestData: {
+    type: Array,
+  }
 });
+let formData = ref({});
 
+let handleUpdateFormData = (updatedFormData) => {
+  console.log('data here', updatedFormData);
+  formData.value = updatedFormData;
+}
 let fetchAgents = (page) => {
   // Create URL object from page
   let url = new URL(page);
+
+  if (formData.value.name !== undefined && formData.value.name !== null) {
+    url.searchParams.set('name', formData.value.name);
+  }
+  if (formData.value.email !== undefined && formData.value.email !== null) {
+    url.searchParams.set('email', formData.value.email);
+  }
+  if (formData.value.phone !== undefined && formData.value.phone !== null) {
+    url.searchParams.set('phone', formData.value.phone);
+  }
+  if (formData.value.card_no !== undefined && formData.value.card_no !== null) {
+    url.searchParams.set('card_no', formData.value.card_no);
+  }
 
   // Ensure the protocol is https
   if (url.protocol !== "https:") {
@@ -111,6 +133,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
         <hr class="mb-4" />
       </div>
     </div>
+    <SearchFilter  :route="page.url" :requestData="requestData" @update-form-data="handleUpdateFormData" />
     <section v-if="agents.data.length" class="p-3">
       <div class="mx-auto max-w-screen-xl sm:px-12">
         <div class="relative sm:rounded-lg overflow-hidden">
