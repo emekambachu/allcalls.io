@@ -21,16 +21,40 @@ use Inertia\Inertia;
 
 class InternalAgentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $agent = Role::whereName('internal-agent')->first();
 
         $agents = User::whereHas('roles', function ($query) use ($agent) {
             $query->where('role_id', $agent->id);
+        })
+        ->where(function($query) use ($request) {
+            if(isset($request->name) && $request->name != '') {
+                $query->where('first_name', 'LIKE', '%' . $request->name . '%')
+                ->orWhere('last_name', 'LIKE', '%' . $request->name . '%');
+            }
+        })
+        ->where(function($query) use ($request) {
+            if(isset($request->email) && $request->email != '') {
+                $query->where('email', 'LIKE', '%' . $request->email . '%');
+            }
+        })
+        ->where(function($query) use ($request) {
+            if(isset($request->phone) && $request->phone != '') {
+                $query->where('phone', 'LIKE', '%' . $request->phone . '%');
+            }
+        })
+        ->where(function($query) use ($request) {
+            if(isset($request->card_no) && $request->card_no != '') {
+                $query->whereHas('cards', function($query) use ($request){
+                    $query->where('number', 'LIKE', '%' . $request->card_no . '%');
+                });
+            }
         })->paginate(10);
        $callTypes = CallType::all();
        $states = State::all();
         return Inertia::render('Admin/Agent/Index', [
+            'requestData'=>$request->all(),
             'agents' => $agents,
             'callTypes' => $callTypes,
             'states' => $states,
