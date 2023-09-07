@@ -115,4 +115,4 @@ Route::middleware('auth:sanctum')->get('/callTypes', [CallTypesAPIController::cl
 // Route::patch('/active-users', [ActiveUsersController::class, 'update']);
 Route::post('/active-users-pusher-webhook', [ActiveUsersPusherWebhookController::class, 'store']);
 
-Route::get('/twilio-ios-access-token', [TwilioIOSAccessTokenController::class, 'show']);
+Route::middleware('auth:sanctum')->get('/twilio-ios-access-token', [TwilioIOSAccessTokenController::class, 'show']);
