@@ -5,6 +5,7 @@ import ClientDetailsModal from "@/Components/ClientDetailsModal.vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import { ref } from "vue";
 import { toaster } from "@/helper.js";
+import Modal from "@/Components/Modal.vue";
 let page = usePage();
 if (page.props.flash.message) {
   toaster("success", page.props.flash.message);
@@ -279,11 +280,12 @@ let capitalizeAndReplaceUnderscore = (str) => {
     <section v-else class="p-3">
       <p class="text-center text-gray-600">No clients yet.</p>
     </section>
-
-    <ClientDetailsModal
-      :showModal="showModal"
-      :callDetail="callDetail"
-      @close="showModal = false"
-    ></ClientDetailsModal>
+    <Modal :show="showModal" @close="showModal = false">
+      <ClientDetailsModal
+        :showModal="showModal"
+        :callDetail="callDetail"
+        @close="showModal = false"
+      ></ClientDetailsModal>
+    </Modal>
   </AuthenticatedLayout>
 </template>

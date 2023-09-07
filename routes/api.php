@@ -16,6 +16,7 @@ use App\Http\Controllers\CallTypesAPIController;
 use App\Http\Controllers\IncomingCallController;
 use App\Http\Controllers\CallRecordingController;
 use App\Http\Controllers\LiveCallClientController;
+use App\Http\Controllers\TwilioIOSAccessTokenController;
 use App\Http\Controllers\ActiveUsersPusherWebhookController;
 
 /*
@@ -90,7 +91,7 @@ Route::get('/call/incoming', function() {
     // Manually construct the TwiML
     $twiml = '<?xml version="1.0" encoding="UTF-8"?>';
     // $twiml .= '<Response><Dial answerOnBridge="true" callerId="' . $numberToDial . '">' . '<Client>+15736523170</Client>' . '</Dial></Response>';
-    $twiml .= '<Response><Dial answerOnBridge="true"><Client callerId="+15736523170">alice</Client></Dial></Response>';
+    $twiml .= '<Response><Dial answerOnBridge="true"><Client callerId="+15736523170">testneo</Client></Dial></Response>';
 
     return response($twiml, 200)->header('Content-Type', 'text/xml');
 })->middleware('twilio');
@@ -113,3 +114,5 @@ Route::middleware('auth:sanctum')->get('/callTypes', [CallTypesAPIController::cl
 // Route::middleware('auth:sanctum')->patch('/active-users', [ActiveUsersController::class, 'update']);
 // Route::patch('/active-users', [ActiveUsersController::class, 'update']);
 Route::post('/active-users-pusher-webhook', [ActiveUsersPusherWebhookController::class, 'store']);
+
+Route::middleware('auth:sanctum')->get('/twilio-ios-access-token', [TwilioIOSAccessTokenController::class, 'show']);

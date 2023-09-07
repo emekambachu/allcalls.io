@@ -77,6 +77,8 @@ class ProfileController extends Controller
     public function edit(Request $request): Response
     {
         $user = $request->user();
+        // $role=
+        $internalAgent=$user->hasRole('internal-agent');
 
         // Get user's call types with states
         $userCallTypesWithStates = $user->callTypes()->with('states')->get();
@@ -126,6 +128,7 @@ class ProfileController extends Controller
             'status' => session('status'),
             'callTypes' => $callTypes,
             'bids' => $bids,
+            'internalAgent'=>$internalAgent
         ]);
     }
 

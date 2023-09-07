@@ -7,7 +7,9 @@
     import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
     import GlobalSpinnerPlugin from './spinner.js'
     const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
-   
+    import VueDatePicker from '@vuepic/vue-datepicker';
+    import '@vuepic/vue-datepicker/dist/main.css'
+    
     createInertiaApp({
         title: (title) => `${title} - ${appName}`,
         resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
@@ -16,6 +18,7 @@
                 .use(plugin)
                 .use(ZiggyVue, Ziggy)
                 .use(GlobalSpinnerPlugin)
+                .component('VueDatePicker', VueDatePicker)
                 .mount(el);
         },
         progress: {
