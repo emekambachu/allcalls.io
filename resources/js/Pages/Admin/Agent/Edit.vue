@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, defineEmits, onMounted, watch } from "vue";
+import { ref, reactive, defineEmits, computed, onMounted, watch } from "vue";
 import TextInput from "@/Components/TextInput.vue";
 import { router, usePage } from "@inertiajs/vue3";
 import GuestTextInput from "@/Components/GuestTextInput.vue";
@@ -8,6 +8,7 @@ import { Head, Link, useForm } from "@inertiajs/vue3";
 import { toaster } from "@/helper.js";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import axios from "axios";
+import { fromJSON } from "postcss";
 let page = usePage();
 if (page.props.flash.message) {
   toaster("success", page.props.flash.message);
@@ -33,6 +34,7 @@ let firstStepErrors = ref({});
 let uiEmailValidation = ref({
   isValid: false,
 });
+let balanceChange = ref(false);
 let form = useForm({
   first_name: "",
   last_name: "",
@@ -40,6 +42,7 @@ let form = useForm({
   password: "",
   phone: "",
   balance: 0,
+  comment: "",
 });
 
 form = JSON.parse(JSON.stringify(props.userDetail));
@@ -52,6 +55,11 @@ watch(
     }
   }
 );
+const isSecondFormVisible = ref(false);
+// Check if balance change
+let changeBalance = (newBalance) => {
+  return newBalance != props.userDetail.balance;
+};
 let validateEmail = (email) => {
   return /\S+@\S+\.\S+/.test(email); // Simple regex for email validation
 };
@@ -60,20 +68,35 @@ const isLoading = ref(false);
 let saveChanges = () => {
   isLoading.value = true;
   if (validateEmail(form.email)) {
-    return axios
-      .post(`/admin/agent/${form.id}`, form)
-      .then((response) => {
-        toaster("success", response.data.message);
-        router.visit(`/admin/agents?page=${props.currentPage}`);
+    if (changeBalance(form.balance) && !balanceChange.value) {
+      balanceChange.value = true;
+      isLoading.value = false;
+    } else {
+      if (changeBalance(form.balance) && !form.comment) {
+        firstStepErrors.value = { comment: "Comment Required" };
         isLoading.value = false;
-      })
-      .catch((error) => {
-        if (error.response.status === 400) {
-          uiEmailValidation.value.isValid = false;
-          firstStepErrors.value = error.response.data.errors;
-          isLoading.value = false;
-        }
-      });
+      } else {
+        return axios
+          .post(`/admin/agent/${form.id}`, form)
+          .then((response) => {
+            toaster("success", response.data.message);
+            router.visit(`/admin/agents?page=${props.currentPage}`);
+            isLoading.value = false;
+            balanceChange.value = false;
+          })
+          .catch((error) => {
+            if (error.response.status === 400) {
+              uiEmailValidation.value.isValid = false;
+              firstStepErrors.value = error.response.data.errors;
+              isLoading.value = false;
+              balanceChange.value = false;
+            } else {
+              //   console.log(error);
+              toaster("error", "Something went wrong");
+            }
+          });
+      }
+    }
   } else {
     uiEmailValidation.value.isValid = true;
     isLoading.value = false;
@@ -198,8 +221,7 @@ let saveChanges = () => {
 
           <GuestTextInput
             id="balance"
-            type="number"
-            step="any"
+            type="text"
             class="mt-1 block w-full"
             v-model="form.balance"
           />
@@ -207,6 +229,22 @@ let saveChanges = () => {
             v-if="firstStepErrors.balance"
             class="text-red-500"
             v-text="firstStepErrors.balance[0]"
+          ></div>
+        </div>
+
+        <div class="mt-4" v-if="balanceChange">
+          <GuestInputLabel for="comment" value="comment" />
+          <GuestTextInput
+            id="comment"
+            type="text"
+            class="mt-1 block w-full"
+            v-model="form.comment"
+            required
+          />
+          <div
+            v-if="firstStepErrors.comment"
+            class="text-red-500"
+            v-text="firstStepErrors.comment"
           ></div>
         </div>
 
