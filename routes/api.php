@@ -16,6 +16,7 @@ use App\Http\Controllers\CallTypesAPIController;
 use App\Http\Controllers\IncomingCallController;
 use App\Http\Controllers\CallRecordingController;
 use App\Http\Controllers\LiveCallClientController;
+use App\Http\Controllers\CallTypesSelectedAPIController;
 use App\Http\Controllers\TwilioIOSAccessTokenController;
 use App\Http\Controllers\ActiveUsersPusherWebhookController;
 use App\Http\Controllers\TwilioIOSAccessTokenGuestController;
@@ -111,6 +112,7 @@ Route::middleware('auth:sanctum')->get('/clients', [ClientsAPIController::class,
 Route::middleware('auth:sanctum')->post('/call-client-info', [LiveCallClientController::class, 'index']);
 
 Route::middleware('auth:sanctum')->get('/callTypes', [CallTypesAPIController::class, 'index']);
+Route::middleware('auth:sanctum')->get('/call-types/selected', [CallTypesSelectedAPIController::class, 'index']);
 
 // Route::middleware('auth:sanctum')->patch('/active-users', [ActiveUsersController::class, 'update']);
 // Route::patch('/active-users', [ActiveUsersController::class, 'update']);

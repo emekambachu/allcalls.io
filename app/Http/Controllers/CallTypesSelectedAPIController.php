@@ -6,7 +6,7 @@ use App\Models\State;
 use App\Models\CallType;
 use Illuminate\Http\Request;
 
-class CallTypesAPIController extends Controller
+class CallTypesSelectedAPIController extends Controller
 {
     public function index(Request $request)
     {
@@ -53,10 +53,15 @@ class CallTypesAPIController extends Controller
 
         });
 
-        return compact('callTypes');
-    }
+        $selectedCallTypes = $userCallTypesWithStates->filter(function ($type) {
+            return $type->user_states && count($type->user_states) > 0;
+        })->map(function ($type) {
+            return [
+                'id' => $type->id,
+                'type' => $type->type,
+            ];
+        })->values();  // Reset array keys
 
-    public function indexNew(Request $request)
-    {
+        return compact('selectedCallTypes');
     }
 }
