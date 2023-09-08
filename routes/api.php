@@ -107,6 +107,7 @@ Route::middleware('auth:sanctum')->post('/userDeviceToken', [IncomingCallControl
 Route::middleware('auth:sanctum')->get('/online-users', [OnlineUsersController::class, 'index']);
 Route::middleware('auth:sanctum')->post('/online-users', [OnlineUsersController::class, 'store']);
 Route::middleware('auth:sanctum')->delete('/online-users/{callTypeId}', [OnlineUsersController::class, 'destroy']);
+Route::middleware('auth:sanctum')->delete('/online-users', [OnlineUsersController::class, 'destroyOnLogout']);
 
 Route::middleware('auth:sanctum')->get('/clients', [ClientsAPIController::class, 'index']);
 

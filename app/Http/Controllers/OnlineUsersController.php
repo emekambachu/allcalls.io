@@ -69,4 +69,23 @@ class OnlineUsersController extends Controller
         // If no record found, return a response indicating the absence of the record
         return response()->json(['message' => 'failed'], 200);
     }
+
+    public function destroyOnLogout(Request $request)
+    {
+        // Retrieve the authenticated user's ID
+        $userId = $request->user()->id;
+
+        // Find the record with user_id and call_type_id
+        $record = OnlineUser::where('user_id', $userId)
+            ->first();
+
+        // If the record exists, delete it
+        if ($record) {
+            $record->delete();
+            return response()->json(['status' => 'success'], 200);
+        }
+
+        // If no record found, return a response indicating the absence of the record
+        return response()->json(['message' => 'failed'], 200);
+    }
 }
