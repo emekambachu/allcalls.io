@@ -10,6 +10,7 @@ use App\Models\Role;
 use App\Models\State;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Rules\CallTypeIdEixst;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -95,9 +96,9 @@ class InternalAgentController extends Controller
                     }
                     $fail('At least one States you are licensed in is required.');
                 },
+                new CallTypeIdEixst('call_types', 'id')
             ],
-            'typesWithStates.*' => ['nullable', 'exists:call_types,id'],
-            'typesWithStates.*.*' => ['nullable', 'exists:states,id'],
+            'typesWithStates.*' => ['nullable', 'exists:states,id'],
         ]);
 
         if ($validator->fails()) {
