@@ -60,8 +60,8 @@ class CallTypesSelectedAPIController extends Controller
                 'id' => $type->id,
                 'type' => $type->type,
             ];
-        })->values();  // Reset array keys
-
-        return compact('selectedCallTypes');
+        })->unique('id')->values();  // Use unique method to remove duplicates based on 'id'
+        
+        return $selectedCallTypes;
     }
 }
