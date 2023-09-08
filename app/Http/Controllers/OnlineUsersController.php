@@ -15,24 +15,15 @@ class OnlineUsersController extends Controller
         // Retrieve the call_type_id from the request
         $callTypeId = $request->call_type_id;
 
-        // Check if there's already a record with user_id and call_type_id
-        $existingRecord = OnlineUser::where('user_id', $userId)
-            ->where('call_type_id', $callTypeId)
-            ->first();
+        OnlineUser::where('user_id', $request->user()->id)->delete();
 
-        // If no record found, create a new one
-        if (!$existingRecord) {
-            OnlineUser::create([
-                'user_id' => $userId,
-                'call_type_id' => $callTypeId,
-            ]);
-
-            // Return a response, if required
-            return response()->json(['status' => 'success'], 200);
-        }
-
-        // Return a response, if required
-        return response()->json(['status' => 'failed'], 200);
+        OnlineUser::updateOrInsert(
+            ['user_id' => $userId],
+            ['call_type_id' => $callTypeId]
+        );
+        
+        // Return a response
+        return response()->json(['status' => 'success'], 200);        
     }
 
     public function destroy(Request $request, $callTypeId)
