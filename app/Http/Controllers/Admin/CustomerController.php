@@ -28,38 +28,45 @@ class CustomerController extends Controller
     {
         $excludeRoles = Role::whereIn('name', ['admin', 'internal-agent'])->pluck('id');
         $users = User::whereDoesntHave('roles', function ($query) use ($excludeRoles) {
-            if(count($excludeRoles)) {
+            if (count($excludeRoles)) {
                 $query->whereIn('role_id', $excludeRoles);
             }
         })
-        ->where(function($query) use ($request) {
-            if(isset($request->name) && $request->name != '') {
-                $query->where('first_name', 'LIKE', '%' . $request->name . '%')
-                ->orWhere('last_name', 'LIKE', '%' . $request->name . '%');
-            }
-        })
-        ->where(function($query) use ($request) {
-            if(isset($request->email) && $request->email != '') {
-                $query->where('email', 'LIKE', '%' . $request->email . '%');
-            }
-        })
-        ->where(function($query) use ($request) {
-            if(isset($request->phone) && $request->phone != '') {
-                $query->where('phone', 'LIKE', '%' . $request->phone . '%');
-            }
-        })
-        ->where(function($query) use ($request) {
-            if(isset($request->card_no) && $request->card_no != '') {
-                $query->whereHas('cards', function($query) use ($request){
-                    $query->where('number', 'LIKE', '%' . $request->card_no . '%');
-                });
-            }
-        })
-        ->paginate(10);
+            ->where(function ($query) use ($request) {
+                if (isset($request->name) && $request->name != '') {
+                    $query->where('first_name', 'LIKE', '%' . $request->name . '%')
+                        ->orWhere('last_name', 'LIKE', '%' . $request->name . '%');
+                }
+            })
+            ->where(function ($query) use ($request) {
+                if (isset($request->email) && $request->email != '') {
+                    $query->where('email', 'LIKE', '%' . $request->email . '%');
+                }
+            })
+            ->where(function ($query) use ($request) {
+                if (isset($request->phone) && $request->phone != '') {
+                    $query->where('phone', 'LIKE', '%' . $request->phone . '%');
+                }
+            })
+            ->where(function ($query) use ($request) {
+                if (isset($request->card_no) && $request->card_no != '') {
+                    $query->whereHas('cards', function ($query) use ($request) {
+                        $query->where('number', 'LIKE', '%' . $request->card_no . '%');
+                    });
+                }
+            })
+            ->with('states')
+            ->with('callTypes')
+            ->paginate(10);
+
+        $callTypes = CallType::get();
+        $states = State::get();
 
         return Inertia::render('Admin/User/Index', [
-            'requestData'=>$request->all(),
+            'requestData' => $request->all(),
             'users' => $users,
+            'callTypes' => $callTypes,
+            'states' => $states
         ]);
     }
 
@@ -129,30 +136,54 @@ class CustomerController extends Controller
                 'errors' => $validator->errors(),
             ], 400);
         }
-
-        try{
-            $user= User::find($id);
-            if($user->balance!=$request->balance){
+        try {
+            $user = User::find($id);
+            if ($user->balance != $request->balance) {
                 Transaction::create([
-                    'amount'=>$request->balance-$user->balance,
-                    'sign'=> 1,
-                    'bonus'=>0,
-                    'user_id'=>$id,
-                    'comment'=>$request->comment
+                    'amount' => $request->balance - $user->balance,
+                    'sign' => 1,
+                    'bonus' => 0,
+                    'user_id' => $id,
+                    'comment' => $request->comment
                 ]);
             }
+            //Call Types And State
+            $callTypesArr = [];
+            if (count($request->selected_states)) {
+                foreach ($request->selected_states as $states) {
+                    if (isset($states['typeId']) && count($states['selectedStateIds'])) {
+                        foreach ($states['selectedStateIds'] as $selectedState) {
+                            $data = [
+                                'user_id' => $user->id,
+                                'call_type_id' => $states['typeId'],
+                                'state_id' => $selectedState,
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ];
+                            array_push($callTypesArr, $data);
+                        }
+                    }
+                }
+            }
+            DB::table('users_call_type_state')->where('user_id', $user->id)->delete();
+            if (count($callTypesArr)) {
+                DB::table('users_call_type_state')->insert($callTypesArr);
+            }
+            //Call Types And State
+
             $user->update([
                 'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'phone' => $request->phone,
-            'balance' => isset($request->balance)?$request->balance:0,
-        ]);
-        return response()->json([
-            'success' => true,
-            'message' => 'Customer updated successfully.',
-        ], 200);
-    }catch(Exception $e){
-        return response()->json(['error'=>$e], 500);
-    }
+                'last_name' => $request->last_name,
+                'phone' => $request->phone,
+                'balance' => isset($request->balance) ? $request->balance : 0,
+            ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Customer updated successfully.',
+            ], 200);
+        } catch (Exception $e) {
+            dd($e);
+            return response()->json(['error' => $e], 500);
+        }
     }
 }
