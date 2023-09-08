@@ -8,6 +8,7 @@ use App\Models\Call;
 use App\Models\CallType;
 use App\Models\Role;
 use App\Models\State;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -23,16 +24,41 @@ use App\Models\Bid;
 
 class CustomerController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $excludeRoles = Role::whereIn('name', ['admin', 'internal-agent'])->pluck('id');
         $users = User::whereDoesntHave('roles', function ($query) use ($excludeRoles) {
             if(count($excludeRoles)) {
                 $query->whereIn('role_id', $excludeRoles);
             }
-        })->paginate(10);
+        })
+        ->where(function($query) use ($request) {
+            if(isset($request->name) && $request->name != '') {
+                $query->where('first_name', 'LIKE', '%' . $request->name . '%')
+                ->orWhere('last_name', 'LIKE', '%' . $request->name . '%');
+            }
+        })
+        ->where(function($query) use ($request) {
+            if(isset($request->email) && $request->email != '') {
+                $query->where('email', 'LIKE', '%' . $request->email . '%');
+            }
+        })
+        ->where(function($query) use ($request) {
+            if(isset($request->phone) && $request->phone != '') {
+                $query->where('phone', 'LIKE', '%' . $request->phone . '%');
+            }
+        })
+        ->where(function($query) use ($request) {
+            if(isset($request->card_no) && $request->card_no != '') {
+                $query->whereHas('cards', function($query) use ($request){
+                    $query->where('number', 'LIKE', '%' . $request->card_no . '%');
+                });
+            }
+        })
+        ->paginate(10);
 
         return Inertia::render('Admin/User/Index', [
+            'requestData'=>$request->all(),
             'users' => $users,
         ]);
     }
@@ -104,14 +130,29 @@ class CustomerController extends Controller
             ], 400);
         }
 
-        $user = User::whereId($id)->update([
-            'first_name' => $request->first_name,
+        try{
+            $user= User::find($id);
+            if($user->balance!=$request->balance){
+                Transaction::create([
+                    'amount'=>$request->balance-$user->balance,
+                    'sign'=> 1,
+                    'bonus'=>0,
+                    'user_id'=>$id,
+                    'comment'=>$request->comment
+                ]);
+            }
+            $user->update([
+                'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'phone' => $request->phone,
+            'balance' => isset($request->balance)?$request->balance:0,
         ]);
         return response()->json([
             'success' => true,
             'message' => 'Customer updated successfully.',
         ], 200);
+    }catch(Exception $e){
+        return response()->json(['error'=>$e], 500);
+    }
     }
 }

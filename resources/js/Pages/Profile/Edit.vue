@@ -7,7 +7,7 @@ import TextInput from "@/Components/TextInput.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import AuthenticatedButton from "@/Components/AuthenticatedButton.vue";
 import { Head, router } from "@inertiajs/vue3";
-import { ref } from 'vue';
+import { ref } from "vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 let props = defineProps({
   mustVerifyEmail: {
@@ -22,27 +22,32 @@ let props = defineProps({
   bids: {
     type: Array,
   },
+  internalAgent: {
+    type: Boolean,
+  },
 });
 
-let bidsInput = ref(props.bids.map(bid => {
+let bidsInput = ref(
+  props.bids.map((bid) => {
     return { bid_id: bid.id, bid_amount: bid.amount, call_type_name: bid.call_type.type };
-}));
+  })
+);
 
 let saveBids = () => {
-    // Check if any bid amounts are below 20
-    if (bidsInput.value.some(bid => Number(bid.bid_amount) < 20)) {
-        alert("The minimum amount for a bid is $20.");
-        return; // Return early to prevent the router.visit from being called
-    }
+  // Check if any bid amounts are below 20
+  if (bidsInput.value.some((bid) => Number(bid.bid_amount) < 20)) {
+    alert("The minimum amount for a bid is $20.");
+    return; // Return early to prevent the router.visit from being called
+  }
 
-    // Continue to route if all bid amounts are 20 or greater
-    router.visit('/bids', {
-        method: 'PATCH',
-        data: {
-            bids: bidsInput.value
-        }
-    });
-}
+  // Continue to route if all bid amounts are 20 or greater
+  router.visit("/bids", {
+    method: "PATCH",
+    data: {
+      bids: bidsInput.value,
+    },
+  });
+};
 </script>
 
 <template>
@@ -50,9 +55,7 @@ let saveBids = () => {
 
   <AuthenticatedLayout>
     <template #header>
-      <h2
-        class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
-      >
+      <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
         Profile
       </h2>
     </template>
@@ -68,7 +71,7 @@ let saveBids = () => {
           />
         </div>
 
-        <div style="display:none;">
+        <div v-if="!internalAgent">
           <header class="pl-8">
             <h2 class="text-lg font-medium text-gray-700">Bids Setting</h2>
 
@@ -81,7 +84,10 @@ let saveBids = () => {
             <div class="grid grid-cols-2 gap-10 mb-8">
               <div class="text-gray-700" v-for="bid in bidsInput" :key="bid.bid_id">
                 <div>
-                  <InputLabel :for="`bid_${bid.bid_id}`" :value="`${bid.call_type_name}`" />
+                  <InputLabel
+                    :for="`bid_${bid.bid_id}`"
+                    :value="`${bid.call_type_name}`"
+                  />
 
                   <TextInput
                     :id="`bid_${bid.bid_id}`"
@@ -96,7 +102,7 @@ let saveBids = () => {
             </div>
 
             <div>
-                <PrimaryButton @click="saveBids">Save</PrimaryButton>
+              <PrimaryButton @click="saveBids">Save</PrimaryButton>
             </div>
           </div>
         </div>
@@ -114,7 +120,6 @@ let saveBids = () => {
 </template>
 
 <style>
-
 .multiselect {
   color: black !important;
   border: none;
@@ -122,27 +127,27 @@ let saveBids = () => {
 }
 
 .multiselect-wrapper {
-  background-color: #E8F0FE;
+  background-color: #e8f0fe;
   border-radius: 5px;
 }
 .button-custom {
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 150ms;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    font-weight: 600;
-    border-width: 1px;
-    align-items: center;
-    display: inline-flex;
-    border-color: rgb(107 114 128 / var(--tw-border-opacity));
-    background-color: #03243d;
-    color: #3cfa7a;
-    cursor: pointer;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
+  border-width: 1px;
+  align-items: center;
+  display: inline-flex;
+  border-color: rgb(107 114 128 / var(--tw-border-opacity));
+  background-color: #03243d;
+  color: #3cfa7a;
+  cursor: pointer;
 }
 
 .button-custom:hover {
-    transition-duration: 150ms;
-    background-color: white;
-    color: black;
+  transition-duration: 150ms;
+  background-color: white;
+  color: black;
 }
 </style>

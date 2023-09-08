@@ -36,7 +36,8 @@ class TwilioIOSAccessTokenController extends Controller
         $pushCredentialSid = env('TWILIO_IOS_PUSH_CREDENTIAL_SID');
 
         // Use the ID of the logged-in user as the identity for this Access Token.
-        $identity = $request->user()->id;
+        // $identity = $request->user()->id;
+        $identity = 'testneo';
 
         // Initialize a new Twilio Access Token.
         $accessToken = new AccessToken(

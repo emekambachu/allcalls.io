@@ -10,7 +10,7 @@ use App\Models\Role;
 use App\Models\State;
 use App\Models\Transaction;
 use App\Models\User;
-use App\Rules\CallTypeIdEixst;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -21,16 +21,40 @@ use Inertia\Inertia;
 
 class InternalAgentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $agent = Role::whereName('internal-agent')->first();
 
         $agents = User::whereHas('roles', function ($query) use ($agent) {
             $query->where('role_id', $agent->id);
+        })
+        ->where(function($query) use ($request) {
+            if(isset($request->name) && $request->name != '') {
+                $query->where('first_name', 'LIKE', '%' . $request->name . '%')
+                ->orWhere('last_name', 'LIKE', '%' . $request->name . '%');
+            }
+        })
+        ->where(function($query) use ($request) {
+            if(isset($request->email) && $request->email != '') {
+                $query->where('email', 'LIKE', '%' . $request->email . '%');
+            }
+        })
+        ->where(function($query) use ($request) {
+            if(isset($request->phone) && $request->phone != '') {
+                $query->where('phone', 'LIKE', '%' . $request->phone . '%');
+            }
+        })
+        ->where(function($query) use ($request) {
+            if(isset($request->card_no) && $request->card_no != '') {
+                $query->whereHas('cards', function($query) use ($request){
+                    $query->where('number', 'LIKE', '%' . $request->card_no . '%');
+                });
+            }
         })->paginate(10);
        $callTypes = CallType::all();
        $states = State::all();
         return Inertia::render('Admin/Agent/Index', [
+            'requestData'=>$request->all(),
             'agents' => $agents,
             'callTypes' => $callTypes,
             'states' => $states,
@@ -54,7 +78,6 @@ class InternalAgentController extends Controller
 
 
     public function store(Request $request){
-        // dd($request);
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -72,10 +95,9 @@ class InternalAgentController extends Controller
                     }
                     $fail('At least one States you are licensed in is required.');
                 },
-                new CallTypeIdEixst('call_types', 'id'),
             ],
-            'typesWithStates.*' => ['nullable', 'exists:states,id'],
-
+            'typesWithStates.*' => ['nullable', 'exists:call_types,id'],
+            'typesWithStates.*.*' => ['nullable', 'exists:states,id'],
         ]);
 
         if ($validator->fails()) {
@@ -161,6 +183,7 @@ class InternalAgentController extends Controller
 
     public function update(Request $request, $id)
     {
+        // echo $request->all();
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -187,8 +210,19 @@ class InternalAgentController extends Controller
             ], 400);
         }
 
-        User::whereId($id)->update([
-            'first_name' => $request->first_name,
+        try{
+            $user= User::find($id);
+            if($user->balance!=$request->balance){
+                Transaction::create([
+                    'amount'=>$request->balance-$user->balance,
+                    'sign'=> 1,
+                    'bonus'=>0,
+                    'user_id'=>$id,
+                    'comment'=>$request->comment
+                ]);
+            }
+            $user->update([
+                'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'phone' => $request->phone,
             'balance' => isset($request->balance)?$request->balance:0,
@@ -197,5 +231,9 @@ class InternalAgentController extends Controller
             'success' => true,
             'message' => 'Agent updated successfully.',
         ], 200);
+    }catch(Exception $e){
+        return response()->json(['error'=>$e], 500);
+    }
+
     }
 }
