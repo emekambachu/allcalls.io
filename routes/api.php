@@ -104,6 +104,7 @@ Route::get('/handle-call-recording', [CallRecordingController::class, 'store']);
 Route::post('/call/pushNotification', [IncomingCallController::class, 'sendPushNotification'])->name('call.pushNotification');
 Route::middleware('auth:sanctum')->post('/userDeviceToken', [IncomingCallController::class, 'saveDeviceToken'])->name('userDeviceToken');
 
+Route::middleware('auth:sanctum')->get('/online-users', [OnlineUsersController::class, 'index']);
 Route::middleware('auth:sanctum')->post('/online-users', [OnlineUsersController::class, 'store']);
 Route::middleware('auth:sanctum')->delete('/online-users/{callTypeId}', [OnlineUsersController::class, 'destroy']);
 
