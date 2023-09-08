@@ -18,6 +18,7 @@ use App\Http\Controllers\CallRecordingController;
 use App\Http\Controllers\LiveCallClientController;
 use App\Http\Controllers\TwilioIOSAccessTokenController;
 use App\Http\Controllers\ActiveUsersPusherWebhookController;
+use App\Http\Controllers\TwilioIOSAccessTokenGuestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -115,4 +116,5 @@ Route::middleware('auth:sanctum')->get('/callTypes', [CallTypesAPIController::cl
 // Route::patch('/active-users', [ActiveUsersController::class, 'update']);
 Route::post('/active-users-pusher-webhook', [ActiveUsersPusherWebhookController::class, 'store']);
 
-Route::middleware('auth:sanctum')->get('/twilio-ios-access-token', [TwilioIOSAccessTokenController::class, 'show']);
+Route::middleware('auth:sanctum')->get('/twilio-ios-access-token-guest', [TwilioIOSAccessTokenGuestController::class, 'show']);
+Route::get('/twilio-ios-access-token', [TwilioIOSAccessTokenController::class, 'show']);
