@@ -214,7 +214,7 @@ class IncomingCallController extends Controller
         Log::debug($selectedUser);
 
         // Find one of the available numbers and associate it with the selected user
-        $availableNumber = $this->getAvailableNumberForUser($selectedUser->id, $from, $callType->id);
+        $availableNumber = $this->getAvailableNumberForUser($selectedUser->user_id, $from, $callType->id);
 
         Log::debug('Forwarding call to ' . $availableNumber->phone);
 
