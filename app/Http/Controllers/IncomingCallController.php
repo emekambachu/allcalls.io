@@ -126,7 +126,7 @@ class IncomingCallController extends Controller
 
         $onlineUsers = OnlineUser::byCallTypeAndState($callType, $stateModel)
             ->withSufficientBalance()
-            ->withActiveUserWaitingStatus()
+            // ->withActiveUserWaitingStatus()
             ->get();
 
         $onlineUsers = OnlineUser::prioritizeInternalAgents($onlineUsers);
@@ -193,7 +193,7 @@ class IncomingCallController extends Controller
         // Fetch all online users who have selected the same call type and state
         $onlineUsers = OnlineUser::byCallTypeAndState($callType, $stateModel)
             ->withSufficientBalance()
-            ->withActiveUserWaitingStatus()
+            // ->withActiveUserWaitingStatus()
             ->get();
 
         $onlineUsers = OnlineUser::prioritizeInternalAgents($onlineUsers);
