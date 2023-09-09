@@ -92,7 +92,7 @@ Route::get('/call/incoming', function() {
 
     // Manually construct the TwiML
     $twiml = '<?xml version="1.0" encoding="UTF-8"?>'; 
- $twiml .= '<Response><Dial answerOnBridge="true" callerId="' . $numberToDial . '">' . '<Client>+15736523170</Client>' . '</Dial></Response>';
+//  $twiml .= '<Response><Dial answerOnBridge="true" callerId="' . $numberToDial . '">' . '<Client>+15736523170</Client>' . '</Dial></Response>';
  $twiml .= '<Response><Dial answerOnBridge="true"><Client callerId="+15736523170">alice</Client></Dial></Response>';
 
  return response($twiml, 200)->header('Content-Type', 'text/xml');
