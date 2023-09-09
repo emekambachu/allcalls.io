@@ -24,26 +24,26 @@ class IncomingCallController extends Controller
             'To' => 'required',
         ]);
 
-        // Check for X-Twilio-Signature header
-        $twilioSignature = $request->header('X-Twilio-Signature');
-        if ($twilioSignature) {
-            Log::debug('X-Twilio-Signature header exists: ' . $twilioSignature);
-            $validator = new RequestValidator(env('TWILIO_AUTH_TOKEN'));
-            $url = url()->full() . '?' . http_build_query($request->all());
-            $variables = $request->all();
+        // // Check for X-Twilio-Signature header
+        // $twilioSignature = $request->header('X-Twilio-Signature');
+        // if ($twilioSignature) {
+        //     Log::debug('X-Twilio-Signature header exists: ' . $twilioSignature);
+        //     $validator = new RequestValidator(env('TWILIO_AUTH_TOKEN'));
+        //     $url = url()->full() . '?' . http_build_query($request->all());
+        //     $variables = $request->all();
 
-            Log::debug('URL: ' . $url);
-            Log::debug($variables);
+        //     Log::debug('URL: ' . $url);
+        //     Log::debug($variables);
 
-            // Check if the incoming signature is valid for your application URL and the incoming parameters
-            if ($validator->validate($twilioSignature, $url, $variables)) {
-                Log::debug('Confirmed to have come from Twilio.');
-            } else {
-                Log::debug('NOT VALID. It might have been spoofed!');
-            }
-        } else {
-            Log::debug('X-Twilio-Signature header not found.');
-        }
+        //     // Check if the incoming signature is valid for your application URL and the incoming parameters
+        //     if ($validator->validate($twilioSignature, $url, $variables)) {
+        //         Log::debug('Confirmed to have come from Twilio.');
+        //     } else {
+        //         Log::debug('NOT VALID. It might have been spoofed!');
+        //     }
+        // } else {
+        //     Log::debug('X-Twilio-Signature header not found.');
+        // }
 
 
         $twiml = '<?xml version="1.0" encoding="UTF-8"?>';
