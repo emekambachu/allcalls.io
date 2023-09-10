@@ -5,13 +5,13 @@ import { onMounted } from "vue";
 import { Head } from "@inertiajs/vue3";
 
 let props = defineProps({
-    users: {
+    onlineUsers: {
         type: Array,
     }
 });
 
 console.log('Online users: ');
-console.log(props.users);
+console.log(props.onlineUsers);
 
 let refreshPage = () => {
     router.visit('/admin/active-users');
@@ -45,16 +45,16 @@ onMounted(() => {
                     <div class="text-4xl text-custom-sky font-bold mb-6">Online Agents</div>
                     <hr class="mb-4" />
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        <template v-for="user in users" :key="user.id">
+                        <template v-for="onlineUser in onlineUsers" :key="onlineUser.id">
                             <div class="rounded-lg shadow-lg border p-4">
                                 <div class="flex items-center justify-between">
-                                    <span class="text-lg font-semibold">{{ user.first_name }} {{ user.last_name }}</span>
-                                    <span :class="getStatusBadge(user.call_status)" class="text-white text-xs px-2 py-1 rounded">
-                                        {{ user.call_status }}
+                                    <span class="text-lg font-semibold">{{ onlineUser.user.first_name }} {{ onlineUser.user.last_name }}</span>
+                                    <span :class="getStatusBadge(onlineUser.user.call_status)" class="text-white text-xs px-2 py-1 rounded">
+                                        {{ onlineUser.user.call_status }}
                                     </span>
                                 </div>
                                 <div class="text-sm mt-2">
-                                    <div><strong>User ID:</strong> {{ user.id }}</div>
+                                    <div><strong>User ID:</strong> {{ onlineUser.user.id }}</div>
                                 </div>
                             </div>
                         </template>

@@ -11,7 +11,7 @@ class OnlineAgentsController extends Controller
 {
     public function index()
     {
-        $users = OnlineUser::all();
+        $users = OnlineUser::with('user')->get();
 
         return Inertia::render('Admin/OnlineAgents/Index', compact('users'));
     }
