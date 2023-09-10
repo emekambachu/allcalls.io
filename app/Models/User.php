@@ -34,6 +34,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'states_info',
         'balance',
         'device_token',
+        'banned'
     ];
 
     /**

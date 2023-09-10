@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import Edit from "@//Pages/Admin/Agent/Edit.vue";
+import Edit from "@//Pages/Admin/User/Edit.vue";
 import Create from "@//Pages/Admin/Agent/Create.vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import { ref } from "vue";
@@ -22,7 +22,9 @@ let props = defineProps({
   states: Array,
   requestData: {
     type: Array,
-  }
+  },
+  callTypes: Array,
+  states: Array,
 });
 let formData = ref({});
 
@@ -256,12 +258,8 @@ let capitalizeAndReplaceUnderscore = (str) => {
     </section>
 
     <Modal :show="showModal" @close="showModal = false">
-      <Edit
-        :showModal="showModal"
-        :userDetail="userDetail"
-        :currentPage="currentPage"
-        @close="showModal = false"
-      ></Edit>
+      <Edit :showModal="showModal" :userDetail="userDetail" :currentPage="currentPage" @close="showModal = false"
+        :callTypes="callTypes" :states="states" :route="'/admin/agent'"  ></Edit>
     </Modal>
     <Modal :show="agentModal" @close="agentModal = false">
       <Create

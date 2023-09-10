@@ -10,6 +10,7 @@ use App\Models\Role;
 use App\Models\State;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Rules\CallTypeIdEixst;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -50,9 +51,13 @@ class InternalAgentController extends Controller
                     $query->where('number', 'LIKE', '%' . $request->card_no . '%');
                 });
             }
-        })->paginate(10);
-       $callTypes = CallType::all();
-       $states = State::all();
+        })
+        ->with('states')
+        ->with('callTypes')
+        ->paginate(10);
+
+        $callTypes = CallType::get();
+        $states = State::get();
         return Inertia::render('Admin/Agent/Index', [
             'requestData'=>$request->all(),
             'agents' => $agents,
@@ -95,9 +100,9 @@ class InternalAgentController extends Controller
                     }
                     $fail('At least one States you are licensed in is required.');
                 },
+                new CallTypeIdEixst('call_types', 'id')
             ],
-            'typesWithStates.*' => ['nullable', 'exists:call_types,id'],
-            'typesWithStates.*.*' => ['nullable', 'exists:states,id'],
+            'typesWithStates.*' => ['nullable', 'exists:states,id'],
         ]);
 
         if ($validator->fails()) {
@@ -221,6 +226,29 @@ class InternalAgentController extends Controller
                     'comment'=>$request->comment
                 ]);
             }
+            //Call Types And State
+            $callTypesArr = [];
+            if (count($request->selected_states)) {
+                foreach ($request->selected_states as $states) {
+                    if (isset($states['typeId']) && count($states['selectedStateIds'])) {
+                        foreach ($states['selectedStateIds'] as $selectedState) {
+                            $data = [
+                                'user_id' => $user->id,
+                                'call_type_id' => $states['typeId'],
+                                'state_id' => $selectedState,
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ];
+                            array_push($callTypesArr, $data);
+                        }
+                    }
+                }
+            }
+            DB::table('users_call_type_state')->where('user_id', $user->id)->delete();
+            if (count($callTypesArr)) {
+                DB::table('users_call_type_state')->insert($callTypesArr);
+            }
+            //Call Types And State
             $user->update([
                 'first_name' => $request->first_name,
             'last_name' => $request->last_name,
