@@ -37,25 +37,32 @@ onMounted(() => {
                 <div class="p-4 rounded-lg bg-white shadow">
                     <h3 class="text-4xl text-custom-sky font-bold mb-6">Online Agents</h3>
                     <hr class="mb-4" />
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        <template v-for="onlineUser in onlineUsers" :key="onlineUser.id">
-                            <div class="rounded-lg shadow-lg p-4">
-                                <div class="flex items-center justify-between">
-                                    <span class="text-lg font-semibold">
-                                        {{ onlineUser.user.first_name }} {{ onlineUser.user.last_name }}
-                                    </span>
-                                    <span :class="getStatusBadge(onlineUser.user.call_status)" class="text-white text-xs px-2 py-1 rounded">
-                                        {{ onlineUser.user.call_status }}
-                                    </span>
-                                </div>
-                                <div class="text-sm mt-2">
-                                    <div><strong>Email:</strong> {{ onlineUser.user.email }}</div>
-                                    <div><strong>Insurance Type:</strong> {{ onlineUser.call_type.type }}</div>
-                                    <div><strong>User ID:</strong> {{ onlineUser.user.id }}</div>
-                                </div>
-                            </div>
-                        </template>
-                    </div>
+                    <!-- The Table Header -->
+                    <table class="w-full text-sm text-left text-gray-400">
+                        <thead class="text-xs text-gray-300 uppercase bg-sky-900">
+                            <tr>
+                                <th scope="col" class="px-4 py-3">First Name</th>
+                                <th scope="col" class="px-4 py-3">Last Name</th>
+                                <th scope="col" class="px-4 py-3">Call Status</th>
+                                <th scope="col" class="px-4 py-3">Email</th>
+                                <th scope="col" class="px-4 py-3">Insurance Type</th>
+                                <th scope="col" class="px-4 py-3">User ID</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- The Table Body -->
+                            <tr v-for="onlineUser in onlineUsers" :key="onlineUser.id" class="border-b border-gray-500">
+                                <td class="text-gray-600 px-4 py-3">{{ onlineUser.user.first_name }}</td>
+                                <td class="text-gray-600 px-4 py-3">{{ onlineUser.user.last_name }}</td>
+                                <td class="text-gray-600 px-4 py-3" :class="getStatusBadge(onlineUser.user.call_status)">{{
+                                    onlineUser.user.call_status }}</td>
+                                <td class="text-gray-600 px-4 py-3">{{ onlineUser.user.email }}</td>
+                                <td class="text-gray-600 px-4 py-3">{{ onlineUser.call_type.type }}</td>
+                                <td class="text-gray-600 px-4 py-3">{{ onlineUser.user.id }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
                 </div>
             </div>
         </div>
