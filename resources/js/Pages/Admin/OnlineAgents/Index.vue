@@ -43,20 +43,24 @@ onMounted(() => {
                             <tr>
                                 <th scope="col" class="px-4 py-3">First Name</th>
                                 <th scope="col" class="px-4 py-3">Last Name</th>
-                                <th scope="col" class="px-4 py-3">Call Status</th>
                                 <th scope="col" class="px-4 py-3">Email</th>
-                                <th scope="col" class="px-4 py-3">Insurance Type</th>
-                                <th scope="col" class="px-4 py-3">User ID</th>
+                                <th scope="col" class="px-4 py-3">Call Status</th>
+                                <th scope="col" class="px-4 py-3">Listening For</th>
                             </tr>
                         </thead>
                         <tbody>
                             <!-- The Table Body -->
                             <tr v-for="onlineUser in onlineUsers" :key="onlineUser.id" class="border-b border-gray-500">
+                                <td class="text-gray-600 px-4 py-3">{{ onlineUser.user.email }}</td>
                                 <td class="text-gray-600 px-4 py-3">{{ onlineUser.user.first_name }}</td>
                                 <td class="text-gray-600 px-4 py-3">{{ onlineUser.user.last_name }}</td>
-                                <td class="text-gray-600 px-4 py-3" :class="getStatusBadge(onlineUser.user.call_status)">{{
-                                    onlineUser.user.call_status }}</td>
                                 <td class="text-gray-600 px-4 py-3">{{ onlineUser.user.email }}</td>
+                                <td class="text-gray-600 px-4 py-3">
+                                    <span
+                                        :class="`${getStatusBadge(onlineUser.user.call_status)} text-white text-xs px-2 py-1 rounded`">
+                                        {{ onlineUser.user.call_status }}
+                                    </span>
+                                </td>
                                 <td class="text-gray-600 px-4 py-3">{{ onlineUser.call_type.type }}</td>
                                 <td class="text-gray-600 px-4 py-3">{{ onlineUser.user.id }}</td>
                             </tr>
