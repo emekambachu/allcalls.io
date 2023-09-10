@@ -68,7 +68,7 @@ export default {
         getStatusBadge(status) {
             switch (status) {
                 case "Waiting":
-                    return "bg-green-700";
+                    return "bg-green-600";
                 case "Ringing":
                     return "bg-yellow-400";
                 case "Talking":
