@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\OnlineUser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Events\OnlineUserListUpdated;
 
 class OnlineUsersController extends Controller
@@ -46,6 +47,8 @@ class OnlineUsersController extends Controller
             ['user_id' => $userId],
             ['call_type_id' => $callTypeId]
         );
+
+        Log::debug('Dispatching OnlineUserListUpdated');
 
         // Dispatch the event
         OnlineUserListUpdated::dispatch();

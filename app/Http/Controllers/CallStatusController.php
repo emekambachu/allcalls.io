@@ -40,6 +40,7 @@ class CallStatusController extends Controller
 
         $user = User::findOrFail($userId);
 
+        Log::debug('Dispatching CallStatusUpdated');
         CallStatusUpdated::dispatch($user, $request->all());
 
         switch ($callStatus) {
