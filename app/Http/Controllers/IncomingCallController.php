@@ -165,7 +165,7 @@ class IncomingCallController extends Controller
         }
 
         // If nobody picks up, forward the call to an external number.
-        // $twimlBody .= '<Dial callerId="+441156471655">+18449831955</Dial>';
+        $twimlBody .= '<Dial callerId="+441156471655">+18449831955</Dial>';
 
 
         $twiml = $twimlStart . $twimlBody . $twimlEnd;
