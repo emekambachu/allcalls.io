@@ -11,12 +11,12 @@ const props = defineProps({
 });
 
 const refreshPage = () => {
-    router.visit('/admin/active-users');
+    router.visit('/admin/online-agents');
 };
 
 onMounted(() => {
     window.Echo.channel('active-user-events')
-        .listen('ActiveUserListUpdated', () => {
+        .listen('OnlineUserListUpdated', () => {
             refreshPage();
         })
         .listen('ActiveUserStatusUpdated', () => {

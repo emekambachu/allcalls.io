@@ -10,6 +10,7 @@ use App\Events\RingingCallEvent;
 use App\Events\CallStatusUpdated;
 use App\Listeners\AddDefaultBids;
 use App\Events\CompletedCallEvent;
+use App\Events\OnlineUserListUpdated;
 use App\Listeners\SendWelcomeEmail;
 use App\Listeners\AddTargetsInRingba;
 use Illuminate\Support\Facades\Event;
@@ -58,7 +59,6 @@ class EventServiceProvider extends ServiceProvider
 
         CallStatusUpdated::class => [
             LogCallStatusChange::class,
-            // UpdateActiveUserStatus::class,
             UpdateUserCallStatus::class,
         ],
     ];

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\OnlineUser;
 use Illuminate\Http\Request;
+use App\Events\OnlineUserListUpdated;
 
 class OnlineUsersController extends Controller
 {
@@ -46,6 +47,10 @@ class OnlineUsersController extends Controller
             ['call_type_id' => $callTypeId]
         );
 
+        // Dispatch the event
+        OnlineUserListUpdated::dispatch();
+
+
         // Return a response
         return response()->json(['status' => 'success'], 200);
     }
@@ -63,6 +68,10 @@ class OnlineUsersController extends Controller
         // If the record exists, delete it
         if ($record) {
             $record->delete();
+
+            // Dispatch the event
+            OnlineUserListUpdated::dispatch();
+
             return response()->json(['status' => 'success'], 200);
         }
 
@@ -82,6 +91,10 @@ class OnlineUsersController extends Controller
         // If the record exists, delete it
         if ($record) {
             $record->delete();
+
+            // Dispatch the event
+            OnlineUserListUpdated::dispatch();
+
             return response()->json(['status' => 'success'], 200);
         }
 
