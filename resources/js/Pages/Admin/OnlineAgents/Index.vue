@@ -58,7 +58,7 @@ onMounted(() => {
                                 <td class="text-gray-600 px-4 py-3">{{ onlineUser.user.email }}</td>
                                 <td class="text-gray-600 px-4 py-3">
                                     <span
-                                        :class="`${getStatusBadge(onlineUser.user.call_status)} text-white text-xs px-2 py-1 rounded`">
+                                        :class="`${getStatusBadge(onlineUser.user.call_status)} text-white text-xs px-2 py-1 rounded-2xl`">
                                         {{ onlineUser.user.call_status }}
                                     </span>
                                 </td>
