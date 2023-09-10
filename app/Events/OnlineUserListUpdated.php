@@ -30,7 +30,7 @@ class OnlineUserListUpdated
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('active-users-events'),
+            new Channel('active-users-events'),
         ];
     }
 }
