@@ -39,7 +39,7 @@ onMounted(() => {
                     <hr class="mb-4" />
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         <template v-for="onlineUser in onlineUsers" :key="onlineUser.id">
-                            <div class="rounded-lg shadow-lg border p-4">
+                            <div class="rounded-lg shadow-lg p-4">
                                 <div class="flex items-center justify-between">
                                     <span class="text-lg font-semibold">
                                         {{ onlineUser.user.first_name }} {{ onlineUser.user.last_name }}
