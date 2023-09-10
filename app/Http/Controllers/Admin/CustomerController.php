@@ -155,4 +155,24 @@ class CustomerController extends Controller
         return response()->json(['error'=>$e], 500);
     }
     }
+    public function banUser($id){
+        $user=User::find($id);
+        if(!$user->banned){
+            $user->update(['banned'=>!$user->banned]);
+            
+            return response()->json([
+                'user'=>$user,
+                'success' => true,
+                'message' => 'Customer banned successfully.',
+            ], 200);
+        }else{
+            $user->update(['banned'=>!$user->banned]);
+            return response()->json([
+                'user'=>$user,
+                'success' => true,
+                'message' => 'Customer un banned successfully.',
+             ], 200);
+
+        }
+    }
 }
