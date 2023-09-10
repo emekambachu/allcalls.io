@@ -810,10 +810,10 @@ let appDownloadModal = ref(false);
           <h2 class="text-xl text-center mb-4 font-bold">Download AllCalls Mobile App</h2>
 
           <div>
-            <a href="#"
+            <a  href="https://play.google.com/apps/internaltest/4700422138103121465"
               ><img style="max-width: 200px; margin: auto" src="/img/google-store.png"
             /></a>
-            <a href="#"
+            <a  href="https://testflight.apple.com/join/ZI91F5fv"
               ><img style="max-width: 200px; margin: auto" src="/img/app-store.png"
             /></a>
           </div>
