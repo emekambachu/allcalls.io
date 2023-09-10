@@ -26,7 +26,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <Head title="Active Users" />
+    <Head title="Online Agents" />
 
     <AuthenticatedLayout>
         <template #header>
