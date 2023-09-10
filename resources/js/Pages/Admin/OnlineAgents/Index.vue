@@ -19,7 +19,7 @@ onMounted(() => {
         .listen('OnlineUserListUpdated', () => {
             refreshPage();
         })
-        .listen('ActiveUserStatusUpdated', () => {
+        .listen('CallStatusUpdated', () => {
             refreshPage();
         });
 });
