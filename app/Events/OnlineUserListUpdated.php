@@ -12,7 +12,7 @@ use Illuminate\Queue\SerializesModels;
 
 class OnlineUserListUpdated
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable, InteractsWithSockets, SerializesModels, ShouldBroadcast;
 
     /**
      * Create a new event instance.
