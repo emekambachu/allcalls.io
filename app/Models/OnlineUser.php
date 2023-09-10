@@ -59,6 +59,11 @@ class OnlineUser extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function callType()
+    {
+        return $this->belongsTo(CallType::class);
+    }
+
     /**
      * Prioritize internal agents and sort by last_called_at.
      *

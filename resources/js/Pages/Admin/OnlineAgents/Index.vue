@@ -4,29 +4,22 @@ import { router } from '@inertiajs/vue3';
 import { onMounted } from "vue";
 import { Head } from "@inertiajs/vue3";
 
-let props = defineProps({
+const props = defineProps({
     onlineUsers: {
         type: Array,
     }
 });
 
-console.log('Online users: ');
-console.log(props.onlineUsers);
-
-let refreshPage = () => {
+const refreshPage = () => {
     router.visit('/admin/active-users');
-}
+};
 
 onMounted(() => {
-    console.log('Registering event listener');
     window.Echo.channel('active-user-events')
-        .listen('ActiveUserListUpdated', e => {
-            console.log('ActiveUserListUpdated fired, refreshing...');
+        .listen('ActiveUserListUpdated', () => {
             refreshPage();
         })
-
-        .listen('ActiveUserStatusUpdated', e => {
-            console.log('ActiveUserStatusUpdated fired, refreshing...');
+        .listen('ActiveUserStatusUpdated', () => {
             refreshPage();
         });
 });
@@ -41,19 +34,23 @@ onMounted(() => {
         </template>
         <div class="py-14">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-                <div class="px-4 sm:px-8 sm:rounded-lg">
-                    <div class="text-4xl text-custom-sky font-bold mb-6">Online Agents</div>
+                <div class="p-4 rounded-lg bg-white shadow">
+                    <h3 class="text-4xl text-custom-sky font-bold mb-6">Online Agents</h3>
                     <hr class="mb-4" />
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         <template v-for="onlineUser in onlineUsers" :key="onlineUser.id">
                             <div class="rounded-lg shadow-lg border p-4">
                                 <div class="flex items-center justify-between">
-                                    <span class="text-lg font-semibold">{{ onlineUser.user.first_name }} {{ onlineUser.user.last_name }}</span>
+                                    <span class="text-lg font-semibold">
+                                        {{ onlineUser.user.first_name }} {{ onlineUser.user.last_name }}
+                                    </span>
                                     <span :class="getStatusBadge(onlineUser.user.call_status)" class="text-white text-xs px-2 py-1 rounded">
                                         {{ onlineUser.user.call_status }}
                                     </span>
                                 </div>
                                 <div class="text-sm mt-2">
+                                    <div><strong>Email:</strong> {{ onlineUser.user.email }}</div>
+                                    <div><strong>Insurance Type:</strong> {{ onlineUser.callType.type }}</div>
                                     <div><strong>User ID:</strong> {{ onlineUser.user.id }}</div>
                                 </div>
                             </div>
@@ -84,4 +81,6 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+/* Add your custom styles here */
+</style>
