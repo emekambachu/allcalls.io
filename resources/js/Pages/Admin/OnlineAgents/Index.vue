@@ -49,7 +49,7 @@ onMounted(() => {
                             <div class="rounded-lg shadow-lg border p-4">
                                 <div class="flex items-center justify-between">
                                     <span class="text-lg font-semibold">{{ user.first_name }} {{ user.last_name }}</span>
-                                    <span :class="getStatusBadge(activeUser.status)" class="text-white text-xs px-2 py-1 rounded">
+                                    <span :class="getStatusBadge(user.call_status)" class="text-white text-xs px-2 py-1 rounded">
                                         {{ user.call_status }}
                                     </span>
                                 </div>
