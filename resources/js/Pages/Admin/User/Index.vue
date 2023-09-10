@@ -29,7 +29,9 @@ let props = defineProps({
   },
   requestData: {
     type: Array,
-  }
+  },
+  callTypes: Array,
+  states: Array,
 });
 
 let formData = ref({});
@@ -217,7 +219,39 @@ let capitalizeAndReplaceUnderscore = (str) => {
       <p class="text-center text-gray-600">No clients yet.</p>
     </section>
     <Modal :show="showModal" @close="showModal = false">
-      <Edit :showModal="showModal" :userDetail="userDetail" :currentPage="currentPage" @close="showModal = false"></Edit>
+      <Edit :showModal="showModal" :userDetail="userDetail" :currentPage="currentPage" @close="showModal = false"
+        :callTypes="callTypes" :states="states" :route="'/admin/customer'" ></Edit>
     </Modal>
   </AuthenticatedLayout>
 </template>
+
+<style src="@vueform/multiselect/themes/default.css"></style>
+<style>
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.multiselect {
+  color: black !important;
+  border: none;
+  border-radius: 10px;
+}
+
+.multiselect-wrapper {
+  background-color: #d7d7d7;
+  border-radius: 5px;
+}
+
+.box-shadow {
+  padding: 20px;
+  width: 97%;
+  margin: auto;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+</style>
