@@ -16,7 +16,7 @@ const refreshPage = () => {
 
 onMounted(() => {
     console.log('Registering event listener');
-    window.Echo.channel('active-user-events')
+    window.Echo.channel('active-users-events')
         .listen('OnlineUserListUpdated', () => {
             refreshPage();
         })

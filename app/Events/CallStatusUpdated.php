@@ -36,7 +36,7 @@ class CallStatusUpdated
     {
         return [
             // new PrivateChannel('channel-name'),
-            new Channel('active-user-events'),
+            new Channel('active-users-events'),
         ];
     }
 }
