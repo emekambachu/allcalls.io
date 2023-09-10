@@ -35,7 +35,7 @@ class CallTypeIdEixst implements ValidationRule
           if(!DB::table($this->table)
           ->whereIn($this->column, $filteredKeys)
           ->exists()) {
-                $fail('One or more keys do not exist in the specified table and column.');
+                $fail('Some of call types not exist.');
           }
     }
 }
