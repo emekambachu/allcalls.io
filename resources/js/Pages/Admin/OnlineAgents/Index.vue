@@ -50,7 +50,7 @@ onMounted(() => {
                                 </div>
                                 <div class="text-sm mt-2">
                                     <div><strong>Email:</strong> {{ onlineUser.user.email }}</div>
-                                    <div><strong>Insurance Type:</strong> {{ onlineUser.callType.type }}</div>
+                                    <div><strong>Insurance Type:</strong> {{ onlineUser.call_type.type }}</div>
                                     <div><strong>User ID:</strong> {{ onlineUser.user.id }}</div>
                                 </div>
                             </div>
