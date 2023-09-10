@@ -16,13 +16,14 @@ use Illuminate\Support\Facades\Event;
 use App\Listeners\LogCallStatusChange;
 use App\Observers\TransactionObserver;
 use Illuminate\Auth\Events\Registered;
+use App\Listeners\UpdateUserCallStatus;
 use App\Events\UserCallTypeStateUpdated;
 use App\Listeners\SendFundsReceiptEmail;
 use App\Listeners\UpdateTargetsInRingba;
 use App\Http\Controllers\FundsController;
+use App\Listeners\UpdateActiveUserStatus;
 use App\Listeners\ChargeUserForMissedCall;
 use App\Listeners\ChargeUserForCompletedCall;
-use App\Listeners\UpdateActiveUserStatus;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -57,7 +58,8 @@ class EventServiceProvider extends ServiceProvider
 
         CallStatusUpdated::class => [
             LogCallStatusChange::class,
-            UpdateActiveUserStatus::class,
+            // UpdateActiveUserStatus::class,
+            UpdateUserCallStatus::class,
         ],
     ];
 
