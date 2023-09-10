@@ -87,6 +87,21 @@ class OnlineUser extends Model
     }
 
     /**
+     * Scope a query to include only those online users whose 'call_status' in the
+     * User model is 'Waiting'.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWithCallStatusWaiting($query)
+    {
+        return $query->whereHas('user', function ($query) {
+            $query->where('call_status', 'Waiting');
+        });
+    }
+
+
+    /**
      * Scope a query to include only those online users whose 'user_id' is also present in the
      * ActiveUser model with a status of 'Waiting'.
      *
