@@ -233,11 +233,11 @@ let appDownloadModal = ref(false);
             </NavLink>
             <NavLink
               class="mb-10 gap-2"
-              :href="route('admin.active-users.index')"
-              :active="route().current('admin.active-users.index')"
+              :href="route('admin.online-agents.index')"
+              :active="route().current('admin.online-agents.index')"
             >
               <img src="/img/clients.png" alt="" />
-              Active Users
+              Online Agents
             </NavLink>
           </div>
           <!-- Page Content -->

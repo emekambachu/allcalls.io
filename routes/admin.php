@@ -2,8 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ActiveUsersController;
-use App\Http\Controllers\ActiveUserChannelController;
 use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\ActiveUserChannelController;
+use App\Http\Controllers\Admin\OnlineAgentsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,6 +49,8 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
     Route::get('/agent/activities/{id}', [\App\Http\Controllers\Admin\InternalAgentController::class, 'getActivity']);
 
-    Route::get('/active-users', [ActiveUsersController::class, 'index'])->name('admin.active-users.index');
-    Route::get('/active-users/join', [ActiveUserChannelController::class, 'join']);
+    // Route::get('/active-users', [ActiveUsersController::class, 'index'])->name('admin.active-users.index');
+    // Route::get('/active-users/join', [ActiveUserChannelController::class, 'join']);
+
+    Route::get('/online-agents', [OnlineAgentsController::class, 'index'])->name('admin.online-agents.index');
 });
