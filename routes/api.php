@@ -88,15 +88,15 @@ Route::middleware('auth:sanctum')->get('/device/token', [TwilioTokenController::
 
 Route::get('/call/incoming', [IncomingCallController::class, 'respond'])->middleware('twilio');
 // Route::get('/call/incoming', function() {
-    // $numberToDial = '+15736523170';
+//     $numberToDial = '+15736523170';
 
     // Manually construct the TwiML
-    /* $twiml = '<?xml version="1.0" encoding="UTF-8"?>'; */
-    // $twiml .= '<Response><Dial answerOnBridge="true" callerId="' . $numberToDial . '">' . '<Client>+15736523170</Client>' . '</Dial></Response>';
-    // $twiml .= '<Response><Dial answerOnBridge="true"><Client callerId="+15736523170">testneo</Client></Dial></Response>';
+    /* $twiml = '<?xml version="1.0" encoding="UTF-8"?>'; */ 
+//  $twiml .= '<Response><Dial answerOnBridge="true" callerId="' . $numberToDial . '">' . '<Client>+15736523170</Client>' . '</Dial></Response>';
+//  $twiml .= '<Response><Dial answerOnBridge="true"><Client callerId="+15736523170">alice</Client></Dial></Response>';
 
-    // return response($twiml, 200)->header('Content-Type', 'text/xml');
-// })->middleware('twilio');
+//  return response($twiml, 200)->header('Content-Type', 'text/xml');
+//  })->middleware('twilio');
 
 Route::get('/handle-call-status', [CallStatusController::class, 'update']);
 Route::get('/handle-call-recording', [CallRecordingController::class, 'store']);
@@ -107,6 +107,7 @@ Route::middleware('auth:sanctum')->post('/userDeviceToken', [IncomingCallControl
 Route::middleware('auth:sanctum')->get('/online-users', [OnlineUsersController::class, 'index']);
 Route::middleware('auth:sanctum')->post('/online-users', [OnlineUsersController::class, 'store']);
 Route::middleware('auth:sanctum')->delete('/online-users/{callTypeId}', [OnlineUsersController::class, 'destroy']);
+Route::middleware('auth:sanctum')->delete('/online-users', [OnlineUsersController::class, 'destroyOnLogout']);
 
 Route::middleware('auth:sanctum')->get('/clients', [ClientsAPIController::class, 'index']);
 

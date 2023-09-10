@@ -24,26 +24,26 @@ class IncomingCallController extends Controller
             'To' => 'required',
         ]);
 
-        // Check for X-Twilio-Signature header
-        $twilioSignature = $request->header('X-Twilio-Signature');
-        if ($twilioSignature) {
-            Log::debug('X-Twilio-Signature header exists: ' . $twilioSignature);
-            $validator = new RequestValidator(env('TWILIO_AUTH_TOKEN'));
-            $url = url()->full() . '?' . http_build_query($request->all());
-            $variables = $request->all();
+        // // Check for X-Twilio-Signature header
+        // $twilioSignature = $request->header('X-Twilio-Signature');
+        // if ($twilioSignature) {
+        //     Log::debug('X-Twilio-Signature header exists: ' . $twilioSignature);
+        //     $validator = new RequestValidator(env('TWILIO_AUTH_TOKEN'));
+        //     $url = url()->full() . '?' . http_build_query($request->all());
+        //     $variables = $request->all();
 
-            Log::debug('URL: ' . $url);
-            Log::debug($variables);
+        //     Log::debug('URL: ' . $url);
+        //     Log::debug($variables);
 
-            // Check if the incoming signature is valid for your application URL and the incoming parameters
-            if ($validator->validate($twilioSignature, $url, $variables)) {
-                Log::debug('Confirmed to have come from Twilio.');
-            } else {
-                Log::debug('NOT VALID. It might have been spoofed!');
-            }
-        } else {
-            Log::debug('X-Twilio-Signature header not found.');
-        }
+        //     // Check if the incoming signature is valid for your application URL and the incoming parameters
+        //     if ($validator->validate($twilioSignature, $url, $variables)) {
+        //         Log::debug('Confirmed to have come from Twilio.');
+        //     } else {
+        //         Log::debug('NOT VALID. It might have been spoofed!');
+        //     }
+        // } else {
+        //     Log::debug('X-Twilio-Signature header not found.');
+        // }
 
 
         $twiml = '<?xml version="1.0" encoding="UTF-8"?>';
@@ -156,7 +156,7 @@ class IncomingCallController extends Controller
             $call_type_id = $availableNumber->call_type_id;
             $uniqueCallId = uniqid();
 
-            $twimlBody .= '<Dial record="record-from-answer" recordingStatusCallbackMethod="GET" recordingStatusCallbackEvent="completed" recordingStatusCallback="https://allcalls.io/api/handle-call-recording?user_id=' . $user_id . '&amp;call_type_id=' . $call_type_id . '&amp;unique_call_id=' . $uniqueCallId . '&amp;from=' . urlencode($availableNumber->from) . '" callerId="+441156471655" timeout="20">';
+            $twimlBody .= '<Dial record="record-from-answer" recordingStatusCallbackMethod="GET" recordingStatusCallbackEvent="completed" recordingStatusCallback="https://allcalls.io/api/handle-call-recording?user_id=' . $user_id . '&amp;call_type_id=' . $call_type_id . '&amp;unique_call_id=' . $uniqueCallId . '&amp;from=' . urlencode($availableNumber->from) . '" callerId="+12518626328" timeout="20">';
             $twimlBody .= '<Client statusCallbackMethod="GET" statusCallbackEvent="initiated ringing answered completed" statusCallback="https://allcalls.io/api/handle-call-status?user_id=' . $user_id . '&amp;call_type_id=' . $call_type_id . '&amp;from=' . urlencode($availableNumber->from) . '&amp;unique_call_id=' . $uniqueCallId . '">';
             $twimlBody .= '<Identity>' . $user_id . '</Identity>';
             $twimlBody .= '<Parameter name="unique_call_id" value="' . $uniqueCallId . '"/>';
