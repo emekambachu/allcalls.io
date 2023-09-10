@@ -18,9 +18,11 @@ onMounted(() => {
     console.log('Registering event listener');
     window.Echo.channel('active-users-events')
         .listen('OnlineUserListUpdated', () => {
+            console.log('OnlineUserListUpdated!');
             refreshPage();
         })
         .listen('CallStatusUpdated', () => {
+            console.log('CallStatusUpdated!');
             refreshPage();
         });
 });
