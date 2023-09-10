@@ -41,6 +41,7 @@ onMounted(() => {
                     <table class="w-full text-sm text-left text-gray-400">
                         <thead class="text-xs text-gray-300 uppercase bg-sky-900">
                             <tr>
+                                <th scope="col" class="px-4 py-3">User ID</th>
                                 <th scope="col" class="px-4 py-3">First Name</th>
                                 <th scope="col" class="px-4 py-3">Last Name</th>
                                 <th scope="col" class="px-4 py-3">Email</th>
@@ -51,7 +52,7 @@ onMounted(() => {
                         <tbody>
                             <!-- The Table Body -->
                             <tr v-for="onlineUser in onlineUsers" :key="onlineUser.id" class="border-b border-gray-500">
-                                <td class="text-gray-600 px-4 py-3">{{ onlineUser.user.email }}</td>
+                                <td class="text-gray-600 px-4 py-3">{{ onlineUser.user.id }}</td>
                                 <td class="text-gray-600 px-4 py-3">{{ onlineUser.user.first_name }}</td>
                                 <td class="text-gray-600 px-4 py-3">{{ onlineUser.user.last_name }}</td>
                                 <td class="text-gray-600 px-4 py-3">{{ onlineUser.user.email }}</td>
@@ -62,7 +63,6 @@ onMounted(() => {
                                     </span>
                                 </td>
                                 <td class="text-gray-600 px-4 py-3">{{ onlineUser.call_type.type }}</td>
-                                <td class="text-gray-600 px-4 py-3">{{ onlineUser.user.id }}</td>
                             </tr>
                         </tbody>
                     </table>
