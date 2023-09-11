@@ -200,8 +200,8 @@ class IncomingCallController extends Controller
 
         if (!$onlineUsers->count()) {
             Log::debug('No online user found.');
-            return '<Response><Say voice="alice" language="en-US">All agents are currently offline. Please try again later.</Say></Response>';
-        }
+            return '<Response><Dial callerId="+12518626328">+18449831955</Dial></Response>';
+        }        
 
         $onlineUserIds = $onlineUsers->pluck('user_id')->toArray();
         $users = User::whereIn('id', $onlineUserIds)->get();
