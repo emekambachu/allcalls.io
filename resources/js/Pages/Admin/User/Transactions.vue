@@ -54,6 +54,8 @@ let fetchTransactionsBypage = async (page) => {
                 <th scope="col" class="px-4 py-3">City</th>
                 <th scope="col" class="px-4 py-3">State</th>
                 <th scope="col" class="px-4 py-3">Zip</th>
+                <th scope="col" class="px-4 py-3">Comment</th>
+                <th scope="col" class="px-4 py-3">Label</th>
               </tr>
             </thead>
             <tbody>
@@ -66,6 +68,8 @@ let fetchTransactionsBypage = async (page) => {
                 <td class="text-gray-600 px-4 py-3">{{ transaction.card?.city }}</td>
                 <td class="text-gray-600 px-4 py-3">{{ transaction.card?.state }}</td>
                 <td class="text-gray-600 px-4 py-3">{{ transaction.card?.zip }}</td>
+                <td class="text-gray-600 px-4 py-3">{{ transaction.comment ? transaction.comment : '-' }}</td>
+                <td class="text-gray-600 px-4 py-3">{{ transaction.label ? transaction.label : '-' }}</td>
               </tr>
             </tbody>
           </table>
