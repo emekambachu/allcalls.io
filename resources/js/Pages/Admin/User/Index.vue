@@ -34,11 +34,13 @@ let props = defineProps({
   states: Array,
 });
 
-let formData = ref({});
-let handleUpdateFormData = (updatedFormData) => {
-  formData.value = updatedFormData;
-}
-
+let formData = ref({
+    name: props.requestData.name,
+    email: props.requestData.email,
+    phone: props.requestData.phone,
+    first_six_card_no: props.requestData.first_six_card_no,
+    last_four_card_no: props.requestData.last_four_card_no,
+});
 let fetchClients = (page) => {
   let url = new URL(page);
   if (formData.value.name !== undefined && formData.value.name !== null) {
@@ -124,7 +126,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
         </div>
       </div>
     </div>
-    <SearchFilter :route="page.url" :requestData="requestData" @update-form-data="handleUpdateFormData" />
+    <SearchFilter :route="page.url" :requestData="requestData" />
     <section v-if="users.data.length" class="p-3">
       <div class="mx-auto max-w-screen-xl sm:px-12">
         <div class="relative sm:rounded-lg overflow-hidden">
