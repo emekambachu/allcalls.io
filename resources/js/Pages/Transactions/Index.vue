@@ -6,9 +6,8 @@ let props = defineProps({
   transactions: {
     type: Object,
   },
-  isInternalAgent: Boolean
+  isInternalAgent: Boolean,
 });
-
 
 let formatDate = (date) => {
   if (!date) {
@@ -47,7 +46,6 @@ let fetchTransactions = (page) => {
 
   router.visit(httpsPage, { method: "get" });
 };
-
 </script>
 
 <template>
@@ -94,7 +92,8 @@ let fetchTransactions = (page) => {
                     {{ transaction.id }}
                   </th>
                   <td class="text-gray-600 px-4 py-3">
-                    ${{ formatMoney(transaction.amount) }}
+                    {{ transaction.sign ? "" : "-" }} $
+                    {{ formatMoney(transaction.amount) }}
                   </td>
                   <td class="text-gray-600 px-4 py-3">
                     {{ formatDate(transaction.created_at) }}
@@ -102,24 +101,29 @@ let fetchTransactions = (page) => {
                   <td class="text-gray-600 px-4 py-3">{{ transaction.comment ? transaction.comment : '-' }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ transaction.label ? transaction.label : '-' }}</td>
                   <td class="text-gray-300 px-4 py-3">
-                      <div v-if="isInternalAgent && transaction.bonus">
-                        <span
-                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                    <div v-if="isInternalAgent && transaction.bonus">
+                      <span
+                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+                      >
                         Bonus
-                        </span>
-                      </div>
+                      </span>
+                    </div>
 
-                      <div v-else>
-                          <span v-if="transaction.sign"
-                                 class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                              Deposited
-                          </span>
+                    <div v-else>
+                      <span
+                        v-if="transaction.sign"
+                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+                      >
+                        Deposited
+                      </span>
 
-                          <span v-else
-                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                              Deducted
-                          </span>
-                      </div>
+                      <span
+                        v-else
+                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800"
+                      >
+                        Deducted
+                      </span>
+                    </div>
                   </td>
                 </tr>
               </tbody>

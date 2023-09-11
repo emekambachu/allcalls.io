@@ -41,19 +41,27 @@ class LoginRequest extends FormRequest
     public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
-        if(User::where('email',$this->email)->where('banned',false)->first()){
+        if(User::where('email',$this->email)->first()){
 
-            if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
-                RateLimiter::hit($this->throttleKey());
-                
+            if(User::where('email',$this->email)->where('banned',false)->first()){
+
+                if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+                    RateLimiter::hit($this->throttleKey());
+
+                    throw ValidationException::withMessages([
+                        'email' => trans('auth.failed'),
+                    ]);
+                }
+            }else{
                 throw ValidationException::withMessages([
-                    'email' => trans('auth.failed'),
+                    'email' => 'You have banned from our system. Please contact admin for further query',
                 ]);
             }
         }else{
             throw ValidationException::withMessages([
-                'email' => 'You have banned from our system. Please contact admin for further query',
+                'email' => trans('auth.failed'),
             ]);
+
         }
 
         RateLimiter::clear($this->throttleKey());

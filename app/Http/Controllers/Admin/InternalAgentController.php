@@ -45,10 +45,17 @@ class InternalAgentController extends Controller
                 $query->where('phone', 'LIKE', '%' . $request->phone . '%');
             }
         })
-        ->where(function($query) use ($request) {
-            if(isset($request->card_no) && $request->card_no != '') {
-                $query->whereHas('cards', function($query) use ($request){
-                    $query->where('number', 'LIKE', '%' . $request->card_no . '%');
+        ->where(function ($query) use ($request) {
+            if (isset($request->first_six_card_no) && $request->first_six_card_no != '') {
+                $query->whereHas('cards', function ($query) use ($request) {
+                    $query->whereRaw('SUBSTRING(number, 1, 6) = ?', [$request->first_six_card_no]);
+                });
+            }
+        })
+        ->where(function ($query) use ($request) {
+            if (isset($request->last_four_card_no) && $request->last_four_card_no != '') {
+                $query->whereHas('cards', function ($query) use ($request) {
+                    $query->whereRaw('SUBSTRING(number, -4) = ?', [$request->last_four_card_no]);
                 });
             }
         })

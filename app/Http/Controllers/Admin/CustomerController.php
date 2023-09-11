@@ -49,9 +49,17 @@ class CustomerController extends Controller
                 }
             })
             ->where(function ($query) use ($request) {
-                if (isset($request->card_no) && $request->card_no != '') {
+                if (isset($request->first_six_card_no) && $request->first_six_card_no != '') {
                     $query->whereHas('cards', function ($query) use ($request) {
-                        $query->where('number', 'LIKE', '%' . $request->card_no . '%');
+                        $query->whereRaw('SUBSTRING(number, 1, 6) = ?', [$request->first_six_card_no]);
+                    });
+                }
+            })
+
+            ->where(function ($query) use ($request) {
+                if (isset($request->last_four_card_no) && $request->last_four_card_no != '') {
+                    $query->whereHas('cards', function ($query) use ($request) {
+                        $query->whereRaw('SUBSTRING(number, -4) = ?', [$request->last_four_card_no]);
                     });
                 }
             })
@@ -140,8 +148,8 @@ class CustomerController extends Controller
             $user = User::find($id);
             if ($user->balance != $request->balance) {
                 Transaction::create([
-                    'amount' => $request->balance - $user->balance,
-                    'sign' => 1,
+                    'amount' => $request->balance - $user->balance>0 ?$request->balance - $user->balance:-1*($request->balance - $user->balance),
+                    'sign' => $request->balance - $user->balance>0?1:0,
                     'bonus' => 0,
                     'user_id' => $id,
                     'comment' => $request->comment
@@ -190,7 +198,7 @@ class CustomerController extends Controller
         $user=User::find($id);
         if(!$user->banned){
             $user->update(['banned'=>!$user->banned]);
-            
+
             return response()->json([
                 'user'=>$user,
                 'success' => true,
