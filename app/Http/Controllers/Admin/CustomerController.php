@@ -140,8 +140,8 @@ class CustomerController extends Controller
             $user = User::find($id);
             if ($user->balance != $request->balance) {
                 Transaction::create([
-                    'amount' => $request->balance - $user->balance,
-                    'sign' => 1,
+                    'amount' => $request->balance - $user->balance>0 ?$request->balance - $user->balance:-1*($request->balance - $user->balance),
+                    'sign' => $request->balance - $user->balance>0?1:0,
                     'bonus' => 0,
                     'user_id' => $id,
                     'comment' => $request->comment
@@ -190,7 +190,7 @@ class CustomerController extends Controller
         $user=User::find($id);
         if(!$user->banned){
             $user->update(['banned'=>!$user->banned]);
-            
+
             return response()->json([
                 'user'=>$user,
                 'success' => true,
