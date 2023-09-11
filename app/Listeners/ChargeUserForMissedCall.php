@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Events\FundsTooLow;
 use App\Models\Transaction;
 use Exception;
 use App\Models\User;
@@ -59,10 +60,12 @@ class ChargeUserForMissedCall
 
                     Log::debug('Deducted $5 from user balance');
                 } else {
+
                     Log::warning('Insufficient balance to charge for missed call');
                     return;
                 }
             } else {
+                FundsTooLow::dispatch($event->user);
                 Log::warning("No user found with ID $userId");
                 return;
             }
