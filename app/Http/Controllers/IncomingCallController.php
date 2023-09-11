@@ -317,6 +317,15 @@ class IncomingCallController extends Controller
             })
             ->first();
 
+        if ( $availableNumber ) {
+            Log::debug('Updating call type id for available number', [
+                'user_id' => $userId,
+                'call_type_id' => $callTypeId,
+            ]);
+            $availableNumber->call_type_id = $callTypeId;
+            $availableNumber->save();
+        }
+
         // Uncomment the lines below for temporary testing as needed
         // $availableNumber = AvailableNumber::wherePhone('+441156471655')->first();
         // $availableNumber = AvailableNumber::wherePhone('+441146971410')->first();
