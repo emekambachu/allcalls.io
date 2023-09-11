@@ -131,6 +131,10 @@ class IncomingCallController extends Controller
 
         $onlineUsers = OnlineUser::prioritizeInternalAgents($onlineUsers);
 
+        dd('ONLINEUSERSARRAY', [
+            'onlineUsers' => $onlineUsers
+        ]);
+
         if (!$onlineUsers->count()) {
             Log::debug('No online user found.');
             return '<Response><Say voice="alice" language="en-US">All agents are currently offline. Please try again later.</Say></Response>';
@@ -316,6 +320,15 @@ class IncomingCallController extends Controller
                 $query->whereNull('user_id');
             })
             ->first();
+
+        if ( $availableNumber ) {
+            Log::debug('Updating call type id for available number', [
+                'user_id' => $userId,
+                'call_type_id' => $callTypeId,
+            ]);
+            $availableNumber->call_type_id = $callTypeId;
+            $availableNumber->save();
+        }
 
         // Uncomment the lines below for temporary testing as needed
         // $availableNumber = AvailableNumber::wherePhone('+441156471655')->first();
