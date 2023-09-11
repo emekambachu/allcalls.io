@@ -9,10 +9,11 @@ let props = defineProps({
 });
 
 let formData = ref({
-    name: props.requestData.name,
-    email: props.requestData.email,
-    phone: props.requestData.phone,
-    card_no: props.requestData.card_no,
+    name: props.requestData.name || '',
+    email: props.requestData.email || '',
+    phone: props.requestData.phone || '',
+    first_six_card_no: props.requestData.first_six_card_no || '',
+    last_four_card_no: props.requestData.last_four_card_no || '',
 });
 let isLoading = ref(false)
 let isLoadingReset = ref(false)
@@ -24,7 +25,8 @@ let fetchData = (e) => {
             name: formData.value.name,
             email: formData.value.email,
             phone: formData.value.phone,
-            card_no: formData.value.card_no,
+            first_six_card_no: formData.value.first_six_card_no,
+            last_four_card_no: formData.value.last_four_card_no,
         };
         router.visit(props.route, {
             data: queryParams
@@ -38,17 +40,8 @@ let ClearFilter = () => {
 
     isLoadingReset.value = true
     try {
-
-        const queryParams = {
-            name: '',
-            email: '',
-            phone: '',
-            card_no: '',
-        };
-
-        router.visit(props.route, {
-            data: queryParams
-        })
+        const baseUrl = props.route.split('?')[0];
+        router.visit(baseUrl)
         isLoadingReset.value = false
     } catch (error) {
 
@@ -56,12 +49,13 @@ let ClearFilter = () => {
 }
 const emit = defineEmits();
 onMounted(() => {
-    emit('update-form-data', {
-        name: formData.value.name,
-        email: formData.value.email,
-        phone: formData.value.phone,
-        card_no: formData.value.card_no
-    });
+    // emit('update-form-data', {
+    //     name: formData.value.name,
+    //     email: formData.value.email,
+    //     phone: formData.value.phone,
+    //     first_six_card_no: formData.value.first_six_card_no,
+    //     last_four_card_no: formData.value.last_four_card_no,
+    // });
 })
 </script>
 <style scoped>
@@ -84,7 +78,7 @@ onMounted(() => {
 }
 </style>
 <template>
-    <div class="grid grid-cols-5 gap-4 px-12 mb-3 mx-3">
+    <div class="grid grid-cols-4 gap-4 px-12 mb-3 mx-3">
 
         <div>
             <InputLabel for="name" value="name" />
@@ -110,17 +104,23 @@ onMounted(() => {
         <div>
             <InputLabel for="card" value="card" />
 
-            <TextInput id="card" type="text" placeholder="first 6 or last 4 of  card no" class="mt-1 block w-full"
-                v-model="formData.card_no" required />
+            <TextInput id="card" type="number" placeholder="First 6 digit  of  card number" class="mt-1 block w-full"
+                v-model="formData.first_six_card_no"   required />
+
+        </div>
+        <div>
+            <InputLabel for="card" value="card" />
+
+            <TextInput id="card" type="number" placeholder="Last 4 digit of  card number" class="mt-1 block w-full"
+                v-model="formData.last_four_card_no"  required />
 
         </div>
         <div>
             <PrimaryButton type="button" class="ml-2" @click.prevent="fetchData">
                 <global-spinner :spinner="isLoading" /> Filter
             </PrimaryButton>
-            <button  @click.prevent="ClearFilter()" type="button" 
-                class="button-custom-back px-4 py-3 rounded-md ml-2">
-                <global-spinner :spinner="isLoadingReset" />  Reset
+            <button @click.prevent="ClearFilter()" type="button" class="button-custom-back px-4 py-3 rounded-md ml-2">
+                <global-spinner :spinner="isLoadingReset" /> Reset
             </button>
         </div>
 
