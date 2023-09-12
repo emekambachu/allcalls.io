@@ -204,6 +204,10 @@ class IncomingCallController extends Controller
 
         $onlineUsers = OnlineUser::prioritizeInternalAgents($onlineUsers);
 
+        Log::debug('onlineUsersAfterPrioritize:', [
+            'onlineUsers' => $onlineUsers,
+        ]);
+
         if (!$onlineUsers->count()) {
             Log::debug('No online user found.');
             return '<Response><Reject reason="busy" /></Response>';
