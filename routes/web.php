@@ -20,7 +20,7 @@ use App\Http\Controllers\FundsWithCardController;
 use App\Http\Controllers\UsageActivityController;
 use App\Http\Controllers\ActiveUserChannelController;
 use App\Http\Controllers\Auth\RegisteredUserController;
-
+use App\Http\Controllers\Admin\OnlineAgentsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -113,6 +113,8 @@ Route::get('/support', [SupportController::class, 'index'])->name('support.index
 
 Route::get('/stripe-test', [StripeTestController::class, 'show']);
 Route::get('/stripe-test-redirect', [StripeTestController::class, 'store']);
+
+Route::get('/ofline-agents', [OnlineAgentsController::class, 'offLineAgent'])->name('offline-agents');
 
 // Route::get('/active-users/join', [ActiveUserChannelController::class, 'join']);
 

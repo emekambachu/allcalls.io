@@ -26,6 +26,23 @@ onMounted(() => {
             refreshPage();
         });
 });
+let formatDate = date => {
+    if (!date) {
+        return '';
+    }
+
+    const dateObj = new Date(date);
+
+    const formattedDate = dateObj.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+    });
+
+    return formattedDate;
+}
 </script>
 
 <template>
@@ -49,13 +66,14 @@ onMounted(() => {
                                 <th scope="col" class="px-4 py-3">Last Name</th>
                                 <th scope="col" class="px-4 py-3">Email</th>
                                 <th scope="col" class="px-4 py-3">Call Status</th>
+                                <th scope="col" class="px-4 py-3">Last call taken</th>
                                 <th scope="col" class="px-4 py-3">Listening For</th>
                             </tr>
                         </thead>
                         <tbody>
                             <!-- The Table Body -->
                             <tr v-for="onlineUser in onlineUsers" :key="onlineUser.id" class="border-b border-gray-500">
-                                <td class="text-gray-600 px-4 py-3">{{ onlineUser.user.id }}</td>
+                                <td class="text-gray-600 px-4 py-3">{{ onlineUser.user.id }} </td>
                                 <td class="text-gray-600 px-4 py-3">{{ onlineUser.user.first_name }}</td>
                                 <td class="text-gray-600 px-4 py-3">{{ onlineUser.user.last_name }}</td>
                                 <td class="text-gray-600 px-4 py-3">{{ onlineUser.user.email }}</td>
@@ -65,6 +83,7 @@ onMounted(() => {
                                         {{ onlineUser.user.call_status }}
                                     </span>
                                 </td>
+                                <td class="text-gray-600 px-4 py-3">{{ onlineUser.user.last_called_at ? formatDate(onlineUser.user.last_called_at) : '' }}</td>
                                 <td class="text-gray-600 px-4 py-3">{{ onlineUser.call_type.type }}</td>
                             </tr>
                         </tbody>
@@ -80,6 +99,7 @@ onMounted(() => {
 export default {
     methods: {
         getStatusBadge(status) {
+            console.log('status', status);
             switch (status) {
                 case "Waiting":
                     return "bg-green-600";
