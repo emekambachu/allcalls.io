@@ -35,6 +35,8 @@ class SaveUserCall
             'from' => $event->from,
         ]);
 
+        Log::debug('FROM IS: ' . $event->from);
+
         Log::debug($call->toArray());
 
         // Query the external database
