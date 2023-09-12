@@ -36,14 +36,14 @@ class ChargeUserForCompletedCall
                 $event->user->decrement('balance', 35);
 
                 Transaction::create([
-                    'amount'=>35,
-                    'sign'=>0,
-                    'user_id'=>$event->user->id,
-                    'created_at'=>now(),
-                    'updated_at'=>now(),
+                    'amount' => 35,
+                    'sign' => 0,
+                    'user_id' => $event->user->id,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             });
-            Log::debug('Deducted $25 from user balance after completed call');
+            Log::debug('Deducted $35 from user balance after completed call');
         } else {
             FundsTooLow::dispatch($event->user);
             Log::warning('Insufficient balance to charge for completed call');
