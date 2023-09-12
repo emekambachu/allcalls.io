@@ -38,7 +38,7 @@ class OnlineUser extends Model
 
         Log::debug('Call type id is ' . $callType->id);
         Log::debug('All online users at this time'. [
-            'onlineUsers' => self::all(),
+            'onlineUsers' => json_encode(self::all()),
         ]);
 
         return $query->whereIn('user_id', $userIds)
