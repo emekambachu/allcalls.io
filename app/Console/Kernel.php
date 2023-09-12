@@ -15,12 +15,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->call(function () {
-            $response = Http::get(route('offline-agents'));
-            // Do something with the response if needed
-            $content = $response->body();
-        })->timezone('America/New_York')->dailyAt('00:00');
-        // ->everyFiveSeconds();
+        $schedule->command('logout:all-users')->dailyAt('23:59');
     }
 
     /**
@@ -29,7 +24,6 @@ class Kernel extends ConsoleKernel
     protected function commands(): void
     {
         $this->load(__DIR__.'/Commands');
-
         require base_path('routes/console.php');
     }
 }

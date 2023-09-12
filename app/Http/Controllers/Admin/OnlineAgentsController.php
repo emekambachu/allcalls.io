@@ -17,7 +17,4 @@ class OnlineAgentsController extends Controller
 
         return Inertia::render('Admin/OnlineAgents/Index', compact('onlineUsers'));
     }
-    public function offLineAgent(){
-        dd('here');
-    }
 }

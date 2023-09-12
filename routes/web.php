@@ -114,8 +114,6 @@ Route::get('/support', [SupportController::class, 'index'])->name('support.index
 Route::get('/stripe-test', [StripeTestController::class, 'show']);
 Route::get('/stripe-test-redirect', [StripeTestController::class, 'store']);
 
-Route::get('/ofline-agents', [OnlineAgentsController::class, 'offLineAgent'])->name('offline-agents');
-
 // Route::get('/active-users/join', [ActiveUserChannelController::class, 'join']);
 
 Route::get('/vince', function() {
