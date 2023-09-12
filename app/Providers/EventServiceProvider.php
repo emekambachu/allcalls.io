@@ -3,6 +3,9 @@
 namespace App\Providers;
 
 use App\Events\FundsAdded;
+use App\Events\FundsTooLow;
+use App\Listeners\NotifyUserForLowFundsViaEmail;
+use App\Listeners\NotifyUserForLowFundsViaSMS;
 use App\Models\Transaction;
 use App\Events\MissedCallEvent;
 use App\Listeners\SaveUserCall;
@@ -55,6 +58,11 @@ class EventServiceProvider extends ServiceProvider
 
         FundsAdded::class => [
             SendFundsReceiptEmail::class,
+        ],
+
+        FundsTooLow::class => [
+            NotifyUserForLowFundsViaEmail::class,
+            NotifyUserForLowFundsViaSMS::class,
         ],
 
         CallStatusUpdated::class => [

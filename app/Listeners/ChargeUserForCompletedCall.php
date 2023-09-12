@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\CompletedCallEvent;
+use App\Events\FundsTooLow;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -42,9 +43,9 @@ class ChargeUserForCompletedCall
                     'updated_at'=>now(),
                 ]);
             });
-
             Log::debug('Deducted $25 from user balance after completed call');
         } else {
+            FundsTooLow::dispatch($event->user);
             Log::warning('Insufficient balance to charge for completed call');
             return;
         }
