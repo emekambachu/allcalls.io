@@ -17,8 +17,27 @@ let formData = ref({
 });
 let isLoading = ref(false)
 let isLoadingReset = ref(false)
+let firstSixNumberError = ref(false)
+let lastFourNumberError = ref(false)
 let fetchData = (e) => {
-
+    if (formData.value.first_six_card_no) {
+        if (formData.value.first_six_card_no.length < 6) {
+            firstSixNumberError.value = true
+            return
+        } else {
+            firstSixNumberError.value = false
+        }
+    }
+    if (formData.value.last_four_card_no) {
+        if (formData.value.last_four_card_no.length < 4) {
+            lastFourNumberError.value = true
+            return
+        } else {
+            lastFourNumberError.value = false
+        }
+    }
+    firstSixNumberError.value = false
+    lastFourNumberError.value = false
     isLoading.value = true
     try {
         const queryParams = {
@@ -57,6 +76,18 @@ onMounted(() => {
     //     last_four_card_no: formData.value.last_four_card_no,
     // });
 })
+let firstSixDigit = (e) => {
+    if (e.target.value.length > 6) {
+        e.target.value = e.target.value.slice(0, 6);
+        formData.value.first_six_card_no = e.target.value
+    }
+}
+let lastFourDigit = (e) => {
+    if (e.target.value.length > 4) {
+        e.target.value = e.target.value.slice(0, 4);
+        formData.value.last_four_card_no = e.target.value
+    }
+}
 </script>
 <style scoped>
 .button-custom-back {
@@ -105,15 +136,15 @@ onMounted(() => {
             <InputLabel for="card" value="card" />
 
             <TextInput id="card" type="number" placeholder="First 6 digit  of  card number" class="mt-1 block w-full"
-                v-model="formData.first_six_card_no"   required />
-
+                v-model="formData.first_six_card_no" @input="firstSixDigit" required />
+            <div v-if="firstSixNumberError == true" class="text-red-500">At least 6 charactror is required.</div>
         </div>
         <div>
             <InputLabel for="card" value="card" />
 
             <TextInput id="card" type="number" placeholder="Last 4 digit of  card number" class="mt-1 block w-full"
-                v-model="formData.last_four_card_no"  required />
-
+                v-model="formData.last_four_card_no" @input="lastFourDigit" required />
+            <div v-if="lastFourNumberError == true" class="text-red-500">At least 4 charactror is required.</div>
         </div>
         <div>
             <PrimaryButton type="button" class="ml-2" @click.prevent="fetchData">
