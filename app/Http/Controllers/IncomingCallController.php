@@ -190,11 +190,17 @@ class IncomingCallController extends Controller
         Log::debug('State of model:');
         Log::debug($stateModel->toArray());
 
+
         // Fetch all online users who have selected the same call type and state
         $onlineUsers = OnlineUser::byCallTypeAndState($callType, $stateModel)
             ->withSufficientBalance()
             ->withCallStatusWaiting()
             ->get();
+
+
+        Log::debug('onlineUsers:', [
+            'onlineUsers' => $onlineUsers,
+        ]);
 
         $onlineUsers = OnlineUser::prioritizeInternalAgents($onlineUsers);
 
