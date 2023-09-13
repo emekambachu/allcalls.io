@@ -122,6 +122,7 @@ class IncomingCallController extends Controller
         $userId = (string) $availableNumber->user_id; // Ensure user id is a string
         Log::debug('User ID associated with the number: ' . $userId);
 
+        Log::debug('AVAILABLE NUMBER FROM: ' . $availableNumber->from);
         $phoneState = $this->getStateFromPhoneNumber($availableNumber->from);
         Log::debug('Phone state:');
         Log::debug($phoneState);
@@ -352,13 +353,21 @@ class IncomingCallController extends Controller
             return '<Response><Say voice="alice" language="en-US">All of our agents are currently busy. Please try again later.</Say></Response>';
         }
 
-        // If this is a new available number, associate it with the user
+
         if (is_null($availableNumber->user_id)) {
             $availableNumber->user_id = $userId;
-            $availableNumber->from = $from;
-            $availableNumber->call_type_id = $callTypeId;
-            $availableNumber->save();
         }
+
+        if (is_null($availableNumber->from)) {
+            $availableNumber->from = $from;
+        }
+
+        if (is_null($availableNumber->call_type_id)){
+            $availableNumber->call_type_id = $callTypeId;
+        }
+
+
+        $availableNumber->save();
 
         return $availableNumber;
     }
