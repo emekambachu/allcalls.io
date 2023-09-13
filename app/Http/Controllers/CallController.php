@@ -1,29 +1,37 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Inertia\Inertia;
 use App\Models\Client;
 use App\Models\Call;
 use App\Models\State;
 use Illuminate\Http\Request;
 
-class ClientsController extends Controller
+class CallController extends Controller
 {
     public function index(Request $request)
     {
-        
         $user_id = $request->user()->id;
-        
-        $Clients = Client::where('user_id', $user_id)
+
+        $calls = Call::where('user_id', $user_id)
+                        ->with(['getClient', 'callType'])
                         ->orderBy('id', 'desc')
                         ->paginate(10);
         
-        $totalClients = Client::where('user_id', $user_id)->count();
+        $totalCalls = Call::where('user_id', $user_id)->count();
+
+        
+        $totalAmountSpent = Call::where('user_id', $user_id)
+                                    ->sum('amount_spent');
+
+        $averageCallDuration = Call::where('user_id', $user_id)
+        ->average('call_duration_in_seconds');
         $states = State::all();
-        return Inertia::render('Clients/Index', [
-            'Clients' => $Clients,
-            'totalClients' => $totalClients,
+        return Inertia::render('Calls/Index', [
+            'calls' => $calls,
+            'totalCalls' => $totalCalls,
+            'totalAmountSpent' => $totalAmountSpent,
+            'averageCallDuration' => $averageCallDuration,
             'states' => $states,
         ]);
     }

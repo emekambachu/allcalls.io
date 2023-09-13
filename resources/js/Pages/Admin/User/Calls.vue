@@ -78,7 +78,6 @@ let formatMoney = (amount) => {
             <tbody>
 
               <tr v-for="call in calls.data" :key="call.id" class="border-b border-gray-500">
-               
                 <td class="text-gray-600 px-4 py-3">{{ call.id }}</td>
                 <td class="text-gray-600 px-4 py-3">{{ call.hung_up_by }}</td>
                 <td class="text-gray-600 px-4 py-3">
@@ -92,12 +91,19 @@ let formatMoney = (amount) => {
                     ).padStart(2, "0")
                   }}
                 </td>
-                
                 <th class="text-gray-600 px-4 py-3">{{ call.call_taken }}</th>
                 <td class="text-gray-600 px-4 py-3">{{ call.amount_spent }}</td>
                 <td class="text-gray-600 px-4 py-3">{{ call.call_type.type }}</td>
-                <td class="text-gray-600 px-4 py-3"> <a v-if="call.recording_url" target="_blank"
-                      :href="call.recording_url">{{ call.recording_url }}</a> <span v-else>_</span> </td>
+                <td class="text-gray-600 px-4 py-3"> 
+                    <a v-if="call.recording_url" target="_blank" :href="call.recording_url" class="flex"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="1.5em" class="pr-1" viewBox="0 0 512 512">
+                        <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                        <path
+                          d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm256-96a96 96 0 1 1 0 192 96 96 0 1 1 0-192zm0 224a128 128 0 1 0 0-256 128 128 0 1 0 0 256zm0-96a32 32 0 1 0 0-64 32 32 0 1 0 0 64z" />
+                      </svg>Open Recording
+                    </a>
+                    <span v-else>_</span>
+                </td>
               </tr>
             </tbody>
           </table>

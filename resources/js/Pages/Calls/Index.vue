@@ -1,7 +1,7 @@
 <script setup>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import ClientModal from "@/Components/ClientModal.vue";
+import ClientDetailsModal from "@/Components/ClientDetailsModal.vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import { ref } from "vue";
 import { toaster } from "@/helper.js";
@@ -12,17 +12,27 @@ if (page.props.flash.message) {
 }
 
 let props = defineProps({
-  Clients: {
+  calls: {
     type: Object,
   },
 
-  totalClients: {
+  totalCalls: {
+    type: Number,
+  },
+
+  totalAmountSpent: {
+    type: Number,
+  },
+
+  averageCallDuration: {
     type: Number,
   },
   states:Array,
 });
 
-let fetchClients = (page) => {
+console.log(props.calls);
+
+let fetchCalls = (page) => {
   // Create URL object from page
   let url = new URL(page);
 
@@ -38,10 +48,10 @@ let fetchClients = (page) => {
 };
 
 let showModal = ref(false);
-let ClientDetail = ref(null);
+let callDetail = ref(null);
 
-let openClientModal = (Client) => {
-  ClientDetail.value = Client;
+let openClientModal = (call) => {
+  callDetail.value = call;
   showModal.value = true;
 };
 
@@ -83,14 +93,14 @@ let capitalizeAndReplaceUnderscore = (str) => {
   <AuthenticatedLayout>
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-        Clients
+        Calls
       </h2>
     </template>
 
     <div class="pt-14">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
         <div class="px-4 sm:px-8 sm:rounded-lg">
-          <div class="text-4xl text-custom-sky font-bold mb-6">Clients</div>
+          <div class="text-4xl text-custom-sky font-bold mb-6">Calls</div>
           <hr class="mb-4" />
         </div>
       </div>
@@ -98,14 +108,26 @@ let capitalizeAndReplaceUnderscore = (str) => {
 
     <div class="mx-auto px-4 sm:px-8 md:px-16 py-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto">
-        <p class="mb-1 text-sm text-gray-300">Total Clients</p>
+        <p class="mb-1 text-sm text-gray-300">Total Calls</p>
         <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
-          {{ totalClients }}
+          {{ totalCalls }}
+        </h2>
+      </div>
+      <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto">
+        <p class="mb-1 text-sm text-gray-300">Total Spent</p>
+        <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
+          ${{ formatMoney(totalAmountSpent) }}
+        </h2>
+      </div>
+      <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto">
+        <p class="mb-1 text-sm text-gray-300">Average Call Duration</p>
+        <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
+          {{ formatTime(averageCallDuration) }}
         </h2>
       </div>
     </div>
 
-    <section v-if="Clients.data.length" class="p-3">
+    <section v-if="calls.data.length" class="p-3">
       <div class="mx-auto max-w-screen-xl sm:px-12">
         <div class="relative sm:rounded-lg overflow-hidden">
           <div class="overflow-x-auto">
@@ -113,30 +135,45 @@ let capitalizeAndReplaceUnderscore = (str) => {
               <thead class="text-xs text-gray-300 uppercase bg-sky-900">
                 <tr>
                   <th scope="col" class="px-4 py-3">ID</th>
-                  <th scope="col" class="px-4 py-3">First Name</th>
-                  <th scope="col" class="px-4 py-3">Last Name</th>
-                  <th scope="col" class="px-4 py-3">Email</th>
-                  <th scope="col" class="px-4 py-3">Status</th>
+                  <th scope="col" class="px-4 py-3">HANG UP BY</th>
+                  <th scope="col" class="px-4 py-3">CALL DURATION</th>
+                  <th scope="col" class="px-4 py-3">CALL TAKEN</th>
+                  <th scope="col" class="px-4 py-3">AMOUNT SPENT</th>
+                  <th scope="col" class="px-4 py-3">CALL TYPE</th>
+                  <th scope="col" class="px-4 py-3">URL</th>
                   <th scope="col" class="px-4 py-3 text-end">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="Client in Clients.data" :key="Client.id" class="border-b border-gray-500">
-                  <td class="text-gray-600 px-4 py-3">{{ Client.id }}</td>
-                  <td class="text-gray-600 px-4 py-3">{{ Client.first_name }}</td>
-                  <td class="text-gray-600 px-4 py-3">{{ Client.last_name }}</td>
-                  <th class="text-gray-600 px-4 py-3">{{ Client.email }}</th>
-                  <td class="text-gray-600 px-4 py-3"> 
-                    <span v-if="Client.status == 'not_sold'"
-                      class="bg-red-600 text-white text-xs px-2 py-1 rounded-2xl">Not Sold</span>
-                    <span v-else-if="Client.status == 'sold'"
-                      class="bg-green-600 text-white text-xs px-2 py-1 rounded-2xl">Sold</span>
-                    <span v-else-if="Client.status"
-                      class="bg-yellow-600 text-white text-xs px-2 py-1 rounded-2xl">{{ Client.status  }}</span>
-                      <span v-else>-</span>
+                <tr v-for="call in calls.data" :key="call.id" class="border-b border-gray-500">
+                  <td class="text-gray-600 px-4 py-3">{{ call.id }}</td>
+                  <td class="text-gray-600 px-4 py-3">{{ call.hung_up_by }}</td>
+                  <td class="text-gray-600 px-4 py-3">
+                    {{
+                      String(Math.floor(call.call_duration_in_seconds / 60)).padStart(
+                        2,
+                        "0"
+                      ) +
+                      ":" +
+                      String(call.call_duration_in_seconds % 60).padStart(2, "0")
+                    }}
+                  </td>
+
+                  <th class="text-gray-600 px-4 py-3">{{ call.call_taken }}</th>
+                  <td class="text-gray-600 px-4 py-3">{{ call.amount_spent }}</td>
+                  <td class="text-gray-600 px-4 py-3">{{ call.call_type.type }}</td>
+                  <td class="text-gray-600 px-4 py-3">
+                    <a v-if="call.recording_url" target="_blank" :href="call.recording_url" class="flex"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="1.5em" class="pr-1" viewBox="0 0 512 512">
+                        <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                        <path
+                          d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm256-96a96 96 0 1 1 0 192 96 96 0 1 1 0-192zm0 224a128 128 0 1 0 0-256 128 128 0 1 0 0 256zm0-96a32 32 0 1 0 0-64 32 32 0 1 0 0 64z" />
+                      </svg>Open Recording
+                    </a>
+                    <span v-else>_</span>
                   </td>
                   <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
-                    <button v-if="Client.unlocked == 1" @click="openClientModal(Client)"
+                    <button v-if="call.get_client" @click="openClientModal(call)"
                       class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
                       type="button">
                       View Client
@@ -153,16 +190,16 @@ let capitalizeAndReplaceUnderscore = (str) => {
                 <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
                   Showing
                   <span class="font-semibold text-custom-blue">{{
-                    Clients.current_page
+                    calls.current_page
                   }}</span>
                   of
                   <span class="font-semibold text-custom-blue">{{
-                    Clients.last_page
+                    calls.last_page
                   }}</span>
                 </span>
                 <ul class="inline-flex items-stretch -space-x-px cursor-pointer">
                   <li>
-                    <a v-if="Clients.prev_page_url" @click="fetchClients(Clients.prev_page_url)"
+                    <a v-if="calls.prev_page_url" @click="fetchCalls(calls.prev_page_url)"
                       class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-custom-white rounded-l-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white">
                       <span class="sr-only">Previous</span>
                       <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
@@ -177,12 +214,12 @@ let capitalizeAndReplaceUnderscore = (str) => {
                   <li>
                     <a
                       class="flex items-center justify-center text-sm py-2 px-3 leading-tight font-extrabold text-gray-500 bg-custom-white shadow-2xl hover:bg-sky-950 hover:shadow-2xl hover:text-white">{{
-                        Clients.current_page }}
+                        calls.current_page }}
                     </a>
                   </li>
 
                   <li>
-                    <a v-if="Clients.next_page_url" @click="fetchClients(Clients.next_page_url)"
+                    <a v-if="calls.next_page_url" @click="fetchCalls(calls.next_page_url)"
                       class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-custom-white rounded-r-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white">
                       <span class="sr-only">Next</span>
                       <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
@@ -205,7 +242,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
       <p class="text-center text-gray-600">No clients yet.</p>
     </section>
     <Modal :show="showModal" @close="showModal = false">
-      <ClientModal :showModal="showModal" :ClientDetail="ClientDetail" :states="states" @close="showModal = false"></ClientModal>
+      <ClientDetailsModal :showModal="showModal" :callDetail="callDetail" :states="states" @close="showModal = false"></ClientDetailsModal>
     </Modal>
   </AuthenticatedLayout>
 </template>

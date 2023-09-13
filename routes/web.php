@@ -20,6 +20,7 @@ use App\Http\Controllers\FundsWithCardController;
 use App\Http\Controllers\UsageActivityController;
 use App\Http\Controllers\ActiveUserChannelController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\CallController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,6 +72,7 @@ Route::middleware(['auth', 'verified', 'registration-step-check','notBanned'])->
     Route::get('/clients', [ClientsController::class, 'index'])->name('clients.index');
     Route::patch('/clients/{client}', [ClientsController::class, 'update'])->name('clients.update');
     Route::get('/support', [SupportController::class, 'index'])->name('support.index');
+    Route::get('/calls', [CallController::class, 'index'])->name('calls.index');
 });
 
 Route::middleware(['auth','notBanned'])->group(function () {

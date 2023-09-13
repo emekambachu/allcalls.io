@@ -394,6 +394,12 @@ let appDownloadModal = ref(false);
               >
                 Clients
               </ResponsiveNavLink>
+              <ResponsiveNavLink
+                :href="route('calls.index')"
+                :active="route().current('calls.index')"
+              >
+                Calls
+              </ResponsiveNavLink>
 
               <ResponsiveNavLink
                 :href="route('activities.index')"
@@ -604,6 +610,15 @@ let appDownloadModal = ref(false);
             >
               <img src="/img/clients.png" alt="" />
               Clients
+            </NavLink>
+
+            <NavLink
+              class="mb-10 gap-2"
+              :href="route('calls.index')"
+              :active="route().current('calls.index')"
+            >
+              <img src="/img/clients.png" alt="" />
+              Calls
             </NavLink>
 
             <NavLink
