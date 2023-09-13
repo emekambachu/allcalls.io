@@ -83,10 +83,10 @@ let updateUser = (id) => {
   <Head title="Dashboard" />
 
   <AuthenticatedLayout>
-    <div class="pt-14">
+    <div class="pt-6">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
         <div class="px-4 sm:px-8 sm:rounded-lg">
-          <div class="pt-14 flex justify-between px-16">
+          <div class="pt-14 flex justify-between">
             <div class="text-4xl text-custom-sky font-bold mb-6">
               {{ user.first_name }} {{ user.last_name }}
             </div>
