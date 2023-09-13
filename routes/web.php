@@ -20,7 +20,7 @@ use App\Http\Controllers\FundsWithCardController;
 use App\Http\Controllers\UsageActivityController;
 use App\Http\Controllers\ActiveUserChannelController;
 use App\Http\Controllers\Auth\RegisteredUserController;
-
+use App\Http\Controllers\Admin\OnlineAgentsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
