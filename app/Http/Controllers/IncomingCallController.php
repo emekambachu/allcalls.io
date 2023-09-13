@@ -96,18 +96,22 @@ class IncomingCallController extends Controller
 
     private function getFromAttribute($fromString)
     {
+        Log::debug('Entered getFromAttribute function. Input: ' . $fromString);
+        
         // Check if the string starts with 'client:'
         if (strpos($fromString, 'client:') === 0) {
+            Log::debug('String starts with "client:". Processing accordingly.');
             // return '2055551234';  // Return a dummy number
             return '4793860440'; // from AR
         }
-
+    
         // If it's a phone number
         if (strpos($fromString, '+1') === 0) {
-            // Remove the +1 prefix
+            Log::debug('String starts with "+1". Processing as phone number.');
             return substr($fromString, 2);
         }
-
+    
+        Log::debug('Returning the string as-is.');
         return $fromString;  // Return as-is
     }
 
