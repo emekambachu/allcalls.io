@@ -4,8 +4,6 @@ namespace App\Providers;
 
 use App\Events\FundsAdded;
 use App\Events\FundsTooLow;
-use App\Listeners\NotifyUserForLowFundsViaEmail;
-use App\Listeners\NotifyUserForLowFundsViaSMS;
 use App\Models\Transaction;
 use App\Events\MissedCallEvent;
 use App\Listeners\SaveUserCall;
@@ -13,11 +11,12 @@ use App\Events\RingingCallEvent;
 use App\Events\CallStatusUpdated;
 use App\Listeners\AddDefaultBids;
 use App\Events\CompletedCallEvent;
-use App\Events\OnlineUserListUpdated;
 use App\Listeners\SendWelcomeEmail;
+use App\Events\OnlineUserListUpdated;
 use App\Listeners\AddTargetsInRingba;
 use Illuminate\Support\Facades\Event;
 use App\Listeners\LogCallStatusChange;
+use App\Listeners\UnlockClientForUser;
 use App\Observers\TransactionObserver;
 use Illuminate\Auth\Events\Registered;
 use App\Listeners\UpdateUserCallStatus;
@@ -28,6 +27,8 @@ use App\Http\Controllers\FundsController;
 use App\Listeners\UpdateActiveUserStatus;
 use App\Listeners\ChargeUserForMissedCall;
 use App\Listeners\ChargeUserForCompletedCall;
+use App\Listeners\NotifyUserForLowFundsViaSMS;
+use App\Listeners\NotifyUserForLowFundsViaEmail;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -54,6 +55,7 @@ class EventServiceProvider extends ServiceProvider
 
         CompletedCallEvent::class => [
             ChargeUserForCompletedCall::class,
+            UnlockClientForUser::class,
         ],
 
         FundsAdded::class => [

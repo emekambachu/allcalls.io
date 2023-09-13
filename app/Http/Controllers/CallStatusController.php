@@ -75,7 +75,7 @@ class CallStatusController extends Controller
                 // Check if DialCallStatus is available and if callDuration is greater than 60
                 if ($callDuration && $callDuration > 60) {
                     // Dispatch CompletedCallEvent
-                    CompletedCallEvent::dispatch($user, CallType::find($callTypeId));
+                    CompletedCallEvent::dispatch($user, CallType::find($callTypeId), $request->unique_call_id);
                 }
                 break;
 

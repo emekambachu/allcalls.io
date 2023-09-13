@@ -18,14 +18,16 @@ class CompletedCallEvent
 
     public User $user;
     public CallType $callType;
+    public $uniqueCallId;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(User $user, CallType $callType)
+    public function __construct(User $user, CallType $callType, $uniqueCallId)
     {
         $this->user = $user;
         $this->callType = $callType;
+        $this->uniqueCallId = $uniqueCallId;
     }
 
     /**
