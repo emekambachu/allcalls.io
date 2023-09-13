@@ -16,6 +16,9 @@ let props = defineProps({
   bids: {
     type: Array,
   },
+  internalAgent: {
+    type: Boolean,
+  },
 });
 
 let formatDate = (date) => {
@@ -57,24 +60,24 @@ let formatMoney = (amount) => {
 </script>
 <style scoped>
 .button-custom {
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 150ms;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    font-weight: 600;
-    border-width: 1px;
-    align-items: center;
-    display: inline-flex;
-    border-color: rgb(107 114 128 / var(--tw-border-opacity));
-    background-color: #03243d;
-    color: #3cfa7a;
-    cursor: pointer;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
+  border-width: 1px;
+  align-items: center;
+  display: inline-flex;
+  border-color: rgb(107 114 128 / var(--tw-border-opacity));
+  background-color: #03243d;
+  color: #3cfa7a;
+  cursor: pointer;
 }
 
 .button-custom:hover {
-    transition-duration: 150ms;
-    background-color: white;
-    color: black;
+  transition-duration: 150ms;
+  background-color: white;
+  color: black;
 }
 </style>
 <template>
@@ -82,9 +85,7 @@ let formatMoney = (amount) => {
 
   <AuthenticatedLayout>
     <template #header>
-      <h2
-        class="font-semibold text-xl text-gray-800 leading-tight"
-      >
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
         Profile
       </h2>
     </template>
@@ -92,19 +93,14 @@ let formatMoney = (amount) => {
     <div class="py-6">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
         <div class="p-4 sm:p-8 sm:rounded-lg">
-          <div class="text-4xl text-custom-sky font-small mb-6">My Profile</div>
+          <div class="text-4xl text-custom-sky font-small mb-6">My Profile </div>
           <hr class="mb-8" />
 
-          <div
-            class="flex flex-col items-start sm:flex-row sm:items-center sm:space-x-8 mb-4 lg:mb-10 relative"
-          >
+          <div class="flex flex-col items-start sm:flex-row sm:items-center sm:space-x-8 mb-4 lg:mb-10 relative">
             <div
-              class="relative inline-flex items-center justify-center w-28 h-28 overflow-hidden rounded-full bg-custom-blue"
-            >
-              <span class="text-5xl font-medium text-center text-custom-white"
-                >{{ getFirstLetter(user.first_name)
-                }}{{ getFirstLetter(user.last_name) }}</span
-              >
+              class="relative inline-flex items-center justify-center w-28 h-28 overflow-hidden rounded-full bg-custom-blue">
+              <span class="text-5xl font-medium text-center text-custom-white">{{ getFirstLetter(user.first_name)
+              }}{{ getFirstLetter(user.last_name) }}</span>
             </div>
             <div class="font-medium text-white">
               <div class="text-4xl text-sky-950">
@@ -120,11 +116,7 @@ let formatMoney = (amount) => {
                 </div>
               </div>
             </div>
-            <Link 
-              href="/profile/edit"
-              class="button-custom px-4 py-3 rounded-md  absolute right-0"
-              >Edit Profile</Link
-            >
+            <Link href="/profile/edit" class="button-custom px-4 py-3 rounded-md  absolute right-0">Edit Profile</Link>
           </div>
 
           <!-- <div>
@@ -154,9 +146,7 @@ let formatMoney = (amount) => {
             </div>
             <div class="flex flex-col space-y-2 h-full overflow-auto">
               <div class="text-sm text-gray-400 font-bold">Email Address</div>
-              <div
-                class="text-md sm:text-xl text-gray-600 font-bold flex-grow"
-              >
+              <div class="text-md sm:text-xl text-gray-600 font-bold flex-grow">
                 {{ user.email }}
               </div>
             </div>
@@ -172,11 +162,8 @@ let formatMoney = (amount) => {
           <hr class="mb-4" />
 
           <div class="grid grid-cols-2 gap-10 mb-12">
-            <div
-              class="flex flex-col space-y-2 h-full overflow-auto"
-              v-for="callType in selectedCallTypesWithStates"
-              :key="callType.id"
-            >
+            <div class="flex flex-col space-y-2 h-full overflow-auto" v-for="callType in selectedCallTypesWithStates"
+              :key="callType.id">
               <div class="text-sm text-gray-400 font-bold">
                 {{ callType.type }}
               </div>
@@ -185,20 +172,23 @@ let formatMoney = (amount) => {
               </div>
             </div>
           </div>
+          <div v-if="!internalAgent">
+            <div class="text-4xl text-custom-sky font-small mb-2">Max Bids</div>
+            <!-- <div class="text-2xl font-bold text-gray-600 mb-6" >Verticals</div> -->
+            <hr class="mb-4" />
 
-          <div class="text-4xl text-custom-sky font-small mb-2">Max Bids</div>
-          <!-- <div class="text-2xl font-bold text-gray-600 mb-6" >Verticals</div> -->
-          <hr class="mb-4" />
-
-          <div class="grid grid-cols-2 gap-10 mb-12">
-            <div v-for="bid in bids" :key="bid.id">
-              <div class="flex flex-col space-y-2 h-full overflow-auto">
-                <div class="text-sm text-gray-400 font-bold">Vertical: <span class="font-light text-gray-500">{{ bid.call_type.type }}</span></div>
-                <div class="text-md sm:text-xl text-gray-600 font-bold">${{ formatMoney(bid.amount) }}</div>
+            <div class="grid grid-cols-2 gap-10 mb-12">
+              <div v-for="bid in bids" :key="bid.id">
+                <div class="flex flex-col space-y-2 h-full overflow-auto">
+                  <div class="text-sm text-gray-400 font-bold">Vertical: <span class="font-light text-gray-500">{{
+                    bid.call_type.type }}</span></div>
+                  <div class="text-md sm:text-xl text-gray-600 font-bold">${{ formatMoney(bid.amount) }}</div>
+                </div>
               </div>
-            </div>
 
+            </div>
           </div>
+
 
         </div>
 
