@@ -355,17 +355,25 @@ class IncomingCallController extends Controller
 
 
         if (is_null($availableNumber->user_id)) {
+            Log::debug('user_id is null. Setting user_id to: ' . $userId);
             $availableNumber->user_id = $userId;
+        } else {
+            Log::debug('user_id is already set to: ' . $availableNumber->user_id);
         }
-
+        
         if (is_null($availableNumber->from)) {
+            Log::debug('from is null. Setting from to: ' . $from);
             $availableNumber->from = $from;
+        } else {
+            Log::debug('from is already set to: ' . $availableNumber->from);
         }
-
-        if (is_null($availableNumber->call_type_id)){
+        
+        if (is_null($availableNumber->call_type_id)) {
+            Log::debug('call_type_id is null. Setting call_type_id to: ' . $callTypeId);
             $availableNumber->call_type_id = $callTypeId;
+        } else {
+            Log::debug('call_type_id is already set to: ' . $availableNumber->call_type_id);
         }
-
 
         $availableNumber->save();
 
