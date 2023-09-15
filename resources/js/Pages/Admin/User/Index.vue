@@ -35,25 +35,25 @@ let props = defineProps({
 });
 
 let formData = ref({
-    name: props.requestData.name,
-    email: props.requestData.email,
-    phone: props.requestData.phone,
-    first_six_card_no: props.requestData.first_six_card_no,
-    last_four_card_no: props.requestData.last_four_card_no,
+  name: props.requestData.name,
+  email: props.requestData.email,
+  phone: props.requestData.phone,
+  first_six_card_no: props.requestData.first_six_card_no,
+  last_four_card_no: props.requestData.last_four_card_no,
 });
 let fetchClients = (page) => {
   let url = new URL(page);
   if (formData.value.name !== undefined && formData.value.name !== null) {
-    url.searchParams.set('name', formData.value.name);
+    url.searchParams.set("name", formData.value.name);
   }
   if (formData.value.email !== undefined && formData.value.email !== null) {
-    url.searchParams.set('email', formData.value.email);
+    url.searchParams.set("email", formData.value.email);
   }
   if (formData.value.phone !== undefined && formData.value.phone !== null) {
-    url.searchParams.set('phone', formData.value.phone);
+    url.searchParams.set("phone", formData.value.phone);
   }
   if (formData.value.card_no !== undefined && formData.value.card_no !== null) {
-    url.searchParams.set('card_no', formData.value.card_no);
+    url.searchParams.set("card_no", formData.value.card_no);
   }
   // Ensure the protocol is https
   if (url.protocol !== "https:") {
@@ -144,18 +144,26 @@ let capitalizeAndReplaceUnderscore = (str) => {
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="user in users.data" :key="user.id" class="border-b border-gray-500">
+                <tr
+                  v-for="user in users.data"
+                  :key="user.id"
+                  class="border-b border-gray-500"
+                >
                   <td class="text-gray-600 px-4 py-3">{{ user.id }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ user.first_name }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ user.last_name }}</td>
                   <th class="text-gray-600 px-4 py-3">{{ user.email }}</th>
-                  <td class="text-gray-600 px-4 py-3">{{ user.balance }}</td>
+                  <td class="text-gray-600 px-4 py-3">
+                    ${{ formatMoney(user.balance) }}
+                  </td>
                   <td class="text-gray-600 px-4 py-3">{{ user.phone }}</td>
                   <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
                     <a :href="route('admin.customer.detail', user.id)">View Detail</a>
-                    <button @click="openClientModal(user, users.current_page)"
+                    <button
+                      @click="openClientModal(user, users.current_page)"
                       class="inline-flex items-center mx-2 p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
-                      type="button">
+                      type="button"
+                    >
                       Edit
                     </button>
                   </td>
@@ -165,7 +173,8 @@ let capitalizeAndReplaceUnderscore = (str) => {
             <div class="p-4">
               <nav
                 class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
-                aria-label="Table navigation">
+                aria-label="Table navigation"
+              >
                 <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
                   Showing
                   <span class="font-semibold text-custom-blue">{{
@@ -178,34 +187,54 @@ let capitalizeAndReplaceUnderscore = (str) => {
                 </span>
                 <ul class="inline-flex items-stretch -space-x-px cursor-pointer">
                   <li>
-                    <a v-if="users.prev_page_url" @click="fetchClients(users.prev_page_url)"
-                      class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-custom-white rounded-l-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white">
+                    <a
+                      v-if="users.prev_page_url"
+                      @click="fetchClients(users.prev_page_url)"
+                      class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-custom-white rounded-l-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white"
+                    >
                       <span class="sr-only">Previous</span>
-                      <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
+                      <svg
+                        class="w-5 h-5"
+                        aria-hidden="true"
+                        fill="currentColor"
+                        viewbox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill-rule="evenodd"
                           d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                          clip-rule="evenodd" />
+                          clip-rule="evenodd"
+                        />
                       </svg>
                     </a>
                   </li>
 
                   <li>
                     <a
-                      class="flex items-center justify-center text-sm py-2 px-3 leading-tight font-extrabold text-gray-500 bg-custom-white shadow-2xl hover:bg-sky-950 hover:shadow-2xl hover:text-white">{{
-                        users.current_page }}
+                      class="flex items-center justify-center text-sm py-2 px-3 leading-tight font-extrabold text-gray-500 bg-custom-white shadow-2xl hover:bg-sky-950 hover:shadow-2xl hover:text-white"
+                      >{{ users.current_page }}
                     </a>
                   </li>
 
                   <li>
-                    <a v-if="users.next_page_url" @click="fetchClients(users.next_page_url)"
-                      class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-custom-white rounded-r-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white">
+                    <a
+                      v-if="users.next_page_url"
+                      @click="fetchClients(users.next_page_url)"
+                      class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-custom-white rounded-r-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white"
+                    >
                       <span class="sr-only">Next</span>
-                      <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
+                      <svg
+                        class="w-5 h-5"
+                        aria-hidden="true"
+                        fill="currentColor"
+                        viewbox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill-rule="evenodd"
                           d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                          clip-rule="evenodd" />
+                          clip-rule="evenodd"
+                        />
                       </svg>
                     </a>
                   </li>
@@ -221,8 +250,15 @@ let capitalizeAndReplaceUnderscore = (str) => {
       <p class="text-center text-gray-600">No clients yet.</p>
     </section>
     <Modal :show="showModal" @close="showModal = false">
-      <Edit :showModal="showModal" :userDetail="userDetail" :currentPage="currentPage" @close="showModal = false"
-        :callTypes="callTypes" :states="states" :route="'/admin/customer'" ></Edit>
+      <Edit
+        :showModal="showModal"
+        :userDetail="userDetail"
+        :currentPage="currentPage"
+        @close="showModal = false"
+        :callTypes="callTypes"
+        :states="states"
+        :route="'/admin/customer'"
+      ></Edit>
     </Modal>
   </AuthenticatedLayout>
 </template>
