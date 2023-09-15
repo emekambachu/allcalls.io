@@ -3,14 +3,25 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Transactions from "@/Pages/Admin/User/Transactions.vue";
 import Calls from "@/Pages/Admin/User/Calls.vue";
 import Activities from "@/Pages/Admin/User/Activities.vue";
+import Clients from '@/Pages/Admin/Clients/Index.vue'
 import { Head } from "@inertiajs/vue3";
 import { Bar } from "vue-chartjs";
 import { ref } from "vue";
 import { toaster } from "@/helper.js";
 import { router, usePage } from "@inertiajs/vue3";
+let page = usePage();
+const tab = ref(0);
+
+if (page.props.flash.message) {
+  toaster("success", page.props.flash.message);
+  if(page.props.flash.message == 'Client updated successfully.'){
+    tab.value = localStorage.getItem('tab')
+  }
+}
 const props = defineProps({
   user: Object,
   callsCount: Number,
+  ClientCount: Number,
   activitiesCount: Number,
   transactionsCount: Number,
 });
@@ -31,10 +42,11 @@ let openTransactionModal = (type) => {
     showActivitiesModal.value = true;
   }
 };
-const tab = ref(0);
+
 
 let ChangeTab = (val) => {
   tab.value = val;
+  localStorage.setItem('tab', val)
 };
 let updateUser = (id) => {
   return axios
@@ -110,7 +122,7 @@ let updateUser = (id) => {
     </div>
 
     <div class="px-16 pt-2">
-      <div class="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+      <div class="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto">
           <p class="mb-1 text-sm text-gray-300">Total Transactions</p>
           <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
@@ -121,6 +133,12 @@ let updateUser = (id) => {
           <p class="mb-1 text-sm text-gray-300">Total Calls</p>
           <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
             {{ callsCount }}
+          </h2>
+        </div>
+        <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto">
+          <p class="mb-1 text-sm text-gray-300">Total Clients</p>
+          <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
+            {{ ClientCount }}
           </h2>
         </div>
         <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto">
@@ -139,78 +157,42 @@ let updateUser = (id) => {
         data-tabs-toggle="#myTabContent"
         role="tablist"
       >
-        <li
-          @click="ChangeTab(0)"
-          class="mr-2"
-          :class="{ 'active-tab': tab == 0 }"
-          role="presentation"
-        >
+      <li @click="ChangeTab(0)" class="mr-8" :class="{ 'active-tab': tab == 0 }" role="presentation">
           <button
-            class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-            id="profile-tab"
-            type="button"
-            role="tab"
-            aria-controls="profile"
-            aria-selected="false"
-          >
-            User Information
+            class="inline-block pb-2 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+            id="profile-tab" type="button" role="tab" aria-controls="profile" aria-selected="false"> User Information
             <!-- <span class="chemical-formula">{{ transactionsCount }}</span>  -->
           </button>
         </li>
-        <li
-          @click="ChangeTab(1)"
-          class="mr-2"
-          :class="{ 'active-tab': tab == 1 }"
-          role="presentation"
-        >
+        <li @click="ChangeTab(1)" class="mr-8 " :class="{ 'active-tab': tab == 1 }" role="presentation">
           <button
-            class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-            id="profile-tab"
-            type="button"
-            role="tab"
-            aria-controls="profile"
-            aria-selected="false"
-          >
-            Transactions
+            class="inline-block pb-2 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+            id="profile-tab" type="button" role="tab" aria-controls="profile" aria-selected="false">Transactions
             <!-- <span class="chemical-formula">{{ transactionsCount }}</span>  -->
           </button>
         </li>
-        <li
-          @click="ChangeTab(2)"
-          class="mr-2"
-          :class="{ 'active-tab': tab == 2 }"
-          role="presentation"
-        >
+        <li @click="ChangeTab(2)" class="mr-8" :class="{ 'active-tab': tab == 2 }" role="presentation">
           <button
-            class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-            id="dashboard-tab"
-            data-tabs-target="#dashboard"
-            type="button"
-            role="tab"
-            aria-controls="dashboard"
-          >
-            Calls
+            class="inline-block pb-2 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+            id="dashboard-tab" data-tabs-target="#dashboard" type="button" role="tab" aria-controls="dashboard">Calls
             <!-- <span class="chemical-formula">{{ callsCount }}</span> -->
           </button>
         </li>
-        <li
-          @click="ChangeTab(3)"
-          class="mr-2"
-          :class="{ 'active-tab': tab == 3 }"
-          role="presentation"
-        >
+        <li @click="ChangeTab(3)" class="mr-8" :class="{ 'active-tab': tab == 3 }" role="presentation">
           <button
-            class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-            id="settings-tab"
-            data-tabs-target="#settings"
-            type="button"
-            role="tab"
-            aria-controls="settings"
-          >
-            Activities
+            class="inline-block pb-2 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+            id="settings-tab" data-tabs-target="#settings" type="button" role="tab" aria-controls="settings">Clients
             <!-- <span class="chemical-formula">{{ activitiesCount }}</span> -->
           </button>
         </li>
+        <li @click="ChangeTab(4)" class="mr-8" :class="{ 'active-tab': tab == 4 }" role="presentation">
+          <button
+            class="inline-block pb-2 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+            id="settings-tab" data-tabs-target="#settings" type="button" role="tab" aria-controls="settings">Activities
+            <!-- <span class="chemical-formula">{{ activitiesCount }}</span> -->
+          </button>
+        </li>
+        
       </ul>
     </div>
 
@@ -290,9 +272,15 @@ let updateUser = (id) => {
     </transition>
     <transition name="slide">
       <section v-if="tab == 3" class="sliding-section" :class="{ show: tab == 1 }">
+        <Clients :user="user" :url="'/admin/customer/clients'" ></Clients>
+      </section>
+    </transition>
+    <transition name="slide">
+      <section v-if="tab == 4" class="sliding-section" :class="{ show: tab == 1 }">
         <Activities :user="user"></Activities>
       </section>
     </transition>
+   
     <!-- <Transaction :showTransactionModal="showTransactionModal" :detailType="detailType" :user="user"
       @close="showTransactionModal = false"></Transaction> -->
 

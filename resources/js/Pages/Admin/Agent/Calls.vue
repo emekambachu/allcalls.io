@@ -2,7 +2,8 @@
 import { ref, reactive, defineEmits, onMounted, watch } from "vue";
 import TextInput from "@/Components/TextInput.vue";
 import { router } from "@inertiajs/vue3"
-
+import ClientDetailsModal from "@/Components/ClientDetailsModal.vue";
+import Modal from "@/Components/Modal.vue";
 let props = defineProps({
   showCallsModal: {
     type: Boolean,
@@ -15,6 +16,7 @@ let props = defineProps({
 });
 
 let calls = ref([]);
+let states = ref(null)
 onMounted(() => {
   Fetehcalls(props.user.id);
 })
@@ -26,6 +28,7 @@ let Fetehcalls = async (id) => {
     const data = response.data; // Assuming your API response provides relevant data
     // console.log('what is data', data.calls);
     calls.value = data.calls
+    states.value = data.states
     slidingLoader.value = false
   } catch (error) {
     console.error(error);
@@ -52,8 +55,13 @@ let formatMoney = (amount) => {
     .replace(/\d(?=(\d{3})+\.)/g, "$&,");
 };
 
+let showModal = ref(false);
+let callDetail = ref(null);
 
-
+let openClientModal = (call) => {
+  callDetail.value = call;
+  showModal.value = true;
+};
 
 </script>
 
@@ -73,6 +81,7 @@ let formatMoney = (amount) => {
                 <th scope="col" class="px-4 py-3">AMMOUNT SPENT</th>
                 <th scope="col" class="px-4 py-3">CALL TYPE</th>
                 <th scope="col" class="px-4 py-3">URL</th>
+                <th scope="col" class="px-4 py-3 text-end">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -104,6 +113,14 @@ let formatMoney = (amount) => {
                     </a>
                     <span v-else>_</span>
                 </td>
+                <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
+                    <button v-if="call.get_client" @click="openClientModal(call)"
+                      class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
+                      type="button">
+                      View Client
+                    </button>
+                    <button v-else class="text-center" type="button">-</button>
+                  </td>
               </tr>
             </tbody>
           </table>
@@ -164,4 +181,7 @@ let formatMoney = (amount) => {
   <section v-else-if="slidingLoader == false" class="p-3">
     <p class="text-center text-gray-600">No Calls yet.</p>
   </section>
+  <Modal :show="showModal" @close="showModal = false">
+      <ClientDetailsModal :showModal="showModal" :callDetail="callDetail" :states="states" @close="showModal = false"></ClientDetailsModal>
+    </Modal>
 </template>
