@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Models\Call;
 use App\Models\CallType;
+use App\Models\Client;
 use App\Models\Role;
 use App\Models\State;
 use App\Models\Transaction;
@@ -79,12 +80,13 @@ class InternalAgentController extends Controller
         $callsCount = Call::whereUserId($id)->count();
         $transactionsCount = Transaction::whereUserId($id)->count();
         $activitiesCount = Activity::whereUserId($id)->count();
-
+        $ClientCount = Client::where('user_id', $id)->count();
         return Inertia::render('Admin/Agent/Show', [
             'user' => $user,
             'callsCount' => $callsCount,
             'transactionsCount' => $transactionsCount,
             'activitiesCount' => $activitiesCount,
+            'ClientCount' => $ClientCount,
         ]);
     }
 
@@ -171,9 +173,11 @@ class InternalAgentController extends Controller
 
     public function getCall($id)
     {
-        $calls = Call::whereUserId($id)->with('user', 'callType')->paginate(10);
+        $calls = Call::whereUserId($id)->with('user','getClient',  'callType')->paginate(10);
+        $states = State::all();
         return response()->json([
-            'calls' => $calls
+            'calls' => $calls,
+            'states' => $states
         ]);
     }
 
@@ -192,7 +196,12 @@ class InternalAgentController extends Controller
             'activities' => $activities
         ]);
     }
-
+    public function getAgentClients($id){
+        $Clients = Client::where('user_id', $id)->paginate(10);
+        return response()->json([
+            'clients' => $Clients
+        ]);
+    }
     public function update(Request $request, $id)
     {
         // echo $request->all();

@@ -6,6 +6,8 @@ use Inertia\Inertia;
 use App\Models\OnlineUser;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class OnlineAgentsController extends Controller
 {

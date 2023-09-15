@@ -24,7 +24,7 @@ class ProfileController extends Controller
     public function view(Request $request): Response
     {
         $user = $request->user();
-
+        $internalAgent=$user->hasRole('internal-agent');
         // Get user's call types with states
         $userCallTypesWithStates = $user->callTypes()->with('states')->get();
 
@@ -68,7 +68,7 @@ class ProfileController extends Controller
 
         $bids = Bid::whereUserId($request->user()->id)->with('callType')->get();
 
-        return Inertia::render('Profile/View', compact('user', 'callTypes', 'bids'));
+        return Inertia::render('Profile/View', compact('user', 'callTypes', 'bids', 'internalAgent'));
     }
 
     /**
