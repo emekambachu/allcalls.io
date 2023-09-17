@@ -60,7 +60,7 @@ Route::middleware(['auth', 'verified', 'registration-step-check','notBanned'])->
     Route::patch('/bids', [BidsController::class, 'update'])->name('bids.update');
 
     Route::get('/billing/funds', [FundsController::class, 'index'])->name('billing.funds.index');
-    Route::post('/billing/funds', [StripeFundsController::class, 'store'])->name('billing.funds.store');
+    Route::post('/billing/funds', [FundsWithCardController::class, 'store'])->name('billing.funds.store');
 
     Route::get('/billing/cards', [CardsController::class, 'index'])->name('billing.cards.index');
     Route::post('/billing/cards', [CardsController::class, 'store'])->name('billing.cards.store');
