@@ -66,60 +66,111 @@ class FundsController extends Controller
     }
 
 
-
-    public function store(Request $request)
+    public function store(Request $request, NMIGateway $gw)
     {
         // 1. Validate the request
         $request->validate([
-            'number' => 'required|numeric|digits_between:15,16',
-            'month' => 'required|numeric|min:1|max:12',
-            'year' => 'required|numeric|min:' . date('Y') . '|max:' . (date('Y') + 10),
-            'cvv' => 'required|numeric|digits_between:3,4',
-            'address' => 'required|string|max:255',
-            'city' => 'required|string|max:255',
-            'state' => 'required|string|max:255',
-
-            'zip' => ['required', 'regex:/^[0-9]{5}(?:-[0-9]{4})?$/'],
-
-            'amount' => 'required|numeric|integer|min:1'
+            'amount' => 'required|numeric|integer|min:1',
+            'cardId' => [
+                'sometimes',
+                'required',
+                'integer',
+                Rule::exists('cards', 'id')->where(function ($query) use ($request) {
+                    return $query->where('user_id', $request->user()->id);
+                }),
+            ],
+            'number' => 'required_without:cardId|numeric|digits_between:15,16',
+            'month' => 'required_without:cardId|numeric|min:1|max:12',
+            'year' => 'required_without:cardId|numeric|min:' . date('Y') . '|max:' . (date('Y') + 10),
+            'cvv' => 'required_without:cardId|numeric|digits_between:3,4',
+            'address' => 'required_without:cardId|string|max:255',
+            'city' => 'required_without:cardId|string|max:255',
+            'state' => 'required_without:cardId|string|max:255',
+            'zip' => ['required_without:cardId', 'regex:/^[0-9]{5}(?:-[0-9]{4})?$/'],
         ]);
 
         // 2. Set up and process payment
-        $gw = new NMIGateway;
-        $gw->setLogin(env('NMI_KEY'));
+        $response = $this->processPayment($request, $gw);
 
-        $gw->setBilling($request->user()->first_name, $request->user()->last_name, $request->address, $request->city, $request->state, $request->zip, 'US', $request->user()->phone, $request->user()->email);
-
-        $subtotal = (float) $request->amount;
-
-        // Adding 3% processing fee to the subtotal
-        $totalWithFee = $subtotal * 1.03;
-
-        // Format to two decimal places
-        $finalAmount = number_format($totalWithFee, 2, '.', '');
-
-        Log::debug('Final Amount: ' . $finalAmount);
-
-        $r = $gw->doSale($finalAmount, $request->number, $request->month . substr($request->year, -2));
-        $response = $gw->responses['responsetext'];
-
-        // If the payment is not successful, redirect back with a failure message
         if ($response !== 'SUCCESS') {
-            return redirect()->back()->with([
-                'message' => 'Payment failed.'
-            ]);
+            return redirect()->back()->with(['message' => 'Payment failed.']);
         }
 
         // 3. If payment is successful, save the card
+        [$card, $cardStatus] = $this->saveCardDetails($request);  // Returning both the card and its status
+
+        // Prepare the flash message
+        $flashMessage = 'Payment successful!';
+        if ($cardStatus === 'NEW_CARD') {
+            $flashMessage .= ' A new card has been added to your account.';
+        }
+
+        // 4. Update user balance and transaction
+        $this->updateUserBalanceAndTransaction($request, $card);
+
+        return redirect()->back()->with(['message' => $flashMessage]);
+    }
+
+    // Helper Method to Process Payment
+    private function processPayment(Request $request, NMIGateway $gw)
+    {
+        $gw->setLogin(env('NMI_KEY'));
+
+        $cardId = $request->input('cardId');
+
+        if ($cardId) {
+            $card = Card::find($cardId);
+            // Decrypt and use the card details from the database
+            $number = Crypt::decryptString($card->number);
+            $month = Crypt::decryptString($card->month);
+            $year = Crypt::decryptString($card->year);
+        } else {
+            // Use the card details from the request
+            $number = $request->number;
+            $month = $request->month;
+            $year = $request->year;
+        }
+
+        $gw->setBilling(
+            $request->user()->first_name,
+            $request->user()->last_name,
+            $request->address,
+            $request->city,
+            $request->state,
+            $request->zip,
+            'US',
+            $request->user()->phone,
+            $request->user()->email
+        );
+
+        $subtotal = (float)$request->amount;
+        $totalWithFee = $subtotal * 1.03;
+        $finalAmount = number_format($totalWithFee, 2, '.', '');
+
+        $r = $gw->doSale($finalAmount, $number, $month . substr($year, -2));
+
+        return $gw->responses['responsetext'];
+    }
+
+
+    private function saveCardDetails(Request $request)
+    {
+        $cardId = $request->input('cardId');
+
+        if ($cardId) {
+            // Return existing card from database
+            $card = Card::find($cardId);
+            return [$card, 'EXISTING_CARD'];
+        }
+
         $encryptedNumber = Crypt::encryptString($request->number);
         $encryptedMonth = Crypt::encryptString($request->month);
         $encryptedYear = Crypt::encryptString($request->year);
         $encryptedCvv = Crypt::encryptString($request->cvv);
 
-        // Check if the user already has a card
         $isFirstCard = !Card::where('user_id', $request->user()->id)->exists();
 
-        $card = Card::create([
+        $newCard = Card::create([
             'number' => $encryptedNumber,
             'month' => $encryptedMonth,
             'year' => $encryptedYear,
@@ -132,21 +183,21 @@ class FundsController extends Controller
             'default' => $isFirstCard,
         ]);
 
-        // The payment is approved:
+        return [$newCard, 'NEW_CARD'];
+    }
+
+    // Helper Method to Update User Balance and Add Transaction
+    private function updateUserBalanceAndTransaction(Request $request, $card)
+    {
         $request->user()->update([
-            'balance' => $request->user()->balance + (float) $request->amount,
+            'balance' => $request->user()->balance + (float)$request->amount,
         ]);
 
-        // Add the transactions.
         Transaction::create([
-            'amount' => (float) $request->amount,
+            'amount' => (float)$request->amount,
             'user_id' => $request->user()->id,
             'sign' => true,
             'card_id' => $card->id,
-        ]);
-
-        return redirect()->back()->with([
-            'message' => 'Payment successful and card added.'
         ]);
     }
 }

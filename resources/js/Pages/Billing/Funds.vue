@@ -59,9 +59,11 @@ let showSuccessNotificationIfAvailable = () => {
 let addFunds = async () => {
     isLoading.value = true;
 
-    router.visit('/billing/funds', {
-        method: 'POST',
-        data: {
+    let requestData;
+
+    // If 'card' has a value of '0'
+    if (card.value === '0') {
+        requestData = {
             amount: amount.value,
             number: number.value,
             month: month.value,
@@ -71,10 +73,33 @@ let addFunds = async () => {
             city: city.value,
             state: state.value,
             zip: zip.value,
+        };
+    } else {
+        // Search for the card object using the id
+        const selectedCard = cards.find(c => c.id === Number(card.value));
+
+        if (selectedCard) {
+            requestData = {
+                amount: amount.value,
+                // Assuming the backend can recognize card id and use the stored data
+                cardId: selectedCard.id,
+            };
+        } else {
+            // Handle the error if the selected card is not found
+            toaster('error', 'Selected card not found');
+            isLoading.value = false;
+            return;
         }
-    })
+    }
+
+    router.visit('/billing/funds', {
+        method: 'POST',
+        data: requestData,
+    });
+
     return;
-}
+};
+
 
 let creditCardFee = computed(() => {
     let fee = Number(amount.value) * 0.03;
