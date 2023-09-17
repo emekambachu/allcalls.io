@@ -90,7 +90,7 @@ let total = computed(() => {
                     <section class="mx-auto sm:px-6 lg:px-8 space-y-6">
                         <div class="p-4 sm:p-8 sm:rounded-lg" style="padding-top: 0">
 
-                            <div @submit.prevent="" class="my-12" autocomplete="on">
+                            <div class="my-12">
                                 <div class="mb-4 flex justify-center">
                                     <img class="h-8 mr-3 border border-gray-300 shadow rounded" src="/img/visa.svg"
                                         alt="VISA" />
