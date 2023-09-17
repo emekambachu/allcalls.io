@@ -193,11 +193,15 @@ class FundsController extends Controller
             'balance' => $request->user()->balance + (float)$request->amount,
         ]);
 
+
+        $cardLast4 = substr(Crypt::decryptString($card->number), -4);
+
         Transaction::create([
             'amount' => (float)$request->amount,
             'user_id' => $request->user()->id,
             'sign' => true,
             'card_id' => $card->id,
+            'label' => 'Funds added manually with credit card ending in ' . $cardLast4,
         ]);
     }
 }
