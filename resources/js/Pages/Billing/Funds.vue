@@ -22,12 +22,15 @@ let name = ref('');
 let number = ref('');
 let month = ref('');
 let year = ref('');
+let expiry = ref('');
 let cvv = ref('');
+
 let address = ref('');
 let city = ref('');
 let state = ref('');
 let zip = ref('');
 let card = ref('0');
+
 
 let isLoading = ref(false);
 
@@ -59,6 +62,18 @@ let showSuccessNotificationIfAvailable = () => {
 let addFunds = async () => {
     isLoading.value = true;
 
+    console.log(expiry.value);
+
+    // Extract month and year from the expiry.value
+    let [monthFromExpiry, yearFromExpiry] = expiry.value.split(' / ');
+
+    // Validate that month and year are available from expiry.value
+    if (!monthFromExpiry || !yearFromExpiry) {
+        toaster('error', 'Invalid expiry date');
+        isLoading.value = false;
+        return;
+    }
+
     let requestData;
 
     // If 'card' has a value of '0'
@@ -66,8 +81,8 @@ let addFunds = async () => {
         requestData = {
             amount: amount.value,
             number: number.value,
-            month: month.value,
-            year: '20' + year.value,
+            month: monthFromExpiry,
+            year: yearFromExpiry,
             cvv: cvv.value,
             address: address.value,
             city: city.value,
@@ -99,6 +114,7 @@ let addFunds = async () => {
 
     return;
 };
+
 
 
 let creditCardFee = computed(() => {
@@ -167,49 +183,50 @@ let total = computed(() => {
                                     <div class="mb-4">
                                         <label class="block mb-2 text-sm font-medium text-gray-500">Card Details</label>
 
-                                        <div class="rounded" style="background-color: #E8F0FE;">
-                                            <div class="flex">
-                                                <!-- Card Number: Allowing 15 to 19 digits (to accommodate various card types) -->
-                                                <div class="flex-1">
+                                        <div class="rounded p-0.5" style="background-color: #E8F0FE;">
+                                            <!-- Use grid instead of flex -->
+                                            <div
+                                                style="display: grid; grid-template-columns: 1fr auto auto; grid-template-rows: auto auto;">
+                                                <!-- Card Number -->
+                                                <div>
                                                     <input
                                                         class="text-sm border-transparent focus:border-transparent focus:ring-0 bg-transparent"
-                                                        type="text" placeholder="Card Number" name="cardNumber" required
-                                                        minlength="16" maxlength="16" v-model="number">
+                                                        type="text" placeholder="Card Number" name="cardNumber"
+                                                        v-cardformat:formatCardNumber required minlength="16" maxlength="16"
+                                                        v-model="number">
+                                                </div>
+                                                <!-- Display errors on a new row under the input -->
+                                                <div style="grid-column: 1 / 2; grid-row: 2 / 3;">
                                                     <InputError class="mt-2" :message="$page.props.errors.number" />
                                                 </div>
 
-
-                                                <!-- Expiry Month: 2 digits between 01 and 12 -->
+                                                <!-- Expiry Date -->
                                                 <div>
                                                     <input
-                                                        class="text-sm w-14 border-transparent focus:border-transparent focus:ring-0 bg-transparent"
-                                                        type="text" placeholder="MM" name="MM" required
-                                                        pattern="(0[1-9]|1[0-2])" maxlength="2" v-model="month">
-                                                    <InputError class="mt-2" :message="$page.props.errors.month" />
+                                                        class="text-sm w-18 border-transparent focus:border-transparent focus:ring-0 bg-transparent"
+                                                        type="text" placeholder="MM / YY" name="MM / YYYY" v-model="expiry"
+                                                        required pattern="(0[1-9]|1[0-2])" v-cardformat:formatCardExpiry>
+                                                </div>
+                                                <!-- Display errors on a new row under the input -->
+                                                <div style="grid-column: 2 / 3; grid-row: 2 / 3;">
+                                                    <InputError class="mt-2" />
                                                 </div>
 
-                                                <!-- Expiry Year: 2 digits, assuming a card can be valid for up to 20 years -->
+                                                <!-- CVV -->
                                                 <div>
                                                     <input
-                                                        class="text-sm w-14 border-transparent focus:border-transparent focus:ring-0 bg-transparent"
-                                                        type="text" placeholder="YY" name="YY" required pattern="\d{2}"
-                                                        v-model="year" maxlength="2">
-                                                    <InputError class="mt-2" :message="$page.props.errors.year" />
-                                                </div>
-
-
-                                                <!-- CVV: 3 or 4 digits -->
-                                                <div>
-                                                    <input
-                                                        class="text-sm w-14 border-transparent focus:border-transparent focus:ring-0 bg-transparent"
+                                                        class="text-sm w-18 border-transparent focus:border-transparent focus:ring-0 bg-transparent"
                                                         type="text" placeholder="CVV" name="CVV" required pattern="\d{3,4}"
-                                                        v-model="cvv" maxlength="4">
+                                                        v-model="cvv" maxlength="4" v-cardformat:formatCardCVC>
+                                                </div>
+                                                <!-- Display errors on a new row under the input -->
+                                                <div style="grid-column: 3 / 4; grid-row: 2 / 3;">
                                                     <InputError class="mt-2" :message="$page.props.errors.cvv" />
                                                 </div>
 
                                             </div>
-
                                         </div>
+
                                     </div>
 
 

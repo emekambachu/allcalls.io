@@ -9,6 +9,7 @@
     const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
     import VueDatePicker from '@vuepic/vue-datepicker';
     import '@vuepic/vue-datepicker/dist/main.css'
+    import VueCreditCardValidation from 'vue-credit-card-validation';
     
     createInertiaApp({
         title: (title) => `${title} - ${appName}`,
@@ -18,6 +19,7 @@
                 .use(plugin)
                 .use(ZiggyVue, Ziggy)
                 .use(GlobalSpinnerPlugin)
+                .use(VueCreditCardValidation)
                 .component('VueDatePicker', VueDatePicker)
                 .mount(el);
         },
