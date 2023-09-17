@@ -7,6 +7,14 @@ import { ref, onMounted, computed } from 'vue';
 import InputError from "@/Components/InputError.vue";
 import { toaster } from '@/helper.js';
 
+let { cards } = defineProps({
+    cards: {
+        type: Array,
+        required: true,
+    }
+});
+console.log(cards);
+
 let page = usePage();
 
 let amount = ref('50');
@@ -19,14 +27,24 @@ let address = ref('');
 let city = ref('');
 let state = ref('');
 let zip = ref('');
+let card = ref('0');
 
 let isLoading = ref(false);
 
 
 onMounted(() => {
     showSuccessNotificationIfAvailable();
+    selectDefaultCardIfAvailable();
 });
 
+let selectDefaultCardIfAvailable = () => {
+    // Search for the default = 1 card:
+    for (let i = 0; i < cards.length; i++) {
+        if (cards[i].default === 1) {
+            card.value = cards[i].id
+        }
+    }
+}
 
 let showSuccessNotificationIfAvailable = () => {
     if (page.props.flash.message) {
@@ -102,142 +120,160 @@ let total = computed(() => {
                                         alt="DISCOVER" />
                                 </div>
 
-                                <div class="mb-4">
-                                    <label for="name" class="block mb-2 text-sm font-medium text-gray-500">Full Name</label>
-                                    <TextInput v-model="name" id="name" placeholder="John Doe" />
-                                    <InputError class="mt-2" :message="$page.props.errors.name" />
+                                <div class="mb-8">
+                                    <label for="cards" class="block mb-2 text-sm font-medium text-gray-500">Card</label>
+                                    <select class="select-custom" v-model="card">
+                                        <option value="0">Add a new card</option>
+                                        <option v-for="currentCard in cards" :key="currentCard.id" :value="currentCard.id"
+                                            v-text="`${currentCard.type} ending in ${currentCard.last4}`"></option>
+                                    </select>
                                 </div>
 
-                                <div class="mb-4">
-                                    <label class="block mb-2 text-sm font-medium text-gray-500">Card Details</label>
-
-                                    <div class="rounded" style="background-color: #E8F0FE;">
-                                        <div class="flex">
-                                            <!-- Card Number: Allowing 15 to 19 digits (to accommodate various card types) -->
-                                            <div class="flex-1">
-                                                <input
-                                                    class="text-sm border-transparent focus:border-transparent focus:ring-0 bg-transparent"
-                                                    type="text" placeholder="Card Number" name="cardNumber" required
-                                                    minlength="16" maxlength="16" v-model="number">
-                                                <InputError class="mt-2" :message="$page.props.errors.number" />
-                                            </div>
+                                <div v-if="card === '0'">
 
 
-                                            <!-- Expiry Month: 2 digits between 01 and 12 -->
-                                            <div>
-                                                <input
-                                                    class="text-sm w-14 border-transparent focus:border-transparent focus:ring-0 bg-transparent"
-                                                    type="text" placeholder="MM" name="MM" required
-                                                    pattern="(0[1-9]|1[0-2])" maxlength="2" v-model="month">
-                                                <InputError class="mt-2" :message="$page.props.errors.month" />
-                                            </div>
+                                    <div class="mb-4">
+                                        <label for="name" class="block mb-2 text-sm font-medium text-gray-500">Full
+                                            Name</label>
+                                        <TextInput v-model="name" id="name" placeholder="John Doe" />
+                                        <InputError class="mt-2" :message="$page.props.errors.name" />
+                                    </div>
 
-                                            <!-- Expiry Year: 2 digits, assuming a card can be valid for up to 20 years -->
-                                            <div>
-                                                <input
-                                                    class="text-sm w-14 border-transparent focus:border-transparent focus:ring-0 bg-transparent"
-                                                    type="text" placeholder="YY" name="YY" required pattern="\d{2}"
-                                                    v-model="year" maxlength="2">
-                                                <InputError class="mt-2" :message="$page.props.errors.year" />
-                                            </div>
+                                    <div class="mb-4">
+                                        <label class="block mb-2 text-sm font-medium text-gray-500">Card Details</label>
+
+                                        <div class="rounded" style="background-color: #E8F0FE;">
+                                            <div class="flex">
+                                                <!-- Card Number: Allowing 15 to 19 digits (to accommodate various card types) -->
+                                                <div class="flex-1">
+                                                    <input
+                                                        class="text-sm border-transparent focus:border-transparent focus:ring-0 bg-transparent"
+                                                        type="text" placeholder="Card Number" name="cardNumber" required
+                                                        minlength="16" maxlength="16" v-model="number">
+                                                    <InputError class="mt-2" :message="$page.props.errors.number" />
+                                                </div>
 
 
-                                            <!-- CVV: 3 or 4 digits -->
-                                            <div>
-                                                <input
-                                                    class="text-sm w-14 border-transparent focus:border-transparent focus:ring-0 bg-transparent"
-                                                    type="text" placeholder="CVV" name="CVV" required pattern="\d{3,4}"
-                                                    v-model="cvv" maxlength="4">
-                                                <InputError class="mt-2" :message="$page.props.errors.cvv" />
+                                                <!-- Expiry Month: 2 digits between 01 and 12 -->
+                                                <div>
+                                                    <input
+                                                        class="text-sm w-14 border-transparent focus:border-transparent focus:ring-0 bg-transparent"
+                                                        type="text" placeholder="MM" name="MM" required
+                                                        pattern="(0[1-9]|1[0-2])" maxlength="2" v-model="month">
+                                                    <InputError class="mt-2" :message="$page.props.errors.month" />
+                                                </div>
+
+                                                <!-- Expiry Year: 2 digits, assuming a card can be valid for up to 20 years -->
+                                                <div>
+                                                    <input
+                                                        class="text-sm w-14 border-transparent focus:border-transparent focus:ring-0 bg-transparent"
+                                                        type="text" placeholder="YY" name="YY" required pattern="\d{2}"
+                                                        v-model="year" maxlength="2">
+                                                    <InputError class="mt-2" :message="$page.props.errors.year" />
+                                                </div>
+
+
+                                                <!-- CVV: 3 or 4 digits -->
+                                                <div>
+                                                    <input
+                                                        class="text-sm w-14 border-transparent focus:border-transparent focus:ring-0 bg-transparent"
+                                                        type="text" placeholder="CVV" name="CVV" required pattern="\d{3,4}"
+                                                        v-model="cvv" maxlength="4">
+                                                    <InputError class="mt-2" :message="$page.props.errors.cvv" />
+                                                </div>
+
                                             </div>
 
                                         </div>
-
-                                    </div>
-                                </div>
-
-                                <div class="grid grid-cols-2 gap-4 mb-4">
-                                    <div>
-                                        <label for="address"
-                                            class="block mb-2 text-sm font-medium text-gray-500">Address</label>
-                                        <TextInput v-model="address" id="address" placeholder="123 Elm St, Apt 4"
-                                            required />
-                                        <InputError class="mt-2" :message="$page.props.errors.address" />
                                     </div>
 
-                                    <div>
-                                        <label for="city" class="block mb-2 text-sm font-medium text-gray-500">City</label>
-                                        <TextInput v-model="city" id="city" placeholder="New York" required />
-                                        <InputError class="mt-2" :message="$page.props.errors.city" />
-                                    </div>
 
-                                    <div>
-                                        <label for="state"
-                                            class="block mb-2 text-sm font-medium text-gray-700">State</label>
-                                        <select v-model="state" name="state" id="state" class="select-custom" required>
-                                            <option selected="" disabled="" value="">Select State</option>
-                                            <option value="AL">Alabama</option>
-                                            <option value="AK">Alaska</option>
-                                            <option value="AZ">Arizona</option>
-                                            <option value="AR">Arkansas</option>
-                                            <option value="CA">California</option>
-                                            <option value="CO">Colorado</option>
-                                            <option value="CT">Connecticut</option>
-                                            <option value="DE">Delaware</option>
-                                            <option value="FL">Florida</option>
-                                            <option value="GA">Georgia</option>
-                                            <option value="HI">Hawaii</option>
-                                            <option value="ID">Idaho</option>
-                                            <option value="IL">Illinois</option>
-                                            <option value="IN">Indiana</option>
-                                            <option value="IA">Iowa</option>
-                                            <option value="KS">Kansas</option>
-                                            <option value="KY">Kentucky</option>
-                                            <option value="LA">Louisiana</option>
-                                            <option value="ME">Maine</option>
-                                            <option value="MD">Maryland</option>
-                                            <option value="MA">Massachusetts</option>
-                                            <option class="text-black" value="MI">Michigan</option>
-                                            <option class="text-black" value="MN">Minnesota</option>
-                                            <option class="text-black" value="MS">Mississippi</option>
-                                            <option class="text-black" value="MO">Missouri</option>
-                                            <option class="text-black" value="MT">Montana</option>
-                                            <option class="text-black" value="NE">Nebraska</option>
-                                            <option class="text-black" value="NV">Nevada</option>
-                                            <option class="text-black" value="NH">New Hampshire</option>
-                                            <option class="text-black" value="NJ">New Jersey</option>
-                                            <option class="text-black" value="NM">New Mexico</option>
-                                            <option class="text-black" value="NY">New York</option>
-                                            <option class="text-black" value="NC">North Carolina</option>
-                                            <option class="text-black" value="ND">North Dakota</option>
-                                            <option class="text-black" value="OH">Ohio</option>
-                                            <option class="text-black" value="OK">Oklahoma</option>
-                                            <option class="text-black" value="OR">Oregon</option>
-                                            <option class="text-black" value="PA">Pennsylvania</option>
-                                            <option class="text-black" value="RI">Rhode Island</option>
-                                            <option class="text-black" value="SC">South Carolina</option>
-                                            <option class="text-black" value="SD">South Dakota</option>
-                                            <option class="text-black" value="TN">Tennessee</option>
-                                            <option class="text-black" value="TX">Texas</option>
-                                            <option class="text-black" value="UT">Utah</option>
-                                            <option class="text-black" value="VT">Vermont</option>
-                                            <option class="text-black" value="VA">Virginia</option>
-                                            <option class="text-black" value="WA">Washington</option>
-                                            <option class="text-black" value="WV">West Virginia</option>
-                                            <option class="text-black" value="WI">Wisconsin</option>
-                                            <option class="text-black" value="WY">Wyoming</option>
-                                        </select>
-                                        <InputError class="mt-2" :message="$page.props.errors.state" />
-                                    </div>
 
-                                    <div>
-                                        <label for="zip" class="block mb-2 text-sm font-medium text-gray-500">ZIP
-                                            Code</label>
-                                        <TextInput v-model="zip" id="zip" placeholder="10001" required pattern="\d{5,6}"
-                                            maxlength="6" />
+                                    <div class="grid grid-cols-2 gap-4 mb-4">
+                                        <div>
+                                            <label for="address"
+                                                class="block mb-2 text-sm font-medium text-gray-500">Address</label>
+                                            <TextInput v-model="address" id="address" placeholder="123 Elm St, Apt 4"
+                                                required />
+                                            <InputError class="mt-2" :message="$page.props.errors.address" />
+                                        </div>
+
+                                        <div>
+                                            <label for="city"
+                                                class="block mb-2 text-sm font-medium text-gray-500">City</label>
+                                            <TextInput v-model="city" id="city" placeholder="New York" required />
+                                            <InputError class="mt-2" :message="$page.props.errors.city" />
+                                        </div>
+
+                                        <div>
+                                            <label for="state"
+                                                class="block mb-2 text-sm font-medium text-gray-700">State</label>
+                                            <select v-model="state" name="state" id="state" class="select-custom" required>
+                                                <option selected="" disabled="" value="">Select State</option>
+                                                <option value="AL">Alabama</option>
+                                                <option value="AK">Alaska</option>
+                                                <option value="AZ">Arizona</option>
+                                                <option value="AR">Arkansas</option>
+                                                <option value="CA">California</option>
+                                                <option value="CO">Colorado</option>
+                                                <option value="CT">Connecticut</option>
+                                                <option value="DE">Delaware</option>
+                                                <option value="FL">Florida</option>
+                                                <option value="GA">Georgia</option>
+                                                <option value="HI">Hawaii</option>
+                                                <option value="ID">Idaho</option>
+                                                <option value="IL">Illinois</option>
+                                                <option value="IN">Indiana</option>
+                                                <option value="IA">Iowa</option>
+                                                <option value="KS">Kansas</option>
+                                                <option value="KY">Kentucky</option>
+                                                <option value="LA">Louisiana</option>
+                                                <option value="ME">Maine</option>
+                                                <option value="MD">Maryland</option>
+                                                <option value="MA">Massachusetts</option>
+                                                <option class="text-black" value="MI">Michigan</option>
+                                                <option class="text-black" value="MN">Minnesota</option>
+                                                <option class="text-black" value="MS">Mississippi</option>
+                                                <option class="text-black" value="MO">Missouri</option>
+                                                <option class="text-black" value="MT">Montana</option>
+                                                <option class="text-black" value="NE">Nebraska</option>
+                                                <option class="text-black" value="NV">Nevada</option>
+                                                <option class="text-black" value="NH">New Hampshire</option>
+                                                <option class="text-black" value="NJ">New Jersey</option>
+                                                <option class="text-black" value="NM">New Mexico</option>
+                                                <option class="text-black" value="NY">New York</option>
+                                                <option class="text-black" value="NC">North Carolina</option>
+                                                <option class="text-black" value="ND">North Dakota</option>
+                                                <option class="text-black" value="OH">Ohio</option>
+                                                <option class="text-black" value="OK">Oklahoma</option>
+                                                <option class="text-black" value="OR">Oregon</option>
+                                                <option class="text-black" value="PA">Pennsylvania</option>
+                                                <option class="text-black" value="RI">Rhode Island</option>
+                                                <option class="text-black" value="SC">South Carolina</option>
+                                                <option class="text-black" value="SD">South Dakota</option>
+                                                <option class="text-black" value="TN">Tennessee</option>
+                                                <option class="text-black" value="TX">Texas</option>
+                                                <option class="text-black" value="UT">Utah</option>
+                                                <option class="text-black" value="VT">Vermont</option>
+                                                <option class="text-black" value="VA">Virginia</option>
+                                                <option class="text-black" value="WA">Washington</option>
+                                                <option class="text-black" value="WV">West Virginia</option>
+                                                <option class="text-black" value="WI">Wisconsin</option>
+                                                <option class="text-black" value="WY">Wyoming</option>
+                                            </select>
+                                            <InputError class="mt-2" :message="$page.props.errors.state" />
+                                        </div>
+
+                                        <div>
+                                            <label for="zip" class="block mb-2 text-sm font-medium text-gray-500">ZIP
+                                                Code</label>
+                                            <TextInput v-model="zip" id="zip" placeholder="10001" required pattern="\d{5,6}"
+                                                maxlength="6" />
                                             <InputError class="mt-2" :message="$page.props.errors.zip" />
+                                        </div>
                                     </div>
                                 </div>
+
                             </div>
 
 
