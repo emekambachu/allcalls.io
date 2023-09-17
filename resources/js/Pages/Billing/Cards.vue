@@ -121,7 +121,7 @@ let setAsDefault = (cardId) => {
                         </div>
                         <div class="flex items-center">
                           <button type="button"
-                            class="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded px-2 py-2 text-xs flex items-center"
+                            class="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded px-2 py-2 text-xs flex items-center mr-2"
                             @click.prevent="setAsDefault(card.id)" v-if="!card.default">
                             Set As Default
                           </button>
