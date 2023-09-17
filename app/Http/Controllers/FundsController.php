@@ -70,7 +70,7 @@ class FundsController extends Controller
     {
         // 1. Validate the request
         $request->validate([
-            'amount' => 'required|numeric|integer|min:1',
+            'amount' => 'required|numeric|min:1',
             'cardId' => [
                 'sometimes',
                 'required',

@@ -20,8 +20,6 @@ let page = usePage();
 let amount = ref('50');
 let name = ref('');
 let number = ref('');
-let month = ref('');
-let year = ref('');
 let expiry = ref('');
 let cvv = ref('');
 
@@ -62,25 +60,17 @@ let showSuccessNotificationIfAvailable = () => {
 let addFunds = async () => {
     isLoading.value = true;
 
-    console.log(expiry.value);
-
     // Extract month and year from the expiry.value
     let [monthFromExpiry, yearFromExpiry] = expiry.value.split(' / ');
 
-    // Validate that month and year are available from expiry.value
-    if (!monthFromExpiry || !yearFromExpiry) {
-        toaster('error', 'Invalid expiry date');
-        isLoading.value = false;
-        return;
-    }
-
     let requestData;
+
 
     // If 'card' has a value of '0'
     if (card.value === '0') {
         requestData = {
             amount: amount.value,
-            number: number.value,
+            number: Number(number.value.trim().replace(/\s/g, '')),
             month: monthFromExpiry,
             year: yearFromExpiry,
             cvv: cvv.value,
@@ -96,8 +86,7 @@ let addFunds = async () => {
         if (selectedCard) {
             requestData = {
                 amount: amount.value,
-                // Assuming the backend can recognize card id and use the stored data
-                cardId: selectedCard.id,
+                cardId: selectedCard.id
             };
         } else {
             // Handle the error if the selected card is not found
@@ -183,16 +172,16 @@ let total = computed(() => {
                                     <div class="mb-4">
                                         <label class="block mb-2 text-sm font-medium text-gray-500">Card Details</label>
 
-                                        <div class="rounded p-0.5" style="background-color: #E8F0FE;">
+                                        <div>
                                             <!-- Use grid instead of flex -->
                                             <div
                                                 style="display: grid; grid-template-columns: 1fr auto auto; grid-template-rows: auto auto;">
                                                 <!-- Card Number -->
-                                                <div>
+                                                <div class="p-0.5 rounded" style="background-color: #E8F0FE;">
                                                     <input
                                                         class="text-sm border-transparent focus:border-transparent focus:ring-0 bg-transparent"
                                                         type="text" placeholder="Card Number" name="cardNumber"
-                                                        v-cardformat:formatCardNumber required minlength="16" maxlength="16"
+                                                        v-cardformat:formatCardNumber required
                                                         v-model="number">
                                                 </div>
                                                 <!-- Display errors on a new row under the input -->
@@ -201,19 +190,20 @@ let total = computed(() => {
                                                 </div>
 
                                                 <!-- Expiry Date -->
-                                                <div>
+                                                <div class="p-0.5 rounded" style="background-color: #E8F0FE;">
                                                     <input
                                                         class="text-sm w-18 border-transparent focus:border-transparent focus:ring-0 bg-transparent"
-                                                        type="text" placeholder="MM / YY" name="MM / YYYY" v-model="expiry"
+                                                        type="text" placeholder="MM / YYYY" name="" v-model="expiry"
                                                         required pattern="(0[1-9]|1[0-2])" v-cardformat:formatCardExpiry>
                                                 </div>
                                                 <!-- Display errors on a new row under the input -->
                                                 <div style="grid-column: 2 / 3; grid-row: 2 / 3;">
-                                                    <InputError class="mt-2" />
+                                                    <InputError v-if="$page.props.errors.month" :message="$page.props.errors.month" />
+                                                    <InputError v-if="$page.props.errors.year" :message="$page.props.errors.year" />
                                                 </div>
 
                                                 <!-- CVV -->
-                                                <div>
+                                                <div class="p-0.5 rounded" style="background-color: #E8F0FE;">
                                                     <input
                                                         class="text-sm w-18 border-transparent focus:border-transparent focus:ring-0 bg-transparent"
                                                         type="text" placeholder="CVV" name="CVV" required pattern="\d{3,4}"
