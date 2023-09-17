@@ -177,7 +177,7 @@ let total = computed(() => {
                                             <div
                                                 style="display: grid; grid-template-columns: 1fr auto auto; grid-template-rows: auto auto;">
                                                 <!-- Card Number -->
-                                                <div class="p-0.5 rounded" style="background-color: #E8F0FE;">
+                                                <div class="p-0.5 rounded-tl rounded-bl" style="background-color: #E8F0FE;">
                                                     <input
                                                         class="text-sm border-transparent focus:border-transparent focus:ring-0 bg-transparent"
                                                         type="text" placeholder="Card Number" name="cardNumber"
@@ -190,7 +190,7 @@ let total = computed(() => {
                                                 </div>
 
                                                 <!-- Expiry Date -->
-                                                <div class="p-0.5 rounded" style="background-color: #E8F0FE;">
+                                                <div class="p-0.5" style="background-color: #E8F0FE;">
                                                     <input
                                                         class="text-sm w-18 border-transparent focus:border-transparent focus:ring-0 bg-transparent"
                                                         type="text" placeholder="MM / YYYY" name="" v-model="expiry"
@@ -203,7 +203,7 @@ let total = computed(() => {
                                                 </div>
 
                                                 <!-- CVV -->
-                                                <div class="p-0.5 rounded" style="background-color: #E8F0FE;">
+                                                <div class="p-0.5 rounded-tr rounded-br" style="background-color: #E8F0FE;">
                                                     <input
                                                         class="text-sm w-18 border-transparent focus:border-transparent focus:ring-0 bg-transparent"
                                                         type="text" placeholder="CVV" name="CVV" required pattern="\d{3,4}"
