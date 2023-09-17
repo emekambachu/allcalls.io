@@ -515,7 +515,7 @@ let appDownloadModal = ref(false);
                   </Link>
                 </li>
 
-                <!-- <li>
+                <li>
                 <Link
                   href="/billing/cards"
                   class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
@@ -542,7 +542,7 @@ let appDownloadModal = ref(false);
 
                   <span>Saved Cards</span>
                   </Link>
-                </li> -->
+                </li>
               </ul>
             </div>
 
