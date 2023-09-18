@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\User;
+use Twilio\Rest\Client;
 use App\Models\CallType;
 use Illuminate\Http\Request;
 use App\Events\MissedCallEvent;
@@ -72,11 +74,53 @@ class CallStatusController extends Controller
 
                 Log::debug('Call duration: ' . $callDuration);
 
+
+
+
+                // ========================================
+                // START: Terminate Call Chain Block
+                // Purpose: To terminate the entire call chain if the call duration exceeds 10 seconds.
+                // ========================================
+
+                // If the call duration is more than 10 seconds
+                if ($callDuration > 10) {
+                    try {
+                        // Initialize Twilio client
+                        $client = new Client(env('TWILIO_ACCOUNT_SID'), env('TWILIO_AUTH_TOKEN'));
+
+                        // Extract ParentCallSid and CallSid from the request
+                        $parentCallSid = $request->ParentCallSid;
+                        $childCallSid = $request->CallSid;
+
+                        // End the parent call if it's still going
+                        if ($parentCallSid) {
+                            $client->calls($parentCallSid)->update(['status' => 'completed']);
+                        }
+
+                        // End the child call if it's still going
+                        if ($childCallSid && $childCallSid !== $parentCallSid) {
+                            $client->calls($childCallSid)->update(['status' => 'completed']);
+                        }
+
+                        Log::debug('Terminated call chain due to duration exceeding 10 seconds.');
+                    } catch (Exception $e) {
+                        // Log the exception for debugging
+                        Log::debug('Error while trying to terminate call chain: ' . $e->getMessage());
+                    }
+                }
+                // ========================================
+                // END: Terminate Call Chain Block
+                // ========================================
+
+
+
                 // Check if DialCallStatus is available and if callDuration is greater than 60
                 if ($callDuration && $callDuration > 60) {
                     // Dispatch CompletedCallEvent
-                    CompletedCallEvent::dispatch($user, CallType::find($callTypeId));
+                    CompletedCallEvent::dispatch($user, CallType::find($callTypeId), $request->unique_call_id);
                 }
+
+
                 break;
 
 

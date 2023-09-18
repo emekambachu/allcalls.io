@@ -2,27 +2,25 @@
 
 namespace App\Listeners;
 
-use App\Events\FundsAdded;
-use App\Mail\FundTransaction;
+use App\Mail\FundsTooLow;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Mail;
 
-class SendFundsReceiptEmail
+class NotifyUserForLowFundsViaEmail
 {
     /**
      * Create the event listener.
      */
     public function __construct()
     {
-        //
     }
 
     /**
      * Handle the event.
      */
-    public function handle(FundsAdded $event): void
+    public function handle(\App\Events\FundsTooLow $event): void
     {
-        Mail::to($event->user)->send(new FundTransaction($event->user, $event->subTotal, $event->processingFee, $event->total, $event->bonus));
+        Mail::to($event->user)->send(new FundsTooLow($event->user));
     }
 }

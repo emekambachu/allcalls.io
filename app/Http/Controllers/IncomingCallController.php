@@ -96,17 +96,22 @@ class IncomingCallController extends Controller
 
     private function getFromAttribute($fromString)
     {
+        Log::debug('Entered getFromAttribute function. Input: ' . $fromString);
+        
         // Check if the string starts with 'client:'
         if (strpos($fromString, 'client:') === 0) {
-            return '2055551234';  // Return a dummy number
+            Log::debug('String starts with "client:". Processing accordingly.');
+            // return '2055551234';  // Return a dummy number
+            return '4793860440'; // from AR
         }
-
+    
         // If it's a phone number
         if (strpos($fromString, '+1') === 0) {
-            // Remove the +1 prefix
+            Log::debug('String starts with "+1". Processing as phone number.');
             return substr($fromString, 2);
         }
-
+    
+        Log::debug('Returning the string as-is.');
         return $fromString;  // Return as-is
     }
 
@@ -117,6 +122,7 @@ class IncomingCallController extends Controller
         $userId = (string) $availableNumber->user_id; // Ensure user id is a string
         Log::debug('User ID associated with the number: ' . $userId);
 
+        Log::debug('AVAILABLE NUMBER FROM: ' . $availableNumber->from);
         $phoneState = $this->getStateFromPhoneNumber($availableNumber->from);
         Log::debug('Phone state:');
         Log::debug($phoneState);
@@ -133,7 +139,7 @@ class IncomingCallController extends Controller
 
         if (!$onlineUsers->count()) {
             Log::debug('No online user found.');
-            return '<Response><Say voice="alice" language="en-US">All agents are currently offline. Please try again later.</Say></Response>';
+            return '<Response><Reject reason="busy" /></Response>';
         }
 
         $onlineUserIds = $onlineUsers->pluck('user_id')->toArray();
@@ -190,18 +196,28 @@ class IncomingCallController extends Controller
         Log::debug('State of model:');
         Log::debug($stateModel->toArray());
 
+
         // Fetch all online users who have selected the same call type and state
         $onlineUsers = OnlineUser::byCallTypeAndState($callType, $stateModel)
             ->withSufficientBalance()
             ->withCallStatusWaiting()
             ->get();
 
+
+        Log::debug('onlineUsers:', [
+            'onlineUsers' => $onlineUsers,
+        ]);
+
         $onlineUsers = OnlineUser::prioritizeInternalAgents($onlineUsers);
+
+        Log::debug('onlineUsersAfterPrioritize:', [
+            'onlineUsers' => $onlineUsers,
+        ]);
 
         if (!$onlineUsers->count()) {
             Log::debug('No online user found.');
-            return '<Response><Dial callerId="+12518626328">+18449831955</Dial></Response>';
-        }        
+            return '<Response><Reject reason="busy" /></Response>';
+        }
 
         $onlineUserIds = $onlineUsers->pluck('user_id')->toArray();
         $users = User::whereIn('id', $onlineUserIds)->get();
@@ -337,14 +353,16 @@ class IncomingCallController extends Controller
             return '<Response><Say voice="alice" language="en-US">All of our agents are currently busy. Please try again later.</Say></Response>';
         }
 
-        // If this is a new available number, associate it with the user
-        if (is_null($availableNumber->user_id)) {
-            $availableNumber->user_id = $userId;
-            $availableNumber->from = $from;
-            $availableNumber->call_type_id = $callTypeId;
-            $availableNumber->save();
-        }
 
+        if (is_null($availableNumber->user_id)) {
+            Log::debug('user_id is null. Setting user_id to: ' . $userId);
+            $availableNumber->user_id = $userId;
+            $availableNumber->call_type_id = $callTypeId;
+        }
+        
+        $availableNumber->from = $from;
+        $availableNumber->save();
+        
         return $availableNumber;
     }
 

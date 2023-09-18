@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Events\FundsTooLow;
 use App\Models\Transaction;
 use Exception;
 use App\Models\User;
@@ -49,20 +50,23 @@ class ChargeUserForMissedCall
                         $user->decrement('balance', 5);
 
                         Transaction::create([
-                            'amount'=>5,
-                            'sign'=>0,
-                            'user_id'=>$user->id,
-                            'created_at'=>now(),
-                            'updated_at'=>now(),
+                            'amount' => 5,
+                            'sign' => 0,
+                            'user_id' => $user->id,
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                            'label' => 'Missed call fee'
                         ]);
                     });
 
                     Log::debug('Deducted $5 from user balance');
                 } else {
+
                     Log::warning('Insufficient balance to charge for missed call');
                     return;
                 }
             } else {
+                FundsTooLow::dispatch($event->user);
                 Log::warning("No user found with ID $userId");
                 return;
             }
@@ -70,7 +74,5 @@ class ChargeUserForMissedCall
             // Log the error for debugging
             Log::error('An error occurred while attempting to charge the user for a missed call: ' . $e->getMessage());
         }
-
-
     }
 }

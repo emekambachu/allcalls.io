@@ -1,9 +1,11 @@
 <?php
 
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\BidsController;
+use App\Http\Controllers\CallController;
 use App\Http\Controllers\CardsController;
 use App\Http\Controllers\FundsController;
 use App\Http\Controllers\AutoPayController;
@@ -19,8 +21,8 @@ use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\FundsWithCardController;
 use App\Http\Controllers\UsageActivityController;
 use App\Http\Controllers\ActiveUserChannelController;
+use App\Http\Controllers\Admin\OnlineAgentsController;
 use App\Http\Controllers\Auth\RegisteredUserController;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -31,7 +33,6 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -60,7 +61,7 @@ Route::middleware(['auth', 'verified', 'registration-step-check','notBanned'])->
     Route::patch('/bids', [BidsController::class, 'update'])->name('bids.update');
 
     Route::get('/billing/funds', [FundsController::class, 'index'])->name('billing.funds.index');
-    Route::post('/billing/funds', [StripeFundsController::class, 'store'])->name('billing.funds.store');
+    Route::post('/billing/funds', [FundsController::class, 'store'])->name('billing.funds.store');
 
     Route::get('/billing/cards', [CardsController::class, 'index'])->name('billing.cards.index');
     Route::post('/billing/cards', [CardsController::class, 'store'])->name('billing.cards.store');
@@ -72,6 +73,7 @@ Route::middleware(['auth', 'verified', 'registration-step-check','notBanned'])->
     Route::get('/clients', [ClientsController::class, 'index'])->name('clients.index');
     Route::patch('/clients/{client}', [ClientsController::class, 'update'])->name('clients.update');
     Route::get('/support', [SupportController::class, 'index'])->name('support.index');
+    Route::get('/calls', [CallController::class, 'index'])->name('calls.index');
 });
 
 Route::middleware(['auth','notBanned'])->group(function () {
@@ -122,5 +124,6 @@ Route::get('/vince', function() {
 });
 
 Route::get('/ryan', function() {
+    Log::debug('TEST!!!');
     return redirect('/');
 });

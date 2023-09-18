@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ActiveUsersController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\ActiveUserChannelController;
+use App\Http\Controllers\Admin\InternalAgentController;
 use App\Http\Controllers\Admin\OnlineAgentsController;
 
 /*
@@ -34,20 +35,24 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::get('/customer/banned/{id}',[CustomerController::class,'banUser'])->name('admin.ban.customer');
     Route::get('/customer/activities/{id}', [CustomerController::class, 'getActivity']);
 
+    Route::get('/customer/clients/{id}', [CustomerController::class, 'getCustomerClients']);
+
     //Agents
-    Route::get('/agents', [\App\Http\Controllers\Admin\InternalAgentController::class, 'index'])->name('admin.agent.index');
+    Route::get('/agents', [InternalAgentController::class, 'index'])->name('admin.agent.index');
+    
+    Route::post('/agent', [InternalAgentController::class, 'store'])->name('admin.agent.store');
 
-    Route::post('/agent', [\App\Http\Controllers\Admin\InternalAgentController::class, 'store'])->name('admin.agent.store');
+    Route::post('/agent/{id}', [InternalAgentController::class, 'update'])->name('admin.agent.update');
 
-    Route::post('/agent/{id}', [\App\Http\Controllers\Admin\InternalAgentController::class, 'update'])->name('admin.agent.update');
+    Route::get('/agent/detail/{id}', [InternalAgentController::class, 'show'])->name('admin.agent.detail');
 
-    Route::get('/agent/detail/{id}', [\App\Http\Controllers\Admin\InternalAgentController::class, 'show'])->name('admin.agent.detail');
+    Route::get('/agent/transactions/{id}', [InternalAgentController::class, 'getTransaction']);
 
-    Route::get('/agent/transactions/{id}', [\App\Http\Controllers\Admin\InternalAgentController::class, 'getTransaction']);
+    Route::get('/agent/calls/{id}', [InternalAgentController::class, 'getCall']);
 
-    Route::get('/agent/calls/{id}', [\App\Http\Controllers\Admin\InternalAgentController::class, 'getCall']);
+    Route::get('/agent/activities/{id}', [InternalAgentController::class, 'getActivity']);
 
-    Route::get('/agent/activities/{id}', [\App\Http\Controllers\Admin\InternalAgentController::class, 'getActivity']);
+    Route::get('/agent/clients/{id}', [InternalAgentController::class, 'getAgentClients']);
 
     // Route::get('/active-users', [ActiveUsersController::class, 'index'])->name('admin.active-users.index');
     // Route::get('/active-users/join', [ActiveUserChannelController::class, 'join']);

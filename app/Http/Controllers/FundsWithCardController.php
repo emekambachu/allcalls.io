@@ -22,7 +22,7 @@ class FundsWithCardController extends Controller
             'number' => 'required|numeric|digits_between:15,16',
             'month' => 'required|numeric|min:1|max:12',
             'year' => 'required|numeric|min:' . date('Y') . '|max:' . (date('Y') + 10),
-            'cvv' => 'required|numeric|digits:4',
+            'cvv' => 'required|numeric|digits_between:3,4',
             'address' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',

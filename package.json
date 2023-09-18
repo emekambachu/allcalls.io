@@ -29,6 +29,7 @@
         "tourguidejs": "^1.1.2",
         "vue-carousel": "^0.18.0",
         "vue-chartjs": "^5.2.0",
+        "vue-credit-card-validation": "^1.0.5",
         "vue-multi-select": "^4.6.0",
         "vue-multiselect": "^2.1.7",
         "vue-shepherd": "^3.0.0",

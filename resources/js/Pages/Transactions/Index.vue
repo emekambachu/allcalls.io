@@ -74,6 +74,7 @@ let fetchTransactions = (page) => {
                   <th scope="col" class="px-4 py-3">ID</th>
                   <th scope="col" class="px-4 py-3">Amount</th>
                   <th scope="col" class="px-4 py-3">Date & Time</th>
+                  <th scope="col" class="px-4 py-3">Label</th>
                   <th scope="col" class="px-4 py-3">Direction</th>
                 </tr>
               </thead>
@@ -96,6 +97,7 @@ let fetchTransactions = (page) => {
                   <td class="text-gray-600 px-4 py-3">
                     {{ formatDate(transaction.created_at) }}
                   </td>
+                  <td class="text-gray-600 px-4 py-3">{{ transaction.label ? transaction.label : '-' }}</td>
                   <td class="text-gray-300 px-4 py-3">
                     <div v-if="isInternalAgent && transaction.bonus">
                       <span

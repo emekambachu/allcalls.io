@@ -19,8 +19,7 @@ use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use App\Models\Bid;
-
-
+use App\Models\Client;
 
 class CustomerController extends Controller
 {
@@ -84,23 +83,33 @@ class CustomerController extends Controller
         $callsCount = Call::whereUserId($id)->count();
         $transactionsCount = Transaction::whereUserId($id)->count();
         $activitiesCount = Activity::whereUserId($id)->count();
+        $ClientCount = Client::where('user_id', $id)->count();
 
         return Inertia::render('Admin/User/Show', [
             'user' => $user,
             'callsCount' => $callsCount,
             'transactionsCount' => $transactionsCount,
             'activitiesCount' => $activitiesCount,
+            'ClientCount' => $ClientCount,
         ]);
     }
 
     public function getUserCall($id)
     {
-        $calls = Call::whereUserId($id)->with('user', 'callType')->paginate(10);
+        $calls = Call::whereUserId($id)->with('user','getClient', 'callType')->paginate(10);
+        $states = State::all();
         return response()->json([
-            'calls' => $calls
+            'calls' => $calls,
+            'states' => $states,
         ]);
     }
 
+    public function getCustomerClients($id){
+        $Clients = Client::where('user_id', $id)->paginate(10);
+        return response()->json([
+            'clients' => $Clients
+        ]);
+    }
     public function getTransaction($id)
     {
         $transactions = Transaction::whereUserId($id)->with('card')->paginate(10);
