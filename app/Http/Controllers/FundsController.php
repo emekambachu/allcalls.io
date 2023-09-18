@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+use Stripe\Token;
+use Stripe\Stripe;
 use App\Models\Card;
 use Inertia\Inertia;
+use App\Events\FundsAdded;
 use App\Models\Transaction;
 use App\Services\NMIGateway;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
-use Stripe\Stripe;
-use Stripe\Token;
 
 class FundsController extends Controller
 {
@@ -90,7 +91,12 @@ class FundsController extends Controller
         ]);
 
         // 2. Set up and process payment
-        $response = $this->processPayment($request, $gw);
+        $paymentDetails = $this->processPayment($request, $gw);
+        $response = $paymentDetails['response'];
+        $subtotal = $paymentDetails['subtotal'];
+        $processingFee = $paymentDetails['processingFee'];
+        $finalAmount = $paymentDetails['finalAmount'];
+
 
         if (!in_array($response, ['SUCCESS', 'Approved'])) {
             return redirect()->back()->with(['message' => 'Payment failed.']);
@@ -99,14 +105,24 @@ class FundsController extends Controller
         // 3. If payment is successful, save the card
         [$card, $cardStatus] = $this->saveCardDetails($request);  // Returning both the card and its status
 
+        $totalWithBonus = false;
+        if ($request->user()->roles->contains('name', 'internal-agent')) {
+            $totalWithBonus = (float)$request->amount * 2;
+        }
+
+        // 4. Update user balance and transaction
+        $this->updateUserBalanceAndTransaction($request, $card, $totalWithBonus);
+
+        FundsAdded::dispatch($request->user(), $subtotal, $processingFee, $finalAmount, $totalWithBonus ? $subtotal : 0);
+
         // Prepare the flash message
         $flashMessage = 'Payment successful!';
         if ($cardStatus === 'NEW_CARD') {
             $flashMessage .= ' A new card has been added to your account.';
         }
-
-        // 4. Update user balance and transaction
-        $this->updateUserBalanceAndTransaction($request, $card);
+        if ($totalWithBonus) {
+            $flashMessage .= ' A bonus has also been added to your account!';
+        }
 
         return redirect()->back()->with(['message' => $flashMessage]);
     }
@@ -155,7 +171,12 @@ class FundsController extends Controller
 
         Log::debug('RESPONSE TEXT: ' . $gw->responses['responsetext']);
 
-        return $gw->responses['responsetext'];
+        return [
+            'response' => $gw->responses['responsetext'],
+            'subtotal' => $subtotal,
+            'processingFee' => $totalWithFee - $subtotal,
+            'finalAmount' => $finalAmount
+        ];
     }
 
 
@@ -192,16 +213,30 @@ class FundsController extends Controller
         return [$newCard, 'NEW_CARD'];
     }
 
-    // Helper Method to Update User Balance and Add Transaction
-    private function updateUserBalanceAndTransaction(Request $request, $card)
+    /**
+     * Update the user's balance and log transactions.
+     * 
+     * @param Request $request The incoming request containing the amount and other details.
+     * @param object $card The card object containing details of the card used.
+     * @param float $totalWithBonus The amount with a potential bonus (default is false).
+     * @return void
+     */
+    private function updateUserBalanceAndTransaction(Request $request, $card, $totalWithBonus = false)
     {
-        $request->user()->update([
-            'balance' => $request->user()->balance + (float)$request->amount,
-        ]);
+        // Check if the user is an internal agent for possible bonus
+        if ($request->user()->roles->contains('name', 'internal-agent')) {
+            $isInternalAgent = true;
+            $totalWithBonus = $request->amount * 2; // Double the amount for internal agents
+        }
 
+        // Update the user's balance
+        $updatedBalance = $request->user()->balance + ($totalWithBonus ? $totalWithBonus : $request->amount);
+        $request->user()->update(['balance' => $updatedBalance]);
 
+        // Extract the last 4 digits of the credit card number
         $cardLast4 = substr(Crypt::decryptString($card->number), -4);
 
+        // Log the normal transaction
         Transaction::create([
             'amount' => (float)$request->amount,
             'user_id' => $request->user()->id,
@@ -209,5 +244,17 @@ class FundsController extends Controller
             'card_id' => $card->id,
             'label' => 'Funds added manually with credit card ending in ' . $cardLast4,
         ]);
+
+        // Log a separate bonus transaction if the user is an internal agent
+        if (isset($isInternalAgent)) {
+            Transaction::create([
+                'amount' => $request->amount,
+                'user_id' => $request->user()->id,
+                'sign' => true,
+                'bonus' => true,
+                'card_id' => $card->id,
+                'label' => 'Bonus funds',
+            ]);
+        }
     }
 }
