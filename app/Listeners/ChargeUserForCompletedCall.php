@@ -41,6 +41,7 @@ class ChargeUserForCompletedCall
                     'user_id' => $event->user->id,
                     'created_at' => now(),
                     'updated_at' => now(),
+                    'label' => 'Purchased call'
                 ]);
             });
             Log::debug('Deducted $35 from user balance after completed call');

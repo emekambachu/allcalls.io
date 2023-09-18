@@ -50,11 +50,12 @@ class ChargeUserForMissedCall
                         $user->decrement('balance', 5);
 
                         Transaction::create([
-                            'amount'=>5,
-                            'sign'=>0,
-                            'user_id'=>$user->id,
-                            'created_at'=>now(),
-                            'updated_at'=>now(),
+                            'amount' => 5,
+                            'sign' => 0,
+                            'user_id' => $user->id,
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                            'label' => 'Missed call fee'
                         ]);
                     });
 
@@ -73,7 +74,5 @@ class ChargeUserForMissedCall
             // Log the error for debugging
             Log::error('An error occurred while attempting to charge the user for a missed call: ' . $e->getMessage());
         }
-
-
     }
 }
