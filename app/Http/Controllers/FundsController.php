@@ -149,6 +149,8 @@ class FundsController extends Controller
 
         $r = $gw->doSale($finalAmount, $number, $month . substr($year, -2));
 
+        Log::debug('RESPONSE TEXT: ' . $gw->responses['responsetext']);
+
         return $gw->responses['responsetext'];
     }
 
