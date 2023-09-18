@@ -147,6 +147,10 @@ class FundsController extends Controller
         $totalWithFee = $subtotal * 1.03;
         $finalAmount = number_format($totalWithFee, 2, '.', '');
 
+        $lastFourDigits = substr($number, -4);  // Extract the last 4 digits of the card number
+        $userId = $request->user()->id;
+        Log::debug("$userId is attempting to add $finalAmount using a card ending in $lastFourDigits");
+
         $r = $gw->doSale($finalAmount, $number, $month . substr($year, -2));
 
         Log::debug('RESPONSE TEXT: ' . $gw->responses['responsetext']);
