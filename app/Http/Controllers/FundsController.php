@@ -92,7 +92,7 @@ class FundsController extends Controller
         // 2. Set up and process payment
         $response = $this->processPayment($request, $gw);
 
-        if ($response !== 'SUCCESS') {
+        if (!in_array($response, ['SUCCESS', 'Approved'])) {
             return redirect()->back()->with(['message' => 'Payment failed.']);
         }
 
