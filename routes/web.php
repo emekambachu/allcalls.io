@@ -1,9 +1,11 @@
 <?php
 
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\BidsController;
+use App\Http\Controllers\CallController;
 use App\Http\Controllers\CardsController;
 use App\Http\Controllers\FundsController;
 use App\Http\Controllers\AutoPayController;
@@ -19,9 +21,8 @@ use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\FundsWithCardController;
 use App\Http\Controllers\UsageActivityController;
 use App\Http\Controllers\ActiveUserChannelController;
-use App\Http\Controllers\Auth\RegisteredUserController;
-use App\Http\Controllers\CallController;
 use App\Http\Controllers\Admin\OnlineAgentsController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -123,5 +124,6 @@ Route::get('/vince', function() {
 });
 
 Route::get('/ryan', function() {
+    Log::debug('TEST!!!');
     return redirect('/');
 });
