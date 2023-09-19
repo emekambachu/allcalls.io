@@ -110,6 +110,7 @@ Route::middleware('auth:sanctum')->delete('/online-users/{callTypeId}', [OnlineU
 Route::middleware('auth:sanctum')->delete('/online-users', [OnlineUsersController::class, 'destroyOnLogout']);
 
 Route::middleware('auth:sanctum')->get('/clients', [ClientsAPIController::class, 'index']);
+Route::middleware('auth:sanctum')->patch('/clients/{client}', [ClientsAPIController::class, 'update']);
 
 Route::middleware('auth:sanctum')->post('/call-client-info', [LiveCallClientController::class, 'index']);
 
