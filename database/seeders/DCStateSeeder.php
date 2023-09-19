@@ -13,7 +13,7 @@ class DCStateSeeder extends Seeder
      */
     public function run(): void
     {
-        State::create([
+        State::firstOrNew([
             'name' => 'DC',
             'full_name' => 'District of Columbia',
         ]);
