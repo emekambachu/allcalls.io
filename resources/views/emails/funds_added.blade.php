@@ -12,7 +12,7 @@ We are pleased to confirm that the funds added to your account have been success
 
 **Email:** {{ $user->email }}
 
-**Contact Number:** {{ $user->contact_number }}
+**Contact Number:** {{ $user->phone }}
 
 ## Deposit Details
 
