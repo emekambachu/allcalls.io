@@ -58,6 +58,7 @@ class SaveUserCall
             'call_id' => $call->id,
             'user_id' => $event->user->id,
             'call_type_id' => $event->callTypeId,
+            'state' => $potentialLead->state,
         ]);
 
         Log::debug('Client saved.');
