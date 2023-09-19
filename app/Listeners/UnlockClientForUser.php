@@ -37,7 +37,7 @@ class UnlockClientForUser
 
 
         $call->client->unlocked = true;
-        $call->save();
+        $call->client->save();
 
         Log::debug('client unlocked for user');
         return;
