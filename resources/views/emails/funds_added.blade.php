@@ -29,6 +29,13 @@ We are pleased to confirm that the funds added to your account have been success
 
 Your account balance is now **${{ number_format($user->balance, 2) }}**.
 
+## Billing Address
+**Address:** {{ $card->address }}  
+**City:** {{ $card->city }}  
+**State:** {{ $card->state }}  
+**ZIP Code:** {{ $card->zip }}  
+**Country:** US
+
 If you have any questions or concerns, feel free to reach out to our support team.
 
 **Best regards,**
