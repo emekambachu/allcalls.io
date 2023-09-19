@@ -707,6 +707,7 @@ class IncomingCallController extends Controller
             '715' => 'WI',
             '920' => 'WI',
             '307' => 'WY',
+            '202' => 'DC',
         ];
 
         $areaCode = substr($phoneNumber, 0, 3);
