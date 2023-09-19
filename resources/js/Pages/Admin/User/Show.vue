@@ -3,19 +3,20 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Transactions from "@/Pages/Admin/User/Transactions.vue";
 import Calls from "@/Pages/Admin/User/Calls.vue";
 import Activities from "@/Pages/Admin/User/Activities.vue";
-import Clients from '@/Pages/Admin/Clients/Index.vue'
+import Clients from "@/Pages/Admin/Clients/Index.vue";
 import { Head } from "@inertiajs/vue3";
 import { Bar } from "vue-chartjs";
 import { ref } from "vue";
 import { toaster } from "@/helper.js";
 import { router, usePage } from "@inertiajs/vue3";
+import { reactive, computed } from "vue";
 let page = usePage();
 const tab = ref(0);
 
 if (page.props.flash.message) {
   toaster("success", page.props.flash.message);
-  if(page.props.flash.message == 'Client updated successfully.'){
-    tab.value = localStorage.getItem('tab')
+  if (page.props.flash.message == "Client updated successfully.") {
+    tab.value = localStorage.getItem("tab");
   }
 }
 const props = defineProps({
@@ -24,6 +25,9 @@ const props = defineProps({
   ClientCount: Number,
   activitiesCount: Number,
   transactionsCount: Number,
+  callTypes: {
+    type: Array,
+  },
 });
 let showTransactionModal = ref(false);
 let showCallsModal = ref(false);
@@ -43,10 +47,22 @@ let openTransactionModal = (type) => {
   }
 };
 
+let state = reactive(props);
+
+let selectedCallTypesWithStates = computed(() => {
+  return state.callTypes
+    .filter((callType) => callType.selected)
+    .map((callType) => {
+      // Clone the call type to avoid mutating the original object
+      let clone = { ...callType };
+      clone.states = clone.statesWithSelection.filter((state) => state.selected);
+      return clone;
+    });
+});
 
 let ChangeTab = (val) => {
   tab.value = val;
-  localStorage.setItem('tab', val)
+  localStorage.setItem("tab", val);
 };
 let updateUser = (id) => {
   return axios
@@ -157,42 +173,96 @@ let updateUser = (id) => {
         data-tabs-toggle="#myTabContent"
         role="tablist"
       >
-      <li @click="ChangeTab(0)" class="mr-8" :class="{ 'active-tab': tab == 0 }" role="presentation">
+        <li
+          @click="ChangeTab(0)"
+          class="mr-8"
+          :class="{ 'active-tab': tab == 0 }"
+          role="presentation"
+        >
           <button
             class="inline-block pb-2 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-            id="profile-tab" type="button" role="tab" aria-controls="profile" aria-selected="false"> User Information
+            id="profile-tab"
+            type="button"
+            role="tab"
+            aria-controls="profile"
+            aria-selected="false"
+          >
+            User Information
             <!-- <span class="chemical-formula">{{ transactionsCount }}</span>  -->
           </button>
         </li>
-        <li @click="ChangeTab(1)" class="mr-8 " :class="{ 'active-tab': tab == 1 }" role="presentation">
+        <li
+          @click="ChangeTab(1)"
+          class="mr-8"
+          :class="{ 'active-tab': tab == 1 }"
+          role="presentation"
+        >
           <button
             class="inline-block pb-2 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-            id="profile-tab" type="button" role="tab" aria-controls="profile" aria-selected="false">Transactions
+            id="profile-tab"
+            type="button"
+            role="tab"
+            aria-controls="profile"
+            aria-selected="false"
+          >
+            Transactions
             <!-- <span class="chemical-formula">{{ transactionsCount }}</span>  -->
           </button>
         </li>
-        <li @click="ChangeTab(2)" class="mr-8" :class="{ 'active-tab': tab == 2 }" role="presentation">
+        <li
+          @click="ChangeTab(2)"
+          class="mr-8"
+          :class="{ 'active-tab': tab == 2 }"
+          role="presentation"
+        >
           <button
             class="inline-block pb-2 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-            id="dashboard-tab" data-tabs-target="#dashboard" type="button" role="tab" aria-controls="dashboard">Calls
+            id="dashboard-tab"
+            data-tabs-target="#dashboard"
+            type="button"
+            role="tab"
+            aria-controls="dashboard"
+          >
+            Calls
             <!-- <span class="chemical-formula">{{ callsCount }}</span> -->
           </button>
         </li>
-        <li @click="ChangeTab(3)" class="mr-8" :class="{ 'active-tab': tab == 3 }" role="presentation">
+        <li
+          @click="ChangeTab(3)"
+          class="mr-8"
+          :class="{ 'active-tab': tab == 3 }"
+          role="presentation"
+        >
           <button
             class="inline-block pb-2 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-            id="settings-tab" data-tabs-target="#settings" type="button" role="tab" aria-controls="settings">Clients
+            id="settings-tab"
+            data-tabs-target="#settings"
+            type="button"
+            role="tab"
+            aria-controls="settings"
+          >
+            Clients
             <!-- <span class="chemical-formula">{{ activitiesCount }}</span> -->
           </button>
         </li>
-        <li @click="ChangeTab(4)" class="mr-8" :class="{ 'active-tab': tab == 4 }" role="presentation">
+        <li
+          @click="ChangeTab(4)"
+          class="mr-8"
+          :class="{ 'active-tab': tab == 4 }"
+          role="presentation"
+        >
           <button
             class="inline-block pb-2 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-            id="settings-tab" data-tabs-target="#settings" type="button" role="tab" aria-controls="settings">Activities
+            id="settings-tab"
+            data-tabs-target="#settings"
+            type="button"
+            role="tab"
+            aria-controls="settings"
+          >
+            Activities
             <!-- <span class="chemical-formula">{{ activitiesCount }}</span> -->
           </button>
         </li>
-        
       </ul>
     </div>
 
@@ -257,6 +327,23 @@ let updateUser = (id) => {
               {{ user.balance || "N/A" }}
             </div>
           </div>
+          <div class="text-4xl text-custom-sky font-small mb-6">Licences</div>
+          <hr class="mb-4" />
+
+          <div class="grid grid-cols-2 gap-10 mb-12">
+            <div
+              class="flex flex-col space-y-2 h-full overflow-auto"
+              v-for="callType in selectedCallTypesWithStates"
+              :key="callType.id"
+            >
+              <div class="text-sm text-gray-400 font-bold">
+                {{ callType.type }}
+              </div>
+              <div class="text-md sm:text-xl text-gray-600 font-bold">
+                {{ callType.states.map((state) => state.name).join(", ") }}
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </transition>
@@ -272,7 +359,7 @@ let updateUser = (id) => {
     </transition>
     <transition name="slide">
       <section v-if="tab == 3" class="sliding-section" :class="{ show: tab == 1 }">
-        <Clients :user="user" :url="'/admin/customer/clients'" ></Clients>
+        <Clients :user="user" :url="'/admin/customer/clients'"></Clients>
       </section>
     </transition>
     <transition name="slide">
@@ -280,7 +367,7 @@ let updateUser = (id) => {
         <Activities :user="user"></Activities>
       </section>
     </transition>
-   
+
     <!-- <Transaction :showTransactionModal="showTransactionModal" :detailType="detailType" :user="user"
       @close="showTransactionModal = false"></Transaction> -->
 

@@ -1,14 +1,14 @@
 <script setup>
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
-import { onMounted } from 'vue';
+import { onMounted } from "vue";
 
 onMounted(() => {
   setTimeout(() => {
-    document.querySelector('.widget-visible iframe').style.bottom = '70px';
+    document.querySelector(".widget-visible iframe").style.bottom = "70px";
   }, 1000);
 
   setTimeout(() => {
-    document.querySelector('.widget-visible iframe').style.bottom = '70px';
+    document.querySelector(".widget-visible iframe").style.bottom = "70px";
   }, 2000);
 });
 </script>
@@ -21,16 +21,18 @@ onMounted(() => {
           <!-- <img src="/img/logo.png" alt=""> -->
           <ApplicationLogo class="text-center" />
         </div>
-        
-          <div class="text-white flex justify-center text-center lg:text-left mt-8 lg:mt-0">
-            <div>
-              <div class="mb-4 text-lg uppercase tracking-wider">AllCalls.io</div>
-              <div class="mb-4 text-gray-200">1309 COFFEEN AVE STE 11246<br>SHERIDAN, WY 82801, USA</div>
-              <div class="mb-4 text-gray-200">(866) 756-0307</div>
-              <div class="mb-4 text-gray-200">support@allcalls.io</div>
+
+        <div class="text-white flex justify-center text-center lg:text-left mt-8 lg:mt-0">
+          <div>
+            <div class="mb-4 text-lg uppercase tracking-wider">AllCalls.io</div>
+            <div class="mb-4 text-gray-200">
+              1309 COFFEEN AVE STE 11246<br />SHERIDAN, WY 82801, USA
             </div>
+            <div class="mb-4 text-gray-200">(855) 815-0382</div>
+            <div class="mb-4 text-gray-200">support@allcalls.io</div>
           </div>
-          <!-- <div class="footer__list">
+        </div>
+        <!-- <div class="footer__list">
             <ul>
               <li class="footer__label">Platform</li>
               <li>Overview</li>
