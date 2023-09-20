@@ -77,28 +77,11 @@ class AgentStatusAPIController extends Controller
 
     private function isAgentAvailable(string $state, string $vertical): bool
     {
-        // Define vertical mapping
-        $verticalMapping = [
-            'auto_insurance' => 'Auto Insurance',
-            'final_expense' => 'Final Expense',
-            'u65_health' => 'U65 Health',
-            'aca' => 'ACA',
-            'medicare' => 'Medicare',
-        ];
-    
         // Map the state string to the corresponding State model
         $stateModel = State::whereName($state)->firstOrFail();
-        
-        // Remap the vertical string to the corresponding model name using the mapping
-        $mappedVertical = $verticalMapping[$vertical] ?? null;
-    
-        if (!$mappedVertical) {
-            // Handle invalid vertical here
-            return false;
-        }
     
         // Query for the call type
-        $callTypeModel = CallType::whereType($mappedVertical)->firstOrFail();
+        $callTypeModel = CallType::whereType($vertical)->firstOrFail();
     
         // Check for online users matching the criteria
         $onlineUsers = OnlineUser::byCallTypeAndState($callTypeModel, $stateModel)
