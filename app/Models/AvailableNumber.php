@@ -10,4 +10,10 @@ class AvailableNumber extends Model
     use HasFactory;
 
     protected $guarded = [];
+    public function callType(){
+        return $this->belongsTo(CallType::class,'call_type_id');
+    }
+    public function user(){
+        return $this->belongsTo(User::class,'user_id');
+    }
 }
