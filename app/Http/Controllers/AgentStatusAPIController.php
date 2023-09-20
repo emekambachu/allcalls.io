@@ -29,10 +29,16 @@ class AgentStatusAPIController extends Controller
         ];
 
         // Validate inputs
+        $validVerticals = implode(',', array_keys($verticalMapping));
+        $customMessages = [
+            'vertical.in' => 'The selected vertical is invalid. Valid options are: ' . $validVerticals,
+        ];
+
         $request->validate([
             'phone' => 'required',
-            'vertical' => 'required|in:' . implode(',', array_keys($verticalMapping)),
-        ]);
+            'vertical' => 'required|in:' . $validVerticals,
+        ], $customMessages);
+
 
         $phone = $request->input('phone');
         $vertical = $verticalMapping[$request->input('vertical')];
