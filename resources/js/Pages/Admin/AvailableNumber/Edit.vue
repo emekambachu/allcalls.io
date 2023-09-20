@@ -11,7 +11,7 @@ import {
 import TextInput from "@/Components/TextInput.vue";
 import Multiselect from "@vueform/multiselect";
 import InputError from "@/Components/InputError.vue";
-import SelectInput from "@/Components/SelectInput";
+import SelectInput from "@/Components/SelectInput.vue";
 import { router, usePage } from "@inertiajs/vue3";
 import GuestTextInput from "@/Components/GuestTextInput.vue";
 import GuestInputLabel from "@/Components/GuestInputLabel.vue";
