@@ -48,15 +48,19 @@ class AgentStatusAPIController extends Controller
         // Get state of the phone number
         $state = config("states.area_codes.{$this->extractAreaCode($phone)}");
 
+        if (! $state) {
+            return response()->json(['status' => 'error', 'message' => 'Could not map the state for the given phone number.'], 200);
+        }
+
         Log::debug('Omega: ' . $state . ', vertical: ' . $vertical);
 
         // Agent lookup
         $agentAvailable = $this->isAgentAvailable($state, $vertical);
 
         if ($agentAvailable) {
-            return response()->json(['status' => 'success', 'message' => 'Agent available'], 200);
+            return response()->json(['status' => 'success', 'online' => true], 200);
         } else {
-            return response()->json(['status' => 'fail', 'message' => 'No agent available'], 404);
+            return response()->json(['status' => 'success', 'online' => false], 200);
         }
     }
 
