@@ -6,6 +6,7 @@ use App\Models\Card;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Envelope;
@@ -20,6 +21,7 @@ class FundTransaction extends Mailable
     public $total;
     public $bonus;
     public Card $card;
+    public $lastFour;
 
     /**
      * Create a new message instance.
@@ -32,6 +34,11 @@ class FundTransaction extends Mailable
         $this->total = $total;
         $this->bonus = $bonus;
         $this->card = $card;
+
+        // Decrypt the card number
+        $decryptedNumber = Crypt::decryptString($card->number);
+        // get the last 4 digits
+        $this->lastFour = substr($decryptedNumber, -4);
     }
 
     /**
@@ -58,6 +65,7 @@ class FundTransaction extends Mailable
                 'total' => $this->total,
                 'bonus' => $this->bonus,
                 'card' => $this->card,
+                'lastFour' => $this->lastFour,
             ],
         );
     }
