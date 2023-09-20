@@ -1,5 +1,5 @@
 <x-mail::message>
-# Funds Deposit Confirmation
+# Order Confirmation
 
 **Dear {{ $user->first_name }},**
 
@@ -8,13 +8,15 @@ We are pleased to confirm that the funds added to your account have been success
 ## Date of Transaction: {{ now()->format('F j, Y, g:i a') }}
 
 ## Account Information
+**Account #:** {{ $user->id }}
+
 **Name:** {{ $user->first_name }} {{ $user->last_name }}
 
 **Email:** {{ $user->email }}
 
 **Contact Number:** {{ $user->phone }}
 
-## Deposit Details
+## Transaction Details
 
 @component('mail::table')
 | Description                   | Amount         |
