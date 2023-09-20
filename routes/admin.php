@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ActiveUsersController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\ActiveUserChannelController;
+use App\Http\Controllers\Admin\AvailableNumberController;
 use App\Http\Controllers\Admin\InternalAgentController;
 use App\Http\Controllers\Admin\OnlineAgentsController;
 
@@ -39,7 +40,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
     //Agents
     Route::get('/agents', [InternalAgentController::class, 'index'])->name('admin.agent.index');
-    
+
     Route::post('/agent', [InternalAgentController::class, 'store'])->name('admin.agent.store');
 
     Route::post('/agent/{id}', [InternalAgentController::class, 'update'])->name('admin.agent.update');
@@ -53,6 +54,12 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::get('/agent/activities/{id}', [InternalAgentController::class, 'getActivity']);
 
     Route::get('/agent/clients/{id}', [InternalAgentController::class, 'getAgentClients']);
+
+    // Available Number
+    Route::get('/available-numbers',[AvailableNumberController::class,'index']);
+    Route::post('/available-number/store',[AvailableNumberController::class,'store']);
+    Route::post('/available-number/{id}', [AvailableNumbertController::class, 'update']);
+
 
     // Route::get('/active-users', [ActiveUsersController::class, 'index'])->name('admin.active-users.index');
     // Route::get('/active-users/join', [ActiveUserChannelController::class, 'join']);
