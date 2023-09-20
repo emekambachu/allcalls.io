@@ -11,6 +11,7 @@ import {
 import TextInput from "@/Components/TextInput.vue";
 import Multiselect from "@vueform/multiselect";
 import InputError from "@/Components/InputError.vue";
+import SelectInput from "@/Components/SelectInput";
 import { router, usePage } from "@inertiajs/vue3";
 import GuestTextInput from "@/Components/GuestTextInput.vue";
 import GuestInputLabel from "@/Components/GuestInputLabel.vue";
@@ -153,7 +154,7 @@ let saveChanges = () => {
           <div class="pt-4">
             <GuestInputLabel for="user_id" value="User" />
 
-            <selectInput
+            <SelectInput
               id="user_id"
               class="mt-1 block w-full"
               v-model="form.user_id"
@@ -163,7 +164,7 @@ let saveChanges = () => {
               <option v-for="use in user" :value="use.id">
                 {{ use.first_name }}
               </option>
-            </selectInput>
+            </SelectInput>
             <!-- <InputError class="mt-2" :message="form.errors.user_id" /> -->
             <div
               v-if="firstStepErrors.user_id"
@@ -193,7 +194,7 @@ let saveChanges = () => {
           <div class="pt-4">
             <GuestInputLabel for="call_type_id" value="Call Type" />
 
-            <selectInput
+            <SelectInput
               id="call_type_id"
               class="mt-1 block w-full"
               v-model="form.call_type_id"
@@ -203,7 +204,7 @@ let saveChanges = () => {
               <option v-for="call_type in callTypes" :value="call_type.id">
                 {{ call_type.type }}
               </option>
-            </selectInput>
+            </SelectInput>
             <!-- <InputError class="mt-2" :message="form.errors.call_type_id" /> -->
             <div
               v-if="firstStepErrors.call_type_id"

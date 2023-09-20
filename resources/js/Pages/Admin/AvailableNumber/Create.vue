@@ -5,7 +5,7 @@ import InputError from "@/Components/InputError.vue";
 import { router, usePage } from "@inertiajs/vue3";
 import GuestTextInput from "@/Components/GuestTextInput.vue";
 import GuestInputLabel from "@/Components/GuestInputLabel.vue";
-import selectInput from "@/Components/selectInput.vue";
+import SelectInput from "@/Components/SelectInput.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import { toaster } from "@/helper.js";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
@@ -231,7 +231,7 @@ let goBack = () => {
             <div class="pt-4">
               <GuestInputLabel for="user_id" value="User" />
 
-              <selectInput
+              <SelectInput
                 id="user_id"
                 class="mt-1 block w-full"
                 v-model="form.user_id"
@@ -241,7 +241,7 @@ let goBack = () => {
                 <option v-for="use in user" :value="use.id">
                   {{ use.first_name }}
                 </option>
-              </selectInput>
+              </SelectInput>
               <!-- <InputError class="mt-2" :message="form.errors.user_id" /> -->
               <div
                 v-if="firstStepErrors.user_id"
