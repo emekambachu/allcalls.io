@@ -125,4 +125,4 @@ Route::post('/active-users-pusher-webhook', [ActiveUsersPusherWebhookController:
 Route::get('/twilio-ios-access-token-guest', [TwilioIOSAccessTokenGuestController::class, 'show']);
 Route::middleware('auth:sanctum')->get('/twilio-ios-access-token', [TwilioIOSAccessTokenController::class, 'show']);
 
-Route::get('/agent-status', [AgentStatusAPIController::class, 'show']);
+Route::match(['get', 'post'], '/agent-status', [AgentStatusAPIController::class, 'show']);
