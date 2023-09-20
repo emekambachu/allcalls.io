@@ -19,9 +19,6 @@ use App\Http\Controllers\Admin\OnlineAgentsController;
 */
 
 Route::prefix('internal-agent')->group(function () {
-
-
-
     Route::middleware(['auth', 'verified', 'internal-agent'])->group(function () {
         //Internal Agents Routes
     });
