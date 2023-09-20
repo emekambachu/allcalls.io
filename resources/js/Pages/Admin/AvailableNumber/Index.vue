@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import Edit from "@//Pages/Admin/User/Edit.vue";
-import Create from "@//Pages/Admin/availableNumber/Create.vue";
+import Edit from "@/Pages/Admin/User/Edit.vue";
+import Create from "@/Pages/Admin/AvailableNumber/Create.vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import { ref } from "vue";
 import { toaster } from "@/helper.js";
