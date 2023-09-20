@@ -10,6 +10,8 @@ We are pleased to confirm that the funds added to your account have been success
 ## Account Information
 **Account #:** {{ $user->id }}
 
+**Card Last 4:** {{ $lastFour }}
+
 **Name:** {{ $user->first_name }} {{ $user->last_name }}
 
 **Email:** {{ $user->email }}
