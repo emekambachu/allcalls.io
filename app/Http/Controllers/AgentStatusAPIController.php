@@ -49,7 +49,7 @@ class AgentStatusAPIController extends Controller
         $state = config("states.area_codes.{$this->extractAreaCode($phone)}");
 
         if (! $state) {
-            return response()->json(['status' => 'error', 'message' => 'Could not map the state for the given phone number.'], 200);
+            return response()->json(['message' => 'Could not map the state for the given phone number.'], 400);
         }
 
         Log::debug('Omega: ' . $state . ', vertical: ' . $vertical);
