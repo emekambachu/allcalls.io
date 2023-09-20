@@ -58,9 +58,9 @@ class AgentStatusAPIController extends Controller
         $agentAvailable = $this->isAgentAvailable($state, $vertical);
 
         if ($agentAvailable) {
-            return response()->json(['status' => 'success', 'online' => true], 200);
+            return response()->json(['online' => true], 200);
         } else {
-            return response()->json(['status' => 'success', 'online' => false], 200);
+            return response()->json(['online' => false], 200);
         }
     }
 
