@@ -51,7 +51,7 @@ class AgentStatusAPIController extends Controller
         // Agent lookup
         $agentAvailable = $this->isAgentAvailable($state, $vertical);
 
-        if (true) {
+        if ($agentAvailable) {
             return response()->json(['status' => 'success', 'message' => 'Agent available'], 200);
         } else {
             return response()->json(['status' => 'fail', 'message' => 'No agent available'], 404);
@@ -67,5 +67,11 @@ class AgentStatusAPIController extends Controller
     private function extractAreaCode(string $phoneNumber): string
     {
         return substr($phoneNumber, 0, 3);
+    }
+
+
+    private function isAgentAvailable($state, $vertical)
+    {
+        return true;
     }
 }
