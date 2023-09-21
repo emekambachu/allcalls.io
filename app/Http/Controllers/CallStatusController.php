@@ -86,7 +86,7 @@ class CallStatusController extends Controller
                 if ($callDuration > 10) {
                     try {
                         // Initialize Twilio client
-                        $client = new Client(env('TWILIO_ACCOUNT_SID'), env('TWILIO_AUTH_TOKEN'));
+                        $client = new Client(env('TWILIO_SID'), env('TWILIO_AUTH_TOKEN'));
 
                         // Extract ParentCallSid and CallSid from the request
                         $parentCallSid = $request->ParentCallSid;
