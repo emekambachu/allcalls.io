@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\InternalAgent\RegisteredInternalAgentController;
+use App\Http\Controllers\Auth\RegisteredInternalAgentController;
+use \App\Http\Controllers\InternalAgent\RegistrationStepController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,17 +20,18 @@ Route::prefix('internal-agent')->group(function () {
 
     Route::get('register', [RegisteredInternalAgentController::class, 'create'])
     ->name('register');
+
     Route::post('register', [RegisteredInternalAgentController::class, 'store'])
     ->name('register');
-   
-    
-   
+
+
+
 
     Route::middleware(['auth', 'verified', 'internal-agent'])->group(function () {
         //Internal Agents Routes
-        Route::get('contract-steps', [RegisteredInternalAgentController::class, 'contractSteps'])
-        ->name('contract-steps');
-        Route::post('register-steps', [RegisteredInternalAgentController::class, 'storeSteps'])
-        ->name('register-steps');
+        Route::get('contract-steps', [RegistrationStepController::class, 'contractSteps'])
+        ->name('contract.steps');
+        Route::post('registration-steps', [RegistrationStepController::class, 'store'])
+        ->name('registration.steps');
     });
 });

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth\InternalAgent;
+namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Call;
@@ -58,7 +58,7 @@ class RegisteredInternalAgentController extends Controller
                 'errors' => $validator->errors(),
             ], 400);
         }
-        
+
         $user = User::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
@@ -106,53 +106,5 @@ class RegisteredInternalAgentController extends Controller
             'success' => true,
             'message' => 'Agent added successfully',
         ], 200);
-    }
-    public function contractSteps(Request $request){
-        
-        $sevenDaysAgo = Carbon::now()->subDays(7);
-
-        $spendData = Call::select(DB::raw('date(call_taken) as date'), DB::raw('sum(amount_spent) as sum'))
-            ->where('call_taken', '>=', $sevenDaysAgo)
-            ->where('user_id', $request->user()->id)
-            ->groupBy('date')
-            ->orderBy('date', 'ASC')
-            ->get();
-        $callTypes = CallType::get();
-        $callData = Call::select(DB::raw('date(call_taken) as date'), DB::raw('count(*) as count'))
-            ->where('call_taken', '>=', $sevenDaysAgo)
-            ->where('user_id', $request->user()->id)
-            ->groupBy('date')
-            ->orderBy('date', 'ASC')
-            ->get();
-
-        $totalCalls = Call::where('call_taken', '>=', $sevenDaysAgo)
-            ->where('user_id', $request->user()->id)
-            ->count();
-
-
-        $totalAmountSpent = Call::where('call_taken', '>=', $sevenDaysAgo)
-            ->where('user_id', $request->user()->id)
-            ->sum('amount_spent');
-
-        $averageCallDuration = Call::where('call_taken', '>=', $sevenDaysAgo)
-            ->where('user_id', $request->user()->id)
-            ->average('call_duration_in_seconds');
-
-
-        $callTypes = CallType::all();
-        $states = State::all();
-
-        return Inertia::render('InternalAgent/ContractSteps', [
-            'callTypes' => $callTypes,
-            'states' => $states,
-            'spendData' => $spendData,
-            'callData' => $callData,
-            'totalCalls' => $totalCalls,
-            'totalAmountSpent' => $totalAmountSpent,
-            'averageCallDuration' => $averageCallDuration,
-        ]);
-    }
-    public function storeSteps(Request $request)  {
-            dd($request);
     }
 }

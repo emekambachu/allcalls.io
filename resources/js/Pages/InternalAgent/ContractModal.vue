@@ -38,7 +38,7 @@ let close = () => {
 let amlCourseRead = ref(false)
 let omissionsInsurance = ref(false)
 watch(form.value, (newVal, oldVal) => {
-    
+
     if (newVal.aml_course == true) {
         amlCourseRead.value = false
     } else {
@@ -188,16 +188,16 @@ let submit = () => {
 
 
     return axios
-        .post("/internal-agent/register-steps", {
+        .post("/internal-agent/registration-steps", {
             // pdfFile:formData,
             aml_course: form.value.aml_course,
             omissions_insurance: form.value.omissions_insurance,
             contactDetailData: contactDetailData.value,
             legalFormData: legalFormData.value,
             AddressHistoryData: AddressHistoryData.value,
-            additionalInfoD: additionalInfoD.value,
-            uploadLicensePdf: uploadLicensePdf.value,
-            uploadBankingInfoPdf: uploadBankingInfoPdf.value,
+            additionalInfo: additionalInfoD.value,
+            residentLicensePdf: uploadLicensePdf.value,
+            bankingInfoPdf: uploadBankingInfoPdf.value,
         }, {
             headers: {
                 'Content-Type': 'multipart/form-data' // Set the content type to multipart/form-data
@@ -431,12 +431,12 @@ let submit = () => {
                                     <button :class="{ 'opacity-25': amlCourseRead }" :disabled="amlCourseRead"
                                         v-show="contractStep === 5 || step > 1 && step != 5 && step != 3" type="button"
                                         @click.prevent="NextStep" class="button-custom px-3 py-2 rounded-md">
-                                        Next Step 
+                                        Next Step
                                     </button>
                                     <button :class="{ 'opacity-25': omissionsInsurance }" :disabled="omissionsInsurance"
                                         v-show="contractStep != 5 && step != 5 && step === 3" type="button"
                                         @click.prevent="NextStep" class="button-custom px-3 py-2 rounded-md">
-                                        Next Step  
+                                        Next Step
                                     </button>
                                     <button v-show="contractStep != 5 && step === 1" type="button"
                                         @click.prevent="ChangeTab" class="button-custom px-3 py-2 rounded-md">

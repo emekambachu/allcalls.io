@@ -30,24 +30,6 @@ ChartJS.register(
     LinearScale
 );
 
-const props = defineProps({
-    spendData: Array,
-    callData: Array,
-    totalCalls: Number,
-    totalAmountSpent: Number,
-    averageCallDuration: Number,
-    callTypes: Array,
-    states: Array,
-});
-let stateOptions = computed(() => {
-    return props.states.map((state) => {
-        return {
-            value: state.id,
-            label: state.name,
-        };
-    });
-});
-
 let step = ref(1);
 let firstStepErrors = ref({});
 let StepsModal = ref(true)
@@ -61,99 +43,8 @@ let insuranceTypes = ref([
     "Debt Relief",
 ]);
 
-let selectedTypes = ref([]);
 
-let selectedTypesWithStates = ref({
-    "Auto Insurance": [],
-    "Final Expense": [],
-    "U65 Health": [],
-    ACA: [],
-    "Medicare/Medicaid": [],
-    "Debt Relief": [],
-});
-let onTypeUpdate = (event) => {
-    if (event.target.checked) {
-        selectedTypes.value.push(Number(event.target.value));
-    } else {
-        selectedTypes.value.splice(
-            selectedTypes.value.indexOf(Number(event.target.value)),
-            1
-        );
-    }
-};
-let form = useForm({
-    consent: false,
-    typesWithStates: props.callTypes.reduce((acc, obj) => {
-        acc[obj.id] = [];
-        return acc;
-    }, {}),
-    bids: props.callTypes.map((type) => {
-        return { call_type_id: type.id, amount: 20 };
-    }),
-});
-let spendChartData = reactive({
-    labels: props.spendData.map((item) => item.date),
-    datasets: [
-        {
-            label: "Amount Spent (Last 7 Days)",
-            data: props.spendData.map((item) => item.sum),
-            backgroundColor: "rgba(75, 192, 192, 0.2)",
-            borderColor: "rgba(75, 192, 192, 1)",
-            borderWidth: 1,
-        },
-    ],
-});
 
-let callChartData = reactive({
-    labels: props.callData.map((item) => item.date),
-    datasets: [
-        {
-            label: "Clients per Day (Last 7 Days)",
-            data: props.callData.map((item) => item.count),
-            backgroundColor: "rgba(153, 102, 255, 0.2)",
-            borderColor: "rgba(153, 102, 255, 1)",
-            borderWidth: 1,
-        },
-    ],
-});
-
-let chartOptions = reactive({
-    responsive: true,
-    scales: {
-        y: {
-            beginAtZero: true,
-        },
-    },
-});
-
-let spendChartOptions = reactive({
-    responsive: true,
-    scales: {
-        y: {
-            beginAtZero: true,
-            ticks: {
-                // Include a dollar sign and commas in the ticks
-                callback: function (value) {
-                    return "$" + value.toLocaleString();
-                },
-            },
-        },
-    },
-});
-
-let formatTime = (duration) => {
-    const minutes = Math.floor(duration / 60);
-    const seconds = Math.floor(duration % 60);
-    return `${minutes.toString().padStart(2, "0")}:${seconds
-        .toString()
-        .padStart(2, "0")}`;
-};
-
-let formatMoney = (amount) => {
-    return parseFloat(amount)
-        .toFixed(2)
-        .replace(/\d(?=(\d{3})+\.)/g, "$&,");
-};
 
 let errors = ref(null);
 const consentError = ref(false)
