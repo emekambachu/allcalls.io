@@ -6,109 +6,121 @@ const props = defineProps({
 });
 let LegalInformation = ref([
     {   id:23,
-        checbox:'convicted_checkbox_8',
+        checbox:'lawsuit_checkbox_8',
         heading: 'Has any lawsuit or claim ever been made against you, your surety company, or errors and omissions insurer, arising out of your sales or practices, or have you been refused surety bonding or E&O coverage?',
         question: '8'
     },
     {
         id:24,
-        checbox:'convicted_checkbox_8a',
+        checbox:'lawsuit_checkbox_8a',
         heading: 'Has a bonding or surety company ever denied, paid on, or revoked a bond for you? 8B. Has any Errors & Omissions company ever denied, paid claims on, or cancelled your coverage?',
         question: '8A'
     },
     {
         id:25,
-        checbox:'convicted_checkbox_9',
+        checbox:'lawsuit_checkbox_8b',
+        heading: 'Has any Errors & Ommisions company ever denied, paid claims on, or cancelled your coverage?',
+        question: '8b'
+    },
+    {
+        id:26,
+        checbox:'license_denied_checkbox_9',
         heading: 'Have you ever had an insurance or securities license denied, suspended, cancelled, or revoked?',
         question: '9'
     },
     {
-        id:26,
-        checbox:'convicted_checkbox_10',
+        id:27,
+        checbox:'regulatory_checkbox_10',
         heading: 'Has any state or federal regulatory body found you to have been a cause of an investment or insurance-related business having its authorization to do business denied, suspended, revoked, or restricted?',
         question: '10'
     },
     {
-        id:27,
-        checbox:'convicted_checkbox_11',
+        id:28,
+        checbox:'regulatory_revoked_checkbox_11',
         heading: 'Has any state or federal regulatory agency revoked or suspended your license as an attorney, accountant, or federal contractor?',
         question: '11'
     },
     {
-        id:28,
-        checbox:'convicted_checkbox_12',
+        id:29,
+        checbox:'regulatory_found_checkbox_12',
         heading: 'Has any state or federal regulatory agency found you to have made a false statement or omission or been dishonest, unfair, or unethical?',
         question: '12'
     },
     {
-        id:29,
-        checbox:'convicted_checkbox_13',
+        id:30,
+        checbox:'interr_licensing_checkbox_13',
         heading: 'Have you ever had any interruptions in licensing?',
         question: '13'
     },
     {
-        id:30,
-        checbox:'convicted_checkbox_14',
+        id:31,
+        checbox:'self_regularity_checkbox_14',
         heading: 'Has any state, federal, or self-regulatory agency filed a complaint against you, fined, sanctioned, censured, penalized, or otherwise disciplined you for a violation of their regulations or state or federal statuses?',
         question: '14'
     },
     {
-        id:31,
-        checbox:'convicted_checkbox_14a',
+        id:32,
+        checbox:'self_regularity_checkbox_14a',
         heading: 'Has any regulatory body ever sanctioned, censured, penalized, or otherwise disciplined you?',
         question: '14A'
     },
     {
-        id:32,
-        checbox:'convicted_checkbox_14b',
+        id:33,
+        checbox:'self_regularity_checkbox_14b',
         heading: 'Has any state, federal, or self-regulatory agency filed a complaint against you, fined, or sanctioned you?',
         question: '14B'
     },
     {
-        id:33,
-        checbox:'convicted_checkbox_14c',
+        id:34,
+        checbox:'self_regularity_checkbox_14c',
         heading: 'Have you ever been the subject of a consumer-initiated complaint?',
         question: '14C'
     },
     {
-        id:34,
-        checbox:'convicted_checkbox_15',
+        id:35,
+        checbox:'bankruptcy_checkbox_15',
         heading: 'Have you personally, or any insurance or securities brokerage firm with whom you have been associated, filed a bankruptcy petition, or declared bankruptcy? 15A. Have you personally filed a bankruptcy petition or declared bankruptcy?',
         question: '15'
     },
     {
-        id:35,
-        checbox:'convicted_checkbox_15b',
+        id:36,
+        checbox:'bankruptcy_checkbox_15a',
+        heading: 'Have you personally, or any insurance or securities brokerage firm with whom you have been associated, filed a bankruptcy petition, or declared bankruptcy? 15A. Have you personally filed a bankruptcy petition or declared bankruptcy?',
+        question: '15a'
+    },
+    {
+        id:37,
+        checbox:'bankruptcy_checkbox_15b',
         heading: 'Has any insurance or securities brokerage firm, with whom you have been associated, filed a bankruptcy petition, or been declared bankrupt, either during your association with them or within 5 years after termination of such an association?',
         question: '15B'
     },
     {
-        id:36,
-        checbox:'convicted_checkbox_15c',
+        id:38,
+        checbox:'bankruptcy_checkbox_15c',
         heading: 'Is the bankruptcy pending?',
         question: '15C'
     },
     {
-        id:37,
-        checbox:'convicted_checkbox_16',
+        id:39,
+        checbox:'liens_against_checkbox_16',
         heading: 'Are there any unsatisfied judgements or liens against you?',
         question: '16'
     },
     {
-        id:38,
-        checbox:'convicted_checkbox_17',
+        id:40,
+        checbox:'connected_checkbox_17',
         heading: 'Are you connected in any way with a bank, savings & loan association, or other lending or financial institution?',
         question: '17'
     },
     {
-        id:39,
-        checbox:'convicted_checkbox_18',
+        id:41,
+        checbox:'aliases_checkbox_18',
         heading: 'Have you ever used any other names or aliases?',
         question: '18'
     },
     {
-        id:40,
-        checbox:'convicted_checkbox_19',
+        id:42,
+        checbox:'unresolved_matter_checkbox_19',
         heading: 'Do you have any unresolved matters pending with the Internal Revenue Service, or other taxing authority?',
         question: '19'
     },

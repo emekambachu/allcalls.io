@@ -61,79 +61,79 @@ let LegalInformation = ref([
     },
     {
         id: 10,
-        checbox: 'convicted_checkbox_2',
+        checbox: 'lawsuit_checkbox_2',
         heading: 'Have you ever been, or are you currently being investigated, have any pending indictments, lawsuits, or have you ever been in a lawsuit with an insurance company?',
         question: '2'
     },
     {
         id: 11,
-        checbox: 'convicted_checkbox_2a',
+        checbox: 'lawsuit_checkbox_2a',
         heading: 'Are you currently under investigation by any legal or regulatory agency?',
         question: '2A'
     },
     {
         id: 12,
-        checbox: 'convicted_checkbox_2b',
+        checbox: 'lawsuit_checkbox_2b',
         heading: 'Have you been under investigation by any insurance company?',
         question: '2B'
     },
     {
         id: 13,
-        checbox: 'convicted_checkbox_2c',
+        checbox: 'lawsuit_checkbox_2c',
         heading: '2CHave you ever been, or are you currently involved in any pending indictments, lawsuits, civil judgements or other legal proceedings (civil or criminal) (you may omit family court)?',
         question: '2C'
     },
     {
         id: 14,
-        checbox: 'convicted_checkbox_2d',
+        checbox: 'lawsuit_checkbox_2d',
         heading: 'Have you ever been named as a defendant or co-defendant in a lawsuit, or have you ever sued or been sued by an insurance company?',
         question: '2D'
     },
     {
         id: 15,
-        checbox: 'convicted_checkbox_3',
+        checbox: 'alleged_engaged_checkbox_3',
         heading: 'Have you ever been alleged to have engaged in any fraud?',
         question: '3'
     },
     {
         id: 16,
-        checbox: 'convicted_checkbox_4',
+        checbox: 'found_engaged_checkbox_4',
         heading: 'Have you ever been found to have engaged in any fraud?',
         question: '4'
     },
     {
         id: 17,
-        checbox: 'convicted_checkbox_5',
+        checbox: 'terminate_contract_checkbox_5',
         heading: 'Has any insurance or financial services company or broker-dealer terminated your contract or appointment or permitted you to resign for reason other than lack of sales?',
         question: '5'
     },
     {
         id: 18,
-        checbox: 'convicted_checkbox_5a',
+        checbox: 'terminate_contract_checkbox_5a',
         heading: 'Were you fired because you were accused of violating insurance or investment-related statutes, regulations, rules, or industry standards of conduct?',
         question: '5A'
     },
     {
         id: 19,
-        checbox: 'convicted_checkbox_5b',
+        checbox: 'terminate_contract_checkbox_5b',
         heading: 'Were you fired because you were accused of fraud or the wrongful taking of property?',
         question: '5B'
     },
     {
         id: 20,
-        checbox: 'convicted_checkbox_5c',
+        checbox: 'terminate_contract_checkbox_5c',
         heading: 'Failure to supervise in connection with insurance or investment-related statutes, regulations, rules, or industry standards of conduct?',
         question: '5C'
     },
     {
         id: 21,
-        checbox: 'convicted_checkbox_6',
+        checbox: 'cancel_insu_cause_checkbox_6',
         heading: 'Have you ever had an appointment with any insurance company denied or terminated for cause? (If you have been reported to Vector One, answer YES) ',
         question: '6'
     },
     {
         id: 22,
-        checbox: 'convicted_checkbox_7',
+        checbox: 'insurer_checkbox_7',
         heading: 'Does any insurer, insured, or other person claim any commission chargeback or other indebtedness from you as a result of any insurance transactions or business? (If you have been reported to Vector One, answer YES)',
         question: '7'
     },
