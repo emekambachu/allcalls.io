@@ -33,7 +33,7 @@ class RegistrationStepController extends Controller
                 'errors' => $validator->errors(),
             ], 400);
         }
-        DB::beginTransaction();
+//        DB::beginTransaction();
         try {
             $basicInfo = InternalAgentRegInfo::where('user_id', auth()->user()->id)->first();
             if (!$basicInfo) {
@@ -125,7 +125,7 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            InternalAgentLegalQuestion::createOrUpdate(['reg_info_id' => $basicInfoId],[
+            InternalAgentLegalQuestion::updateOrCreate(['reg_info_id' => $basicInfoId],[
                 'convicted_checkbox_1' => isset($request->convicted_checkbox_1) ? $request->convicted_checkbox_1 : null,
                 'convicted_checkbox_1a' => isset($request->convicted_checkbox_1a) ? $request->convicted_checkbox_1a : null,
                 'convicted_checkbox_1b' => isset($request->convicted_checkbox_1b) ? $request->convicted_checkbox_1b : null,
@@ -170,7 +170,7 @@ class RegistrationStepController extends Controller
                 'unresolved_matter_checkbox_19' => isset($request->unresolved_matter_checkbox_19) ? $request->unresolved_matter_checkbox_19 : null,
             ]);
 
-            InternalAgentAdditionalInfo::createOrUpdate(['reg_info_id' => $basicInfoId],[
+            InternalAgentAdditionalInfo::updateOrCreate(['reg_info_id' => $basicInfoId],[
                 'resident_country' => isset($request->resident_country) ? $request->resident_country : null,
                 'resident_your_home' => isset($request->resident_your_home) ? $request->resident_your_home : null,
                 'resident_city_state' => isset($request->resident_city_state) ? $request->resident_city_state : null,
@@ -182,84 +182,86 @@ class RegistrationStepController extends Controller
 
             $addresses = [];
 
-            if (isset($request->AddressHistoryData->history_address1)) {
+            if (isset($request->history_address1)) {
                 array_push($addresses, [
                     'reg_info_id' => $basicInfoId,
-                    'address' => isset($request->AddressHistoryData->history_address1->address) ? $request->AddressHistoryData->history_address1->address : null,
-                    'city_state' => isset($request->AddressHistoryData->history_address1->city) ? $request->AddressHistoryData->history_address1->city : null,
-                    'zip' => isset($request->AddressHistoryData->history_address1->zip_code) ? $request->AddressHistoryData->history_address1->zip_code : null,
-                    'move_in_date' => isset($request->AddressHistoryData->history_address1->move_in_date) ? $request->AddressHistoryData->history_address1->move_in_date : null,
-                    'move_out_date' => isset($request->AddressHistoryData->history_address1->move_out_date) ? $request->AddressHistoryData->history_address1->move_out_date : null,
+                    'address' => isset($request->history_address1['address']) ? $request->history_address1['address'] : null,
+                    'city_state' => isset($request->history_address1['city']) ? $request->history_address1['city'] : null,
+                    'zip' => isset($request->history_address1['zip_code']) ? $request->history_address1['zip_code'] : null,
+                    'move_in_date' => isset($request->history_address1['move_in_date']) ? $request->history_address1['move_in_date'] : null,
+                    'move_out_date' => isset($request->history_address1['move_out_date']) ? $request->history_address1['move_out_date'] : null,
                 ]);
             }
 
-            if (isset($request->AddressHistoryData->history_address2)) {
+            if (isset($request->history_address2)) {
                 array_push($addresses, [
                     'reg_info_id' => $basicInfoId,
-                    'address' => isset($request->AddressHistoryData->history_address2->address) ? $request->AddressHistoryData->history_address2->address : null,
-                    'city_state' => isset($request->AddressHistoryData->history_address2->city) ? $request->AddressHistoryData->history_address2->city : null,
-                    'zip' => isset($request->AddressHistoryData->history_address2->zip_code) ? $request->AddressHistoryData->history_address2->zip_code : null,
-                    'move_in_date' => isset($request->AddressHistoryData->history_address2->move_in_date) ? $request->AddressHistoryData->history_address2->move_in_date : null,
-                    'move_out_date' => isset($request->AddressHistoryData->history_address2->move_out_date) ? $request->AddressHistoryData->history_address2->move_out_date : null,
+                    'address' => isset($request->history_address2['address']) ? $request->history_address2['address'] : null,
+                    'city_state' => isset($request->history_address2['city']) ? $request->history_address2['city'] : null,
+                    'zip' => isset($request->history_address2['zip_code']) ? $request->history_address2['zip_code'] : null,
+                    'move_in_date' => isset($request->history_address2['move_in_date']) ? $request->history_address2['move_in_date'] : null,
+                    'move_out_date' => isset($request->history_address2['move_out_date']) ? $request->history_address2['move_out_date'] : null,
                 ]);
             }
 
-            if (isset($request->AddressHistoryData->history_address3)) {
+            if (isset($request->history_address3)) {
                 array_push($addresses, [
                     'reg_info_id' => $basicInfoId,
-                    'address' => isset($request->AddressHistoryData->history_address3->address) ? $request->AddressHistoryData->history_address3->address : null,
-                    'city_state' => isset($request->AddressHistoryData->history_address3->city) ? $request->AddressHistoryData->history_address3->city : null,
-                    'zip' => isset($request->AddressHistoryData->history_address3->zip_code) ? $request->AddressHistoryData->history_address3->zip_code : null,
-                    'move_in_date' => isset($request->AddressHistoryData->history_address3->move_in_date) ? $request->AddressHistoryData->history_address3->move_in_date : null,
-                    'move_out_date' => isset($request->AddressHistoryData->history_address3->move_out_date) ? $request->AddressHistoryData->history_address3->move_out_date : null,
+                    'address' => isset($request->history_address3['address']) ? $request->history_address3['address'] : null,
+                    'city_state' => isset($request->history_address3['city']) ? $request->history_address3['city'] : null,
+                    'zip' => isset($request->history_address3['zip_code']) ? $request->history_address3['zip_code'] : null,
+                    'move_in_date' => isset($request->history_address3['move_in_date']) ? $request->history_address3['move_in_date'] : null,
+                    'move_out_date' => isset($request->history_address3['move_out_date']) ? $request->history_address3['move_out_date'] : null,
                 ]);
             }
 
-            if (isset($request->AddressHistoryData->history_address4)) {
+            if (isset($request->history_address4)) {
                 array_push($addresses, [
                     'reg_info_id' => $basicInfoId,
-                    'address' => isset($request->AddressHistoryData->history_address4->address) ? $request->AddressHistoryData->history_address4->address : null,
-                    'city_state' => isset($request->AddressHistoryData->history_address4->city) ? $request->AddressHistoryData->history_address4->city : null,
-                    'zip' => isset($request->AddressHistoryData->history_address4->zip_code) ? $request->AddressHistoryData->history_address4->zip_code : null,
-                    'move_in_date' => isset($request->AddressHistoryData->history_address4->move_in_date) ? $request->AddressHistoryData->history_address4->move_in_date : null,
-                    'move_out_date' => isset($request->AddressHistoryData->history_address4->move_out_date) ? $request->AddressHistoryData->history_address4->move_out_date : null,
+                    'address' => isset($request->history_address4['address']) ? $request->history_address4['address'] : null,
+                    'city_state' => isset($request->history_address4['city']) ? $request->history_address4['city'] : null,
+                    'zip' => isset($request->history_address4['zip_code']) ? $request->history_address4['zip_code'] : null,
+                    'move_in_date' => isset($request->history_address4['move_in_date']) ? $request->history_address4['move_in_date'] : null,
+                    'move_out_date' => isset($request->history_address4['move_out_date']) ? $request->history_address4['move_out_date'] : null,
                 ]);
             }
 
-            if (isset($request->AddressHistoryData->history_address5)) {
+            if (isset($request->history_address5)) {
                 array_push($addresses, [
                     'reg_info_id' => $basicInfoId,
-                    'address' => isset($request->AddressHistoryData->history_address5->address) ? $request->AddressHistoryData->history_address5->address : null,
-                    'city_state' => isset($request->AddressHistoryData->history_address5->city) ? $request->AddressHistoryData->history_address5->city : null,
-                    'zip' => isset($request->AddressHistoryData->history_address5->zip_code) ? $request->AddressHistoryData->history_address5->zip_code : null,
-                    'move_in_date' => isset($request->AddressHistoryData->history_address5->move_in_date) ? $request->AddressHistoryData->history_address5->move_in_date : null,
-                    'move_out_date' => isset($request->AddressHistoryData->history_address5->move_out_date) ? $request->AddressHistoryData->history_address5->move_out_date : null,
+                    'address' => isset($request->history_address5['address']) ? $request->history_address5['address'] : null,
+                    'city_state' => isset($request->history_address5['city']) ? $request->history_address5['city'] : null,
+                    'zip' => isset($request->history_address5['zip_code']) ? $request->history_address5['zip_code'] : null,
+                    'move_in_date' => isset($request->history_address5['move_in_date']) ? $request->history_address5['move_in_date'] : null,
+                    'move_out_date' => isset($request->history_address5['move_out_date']) ? $request->history_address5['move_out_date'] : null,
                 ]);
             }
 
-            if (isset($request->AddressHistoryData->history_address6)) {
+            if (isset($request->history_address6)) {
                 array_push($addresses, [
                     'reg_info_id' => $basicInfoId,
-                    'address' => isset($request->AddressHistoryData->history_address6->address) ? $request->AddressHistoryData->history_address6->address : null,
-                    'city_state' => isset($request->AddressHistoryData->history_address6->city) ? $request->AddressHistoryData->history_address6->city : null,
-                    'zip' => isset($request->AddressHistoryData->history_address6->zip_code) ? $request->AddressHistoryData->history_address6->zip_code : null,
-                    'move_in_date' => isset($request->AddressHistoryData->history_address6->move_in_date) ? $request->AddressHistoryData->history_address6->move_in_date : null,
-                    'move_out_date' => isset($request->AddressHistoryData->history_address6->move_out_date) ? $request->AddressHistoryData->history_address6->move_out_date : null,
+                    'address' => isset($request->history_address6['address']) ? $request->history_address6['address'] : null,
+                    'city_state' => isset($request->history_address6['city']) ? $request->history_address6['city'] : null,
+                    'zip' => isset($request->history_address6['zip_code']) ? $request->history_address6['zip_code'] : null,
+                    'move_in_date' => isset($request->history_address6['move_in_date']) ? $request->history_address6['move_in_date'] : null,
+                    'move_out_date' => isset($request->history_address6['move_out_date']) ? $request->history_address6['move_out_date'] : null,
                 ]);
             }
 
-            if (isset($request->AddressHistoryData->history_address7)) {
+            if (isset($request->history_address7)) {
                 array_push($addresses, [
                     'reg_info_id' => $basicInfoId,
-                    'address' => isset($request->AddressHistoryData->history_address7->address) ? $request->AddressHistoryData->history_address7->address : null,
-                    'city_state' => isset($request->AddressHistoryData->history_address7->city) ? $request->AddressHistoryData->history_address7->city : null,
-                    'zip' => isset($request->AddressHistoryData->history_address7->zip_code) ? $request->AddressHistoryData->history_address7->zip_code : null,
-                    'move_in_date' => isset($request->AddressHistoryData->history_address7->move_in_date) ? $request->AddressHistoryData->history_address7->move_in_date : null,
-                    'move_out_date' => isset($request->AddressHistoryData->history_address7->move_out_date) ? $request->AddressHistoryData->history_address7->move_out_date : null,
+                    'address' => isset($request->history_address7['address']) ? $request->history_address7['address'] : null,
+                    'city_state' => isset($request->history_address7['city']) ? $request->history_address7['city'] : null,
+                    'zip' => isset($request->history_address7['zip_code']) ? $request->history_address7['zip_code'] : null,
+                    'move_in_date' => isset($request->history_address7['move_in_date']) ? $request->history_address7['move_in_date'] : null,
+                    'move_out_date' => isset($request->history_address7['move_out_date']) ? $request->history_address7['move_out_date'] : null,
                 ]);
             }
+dd($addresses);
 
             if (count($addresses)) {
+                InternalAgentAddress::where('reg_info_id',$basicInfoId)->delete();
                 InternalAgentAddress::create($addresses);
             }
 
@@ -267,7 +269,7 @@ class RegistrationStepController extends Controller
                 $path = $request->file('residentLicensePdf')->store('internal-agents/resident-license-pdf', 'local');
                 $name = $request->file('residentLicensePdf')->getClientOriginalName();
 
-                InternalAgentResidentLicense::createOrUpdate(['reg_info_id' => $basicInfoId],[
+                InternalAgentResidentLicense::updateOrCreate(['reg_info_id' => $basicInfoId],[
                     'name' => $name,
                     'url' => $path,
                 ]);
@@ -277,19 +279,19 @@ class RegistrationStepController extends Controller
                 $path = $request->file('bankingInfoPdf')->store('internal-agents/banking-info', 'local');
                 $name = $request->file('bankingInfoPdf')->getClientOriginalName();
 
-                InternalAgentBankingInfo::createOrUpdate(['reg_info_id' => $basicInfoId],[
+                InternalAgentBankingInfo::updateOrCreate(['reg_info_id' => $basicInfoId],[
                     'name' => $name,
                     'url' => $path,
                 ]);
             }
 
-            DB::commit();
+//            DB::commit();
 
             return Inertia::render('InternalAgent/ContractSteps')
                 ->with('message', 'Internal agent registration completed successfully.');
         } catch (\Exception $e) {
-            DB::rollBack();
-            dd('error', $e);
+//            DB::rollBack();
+            dd('error', $e->getMessage());
         }
     }
 

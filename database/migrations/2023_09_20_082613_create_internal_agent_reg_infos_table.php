@@ -54,8 +54,8 @@ return new class extends Migration
             $table->string('business_city_state')->nullable();
             $table->string('business_zip')->nullable();
             $table->string('business_move_in_date')->nullable();
-            $table->string('aml_course')->nullable();
-            $table->string('omissions_insurance')->nullable();
+            $table->boolean('aml_course')->default(0);
+            $table->boolean('omissions_insurance')->default(0);
             $table->timestamps();
         });
     }
