@@ -9,12 +9,12 @@ const selectedDate = computed({
     form.training_completion_date = new Date(newValue.getFullYear(), newValue.getMonth(), newValue.getDate());
   },
 });
-let form = useForm({
+let form = ref({
     
 
 })
 const emits = defineEmits();
-watch(form, (newForm, oldForm) => {
+watch(form.value, (newForm, oldForm) => {
     emits("additionalInfoData", newForm);
 });
 </script>

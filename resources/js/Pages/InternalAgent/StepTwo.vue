@@ -2,7 +2,7 @@
 import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 let maxDate = ref(new Date)
-let form = useForm({
+let form = ref({
     first_name: null,
     last_name: null,
     middle_name: null,
@@ -42,7 +42,7 @@ let form = useForm({
     business_move_in_date: null,
 })
 const emits = defineEmits();
-watch(form, (newForm, oldForm) => {
+watch(form.value, (newForm, oldForm) => {
     emits("updateFormData", newForm);
 });
 </script>

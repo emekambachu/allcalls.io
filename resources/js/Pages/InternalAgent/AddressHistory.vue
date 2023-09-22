@@ -26,7 +26,7 @@ let addres_history = ref([
         address: 'history_address7',
     },
 ])
-let form = useForm({
+let form = ref({
     history_address1: {},
     history_address2: {},
     history_address3: {},
@@ -36,7 +36,7 @@ let form = useForm({
     history_address7: {},
 })
 const emits = defineEmits();
-watch(form, (newForm, oldForm) => {
+watch(form.value, (newForm, oldForm) => {
     emits("addRessHistory", newForm);
 });
 </script>

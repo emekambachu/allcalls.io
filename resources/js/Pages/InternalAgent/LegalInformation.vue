@@ -141,11 +141,11 @@ let LegalInformation = ref([
 
 ])
 
-let page1form = useForm({
+let page1form = ref({
     
 })
 const emits = defineEmits();
-watch(page1form, (newForm, oldForm) => {
+watch(page1form.value, (newForm, oldForm) => {
     emits("updateFormData", newForm);
 });
 </script>

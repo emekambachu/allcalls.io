@@ -1,18 +1,16 @@
 <script setup>
 import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
-import GuestInputLabel from "@/Components/GuestInputLabel.vue";
-import Multiselect from "@vueform/multiselect";
 import InputError from "@/Components/InputError.vue";
-import TextInput from "@/Components/TextInput.vue";
 import { router } from "@inertiajs/vue3";
 import { Head, Link, useForm } from "@inertiajs/vue3";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
 import StepTwo from "@/Pages/InternalAgent/StepTwo.vue";
 import Tabs from '@/Pages/InternalAgent/Tabs.vue'
 import LegalInformation from '@/Pages/InternalAgent/LegalInformation.vue'
 import LegalInformation2 from '@/Pages/InternalAgent/LegalInformation2.vue'
 import AddressHistory from '@/Pages/InternalAgent/AddressHistory.vue'
 import AdditionalInfo from '@/Pages/InternalAgent/AdditionalInfo.vue'
+import UploadLicence from '@/Pages/InternalAgent/UploadLicence.vue'
+import BankInformationUpload from '@/Pages/InternalAgent/BankInformationUpload.vue'
 
 
 import { toaster } from "@/helper.js";
@@ -25,53 +23,46 @@ let props = defineProps({
     states: Array,
 });
 
-let form = useForm({
-    aml_course:false,
+let form = ref({
+    aml_course: false,
+    omissions_insurance: false
 });
 
 let step = ref(1);
 let contractStep = ref(1);
-let ContactDetail = ref('Contact Details')
-let selectedTypes = ref([]);
 let emit = defineEmits(["close"]);
 let close = () => {
     emit("close");
 };
-let termsAndConditons = ref(true);
-let onTypeUpdate = (event) => {
-    if (event.target.checked) {
-        selectedTypes.value.push(Number(event.target.value));
-    } else {
-        selectedTypes.value.splice(
-            selectedTypes.value.indexOf(Number(event.target.value)),
-            1
-        );
-        delete form.typesWithStates[Number(event.target.value)];
-    }
-};
-let TermAndConditons = (event) => {
-    if (event.target.checked) {
-        termsAndConditons.value = false;
-    } else {
-        termsAndConditons.value = true;
-    }
-};
+
 let amlCourseRead = ref(false)
-watch(form, (newVal, oldVal) => {
-    if(newVal.aml_course == true){
-        amlCourseRead.value = false 
-    }else{
-        amlCourseRead.value = true 
+let omissionsInsurance = ref(false)
+watch(form.value, (newVal, oldVal) => {
+    
+    if (newVal.aml_course == true) {
+        amlCourseRead.value = false
+    } else {
+        amlCourseRead.value = true
     }
-   
+    if (newVal.omissions_insurance == true) {
+        omissionsInsurance.value = false
+    } else {
+        omissionsInsurance.value = true
+    }
+
 })
 let NextStep = () => {
     step.value += 1;
     contractStep.value = 0
-    if(step.value === 2 && form.aml_course === false){
+    if (step.value === 2 && form.value.aml_course === false) {
         amlCourseRead.value = true
-    }else{
+    } else {
         amlCourseRead.value = false
+    }
+    if (step.value === 3 && form.value.omissions_insurance === false) {
+        omissionsInsurance.value = true
+    } else {
+        omissionsInsurance.value = false
     }
 };
 let goBack = () => {
@@ -79,10 +70,15 @@ let goBack = () => {
         contractStep.value = 5
     }
     step.value -= 1;
-    if(step.value === 2 && form.aml_course === false){
+    if (step.value === 2 && form.value.aml_course === false) {
         amlCourseRead.value = true
-    }else{
+    } else {
         amlCourseRead.value = false
+    }
+    if (step.value === 3 && form.value.omissions_insurance === false) {
+        omissionsInsurance.value = true
+    } else {
+        omissionsInsurance.value = false
     }
 
 };
@@ -126,50 +122,86 @@ if (contractStep.value === 1) {
 const isLoading = ref(false);
 let firstStepErrors = ref({});
 
-let contactDetail = ref()
+let contactDetailData = ref(null)
 let updateFormData = (val) => {
-    contactDetail.value = val
+    contactDetailData.value = val
+    console.log('contactDetailData', contactDetailData.value);
 }
 
 // Use an object to store the legal form data
-const legalFormData = ref({});
+const legalFormData = ref(null);
 
 // Define a computed property to get the merged data
 const mergedData = computed(() => {
-  return {
-    ...legalFormData.value,
-  };
+    return {
+        ...legalFormData.value,
+    };
 });
 
 // Function to update the legal form data
 const updateLegalFormData = (val) => {
-  // Merge the new data with the existing data
-  legalFormData.value = {
-    ...legalFormData.value,
-    ...val,
-  };
-  console.log('what merge data', mergedData.value);
+    // Merge the new data with the existing data
+    legalFormData.value = {
+        ...legalFormData.value,
+        ...val,
+    };
+    //   console.log('what merge data', mergedData.value);
+    //   console.log('what merge legalFormData', legalFormData.value);
 };
-let AddressHistoryData = ref()
+let AddressHistoryData = ref(null)
 let AddressHistoryfun = (val) => {
     AddressHistoryData.value = val
 }
-let additionalInfoD = ref()
+let additionalInfoD = ref(null)
 let additionalInformation = (val) => {
     additionalInfoD.value = val
-    console.log('new values', additionalInfoD.value);
+    // console.log('new values', additionalInfoD.value);
 }
-
+let uploadLicensePdf = ref(null)
+let uploadLicense = (val) => {
+    console.log('new uploadLicense', val);
+    uploadLicensePdf.value = val
+}
+let uploadBankingInfoPdf = ref(null)
+let uploadBankingInfo = (val) => {
+    uploadBankingInfoPdf.value = val
+}
 let submit = () => {
+
     isLoading.value = true;
+
+    // Create a FormData object to send the file
+    const formData = new FormData();
+    // formData.append('aml_course', form.aml_course);
+    // formData.append('contactData', contactDetailData.value);
+    // formData.append('questionsData', legalFormData.value);
+    // formData.append('AddressHistoryData', AddressHistoryData.value);
+    // formData.append('additionalInfoD', additionalInfoD.value);
+    // formData.append('uploadLicensePdf', uploadLicensePdf.value);
+
+    // Append the PDF file to the FormData object
+
+    // if (uploadLicensePdf.value) {
+    //     formData.append('pdfFile', uploadLicensePdf.value);
+    //     formData.append('pdfFile', uploadBankingInfoPdf.value);
+    // }
+
 
     return axios
         .post("/internal-agent/register-steps", {
-            aml_course:form.aml_course,
-            contactDetail:contactDetail.value,
-            contact_detail:mergedData.value,
-            AddressHistoryData:AddressHistoryData.value,
-            additionalInfoD:additionalInfoD.value
+            // pdfFile:formData,
+            aml_course: form.value.aml_course,
+            omissions_insurance: form.value.omissions_insurance,
+            contactDetailData: contactDetailData.value,
+            legalFormData: legalFormData.value,
+            AddressHistoryData: AddressHistoryData.value,
+            additionalInfoD: additionalInfoD.value,
+            uploadLicensePdf: uploadLicensePdf.value,
+            uploadBankingInfoPdf: uploadBankingInfoPdf.value,
+        }, {
+            headers: {
+                'Content-Type': 'multipart/form-data' // Set the content type to multipart/form-data
+            }
         })
         .then((response) => {
             close();
@@ -192,6 +224,40 @@ let submit = () => {
             }
         });
 };
+
+// let submit = () => {
+//     isLoading.value = true;
+
+//     return axios
+//         .post("/internal-agent/register-steps", {
+//             aml_course:form.aml_course,
+//             contactDetail:contactDetail.value,
+//             contact_detail:mergedData.value,
+//             AddressHistoryData:AddressHistoryData.value,
+//             additionalInfoD:additionalInfoD.value,
+//             uploadLicensePdf:uploadLicensePdf.value
+//         })
+//         .then((response) => {
+//             close();
+//             toaster("success", response.data.message);
+//             router.visit("/dashboard");
+//             isLoading.value = false;
+//         })
+//         .catch((error) => {
+//             if (error.response) {
+//                 if (error.response.status === 400) {
+//                     firstStepErrors.value = error.response.data.errors;
+//                     isLoading.value = false;
+//                 } else {
+//                     console.log("Other errors", error.response.data);
+//                 }
+//             } else if (error.request) {
+//                 console.log("No response received", error.request);
+//             } else {
+//                 console.log("Error", error.message);
+//             }
+//         });
+// };
 </script>
 <style scoped>
 .active\:bg-gray-900:active {
@@ -295,38 +361,54 @@ let submit = () => {
                         </div>
                         <div v-show="step === 2" class="pt-6">
                             <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
-                                AML Course 
+                                AML Course
                             </h1>
                             <div class="iframe-cls">
-                                <iframe 
+                                <iframe
                                     src="https://www.financialservicecareers.com/_files/ugd/0fb1f5_0a18cb8e43734547b1c42be4c1a0a52b.pdf"
                                     width="100%" height="500px" frameborder="0"></iframe>
                             </div>
-
                             <div class="flex justify-between my-5">
                                 <div></div>
                                 <div>
                                     <input id="link-checkbox" v-model="form.aml_course" type="checkbox" value=""
                                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                     <label for="link-checkbox"
-                                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">I have completed the AML course.</label>
+                                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">I have completed
+                                        the AML course.</label>
                                 </div>
                             </div>
-
                         </div>
+
                         <div v-show="step === 3" class="pt-6">
                             <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
                                 Errors and Omissions Insurances
                             </h1>
-                                    <iframe src="https://mga-eo.com/apply/nd/lh-eo?_ga=2.22742075.1083085069.1638818057-1601577075.1638818057" width="100%" height="500px" frameborder="0"></iframe>
+                            <iframe
+                                src="https://mga-eo.com/apply/nd/lh-eo?_ga=2.22742075.1083085069.1638818057-1601577075.1638818057"
+                                width="100%" height="500px" frameborder="0"></iframe>
+                                <div class="flex justify-between my-5">
+                                <div></div>
+                                <div>
+                                    <input id="link-omissions_insurance" v-model="form.omissions_insurance" type="checkbox" value=""
+                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="link-omissions_insurance"
+                                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Errors and Omissions Insurances.</label>
+                                </div>
+                            </div>
                         </div>
 
-                       
+                        <div v-show="step === 4">
+                            <UploadLicence @uploadLicense="uploadLicense" />
+                        </div>
+                        <div v-show="step === 5">
+                            <BankInformationUpload @uploadBankingInfo="uploadBankingInfo" />
+                        </div>
 
                         <div class="px-5 pb-6">
                             <div class="flex justify-between flex-wrap">
                                 <div class="mt-4">
-                                    <a v-show="step > 1 " href="#" @click.prevent="goBack"
+                                    <a v-show="step > 1" href="#" @click.prevent="goBack"
                                         class="button-custom-back px-3 py-2 rounded-md">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
@@ -346,9 +428,15 @@ let submit = () => {
                                     </a>
                                 </div>
                                 <div class="mt-4">
-                                    <button :class="{ 'opacity-25': amlCourseRead  }" :disabled="amlCourseRead" v-show="contractStep === 5 || step > 1 && step != 5 " type="button" @click.prevent="NextStep"
-                                        class="button-custom px-3 py-2 rounded-md">
-                                        Next Step
+                                    <button :class="{ 'opacity-25': amlCourseRead }" :disabled="amlCourseRead"
+                                        v-show="contractStep === 5 || step > 1 && step != 5 && step != 3" type="button"
+                                        @click.prevent="NextStep" class="button-custom px-3 py-2 rounded-md">
+                                        Next Step 
+                                    </button>
+                                    <button :class="{ 'opacity-25': omissionsInsurance }" :disabled="omissionsInsurance"
+                                        v-show="contractStep != 5 && step != 5 && step === 3" type="button"
+                                        @click.prevent="NextStep" class="button-custom px-3 py-2 rounded-md">
+                                        Next Step  
                                     </button>
                                     <button v-show="contractStep != 5 && step === 1" type="button"
                                         @click.prevent="ChangeTab" class="button-custom px-3 py-2 rounded-md">
@@ -367,5 +455,4 @@ let submit = () => {
                 </div>
             </div>
         </div>
-    </Transition>
-</template>
+    </Transition></template>
