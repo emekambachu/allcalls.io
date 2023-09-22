@@ -22,14 +22,11 @@ class RegistrationStepController extends Controller
     }
 
     public function store(Request $request)
-        {
-            dd($request);
-
-        $validator = Validator::make($request, [
+    {
+        $validator = Validator::make($request->all(), [
             'first_name' => 'required',
             'last_name' => 'required',
         ]);
-
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
@@ -38,131 +35,97 @@ class RegistrationStepController extends Controller
         }
         DB::beginTransaction();
         try {
-            $basicInfo = InternalAgentRegInfo::create([
-                'user_id' => auth()->user()->id,
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'middle_name' => isset($request->middle_name) ? $request->middle_name : null,
-                'ssn' => isset($request->ssn) ? $request->ssn : null,
-                'gender' => isset($request->gender) ? $request->gender : null,
-                'dob' => isset($request->dob) ? $request->dob : null,
-                'martial_status' => isset($request->martial_status) ? $request->martial_status : null,
-                'cell_phone' => isset($request->cell_phone) ? $request->cell_phone : null,
-                'home_phone' => isset($request->home_phone) ? $request->home_phone : null,
-                'fax' => isset($request->fax) ? $request->fax : null,
-                'email' => isset($request->email) ? $request->email : null,
-                'driver_license_no' => isset($request->driver_license_no) ? $request->driver_license_no : null,
-                'driver_license_state' => isset($request->driver_license_state) ? $request->driver_license_state : null,
-                'address' => isset($request->address) ? $request->address : null,
-                'city_state' => isset($request->city_state) ? $request->city_state : null,
-                'zip' => isset($request->zip) ? $request->zip : null,
-                'move_in_date' => isset($request->move_in_date) ? $request->move_in_date : null,
-                'move_in_address' => isset($request->move_in_address) ? $request->move_in_address : null,
-                'move_in_city_state' => isset($request->move_in_city_state) ? $request->move_in_city_state : null,
-                'move_in_zip' => isset($request->move_in_zip) ? $request->move_in_zip : null,
-                'resident_insu_license_no' => isset($request->resident_insu_license_no) ? $request->resident_insu_license_no : null,
-                'resident_insu_license_state' => isset($request->resident_insu_license_state) ? $request->resident_insu_license_state : null,
-                'doing_business_as' => isset($request->doing_business_as) ? $request->doing_business_as : null,
-                'business_name' => isset($request->business_name) ? $request->business_name : null,
-                'business_tax_id' => isset($request->business_tax_id) ? $request->business_tax_id : null,
-                'business_agent_name' => isset($request->business_agent_name) ? $request->business_agent_name : null,
-                'business_agent_title' => isset($request->business_agent_title) ? $request->business_agent_title : null,
-                'business_company_type' => isset($request->business_company_type) ? $request->business_company_type : null,
-                'business_insu_license_no' => isset($request->business_insu_license_no) ? $request->business_insu_license_no : null,
-                'business_office_fax' => isset($request->business_office_fax) ? $request->business_office_fax : null,
-                'business_office_phone' => isset($request->business_office_phone) ? $request->business_office_phone : null,
-                'business_email' => isset($request->business_email) ? $request->business_email : null,
-                'business_website' => isset($request->business_website) ? $request->business_website : null,
-                'business_address' => isset($request->business_address) ? $request->business_address : null,
-                'business_city_state' => isset($request->business_city_state) ? $request->business_city_state : null,
-                'business_zip' => isset($request->business_zip) ? $request->business_zip : null,
-                'business_move_in_date' => isset($request->business_move_in_date) ? $request->business_move_in_date : null,
-                'aml_course' => isset($request->aml_course) ? $request->aml_course : null,
-                'omissions_insurance' => isset($request->omissions_insurance) ? $request->omissions_insurance : null,
-            ]);
-
-            $addresses = [];
-
-            if (isset($request->AddressHistoryData->history_address1)) {
-                array_push($addresses, [
-                    'reg_info_id' => $basicInfo->id,
-                    'address' => isset($request->AddressHistoryData->history_address1->address) ? $request->AddressHistoryData->history_address1->address : null,
-                    'city_state' => isset($request->AddressHistoryData->history_address1->city) ? $request->AddressHistoryData->history_address1->city : null,
-                    'zip' => isset($request->AddressHistoryData->history_address1->zip_code) ? $request->AddressHistoryData->history_address1->zip_code : null,
-                    'move_in_date' => isset($request->AddressHistoryData->history_address1->move_in_date) ? $request->AddressHistoryData->history_address1->move_in_date : null,
-                    'move_out_date' => isset($request->AddressHistoryData->history_address1->move_out_date) ? $request->AddressHistoryData->history_address1->move_out_date : null,
+            $basicInfo = InternalAgentRegInfo::where('user_id', auth()->user()->id)->first();
+            if (!$basicInfo) {
+                $basicInfo = InternalAgentRegInfo::create([
+                    'user_id' => auth()->user()->id,
+                    'first_name' => $request->first_name,
+                    'last_name' => $request->last_name,
+                    'middle_name' => isset($request->middle_name) ? $request->middle_name : null,
+                    'ssn' => isset($request->ssn) ? $request->ssn : null,
+                    'gender' => isset($request->gender) ? $request->gender : null,
+                    'dob' => isset($request->dob) ? $request->dob : null,
+                    'martial_status' => isset($request->martial_status) ? $request->martial_status : null,
+                    'cell_phone' => isset($request->cell_phone) ? $request->cell_phone : null,
+                    'home_phone' => isset($request->home_phone) ? $request->home_phone : null,
+                    'fax' => isset($request->fax) ? $request->fax : null,
+                    'email' => isset($request->email) ? $request->email : null,
+                    'driver_license_no' => isset($request->driver_license_no) ? $request->driver_license_no : null,
+                    'driver_license_state' => isset($request->driver_license_state) ? $request->driver_license_state : null,
+                    'address' => isset($request->address) ? $request->address : null,
+                    'city_state' => isset($request->city_state) ? $request->city_state : null,
+                    'zip' => isset($request->zip) ? $request->zip : null,
+                    'move_in_date' => isset($request->move_in_date) ? $request->move_in_date : null,
+                    'move_in_address' => isset($request->move_in_address) ? $request->move_in_address : null,
+                    'move_in_city_state' => isset($request->move_in_city_state) ? $request->move_in_city_state : null,
+                    'move_in_zip' => isset($request->move_in_zip) ? $request->move_in_zip : null,
+                    'resident_insu_license_no' => isset($request->resident_insu_license_no) ? $request->resident_insu_license_no : null,
+                    'resident_insu_license_state' => isset($request->resident_insu_license_state) ? $request->resident_insu_license_state : null,
+                    'doing_business_as' => isset($request->doing_business_as) ? $request->doing_business_as : null,
+                    'business_name' => isset($request->business_name) ? $request->business_name : null,
+                    'business_tax_id' => isset($request->business_tax_id) ? $request->business_tax_id : null,
+                    'business_agent_name' => isset($request->business_agent_name) ? $request->business_agent_name : null,
+                    'business_agent_title' => isset($request->business_agent_title) ? $request->business_agent_title : null,
+                    'business_company_type' => isset($request->business_company_type) ? $request->business_company_type : null,
+                    'business_insu_license_no' => isset($request->business_insu_license_no) ? $request->business_insu_license_no : null,
+                    'business_office_fax' => isset($request->business_office_fax) ? $request->business_office_fax : null,
+                    'business_office_phone' => isset($request->business_office_phone) ? $request->business_office_phone : null,
+                    'business_email' => isset($request->business_email) ? $request->business_email : null,
+                    'business_website' => isset($request->business_website) ? $request->business_website : null,
+                    'business_address' => isset($request->business_address) ? $request->business_address : null,
+                    'business_city_state' => isset($request->business_city_state) ? $request->business_city_state : null,
+                    'business_zip' => isset($request->business_zip) ? $request->business_zip : null,
+                    'business_move_in_date' => isset($request->business_move_in_date) ? $request->business_move_in_date : null,
+                    'aml_course' => isset($request->aml_course) ? $request->aml_course : null,
+                    'omissions_insurance' => isset($request->omissions_insurance) ? $request->omissions_insurance : null,
+                ]);
+                $basicInfoId = $basicInfo->id;
+            } else {
+                $basicInfoId = $basicInfo->id;
+                $basicInfo->update([
+                    'first_name' => $request->first_name,
+                    'last_name' => $request->last_name,
+                    'middle_name' => isset($request->middle_name) ? $request->middle_name : null,
+                    'ssn' => isset($request->ssn) ? $request->ssn : null,
+                    'gender' => isset($request->gender) ? $request->gender : null,
+                    'dob' => isset($request->dob) ? $request->dob : null,
+                    'martial_status' => isset($request->martial_status) ? $request->martial_status : null,
+                    'cell_phone' => isset($request->cell_phone) ? $request->cell_phone : null,
+                    'home_phone' => isset($request->home_phone) ? $request->home_phone : null,
+                    'fax' => isset($request->fax) ? $request->fax : null,
+                    'email' => isset($request->email) ? $request->email : null,
+                    'driver_license_no' => isset($request->driver_license_no) ? $request->driver_license_no : null,
+                    'driver_license_state' => isset($request->driver_license_state) ? $request->driver_license_state : null,
+                    'address' => isset($request->address) ? $request->address : null,
+                    'city_state' => isset($request->city_state) ? $request->city_state : null,
+                    'zip' => isset($request->zip) ? $request->zip : null,
+                    'move_in_date' => isset($request->move_in_date) ? $request->move_in_date : null,
+                    'move_in_address' => isset($request->move_in_address) ? $request->move_in_address : null,
+                    'move_in_city_state' => isset($request->move_in_city_state) ? $request->move_in_city_state : null,
+                    'move_in_zip' => isset($request->move_in_zip) ? $request->move_in_zip : null,
+                    'resident_insu_license_no' => isset($request->resident_insu_license_no) ? $request->resident_insu_license_no : null,
+                    'resident_insu_license_state' => isset($request->resident_insu_license_state) ? $request->resident_insu_license_state : null,
+                    'doing_business_as' => isset($request->doing_business_as) ? $request->doing_business_as : null,
+                    'business_name' => isset($request->business_name) ? $request->business_name : null,
+                    'business_tax_id' => isset($request->business_tax_id) ? $request->business_tax_id : null,
+                    'business_agent_name' => isset($request->business_agent_name) ? $request->business_agent_name : null,
+                    'business_agent_title' => isset($request->business_agent_title) ? $request->business_agent_title : null,
+                    'business_company_type' => isset($request->business_company_type) ? $request->business_company_type : null,
+                    'business_insu_license_no' => isset($request->business_insu_license_no) ? $request->business_insu_license_no : null,
+                    'business_office_fax' => isset($request->business_office_fax) ? $request->business_office_fax : null,
+                    'business_office_phone' => isset($request->business_office_phone) ? $request->business_office_phone : null,
+                    'business_email' => isset($request->business_email) ? $request->business_email : null,
+                    'business_website' => isset($request->business_website) ? $request->business_website : null,
+                    'business_address' => isset($request->business_address) ? $request->business_address : null,
+                    'business_city_state' => isset($request->business_city_state) ? $request->business_city_state : null,
+                    'business_zip' => isset($request->business_zip) ? $request->business_zip : null,
+                    'business_move_in_date' => isset($request->business_move_in_date) ? $request->business_move_in_date : null,
+                    'aml_course' => isset($request->aml_course) ? $request->aml_course : null,
+                    'omissions_insurance' => isset($request->omissions_insurance) ? $request->omissions_insurance : null,
                 ]);
             }
 
-            if (isset($request->AddressHistoryData->history_address2)) {
-                array_push($addresses, [
-                    'reg_info_id' => $basicInfo->id,
-                    'address' => isset($request->AddressHistoryData->history_address2->address) ? $request->AddressHistoryData->history_address2->address : null,
-                    'city_state' => isset($request->AddressHistoryData->history_address2->city) ? $request->AddressHistoryData->history_address2->city : null,
-                    'zip' => isset($request->AddressHistoryData->history_address2->zip_code) ? $request->AddressHistoryData->history_address2->zip_code : null,
-                    'move_in_date' => isset($request->AddressHistoryData->history_address2->move_in_date) ? $request->AddressHistoryData->history_address2->move_in_date : null,
-                    'move_out_date' => isset($request->AddressHistoryData->history_address2->move_out_date) ? $request->AddressHistoryData->history_address2->move_out_date : null,
-                ]);
-            }
-
-            if (isset($request->AddressHistoryData->history_address3)) {
-                array_push($addresses, [
-                    'reg_info_id' => $basicInfo->id,
-                    'address' => isset($request->AddressHistoryData->history_address3->address) ? $request->AddressHistoryData->history_address3->address : null,
-                    'city_state' => isset($request->AddressHistoryData->history_address3->city) ? $request->AddressHistoryData->history_address3->city : null,
-                    'zip' => isset($request->AddressHistoryData->history_address3->zip_code) ? $request->AddressHistoryData->history_address3->zip_code : null,
-                    'move_in_date' => isset($request->AddressHistoryData->history_address3->move_in_date) ? $request->AddressHistoryData->history_address3->move_in_date : null,
-                    'move_out_date' => isset($request->AddressHistoryData->history_address3->move_out_date) ? $request->AddressHistoryData->history_address3->move_out_date : null,
-                ]);
-            }
-            if (isset($request->AddressHistoryData->history_address4)) {
-                array_push($addresses, [
-                    'reg_info_id' => $basicInfo->id,
-                    'address' => isset($request->AddressHistoryData->history_address4->address) ? $request->AddressHistoryData->history_address4->address : null,
-                    'city_state' => isset($request->AddressHistoryData->history_address4->city) ? $request->AddressHistoryData->history_address4->city : null,
-                    'zip' => isset($request->AddressHistoryData->history_address4->zip_code) ? $request->AddressHistoryData->history_address4->zip_code : null,
-                    'move_in_date' => isset($request->AddressHistoryData->history_address4->move_in_date) ? $request->AddressHistoryData->history_address4->move_in_date : null,
-                    'move_out_date' => isset($request->AddressHistoryData->history_address4->move_out_date) ? $request->AddressHistoryData->history_address4->move_out_date : null,
-                ]);
-            }
-            if (isset($request->AddressHistoryData->history_address5)) {
-                array_push($addresses, [
-                    'reg_info_id' => $basicInfo->id,
-                    'address' => isset($request->AddressHistoryData->history_address5->address) ? $request->AddressHistoryData->history_address5->address : null,
-                    'city_state' => isset($request->AddressHistoryData->history_address5->city) ? $request->AddressHistoryData->history_address5->city : null,
-                    'zip' => isset($request->AddressHistoryData->history_address5->zip_code) ? $request->AddressHistoryData->history_address5->zip_code : null,
-                    'move_in_date' => isset($request->AddressHistoryData->history_address5->move_in_date) ? $request->AddressHistoryData->history_address5->move_in_date : null,
-                    'move_out_date' => isset($request->AddressHistoryData->history_address5->move_out_date) ? $request->AddressHistoryData->history_address5->move_out_date : null,
-                ]);
-            }
-            if (isset($request->AddressHistoryData->history_address6)) {
-                array_push($addresses, [
-                    'reg_info_id' => $basicInfo->id,
-                    'address' => isset($request->AddressHistoryData->history_address6->address) ? $request->AddressHistoryData->history_address6->address : null,
-                    'city_state' => isset($request->AddressHistoryData->history_address6->city) ? $request->AddressHistoryData->history_address6->city : null,
-                    'zip' => isset($request->AddressHistoryData->history_address6->zip_code) ? $request->AddressHistoryData->history_address6->zip_code : null,
-                    'move_in_date' => isset($request->AddressHistoryData->history_address6->move_in_date) ? $request->AddressHistoryData->history_address6->move_in_date : null,
-                    'move_out_date' => isset($request->AddressHistoryData->history_address6->move_out_date) ? $request->AddressHistoryData->history_address6->move_out_date : null,
-                ]);
-            }
-            if (isset($request->AddressHistoryData->history_address7)) {
-                array_push($addresses, [
-                    'reg_info_id' => $basicInfo->id,
-                    'address' => isset($request->AddressHistoryData->history_address7->address) ? $request->AddressHistoryData->history_address7->address : null,
-                    'city_state' => isset($request->AddressHistoryData->history_address7->city) ? $request->AddressHistoryData->history_address7->city : null,
-                    'zip' => isset($request->AddressHistoryData->history_address7->zip_code) ? $request->AddressHistoryData->history_address7->zip_code : null,
-                    'move_in_date' => isset($request->AddressHistoryData->history_address7->move_in_date) ? $request->AddressHistoryData->history_address7->move_in_date : null,
-                    'move_out_date' => isset($request->AddressHistoryData->history_address7->move_out_date) ? $request->AddressHistoryData->history_address7->move_out_date : null,
-                ]);
-            }
-
-
-            if (count($addresses)) {
-                InternalAgentAddress::create($addresses);
-            }
-
-            InternalAgentLegalQuestion::create([
-                'reg_info_id' => $basicInfo->id,
+            InternalAgentLegalQuestion::createOrUpdate(['reg_info_id' => $basicInfoId],[
                 'convicted_checkbox_1' => isset($request->convicted_checkbox_1) ? $request->convicted_checkbox_1 : null,
                 'convicted_checkbox_1a' => isset($request->convicted_checkbox_1a) ? $request->convicted_checkbox_1a : null,
                 'convicted_checkbox_1b' => isset($request->convicted_checkbox_1b) ? $request->convicted_checkbox_1b : null,
@@ -207,8 +170,7 @@ class RegistrationStepController extends Controller
                 'unresolved_matter_checkbox_19' => isset($request->unresolved_matter_checkbox_19) ? $request->unresolved_matter_checkbox_19 : null,
             ]);
 
-            InternalAgentAdditionalInfo::create([
-                'reg_info_id' => $basicInfo->id,
+            InternalAgentAdditionalInfo::createOrUpdate(['reg_info_id' => $basicInfoId],[
                 'resident_country' => isset($request->resident_country) ? $request->resident_country : null,
                 'resident_your_home' => isset($request->resident_your_home) ? $request->resident_your_home : null,
                 'resident_city_state' => isset($request->resident_city_state) ? $request->resident_city_state : null,
@@ -218,12 +180,94 @@ class RegistrationStepController extends Controller
                 'limra_password' => isset($request->limra_password) ? $request->limra_password : null,
             ]);
 
+            $addresses = [];
+
+            if (isset($request->AddressHistoryData->history_address1)) {
+                array_push($addresses, [
+                    'reg_info_id' => $basicInfoId,
+                    'address' => isset($request->AddressHistoryData->history_address1->address) ? $request->AddressHistoryData->history_address1->address : null,
+                    'city_state' => isset($request->AddressHistoryData->history_address1->city) ? $request->AddressHistoryData->history_address1->city : null,
+                    'zip' => isset($request->AddressHistoryData->history_address1->zip_code) ? $request->AddressHistoryData->history_address1->zip_code : null,
+                    'move_in_date' => isset($request->AddressHistoryData->history_address1->move_in_date) ? $request->AddressHistoryData->history_address1->move_in_date : null,
+                    'move_out_date' => isset($request->AddressHistoryData->history_address1->move_out_date) ? $request->AddressHistoryData->history_address1->move_out_date : null,
+                ]);
+            }
+
+            if (isset($request->AddressHistoryData->history_address2)) {
+                array_push($addresses, [
+                    'reg_info_id' => $basicInfoId,
+                    'address' => isset($request->AddressHistoryData->history_address2->address) ? $request->AddressHistoryData->history_address2->address : null,
+                    'city_state' => isset($request->AddressHistoryData->history_address2->city) ? $request->AddressHistoryData->history_address2->city : null,
+                    'zip' => isset($request->AddressHistoryData->history_address2->zip_code) ? $request->AddressHistoryData->history_address2->zip_code : null,
+                    'move_in_date' => isset($request->AddressHistoryData->history_address2->move_in_date) ? $request->AddressHistoryData->history_address2->move_in_date : null,
+                    'move_out_date' => isset($request->AddressHistoryData->history_address2->move_out_date) ? $request->AddressHistoryData->history_address2->move_out_date : null,
+                ]);
+            }
+
+            if (isset($request->AddressHistoryData->history_address3)) {
+                array_push($addresses, [
+                    'reg_info_id' => $basicInfoId,
+                    'address' => isset($request->AddressHistoryData->history_address3->address) ? $request->AddressHistoryData->history_address3->address : null,
+                    'city_state' => isset($request->AddressHistoryData->history_address3->city) ? $request->AddressHistoryData->history_address3->city : null,
+                    'zip' => isset($request->AddressHistoryData->history_address3->zip_code) ? $request->AddressHistoryData->history_address3->zip_code : null,
+                    'move_in_date' => isset($request->AddressHistoryData->history_address3->move_in_date) ? $request->AddressHistoryData->history_address3->move_in_date : null,
+                    'move_out_date' => isset($request->AddressHistoryData->history_address3->move_out_date) ? $request->AddressHistoryData->history_address3->move_out_date : null,
+                ]);
+            }
+
+            if (isset($request->AddressHistoryData->history_address4)) {
+                array_push($addresses, [
+                    'reg_info_id' => $basicInfoId,
+                    'address' => isset($request->AddressHistoryData->history_address4->address) ? $request->AddressHistoryData->history_address4->address : null,
+                    'city_state' => isset($request->AddressHistoryData->history_address4->city) ? $request->AddressHistoryData->history_address4->city : null,
+                    'zip' => isset($request->AddressHistoryData->history_address4->zip_code) ? $request->AddressHistoryData->history_address4->zip_code : null,
+                    'move_in_date' => isset($request->AddressHistoryData->history_address4->move_in_date) ? $request->AddressHistoryData->history_address4->move_in_date : null,
+                    'move_out_date' => isset($request->AddressHistoryData->history_address4->move_out_date) ? $request->AddressHistoryData->history_address4->move_out_date : null,
+                ]);
+            }
+
+            if (isset($request->AddressHistoryData->history_address5)) {
+                array_push($addresses, [
+                    'reg_info_id' => $basicInfoId,
+                    'address' => isset($request->AddressHistoryData->history_address5->address) ? $request->AddressHistoryData->history_address5->address : null,
+                    'city_state' => isset($request->AddressHistoryData->history_address5->city) ? $request->AddressHistoryData->history_address5->city : null,
+                    'zip' => isset($request->AddressHistoryData->history_address5->zip_code) ? $request->AddressHistoryData->history_address5->zip_code : null,
+                    'move_in_date' => isset($request->AddressHistoryData->history_address5->move_in_date) ? $request->AddressHistoryData->history_address5->move_in_date : null,
+                    'move_out_date' => isset($request->AddressHistoryData->history_address5->move_out_date) ? $request->AddressHistoryData->history_address5->move_out_date : null,
+                ]);
+            }
+
+            if (isset($request->AddressHistoryData->history_address6)) {
+                array_push($addresses, [
+                    'reg_info_id' => $basicInfoId,
+                    'address' => isset($request->AddressHistoryData->history_address6->address) ? $request->AddressHistoryData->history_address6->address : null,
+                    'city_state' => isset($request->AddressHistoryData->history_address6->city) ? $request->AddressHistoryData->history_address6->city : null,
+                    'zip' => isset($request->AddressHistoryData->history_address6->zip_code) ? $request->AddressHistoryData->history_address6->zip_code : null,
+                    'move_in_date' => isset($request->AddressHistoryData->history_address6->move_in_date) ? $request->AddressHistoryData->history_address6->move_in_date : null,
+                    'move_out_date' => isset($request->AddressHistoryData->history_address6->move_out_date) ? $request->AddressHistoryData->history_address6->move_out_date : null,
+                ]);
+            }
+
+            if (isset($request->AddressHistoryData->history_address7)) {
+                array_push($addresses, [
+                    'reg_info_id' => $basicInfoId,
+                    'address' => isset($request->AddressHistoryData->history_address7->address) ? $request->AddressHistoryData->history_address7->address : null,
+                    'city_state' => isset($request->AddressHistoryData->history_address7->city) ? $request->AddressHistoryData->history_address7->city : null,
+                    'zip' => isset($request->AddressHistoryData->history_address7->zip_code) ? $request->AddressHistoryData->history_address7->zip_code : null,
+                    'move_in_date' => isset($request->AddressHistoryData->history_address7->move_in_date) ? $request->AddressHistoryData->history_address7->move_in_date : null,
+                    'move_out_date' => isset($request->AddressHistoryData->history_address7->move_out_date) ? $request->AddressHistoryData->history_address7->move_out_date : null,
+                ]);
+            }
+
+            if (count($addresses)) {
+                InternalAgentAddress::create($addresses);
+            }
+
             if ($request->file('residentLicensePdf') && $request->file('residentLicensePdf')->isValid()) {
                 $path = $request->file('residentLicensePdf')->store('internal-agents/resident-license-pdf', 'local');
                 $name = $request->file('residentLicensePdf')->getClientOriginalName();
 
-                InternalAgentResidentLicense::create([
-                    'reg_info_id' => $basicInfo->id,
+                InternalAgentResidentLicense::createOrUpdate(['reg_info_id' => $basicInfoId],[
                     'name' => $name,
                     'url' => $path,
                 ]);
@@ -233,8 +277,7 @@ class RegistrationStepController extends Controller
                 $path = $request->file('bankingInfoPdf')->store('internal-agents/banking-info', 'local');
                 $name = $request->file('bankingInfoPdf')->getClientOriginalName();
 
-                InternalAgentBankingInfo::create([
-                    'reg_info_id' => $basicInfo->id,
+                InternalAgentBankingInfo::createOrUpdate(['reg_info_id' => $basicInfoId],[
                     'name' => $name,
                     'url' => $path,
                 ]);
@@ -243,13 +286,11 @@ class RegistrationStepController extends Controller
             DB::commit();
 
             return Inertia::render('InternalAgent/ContractSteps')
-                ->with('success', 'Internal agent registration completed successfully.');
+                ->with('message', 'Internal agent registration completed successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
-            dd('error',$e);
+            dd('error', $e);
         }
-
-
     }
 
 }
