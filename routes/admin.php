@@ -2,11 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ActiveUsersController;
+use App\Http\Controllers\AgentInvitesController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\ActiveUserChannelController;
-use App\Http\Controllers\Admin\AvailableNumberController;
-use App\Http\Controllers\Admin\InternalAgentController;
 use App\Http\Controllers\Admin\OnlineAgentsController;
+use App\Http\Controllers\Admin\InternalAgentController;
+use App\Http\Controllers\Admin\AvailableNumberController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,4 +66,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     // Route::get('/active-users/join', [ActiveUserChannelController::class, 'join']);
 
     Route::get('/online-agents', [OnlineAgentsController::class, 'index'])->name('admin.online-agents.index');
+
+    Route::get('/agent-invites', [AgentInvitesController::class, 'index'])->name('admin.agent-invites.index');
+    Route::post('/agent-invites', [AgentInvitesController::class, 'store'])->name('admin.agent-invites.store');
 });
