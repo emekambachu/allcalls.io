@@ -23,6 +23,7 @@ class RegistrationStepController extends Controller
 
     public function store(Request $request)
         {
+            dd($request);
 
         $validator = Validator::make($request->contactDetailData, [
             'first_name' => 'required',

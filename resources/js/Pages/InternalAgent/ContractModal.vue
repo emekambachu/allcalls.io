@@ -168,37 +168,43 @@ let uploadBankingInfo = (val) => {
 }
 let submit = () => {
 
+    // console.log('contactDetailData.value,', contactDetailData.value);
+    // console.log('legalFormData.value', legalFormData.value);
+    // console.log('AddressHistoryData.value', AddressHistoryData.value);
+    // console.log('additionalInfoD.value', additionalInfoD.value);
+    // console.log('uploadLicensePdf.value', uploadLicensePdf.value);
+    // console.log('uploadBankingInfoPdf.value', uploadBankingInfoPdf.value);
+
+
+    // return
+
+    const requestData = {};
+
+// Merge all the individual data objects into the requestData object
+    Object.assign(requestData, form.value);
+    Object.assign(requestData, contactDetailData.value);
+    Object.assign(requestData, legalFormData.value);
+    Object.assign(requestData, AddressHistoryData.value);
+    Object.assign(requestData, additionalInfoD.value);
+    requestData.residentLicensePdf = uploadLicensePdf.value;
+    requestData.bankingInfoPdf = uploadBankingInfoPdf.value;
+
     isLoading.value = true;
 
-    // Create a FormData object to send the file
-    const formData = new FormData();
-    // formData.append('aml_course', form.aml_course);
-    // formData.append('contactData', contactDetailData.value);
-    // formData.append('questionsData', legalFormData.value);
-    // formData.append('AddressHistoryData', AddressHistoryData.value);
-    // formData.append('additionalInfoD', additionalInfoD.value);
-    // formData.append('uploadLicensePdf', uploadLicensePdf.value);
-
-    // Append the PDF file to the FormData object
-
-    // if (uploadLicensePdf.value) {
-    //     formData.append('pdfFile', uploadLicensePdf.value);
-    //     formData.append('pdfFile', uploadBankingInfoPdf.value);
-    // }
-
+    // {
+    //         // pdfFile:formData,
+    //         aml_course: form.value.aml_course,
+    //         omissions_insurance: form.value.omissions_insurance,
+    //         contactDetailData: contactDetailData.value,
+    //         legalFormData: legalFormData.value,
+    //         AddressHistoryData: AddressHistoryData.value,
+    //         additionalInfo: additionalInfoD.value,
+    //         residentLicensePdf: uploadLicensePdf.value,
+    //         bankingInfoPdf: uploadBankingInfoPdf.value,
+    //     },
 
     return axios
-        .post("/internal-agent/registration-steps", {
-            // pdfFile:formData,
-            aml_course: form.value.aml_course,
-            omissions_insurance: form.value.omissions_insurance,
-            contactDetailData: contactDetailData.value,
-            legalFormData: legalFormData.value,
-            AddressHistoryData: AddressHistoryData.value,
-            additionalInfo: additionalInfoD.value,
-            residentLicensePdf: uploadLicensePdf.value,
-            bankingInfoPdf: uploadBankingInfoPdf.value,
-        }, {
+        .post("/internal-agent/registration-steps",requestData, {
             headers: {
                 'Content-Type': 'multipart/form-data' // Set the content type to multipart/form-data
             }
