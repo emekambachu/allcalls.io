@@ -9,5 +9,6 @@ class InternalAgentAddress extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
+    protected $table = "internal_agent_addresses";
 
 }

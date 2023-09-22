@@ -33,7 +33,7 @@ class RegistrationStepController extends Controller
                 'errors' => $validator->errors(),
             ], 400);
         }
-//        DB::beginTransaction();
+        DB::beginTransaction();
         try {
             $basicInfo = InternalAgentRegInfo::where('user_id', auth()->user()->id)->first();
             if (!$basicInfo) {
@@ -44,7 +44,7 @@ class RegistrationStepController extends Controller
                     'middle_name' => isset($request->middle_name) ? $request->middle_name : null,
                     'ssn' => isset($request->ssn) ? $request->ssn : null,
                     'gender' => isset($request->gender) ? $request->gender : null,
-                    'dob' => isset($request->dob) ? $request->dob : null,
+                    'dob' => isset($request->dob) ? date('m/d/Y', strtotime($request->dob)) : null,
                     'martial_status' => isset($request->martial_status) ? $request->martial_status : null,
                     'cell_phone' => isset($request->cell_phone) ? $request->cell_phone : null,
                     'home_phone' => isset($request->home_phone) ? $request->home_phone : null,
@@ -55,7 +55,7 @@ class RegistrationStepController extends Controller
                     'address' => isset($request->address) ? $request->address : null,
                     'city_state' => isset($request->city_state) ? $request->city_state : null,
                     'zip' => isset($request->zip) ? $request->zip : null,
-                    'move_in_date' => isset($request->move_in_date) ? $request->move_in_date : null,
+                    'move_in_date' => isset($request->move_in_date) ? date('m/d/Y', strtotime($request->move_in_date))  : null,
                     'move_in_address' => isset($request->move_in_address) ? $request->move_in_address : null,
                     'move_in_city_state' => isset($request->move_in_city_state) ? $request->move_in_city_state : null,
                     'move_in_zip' => isset($request->move_in_zip) ? $request->move_in_zip : null,
@@ -75,7 +75,7 @@ class RegistrationStepController extends Controller
                     'business_address' => isset($request->business_address) ? $request->business_address : null,
                     'business_city_state' => isset($request->business_city_state) ? $request->business_city_state : null,
                     'business_zip' => isset($request->business_zip) ? $request->business_zip : null,
-                    'business_move_in_date' => isset($request->business_move_in_date) ? $request->business_move_in_date : null,
+                    'business_move_in_date' => isset($request->business_move_in_date) ? date('m/d/Y', strtotime($request->business_move_in_date))  : null,
                     'aml_course' => isset($request->aml_course) ? $request->aml_course : null,
                     'omissions_insurance' => isset($request->omissions_insurance) ? $request->omissions_insurance : null,
                 ]);
@@ -88,7 +88,7 @@ class RegistrationStepController extends Controller
                     'middle_name' => isset($request->middle_name) ? $request->middle_name : null,
                     'ssn' => isset($request->ssn) ? $request->ssn : null,
                     'gender' => isset($request->gender) ? $request->gender : null,
-                    'dob' => isset($request->dob) ? $request->dob : null,
+                    'dob' => isset($request->dob) ? date('m/d/Y', strtotime($request->dob))  : null,
                     'martial_status' => isset($request->martial_status) ? $request->martial_status : null,
                     'cell_phone' => isset($request->cell_phone) ? $request->cell_phone : null,
                     'home_phone' => isset($request->home_phone) ? $request->home_phone : null,
@@ -99,7 +99,7 @@ class RegistrationStepController extends Controller
                     'address' => isset($request->address) ? $request->address : null,
                     'city_state' => isset($request->city_state) ? $request->city_state : null,
                     'zip' => isset($request->zip) ? $request->zip : null,
-                    'move_in_date' => isset($request->move_in_date) ? $request->move_in_date : null,
+                    'move_in_date' => isset($request->move_in_date) ? date('m/d/Y', strtotime($request->move_in_date)) : null,
                     'move_in_address' => isset($request->move_in_address) ? $request->move_in_address : null,
                     'move_in_city_state' => isset($request->move_in_city_state) ? $request->move_in_city_state : null,
                     'move_in_zip' => isset($request->move_in_zip) ? $request->move_in_zip : null,
@@ -119,13 +119,13 @@ class RegistrationStepController extends Controller
                     'business_address' => isset($request->business_address) ? $request->business_address : null,
                     'business_city_state' => isset($request->business_city_state) ? $request->business_city_state : null,
                     'business_zip' => isset($request->business_zip) ? $request->business_zip : null,
-                    'business_move_in_date' => isset($request->business_move_in_date) ? $request->business_move_in_date : null,
+                    'business_move_in_date' => isset($request->business_move_in_date) ? date('m/d/Y', strtotime($request->business_move_in_date))  : null,
                     'aml_course' => isset($request->aml_course) ? $request->aml_course : null,
                     'omissions_insurance' => isset($request->omissions_insurance) ? $request->omissions_insurance : null,
                 ]);
             }
 
-            InternalAgentLegalQuestion::updateOrCreate(['reg_info_id' => $basicInfoId],[
+            InternalAgentLegalQuestion::updateOrCreate(['reg_info_id' => $basicInfoId], [
                 'convicted_checkbox_1' => isset($request->convicted_checkbox_1) ? $request->convicted_checkbox_1 : null,
                 'convicted_checkbox_1a' => isset($request->convicted_checkbox_1a) ? $request->convicted_checkbox_1a : null,
                 'convicted_checkbox_1b' => isset($request->convicted_checkbox_1b) ? $request->convicted_checkbox_1b : null,
@@ -170,13 +170,13 @@ class RegistrationStepController extends Controller
                 'unresolved_matter_checkbox_19' => isset($request->unresolved_matter_checkbox_19) ? $request->unresolved_matter_checkbox_19 : null,
             ]);
 
-            InternalAgentAdditionalInfo::updateOrCreate(['reg_info_id' => $basicInfoId],[
+            InternalAgentAdditionalInfo::updateOrCreate(['reg_info_id' => $basicInfoId], [
                 'resident_country' => isset($request->resident_country) ? $request->resident_country : null,
                 'resident_your_home' => isset($request->resident_your_home) ? $request->resident_your_home : null,
                 'resident_city_state' => isset($request->resident_city_state) ? $request->resident_city_state : null,
                 'resident_maiden_name' => isset($request->resident_maiden_name) ? $request->resident_maiden_name : null,
                 'aml_provider' => isset($request->aml_provider) ? $request->aml_provider : null,
-                'training_completion_date' => isset($request->training_completion_date) ? $request->training_completion_date : null,
+                'training_completion_date' => isset($request->training_completion_date) ? date('m/d/Y', strtotime($request->training_completion_date))  : null,
                 'limra_password' => isset($request->limra_password) ? $request->limra_password : null,
             ]);
 
@@ -188,8 +188,10 @@ class RegistrationStepController extends Controller
                     'address' => isset($request->history_address1['address']) ? $request->history_address1['address'] : null,
                     'city_state' => isset($request->history_address1['city']) ? $request->history_address1['city'] : null,
                     'zip' => isset($request->history_address1['zip_code']) ? $request->history_address1['zip_code'] : null,
-                    'move_in_date' => isset($request->history_address1['move_in_date']) ? $request->history_address1['move_in_date'] : null,
-                    'move_out_date' => isset($request->history_address1['move_out_date']) ? $request->history_address1['move_out_date'] : null,
+                    'move_in_date' => isset($request->history_address1['move_in_date']) ? date('m/d/Y', strtotime($request->history_address1['move_in_date']))  : null,
+                    'move_out_date' => isset($request->history_address1['move_out_date']) ? date('m/d/Y', strtotime($request->history_address1['move_out_date']))  : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -199,8 +201,10 @@ class RegistrationStepController extends Controller
                     'address' => isset($request->history_address2['address']) ? $request->history_address2['address'] : null,
                     'city_state' => isset($request->history_address2['city']) ? $request->history_address2['city'] : null,
                     'zip' => isset($request->history_address2['zip_code']) ? $request->history_address2['zip_code'] : null,
-                    'move_in_date' => isset($request->history_address2['move_in_date']) ? $request->history_address2['move_in_date'] : null,
-                    'move_out_date' => isset($request->history_address2['move_out_date']) ? $request->history_address2['move_out_date'] : null,
+                    'move_in_date' => isset($request->history_address2['move_in_date']) ? date('m/d/Y', strtotime($request->history_address2['move_in_date']))  : null,
+                    'move_out_date' => isset($request->history_address2['move_out_date']) ? date('m/d/Y', strtotime($request->history_address2['move_out_date']))  : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -210,8 +214,10 @@ class RegistrationStepController extends Controller
                     'address' => isset($request->history_address3['address']) ? $request->history_address3['address'] : null,
                     'city_state' => isset($request->history_address3['city']) ? $request->history_address3['city'] : null,
                     'zip' => isset($request->history_address3['zip_code']) ? $request->history_address3['zip_code'] : null,
-                    'move_in_date' => isset($request->history_address3['move_in_date']) ? $request->history_address3['move_in_date'] : null,
-                    'move_out_date' => isset($request->history_address3['move_out_date']) ? $request->history_address3['move_out_date'] : null,
+                    'move_in_date' => isset($request->history_address3['move_in_date']) ? date('m/d/Y', strtotime($request->history_address3['move_in_date']))   : null,
+                    'move_out_date' => isset($request->history_address3['move_out_date']) ? date('m/d/Y', strtotime($request->history_address3['move_out_date']))  : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -221,8 +227,10 @@ class RegistrationStepController extends Controller
                     'address' => isset($request->history_address4['address']) ? $request->history_address4['address'] : null,
                     'city_state' => isset($request->history_address4['city']) ? $request->history_address4['city'] : null,
                     'zip' => isset($request->history_address4['zip_code']) ? $request->history_address4['zip_code'] : null,
-                    'move_in_date' => isset($request->history_address4['move_in_date']) ? $request->history_address4['move_in_date'] : null,
-                    'move_out_date' => isset($request->history_address4['move_out_date']) ? $request->history_address4['move_out_date'] : null,
+                    'move_in_date' => isset($request->history_address4['move_in_date']) ? date('m/d/Y', strtotime($request->history_address4['move_in_date']))  : null,
+                    'move_out_date' => isset($request->history_address4['move_out_date']) ? date('m/d/Y', strtotime($request->history_address4['move_out_date'])) : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -232,8 +240,10 @@ class RegistrationStepController extends Controller
                     'address' => isset($request->history_address5['address']) ? $request->history_address5['address'] : null,
                     'city_state' => isset($request->history_address5['city']) ? $request->history_address5['city'] : null,
                     'zip' => isset($request->history_address5['zip_code']) ? $request->history_address5['zip_code'] : null,
-                    'move_in_date' => isset($request->history_address5['move_in_date']) ? $request->history_address5['move_in_date'] : null,
-                    'move_out_date' => isset($request->history_address5['move_out_date']) ? $request->history_address5['move_out_date'] : null,
+                    'move_in_date' => isset($request->history_address5['move_in_date']) ? date('m/d/Y', strtotime($request->history_address5['move_in_date']))  : null,
+                    'move_out_date' => isset($request->history_address5['move_out_date']) ? date('m/d/Y', strtotime($request->history_address5['move_out_date']))  : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -243,8 +253,10 @@ class RegistrationStepController extends Controller
                     'address' => isset($request->history_address6['address']) ? $request->history_address6['address'] : null,
                     'city_state' => isset($request->history_address6['city']) ? $request->history_address6['city'] : null,
                     'zip' => isset($request->history_address6['zip_code']) ? $request->history_address6['zip_code'] : null,
-                    'move_in_date' => isset($request->history_address6['move_in_date']) ? $request->history_address6['move_in_date'] : null,
-                    'move_out_date' => isset($request->history_address6['move_out_date']) ? $request->history_address6['move_out_date'] : null,
+                    'move_in_date' => isset($request->history_address6['move_in_date']) ? date('m/d/Y', strtotime($request->history_address6['move_in_date']))  : null,
+                    'move_out_date' => isset($request->history_address6['move_out_date']) ? date('m/d/Y', strtotime($request->history_address6['move_out_date']))  : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -254,44 +266,62 @@ class RegistrationStepController extends Controller
                     'address' => isset($request->history_address7['address']) ? $request->history_address7['address'] : null,
                     'city_state' => isset($request->history_address7['city']) ? $request->history_address7['city'] : null,
                     'zip' => isset($request->history_address7['zip_code']) ? $request->history_address7['zip_code'] : null,
-                    'move_in_date' => isset($request->history_address7['move_in_date']) ? $request->history_address7['move_in_date'] : null,
-                    'move_out_date' => isset($request->history_address7['move_out_date']) ? $request->history_address7['move_out_date'] : null,
+                    'move_in_date' => isset($request->history_address7['move_in_date']) ? date('m/d/Y', strtotime($request->history_address7['move_in_date'])) : null,
+                    'move_out_date' => isset($request->history_address7['move_out_date']) ? date('m/d/Y', strtotime($request->history_address7['move_out_date']))   : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
             if (count($addresses)) {
-                InternalAgentAddress::where('reg_info_id',$basicInfoId)->delete();
-                InternalAgentAddress::create($addresses);
+                InternalAgentAddress::where('reg_info_id', $basicInfoId)->delete();
+                DB::table('internal_agent_addresses')->insert($addresses);
             }
 
             if ($request->file('residentLicensePdf') && $request->file('residentLicensePdf')->isValid()) {
-                $path = $request->file('residentLicensePdf')->store('internal-agents/resident-license-pdf', 'local');
-                $name = $request->file('residentLicensePdf')->getClientOriginalName();
 
-                InternalAgentResidentLicense::updateOrCreate(['reg_info_id' => $basicInfoId],[
+                $residentPDf =  InternalAgentResidentLicense::where('reg_info_id', $basicInfoId)->first();
+                if ($residentPDf) {
+                    if (file_exists(asset('internal-agents/resident-license-pdf/' . $residentPDf->name))) {
+                        unlink(asset('internal-agents/resident-license-pdf/' . $residentPDf->name));
+                    }
+                    $residentPDf->delete();
+                }
+
+                $name = $request->file('residentLicensePdf')->getClientOriginalName();
+                $request->file('residentLicensePdf')->move(public_path('internal-agents/resident-license-pdf'), $name);
+                $path = asset('internal-agents/resident-license-pdf/' . $name);
+                InternalAgentResidentLicense::updateOrCreate(['reg_info_id' => $basicInfoId], [
                     'name' => $name,
                     'url' => $path,
                 ]);
             }
 
             if ($request->file('bankingInfoPdf') && $request->file('bankingInfoPdf')->isValid()) {
-                $path = $request->file('bankingInfoPdf')->store('internal-agents/banking-info', 'local');
-                $name = $request->file('bankingInfoPdf')->getClientOriginalName();
+                $bankingInfoPdf =  InternalAgentBankingInfo::where('reg_info_id', $basicInfoId)->first();
+                if ($bankingInfoPdf) {
+                    if (file_exists(asset('internal-agents/banking-info/' . $bankingInfoPdf->name))) {
+                        unlink(asset('internal-agents/banking-info/' . $bankingInfoPdf->name));
+                    }
+                    $bankingInfoPdf->delete();
+                }
 
-                InternalAgentBankingInfo::updateOrCreate(['reg_info_id' => $basicInfoId],[
+                $name = $request->file('bankingInfoPdf')->getClientOriginalName();
+                $request->file('bankingInfoPdf')->move(public_path('internal-agents/banking-info'), $name);
+                $path = asset('internal-agents/banking-info/' . $name);
+
+                InternalAgentBankingInfo::updateOrCreate(['reg_info_id' => $basicInfoId], [
                     'name' => $name,
                     'url' => $path,
                 ]);
             }
 
-//            DB::commit();
-
+            DB::commit();
             return Inertia::render('InternalAgent/ContractSteps')
                 ->with('message', 'Internal agent registration completed successfully.');
         } catch (\Exception $e) {
-//            DB::rollBack();
+            //            DB::rollBack();
             dd('error', $e->getMessage());
         }
     }
-
 }

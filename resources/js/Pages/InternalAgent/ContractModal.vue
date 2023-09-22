@@ -155,7 +155,7 @@ let AddressHistoryfun = (val) => {
 let additionalInfoD = ref(null)
 let additionalInformation = (val) => {
     additionalInfoD.value = val
-    // console.log('new values', additionalInfoD.value);
+    console.log('new values', additionalInfoD.value);
 }
 let uploadLicensePdf = ref(null)
 let uploadLicense = (val) => {
@@ -168,20 +168,14 @@ let uploadBankingInfo = (val) => {
 }
 let submit = () => {
 
-    // console.log('contactDetailData.value,', contactDetailData.value);
-    // console.log('legalFormData.value', legalFormData.value);
-    // console.log('AddressHistoryData.value', AddressHistoryData.value);
-    // console.log('additionalInfoD.value', additionalInfoD.value);
-    // console.log('uploadLicensePdf.value', uploadLicensePdf.value);
-    // console.log('uploadBankingInfoPdf.value', uploadBankingInfoPdf.value);
-
-
-    // return
-
     const requestData = {};
 
 // Merge all the individual data objects into the requestData object
-    Object.assign(requestData, form.value);
+
+    Object.assign(requestData, {
+        aml_course: form.value.aml_course ? 1 : 0, // Send 1 if true, 0 if false
+        omissions_insurance: form.value.omissions_insurance ? 1 : 0, // Send 1 if true, 0 if false
+    });
     Object.assign(requestData, contactDetailData.value);
     Object.assign(requestData, legalFormData.value);
     Object.assign(requestData, AddressHistoryData.value);
@@ -190,18 +184,6 @@ let submit = () => {
     requestData.bankingInfoPdf = uploadBankingInfoPdf.value;
 
     isLoading.value = true;
-
-    // {
-    //         // pdfFile:formData,
-    //         aml_course: form.value.aml_course,
-    //         omissions_insurance: form.value.omissions_insurance,
-    //         contactDetailData: contactDetailData.value,
-    //         legalFormData: legalFormData.value,
-    //         AddressHistoryData: AddressHistoryData.value,
-    //         additionalInfo: additionalInfoD.value,
-    //         residentLicensePdf: uploadLicensePdf.value,
-    //         bankingInfoPdf: uploadBankingInfoPdf.value,
-    //     },
 
     return axios
         .post("/internal-agent/registration-steps",requestData, {

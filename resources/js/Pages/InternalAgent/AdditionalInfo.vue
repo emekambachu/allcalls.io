@@ -1,18 +1,36 @@
 <script setup>
 import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
+import { format } from 'date-fns';
 let maxDate = ref(new Date)
-const selectedDate = computed({
-  get: () => form.training_completion_date,
-  set: (newValue) => {
-    // Set the selected date with the time portion set to midnight
-    form.training_completion_date = new Date(newValue.getFullYear(), newValue.getMonth(), newValue.getDate());
-  },
-});
 let form = ref({
     
 
 })
+
+const selectedDate = computed({
+  get: () => {
+    const date = form.value.training_completion_date;
+    // Check if the date is valid before formatting
+    if (date instanceof Date && !isNaN(date)) {
+      return format(date, "dd-MMM-yyyy");
+    } else {
+      return ""; // Return an empty string or another default value if the date is invalid
+    }
+  },
+  set: (newValue) => {
+    // Parse the new date string and set it in the correct format
+    const parsedDate = new Date(newValue);
+
+    // Check if the parsed date is valid before setting it
+    if (parsedDate instanceof Date && !isNaN(parsedDate)) {
+      form.value.training_completion_date = format(parsedDate, "dd-MMM-yyyy")  ;
+    } else {
+      console.error("Invalid date format");
+    }
+  },
+});
+
 const emits = defineEmits();
 watch(form.value, (newForm, oldForm) => {
     emits("additionalInfoData", newForm);
@@ -112,7 +130,7 @@ watch(form.value, (newForm, oldForm) => {
             </div>
             <div>
                 <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 dark:text-white">Training Completion Date</label>
-                <VueDatePicker v-model="selectedDate"  format="dd-MMM-yyyy" :maxDate="maxDate">
+                <VueDatePicker v-model="form.training_completion_date"  format="dd-MMM-yyyy" :maxDate="maxDate">
                 </VueDatePicker>
             </div>
             <div>

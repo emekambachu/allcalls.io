@@ -171,14 +171,14 @@ watch(page1form.value, (newForm, oldForm) => {
                 <div class="flex mt-4">
                     <div class="flex items-center mr-4">
                         <input :id="'default-radio-' + information.id + '-yes'" v-model="page1form[information.checbox]"
-                            :value="true" type="radio" :name="'question-' + information.id"
+                            value="YES" type="radio" :name="'question-' + information.id"
                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
                         <label :for="'default-radio-' + information.id + '-yes'"
                             class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">YES</label>
                     </div>
                     <div class="flex items-center">
                         <input :id="'default-radio-' + information.id + '-no'" v-model="page1form[information.checbox]"
-                            :value="false" type="radio" :name="'question-' + information.id"
+                            value="NO" type="radio" :name="'question-' + information.id"
                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
                         <label :for="'default-radio-' + information.id + '-no'"
                             class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">NO</label>
