@@ -1,11 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ActiveUsersController;
-use App\Http\Controllers\Admin\CustomerController;
-use App\Http\Controllers\ActiveUserChannelController;
-use App\Http\Controllers\Admin\InternalAgentController;
-use App\Http\Controllers\Admin\OnlineAgentsController;
+use App\Http\Controllers\Auth\InternalAgent\RegisteredInternalAgentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,8 +14,22 @@ use App\Http\Controllers\Admin\OnlineAgentsController;
 |
 */
 
+
 Route::prefix('internal-agent')->group(function () {
+
+    Route::get('register', [RegisteredInternalAgentController::class, 'create'])
+    ->name('register');
+    Route::post('register', [RegisteredInternalAgentController::class, 'store'])
+    ->name('register');
+   
+    
+   
+
     Route::middleware(['auth', 'verified', 'internal-agent'])->group(function () {
         //Internal Agents Routes
+        Route::get('contract-steps', [RegisteredInternalAgentController::class, 'contractSteps'])
+        ->name('contract-steps');
+        Route::post('register-steps', [RegisteredInternalAgentController::class, 'storeSteps'])
+        ->name('register-steps');
     });
 });

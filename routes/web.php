@@ -45,6 +45,9 @@ Route::get('/', function () {
 require __DIR__.'/auth.php';
 require 'admin.php';
 
+require __DIR__.'/auth.php';
+require 'internal-agent.php';
+
 Route::get('/transactions', [TransactionsController::class, 'index'])->middleware(['auth', 'verified','notBanned'])->name('transactions.index');
 Route::delete('/transactions/{transaction}', [TransactionsController::class, 'destroy'])->middleware(['auth', 'verified','notBanned'])->name('transactions.destroy');
 
