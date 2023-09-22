@@ -258,7 +258,6 @@ class RegistrationStepController extends Controller
                     'move_out_date' => isset($request->history_address7['move_out_date']) ? $request->history_address7['move_out_date'] : null,
                 ]);
             }
-dd($addresses);
 
             if (count($addresses)) {
                 InternalAgentAddress::where('reg_info_id',$basicInfoId)->delete();
