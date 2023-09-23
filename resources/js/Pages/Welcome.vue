@@ -37,14 +37,32 @@
   
   
   
-    video.addEventListener("mouseover", mouseOver);
-    video.addEventListener("mouseout", mouseOut);
+    video.addEventListener("mousemove", mouseOver);
+    video.addEventListener("mouseleave", mouseOut);
+    vid.addEventListener("ended", function(){
+      document.querySelector('#pauseButton').classList.add("displayNoneClass");
+      document.querySelector('#pauseButton').classList.remove("displayFlexClass");
+      document.querySelector('#finalPlay').classList.add("displayFlexClass");
+      document.querySelector('#finalPlay').classList.remove("displayNoneClass");
+    });
+    vid.addEventListener("pause", function(){
+        document.querySelector('#pauseButton').classList.add("displayNoneClass");
+        document.querySelector('#pauseButton').classList.remove("displayFlexClass");
+        document.querySelector('#finalPlay').classList.remove("displayNoneClass");
+        document.querySelector('#finalPlay').classList.add("displayFlexClass");
+    });
+    vid.addEventListener("play", function(){
+        document.querySelector('#finalPlay').classList.add("displayNoneClass");
+        document.querySelector('#pauseButton').classList.remove("displayNoneClass");
+        document.querySelector('#pauseButton').classList.add("displayFlexClass");
+        document.querySelector('#finalPlay').classList.remove("displayFlexClass");
+    });
+
     // pvid.addEventListener("click", playVid);
   
     fvideo.addEventListener("click", function() {
       
       setTimeout(() => {
-        // alert('here');
         fvideo.classList.add("hided");
       }, 3000);
       if (vid.paused == true) {
@@ -67,9 +85,17 @@
       }
     });
     
-  
+  var aaa
     function mouseOver() {
+    //  let aaa = '';
+     if(aaa){
+      clearTimeout(aaa);
+     } 
+     aaa =  setTimeout(() => {
+        fvideo.classList.add("hided");
+      }, 3000);
       fvideo.classList.remove("hided");
+      
     }
   
     function mouseOut() {
@@ -80,8 +106,18 @@
       vid.play(); 
     }
     // video.addEventListener("click", mouseOver);
+
+
+
+    vid.addEventListener("touchend", function() {
+      fvideo.classList.remove("hided");
+    });
   
   });
+
+
+
+  
   
   </script>
   
@@ -291,8 +327,8 @@
               <div class="video-wrapper" id="demo">
                 <div class="video-container" id="video-container">
                   <video @mouseover="mouseOver" controls id="video" preload="metadata">
-                    <!-- <source src="/video/file.mp4" type="video/mp4"> -->
-                    <source src="//cdn.jsdelivr.net/npm/big-buck-bunny-1080p@0.0.6/video.mp4" type="video/mp4">
+                    <source src="/video/file.mp4" type="video/mp4">
+                    <!-- <source src="//cdn.jsdelivr.net/npm/big-buck-bunny-1080p@0.0.6/video.mp4" type="video/mp4"> -->
 
                     
                   </video>
@@ -611,10 +647,10 @@
     margin-bottom: 90px;
   }
   .displayNoneClass{
-    display: none;
+    display: none !important;
   }
   .displayFlexClass{
-    display: flex;
+    display: flex !important;
   }
   @media (prefers-color-scheme: dark) {
     .dark\:bg-dots-lighter {
