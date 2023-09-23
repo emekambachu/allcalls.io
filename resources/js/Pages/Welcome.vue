@@ -303,7 +303,7 @@
                       <svg id="finalPlay" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80">
                         <path d="M40 0a40 40 0 1040 40A40 4000 0 0040 0zM26 61.56V18.44L64 40z" />
                       </svg>
-                      <img id="pauseButton" class="svgClass displayNoneClass" src="/img/pause.svg" alt="svg">
+                      <img id="pauseButton" class="svgClass displayNoneClass" src="/img/pause.png" alt="svg">
                     </div>
                   </div>
                 </div>
