@@ -47,28 +47,11 @@ watch(form.value, (newForm, oldForm) => {
 });
 </script>
 <style scoped>
-.input-custom {
-    background-color: #d3e4eb;
-    border: solid 2px #a7d4ea;
-    height: 35px;
-}
-
-.small-input-custom {
-    width: 35px;
-    margin-right: 5px;
-}
-
-.flex-container {
-    display: flex;
-}
-
-.flex-item {
-    text-align: center;
-    padding: 10px;
-    border: 1px solid #000;
-}
 </style>
 <template>
+    <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
+        New Producer Information
+    </h1>
     <div>
 
 

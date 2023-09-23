@@ -15,14 +15,8 @@ import BankInformationUpload from '@/Pages/InternalAgent/BankInformationUpload.v
 
 import { toaster } from "@/helper.js";
 let props = defineProps({
-    StepsModal: {
-        type: Boolean,
-    },
-
-    callTypes: Array,
-    states: Array,
 });
-
+let StepsModal = ref(true)
 let form = ref({
     aml_course: false,
     omissions_insurance: false
@@ -83,40 +77,13 @@ let goBack = () => {
 
 };
 
-let main_heading = ref('New Producer Information');
 let ChangeTab = () => {
-    contractStep.value += 1
-    if (contractStep.value === 1) {
-        main_heading.value = 'New Producer Information'
-    } else if (contractStep.value === 2 || contractStep.value === 3) {
-        main_heading.value = 'Legal Questions'
-    } else if (contractStep.value === 4) {
-        main_heading.value = 'Address History'
-    } else if (contractStep.value === 5) {
-        main_heading.value = 'Additional Information'
-    }
+    contractStep.value += 1  
 }
 let ChangeTabBack = () => {
     contractStep.value -= 1
-    if (contractStep.value === 1) {
-        main_heading.value = 'New Producer Information'
-    } else if (contractStep.value === 2 || contractStep.value === 3) {
-        main_heading.value = 'Legal Questions'
-    } else if (contractStep.value === 4) {
-        main_heading.value = 'Address History'
-    } else if (contractStep.value === 5) {
-        main_heading.value = 'Additional Information'
-    }
 }
-if (contractStep.value === 1) {
-    main_heading.value = 'New Producer Information'
-} else if (contractStep.value === 2 || contractStep.value === 3) {
-    main_heading.value = 'Legal Questions'
-} else if (contractStep.value === 4) {
-    main_heading.value = 'Address History'
-} else if (contractStep.value === 5) {
-    main_heading.value = 'Additional Information'
-}
+
 
 
 const isLoading = ref(false);
@@ -145,8 +112,6 @@ const updateLegalFormData = (val) => {
         ...legalFormData.value,
         ...val,
     };
-    //   console.log('what merge data', mergedData.value);
-    //   console.log('what merge legalFormData', legalFormData.value);
 };
 let AddressHistoryData = ref(null)
 let AddressHistoryfun = (val) => {
@@ -170,7 +135,7 @@ let submit = () => {
 
     const requestData = {};
 
-// Merge all the individual data objects into the requestData object
+    // Merge all the individual data objects into the requestData object
 
     Object.assign(requestData, {
         aml_course: form.value.aml_course ? 1 : 0, // Send 1 if true, 0 if false
@@ -186,7 +151,7 @@ let submit = () => {
     isLoading.value = true;
 
     return axios
-        .post("/internal-agent/registration-steps",requestData, {
+        .post("/internal-agent/registration-steps", requestData, {
             headers: {
                 'Content-Type': 'multipart/form-data' // Set the content type to multipart/form-data
             }
@@ -213,50 +178,9 @@ let submit = () => {
         });
 };
 
-// let submit = () => {
-//     isLoading.value = true;
 
-//     return axios
-//         .post("/internal-agent/register-steps", {
-//             aml_course:form.aml_course,
-//             contactDetail:contactDetail.value,
-//             contact_detail:mergedData.value,
-//             AddressHistoryData:AddressHistoryData.value,
-//             additionalInfoD:additionalInfoD.value,
-//             uploadLicensePdf:uploadLicensePdf.value
-//         })
-//         .then((response) => {
-//             close();
-//             toaster("success", response.data.message);
-//             router.visit("/dashboard");
-//             isLoading.value = false;
-//         })
-//         .catch((error) => {
-//             if (error.response) {
-//                 if (error.response.status === 400) {
-//                     firstStepErrors.value = error.response.data.errors;
-//                     isLoading.value = false;
-//                 } else {
-//                     console.log("Other errors", error.response.data);
-//                 }
-//             } else if (error.request) {
-//                 console.log("No response received", error.request);
-//             } else {
-//                 console.log("Error", error.message);
-//             }
-//         });
-// };
 </script>
 <style scoped>
-.active\:bg-gray-900:active {
-    color: white;
-}
-
-.hover\:drop-shadow-2xl:hover {
-    background-color: white;
-    color: black;
-}
-
 .button-custom {
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 150ms;
@@ -325,13 +249,6 @@ let submit = () => {
 
                         <Tabs :step="step" />
 
-
-
-                        <h1 v-show="step === 1" style="background-color: #134576;"
-                            class="mb-4	text-center rounded-md py-2 text-white">
-                            {{ main_heading }}
-                        </h1>
-
                         <div v-show="contractStep === 1" class="">
                             <StepTwo @updateFormData="updateFormData" />
                         </div>
@@ -342,7 +259,8 @@ let submit = () => {
                             <LegalInformation2 @updateFormData="updateLegalFormData" />
                         </div>
                         <div v-show="contractStep === 4">
-                            <AddressHistory @addRessHistory="AddressHistoryfun" />
+                            <AddressHistory @addRessHistory="AddressHistoryfun" @changeTab="ChangeTab()"
+                                @goback="ChangeTabBack()" />
                         </div>
                         <div v-show="contractStep === 5">
                             <AdditionalInfo @additionalInfoData="additionalInformation" />
@@ -352,9 +270,8 @@ let submit = () => {
                                 AML Course
                             </h1>
                             <div class="iframe-cls">
-                                <iframe
-                                    src="https://www.financialservicecareers.com/_files/ugd/0fb1f5_0a18cb8e43734547b1c42be4c1a0a52b.pdf"
-                                    width="100%" height="500px" frameborder="0"></iframe>
+                                <iframe src="https://secure.reged.com/Login/vu/VirtualUniversity/EQUIS" width="100%"
+                                    height="500px" frameborder="0"></iframe>
                             </div>
                             <div class="flex justify-between my-5">
                                 <div></div>
@@ -375,13 +292,15 @@ let submit = () => {
                             <iframe
                                 src="https://mga-eo.com/apply/nd/lh-eo?_ga=2.22742075.1083085069.1638818057-1601577075.1638818057"
                                 width="100%" height="500px" frameborder="0"></iframe>
-                                <div class="flex justify-between my-5">
+                            <div class="flex justify-between my-5">
                                 <div></div>
                                 <div>
-                                    <input id="link-omissions_insurance" v-model="form.omissions_insurance" type="checkbox" value=""
+                                    <input id="link-omissions_insurance" v-model="form.omissions_insurance" type="checkbox"
+                                        value=""
                                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                     <label for="link-omissions_insurance"
-                                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Errors and Omissions Insurances.</label>
+                                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Errors and
+                                        Omissions Insurances.</label>
                                 </div>
                             </div>
                         </div>
@@ -404,7 +323,7 @@ let submit = () => {
                                                 d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
                                         </svg>
                                         Step Back</a>
-                                    <a v-show="step != 2 && contractStep != 6 && contractStep != 1 && contractStep != 0"
+                                    <a v-show="step != 2 && contractStep != 6 && contractStep != 1 && contractStep != 0 && contractStep != 4"
                                         href="#" @click.prevent="ChangeTabBack"
                                         class="button-custom-back px-3 py-2 rounded-md">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -426,7 +345,7 @@ let submit = () => {
                                         @click.prevent="NextStep" class="button-custom px-3 py-2 rounded-md">
                                         Next Step
                                     </button>
-                                    <button v-show="contractStep != 5 && step === 1" type="button"
+                                    <button v-show="contractStep != 5 && step === 1 && contractStep != 4" type="button"
                                         @click.prevent="ChangeTab" class="button-custom px-3 py-2 rounded-md">
                                         Next
                                     </button>
@@ -443,4 +362,5 @@ let submit = () => {
                 </div>
             </div>
         </div>
-    </Transition></template>
+    </Transition>
+</template>

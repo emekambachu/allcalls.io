@@ -142,7 +142,7 @@ let LegalInformation = ref([
 ])
 
 let page1form = ref({
-    
+
 })
 const emits = defineEmits();
 watch(page1form.value, (newForm, oldForm) => {
@@ -150,6 +150,9 @@ watch(page1form.value, (newForm, oldForm) => {
 });
 </script>
 <template>
+    <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
+        Legal Questions
+    </h1>
     <div style="width:100%;" class="flex justify-around">
         <p> <strong>For contracting and appointment requests, please answer the following questions. If
                 you answer YES to any question, you must provide documentation including a full, detailed explanation and

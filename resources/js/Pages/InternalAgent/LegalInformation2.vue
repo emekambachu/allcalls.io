@@ -5,131 +5,132 @@ const props = defineProps({
     contractStep: String,
 });
 let LegalInformation = ref([
-    {   id:23,
-        checbox:'lawsuit_checkbox_8',
+    {
+        id: 23,
+        checbox: 'lawsuit_checkbox_8',
         heading: 'Has any lawsuit or claim ever been made against you, your surety company, or errors and omissions insurer, arising out of your sales or practices, or have you been refused surety bonding or E&O coverage?',
         question: '8'
     },
     {
-        id:24,
-        checbox:'lawsuit_checkbox_8a',
+        id: 24,
+        checbox: 'lawsuit_checkbox_8a',
         heading: 'Has a bonding or surety company ever denied, paid on, or revoked a bond for you? 8B. Has any Errors & Omissions company ever denied, paid claims on, or cancelled your coverage?',
         question: '8A'
     },
     {
-        id:25,
-        checbox:'lawsuit_checkbox_8b',
+        id: 25,
+        checbox: 'lawsuit_checkbox_8b',
         heading: 'Has any Errors & Ommisions company ever denied, paid claims on, or cancelled your coverage?',
         question: '8b'
     },
     {
-        id:26,
-        checbox:'license_denied_checkbox_9',
+        id: 26,
+        checbox: 'license_denied_checkbox_9',
         heading: 'Have you ever had an insurance or securities license denied, suspended, cancelled, or revoked?',
         question: '9'
     },
     {
-        id:27,
-        checbox:'regulatory_checkbox_10',
+        id: 27,
+        checbox: 'regulatory_checkbox_10',
         heading: 'Has any state or federal regulatory body found you to have been a cause of an investment or insurance-related business having its authorization to do business denied, suspended, revoked, or restricted?',
         question: '10'
     },
     {
-        id:28,
-        checbox:'regulatory_revoked_checkbox_11',
+        id: 28,
+        checbox: 'regulatory_revoked_checkbox_11',
         heading: 'Has any state or federal regulatory agency revoked or suspended your license as an attorney, accountant, or federal contractor?',
         question: '11'
     },
     {
-        id:29,
-        checbox:'regulatory_found_checkbox_12',
+        id: 29,
+        checbox: 'regulatory_found_checkbox_12',
         heading: 'Has any state or federal regulatory agency found you to have made a false statement or omission or been dishonest, unfair, or unethical?',
         question: '12'
     },
     {
-        id:30,
-        checbox:'interr_licensing_checkbox_13',
+        id: 30,
+        checbox: 'interr_licensing_checkbox_13',
         heading: 'Have you ever had any interruptions in licensing?',
         question: '13'
     },
     {
-        id:31,
-        checbox:'self_regularity_checkbox_14',
+        id: 31,
+        checbox: 'self_regularity_checkbox_14',
         heading: 'Has any state, federal, or self-regulatory agency filed a complaint against you, fined, sanctioned, censured, penalized, or otherwise disciplined you for a violation of their regulations or state or federal statuses?',
         question: '14'
     },
     {
-        id:32,
-        checbox:'self_regularity_checkbox_14a',
+        id: 32,
+        checbox: 'self_regularity_checkbox_14a',
         heading: 'Has any regulatory body ever sanctioned, censured, penalized, or otherwise disciplined you?',
         question: '14A'
     },
     {
-        id:33,
-        checbox:'self_regularity_checkbox_14b',
+        id: 33,
+        checbox: 'self_regularity_checkbox_14b',
         heading: 'Has any state, federal, or self-regulatory agency filed a complaint against you, fined, or sanctioned you?',
         question: '14B'
     },
     {
-        id:34,
-        checbox:'self_regularity_checkbox_14c',
+        id: 34,
+        checbox: 'self_regularity_checkbox_14c',
         heading: 'Have you ever been the subject of a consumer-initiated complaint?',
         question: '14C'
     },
     {
-        id:35,
-        checbox:'bankruptcy_checkbox_15',
+        id: 35,
+        checbox: 'bankruptcy_checkbox_15',
         heading: 'Have you personally, or any insurance or securities brokerage firm with whom you have been associated, filed a bankruptcy petition, or declared bankruptcy? 15A. Have you personally filed a bankruptcy petition or declared bankruptcy?',
         question: '15'
     },
     {
-        id:36,
-        checbox:'bankruptcy_checkbox_15a',
+        id: 36,
+        checbox: 'bankruptcy_checkbox_15a',
         heading: 'Have you personally, or any insurance or securities brokerage firm with whom you have been associated, filed a bankruptcy petition, or declared bankruptcy? 15A. Have you personally filed a bankruptcy petition or declared bankruptcy?',
         question: '15a'
     },
     {
-        id:37,
-        checbox:'bankruptcy_checkbox_15b',
+        id: 37,
+        checbox: 'bankruptcy_checkbox_15b',
         heading: 'Has any insurance or securities brokerage firm, with whom you have been associated, filed a bankruptcy petition, or been declared bankrupt, either during your association with them or within 5 years after termination of such an association?',
         question: '15B'
     },
     {
-        id:38,
-        checbox:'bankruptcy_checkbox_15c',
+        id: 38,
+        checbox: 'bankruptcy_checkbox_15c',
         heading: 'Is the bankruptcy pending?',
         question: '15C'
     },
     {
-        id:39,
-        checbox:'liens_against_checkbox_16',
+        id: 39,
+        checbox: 'liens_against_checkbox_16',
         heading: 'Are there any unsatisfied judgements or liens against you?',
         question: '16'
     },
     {
-        id:40,
-        checbox:'connected_checkbox_17',
+        id: 40,
+        checbox: 'connected_checkbox_17',
         heading: 'Are you connected in any way with a bank, savings & loan association, or other lending or financial institution?',
         question: '17'
     },
     {
-        id:41,
-        checbox:'aliases_checkbox_18',
+        id: 41,
+        checbox: 'aliases_checkbox_18',
         heading: 'Have you ever used any other names or aliases?',
         question: '18'
     },
     {
-        id:42,
-        checbox:'unresolved_matter_checkbox_19',
+        id: 42,
+        checbox: 'unresolved_matter_checkbox_19',
         heading: 'Do you have any unresolved matters pending with the Internal Revenue Service, or other taxing authority?',
         question: '19'
     },
-    
-    
+
+
 
 ])
-let page2form  = ref({
-    
+let page2form = ref({
+
 })
 const emits = defineEmits();
 watch(page2form.value, (newForm, oldForm) => {
@@ -137,8 +138,13 @@ watch(page2form.value, (newForm, oldForm) => {
 });
 </script>
 <template>
+    <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
+        Legal Questions
+    </h1>
     <div style="width:100%;" class="flex justify-around">
-        <p > <strong>For contracting and appointment requests, please answer the following questions. If you answer YES to any question, you must provide documentation including a full, detailed explanation and specific dates. Please answer every question including subquestions for clarity.</strong></p>
+        <p> <strong>For contracting and appointment requests, please answer the following questions. If you answer YES to
+                any question, you must provide documentation including a full, detailed explanation and specific dates.
+                Please answer every question including subquestions for clarity.</strong></p>
     </div>
 
     <hr class="w-100 h-1 my-4 bg-gray-600 border-0 rounded dark:bg-gray-700">
@@ -175,7 +181,7 @@ watch(page2form.value, (newForm, oldForm) => {
     </div>
 
     <div style="width:100%;" class="flex justify-around">
-        <p > <strong>I attest that the information I have provided is true to the best of my knowledge. I acknowledge that if any information changes, I will notify my agency office within 5 days of such change. Further, I understand that my agency may contact me when I need to answer carrier-specific questions.</strong></p>
-    </div>
-    
-</template>
+        <p> <strong>I attest that the information I have provided is true to the best of my knowledge. I acknowledge that if
+                any information changes, I will notify my agency office within 5 days of such change. Further, I understand
+            that my agency may contact me when I need to answer carrier-specific questions.</strong></p>
+</div></template>

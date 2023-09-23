@@ -2,6 +2,7 @@
 import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 let maxDate = ref(new Date)
+const emits = defineEmits();
 let addres_history = ref([
     {
         address: 'history_address1',
@@ -35,56 +36,116 @@ let form = ref({
     history_address6: {},
     history_address7: {},
 })
-const emits = defineEmits();
+let hasValidationErrors = ref({});
+const ChangeTab = () => {
+    hasValidationErrors.value = {};
+    for (const history of addres_history.value) {
+        const formData = form.value[history.address];
+        if (Object.keys(formData).length != 0) {
+            if (!formData.address || !formData.city || !formData.zip_code) {
+                hasValidationErrors.value[history.address] = {
+                    address: !formData.address,
+                    city: !formData.city,
+                    zip_code: !formData.zip_code,
+                };
+                return; // Stop tab change
+            }
+        } else {
+            emits("changeTab");
+            return
+        }
+
+    }
+}
+let ChangeTabBack = () => {
+    emits("goback");
+}
 watch(form.value, (newForm, oldForm) => {
     emits("addRessHistory", newForm);
 });
 </script>
 <style scoped>
-.input-custom {
-    background-color: #d3e4eb;
-    border: solid 2px #a7d4ea;
-    height: 35px;
+.button-custom {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 600;
+    border-width: 1px;
+    align-items: center;
+    display: inline-flex;
+    border-color: rgb(107 114 128 / var(--tw-border-opacity));
+    background-color: #03243d;
+    color: #3cfa7a;
+    cursor: pointer;
 }
 
-.small-input-custom {
-    width: 35px;
-    margin-right: 5px;
+.button-custom:hover {
+    transition-duration: 150ms;
+    background-color: white;
+    color: black;
 }
 
-.flex-container {
-    display: flex;
+.button-custom-back {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 600;
+    border-width: 1px;
+    align-items: center;
+    display: inline-flex;
+    border-color: rgb(107 114 128 / var(--tw-border-opacity));
 }
 
-.flex-item {
-    text-align: center;
-    padding: 10px;
-    border: 1px solid #000;
+.button-custom-back:hover {
+    background-color: #03243d;
+    color: #3cfa7a;
+    transition-duration: 150ms;
 }
 </style>
 <template>
+    <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
+        Address History
+    </h1>
     <div v-for="(history, index) in addres_history" :key="history.id">
 
         <div class="grid lg:grid-cols-3 mb-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
             <div>
-                <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Home Address</label>
+                <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Home
+                    Address</label>
                 <div>
                     <input type="text" v-model="form[history.address].address" id="default-input"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <span style="font-size: 14px;">Include Apt/Unit #</span>
                 </div>
+                <div v-if="hasValidationErrors[history.address]">
+                    <span v-if="hasValidationErrors[history.address].address" class="text-red-600">Home Address is
+                        required</span>
+                </div>
             </div>
+
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">City,
                     State</label>
                 <input type="text" v-model="form[history.address].city" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <div v-if="hasValidationErrors[history.address]">
+                    <span v-if="hasValidationErrors[history.address].city" class="text-red-600">City, State is
+                        required</span>
+                </div>
             </div>
+
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Zip Code</label>
                 <input type="text" v-model="form[history.address].zip_code" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <div v-if="hasValidationErrors[history.address]">
+                    <span v-if="hasValidationErrors[history.address].zip_code" class="text-red-600">Zip Code is
+                        required</span>
+                </div>
             </div>
+
         </div>
 
         <div class="grid lg:grid-cols-3 mb-2 md:grid-cols-2 sm:grid-cols-1 mt-3 gap-4">
@@ -101,6 +162,27 @@ watch(form.value, (newForm, oldForm) => {
                 </VueDatePicker>
             </div>
         </div>
+
         <hr class="w-100 h-1 my-4 bg-gray-600 border-0 rounded dark:bg-gray-700">
+    </div>
+    <div class="px-5 pb-6">
+        <div class="flex justify-between flex-wrap">
+            <div class="mt-4">
+
+                <button type="button" @click.prevent="ChangeTabBack" class="button-custom-back px-3 py-2 rounded-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-4 h-4 mr-2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
+                    </svg>
+                    Back
+                </button>
+            </div>
+            <div class="mt-4">
+                <button type="button" @click="ChangeTab" class="button-custom px-3 py-2 rounded-md">
+                    Next
+                </button>
+
+            </div>
+        </div>
     </div>
 </template>
