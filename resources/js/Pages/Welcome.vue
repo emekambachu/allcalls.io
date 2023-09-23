@@ -32,7 +32,7 @@
     var video = document.querySelector("#demo");
     var fvideo = document.querySelector("#playButton");
     var vid = document.querySelector("#video");
-    var pvid = document.querySelector("#circle-play-b");
+    // var pvid = document.querySelector("#circle-play-b");
     var finalPlay = document.querySelector("#finalPaly");
   
   
@@ -41,7 +41,12 @@
     video.addEventListener("mouseout", mouseOut);
     // pvid.addEventListener("click", playVid);
   
-    pvid.addEventListener("click", function() {
+    fvideo.addEventListener("click", function() {
+      
+      setTimeout(() => {
+        // alert('here');
+        fvideo.classList.add("hided");
+      }, 3000);
       if (vid.paused == true) {
         // Play the video
         vid.play();
@@ -74,6 +79,7 @@
       fvideo.classList.add("hided");
       vid.play(); 
     }
+    // video.addEventListener("click", mouseOver);
   
   });
   
@@ -285,7 +291,10 @@
               <div class="video-wrapper" id="demo">
                 <div class="video-container" id="video-container">
                   <video @mouseover="mouseOver" controls id="video" preload="metadata">
-                    <source src="/video/file.mp4" type="video/mp4">
+                    <!-- <source src="/video/file.mp4" type="video/mp4"> -->
+                    <source src="//cdn.jsdelivr.net/npm/big-buck-bunny-1080p@0.0.6/video.mp4" type="video/mp4">
+
+                    
                   </video>
               
                   <div class="play-button-wrapper hided" id="playButton">
