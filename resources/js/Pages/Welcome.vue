@@ -1,11 +1,12 @@
 <script setup>
 import { Head, Link } from "@inertiajs/vue3";
-import { onMounted, onBeforeUnmount, ref } from "vue";
+import  { onMounted, onBeforeUnmount, ref } from "vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import Footer from "@/Components/Footer.vue";
 import ScrollAnimation from "@/Components/ScrollAnimation.vue";
 import DownloadAppModal from "@/Components/DownloadAppModal.vue";
+
 defineProps({
   canLogin: {
     type: Boolean,
@@ -25,6 +26,52 @@ defineProps({
 let appDownloadModal = ref(false)
 // Define a reactive property for v-show
 const showHamburger = ref(false);
+
+onMounted(() => {
+
+  var video = document.querySelector("#demo");
+  var fvideo = document.querySelector("#playButton");
+  var vid = document.querySelector("#video");
+  var pvid = document.querySelector("#circle-play-b");
+
+
+
+  video.addEventListener("mouseover", mouseOver);
+  video.addEventListener("mouseout", mouseOut);
+  // pvid.addEventListener("click", playVid);
+
+  pvid.addEventListener("click", function() {
+    fvideo.classList.remove("hided");
+  if (vid.paused == true) {
+    // Play the video
+    vid.play();
+
+    // Update the button text to 'Pause'
+    playPause.classList.toggle('pause');
+  } else {
+    // Pause the video
+    vid.pause();
+
+    // Update the button text to 'Play'
+   playPause.classList.toggle('pause');
+  }
+});
+  
+
+  function mouseOver() {
+    fvideo.classList.remove("hided");
+  }
+
+  function mouseOut() {
+    fvideo.classList.add("hided");
+  }
+  function playVid() { 
+    fvideo.classList.add("hided");
+    vid.play(); 
+  }
+
+});
+
 </script>
 
 <template>
@@ -230,7 +277,22 @@ const showHamburger = ref(false);
 
         <div class="secTwo__why">
           <div class="secTwo__why-l">
-            <img src="/img/video-mask.png" alt="" />
+            <div class="video-wrapper" id="demo">
+              <div class="video-container" id="video-container">
+                <video @mouseover="mouseOver" controls id="video" preload="metadata" poster="//cdn.jsdelivr.net/npm/big-buck-bunny-1080p@0.0.6/poster.jpg">
+                  <source src="//cdn.jsdelivr.net/npm/big-buck-bunny-1080p@0.0.6/video.mp4" type="video/mp4">
+                </video>
+            
+                <div class="play-button-wrapper hided" id="playButton">
+                  <div title="Play video" class="play-gif" id="circle-play-b">
+                    <!-- SVG Play Button -->
+                    <svg id="finalPlay" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80">
+                      <path d="M40 0a40 40 0 1040 40A40 4000 0 0040 0zM26 61.56V18.44L64 40z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="secTwo__why-r">
             <div class="secTwo__title">Why Choose AllCalls.io</div>
@@ -476,6 +538,58 @@ const showHamburger = ref(false);
 <style>
 .bg-dots-darker {
   background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.22676 0C1.91374 0 2.45351 0.539773 2.45351 1.22676C2.45351 1.91374 1.91374 2.45351 1.22676 2.45351C0.539773 2.45351 0 1.91374 0 1.22676C0 0.539773 0.539773 0 1.22676 0Z' fill='rgba(0,0,0,0.07)'/%3E%3C/svg%3E");
+}
+.video-container {
+	 width: 640px;
+	 border-radius: 4px;
+	 margin: 0 auto;
+	 position: relative;
+	 display: flex;
+	 flex-direction: column;
+	 justify-content: center;
+	 box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.4);
+}
+ .video-container .video-wrapper {
+	 width: 100%;
+	 height: 100%;
+	 display: flex;
+	 justify-content: center;
+	 align-items: center;
+}
+ .video-container video {
+	 width: 100%;
+	 height: 100%;
+	 border-radius: 4px;
+}
+ .play-button-wrapper {
+	 position: absolute;
+	 top: 0;
+	 left: 0;
+	 right: 0;
+	 bottom: 0;
+	 display: flex;
+	 align-items: center;
+	 justify-content: center;
+	 width: 100%;
+	 height: auto;
+	 pointer-events: none;
+}
+ .play-button-wrapper #circle-play-b {
+	 cursor: pointer;
+	 pointer-events: auto;
+}
+ .play-button-wrapper #circle-play-b svg {
+	 width: 100px;
+	 height: 100px;
+	 fill: #fff;
+	 stroke: #fff;
+	 cursor: pointer;
+	 background-color: rgba(0, 0, 0, 0.2);
+	 border-radius: 50%;
+	 opacity: 0.9;
+}
+.hided{
+  display: none;
 }
 @media (prefers-color-scheme: dark) {
   .dark\:bg-dots-lighter {
