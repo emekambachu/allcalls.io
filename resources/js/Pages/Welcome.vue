@@ -57,7 +57,6 @@
         document.querySelector('#pauseButton').classList.add("displayNoneClass");
         document.querySelector('#pauseButton').classList.remove("displayFlexClass");
         document.querySelector('#finalPlay').classList.remove("displayNoneClass");
-
         document.querySelector('#finalPlay').classList.add("displayFlexClass");
 
       }
