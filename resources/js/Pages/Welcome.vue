@@ -279,8 +279,8 @@ onMounted(() => {
           <div class="secTwo__why-l">
             <div class="video-wrapper" id="demo">
               <div class="video-container" id="video-container">
-                <video @mouseover="mouseOver" controls id="video" preload="metadata" poster="//cdn.jsdelivr.net/npm/big-buck-bunny-1080p@0.0.6/poster.jpg">
-                  <source src="//cdn.jsdelivr.net/npm/big-buck-bunny-1080p@0.0.6/video.mp4" type="video/mp4">
+                <video @mouseover="mouseOver" controls id="video" preload="metadata">
+                  <source src="/video/file.mp4" type="video/mp4">
                 </video>
             
                 <div class="play-button-wrapper hided" id="playButton">
@@ -540,7 +540,7 @@ onMounted(() => {
   background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.22676 0C1.91374 0 2.45351 0.539773 2.45351 1.22676C2.45351 1.91374 1.91374 2.45351 1.22676 2.45351C0.539773 2.45351 0 1.91374 0 1.22676C0 0.539773 0.539773 0 1.22676 0Z' fill='rgba(0,0,0,0.07)'/%3E%3C/svg%3E");
 }
 .video-container {
-	 width: 640px;
+	 max-width: 640px;
 	 border-radius: 4px;
 	 margin: 0 auto;
 	 position: relative;
