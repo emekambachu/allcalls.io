@@ -2,15 +2,21 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Models\Role;
 use Exception;
+use Carbon\Carbon;
 use App\Models\Bid;
+use App\Models\Call;
+use App\Models\Role;
 use App\Models\User;
 use Inertia\Inertia;
 use App\Models\State;
 use Inertia\Response;
+use App\Models\Client;
 use App\Models\CallType;
+use App\Models\AgentInvite;
 use Illuminate\Http\Request;
+use App\Rules\CallTypeIdEixst;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -20,23 +26,22 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Auth\Events\Registered;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
-use Carbon\Carbon;
-use App\Models\Client;
-use App\Models\Call;
-use App\Rules\CallTypeIdEixst;
 
 class RegisteredUserController extends Controller
 {
     /**
      * Display the registration view.
      */
-    public function create(): Response
+    public function create(Request $request): Response
     {
         $callTypes = CallType::all();
         $states = State::all();
-        return Inertia::render('Auth/Register', compact('callTypes', 'states'));
+        return Inertia::render('Auth/Register', [
+            'callTypes' => $callTypes,
+            'states' => $states,
+            'agentToken' => $request->agentToken ?? null,
+        ]);
     }
 
     public function validateStepOne(Request $request)
@@ -94,6 +99,13 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        if ($request->agentToken && AgentInvite::verify($request->agentToken)) {
+            $user->markEmailAsVerified();
+
+            $agentRole = Role::whereName('internal-agent')->first(); 
+            $user->roles()->attach($agentRole->id);
+        }
+
         Auth::login($user);
 
         event(new Registered($user));
@@ -140,6 +152,16 @@ class RegisteredUserController extends Controller
         $callTypes = CallType::all();
         $states = State::all();
 
+        $isInternalAgent = false;
+        if ($request->agentToken) {
+            $invite = AgentInvite::where('token', $request->agentToken)->where('used', true)->first();
+
+            if ($invite) {
+                $isInternalAgent = true;
+            }
+        }
+
+
         return Inertia::render('Auth/RegistrationSteps', [
             'callTypes' => $callTypes,
             'states' => $states,
@@ -148,6 +170,7 @@ class RegisteredUserController extends Controller
             'totalCalls' => $totalCalls,
             'totalAmountSpent' => $totalAmountSpent,
             'averageCallDuration' => $averageCallDuration,
+            'isInternalAgent' => $isInternalAgent,
         ]);
     }
 

@@ -73,7 +73,12 @@ let generateInvite = () => {
                         <tbody>
                             <tr class="border-b border-gray-500" v-for="agentInvite in agentInvites" :key="agentInvite.id">
                                 <td class="text-gray-600 px-4 py-3" v-text="agentInvite.id"></td>
-                                <td class="text-gray-600 px-4 py-3" v-text="`${baseUrl}?token=${agentInvite.token}`"></td>
+                                <td class="text-gray-600 px-4 py-3">
+                                    <a class="text-blue-500 hover:text-blue-700 hover:underline"
+                                        target="_blank"
+                                        :href="`${baseUrl}/register?agentToken=${agentInvite.token}`"
+                                        v-text="`${baseUrl}/register?agentToken=${agentInvite.token}`"></a>
+                                </td>
                                 <td class="text-gray-600 px-4 py-3">
                                     <span v-if="agentInvite.used">
                                         Used
