@@ -42,6 +42,10 @@ const ChangeTab = () => {
     for (const history of addres_history.value) {
         const formData = form.value[history.address];
         if (Object.keys(formData).length != 0) {
+            if(formData.address === '' && formData.address === '' &&  formData.address === '' ){
+                emits("changeTab");
+                return
+            }
             if (!formData.address || !formData.city || !formData.zip_code) {
                 hasValidationErrors.value[history.address] = {
                     address: !formData.address,

@@ -3,7 +3,7 @@ import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
 import InputError from "@/Components/InputError.vue";
 import { router } from "@inertiajs/vue3";
 import { Head, Link, useForm } from "@inertiajs/vue3";
-import StepTwo from "@/Pages/InternalAgent/StepTwo.vue";
+import ContactDetail from "@/Pages/InternalAgent/ContactDetail.vue";
 import Tabs from '@/Pages/InternalAgent/Tabs.vue'
 import LegalInformation from '@/Pages/InternalAgent/LegalInformation.vue'
 import LegalInformation2 from '@/Pages/InternalAgent/LegalInformation2.vue'
@@ -78,7 +78,7 @@ let goBack = () => {
 };
 
 let ChangeTab = () => {
-    contractStep.value += 1  
+    contractStep.value += 1
 }
 let ChangeTabBack = () => {
     contractStep.value -= 1
@@ -167,6 +167,8 @@ let submit = () => {
                 if (error.response.status === 400) {
                     firstStepErrors.value = error.response.data.errors;
                     isLoading.value = false;
+                    step.value = 1
+                    contractStep.value = 1
                 } else {
                     console.log("Other errors", error.response.data);
                 }
@@ -250,7 +252,7 @@ let submit = () => {
                         <Tabs :step="step" />
 
                         <div v-show="contractStep === 1" class="">
-                            <StepTwo @updateFormData="updateFormData" />
+                            <ContactDetail @updateFormData="updateFormData" :firstStepErrors="firstStepErrors" />
                         </div>
                         <div v-show="contractStep === 2">
                             <LegalInformation @updateFormData="updateLegalFormData" />
@@ -269,9 +271,26 @@ let submit = () => {
                             <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
                                 AML Course
                             </h1>
-                            <div class="iframe-cls">
-                                <iframe src="https://secure.reged.com/Login/vu/VirtualUniversity/EQUIS" width="100%"
-                                    height="500px" frameborder="0"></iframe>
+                           
+
+                            <div class="bg-blue-50 py-10 px-6 rounded-lg shadow-md">
+                                <div class="mb-4">
+                                    <a target="_blank"
+                                        href="https://www.financialservicecareers.com/_files/ugd/0fb1f5_0a18cb8e43734547b1c42be4c1a0a52b.pdf"
+                                        >
+                                        <strong class="text-blue-600 mr-1 hover:underline">Detailed PDF Guide</strong> 
+                                    </a>outlining the required steps within the AML
+                                        course.
+                                </div>
+                                <div class="mb-4">
+                                    <a target="_blank" href="https://secure.reged.com/Login/vu/VirtualUniversity/EQUIS"
+                                        >
+                                        <strong class="text-blue-600 mr-1  hover:underline">Click Here</strong> 
+                                    </a> <span >for the registration and course completion</span>
+                                </div>
+                                <div class="text-gray-600">
+                                    Please download PDF for course completion after completing the course.
+                                </div>
                             </div>
                             <div class="flex justify-between my-5">
                                 <div></div>
@@ -289,9 +308,18 @@ let submit = () => {
                             <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
                                 Errors and Omissions Insurances
                             </h1>
-                            <iframe
-                                src="https://mga-eo.com/apply/nd/lh-eo?_ga=2.22742075.1083085069.1638818057-1601577075.1638818057"
-                                width="100%" height="500px" frameborder="0"></iframe>
+                            <div class="bg-blue-50 py-10 px-6 rounded-lg shadow-md">
+                                <div class="text-gray-600 mb-4">
+                                    Complete the sign-up process and apply for Errors and Omissions Insurance.
+                                </div>
+                                <div class="mb-4">
+                                    <a target="_blank"
+                                        href="https://mga-eo.com/apply/nd/lh-eo?_ga=2.22742075.1083085069.1638818057-1601577075.1638818057"
+                                        >
+                                        <strong class="text-blue-600 mr-1 hover:underline">MGA E&O Insurance Application </strong> 
+                                    </a>for registration and application.
+                                </div>
+                            </div>
                             <div class="flex justify-between my-5">
                                 <div></div>
                                 <div>

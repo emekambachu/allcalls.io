@@ -1,6 +1,9 @@
 <script setup>
 import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
+let props = defineProps({
+    firstStepErrors:Object,
+});
 let maxDate = ref(new Date)
 let form = ref({
     first_name: null,
@@ -46,8 +49,7 @@ watch(form.value, (newForm, oldForm) => {
     emits("updateFormData", newForm);
 });
 </script>
-<style scoped>
-</style>
+<style scoped></style>
 <template>
     <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
         New Producer Information
@@ -61,18 +63,21 @@ watch(form.value, (newForm, oldForm) => {
                     Name</label>
                 <input type="text" v-model="form.last_name" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <div v-if="firstStepErrors.last_name" class="text-red-500" v-text="firstStepErrors.last_name[0]"></div>
             </div>
             <div>
                 <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First
                     Name</label>
                 <input type="text" v-model="form.first_name" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <div v-if="firstStepErrors.first_name" class="text-red-500" v-text="firstStepErrors.first_name[0]"></div>
             </div>
             <div>
                 <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Middle
                     Name</label>
                 <input type="text" v-model="form.middle_name" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <div v-if="firstStepErrors.middle_name" class="text-red-500" v-text="firstStepErrors.middle_name[0]"></div>
             </div>
         </div>
 
@@ -98,6 +103,7 @@ watch(form.value, (newForm, oldForm) => {
                     Birth</label>
                 <VueDatePicker v-model="form.dob" format="dd-MMM-yyyy" :maxDate="maxDate"></VueDatePicker>
             </div>
+            <div v-if="firstStepErrors.dob" class="text-red-500" v-text="firstStepErrors.dob[0]"></div>
         </div>
 
         <div class="grid lg:grid-cols-3 mb-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
@@ -106,17 +112,20 @@ watch(form.value, (newForm, oldForm) => {
                     Phone</label>
                 <input type="text" v-model="form.cell_phone" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <div v-if="firstStepErrors.cell_phone" class="text-red-500" v-text="firstStepErrors.cell_phone[0]"></div>
             </div>
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Home
                     Phone</label>
                 <input type="text" v-model="form.home_phone" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <div v-if="firstStepErrors.home_phone" class="text-red-500" v-text="firstStepErrors.home_phone[0]"></div>
             </div>
             <div>
                 <label for="middle_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Fax</label>
                 <input type="text" v-model="form.fax" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <div v-if="firstStepErrors.fax" class="text-red-500" v-text="firstStepErrors.fax[0]"></div>
             </div>
         </div>
 
@@ -125,6 +134,7 @@ watch(form.value, (newForm, oldForm) => {
                 <label for="middle_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Email</label>
                 <input type="text" v-model="form.email" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <div v-if="firstStepErrors.email" class="text-red-500" v-text="firstStepErrors.email[0]"></div>
             </div>
 
             <div>
@@ -136,6 +146,7 @@ watch(form.value, (newForm, oldForm) => {
                     <option value="married">Married</option>
                     <option value="unmarried">UnMarried</option>
                 </select>
+                <div v-if="firstStepErrors.martial_status" class="text-red-500" v-text="firstStepErrors.martial_status[0]"></div>
             </div>
 
         </div>
