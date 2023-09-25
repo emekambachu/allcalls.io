@@ -15,6 +15,7 @@ let props = defineProps({
 
   callTypes: Array,
   states: Array,
+  agentToken: String,
 });
 let stateOptions = computed(() => {
   return props.states.map((state) => {
@@ -176,29 +177,57 @@ let submit = () => {
       <div class="relative w-full max-w-md max-h-full mx-auto">
         <div class="relative bg-white rounded-lg shadow-lg">
           <div>
-            <div v-if="step === 0" class="pt-6">
+            <!-- Step 0 -->
+            <div v-if="step === 0 && !agentToken" class="pt-6">
               <div class="px-12 py-2">
                 <p class="text-gray-700 text-lg text-left leading-relaxed">
-                  Our dynamic bidding system allows you to set a maximum bid for each type
-                  of call you're interested in as you configure your account.
+                  Our dynamic bidding system allows you to set a maximum bid for
+                  each type of call you're interested in as you configure your
+                  account.
                 </p>
               </div>
             </div>
-            <div v-if="step === 1" class="pt-6">
+            <div v-if="step === 0 && agentToken" class="pt-6">
               <div class="px-12 py-2">
                 <p class="text-gray-700 text-lg text-left leading-relaxed">
-                  Each call type has minimum price of $25, but you can bid higher to
-                  increase your chances of receiving a call. The user with the highest bid
-                  wins the call but pays only $1 more than the second highest bid.
+                  Configure your account to indicate the call types you're
+                  interested in.
                 </p>
               </div>
             </div>
-            <div v-if="step === 2" class="pt-6">
+
+            <!-- Step 1 -->
+            <div v-if="step === 1 && !agentToken" class="pt-6">
               <div class="px-12 py-2">
                 <p class="text-gray-700 text-lg text-left leading-relaxed">
-                  To start, select your desired call types and indicate the maximum price
-                  you are willing to pay for each call. Don't forget to select the states
-                  where you're licensed to operate.
+                  Each call type has a minimum price of $25. Bid higher to
+                  increase your chances of receiving a call. The highest bid
+                  wins but pays only $1 more than the second-highest bid.
+                </p>
+              </div>
+            </div>
+            <div v-if="step === 1 && agentToken" class="pt-6">
+              <div class="px-12 py-2">
+                <p class="text-gray-700 text-lg text-left leading-relaxed">
+                  You have priority for each call type.
+                </p>
+              </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div v-if="step === 2 && !agentToken" class="pt-6">
+              <div class="px-12 py-2">
+                <p class="text-gray-700 text-lg text-left leading-relaxed">
+                  Select your desired call types and set your maximum price.
+                  Ensure you select the states where you're licensed to operate.
+                </p>
+              </div>
+            </div>
+            <div v-if="step === 2 && agentToken" class="pt-6">
+              <div class="px-12 py-2">
+                <p class="text-gray-700 text-lg text-left leading-relaxed">
+                  Choose your call types and verify the states you're licensed
+                  in.
                 </p>
               </div>
             </div>
@@ -232,8 +261,11 @@ let submit = () => {
                       v-text="callType.type"
                     ></label>
 
-                    <div v-if="selectedTypes.includes(callType.id)" class="pt-2 mb-8">
-                      <div>
+                    <div
+                      v-if="selectedTypes.includes(callType.id)"
+                      class="pt-2 mb-8"
+                    >
+                      <div v-if="!agentToken">
                         <label class="ml-2 text-xs font-medium">Your Bid</label>
                         <div class="relative mb-2">
                           <div
@@ -267,7 +299,10 @@ let submit = () => {
                     </div>
                   </div>
 
-                  <InputError class="mt-2" :message="form.errors.insurance_type" />
+                  <InputError
+                    class="mt-2"
+                    :message="form.errors.insurance_type"
+                  />
                   <div v-if="firstStepErrors">
                     <div
                       v-if="firstStepErrors.typesWithStates"

@@ -171,6 +171,7 @@ class RegisteredUserController extends Controller
             'totalAmountSpent' => $totalAmountSpent,
             'averageCallDuration' => $averageCallDuration,
             'isInternalAgent' => $isInternalAgent,
+            'agentToken' => $request->agentToken ?? null,
         ]);
     }
 
