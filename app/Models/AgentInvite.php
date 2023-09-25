@@ -19,30 +19,31 @@ class AgentInvite extends Model
      * If the token is not found, already used, or expired, it will return false.
      *
      * @param string $token The agent invite token.
+     * @param bool $checkUsed Whether to check the "used" column (default is true).
      *
      * @return bool True if the token is valid and marked as used, false otherwise.
      */
-    public static function verify($token)
+    public static function verify($token, $checkUsed = true)
     {
         // Find the invite by token
         $invite = self::where('token', $token)->first();
 
-        // If no invite found or the invite is already used, return false
-        if (!$invite || $invite->used) {
+        // If no invite found or the invite is already used and checkUsed is true, return false
+        if (!$invite || ($checkUsed && $invite->used)) {
             return false;
         }
 
         // Check if the invite has expired (older than 24 hours)
         $created = $invite->created_at;
         if ($created->lt(now()->subHours(24))) {
-            return false;  // Invite has expired
+            return false; // Invite has expired
         }
 
         // If it's a valid invite, mark it as used
         $invite->used = true;
         $invite->save();
 
-        return true;  // Successfully verified and marked as used
+        return true; // Successfully verified and marked as used
     }
 
     public static function verifyUsed($token)
@@ -58,14 +59,14 @@ class AgentInvite extends Model
         // Check if the invite has expired (older than 24 hours)
         $created = $invite->created_at;
         if ($created->lt(now()->subHours(24))) {
-            return false;  // Invite has expired
+            return false; // Invite has expired
         }
 
         // If it's a valid invite, mark it as used
         $invite->used = true;
         $invite->save();
 
-        return true;  // Successfully verified and marked as used
+        return true; // Successfully verified and marked as used
     }
 
 }

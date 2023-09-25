@@ -19,7 +19,7 @@ class AgentInvitesController extends Controller
     {
         $agentInvite = AgentInvite::create([ 'token' => uniqid() ]);
     
-        $link = url('/register?=' . $agentInvite->token);
+        $link = url('/register?agentToken=' . $agentInvite->token);
     
         return redirect('/admin/agent-invites')->with([
             'agentInvitationLink' => $link

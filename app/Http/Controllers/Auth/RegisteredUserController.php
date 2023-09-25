@@ -154,11 +154,11 @@ class RegisteredUserController extends Controller
 
         $isInternalAgent = false;
         if ($request->agentToken) {
-            $invite = AgentInvite::where('token', $request->agentToken)->where('used', true)->first();
-
-            if ($invite) {
-                $isInternalAgent = true;
+            // Verify agent token without checking the used status
+            if (!AgentInvite::verify($request->agentToken, false)) {
+                return response('Unauthorized', 401);
             }
+            $isInternalAgent = true;
         }
 
 
