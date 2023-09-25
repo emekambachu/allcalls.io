@@ -37,6 +37,17 @@ let generateInvite = () => {
         method: 'POST',
     });
 };
+
+let deleteInvite = agentInvite => {
+    if (window.confirm("Are you sure you want to delete this invite?")) {
+        router.visit(`/admin/agent-invites/${agentInvite.id}`, {
+            method: 'DELETE'
+        });
+    } else {
+        console.log("Deletion cancelled");
+    }
+};
+
 </script>
 
 <template>
@@ -88,7 +99,7 @@ let generateInvite = () => {
                                     </span>
                                 </td>
                                 <td class="text-gray-600 px-4 py-3">
-                                    <button class="text-white bg-red-500 px-2 py-1 rounded-2xl">
+                                    <button @click.prevent="deleteInvite(agentInvite)" class="text-white bg-red-500 px-2 py-1 rounded-2xl">
                                         Delete
                                     </button>
                                 </td>

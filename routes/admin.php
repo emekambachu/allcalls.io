@@ -69,4 +69,5 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
     Route::get('/agent-invites', [AgentInvitesController::class, 'index'])->name('admin.agent-invites.index');
     Route::post('/agent-invites', [AgentInvitesController::class, 'store'])->name('admin.agent-invites.store');
+    Route::delete('/agent-invites/{id}', [AgentInvitesController::class, 'destroy'])->name('admin.agent-invites.destroy');
 });

@@ -25,4 +25,15 @@ class AgentInvitesController extends Controller
             'agentInvitationLink' => $link
         ]);
     }
+
+    public function destroy($id)
+    {
+        $invite = AgentInvite::findOrFail($id);
+
+        $invite->delete();
+
+        return redirect()->back()->with([
+            'message' => 'Invite deleted successfully.'
+        ]);
+    }
 }
