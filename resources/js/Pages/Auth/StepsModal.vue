@@ -177,7 +177,7 @@ let submit = () => {
       <div class="relative w-full max-w-xl max-h-full mx-auto">
         <div class="relative bg-white rounded-lg shadow-lg transition-all">
           <div class="px-12 py-2">
-            <h1 class="mt-8 text-3xl font-bold">Welcome to AllCalls.io!</h1>
+            <h1 class="mt-8 text-gray-800 text-3xl font-bold">Welcome to AllCalls.io!</h1>
           </div>
           <div>
             <!-- Step 0 -->
@@ -200,7 +200,7 @@ let submit = () => {
 
             <!-- Step 1 -->
             <div v-if="step === 1 && !agentToken">
-              <div class="px-12 py-2">
+              <div class="px-12">
                 <p class="text-gray-700 text-sm text-left leading-relaxed">
                   Each call type has a minimum price of $25. Bid higher to
                   increase your chances of receiving a call. The highest bid
@@ -209,7 +209,7 @@ let submit = () => {
               </div>
             </div>
             <div v-if="step === 1 && agentToken">
-              <div class="px-12 py-2">
+              <div class="px-12">
                 <p class="text-gray-700 text-sm text-left leading-relaxed">
                   Special note for you, {{ $page.props.auth.user.first_name }}! As an esteemed agent, you hold priority for each category over our entire user base. Here, quality leads meet unmatched privilege.
                 </p>
@@ -218,7 +218,7 @@ let submit = () => {
 
             <!-- Step 2 -->
             <div v-if="step === 2 && !agentToken">
-              <div class="px-12 py-2">
+              <div class="px-12">
                 <p class="text-gray-700 text-sm text-left leading-relaxed">
                   Select your desired call types and set your maximum price.
                   Ensure you select the states where you're licensed to operate.
@@ -226,7 +226,7 @@ let submit = () => {
               </div>
             </div>
             <div v-if="step === 2 && agentToken">
-              <div class="px-12 py-2">
+              <div class="px-12">
                 <p class="text-gray-700 text-sm text-left leading-relaxed">
                   Select your preferred call types and cross-verify the states you're officially licensed in. Every detail here fine-tunes your lead matching.
                 </p>
