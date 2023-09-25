@@ -174,8 +174,8 @@ let submit = () => {
     >
       <div class="fixed inset-0 bg-black opacity-90 blurred-overlay"></div>
       <!-- This is the overlay -->
-      <div class="relative w-full max-w-md max-h-full mx-auto">
-        <div class="relative bg-white rounded-lg shadow-lg">
+      <div class="relative w-full max-w-xl max-h-full mx-auto">
+        <div class="relative bg-white rounded-lg shadow-lg transition-all">
           <div class="px-12 py-2">
             <h1 class="mt-8 text-2xl font-bold">Welcome {{ $page.props.auth.user.first_name }}!</h1>
           </div>
