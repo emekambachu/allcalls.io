@@ -72,7 +72,7 @@ let deleteInvite = agentInvite => {
                         </div>
                     </div>
                     <hr class="mb-4" />
-                    <table class="w-full text-sm text-left text-gray-400">
+                    <table v-if="agentInvites.length" class="w-full text-sm text-left text-gray-400">
                         <thead class="text-xs text-gray-300 uppercase bg-sky-900">
                             <tr>
                                 <th scope="col" class="px-4 py-3">ID</th>
@@ -107,6 +107,9 @@ let deleteInvite = agentInvite => {
                         </tbody>
                     </table>
 
+                    <div v-else class="text-center py-4 text-gray-900">
+                        No invites yet.
+                    </div>
                 </div>
             </div>
         </div>
