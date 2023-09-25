@@ -212,7 +212,7 @@ let submit = () => {
             <div v-if="step === 1 && agentToken">
               <div class="px-12 py-2">
                 <p class="text-gray-700 text-sm text-left leading-relaxed">
-                  You have priority for each call type.
+                  As an internal agent, you have priority for each vertical over all other users.
                 </p>
               </div>
             </div>
