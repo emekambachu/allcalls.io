@@ -325,8 +325,11 @@ class RegistrationStepController extends Controller
             return Inertia::render('InternalAgent/ContractSteps')
                 ->with('message', 'Internal agent registration completed successfully.');
         } catch (\Exception $e) {
-            //            DB::rollBack();
-            dd('error', $e->getMessage());
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'errors' => $e->getMessage(),
+            ], 400);
         }
     }
 }
