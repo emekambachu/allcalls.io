@@ -125,7 +125,7 @@ let deleteInvite = (agentInvite) => {
                 <td class="text-gray-600 px-4 py-3">
                   <button
                     @click.prevent="deleteInvite(agentInvite)"
-                    class="text-white bg-red-500 px-3 py-1.5 rounded-2xl flex items-center shadow hover:bg-red-400"
+                    class="text-white bg-red-500 px-3 py-1.5 rounded-lg flex items-center shadow hover:bg-red-400"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
