@@ -85,8 +85,9 @@ watch(form.value, (newForm, oldForm) => {
             <div>
                 <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Social
                     Security Number (SSN)</label>
-                <input type="text" v-model="form.ssn" id="default-input"
+                <input type="number" v-model="form.ssn" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <div v-if="firstStepErrors.ssn" class="text-red-500" v-text="firstStepErrors.ssn[0]"></div>
             </div>
             <div>
                 <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Gender</label>
@@ -97,6 +98,7 @@ watch(form.value, (newForm, oldForm) => {
                     <option value="female">Female</option>
                     <option value="other">Other</option>
                 </select>
+                <div v-if="firstStepErrors.gender" class="text-red-500" v-text="firstStepErrors.gender[0]"></div>
             </div>
             <div>
                 <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date of
@@ -110,20 +112,20 @@ watch(form.value, (newForm, oldForm) => {
             <div>
                 <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Cell
                     Phone</label>
-                <input type="text" v-model="form.cell_phone" id="default-input"
+                <input type="number" v-model="form.cell_phone" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <div v-if="firstStepErrors.cell_phone" class="text-red-500" v-text="firstStepErrors.cell_phone[0]"></div>
             </div>
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Home
                     Phone</label>
-                <input type="text" v-model="form.home_phone" id="default-input"
+                <input type="number" v-model="form.home_phone" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <div v-if="firstStepErrors.home_phone" class="text-red-500" v-text="firstStepErrors.home_phone[0]"></div>
             </div>
             <div>
                 <label for="middle_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Fax</label>
-                <input type="text" v-model="form.fax" id="default-input"
+                <input type="number" v-model="form.fax" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <div v-if="firstStepErrors.fax" class="text-red-500" v-text="firstStepErrors.fax[0]"></div>
             </div>
@@ -155,14 +157,17 @@ watch(form.value, (newForm, oldForm) => {
             <div>
                 <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Drivers
                     License#</label>
-                <input type="text" v-model="form.driver_license_no" id="default-input"
+                <input type="number" v-model="form.driver_license_no" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <div v-if="firstStepErrors.driver_license_no" class="text-red-500" v-text="firstStepErrors.driver_license_no[0]"></div>
             </div>
+           
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Driver Licence
                     State</label>
                 <input type="text" v-model="form.driver_license_state" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <div v-if="firstStepErrors.driver_license_state" class="text-red-500" v-text="firstStepErrors.driver_license_state[0]"></div>
             </div>
         </div>
 
@@ -175,17 +180,20 @@ watch(form.value, (newForm, oldForm) => {
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <span style="font-size: 14px;">Include Apt/Unit #</span>
                 </div>
+                <div v-if="firstStepErrors.address" class="text-red-500" v-text="firstStepErrors.address[0]"></div>
             </div>
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">City,
                     State</label>
                 <input type="text" v-model="form.city_state" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <div v-if="firstStepErrors.city_state" class="text-red-500" v-text="firstStepErrors.city_state[0]"></div>
             </div>
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Zip Code</label>
-                <input type="text" v-model="form.zip" id="default-input"
+                <input type="number" v-model="form.zip" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <div v-if="firstStepErrors.zip" class="text-red-500" v-text="firstStepErrors.zip[0]"></div>
             </div>
         </div>
 
@@ -194,6 +202,7 @@ watch(form.value, (newForm, oldForm) => {
                 <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 dark:text-white">Move-In
                     Date</label>
                 <VueDatePicker v-model="form.move_in_date" format="dd-MMM-yyyy" :maxDate="maxDate"></VueDatePicker>
+                <div v-if="firstStepErrors.move_in_date" class="text-red-500" v-text="firstStepErrors.move_in_date[0]"></div>
             </div>
         </div>
 
@@ -206,17 +215,20 @@ watch(form.value, (newForm, oldForm) => {
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <span style="font-size: 14px;">Include Apt/Unit #</span>
                 </div>
+                <div v-if="firstStepErrors.move_in_address" class="text-red-500" v-text="firstStepErrors.move_in_address[0]"></div>
             </div>
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">City,
                     State</label>
                 <input type="text" v-model="form.move_in_city_state" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <div v-if="firstStepErrors.move_in_city_state" class="text-red-500" v-text="firstStepErrors.move_in_city_state[0]"></div>
             </div>
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Zip Code</label>
-                <input type="text" v-model="form.move_in_zip" id="default-input"
+                <input type="number" v-model="form.move_in_zip" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <div v-if="firstStepErrors.move_in_zip" class="text-red-500" v-text="firstStepErrors.move_in_zip[0]"></div>
             </div>
         </div>
         <hr class="w-100 h-1 my-4 bg-gray-600 border-0 rounded dark:bg-gray-700">
@@ -228,6 +240,7 @@ watch(form.value, (newForm, oldForm) => {
                 </label>
                 <input type="text" v-model="form.resident_insu_license_no" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <div v-if="firstStepErrors.resident_insu_license_no" class="text-red-500" v-text="firstStepErrors.resident_insu_license_no[0]"></div>
 
             </div>
             <div>
@@ -236,6 +249,7 @@ watch(form.value, (newForm, oldForm) => {
                     State</label>
                 <input type="text" v-model="form.resident_insu_license_state" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <div v-if="firstStepErrors.resident_insu_license_state" class="text-red-500" v-text="firstStepErrors.resident_insu_license_state[0]"></div>
             </div>
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Doing Business
@@ -245,7 +259,7 @@ watch(form.value, (newForm, oldForm) => {
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <span style="font-size: 14px;">Individual / Business Entity (Requires Licence)</span>
                 </div>
-
+                <div v-if="firstStepErrors.doing_business_as" class="text-red-500" v-text="firstStepErrors.doing_business_as[0]"></div>
             </div>
         </div>
         <hr class="w-100 h-1 my-4 bg-gray-600 border-0 rounded dark:bg-gray-700">
@@ -270,18 +284,21 @@ watch(form.value, (newForm, oldForm) => {
                 </div>
                 <input type="text" v-model="form.business_name" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <div v-if="firstStepErrors.business_name" class="text-red-500" v-text="firstStepErrors.business_name[0]"></div>
 
             </div>
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Tax ID</label>
-                <input type="text" v-model="form.business_tax_id" id="default-input"
+                <input type="number" v-model="form.business_tax_id" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <div v-if="firstStepErrors.business_tax_id" class="text-red-500" v-text="firstStepErrors.business_tax_id[0]"></div>
             </div>
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Principle Agent
                     Name</label>
                 <input type="text" v-model="form.business_agent_name" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <div v-if="firstStepErrors.business_agent_name" class="text-red-500" v-text="firstStepErrors.business_agent_name[0]"></div>
             </div>
             <div>
                 <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Priciple Agent
@@ -289,6 +306,7 @@ watch(form.value, (newForm, oldForm) => {
                 </label>
                 <input type="text" v-model="form.business_agent_title" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <div v-if="firstStepErrors.business_agent_title" class="text-red-500" v-text="firstStepErrors.business_agent_title[0]"></div>
             </div>
         </div>
 
@@ -298,23 +316,27 @@ watch(form.value, (newForm, oldForm) => {
                     Insurance Licence #</label>
                 <input type="text" v-model="form.business_insu_license_no" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <div v-if="firstStepErrors.business_insu_license_no" class="text-red-500" v-text="firstStepErrors.business_insu_license_no[0]"></div>
 
             </div>
             <div>
                 <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Cell Fax</label>
-                <input type="text" v-model="form.business_office_fax" id="default-input"
+                <input type="number" v-model="form.business_office_fax" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <div v-if="firstStepErrors.business_office_fax" class="text-red-500" v-text="firstStepErrors.business_office_fax[0]"></div>
             </div>
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Office
                     Phone</label>
-                <input type="text" v-model="form.business_office_phone" id="default-input"
+                <input type="number" v-model="form.business_office_phone" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <div v-if="firstStepErrors.business_office_phone" class="text-red-500" v-text="firstStepErrors.business_office_phone[0]"></div>
             </div>
             <div>
                 <label for="middle_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Email</label>
                 <input type="text" v-model="form.business_email" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <div v-if="firstStepErrors.business_email" class="text-red-500" v-text="firstStepErrors.business_email[0]"></div>
             </div>
         </div>
 
@@ -323,6 +345,7 @@ watch(form.value, (newForm, oldForm) => {
                 <label for="middle_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Website</label>
                 <input type="text" v-model="form.business_website" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <div v-if="firstStepErrors.business_website" class="text-red-500" v-text="firstStepErrors.business_website[0]"></div>
             </div>
             <div>
                 <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Business Address
@@ -332,17 +355,20 @@ watch(form.value, (newForm, oldForm) => {
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <span style="font-size: 14px;">Include Apt/Unit #</span>
                 </div>
+                <div v-if="firstStepErrors.business_address" class="text-red-500" v-text="firstStepErrors.business_address[0]"></div>
             </div>
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">City,
                     State</label>
                 <input type="text" v-model="form.business_city_state" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <div v-if="firstStepErrors.business_city_state" class="text-red-500" v-text="firstStepErrors.business_city_state[0]"></div>
             </div>
             <div>
                 <label for="first_name" class="block mb-0 text-sm font-black text-gray-900 dark:text-white">Zip Code</label>
-                <input type="text" v-model="form.business_zip" id="default-input"
+                <input type="number" v-model="form.business_zip" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <div v-if="firstStepErrors.business_zip" class="text-red-500" v-text="firstStepErrors.business_zip[0]"></div>
             </div>
         </div>
 
@@ -351,6 +377,7 @@ watch(form.value, (newForm, oldForm) => {
                 <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 dark:text-white">Move-In
                     Date</label>
                 <VueDatePicker v-model="form.business_move_in_date" format="dd-MMM-yyyy" :maxDate="maxDate"></VueDatePicker>
+                <div v-if="firstStepErrors.business_move_in_date" class="text-red-500" v-text="firstStepErrors.business_move_in_date[0]"></div>
             </div>
             <div>
 
@@ -365,6 +392,7 @@ watch(form.value, (newForm, oldForm) => {
                         <option value="LLP">LLP</option>
                         <option value="LLC">LLC</option>
                     </select>
+                    <div v-if="firstStepErrors.business_company_type" class="text-red-500" v-text="firstStepErrors.business_company_type[0]"></div>
                 </div>
             </div>
             <div>
