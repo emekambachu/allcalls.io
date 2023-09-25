@@ -32,8 +32,6 @@ class AgentInvitesController extends Controller
 
         $invite->delete();
 
-        return redirect()->back()->with([
-            'message' => 'Invite deleted successfully.'
-        ]);
+        return redirect()->back()->with(['message' => 'Invite deleted successfully.']);
     }
 }
