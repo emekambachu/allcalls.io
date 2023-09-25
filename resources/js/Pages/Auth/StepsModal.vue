@@ -177,12 +177,12 @@ let submit = () => {
       <div class="relative w-full max-w-xl max-h-full mx-auto">
         <div class="relative bg-white rounded-lg shadow-lg transition-all">
           <div class="px-12 py-2">
-            <h1 class="mt-8 text-2xl font-bold">Welcome {{ $page.props.auth.user.first_name }}!</h1>
+            <h1 class="mt-8 text-3xl font-bold">Welcome to AllCalls.io!</h1>
           </div>
           <div>
             <!-- Step 0 -->
             <div v-if="step === 0 && !agentToken">
-              <div class="px-12 py-2">
+              <div class="px-12">
                 <p class="text-gray-700 text-lg text-left leading-relaxed">
                   Our dynamic bidding system allows you to set a maximum bid for
                   each type of call you're interested in as you configure your
@@ -191,10 +191,9 @@ let submit = () => {
               </div>
             </div>
             <div v-if="step === 0 && agentToken">
-              <div class="px-12 py-2">
+              <div class="px-12">
                 <p class="text-gray-700 text-sm text-left leading-relaxed">
-                  Configure your account to indicate the call types you're
-                  interested in.
+                  Hello, {{ $page.props.auth.user.first_name }}! Let's tailor your experience. Begin by indicating which call types resonate with your expertise. The perfect leads are just a few taps away!
                 </p>
               </div>
             </div>
@@ -212,7 +211,7 @@ let submit = () => {
             <div v-if="step === 1 && agentToken">
               <div class="px-12 py-2">
                 <p class="text-gray-700 text-sm text-left leading-relaxed">
-                  As an internal agent, you have priority for each vertical over all other users.
+                  Special note for you, {{ $page.props.auth.user.first_name }}! As an esteemed agent, you hold priority for each category over our entire user base. Here, quality leads meet unmatched privilege.
                 </p>
               </div>
             </div>
@@ -229,8 +228,7 @@ let submit = () => {
             <div v-if="step === 2 && agentToken">
               <div class="px-12 py-2">
                 <p class="text-gray-700 text-sm text-left leading-relaxed">
-                  Choose your call types and verify the states you're licensed
-                  in.
+                  Select your preferred call types and cross-verify the states you're officially licensed in. Every detail here fine-tunes your lead matching.
                 </p>
               </div>
             </div>
