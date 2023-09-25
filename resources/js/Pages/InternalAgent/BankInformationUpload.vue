@@ -2,16 +2,22 @@
 <script setup>
 import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
-
+let props = defineProps({
+    firstStepErrors:Object,
+});
 const fileError = ref(false);
 const selectedFileName = ref(""); // To store the selected file name
-const selectedFile = ref()
+const selectedFile = ref(null)
 const handleFileChange = (event) => {
     const files = event.target.files;
+    selectedFile.value = null
     if (files.length === 1 && files[0].type === "application/pdf") {
         fileError.value = false; // Reset the error message
         selectedFileName.value = files[0].name; // Set the selected file name
         selectedFile.value = files[0]
+        if(props.firstStepErrors.bankingInfoPdf){
+            props.firstStepErrors.bankingInfoPdf = null
+        }
     } else if (files.length > 1) {
         fileError.value = true;
         selectedFileName.value = ""; // Clear the selected file name
@@ -29,6 +35,9 @@ const handleDrop = (event) => {
         fileError.value = false; // Reset the error message
         selectedFileName.value = files[0].name; // Set the selected file name
         selectedFile.value = files[0]
+        if(props.firstStepErrors.bankingInfoPdf){
+            props.firstStepErrors.bankingInfoPdf = null
+        }
         // console.log('handleDrop', selectedFile.value);
     } else if (files.length > 1) {
         // Display an error message for multiple files
@@ -68,7 +77,7 @@ watch(selectedFile, (newForm, oldForm) => {
                     <p class="text-xs text-gray-500 dark:text-gray-400">PDF files only</p>
                 </div>
                 <input id="dropzone-file-bank-info" type="file" class="hidden" @change="handleFileChange" accept=".pdf"
-                    multiple />
+                     />
             </label>
         </div>
         <p v-if="fileError" class="text-red-500">{{ fileErrorMessage }}</p>
@@ -76,6 +85,7 @@ watch(selectedFile, (newForm, oldForm) => {
         <div v-if="selectedFileName" class="text-green-500 mt-4">
             Selected File: {{ selectedFileName }}
         </div>
+        <div v-if="firstStepErrors.bankingInfoPdf" class="text-red-500" v-text="firstStepErrors.bankingInfoPdf[0]"></div> 
     </div>
 </template>
 

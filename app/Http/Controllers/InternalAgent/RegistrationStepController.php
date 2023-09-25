@@ -26,6 +26,11 @@ class RegistrationStepController extends Controller
         $validator = Validator::make($request->all(), [
             'first_name' => 'required',
             'last_name' => 'required',
+            'convicted_checkbox_1' => 'required',
+            'lawsuit_checkbox_8' => 'required',
+            'resident_country' => 'required',
+            'residentLicensePdf' => 'required',
+            'bankingInfoPdf' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json([

@@ -2,18 +2,23 @@
 <script setup>
 import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
-
+let props = defineProps({
+    firstStepErrors:Object,
+});
 const fileError = ref(false);
 const selectedFileName = ref(""); // To store the selected file name
 const selectedFile = ref()
 const handleFileChange = (event) => {
     const files = event.target.files;
+    selectedFile.value = null
     if (files.length === 1 && files[0].type === "application/pdf") {
         // Handle the single PDF file here
         fileError.value = false; // Reset the error message
         selectedFileName.value = files[0].name; // Set the selected file name
         selectedFile.value = files[0]
-        console.log('handleFileChange', selectedFile.value);
+        if(props.firstStepErrors.residentLicensePdf){
+            props.firstStepErrors.residentLicensePdf = null
+        }
     } else if (files.length > 1) {
         // Display an error message for multiple files
         fileError.value = true;
@@ -33,7 +38,9 @@ const handleDrop = (event) => {
         fileError.value = false; // Reset the error message
         selectedFileName.value = files[0].name; // Set the selected file name
         selectedFile.value = files[0]
-        console.log('handleDrop', selectedFile.value);
+        if(props.firstStepErrors.residentLicensePdf){
+            props.firstStepErrors.residentLicensePdf = null
+        }
     } else if (files.length > 1) {
         // Display an error message for multiple files
         fileError.value = true;
@@ -71,7 +78,7 @@ watch(selectedFile, (newForm, oldForm) => {
                     </p>
                     <p class="text-xs text-gray-500 dark:text-gray-400">PDF files only</p>
                 </div>
-                <input id="dropzone-file" type="file" class="hidden" @change="handleFileChange" accept=".pdf" multiple />
+                <input id="dropzone-file" type="file" class="hidden" @change="handleFileChange" accept=".pdf"  />
             </label>
         </div>
         <p v-if="fileError" class="text-red-500">{{ fileErrorMessage }}</p>
@@ -79,6 +86,7 @@ watch(selectedFile, (newForm, oldForm) => {
         <div v-if="selectedFileName" class="text-green-500 mt-4">
             Selected File: {{ selectedFileName }}
         </div>
+        <div v-if="firstStepErrors.residentLicensePdf" class="text-red-500" v-text="firstStepErrors.residentLicensePdf[0]"></div> 
     </div>
 </template>
 

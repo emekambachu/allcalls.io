@@ -58,6 +58,7 @@ let NextStep = () => {
     } else {
         omissionsInsurance.value = false
     }
+    window.scrollTo(0, 0);
 };
 let goBack = () => {
     if (step.value === 2) {
@@ -79,6 +80,7 @@ let goBack = () => {
 
 let ChangeTab = () => {
     contractStep.value += 1
+    window.scrollTo(0, 0);
 }
 let ChangeTabBack = () => {
     contractStep.value -= 1
@@ -92,7 +94,7 @@ let firstStepErrors = ref({});
 let contactDetailData = ref(null)
 let updateFormData = (val) => {
     contactDetailData.value = val
-    console.log('contactDetailData', contactDetailData.value);
+    // console.log('contactDetailData', contactDetailData.value);
 }
 
 // Use an object to store the legal form data
@@ -120,16 +122,44 @@ let AddressHistoryfun = (val) => {
 let additionalInfoD = ref(null)
 let additionalInformation = (val) => {
     additionalInfoD.value = val
-    console.log('new values', additionalInfoD.value);
+    // console.log('new values', additionalInfoD.value);
 }
 let uploadLicensePdf = ref(null)
 let uploadLicense = (val) => {
-    console.log('new uploadLicense', val);
     uploadLicensePdf.value = val
 }
 let uploadBankingInfoPdf = ref(null)
 let uploadBankingInfo = (val) => {
     uploadBankingInfoPdf.value = val
+}
+let errorHandle = (data) => {
+    if (data.first_name || data.last_name) {
+        step.value = 1
+        contractStep.value = 1
+        return
+    } else if (data.convicted_checkbox_1) {
+        step.value = 1
+        contractStep.value = 2
+        return
+    } else if (data.lawsuit_checkbox_8) {
+        step.value = 1
+        contractStep.value = 3
+        return
+    } else if (data.resident_country) {
+        step.value = 1
+        contractStep.value = 5
+        return
+    }
+    else if (data.residentLicensePdf) {
+        step.value = 4
+        contractStep.value = 6
+        return
+    }
+    else if (data.bankingInfoPdf) {
+        step.value = 5
+        contractStep.value = 6
+        return
+    }
 }
 let submit = () => {
 
@@ -165,10 +195,10 @@ let submit = () => {
         .catch((error) => {
             if (error.response) {
                 if (error.response.status === 400) {
+                    console.log(error.response.data);
                     firstStepErrors.value = error.response.data.errors;
                     isLoading.value = false;
-                    step.value = 1
-                    contractStep.value = 1
+                    errorHandle(error.response.data.errors)
                 } else {
                     console.log("Other errors", error.response.data);
                 }
@@ -255,38 +285,37 @@ let submit = () => {
                             <ContactDetail @updateFormData="updateFormData" :firstStepErrors="firstStepErrors" />
                         </div>
                         <div v-show="contractStep === 2">
-                            <LegalInformation @updateFormData="updateLegalFormData" />
+                            <LegalInformation @updateFormData="updateLegalFormData" :firstStepErrors="firstStepErrors" />
                         </div>
                         <div v-show="contractStep === 3">
-                            <LegalInformation2 @updateFormData="updateLegalFormData" />
+                            <LegalInformation2 @updateFormData="updateLegalFormData" :firstStepErrors="firstStepErrors" />
                         </div>
                         <div v-show="contractStep === 4">
                             <AddressHistory @addRessHistory="AddressHistoryfun" @changeTab="ChangeTab()"
                                 @goback="ChangeTabBack()" />
                         </div>
                         <div v-show="contractStep === 5">
-                            <AdditionalInfo @additionalInfoData="additionalInformation" />
+                            <AdditionalInfo @additionalInfoData="additionalInformation"
+                                :firstStepErrors="firstStepErrors" />
                         </div>
                         <div v-show="step === 2" class="pt-6">
                             <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
                                 AML Course
                             </h1>
-                           
+
 
                             <div class="bg-blue-50 py-10 px-6 rounded-lg shadow-md">
                                 <div class="mb-4">
                                     <a target="_blank"
-                                        href="https://www.financialservicecareers.com/_files/ugd/0fb1f5_0a18cb8e43734547b1c42be4c1a0a52b.pdf"
-                                        >
-                                        <strong class="text-blue-600 mr-1 hover:underline">Detailed PDF Guide</strong> 
+                                        href="https://www.financialservicecareers.com/_files/ugd/0fb1f5_0a18cb8e43734547b1c42be4c1a0a52b.pdf">
+                                        <strong class="text-blue-600 mr-1 hover:underline">Detailed PDF Guide</strong>
                                     </a>outlining the required steps within the AML
-                                        course.
+                                    course.
                                 </div>
                                 <div class="mb-4">
-                                    <a target="_blank" href="https://secure.reged.com/Login/vu/VirtualUniversity/EQUIS"
-                                        >
-                                        <strong class="text-blue-600 mr-1  hover:underline">Click Here</strong> 
-                                    </a> <span >for the registration and course completion</span>
+                                    <a target="_blank" href="https://secure.reged.com/Login/vu/VirtualUniversity/EQUIS">
+                                        <strong class="text-blue-600 mr-1  hover:underline">Click Here</strong>
+                                    </a> <span>for the registration and course completion</span>
                                 </div>
                                 <div class="text-gray-600">
                                     Please download PDF for course completion after completing the course.
@@ -314,9 +343,9 @@ let submit = () => {
                                 </div>
                                 <div class="mb-4">
                                     <a target="_blank"
-                                        href="https://mga-eo.com/apply/nd/lh-eo?_ga=2.22742075.1083085069.1638818057-1601577075.1638818057"
-                                        >
-                                        <strong class="text-blue-600 mr-1 hover:underline">MGA E&O Insurance Application </strong> 
+                                        href="https://mga-eo.com/apply/nd/lh-eo?_ga=2.22742075.1083085069.1638818057-1601577075.1638818057">
+                                        <strong class="text-blue-600 mr-1 hover:underline">MGA E&O Insurance Application
+                                        </strong>
                                     </a>for registration and application.
                                 </div>
                             </div>
@@ -334,10 +363,10 @@ let submit = () => {
                         </div>
 
                         <div v-show="step === 4">
-                            <UploadLicence @uploadLicense="uploadLicense" />
+                            <UploadLicence @uploadLicense="uploadLicense" :firstStepErrors="firstStepErrors" />
                         </div>
                         <div v-show="step === 5">
-                            <BankInformationUpload @uploadBankingInfo="uploadBankingInfo" />
+                            <BankInformationUpload @uploadBankingInfo="uploadBankingInfo" :firstStepErrors="firstStepErrors" />
                         </div>
 
                         <div class="px-5 pb-6">

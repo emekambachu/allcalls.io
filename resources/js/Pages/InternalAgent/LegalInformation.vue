@@ -3,6 +3,7 @@ import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 const props = defineProps({
     contractStep: String,
+    firstStepErrors:Object,
 });
 let LegalInformation = ref([
     {
@@ -186,9 +187,11 @@ watch(page1form.value, (newForm, oldForm) => {
                         <label :for="'default-radio-' + information.id + '-no'"
                             class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">NO</label>
                     </div>
+                    
                 </div>
             </div>
         </div>
+        <div v-if="firstStepErrors[information.checbox]" class="text-red-500" v-text="firstStepErrors[information.checbox][0]"></div>
         <hr class="w-100 h-1 my-4 bg-gray-600 border-0 rounded dark:bg-gray-700">
     </div>
 </template>

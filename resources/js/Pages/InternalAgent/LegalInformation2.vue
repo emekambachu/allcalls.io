@@ -3,6 +3,7 @@ import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 const props = defineProps({
     contractStep: String,
+    firstStepErrors:Object,
 });
 let LegalInformation = ref([
     {
@@ -177,6 +178,7 @@ watch(page2form.value, (newForm, oldForm) => {
                 </div>
             </div>
         </div>
+        <div v-if="firstStepErrors[information.checbox]" class="text-red-500" v-text="firstStepErrors[information.checbox][0]"></div>
         <hr class="w-100 h-1 my-4 bg-gray-600 border-0 rounded dark:bg-gray-700">
     </div>
 
