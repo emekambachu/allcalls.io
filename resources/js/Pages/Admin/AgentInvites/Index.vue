@@ -107,7 +107,7 @@ let deleteInvite = agentInvite => {
                         </tbody>
                     </table>
 
-                    <div v-else class="text-center py-4 text-gray-900">
+                    <div v-else class="text-center py-4 text-gray-800">
                         No invites yet.
                     </div>
                 </div>
