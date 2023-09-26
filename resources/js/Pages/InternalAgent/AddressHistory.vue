@@ -28,21 +28,22 @@ let addres_history = ref([
     },
 ])
 let form = ref({
-    history_address1: {},
-    history_address2: {},
-    history_address3: {},
-    history_address4: {},
-    history_address5: {},
-    history_address6: {},
-    history_address7: {},
+    history_address1: { id: 1, },
+    history_address2: { id: 2, },
+    history_address3: { id: 3, },
+    history_address4: { id: 4, },
+    history_address5: { id: 5, },
+    history_address6: { id: 6, },
+    history_address7: { id: 7, },
 })
 let hasValidationErrors = ref({});
 const ChangeTab = () => {
     hasValidationErrors.value = {};
     for (const history of addres_history.value) {
         const formData = form.value[history.address];
+        Object.assign(formData, form.value[history.id]);
         if (Object.keys(formData).length != 0) {
-            if(formData.address === '' && formData.address === '' &&  formData.address === '' ){
+            if (formData.address === '' && formData.address === '' && formData.address === '') {
                 emits("changeTab");
                 return
             }
@@ -52,18 +53,24 @@ const ChangeTab = () => {
                     city: !formData.city,
                     zip_code: !formData.zip_code,
                 };
-                
-            var element = document.getElementById("modal_main_id");
-            element.scrollIntoView();
-    
+
+                var element = document.getElementById("modal_main_id");
+                element.scrollIntoView();
+
                 return; // Stop tab change
+            }
+            if (formData.id === 7) {
+                if (formData.address && formData.city && formData.zip_code) {
+                    emits("changeTab");
+                    return
+                }
             }
         } else {
             emits("changeTab");
             return
         }
-
     }
+
 }
 let ChangeTabBack = () => {
     emits("goback");
@@ -92,6 +99,9 @@ watch(form.value, (newForm, oldForm) => {
                         required</span>
                 </div>
             </div>
+
+            <input type="hidden" v-model="form[history.address].id">
+
 
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">City,

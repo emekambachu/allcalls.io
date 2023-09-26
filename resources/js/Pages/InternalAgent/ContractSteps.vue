@@ -23,8 +23,8 @@ let form = ref({
     omissions_insurance: false
 });
 
-let step = ref(1);
-let contractStep = ref(1);
+let step = ref(5);
+let contractStep = ref(6);
 let emit = defineEmits(["close"]);
 let close = () => {
     emit("close");
@@ -64,8 +64,7 @@ let NextStep = () => {
     window.scrollTo(0, 0);
 };
 let goBack = () => {
-    var element = document.getElementById("modal_main_id");
-    element.scrollIntoView();
+
     if (step.value === 2) {
         contractStep.value = 5
     }
@@ -90,8 +89,6 @@ let ChangeTab = () => {
 }
 let ChangeTabBack = () => {
     contractStep.value -= 1
-    var element = document.getElementById("modal_main_id");
-    element.scrollIntoView();
 }
 
 
@@ -106,22 +103,15 @@ let updateFormData = (val) => {
 }
 
 // Use an object to store the legal form data
-const legalFormData = ref(null);
-
-// Define a computed property to get the merged data
-const mergedData = computed(() => {
-    return {
-        ...legalFormData.value,
-    };
-});
-
+const legalFormData1 = ref(null);
+const legalFormData2 = ref(null);
 // Function to update the legal form data
-const updateLegalFormData = (val) => {
-    // Merge the new data with the existing data
-    legalFormData.value = {
-        ...legalFormData.value,
-        ...val,
-    };
+
+const updateLegalFormData1 = (val) => {
+    legalFormData1.value = val
+};
+const updateLegalFormData2 = (val) => {
+    legalFormData2.value = val
 };
 let AddressHistoryData = ref(null)
 let AddressHistoryfun = (val) => {
@@ -141,33 +131,34 @@ let uploadBankingInfo = (val) => {
     uploadBankingInfoPdf.value = val
 }
 let errorHandle = (data) => {
-    if (data.first_name || data.last_name) {
-        step.value = 1
-        contractStep.value = 1
-        return
-    } else if (data.convicted_checkbox_1) {
-        step.value = 1
-        contractStep.value = 2
-        return
-    } else if (data.lawsuit_checkbox_8) {
-        step.value = 1
-        contractStep.value = 3
-        return
-    } else if (data.resident_country) {
-        step.value = 1
-        contractStep.value = 5
-        return
-    }
-    else if (data.residentLicensePdf) {
-        step.value = 4
-        contractStep.value = 6
-        return
-    }
-    else if (data.bankingInfoPdf) {
-        step.value = 5
-        contractStep.value = 6
-        return
-    }
+    console.log('what is erros', data);
+    // if (data.first_name || data.last_name) {
+    //     step.value = 1
+    //     contractStep.value = 1
+    //     return
+    // } else if (data.convicted_checkbox_1) {
+    //     step.value = 1
+    //     contractStep.value = 2
+    //     return
+    // } else if (data.lawsuit_checkbox_8) {
+    //     step.value = 1
+    //     contractStep.value = 3
+    //     return
+    // } else if (data.resident_country) {
+    //     step.value = 1
+    //     contractStep.value = 5
+    //     return
+    // }
+    // else if (data.residentLicensePdf) {
+    //     step.value = 4
+    //     contractStep.value = 6
+    //     return
+    // }
+    // else if (data.bankingInfoPdf) {
+    //     step.value = 5
+    //     contractStep.value = 6
+    //     return
+    // }
 }
 let submit = () => {
 
@@ -180,7 +171,8 @@ let submit = () => {
         omissions_insurance: form.value.omissions_insurance ? 1 : 0, // Send 1 if true, 0 if false
     });
     Object.assign(requestData, contactDetailData.value);
-    Object.assign(requestData, legalFormData.value);
+    Object.assign(requestData, legalFormData1.value);
+    Object.assign(requestData, legalFormData2.value);
     Object.assign(requestData, AddressHistoryData.value);
     Object.assign(requestData, additionalInfoD.value);
     requestData.residentLicensePdf = uploadLicensePdf.value;
@@ -295,11 +287,11 @@ let submit = () => {
                                     @changeTab="ChangeTab()" />
                             </div>
                             <div v-show="contractStep === 2">
-                                <LegalInformation @updateFormData="updateLegalFormData" :firstStepErrors="firstStepErrors"
+                                <LegalInformation @updateFormData="updateLegalFormData1" :firstStepErrors="firstStepErrors"
                                     @changeTab="ChangeTab()" @goback="ChangeTabBack()" />
                             </div>
                             <div v-show="contractStep === 3">
-                                <LegalInformation2 @updateFormData="updateLegalFormData" :firstStepErrors="firstStepErrors"
+                                <LegalInformation2 @updateFormData="updateLegalFormData2" :firstStepErrors="firstStepErrors"
                                     @changeTab="ChangeTab()" @goback="ChangeTabBack()" />
                             </div>
                             <div v-show="contractStep === 4">

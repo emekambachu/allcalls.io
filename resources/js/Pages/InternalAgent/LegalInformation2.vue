@@ -138,6 +138,7 @@ let form = ref({
 watch(form.value, (newForm, oldForm) => {
     emits("updateFormData", newForm);
 });
+const requiredIDs = [37, 39, 40, 41, 42];
 let ChangeTab = () => {
     for (const key in props.firstStepErrors) {
         if (props.firstStepErrors.hasOwnProperty(key)) {
@@ -146,19 +147,20 @@ let ChangeTab = () => {
     }
     // Define an array of field names that are required
     for (const information of LegalInformation.value) {
-        console.log('form[information.checbox]', form.value[information.checbox]);
-        if (!form.value[information.checbox]) {
-            const fieldName = information.checbox.replace(/_/g, ' '); // Replace underscores with spaces
-            props.firstStepErrors[information.checbox] = [`The ${fieldName} field is required.`];
+        if (requiredIDs.includes(information.id)) {
+            if (!form.value[information.checbox]) {
+                props.firstStepErrors[information.checbox] = [`The YES OR NO  is required.`];
+            }
         }
+
     }
     // Check if there are any errors
     const hasErrors = Object.values(props.firstStepErrors).some(errors => errors.length > 0);
     if (!hasErrors) {
         emits("changeTab");
-    }else{
-        var element = document.getElementById("modal_main_id");
-        element.scrollIntoView();
+    } else {
+        // var element = document.getElementById("modal_main_id");
+        // element.scrollIntoView();
     }
 }
 let ChangeTabBack = () => {
@@ -183,7 +185,7 @@ let ChangeTabBack = () => {
                 <p>
                     <strong>
                         <span style="font-size: 18px;" class="mr-2">{{ information.question }}.</span>{{ information.heading
-                        }}<span class="text-red-500 ml-1">*</span>
+                        }}<span v-if="requiredIDs.includes(information.id)" class="text-red-500 ml-1">*</span>
                     </strong>
                 </p>
 
@@ -203,7 +205,8 @@ let ChangeTabBack = () => {
                             class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">NO</label>
                     </div>
                 </div>
-                <div v-if="firstStepErrors[information.checbox]" class="text-red-500" v-text="firstStepErrors[information.checbox][0]"></div>
+                <div v-if="firstStepErrors[information.checbox]" class="text-red-500 mt-3"
+                    v-text="firstStepErrors[information.checbox][0]"></div>
             </div>
         </div>
         <hr class="w-100 h-1 my-4 bg-gray-600 border-0 rounded dark:bg-gray-700">

@@ -10,9 +10,9 @@ let form = ref({
     last_name: null,
     middle_name: null,
     ssn: null,
-    gender: 'Choose',
+    gender: null,
     dob: null,
-    martial_status: 'Choose',
+    martial_status: null,
     cell_phone: null,
     home_phone: null,
     fax: null,
@@ -29,18 +29,19 @@ let form = ref({
     resident_insu_license_no: null,
     resident_insu_license_state: null,
     doing_business_as: null,
+
     business_name: null,
     business_tax_id: null,
     business_agent_name: null,
     business_agent_title: null,
-    business_company_type: 'Choose',
+    business_company_type: null,
     business_insu_license_no: null,
     business_office_fax: null,
     business_office_phone: null,
     business_email: null,
     business_website: null,
     business_address: null,
-    business_city_state: null,
+    business_city_state:'test',
     business_zip: null,
     business_move_in_date: null,
 })
@@ -48,6 +49,9 @@ const emits = defineEmits();
 watch(form.value, (newForm, oldForm) => {
     emits("updateFormData", newForm);
 });
+onMounted(()=>{
+    emits("updateFormData", form.value);
+})
 let ChangeTab = () => {
     for (const key in props.firstStepErrors) {
         if (props.firstStepErrors.hasOwnProperty(key)) {
@@ -55,17 +59,24 @@ let ChangeTab = () => {
         }
     }
     // Define an array of field names that are required
-    const requiredFields = [
-        "first_name", "last_name", "middle_name", "ssn", "gender", "dob", "martial_status",
-        "cell_phone", "home_phone", "fax", "email", "driver_license_no", "driver_license_state",
-        "address", "city_state", "zip", "move_in_date", "move_in_address", "move_in_city_state",
-        "move_in_zip", "resident_insu_license_no", "resident_insu_license_state", "doing_business_as",
+    const businessInputs = [
         "business_name", "business_tax_id", "business_agent_name", "business_agent_title",
         "business_company_type", "business_insu_license_no", "business_office_fax",
         "business_office_phone", "business_email", "business_website", "business_address",
         "business_city_state", "business_zip", "business_move_in_date"
+    ]
+    const requiredFields = [
+        "first_name", "last_name", "middle_name", "ssn", "gender", "dob", "martial_status",
+        "cell_phone", "email", "driver_license_no", "driver_license_state",
+        "address", "city_state", "zip", "move_in_date", "resident_insu_license_no", "resident_insu_license_state",
     ];
-    requiredFields.forEach(fieldName => {
+    const hasBusinessValue = businessInputs.some(fieldName => {
+        const value = form.value[fieldName];
+        return value !== null && value !== "Choose" && value !== '';
+    });
+    const mergedFields = hasBusinessValue ? [...requiredFields, ...businessInputs] : requiredFields;
+
+    mergedFields.forEach(fieldName => {
         if (form.value[fieldName] === null || form.value[fieldName] === "" || form.value[fieldName] === "Choose") {
             props.firstStepErrors[fieldName] = [`The ${fieldName.replace(/_/g, ' ')} field is required.`];
         }
@@ -91,7 +102,7 @@ let ChangeTab = () => {
         <div class="grid lg:grid-cols-3 mb-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
             <div>
                 <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last
-                    Name <span class="text-red-500">*</span></label>
+                    Name<span class="text-red-500">*</span></label>
                 <input type="text" v-model="form.last_name" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <div v-if="firstStepErrors.last_name" class="text-red-500" v-text="firstStepErrors.last_name[0]"></div>
@@ -115,7 +126,7 @@ let ChangeTab = () => {
         <div class="grid lg:grid-cols-3 mb-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
             <div>
                 <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Social
-                    Security Number (SSN) <span class="text-red-500">*</span></label>
+                    Security Number (SSN)<span class="text-red-500">*</span></label>
                 <input type="number" v-model="form.ssn" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <div v-if="firstStepErrors.ssn" class="text-red-500" v-text="firstStepErrors.ssn[0]"></div>
@@ -125,7 +136,7 @@ let ChangeTab = () => {
                         class="text-red-500">*</span></label>
                 <select v-model="form.gender" id="countries"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <option selected>Choose </option>
+                    <option value=null>Choose </option>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
                     <option value="other">Other</option>
@@ -151,14 +162,13 @@ let ChangeTab = () => {
             </div>
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Home
-                    Phone<span class="text-red-500">*</span></label>
+                    Phone</label>
                 <input type="number" v-model="form.home_phone" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <div v-if="firstStepErrors.home_phone" class="text-red-500" v-text="firstStepErrors.home_phone[0]"></div>
             </div>
             <div>
-                <label for="middle_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Fax<span
-                        class="text-red-500">*</span></label>
+                <label for="middle_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Fax</label>
                 <input type="number" v-model="form.fax" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <div v-if="firstStepErrors.fax" class="text-red-500" v-text="firstStepErrors.fax[0]"></div>
@@ -179,7 +189,7 @@ let ChangeTab = () => {
                     Status<span class="text-red-500">*</span></label>
                 <select v-model="form.martial_status" id="countries"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <option selected>Choose </option>
+                    <option value=null>Choose </option>
                     <option value="married">Married</option>
                     <option value="unmarried">UnMarried</option>
                 </select>
@@ -239,7 +249,7 @@ let ChangeTab = () => {
         <div class="grid lg:grid-cols-3 mb-2 md:grid-cols-2 sm:grid-cols-1 mt-3 gap-4">
             <div>
                 <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 dark:text-white">Move-In
-                    Date <span class="text-red-500">*</span></label>
+                    Date<span class="text-red-500">*</span></label>
                 <VueDatePicker v-model="form.move_in_date" format="dd-MMM-yyyy" :maxDate="maxDate"></VueDatePicker>
                 <div v-if="firstStepErrors.move_in_date" class="text-red-500" v-text="firstStepErrors.move_in_date[0]">
                 </div>
@@ -249,7 +259,7 @@ let ChangeTab = () => {
         <div class="grid lg:grid-cols-3 mb-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
             <div>
                 <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Mailing Address
-                    (If Diffrent From Residence) <span class="text-red-500">*</span></label>
+                    (If Diffrent From Residence)</label>
                 <div>
                     <input type="text" v-model="form.move_in_address" id="default-input"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -260,15 +270,14 @@ let ChangeTab = () => {
             </div>
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">City,
-                    State <span class="text-red-500">*</span></label>
+                    State</label>
                 <input type="text" v-model="form.move_in_city_state" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <div v-if="firstStepErrors.move_in_city_state" class="text-red-500"
                     v-text="firstStepErrors.move_in_city_state[0]"></div>
             </div>
             <div>
-                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Zip Code<span
-                        class="text-red-500">*</span></label>
+                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Zip Code</label>
                 <input type="number" v-model="form.move_in_zip" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <div v-if="firstStepErrors.move_in_zip" class="text-red-500" v-text="firstStepErrors.move_in_zip[0]"></div>
@@ -279,7 +288,7 @@ let ChangeTab = () => {
         <div class="grid lg:grid-cols-3 mb-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
             <div>
                 <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Resident
-                    Insurance License # <span class="text-red-500">*</span>
+                    Insurance License #<span class="text-red-500">*</span>
                 </label>
                 <input type="text" v-model="form.resident_insu_license_no" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -290,7 +299,7 @@ let ChangeTab = () => {
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Resident
                     Insurance License
-                    State <span class="text-red-500">*</span></label>
+                    State<span class="text-red-500">*</span></label>
                 <input type="text" v-model="form.resident_insu_license_state" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <div v-if="firstStepErrors.resident_insu_license_state" class="text-red-500"
@@ -298,7 +307,7 @@ let ChangeTab = () => {
             </div>
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Doing Business
-                    As <span class="text-red-500">*</span></label>
+                    As</label>
                 <div>
                     <input type="text" v-model="form.doing_business_as" id="default-input"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -323,8 +332,8 @@ let ChangeTab = () => {
 
         <div class="grid lg:grid-cols-4 mb-2 mt-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
             <div>
-                <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Business Name
-                    <span class="text-red-500">*</span></label>
+                <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Business
+                    Name</label>
                 <div>
 
                 </div>
@@ -335,8 +344,7 @@ let ChangeTab = () => {
 
             </div>
             <div>
-                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Tax ID<span
-                        class="text-red-500">*</span></label>
+                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Tax ID</label>
                 <input type="number" v-model="form.business_tax_id" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <div v-if="firstStepErrors.business_tax_id" class="text-red-500"
@@ -344,7 +352,7 @@ let ChangeTab = () => {
             </div>
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Principle Agent
-                    Name<span class="text-red-500">*</span></label>
+                    Name</label>
                 <input type="text" v-model="form.business_agent_name" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <div v-if="firstStepErrors.business_agent_name" class="text-red-500"
@@ -352,7 +360,7 @@ let ChangeTab = () => {
             </div>
             <div>
                 <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Priciple Agent
-                    Title<span class="text-red-500">*</span>
+                    Title
                 </label>
                 <input type="text" v-model="form.business_agent_title" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -364,7 +372,7 @@ let ChangeTab = () => {
         <div class="grid lg:grid-cols-4 mb-2 mt-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Business
-                    Insurance Licence #<span class="text-red-500">*</span></label>
+                    Insurance Licence #</label>
                 <input type="text" v-model="form.business_insu_license_no" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <div v-if="firstStepErrors.business_insu_license_no" class="text-red-500"
@@ -372,8 +380,7 @@ let ChangeTab = () => {
 
             </div>
             <div>
-                <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Cell Fax<span
-                        class="text-red-500">*</span></label>
+                <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Cell Fax</label>
                 <input type="number" v-model="form.business_office_fax" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <div v-if="firstStepErrors.business_office_fax" class="text-red-500"
@@ -381,15 +388,14 @@ let ChangeTab = () => {
             </div>
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Office
-                    Phone<span class="text-red-500">*</span></label>
+                    Phone</label>
                 <input type="number" v-model="form.business_office_phone" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <div v-if="firstStepErrors.business_office_phone" class="text-red-500"
                     v-text="firstStepErrors.business_office_phone[0]"></div>
             </div>
             <div>
-                <label for="middle_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Email<span
-                        class="text-red-500">*</span></label>
+                <label for="middle_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Email</label>
                 <input type="text" v-model="form.business_email" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <div v-if="firstStepErrors.business_email" class="text-red-500" v-text="firstStepErrors.business_email[0]">
@@ -399,8 +405,7 @@ let ChangeTab = () => {
 
         <div class="grid lg:grid-cols-4 mb-2 mt-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
             <div>
-                <label for="middle_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Website<span
-                        class="text-red-500">*</span></label>
+                <label for="middle_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Website</label>
                 <input type="text" v-model="form.business_website" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <div v-if="firstStepErrors.business_website" class="text-red-500"
@@ -408,7 +413,7 @@ let ChangeTab = () => {
             </div>
             <div>
                 <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Business
-                    Address<span class="text-red-500">*</span>
+                    Address
                 </label>
                 <div>
                     <input type="text" v-model="form.business_address" id="default-input"
@@ -420,15 +425,14 @@ let ChangeTab = () => {
             </div>
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">City,
-                    State<span class="text-red-500">*</span></label>
+                    State</label>
                 <input type="text" v-model="form.business_city_state" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <div v-if="firstStepErrors.business_city_state" class="text-red-500"
                     v-text="firstStepErrors.business_city_state[0]"></div>
             </div>
             <div>
-                <label for="first_name" class="block mb-0 text-sm font-black text-gray-900 dark:text-white">Zip Code<span
-                        class="text-red-500">*</span></label>
+                <label for="first_name" class="block mb-0 text-sm font-black text-gray-900 dark:text-white">Zip Code</label>
                 <input type="number" v-model="form.business_zip" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <div v-if="firstStepErrors.business_zip" class="text-red-500" v-text="firstStepErrors.business_zip[0]">
@@ -439,7 +443,7 @@ let ChangeTab = () => {
         <div class="grid lg:grid-cols-4 mb-2 md:grid-cols-1 sm:grid-cols-1  gap-4">
             <div>
                 <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 dark:text-white">Move-In
-                    Date<span class="text-red-500">*</span></label>
+                    Date</label>
                 <VueDatePicker v-model="form.business_move_in_date" format="dd-MMM-yyyy" :maxDate="maxDate"></VueDatePicker>
                 <div v-if="firstStepErrors.business_move_in_date" class="text-red-500"
                     v-text="firstStepErrors.business_move_in_date[0]"></div>
@@ -448,10 +452,10 @@ let ChangeTab = () => {
 
                 <div>
                     <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company
-                        Type<span class="text-red-500">*</span></label>
+                        Type</label>
                     <select v-model="form.business_company_type" id="countries"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <option selected>Choose </option>
+                        <option value=null>Choose </option>
                         <option value="corporation">Corporation</option>
                         <option value="parternership">Parternership</option>
                         <option value="LLP">LLP</option>
@@ -464,13 +468,14 @@ let ChangeTab = () => {
             <div>
             </div>
         </div>
-</div>
-<div class="px-5 pb-6">
-    <div class="flex justify-end flex-wrap">
-        <div class="mt-4">
-            <button type="button" @click="ChangeTab" class="button-custom px-3 py-2 rounded-md">
-                Next
-            </button>
+    </div>
+    <div class="px-5 pb-6">
+        <div class="flex justify-end flex-wrap">
+            <div class="mt-4">
+                <button type="button" @click="ChangeTab" class="button-custom px-3 py-2 rounded-md">
+                    Next
+                </button>
+            </div>
         </div>
     </div>
-</div></template>
+</template>

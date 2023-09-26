@@ -109,7 +109,7 @@ let ChangeTabBack = () => {
             </div>
             <div>
                 <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">City, state of
-                    Birth <span class="text-red-500 ">*</span></label>
+                    Birth<span class="text-red-500 ">*</span></label>
                 <input type="text" v-model="form.resident_city_state" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <div v-if="firstStepErrors.resident_city_state" class="text-red-500"
@@ -138,7 +138,7 @@ let ChangeTabBack = () => {
 
             <div class=" mt-4 lg:ml-4 sm:ml-0">
                 <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">AML
-                    Provider <span class="text-red-500 ">*</span></label>
+                    Provider<span class="text-red-500 ">*</span></label>
                 <div class="flex">
                     <div class="flex items-center mr-4">
 
@@ -161,7 +161,7 @@ let ChangeTabBack = () => {
             </div>
             <div>
                 <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 dark:text-white">Training
-                    Completion Date <span class="text-red-500 ">*</span></label>
+                    Completion Date<span class="text-red-500 ">*</span></label>
                 <VueDatePicker v-model="form.training_completion_date" format="dd-MMM-yyyy" :maxDate="maxDate">
                 </VueDatePicker>
                 <div v-if="firstStepErrors.training_completion_date" class="text-red-500"
