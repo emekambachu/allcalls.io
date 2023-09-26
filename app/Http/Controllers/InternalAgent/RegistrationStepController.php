@@ -32,8 +32,6 @@ class RegistrationStepController extends Controller
             'dob' => 'required',
             'martial_status' => 'required',
             'cell_phone' => 'required',
-            'home_phone' => 'required',
-            'fax' => 'required',
             'email' => 'required',
             'driver_license_no' => 'required',
             'driver_license_state' => 'required',
@@ -46,61 +44,13 @@ class RegistrationStepController extends Controller
             'move_in_zip' => 'required',
             'resident_insu_license_no' => 'required',
             'resident_insu_license_state' => 'required',
-            'doing_business_as' => 'required',
-            'business_name' => 'required',
-            'business_tax_id' => 'required',
-            'business_agent_name' => 'required',
-            'business_agent_title' => 'required',
-            'business_company_type' => 'required',
-            'business_insu_license_no' => 'required',
-            'business_office_fax' => 'required',
-            'business_office_phone' => 'required',
-            'business_email' => 'required',
-            'business_website' => 'required',
-            'business_address' => 'required',
-            'business_city_state' => 'required',
-            'business_zip' => 'required',
-            'business_move_in_date' => 'required',
             'aml_course' => 'required',
             'omissions_insurance' => 'required',
             'convicted_checkbox_1' => 'required',
             'convicted_checkbox_1a' => 'required',
             'convicted_checkbox_1b' => 'required',
             'convicted_checkbox_1c' => 'required',
-            'convicted_checkbox_1d' => 'required',
-            'convicted_checkbox_1e' => 'required',
-            'convicted_checkbox_1f' => 'required',
-            'convicted_checkbox_1g' => 'required',
-            'convicted_checkbox_1h' => 'required',
-            'lawsuit_checkbox_2' => 'required',
-            'lawsuit_checkbox_2a' => 'required',
-            'lawsuit_checkbox_2b' => 'required',
-            'lawsuit_checkbox_2c' => 'required',
-            'lawsuit_checkbox_2d' => 'required',
-            'alleged_engaged_checkbox_3' => 'required',
-            'found_engaged_checkbox_4' => 'required',
-            'terminate_contract_checkbox_5' => 'required',
-            'terminate_contract_checkbox_5a' => 'required',
-            'terminate_contract_checkbox_5b' => 'required',
-            'terminate_contract_checkbox_5c' => 'required',
-            'cancel_insu_cause_checkbox_6' => 'required',
-            'insurer_checkbox_7' => 'required',
-            'lawsuit_checkbox_8' => 'required',
-            'lawsuit_checkbox_8a' => 'required',
-            'lawsuit_checkbox_8b' => 'required',
-            'license_denied_checkbox_9' => 'required',
-            'regulatory_checkbox_10' => 'required',
-            'regulatory_revoked_checkbox_11' => 'required',
-            'regulatory_found_checkbox_12' => 'required',
-            'interr_licensing_checkbox_13' => 'required',
-            'self_regularity_checkbox_14' => 'required',
-            'self_regularity_checkbox_14a' => 'required',
-            'self_regularity_checkbox_14b' => 'required',
-            'self_regularity_checkbox_14c' => 'required',
-            'bankruptcy_checkbox_15' => 'required',
-            'bankruptcy_checkbox_15a' => 'required',
             'bankruptcy_checkbox_15b' => 'required',
-            'bankruptcy_checkbox_15c' => 'required',
             'liens_against_checkbox_16' => 'required',
             'connected_checkbox_17' => 'required',
             'aliases_checkbox_18' => 'required',
@@ -115,6 +65,26 @@ class RegistrationStepController extends Controller
             'residentLicensePdf' => 'required|mimetypes:application/pdf|max:2048',
             'bankingInfoPdf' => 'required|mimetypes:application/pdf|max:2048',
         ]);
+
+
+//        if($request['business_name']) {
+//            $validator = Validator::make($request->all(), [
+//                'business_name' => 'nullable|required',
+//                'business_tax_id' => 'required',
+//                'business_agent_name' => 'required',
+//                'business_agent_title' => 'required',
+//                'business_company_type' => 'required',
+//                'business_insu_license_no' => 'required',
+//                'business_office_fax' => 'required',
+//                'business_office_phone' => 'required',
+//                'business_email' => 'required',
+//                'business_website' => 'required',
+//                'business_address' => 'required',
+//                'business_city_state' => 'required',
+//                'business_zip' => 'required',
+//                'business_move_in_date' => 'required',
+//            ]);
+//        }
 
         if ($validator->fails()) {
             return response()->json([
@@ -134,50 +104,6 @@ class RegistrationStepController extends Controller
                     'ssn' => isset($request->ssn) ? $request->ssn : null,
                     'gender' => isset($request->gender) ? $request->gender : null,
                     'dob' => isset($request->dob) ? date('m/d/Y', strtotime($request->dob)) : null,
-                    'martial_status' => isset($request->martial_status) ? $request->martial_status : null,
-                    'cell_phone' => isset($request->cell_phone) ? $request->cell_phone : null,
-                    'home_phone' => isset($request->home_phone) ? $request->home_phone : null,
-                    'fax' => isset($request->fax) ? $request->fax : null,
-                    'email' => isset($request->email) ? $request->email : null,
-                    'driver_license_no' => isset($request->driver_license_no) ? $request->driver_license_no : null,
-                    'driver_license_state' => isset($request->driver_license_state) ? $request->driver_license_state : null,
-                    'address' => isset($request->address) ? $request->address : null,
-                    'city_state' => isset($request->city_state) ? $request->city_state : null,
-                    'zip' => isset($request->zip) ? $request->zip : null,
-                    'move_in_date' => isset($request->move_in_date) ? date('m/d/Y', strtotime($request->move_in_date))  : null,
-                    'move_in_address' => isset($request->move_in_address) ? $request->move_in_address : null,
-                    'move_in_city_state' => isset($request->move_in_city_state) ? $request->move_in_city_state : null,
-                    'move_in_zip' => isset($request->move_in_zip) ? $request->move_in_zip : null,
-                    'resident_insu_license_no' => isset($request->resident_insu_license_no) ? $request->resident_insu_license_no : null,
-                    'resident_insu_license_state' => isset($request->resident_insu_license_state) ? $request->resident_insu_license_state : null,
-                    'doing_business_as' => isset($request->doing_business_as) ? $request->doing_business_as : null,
-                    'business_name' => isset($request->business_name) ? $request->business_name : null,
-                    'business_tax_id' => isset($request->business_tax_id) ? $request->business_tax_id : null,
-                    'business_agent_name' => isset($request->business_agent_name) ? $request->business_agent_name : null,
-                    'business_agent_title' => isset($request->business_agent_title) ? $request->business_agent_title : null,
-                    'business_company_type' => isset($request->business_company_type) ? $request->business_company_type : null,
-                    'business_insu_license_no' => isset($request->business_insu_license_no) ? $request->business_insu_license_no : null,
-                    'business_office_fax' => isset($request->business_office_fax) ? $request->business_office_fax : null,
-                    'business_office_phone' => isset($request->business_office_phone) ? $request->business_office_phone : null,
-                    'business_email' => isset($request->business_email) ? $request->business_email : null,
-                    'business_website' => isset($request->business_website) ? $request->business_website : null,
-                    'business_address' => isset($request->business_address) ? $request->business_address : null,
-                    'business_city_state' => isset($request->business_city_state) ? $request->business_city_state : null,
-                    'business_zip' => isset($request->business_zip) ? $request->business_zip : null,
-                    'business_move_in_date' => isset($request->business_move_in_date) ? date('m/d/Y', strtotime($request->business_move_in_date))  : null,
-                    'aml_course' => isset($request->aml_course) ? $request->aml_course : null,
-                    'omissions_insurance' => isset($request->omissions_insurance) ? $request->omissions_insurance : null,
-                ]);
-                $basicInfoId = $basicInfo->id;
-            } else {
-                $basicInfoId = $basicInfo->id;
-                $basicInfo->update([
-                    'first_name' => $request->first_name,
-                    'last_name' => $request->last_name,
-                    'middle_name' => isset($request->middle_name) ? $request->middle_name : null,
-                    'ssn' => isset($request->ssn) ? $request->ssn : null,
-                    'gender' => isset($request->gender) ? $request->gender : null,
-                    'dob' => isset($request->dob) ? date('m/d/Y', strtotime($request->dob))  : null,
                     'martial_status' => isset($request->martial_status) ? $request->martial_status : null,
                     'cell_phone' => isset($request->cell_phone) ? $request->cell_phone : null,
                     'home_phone' => isset($request->home_phone) ? $request->home_phone : null,
@@ -208,7 +134,51 @@ class RegistrationStepController extends Controller
                     'business_address' => isset($request->business_address) ? $request->business_address : null,
                     'business_city_state' => isset($request->business_city_state) ? $request->business_city_state : null,
                     'business_zip' => isset($request->business_zip) ? $request->business_zip : null,
-                    'business_move_in_date' => isset($request->business_move_in_date) ? date('m/d/Y', strtotime($request->business_move_in_date))  : null,
+                    'business_move_in_date' => isset($request->business_move_in_date) ? date('m/d/Y', strtotime($request->business_move_in_date)) : null,
+                    'aml_course' => isset($request->aml_course) ? $request->aml_course : null,
+                    'omissions_insurance' => isset($request->omissions_insurance) ? $request->omissions_insurance : null,
+                ]);
+                $basicInfoId = $basicInfo->id;
+            } else {
+                $basicInfoId = $basicInfo->id;
+                $basicInfo->update([
+                    'first_name' => $request->first_name,
+                    'last_name' => $request->last_name,
+                    'middle_name' => isset($request->middle_name) ? $request->middle_name : null,
+                    'ssn' => isset($request->ssn) ? $request->ssn : null,
+                    'gender' => isset($request->gender) ? $request->gender : null,
+                    'dob' => isset($request->dob) ? date('m/d/Y', strtotime($request->dob)) : null,
+                    'martial_status' => isset($request->martial_status) ? $request->martial_status : null,
+                    'cell_phone' => isset($request->cell_phone) ? $request->cell_phone : null,
+                    'home_phone' => isset($request->home_phone) ? $request->home_phone : null,
+                    'fax' => isset($request->fax) ? $request->fax : null,
+                    'email' => isset($request->email) ? $request->email : null,
+                    'driver_license_no' => isset($request->driver_license_no) ? $request->driver_license_no : null,
+                    'driver_license_state' => isset($request->driver_license_state) ? $request->driver_license_state : null,
+                    'address' => isset($request->address) ? $request->address : null,
+                    'city_state' => isset($request->city_state) ? $request->city_state : null,
+                    'zip' => isset($request->zip) ? $request->zip : null,
+                    'move_in_date' => isset($request->move_in_date) ? date('m/d/Y', strtotime($request->move_in_date)) : null,
+                    'move_in_address' => isset($request->move_in_address) ? $request->move_in_address : null,
+                    'move_in_city_state' => isset($request->move_in_city_state) ? $request->move_in_city_state : null,
+                    'move_in_zip' => isset($request->move_in_zip) ? $request->move_in_zip : null,
+                    'resident_insu_license_no' => isset($request->resident_insu_license_no) ? $request->resident_insu_license_no : null,
+                    'resident_insu_license_state' => isset($request->resident_insu_license_state) ? $request->resident_insu_license_state : null,
+                    'doing_business_as' => isset($request->doing_business_as) ? $request->doing_business_as : null,
+                    'business_name' => isset($request->business_name) ? $request->business_name : null,
+                    'business_tax_id' => isset($request->business_tax_id) ? $request->business_tax_id : null,
+                    'business_agent_name' => isset($request->business_agent_name) ? $request->business_agent_name : null,
+                    'business_agent_title' => isset($request->business_agent_title) ? $request->business_agent_title : null,
+                    'business_company_type' => isset($request->business_company_type) ? $request->business_company_type : null,
+                    'business_insu_license_no' => isset($request->business_insu_license_no) ? $request->business_insu_license_no : null,
+                    'business_office_fax' => isset($request->business_office_fax) ? $request->business_office_fax : null,
+                    'business_office_phone' => isset($request->business_office_phone) ? $request->business_office_phone : null,
+                    'business_email' => isset($request->business_email) ? $request->business_email : null,
+                    'business_website' => isset($request->business_website) ? $request->business_website : null,
+                    'business_address' => isset($request->business_address) ? $request->business_address : null,
+                    'business_city_state' => isset($request->business_city_state) ? $request->business_city_state : null,
+                    'business_zip' => isset($request->business_zip) ? $request->business_zip : null,
+                    'business_move_in_date' => isset($request->business_move_in_date) ? date('m/d/Y', strtotime($request->business_move_in_date)) : null,
                     'aml_course' => isset($request->aml_course) ? $request->aml_course : null,
                     'omissions_insurance' => isset($request->omissions_insurance) ? $request->omissions_insurance : null,
                 ]);
@@ -265,7 +235,7 @@ class RegistrationStepController extends Controller
                 'resident_city_state' => isset($request->resident_city_state) ? $request->resident_city_state : null,
                 'resident_maiden_name' => isset($request->resident_maiden_name) ? $request->resident_maiden_name : null,
                 'aml_provider' => isset($request->aml_provider) ? $request->aml_provider : null,
-                'training_completion_date' => isset($request->training_completion_date) ? date('m/d/Y', strtotime($request->training_completion_date))  : null,
+                'training_completion_date' => isset($request->training_completion_date) ? date('m/d/Y', strtotime($request->training_completion_date)) : null,
                 'limra_password' => isset($request->limra_password) ? $request->limra_password : null,
             ]);
 
@@ -277,8 +247,8 @@ class RegistrationStepController extends Controller
                     'address' => isset($request->history_address1['address']) ? $request->history_address1['address'] : null,
                     'city_state' => isset($request->history_address1['city']) ? $request->history_address1['city'] : null,
                     'zip' => isset($request->history_address1['zip_code']) ? $request->history_address1['zip_code'] : null,
-                    'move_in_date' => isset($request->history_address1['move_in_date']) ? date('m/d/Y', strtotime($request->history_address1['move_in_date']))  : null,
-                    'move_out_date' => isset($request->history_address1['move_out_date']) ? date('m/d/Y', strtotime($request->history_address1['move_out_date']))  : null,
+                    'move_in_date' => isset($request->history_address1['move_in_date']) ? date('m/d/Y', strtotime($request->history_address1['move_in_date'])) : null,
+                    'move_out_date' => isset($request->history_address1['move_out_date']) ? date('m/d/Y', strtotime($request->history_address1['move_out_date'])) : null,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
@@ -290,8 +260,8 @@ class RegistrationStepController extends Controller
                     'address' => isset($request->history_address2['address']) ? $request->history_address2['address'] : null,
                     'city_state' => isset($request->history_address2['city']) ? $request->history_address2['city'] : null,
                     'zip' => isset($request->history_address2['zip_code']) ? $request->history_address2['zip_code'] : null,
-                    'move_in_date' => isset($request->history_address2['move_in_date']) ? date('m/d/Y', strtotime($request->history_address2['move_in_date']))  : null,
-                    'move_out_date' => isset($request->history_address2['move_out_date']) ? date('m/d/Y', strtotime($request->history_address2['move_out_date']))  : null,
+                    'move_in_date' => isset($request->history_address2['move_in_date']) ? date('m/d/Y', strtotime($request->history_address2['move_in_date'])) : null,
+                    'move_out_date' => isset($request->history_address2['move_out_date']) ? date('m/d/Y', strtotime($request->history_address2['move_out_date'])) : null,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
@@ -303,8 +273,8 @@ class RegistrationStepController extends Controller
                     'address' => isset($request->history_address3['address']) ? $request->history_address3['address'] : null,
                     'city_state' => isset($request->history_address3['city']) ? $request->history_address3['city'] : null,
                     'zip' => isset($request->history_address3['zip_code']) ? $request->history_address3['zip_code'] : null,
-                    'move_in_date' => isset($request->history_address3['move_in_date']) ? date('m/d/Y', strtotime($request->history_address3['move_in_date']))   : null,
-                    'move_out_date' => isset($request->history_address3['move_out_date']) ? date('m/d/Y', strtotime($request->history_address3['move_out_date']))  : null,
+                    'move_in_date' => isset($request->history_address3['move_in_date']) ? date('m/d/Y', strtotime($request->history_address3['move_in_date'])) : null,
+                    'move_out_date' => isset($request->history_address3['move_out_date']) ? date('m/d/Y', strtotime($request->history_address3['move_out_date'])) : null,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
@@ -316,7 +286,7 @@ class RegistrationStepController extends Controller
                     'address' => isset($request->history_address4['address']) ? $request->history_address4['address'] : null,
                     'city_state' => isset($request->history_address4['city']) ? $request->history_address4['city'] : null,
                     'zip' => isset($request->history_address4['zip_code']) ? $request->history_address4['zip_code'] : null,
-                    'move_in_date' => isset($request->history_address4['move_in_date']) ? date('m/d/Y', strtotime($request->history_address4['move_in_date']))  : null,
+                    'move_in_date' => isset($request->history_address4['move_in_date']) ? date('m/d/Y', strtotime($request->history_address4['move_in_date'])) : null,
                     'move_out_date' => isset($request->history_address4['move_out_date']) ? date('m/d/Y', strtotime($request->history_address4['move_out_date'])) : null,
                     'created_at' => now(),
                     'updated_at' => now(),
@@ -329,8 +299,8 @@ class RegistrationStepController extends Controller
                     'address' => isset($request->history_address5['address']) ? $request->history_address5['address'] : null,
                     'city_state' => isset($request->history_address5['city']) ? $request->history_address5['city'] : null,
                     'zip' => isset($request->history_address5['zip_code']) ? $request->history_address5['zip_code'] : null,
-                    'move_in_date' => isset($request->history_address5['move_in_date']) ? date('m/d/Y', strtotime($request->history_address5['move_in_date']))  : null,
-                    'move_out_date' => isset($request->history_address5['move_out_date']) ? date('m/d/Y', strtotime($request->history_address5['move_out_date']))  : null,
+                    'move_in_date' => isset($request->history_address5['move_in_date']) ? date('m/d/Y', strtotime($request->history_address5['move_in_date'])) : null,
+                    'move_out_date' => isset($request->history_address5['move_out_date']) ? date('m/d/Y', strtotime($request->history_address5['move_out_date'])) : null,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
@@ -342,8 +312,8 @@ class RegistrationStepController extends Controller
                     'address' => isset($request->history_address6['address']) ? $request->history_address6['address'] : null,
                     'city_state' => isset($request->history_address6['city']) ? $request->history_address6['city'] : null,
                     'zip' => isset($request->history_address6['zip_code']) ? $request->history_address6['zip_code'] : null,
-                    'move_in_date' => isset($request->history_address6['move_in_date']) ? date('m/d/Y', strtotime($request->history_address6['move_in_date']))  : null,
-                    'move_out_date' => isset($request->history_address6['move_out_date']) ? date('m/d/Y', strtotime($request->history_address6['move_out_date']))  : null,
+                    'move_in_date' => isset($request->history_address6['move_in_date']) ? date('m/d/Y', strtotime($request->history_address6['move_in_date'])) : null,
+                    'move_out_date' => isset($request->history_address6['move_out_date']) ? date('m/d/Y', strtotime($request->history_address6['move_out_date'])) : null,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
@@ -356,7 +326,7 @@ class RegistrationStepController extends Controller
                     'city_state' => isset($request->history_address7['city']) ? $request->history_address7['city'] : null,
                     'zip' => isset($request->history_address7['zip_code']) ? $request->history_address7['zip_code'] : null,
                     'move_in_date' => isset($request->history_address7['move_in_date']) ? date('m/d/Y', strtotime($request->history_address7['move_in_date'])) : null,
-                    'move_out_date' => isset($request->history_address7['move_out_date']) ? date('m/d/Y', strtotime($request->history_address7['move_out_date']))   : null,
+                    'move_out_date' => isset($request->history_address7['move_out_date']) ? date('m/d/Y', strtotime($request->history_address7['move_out_date'])) : null,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
@@ -369,7 +339,7 @@ class RegistrationStepController extends Controller
 
             if ($request->file('residentLicensePdf') && $request->file('residentLicensePdf')->isValid()) {
 
-                $residentPDf =  InternalAgentResidentLicense::where('reg_info_id', $basicInfoId)->first();
+                $residentPDf = InternalAgentResidentLicense::where('reg_info_id', $basicInfoId)->first();
                 if ($residentPDf) {
                     if (file_exists(asset('internal-agents/resident-license-pdf/' . $residentPDf->name))) {
                         unlink(asset('internal-agents/resident-license-pdf/' . $residentPDf->name));
@@ -387,7 +357,7 @@ class RegistrationStepController extends Controller
             }
 
             if ($request->file('bankingInfoPdf') && $request->file('bankingInfoPdf')->isValid()) {
-                $bankingInfoPdf =  InternalAgentBankingInfo::where('reg_info_id', $basicInfoId)->first();
+                $bankingInfoPdf = InternalAgentBankingInfo::where('reg_info_id', $basicInfoId)->first();
                 if ($bankingInfoPdf) {
                     if (file_exists(asset('internal-agents/banking-info/' . $bankingInfoPdf->name))) {
                         unlink(asset('internal-agents/banking-info/' . $bankingInfoPdf->name));
