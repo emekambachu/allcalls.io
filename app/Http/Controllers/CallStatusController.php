@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use App\Models\Call;
 use App\Models\User;
 use Twilio\Rest\Client;
 use App\Models\CallType;
@@ -86,7 +87,7 @@ class CallStatusController extends Controller
                 if ($callDuration > 10) {
                     try {
                         // Initialize Twilio client
-                        $client = new Client(env('TWILIO_ACCOUNT_SID'), env('TWILIO_AUTH_TOKEN'));
+                        $client = new Client(env('TWILIO_SID'), env('TWILIO_AUTH_TOKEN'));
 
                         // Extract ParentCallSid and CallSid from the request
                         $parentCallSid = $request->ParentCallSid;
@@ -111,6 +112,27 @@ class CallStatusController extends Controller
                 // ========================================
                 // END: Terminate Call Chain Block
                 // ========================================
+
+
+
+
+
+                // ========================================
+                // START: Save Call Duration
+                // ========================================
+                Log::debug('SaveCallDuration: start.');
+                $call = Call::where('unique_call_id', $request->unique_call_id)->first();
+                if ($call && $callDuration) {
+                    Log::debug('SaveCallDuration: call && callDuration found.');
+                    $call->call_duration_in_seconds = $callDuration;
+                    $call->save();
+                    Log::debug('SaveCallDuration: saved.');
+                }
+                Log::debug('SaveCallDuration: end.');
+                // ========================================
+                // END: Save Call Duration
+                // ========================================
+
 
 
 

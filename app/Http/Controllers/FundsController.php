@@ -113,7 +113,7 @@ class FundsController extends Controller
         // 4. Update user balance and transaction
         $this->updateUserBalanceAndTransaction($request, $card, $totalWithBonus);
 
-        FundsAdded::dispatch($request->user(), $subtotal, $processingFee, $finalAmount, $totalWithBonus ? $subtotal : 0);
+        FundsAdded::dispatch($request->user(), $subtotal, $processingFee, $finalAmount, $totalWithBonus ? $subtotal : 0, $card);
 
         // Prepare the flash message
         $flashMessage = 'Payment successful!';

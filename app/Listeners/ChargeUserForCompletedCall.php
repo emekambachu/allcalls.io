@@ -2,9 +2,10 @@
 
 namespace App\Listeners;
 
-use App\Events\CompletedCallEvent;
+use App\Models\Call;
 use App\Events\FundsTooLow;
 use App\Models\Transaction;
+use App\Events\CompletedCallEvent;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\InteractsWithQueue;
@@ -43,6 +44,12 @@ class ChargeUserForCompletedCall
                     'updated_at' => now(),
                     'label' => 'Purchased call'
                 ]);
+
+                $call = Call::where('unique_call_id', $event->uniqueCallId)->first();
+                if ($call) {
+                    $call->amount_spent = 35;
+                    $call->save();
+                }
             });
             Log::debug('Deducted $35 from user balance after completed call');
         } else {

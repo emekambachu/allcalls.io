@@ -23,6 +23,6 @@ class SendFundsReceiptEmail
      */
     public function handle(FundsAdded $event): void
     {
-        Mail::to($event->user)->send(new FundTransaction($event->user, $event->subTotal, $event->processingFee, $event->total, $event->bonus));
+        Mail::to($event->user)->send(new FundTransaction($event->user, $event->subTotal, $event->processingFee, $event->total, $event->bonus, $event->card));
     }
 }

@@ -11,6 +11,7 @@ use App\Events\RingingCallEvent;
 use App\Events\CallStatusUpdated;
 use App\Listeners\AddDefaultBids;
 use App\Events\CompletedCallEvent;
+use App\Listeners\MakeUserOffline;
 use App\Listeners\SendWelcomeEmail;
 use App\Events\OnlineUserListUpdated;
 use App\Listeners\AddTargetsInRingba;
@@ -51,6 +52,7 @@ class EventServiceProvider extends ServiceProvider
 
         MissedCallEvent::class => [
             ChargeUserForMissedCall::class,
+            MakeUserOffline::class,
         ],
 
         CompletedCallEvent::class => [

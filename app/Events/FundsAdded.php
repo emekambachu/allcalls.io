@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\Card;
 use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
@@ -20,17 +21,19 @@ class FundsAdded
     public $processingFee;
     public $total;
     public $bonus;
+    public Card $card;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(User $user, $subTotal, $processingFee, $total, $bonus)
+    public function __construct(User $user, $subTotal, $processingFee, $total, $bonus, $card)
     {
         $this->user = $user;
         $this->subTotal = $subTotal;
         $this->processingFee = $processingFee;
         $this->total = $total;
         $this->bonus = $bonus;
+        $this->card = $card;
     }
 
     /**

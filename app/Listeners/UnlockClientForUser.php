@@ -37,9 +37,14 @@ class UnlockClientForUser
 
 
         $call->client->unlocked = true;
-        $call->save();
+        $result = $call->client->save();
 
-        Log::debug('client unlocked for user');
+        if (!$result) {
+            Log::error('Client unlock save failed', ['client' => $call->client->toArray()]);
+        } else {
+            Log::info('Client unlock save succeeded', ['client' => $call->client->toArray()]);
+        }
+        
         return;
     }
 }
