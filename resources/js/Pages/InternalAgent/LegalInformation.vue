@@ -142,13 +142,39 @@ let LegalInformation = ref([
 
 ])
 
-let page1form = ref({
+let form = ref({
 
 })
 const emits = defineEmits();
-watch(page1form.value, (newForm, oldForm) => {
+watch(form.value, (newForm, oldForm) => {
     emits("updateFormData", newForm);
 });
+let ChangeTab = () => {
+    for (const key in props.firstStepErrors) {
+        if (props.firstStepErrors.hasOwnProperty(key)) {
+            props.firstStepErrors[key] = [];
+        }
+    }
+    // Define an array of field names that are required
+    for (const information of LegalInformation.value) {
+        console.log('form[information.checbox]', form.value[information.checbox]);
+        if (!form.value[information.checbox]) {
+            const fieldName = information.checbox.replace(/_/g, ' '); // Replace underscores with spaces
+            props.firstStepErrors[information.checbox] = [`The ${fieldName} field is required.`];
+        }
+    }
+    // Check if there are any errors
+    const hasErrors = Object.values(props.firstStepErrors).some(errors => errors.length > 0);
+    if (!hasErrors) {
+        emits("changeTab");
+    }else{
+        var element = document.getElementById("modal_main_id");
+        element.scrollIntoView();
+    }
+}
+let ChangeTabBack = () => {
+    emits("goback");
+}
 </script>
 <template>
     <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
@@ -174,14 +200,14 @@ watch(page1form.value, (newForm, oldForm) => {
 
                 <div class="flex mt-4">
                     <div class="flex items-center mr-4">
-                        <input :id="'default-radio-' + information.id + '-yes'" v-model="page1form[information.checbox]"
+                        <input :id="'default-radio-' + information.id + '-yes'" v-model="form[information.checbox]"
                             value="YES" type="radio" :name="'question-' + information.id"
                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
                         <label :for="'default-radio-' + information.id + '-yes'"
                             class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">YES</label>
                     </div>
                     <div class="flex items-center">
-                        <input :id="'default-radio-' + information.id + '-no'" v-model="page1form[information.checbox]"
+                        <input :id="'default-radio-' + information.id + '-no'" v-model="form[information.checbox]"
                             value="NO" type="radio" :name="'question-' + information.id"
                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
                         <label :for="'default-radio-' + information.id + '-no'"
@@ -189,9 +215,30 @@ watch(page1form.value, (newForm, oldForm) => {
                     </div>
                     
                 </div>
+                <div v-if="firstStepErrors[information.checbox]" class="text-red-500" v-text="firstStepErrors[information.checbox][0]"></div>
             </div>
         </div>
-        <div v-if="firstStepErrors[information.checbox]" class="text-red-500" v-text="firstStepErrors[information.checbox][0]"></div>
+        
         <hr class="w-100 h-1 my-4 bg-gray-600 border-0 rounded dark:bg-gray-700">
+    </div>
+    <div class="px-5 pb-6">
+        <div class="flex justify-between flex-wrap">
+            <div class="mt-4">
+
+                <button type="button" @click.prevent="ChangeTabBack" class="button-custom-back px-3 py-2 rounded-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-4 h-4 mr-2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
+                    </svg>
+                    Back
+                </button>
+            </div>
+            <div class="mt-4">
+                <button type="button" @click="ChangeTab" class="button-custom px-3 py-2 rounded-md">
+                    Next
+                </button>
+
+            </div>
+        </div>
     </div>
 </template>

@@ -7,7 +7,7 @@ let props = defineProps({
 });
 const fileError = ref(false);
 const selectedFileName = ref(""); // To store the selected file name
-const selectedFile = ref()
+const selectedFile = ref(null)
 const handleFileChange = (event) => {
     const files = event.target.files;
     selectedFile.value = null
@@ -23,10 +23,14 @@ const handleFileChange = (event) => {
         // Display an error message for multiple files
         fileError.value = true;
         selectedFileName.value = ""; // Clear the selected file name
+        props.firstStepErrors.residentLicensePdf = [];
+        selectedFile.value = null
     } else {
         // Display an error message for invalid file type
         fileError.value = true;
         selectedFileName.value = ""; // Clear the selected file name
+        props.firstStepErrors.residentLicensePdf = [];
+        selectedFile.value = null
     }
 };
 
@@ -45,10 +49,14 @@ const handleDrop = (event) => {
         // Display an error message for multiple files
         fileError.value = true;
         selectedFileName.value = ""; // Clear the selected file name
+        props.firstStepErrors.residentLicensePdf = [];
+        selectedFile.value = null
     } else {
         // Display an error message for invalid file type or no files dropped
         fileError.value = true;
         selectedFileName.value = ""; // Clear the selected file name
+        props.firstStepErrors.residentLicensePdf = [];
+        selectedFile.value = null
     }
 };
 
@@ -57,6 +65,23 @@ const emits = defineEmits();
 watch(selectedFile, (newForm, oldForm) => {
     emits("uploadLicense", newForm);
 });
+let ChangeTab = () => {
+    for (const key in props.firstStepErrors) {
+        if (props.firstStepErrors.hasOwnProperty(key)) {
+            props.firstStepErrors[key] = [];
+        }
+    }
+   
+    if(!selectedFile.value){
+        fileError.value = false;
+        props.firstStepErrors.residentLicensePdf = [`The Resident License field is required.`];
+    }else{
+        emits("changeTab");
+    }
+}
+let ChangeTabBack = () => {
+    emits("goback");
+}
 </script>
 <template>
     <div>
@@ -81,12 +106,32 @@ watch(selectedFile, (newForm, oldForm) => {
                 <input id="dropzone-file" type="file" class="hidden" @change="handleFileChange" accept=".pdf"  />
             </label>
         </div>
-        <p v-if="fileError" class="text-red-500">{{ fileErrorMessage }}</p>
+        <p v-if="fileError" class="text-red-500 mt-4">{{ fileErrorMessage }}</p>
         <!-- Display the selected file name with styling -->
         <div v-if="selectedFileName" class="text-green-500 mt-4">
             Selected File: {{ selectedFileName }}
         </div>
-        <div v-if="firstStepErrors.residentLicensePdf" class="text-red-500" v-text="firstStepErrors.residentLicensePdf[0]"></div> 
+        <div v-if="firstStepErrors.residentLicensePdf" class="text-red-500 mt-4" v-text="firstStepErrors.residentLicensePdf[0]"></div> 
+    </div>
+    <div class="px-5 pb-6">
+        <div class="flex justify-between flex-wrap">
+            <div class="mt-4">
+
+                <button type="button" @click.prevent="ChangeTabBack" class="button-custom-back px-3 py-2 rounded-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-4 h-4 mr-2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
+                    </svg>
+                    Back Step
+                </button>
+            </div>
+            <div class="mt-4">
+                <button type="button" @click="ChangeTab" class="button-custom px-3 py-2 rounded-md">
+                    Next Step
+                </button>
+
+            </div>
+        </div>
     </div>
 </template>
 

@@ -52,6 +52,10 @@ const ChangeTab = () => {
                     city: !formData.city,
                     zip_code: !formData.zip_code,
                 };
+                
+            var element = document.getElementById("modal_main_id");
+            element.scrollIntoView();
+    
                 return; // Stop tab change
             }
         } else {
@@ -68,46 +72,6 @@ watch(form.value, (newForm, oldForm) => {
     emits("addRessHistory", newForm);
 });
 </script>
-<style scoped>
-.button-custom {
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 150ms;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    font-weight: 600;
-    border-width: 1px;
-    align-items: center;
-    display: inline-flex;
-    border-color: rgb(107 114 128 / var(--tw-border-opacity));
-    background-color: #03243d;
-    color: #3cfa7a;
-    cursor: pointer;
-}
-
-.button-custom:hover {
-    transition-duration: 150ms;
-    background-color: white;
-    color: black;
-}
-
-.button-custom-back {
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 150ms;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    font-weight: 600;
-    border-width: 1px;
-    align-items: center;
-    display: inline-flex;
-    border-color: rgb(107 114 128 / var(--tw-border-opacity));
-}
-
-.button-custom-back:hover {
-    background-color: #03243d;
-    color: #3cfa7a;
-    transition-duration: 150ms;
-}
-</style>
 <template>
     <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
         Address History
