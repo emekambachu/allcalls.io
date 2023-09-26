@@ -16,19 +16,10 @@ use \App\Http\Controllers\InternalAgent\RegistrationStepController;
 */
 
 
-Route::prefix('internal-agent')->group(function () {
-
-    Route::get('register', [RegisteredInternalAgentController::class, 'create'])
-    ->name('register');
-
-    Route::post('register', [RegisteredInternalAgentController::class, 'store'])
-    ->name('register');
-
-    Route::middleware(['auth', 'verified', 'internal-agent'])->group(function () {
-        //Internal Agents Routes
-        Route::get('contract-steps', [RegistrationStepController::class, 'contractSteps'])
+Route::prefix('internal-agent')->middleware(['auth', 'verified', 'internal-agent'])->group(function () {
+    //Internal Agents Routes
+    Route::get('contract-steps', [RegistrationStepController::class, 'contractSteps'])
         ->name('contract.steps');
-        Route::post('registration-steps', [RegistrationStepController::class, 'store'])
+    Route::post('registration-steps', [RegistrationStepController::class, 'store'])
         ->name('registration.steps');
-    });
 });

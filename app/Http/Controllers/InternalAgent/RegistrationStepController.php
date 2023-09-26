@@ -112,7 +112,6 @@ class RegistrationStepController extends Controller
             'aml_provider' => 'required',
             'training_completion_date' => 'required',
             'limra_password' => 'required',
-
             'residentLicensePdf' => 'required|mimetypes:application/pdf|max:2048',
             'bankingInfoPdf' => 'required|mimetypes:application/pdf|max:2048',
         ]);

@@ -67,8 +67,6 @@ class RegisteredInternalAgentController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $user->markEmailAsVerified();
-
         $agentRole = Role::whereName('internal-agent')->first();
         DB::table('role_user')->insert([
             'user_id' => $user->id,
@@ -101,6 +99,9 @@ class RegisteredInternalAgentController extends Controller
                 DB::table('users_call_type_state')->insert($data);
             });
         }
+
+        event(new Registered($user));
+
         Auth::login($user);
         return response()->json([
             'success' => true,
