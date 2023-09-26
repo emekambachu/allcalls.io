@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use App\Events\FundsAdded;
 use App\Events\FundsTooLow;
-use App\Listeners\MakeUserOffline;
 use App\Models\Transaction;
 use App\Events\MissedCallEvent;
 use App\Listeners\SaveUserCall;
@@ -12,6 +11,7 @@ use App\Events\RingingCallEvent;
 use App\Events\CallStatusUpdated;
 use App\Listeners\AddDefaultBids;
 use App\Events\CompletedCallEvent;
+use App\Listeners\MakeUserOffline;
 use App\Listeners\SendWelcomeEmail;
 use App\Events\OnlineUserListUpdated;
 use App\Listeners\AddTargetsInRingba;
