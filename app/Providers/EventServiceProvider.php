@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Events\FundsAdded;
 use App\Events\FundsTooLow;
+use App\Listeners\MakeUserOffline;
 use App\Models\Transaction;
 use App\Events\MissedCallEvent;
 use App\Listeners\SaveUserCall;
@@ -51,6 +52,7 @@ class EventServiceProvider extends ServiceProvider
 
         MissedCallEvent::class => [
             ChargeUserForMissedCall::class,
+            MakeUserOffline::class,
         ],
 
         CompletedCallEvent::class => [
