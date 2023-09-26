@@ -101,7 +101,7 @@ let ChangeTabBack = () => {
                     <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
                         <span class="font-semibold">Click to upload</span> or drag and drop
                     </p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">PDF files only</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">PDF files only<span class="text-red-500 ">*</span></p>
                 </div>
                 <input id="dropzone-file" type="file" class="hidden" @change="handleFileChange" accept=".pdf"  />
             </label>

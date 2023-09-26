@@ -183,7 +183,7 @@ let ChangeTabBack = () => {
                 <p>
                     <strong>
                         <span style="font-size: 18px;" class="mr-2">{{ information.question }}.</span>{{ information.heading
-                        }}
+                        }}<span class="text-red-500 ml-1">*</span>
                     </strong>
                 </p>
 
