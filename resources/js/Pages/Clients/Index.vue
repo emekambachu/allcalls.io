@@ -153,15 +153,12 @@ let capitalizeAndReplaceUnderscore = (str) => {
                     <span v-else>-</span>
                   </td>
                   <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
-                    <button
-                      v-if="Client.unlocked == 1"
-                      @click="openClientModal(Client)"
-                      class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
+                    <button @click="openClientModal(Client)" class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
                       type="button"
                     >
                       View Client
                     </button>
-                    <button v-else class="text-center" type="button">-</button>
+                    <!-- <button v-else class="text-center" type="button">-</button> -->
                   </td>
                 </tr>
               </tbody>
