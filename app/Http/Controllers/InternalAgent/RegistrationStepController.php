@@ -78,6 +78,21 @@ class RegistrationStepController extends Controller
             'business_city_state' => 'nullable|required_with:business_name,business_tax_id,business_agent_name,business_agent_title,business_company_type,business_insu_license_no,business_office_fax,business_office_phone,business_email,business_website,business_address,business_zip,business_move_in_date',
             'business_zip' => 'nullable|required_with:business_name,business_tax_id,business_agent_name,business_agent_title,business_company_type,business_insu_license_no,business_office_fax,business_office_phone,business_email,business_website,business_address,business_city_state,business_move_in_date',
             'business_move_in_date' => 'nullable|required_with:business_name,business_tax_id,business_agent_name,business_agent_title,business_company_type,business_insu_license_no,business_office_fax,business_office_phone,business_email,business_website,business_address,business_city_state,business_zip',
+        ], [
+            'business_name.required' => 'The business name is required.',
+            'business_tax_id.required' => 'The business tax ID is required.',
+            'business_agent_name.required' => 'The business agent name is required.',
+            'business_agent_title.required' => 'The business agent title is required.',
+            'business_company_type.required' => 'The business company type is required.',
+            'business_insu_license_no.required' => 'The business insurance license number is required.',
+            'business_office_fax.required' => 'The business office fax is required.',
+            'business_office_phone.required' => 'The business office phone is required.',
+            'business_email.required' => 'The business email is required.',
+            'business_website.required' => 'The business website is required.',
+            'business_address.required' => 'The business address is required.',
+            'business_city_state.required' => 'The business city/state is required.',
+            'business_zip.required' => 'The business ZIP code is required.',
+            'business_move_in_date.required' => 'The business move-in date is required.',
         ]);
 
         if ($validator->fails()) {
