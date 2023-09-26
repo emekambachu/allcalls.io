@@ -24,9 +24,6 @@ Route::prefix('internal-agent')->group(function () {
     Route::post('register', [RegisteredInternalAgentController::class, 'store'])
     ->name('register');
 
-
-
-
     Route::middleware(['auth', 'verified', 'internal-agent'])->group(function () {
         //Internal Agents Routes
         Route::get('contract-steps', [RegistrationStepController::class, 'contractSteps'])
