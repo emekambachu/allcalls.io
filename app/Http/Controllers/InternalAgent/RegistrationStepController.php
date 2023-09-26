@@ -64,7 +64,6 @@ class RegistrationStepController extends Controller
             'limra_password' => 'required',
             'residentLicensePdf' => 'required|mimetypes:application/pdf|max:2048',
             'bankingInfoPdf' => 'required|mimetypes:application/pdf|max:2048',
-
             'business_name' => 'nullable|required',
             'business_tax_id' => 'nullable|required_with:business_name,business_agent_name,business_agent_title,business_company_type,business_insu_license_no,business_office_fax,business_office_phone,business_email,business_website,business_address,business_city_state,business_zip,business_move_in_date',
             'business_agent_name' => 'nullable|required_with:business_name,business_tax_id,business_agent_title,business_company_type,business_insu_license_no,business_office_fax,business_office_phone,business_email,business_website,business_address,business_city_state,business_zip,business_move_in_date',
@@ -80,26 +79,6 @@ class RegistrationStepController extends Controller
             'business_zip' => 'nullable|required_with:business_name,business_tax_id,business_agent_name,business_agent_title,business_company_type,business_insu_license_no,business_office_fax,business_office_phone,business_email,business_website,business_address,business_city_state,business_move_in_date',
             'business_move_in_date' => 'nullable|required_with:business_name,business_tax_id,business_agent_name,business_agent_title,business_company_type,business_insu_license_no,business_office_fax,business_office_phone,business_email,business_website,business_address,business_city_state,business_zip',
         ]);
-
-
-//        if($request['business_name']) {
-//            $validator = Validator::make($request->all(), [
-//                'business_name' => 'nullable|required',
-//                'business_tax_id' => 'required',
-//                'business_agent_name' => 'required',
-//                'business_agent_title' => 'required',
-//                'business_company_type' => 'required',
-//                'business_insu_license_no' => 'required',
-//                'business_office_fax' => 'required',
-//                'business_office_phone' => 'required',
-//                'business_email' => 'required',
-//                'business_website' => 'required',
-//                'business_address' => 'required',
-//                'business_city_state' => 'required',
-//                'business_zip' => 'required',
-//                'business_move_in_date' => 'required',
-//            ]);
-//        }
 
         if ($validator->fails()) {
             return response()->json([
