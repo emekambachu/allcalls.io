@@ -10,9 +10,9 @@ let form = ref({
     last_name: null,
     middle_name: null,
     ssn: null,
-    gender: null,
+    gender: 'Choose',
     dob: null,
-    martial_status: null,
+    martial_status: 'Choose',
     cell_phone: null,
     home_phone: null,
     fax: null,
@@ -34,14 +34,14 @@ let form = ref({
     business_tax_id: null,
     business_agent_name: null,
     business_agent_title: null,
-    business_company_type: null,
+    business_company_type: 'Choose',
     business_insu_license_no: null,
     business_office_fax: null,
     business_office_phone: null,
     business_email: null,
     business_website: null,
     business_address: null,
-    business_city_state:'test',
+    business_city_state:null,
     business_zip: null,
     business_move_in_date: null,
 })
@@ -49,9 +49,6 @@ const emits = defineEmits();
 watch(form.value, (newForm, oldForm) => {
     emits("updateFormData", newForm);
 });
-onMounted(()=>{
-    emits("updateFormData", form.value);
-})
 let ChangeTab = () => {
     for (const key in props.firstStepErrors) {
         if (props.firstStepErrors.hasOwnProperty(key)) {
@@ -70,7 +67,9 @@ let ChangeTab = () => {
         "cell_phone", "email", "driver_license_no", "driver_license_state",
         "address", "city_state", "zip", "move_in_date", "resident_insu_license_no", "resident_insu_license_state",
     ];
+   console.log('form', form.value);
     const hasBusinessValue = businessInputs.some(fieldName => {
+        console.log('fieldName', fieldName);
         const value = form.value[fieldName];
         return value !== null && value !== "Choose" && value !== '';
     });
@@ -136,7 +135,7 @@ let ChangeTab = () => {
                         class="text-red-500">*</span></label>
                 <select v-model="form.gender" id="countries"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <option value=null>Choose </option>
+                    <option >Choose </option>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
                     <option value="other">Other</option>
@@ -189,7 +188,7 @@ let ChangeTab = () => {
                     Status<span class="text-red-500">*</span></label>
                 <select v-model="form.martial_status" id="countries"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <option value=null>Choose </option>
+                    <option >Choose </option>
                     <option value="married">Married</option>
                     <option value="unmarried">UnMarried</option>
                 </select>
@@ -455,7 +454,7 @@ let ChangeTab = () => {
                         Type</label>
                     <select v-model="form.business_company_type" id="countries"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <option value=null>Choose </option>
+                        <option >Choose </option>
                         <option value="corporation">Corporation</option>
                         <option value="parternership">Parternership</option>
                         <option value="LLP">LLP</option>

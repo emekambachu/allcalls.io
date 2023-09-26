@@ -23,8 +23,7 @@ class RegistrationStepController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
-        $validator = Validator::make($request->all(), [
+        $step1Validation = Validator::make($request->all(), [
             'first_name' => 'required',
             'last_name' => 'required',
             'middle_name' => 'required',
@@ -45,26 +44,6 @@ class RegistrationStepController extends Controller
             'move_in_zip' => 'required',
             'resident_insu_license_no' => 'required',
             'resident_insu_license_state' => 'required',
-            'aml_course' => 'required',
-            'omissions_insurance' => 'required',
-            'convicted_checkbox_1' => 'required',
-            'convicted_checkbox_1a' => 'required',
-            'convicted_checkbox_1b' => 'required',
-            'convicted_checkbox_1c' => 'required',
-            'bankruptcy_checkbox_15b' => 'required',
-            'liens_against_checkbox_16' => 'required',
-            'connected_checkbox_17' => 'required',
-            'aliases_checkbox_18' => 'required',
-            'unresolved_matter_checkbox_19' => 'required',
-            'resident_country' => 'required',
-            'resident_your_home' => 'required',
-            'resident_city_state' => 'required',
-            'resident_maiden_name' => 'required',
-            'aml_provider' => 'required',
-            'training_completion_date' => 'required',
-            'limra_password' => 'required',
-            'residentLicensePdf' => 'required|mimetypes:application/pdf|max:2048',
-            'bankingInfoPdf' => 'required|mimetypes:application/pdf|max:2048',
             'business_name' => 'nullable|required',
             'business_tax_id' => 'nullable|required_with:business_name,business_agent_name,business_agent_title,business_company_type,business_insu_license_no,business_office_fax,business_office_phone,business_email,business_website,business_address,business_city_state,business_zip,business_move_in_date',
             'business_agent_name' => 'nullable|required_with:business_name,business_tax_id,business_agent_title,business_company_type,business_insu_license_no,business_office_fax,business_office_phone,business_email,business_website,business_address,business_city_state,business_zip,business_move_in_date',
@@ -81,27 +60,132 @@ class RegistrationStepController extends Controller
             'business_move_in_date' => 'nullable|required_with:business_name,business_tax_id,business_agent_name,business_agent_title,business_company_type,business_insu_license_no,business_office_fax,business_office_phone,business_email,business_website,business_address,business_city_state,business_zip',
         ], [
             'business_name.required' => 'The business name is required.',
-            'business_tax_id.required' => 'The business tax ID is required.',
-            'business_agent_name.required' => 'The business agent name is required.',
-            'business_agent_title.required' => 'The business agent title is required.',
-            'business_company_type.required' => 'The business company type is required.',
-            'business_insu_license_no.required' => 'The business insurance license number is required.',
-            'business_office_fax.required' => 'The business office fax is required.',
-            'business_office_phone.required' => 'The business office phone is required.',
-            'business_email.required' => 'The business email is required.',
-            'business_website.required' => 'The business website is required.',
-            'business_address.required' => 'The business address is required.',
-            'business_city_state.required' => 'The business city/state is required.',
-            'business_zip.required' => 'The business ZIP code is required.',
-            'business_move_in_date.required' => 'The business move-in date is required.',
+            'business_tax_id.required_with' => 'The business tax ID is required.',
+            'business_agent_name.required_with' => 'The business agent name is required.',
+            'business_agent_title.required_with' => 'The business agent title is required.',
+            'business_company_type.required_with' => 'The business company type is required.',
+            'business_insu_license_no.required_with' => 'The business insurance license number is required.',
+            'business_office_fax.required_with' => 'The business office fax is required.',
+            'business_office_phone.required_with' => 'The business office phone is required.',
+            'business_email.required_with' => 'The business email is required.',
+            'business_website.required_with' => 'The business website is required.',
+            'business_address.required_with' => 'The business address is required.',
+            'business_city_state.required_with' => 'The business city/state is required.',
+            'business_zip.required_with' => 'The business ZIP code is required.',
+            'business_move_in_date.required_with' => 'The business move-in date is required.',
         ]);
-
-        if ($validator->fails()) {
+        if ($step1Validation->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->errors(),
+                'step' => 1,
+                'errors' => $step1Validation->errors(),
             ], 400);
         }
+
+
+        $step1SubStep2Validation = Validator::make($request->all(), [
+            'convicted_checkbox_1' => 'required',
+            'convicted_checkbox_1a' => 'required',
+            'convicted_checkbox_1b' => 'required',
+            'convicted_checkbox_1c' => 'required',
+        ], [
+            'omissions_insurance.required' => 'This field is required.',
+            'convicted_checkbox_1.required' => 'This field is required.',
+            'convicted_checkbox_1a.required' => 'This field is required.',
+            'convicted_checkbox_1b.required' => 'This field is required.',
+            'convicted_checkbox_1c.required' => 'This field is required.',
+        ]);
+        if ($step1SubStep2Validation->fails()) {
+            return response()->json([
+                'success' => false,
+                'step' => 2,
+                'errors' => $step1SubStep2Validation->errors(),
+            ], 400);
+        }
+
+        $step1SubStep3Validation = Validator::make($request->all(), [
+            'bankruptcy_checkbox_15b' => 'required',
+            'liens_against_checkbox_16' => 'required',
+            'connected_checkbox_17' => 'required',
+            'aliases_checkbox_18' => 'required',
+            'unresolved_matter_checkbox_19' => 'required',
+        ], [
+            'bankruptcy_checkbox_15b.required' => 'This field is required.',
+            'liens_against_checkbox_16.required' => 'This field is required.',
+            'connected_checkbox_17.required' => 'This field is required.',
+            'aliases_checkbox_18.required' => 'This field is required.',
+            'unresolved_matter_checkbox_19.required' => 'This field is required.',
+        ]);
+        if ($step1SubStep3Validation->fails()) {
+            return response()->json([
+                'success' => false,
+                'step' => 3,
+                'errors' => $step1SubStep3Validation->errors(),
+            ], 400);
+        }
+
+
+        $step1SubStep4Validation = Validator::make($request->all(), [
+            'resident_country' => 'required',
+            'resident_your_home' => 'required',
+            'resident_city_state' => 'required',
+            'resident_maiden_name' => 'required',
+            'aml_provider' => 'required',
+            'training_completion_date' => 'required',
+            'limra_password' => 'required',
+        ]);
+        if ($step1SubStep4Validation->fails()) {
+            return response()->json([
+                'success' => false,
+                'step' => 4,
+                'errors' => $step1SubStep4Validation->errors(),
+            ], 400);
+        }
+
+        $step2Validation = Validator::make($request->all(), [
+            'aml_course' => 'required',
+        ]);
+        if ($step2Validation->fails()) {
+            return response()->json([
+                'success' => false,
+                'step' => 5,
+                'errors' => $step2Validation->errors(),
+            ], 400);
+        }
+
+        $step3Validation = Validator::make($request->all(), [
+            'omissions_insurance' => 'required',
+        ]);
+        if ($step3Validation->fails()) {
+            return response()->json([
+                'success' => false,
+                'step' => 6,
+                'errors' => $step3Validation->errors(),
+            ], 400);
+        }
+
+        $step4Validation = Validator::make($request->all(), [
+            'residentLicensePdf' => 'required|mimetypes:application/pdf|max:2048',
+        ]);
+        if ($step4Validation->fails()) {
+            return response()->json([
+                'success' => false,
+                'step' => 7,
+                'errors' => $step4Validation->errors(),
+            ], 400);
+        }
+
+        $step5Validation = Validator::make($request->all(), [
+            'bankingInfoPdf' => 'required|mimetypes:application/pdf|max:2048',
+        ]);
+        if ($step5Validation->fails()) {
+            return response()->json([
+                'success' => false,
+                'step' => 8,
+                'errors' => $step5Validation->errors(),
+            ], 400);
+        }
+
         DB::beginTransaction();
         try {
             $basicInfo = InternalAgentRegInfo::where('user_id', auth()->user()->id)->first();

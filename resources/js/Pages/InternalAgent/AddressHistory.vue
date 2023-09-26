@@ -42,7 +42,7 @@ const ChangeTab = () => {
     for (const history of addres_history.value) {
         const formData = form.value[history.address];
         Object.assign(formData, form.value[history.id]);
-        if (Object.keys(formData).length != 0) {
+        if (Object.keys(formData).length != 1) {
             if (formData.address === '' && formData.address === '' && formData.address === '') {
                 emits("changeTab");
                 return

@@ -161,7 +161,7 @@ let ChangeTab = () => {
     for (const information of LegalInformation.value) {
         if (requiredIDs.includes(information.id)) {
             if (!form.value[information.checbox]) {
-                props.firstStepErrors[information.checbox] = [`The YES OR NO  is required.`];
+                props.firstStepErrors[information.checbox] = [`This field is required.`];
             }
         }
     }

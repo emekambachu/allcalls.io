@@ -23,8 +23,8 @@ let form = ref({
     omissions_insurance: false
 });
 
-let step = ref(5);
-let contractStep = ref(6);
+let step = ref(1);
+let contractStep = ref(1);
 let emit = defineEmits(["close"]);
 let close = () => {
     emit("close");
@@ -130,45 +130,49 @@ let uploadBankingInfoPdf = ref(null)
 let uploadBankingInfo = (val) => {
     uploadBankingInfoPdf.value = val
 }
+
 let errorHandle = (data) => {
-    console.log('what is erros', data);
-    // if (data.first_name || data.last_name) {
-    //     step.value = 1
-    //     contractStep.value = 1
-    //     return
-    // } else if (data.convicted_checkbox_1) {
-    //     step.value = 1
-    //     contractStep.value = 2
-    //     return
-    // } else if (data.lawsuit_checkbox_8) {
-    //     step.value = 1
-    //     contractStep.value = 3
-    //     return
-    // } else if (data.resident_country) {
-    //     step.value = 1
-    //     contractStep.value = 5
-    //     return
-    // }
-    // else if (data.residentLicensePdf) {
-    //     step.value = 4
-    //     contractStep.value = 6
-    //     return
-    // }
-    // else if (data.bankingInfoPdf) {
-    //     step.value = 5
-    //     contractStep.value = 6
-    //     return
-    // }
+    if(data.step === 1 || data.step === 2 || data.step === 3){
+        contractStep.value = data.step
+        step.value = 1
+    }else if(data.step === 4){
+        contractStep.value = 5
+        step.value = 1
+    }else if(data.step === 5){
+        contractStep.value = 6
+        step.value = 2
+    }else if(data.step === 6){
+        contractStep.value = 6
+        step.value = 3
+    }else if(data.step === 7){
+        contractStep.value = 6
+        step.value = 4
+    }else if(data.step === 8){
+        contractStep.value = 6
+        step.value = 5
+    }
+  
 }
+
+
+
 let submit = () => {
 
     const requestData = {};
 
     // Merge all the individual data objects into the requestData object
-
+    if(contactDetailData.value.gender === 'Choose'){
+        contactDetailData.value.gender = null
+    }
+    if(contactDetailData.value.martial_status === 'Choose'){
+        contactDetailData.value.martial_status = null
+    }
+    if(contactDetailData.value.business_company_type === 'Choose'){
+        contactDetailData.value.business_company_type = null
+    }
     Object.assign(requestData, {
-        aml_course: form.value.aml_course ? 1 : 0, // Send 1 if true, 0 if false
-        omissions_insurance: form.value.omissions_insurance ? 1 : 0, // Send 1 if true, 0 if false
+        aml_course: form.value.aml_course ? 1 : null, // Send 1 if true, 0 if false
+        omissions_insurance: form.value.omissions_insurance ? 1 : null, // Send 1 if true, 0 if false
     });
     Object.assign(requestData, contactDetailData.value);
     Object.assign(requestData, legalFormData1.value);
@@ -195,10 +199,10 @@ let submit = () => {
         .catch((error) => {
             if (error.response) {
                 if (error.response.status === 400) {
-                    console.log(error.response.data);
+                    // console.log(error.response.data.step);
                     firstStepErrors.value = error.response.data.errors;
                     isLoading.value = false;
-                    errorHandle(error.response.data.errors)
+                    errorHandle(error.response.data)
                 } else {
                     console.log("Other errors", error.response.data);
                 }
@@ -265,7 +269,7 @@ let submit = () => {
 }
 </style>
 <template>
-<AuthenticatedLayout>
+    <AuthenticatedLayout>
         <Transition name="modal" enter-active-class="transition ease-out  duration-300 transform"
             enter-from-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             enter-to-class="opacity-100 translate-y-0 sm:scale-100"
@@ -299,8 +303,8 @@ let submit = () => {
                                     @goback="ChangeTabBack()" />
                             </div>
                             <div v-show="contractStep === 5">
-                                <AdditionalInfo @additionalInfoData="additionalInformation" :firstStepErrors="firstStepErrors"
-                                    @changeTab="NextStep()" @goback="ChangeTabBack()" />
+                                <AdditionalInfo @additionalInfoData="additionalInformation"
+                                    :firstStepErrors="firstStepErrors" @changeTab="NextStep()" @goback="ChangeTabBack()" />
                             </div>
                             <div v-show="step === 2" class="pt-6">
                                 <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
@@ -330,10 +334,13 @@ let submit = () => {
                                         <input id="link-checkbox" v-model="form.aml_course" type="checkbox" value=""
                                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                         <label for="link-checkbox"
-                                            class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">I have completed
+                                            class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">I have
+                                            completed
                                             the AML course.<span class="text-red-500 ">*</span></label>
                                     </div>
                                 </div>
+                                <div v-if="firstStepErrors.aml_provider" class="text-red-500"
+                                    v-text="firstStepErrors.aml_provider[0]"></div>
                                 <div class="px-5 pb-6">
                                     <div class="flex justify-between flex-wrap">
                                         <div class="mt-4">
@@ -349,7 +356,9 @@ let submit = () => {
                                             </button>
                                         </div>
                                         <div class="mt-4">
-                                            <button type="button" :class="{ 'opacity-25': amlCourseRead }" :disabled="amlCourseRead" @click.prevent="NextStep" class="button-custom px-3 py-2 rounded-md">
+                                            <button type="button" :class="{ 'opacity-25': amlCourseRead }"
+                                                :disabled="amlCourseRead" @click.prevent="NextStep"
+                                                class="button-custom px-3 py-2 rounded-md">
                                                 Next Step
                                             </button>
 
@@ -377,14 +386,16 @@ let submit = () => {
                                 <div class="flex justify-between my-5">
                                     <div></div>
                                     <div>
-                                        <input id="link-omissions_insurance" v-model="form.omissions_insurance" type="checkbox"
-                                            value=""
+                                        <input id="link-omissions_insurance" v-model="form.omissions_insurance"
+                                            type="checkbox" value=""
                                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                         <label for="link-omissions_insurance"
                                             class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Errors and
                                             Omissions Insurances.<span class="text-red-500 ">*</span></label>
                                     </div>
                                 </div>
+                                <div v-if="firstStepErrors.omissions_insurance" class="text-red-500"
+                                    v-text="firstStepErrors.omissions_insurance[0]"></div>
                                 <div class="px-5 pb-6">
                                     <div class="flex justify-between flex-wrap">
                                         <div class="mt-4">
@@ -400,7 +411,9 @@ let submit = () => {
                                             </button>
                                         </div>
                                         <div class="mt-4">
-                                            <button type="button" :class="{ 'opacity-25': omissionsInsurance }" :disabled="omissionsInsurance" @click.prevent="NextStep" class="button-custom px-3 py-2 rounded-md">
+                                            <button type="button" :class="{ 'opacity-25': omissionsInsurance }"
+                                                :disabled="omissionsInsurance" @click.prevent="NextStep"
+                                                class="button-custom px-3 py-2 rounded-md">
                                                 Next Step
                                             </button>
 
@@ -410,11 +423,12 @@ let submit = () => {
                             </div>
 
                             <div v-show="step === 4">
-                                <UploadLicence @uploadLicense="uploadLicense" :firstStepErrors="firstStepErrors" @changeTab="NextStep()" @goback="goBack()" />
+                                <UploadLicence @uploadLicense="uploadLicense" :firstStepErrors="firstStepErrors"
+                                    @changeTab="NextStep()" @goback="goBack()" />
                             </div>
                             <div v-show="step === 5">
                                 <BankInformationUpload @uploadBankingInfo="uploadBankingInfo"
-                                    :firstStepErrors="firstStepErrors" @submit="submit()"  @goback="goBack()" />
+                                    :firstStepErrors="firstStepErrors" @submit="submit()" @goback="goBack()" />
                             </div>
 
                             <!-- <div class="px-5 pb-6">
@@ -468,5 +482,5 @@ let submit = () => {
                 </div>
             </div>
         </Transition>
-</AuthenticatedLayout>
+    </AuthenticatedLayout>
 </template>
