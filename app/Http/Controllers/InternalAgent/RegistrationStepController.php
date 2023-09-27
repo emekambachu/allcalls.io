@@ -5,7 +5,9 @@ namespace App\Http\Controllers\InternalAgent;
 use App\Http\Controllers\Controller;
 use App\Models\InternalAgentAdditionalInfo;
 use App\Models\InternalAgentAddress;
+use App\Models\InternalAgentAmlCourse;
 use App\Models\InternalAgentBankingInfo;
+use App\Models\InternalAgentErrorAndEmission;
 use App\Models\InternalAgentLegalQuestion;
 use App\Models\InternalAgentRegInfo;
 use App\Models\InternalAgentResidentLicense;
@@ -29,7 +31,7 @@ class RegistrationStepController extends Controller
 
     public function store(Request $request)
     {   
-        // dd($request->all());
+        dd($request->all());
         $step1Validation = Validator::make($request->all(), [
             'first_name' => 'required',
             'last_name' => 'required',
@@ -150,6 +152,7 @@ class RegistrationStepController extends Controller
 
         $step2Validation = Validator::make($request->all(), [
             'aml_course' => 'required',
+            'uploadAmlPdf' => 'required|mimetypes:application/pdf|max:2048',
         ]);
         if ($step2Validation->fails()) {
             return response()->json([
@@ -161,6 +164,7 @@ class RegistrationStepController extends Controller
 
         $step3Validation = Validator::make($request->all(), [
             'omissions_insurance' => 'required',
+            'uploadOmmisionPdf' => 'required|mimetypes:application/pdf|max:2048',
         ]);
         if ($step3Validation->fails()) {
             return response()->json([
@@ -239,7 +243,8 @@ class RegistrationStepController extends Controller
                     'omissions_insurance' => isset($request->omissions_insurance) ? $request->omissions_insurance : null,
                 ]);
                 $basicInfoId = $basicInfo->id;
-            } else {
+            } 
+            else {
                 $basicInfoId = $basicInfo->id;
                 $basicInfo->update([
                     'first_name' => $request->first_name,
@@ -436,6 +441,45 @@ class RegistrationStepController extends Controller
                 InternalAgentAddress::where('reg_info_id', $basicInfoId)->delete();
                 DB::table('internal_agent_addresses')->insert($addresses);
             }
+
+            if ($request->file('uploadAmlPdf') && $request->file('uploadAmlPdf')->isValid()) {
+                $amlCoursePdf = InternalAgentAmlCourse::where('reg_info_id', $basicInfoId)->first();
+                if ($amlCoursePdf) {
+                    if (file_exists(asset('internal-agents/aml-course/' . $amlCoursePdf->name))) {
+                        unlink(asset('internal-agents/aml-course/' . $amlCoursePdf->name));
+                    }
+                    $amlCoursePdf->delete();
+                }
+
+                $name = $request->file('uploadAmlPdf')->getClientOriginalName();
+                $request->file('uploadAmlPdf')->move(public_path('internal-agents/aml-course'), $name);
+                $path = asset('internal-agents/aml-course/' . $name);
+
+                InternalAgentAmlCourse::updateOrCreate(['reg_info_id' => $basicInfoId], [
+                    'name' => $name,
+                    'url' => $path,
+                ]);
+            }
+
+            if ($request->file('uploadOmmisionPdf') && $request->file('uploadOmmisionPdf')->isValid()) {
+                $uploadOmmisionPdf = InternalAgentErrorAndEmission::where('reg_info_id', $basicInfoId)->first();
+                if ($uploadOmmisionPdf) {
+                    if (file_exists(asset('internal-agents/error-and-omission/' . $uploadOmmisionPdf->name))) {
+                        unlink(asset('internal-agents/error-and-omission/' . $uploadOmmisionPdf->name));
+                    }
+                    $uploadOmmisionPdf->delete();
+                }
+
+                $name = $request->file('uploadOmmisionPdf')->getClientOriginalName();
+                $request->file('uploadOmmisionPdf')->move(public_path('internal-agents/error-and-omission'), $name);
+                $path = asset('internal-agents/error-and-omission/' . $name);
+
+                InternalAgentErrorAndEmission::updateOrCreate(['reg_info_id' => $basicInfoId], [
+                    'name' => $name,
+                    'url' => $path,
+                ]);
+            }
+
 
             if ($request->file('residentLicensePdf') && $request->file('residentLicensePdf')->isValid()) {
 
