@@ -5,16 +5,22 @@ import { format } from 'date-fns';
 let maxDate = ref(new Date)
 let props = defineProps({
     firstStepErrors: Object,
+    states: Array,
 });
 const emits = defineEmits();
+let countries = ref([{
+    'name': 'United States of America',
+    'code':"USA"
+}])
 let form = ref({
-    resident_country:null,
-    resident_your_home:null,
-    resident_city_state:null,
-    resident_maiden_name:null,
-    aml_provider:null,
-    training_completion_date:null,
-    limra_password:null,
+    resident_country: 'USA',
+    resident_your_home: null,
+    resident_city: null,
+    resident_state: 'Choose',
+    resident_maiden_name: null,
+    aml_provider: null,
+    training_completion_date: null,
+    limra_password: null,
 
 })
 
@@ -29,7 +35,7 @@ let ChangeTab = () => {
     }
     // Define an array of field names that are required
     const requiredFields = [
-        "resident_country", "resident_your_home", "resident_city_state", "resident_maiden_name", "aml_provider", "training_completion_date", "limra_password"
+        "resident_country", "resident_your_home", "resident_city", 'resident_state',  
     ];
     requiredFields.forEach(fieldName => {
         if (form.value[fieldName] === null || form.value[fieldName] === "" || form.value[fieldName] === "Choose") {
@@ -40,7 +46,7 @@ let ChangeTab = () => {
     const hasErrors = Object.values(props.firstStepErrors).some(errors => errors.length > 0);
     if (!hasErrors) {
         emits("changeTab");
-    }else{
+    } else {
         var element = document.getElementById("modal_main_id");
         element.scrollIntoView();
     }
@@ -75,14 +81,18 @@ let ChangeTabBack = () => {
     <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
         Additional Information
     </h1>
-    <div>
+    <div >
 
         <div class="grid lg:grid-cols-2 mb-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
             <div>
                 <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Resident
                     Country<span class="text-red-500 ">*</span></label>
-                <input type="text" v-model="form.resident_country" id="default-input"
+                    <select v-model="form.resident_country" id="countries"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option v-for="country in countries" :value="country.code">{{ country.name }} </option>
+                </select>
+                <!-- <input type="text" v-model="form.resident_country" id="default-input"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"> -->
                 <div v-if="firstStepErrors.resident_country" class="text-red-500"
                     v-text="firstStepErrors.resident_country[0]"></div>
             </div>
@@ -92,41 +102,57 @@ let ChangeTabBack = () => {
                 <div class="flex">
                     <div class="flex items-center mr-4">
 
-                        <input id="default-radio-1" v-model="form.resident_your_home" type="radio" value="YES"
+                        <input id="default-radio-1-1" v-model="form.resident_your_home" type="radio" value="YES"
                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                        <label for="default-radio-1"
+                        <label for="default-radio-1-1"
                             class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">YES</label>
                     </div>
                     <div class="flex items-center">
-                        <input id="default-radio-2" v-model="form.resident_your_home" type="radio" value="NO"
+                        <input id="default-radio-2-2" v-model="form.resident_your_home" type="radio" value="NO"
                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                        <label for="default-radio-2"
+                        <label for="default-radio-2-2"
                             class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">NO</label>
                     </div>
                 </div>
                 <div v-if="firstStepErrors.resident_your_home" class="text-red-500"
                     v-text="firstStepErrors.resident_your_home[0]"></div>
             </div>
+
+            
+
+        </div>
+        <div class="grid lg:grid-cols-3 mb-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
             <div>
-                <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">City, state of
+                <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">City of
                     Birth<span class="text-red-500 ">*</span></label>
-                <input type="text" v-model="form.resident_city_state" id="default-input"
+                <input type="text" v-model="form.resident_city" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                <div v-if="firstStepErrors.resident_city_state" class="text-red-500"
-                    v-text="firstStepErrors.resident_city_state[0]"></div>
+                <div v-if="firstStepErrors.resident_city" class="text-red-500"
+                    v-text="firstStepErrors.resident_city[0]"></div>
             </div>
             <div>
+                <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white"> State of
+                    Birth<span class="text-red-500 ">*</span></label>
+                <select v-model="form.resident_state" id="countries"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option>Choose </option>
+                    <option v-for="state in states" :value="state.id">{{ state.full_name }} </option>
+                </select>
+                <div v-if="firstStepErrors.resident_state" class="text-red-500" v-text="firstStepErrors.resident_state[0]">
+                </div>
+            </div>
+
+            <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Maiden
-                    Name<span class="text-red-500 ">*</span></label>
+                    Name</label>
                 <input type="text" v-model="form.resident_maiden_name" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <div v-if="firstStepErrors.resident_maiden_name" class="text-red-500"
                     v-text="firstStepErrors.resident_maiden_name[0]"></div>
             </div>
-
         </div>
 
-        <h1 style="background-color: #134576;" class="mb-4 mt-4	text-center rounded-md py-2 text-white">
+        <!-- <h1 style="background-color: #134576;" class="mb-4 mt-4	text-center rounded-md py-2 text-white">
             Anti-Money Loundering
         </h1>
         <p>
@@ -206,7 +232,7 @@ let ChangeTabBack = () => {
         <p class="my-3">
             Equis Financial has a special group pricing arranged with 360 Coverage Pros. For less than $400 a year, you can
             be completely covered. For more information, visit: www.360coveragepros.com/equis/errors-and-omissions
-        </p>
+        </p> -->
         <div class="px-5 pb-6">
             <div class="flex justify-between flex-wrap">
                 <div class="mt-4">
@@ -225,7 +251,8 @@ let ChangeTabBack = () => {
                         Next Step
                     </button>
 
+                </div>
             </div>
         </div>
     </div>
-</div></template>
+</template>

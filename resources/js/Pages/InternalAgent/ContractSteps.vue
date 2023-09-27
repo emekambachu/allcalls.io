@@ -12,10 +12,14 @@ import AddressHistory from '@/Pages/InternalAgent/AddressHistory.vue'
 import AdditionalInfo from '@/Pages/InternalAgent/AdditionalInfo.vue'
 import UploadLicence from '@/Pages/InternalAgent/UploadLicence.vue'
 import BankInformationUpload from '@/Pages/InternalAgent/BankInformationUpload.vue'
+import AmLCourse from '@/Pages/InternalAgent/AmLCourse.vue'
+import ErrorsAndEmissions from '@/Pages/InternalAgent/ErrorsAndEmissions.vue'
 
 
 import { toaster } from "@/helper.js";
 let props = defineProps({
+    userData: Object,
+    states: Array,
 });
 let StepsModal = ref(true)
 let form = ref({
@@ -30,38 +34,12 @@ let close = () => {
     emit("close");
 };
 
-let amlCourseRead = ref(false)
-let omissionsInsurance = ref(false)
-watch(form.value, (newVal, oldVal) => {
 
-    if (newVal.aml_course == true) {
-        amlCourseRead.value = false
-    } else {
-        amlCourseRead.value = true
-    }
-    if (newVal.omissions_insurance == true) {
-        omissionsInsurance.value = false
-    } else {
-        omissionsInsurance.value = true
-    }
-
-})
 let NextStep = () => {
     var element = document.getElementById("modal_main_id");
     element.scrollIntoView();
     step.value += 1;
     contractStep.value = 0
-    if (step.value === 2 && form.value.aml_course === false) {
-        amlCourseRead.value = true
-    } else {
-        amlCourseRead.value = false
-    }
-    if (step.value === 3 && form.value.omissions_insurance === false) {
-        omissionsInsurance.value = true
-    } else {
-        omissionsInsurance.value = false
-    }
-    window.scrollTo(0, 0);
 };
 let goBack = () => {
 
@@ -69,16 +47,7 @@ let goBack = () => {
         contractStep.value = 5
     }
     step.value -= 1;
-    if (step.value === 2 && form.value.aml_course === false) {
-        amlCourseRead.value = true
-    } else {
-        amlCourseRead.value = false
-    }
-    if (step.value === 3 && form.value.omissions_insurance === false) {
-        omissionsInsurance.value = true
-    } else {
-        omissionsInsurance.value = false
-    }
+   
 
 };
 
@@ -105,6 +74,8 @@ let updateFormData = (val) => {
 // Use an object to store the legal form data
 const legalFormData1 = ref(null);
 const legalFormData2 = ref(null);
+let uploadAmlPdf = ref(null)
+let uploadOmmisionPdf = ref(null)
 // Function to update the legal form data
 
 const updateLegalFormData1 = (val) => {
@@ -131,27 +102,32 @@ let uploadBankingInfo = (val) => {
     uploadBankingInfoPdf.value = val
 }
 
+let uploadPdfAml = (val) => {
+    uploadAmlPdf.value = val
+    // console.log('uploadPdfAml', val);
+}
+let uploadPdfOmmision = (val) => {
+    uploadOmmisionPdf.value = val
+    // console.log('parent uploadPdfOmmision', val);
+}
 let errorHandle = (data) => {
-    if(data.step === 1 || data.step === 2 || data.step === 3){
-        contractStep.value = data.step
-        step.value = 1
-    }else if(data.step === 4){
-        contractStep.value = 5
-        step.value = 1
-    }else if(data.step === 5){
-        contractStep.value = 6
-        step.value = 2
-    }else if(data.step === 6){
-        contractStep.value = 6
-        step.value = 3
-    }else if(data.step === 7){
-        contractStep.value = 6
-        step.value = 4
-    }else if(data.step === 8){
-        contractStep.value = 6
-        step.value = 5
+    const stepMapping = {
+        1: { contractStep: data.step, step: 1 },
+        2: { contractStep: data.step, step: 1 },
+        3: { contractStep: data.step, step: 1 },
+        4: { contractStep: 5, step: 1 },
+        5: { contractStep: 6, step: 2 },
+        6: { contractStep: 6, step: 3 },
+        7: { contractStep: 6, step: 4 },
+        8: { contractStep: 6, step: 5 },
+    };
+
+    if (stepMapping.hasOwnProperty(data.step)) {
+        const { contractStep: newContractStep, step: newStep } = stepMapping[data.step];
+        contractStep.value = newContractStep;
+        step.value = newStep;
     }
-  
+
 }
 
 
@@ -160,16 +136,7 @@ let submit = () => {
 
     const requestData = {};
 
-    // Merge all the individual data objects into the requestData object
-    if(contactDetailData.value.gender === 'Choose'){
-        contactDetailData.value.gender = null
-    }
-    if(contactDetailData.value.martial_status === 'Choose'){
-        contactDetailData.value.martial_status = null
-    }
-    if(contactDetailData.value.business_company_type === 'Choose'){
-        contactDetailData.value.business_company_type = null
-    }
+    console.log('contactDetailData.value',contactDetailData.value);
     Object.assign(requestData, {
         aml_course: form.value.aml_course ? 1 : null, // Send 1 if true, 0 if false
         omissions_insurance: form.value.omissions_insurance ? 1 : null, // Send 1 if true, 0 if false
@@ -178,10 +145,20 @@ let submit = () => {
     Object.assign(requestData, legalFormData1.value);
     Object.assign(requestData, legalFormData2.value);
     Object.assign(requestData, AddressHistoryData.value);
-    Object.assign(requestData, additionalInfoD.value);
+    // Object.assign(requestData, additionalInfoD.value);
     requestData.residentLicensePdf = uploadLicensePdf.value;
     requestData.bankingInfoPdf = uploadBankingInfoPdf.value;
+    requestData.uploadAmlPdf = uploadAmlPdf.value
+    requestData.uploadOmmisionPdf = uploadOmmisionPdf.value
 
+
+    for (const key in requestData) {
+        if (requestData.hasOwnProperty(key) && requestData[key] === 'Choose') {
+            requestData[key] = null
+        }
+    }
+    // console.log(requestData);
+   
     isLoading.value = true;
 
     return axios
@@ -217,6 +194,16 @@ let submit = () => {
 
 </script>
 <style >
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
 .button-custom {
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 150ms;
@@ -288,7 +275,7 @@ let submit = () => {
 
                             <div v-show="contractStep === 1" class="">
                                 <ContactDetail @updateFormData="updateFormData" :firstStepErrors="firstStepErrors"
-                                    @changeTab="ChangeTab()" />
+                                    @changeTab="ChangeTab()" :states="states" :userData="userData" />
                             </div>
                             <div v-show="contractStep === 2">
                                 <LegalInformation @updateFormData="updateLegalFormData1" :firstStepErrors="firstStepErrors"
@@ -300,14 +287,17 @@ let submit = () => {
                             </div>
                             <div v-show="contractStep === 4">
                                 <AddressHistory @addRessHistory="AddressHistoryfun" @changeTab="ChangeTab()"
-                                    @goback="ChangeTabBack()" />
+                                    @goback="ChangeTabBack()" :states="states" />
                             </div>
                             <div v-show="contractStep === 5">
                                 <AdditionalInfo @additionalInfoData="additionalInformation"
-                                    :firstStepErrors="firstStepErrors" @changeTab="NextStep()" @goback="ChangeTabBack()" />
+                                    :firstStepErrors="firstStepErrors" :states="states" @changeTab="NextStep()"
+                                    @goback="ChangeTabBack()" />
                             </div>
                             <div v-show="step === 2" class="pt-6">
-                                <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
+                                <AmLCourse :firstStepErrors="firstStepErrors" @uploadPdfAml="uploadPdfAml" @changeTab="NextStep()"
+                                    @goback="goBack()"  />
+                                <!-- <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
                                     AML Course
                                 </h1>
 
@@ -339,8 +329,8 @@ let submit = () => {
                                             the AML course.<span class="text-red-500 ">*</span></label>
                                     </div>
                                 </div>
-                                <div v-if="firstStepErrors.aml_provider" class="text-red-500"
-                                    v-text="firstStepErrors.aml_provider[0]"></div>
+                                <div v-if="firstStepErrors.aml_course" class="text-red-500"
+                                    v-text="firstStepErrors.aml_course[0]"></div>
                                 <div class="px-5 pb-6">
                                     <div class="flex justify-between flex-wrap">
                                         <div class="mt-4">
@@ -364,11 +354,13 @@ let submit = () => {
 
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
 
                             <div v-show="step === 3" class="pt-6">
-                                <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
+                                <ErrorsAndEmissions :firstStepErrors="firstStepErrors" @uploadPdfOmmision="uploadPdfOmmision" @changeTab="NextStep()"
+                                    @goback="goBack()" />
+                                <!-- <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
                                     Errors and Omissions Insurances
                                 </h1>
                                 <div class="bg-blue-50 py-10 px-6 rounded-lg shadow-md">
@@ -419,7 +411,7 @@ let submit = () => {
 
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
 
                             <div v-show="step === 4">
@@ -430,6 +422,8 @@ let submit = () => {
                                 <BankInformationUpload @uploadBankingInfo="uploadBankingInfo"
                                     :firstStepErrors="firstStepErrors" @submit="submit()" @goback="goBack()" />
                             </div>
+
+                           
 
                             <!-- <div class="px-5 pb-6">
                                 <div class="flex justify-between flex-wrap">

@@ -9,6 +9,7 @@ use App\Models\InternalAgentBankingInfo;
 use App\Models\InternalAgentLegalQuestion;
 use App\Models\InternalAgentRegInfo;
 use App\Models\InternalAgentResidentLicense;
+use App\Models\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -18,11 +19,17 @@ class RegistrationStepController extends Controller
 {
     public function contractSteps()
     {
-        return Inertia::render('InternalAgent/ContractSteps');
+        $userData =  auth()->user();
+        $states = State::all();
+        return Inertia::render('InternalAgent/ContractSteps', [
+            'userData' => $userData,
+            'states' => $states,
+        ]);
     }
 
     public function store(Request $request)
-    {
+    {   
+        // dd($request->all());
         $step1Validation = Validator::make($request->all(), [
             'first_name' => 'required',
             'last_name' => 'required',
@@ -44,7 +51,7 @@ class RegistrationStepController extends Controller
             'move_in_zip' => 'required',
             'resident_insu_license_no' => 'required',
             'resident_insu_license_state' => 'required',
-            'business_name' => 'nullable|required',
+            'business_name' => 'nullable|required_with:business_tax_id,business_agent_name,business_agent_title,business_company_type,business_insu_license_no,business_office_fax,business_office_phone,business_email,business_website,business_address,business_city_state,business_zip,business_move_in_date',
             'business_tax_id' => 'nullable|required_with:business_name,business_agent_name,business_agent_title,business_company_type,business_insu_license_no,business_office_fax,business_office_phone,business_email,business_website,business_address,business_city_state,business_zip,business_move_in_date',
             'business_agent_name' => 'nullable|required_with:business_name,business_tax_id,business_agent_title,business_company_type,business_insu_license_no,business_office_fax,business_office_phone,business_email,business_website,business_address,business_city_state,business_zip,business_move_in_date',
             'business_agent_title' => 'nullable|required_with:business_name,business_tax_id,business_agent_name,business_company_type,business_insu_license_no,business_office_fax,business_office_phone,business_email,business_website,business_address,business_city_state,business_zip,business_move_in_date',
@@ -55,11 +62,12 @@ class RegistrationStepController extends Controller
             'business_email' => 'nullable|required_with:business_name,business_tax_id,business_agent_name,business_agent_title,business_company_type,business_insu_license_no,business_office_fax,business_office_phone,business_website,business_address,business_city_state,business_zip,business_move_in_date',
             'business_website' => 'nullable|required_with:business_name,business_tax_id,business_agent_name,business_agent_title,business_company_type,business_insu_license_no,business_office_fax,business_office_phone,business_email,business_address,business_city_state,business_zip,business_move_in_date',
             'business_address' => 'nullable|required_with:business_name,business_tax_id,business_agent_name,business_agent_title,business_company_type,business_insu_license_no,business_office_fax,business_office_phone,business_email,business_website,business_city_state,business_zip,business_move_in_date',
-            'business_city_state' => 'nullable|required_with:business_name,business_tax_id,business_agent_name,business_agent_title,business_company_type,business_insu_license_no,business_office_fax,business_office_phone,business_email,business_website,business_address,business_zip,business_move_in_date',
+            'business_city' => 'nullable|required_with:business_name,business_tate,business_tax_id,business_agent_name,business_agent_title,business_company_type,business_insu_license_no,business_office_fax,business_office_phone,business_email,business_website,business_address,business_zip,business_move_in_date',
+            'business_state' => 'nullable|required_with:business_name,business_city,business_tax_id,business_agent_name,business_agent_title,business_company_type,business_insu_license_no,business_office_fax,business_office_phone,business_email,business_website,business_address,business_zip,business_move_in_date',
             'business_zip' => 'nullable|required_with:business_name,business_tax_id,business_agent_name,business_agent_title,business_company_type,business_insu_license_no,business_office_fax,business_office_phone,business_email,business_website,business_address,business_city_state,business_move_in_date',
             'business_move_in_date' => 'nullable|required_with:business_name,business_tax_id,business_agent_name,business_agent_title,business_company_type,business_insu_license_no,business_office_fax,business_office_phone,business_email,business_website,business_address,business_city_state,business_zip',
         ], [
-            'business_name.required' => 'The business name is required.',
+            'business_name.required_with' => 'The business name is required.',
             'business_tax_id.required_with' => 'The business tax ID is required.',
             'business_agent_name.required_with' => 'The business agent name is required.',
             'business_agent_title.required_with' => 'The business agent title is required.',
@@ -70,7 +78,8 @@ class RegistrationStepController extends Controller
             'business_email.required_with' => 'The business email is required.',
             'business_website.required_with' => 'The business website is required.',
             'business_address.required_with' => 'The business address is required.',
-            'business_city_state.required_with' => 'The business city/state is required.',
+            'business_city.required_with' => 'The business city is required.',
+            'business_state.required_with' => 'The business state is required.',
             'business_zip.required_with' => 'The business ZIP code is required.',
             'business_move_in_date.required_with' => 'The business move-in date is required.',
         ]);
@@ -126,13 +135,10 @@ class RegistrationStepController extends Controller
 
 
         $step1SubStep4Validation = Validator::make($request->all(), [
-            'resident_country' => 'required',
-            'resident_your_home' => 'required',
-            'resident_city_state' => 'required',
-            'resident_maiden_name' => 'required',
-            'aml_provider' => 'required',
-            'training_completion_date' => 'required',
-            'limra_password' => 'required',
+            // 'resident_country' => 'required',
+            // 'resident_your_home' => 'required',
+            // 'resident_city_state' => 'required',
+            // 'resident_maiden_name' => 'required',
         ]);
         if ($step1SubStep4Validation->fails()) {
             return response()->json([

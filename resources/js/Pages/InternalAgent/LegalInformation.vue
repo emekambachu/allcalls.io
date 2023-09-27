@@ -81,7 +81,7 @@ let LegalInformation = ref([
     {
         id: 13,
         checbox: 'lawsuit_checkbox_2c',
-        heading: '2CHave you ever been, or are you currently involved in any pending indictments, lawsuits, civil judgements or other legal proceedings (civil or criminal) (you may omit family court)?',
+        heading: 'Have you ever been, or are you currently involved in any pending indictments, lawsuits, civil judgements or other legal proceedings (civil or criminal) (you may omit family court)?',
         question: '2C'
     },
     {
@@ -159,13 +159,19 @@ let ChangeTab = () => {
    
     // Define an array of field names that are required
     for (const information of LegalInformation.value) {
-        if (requiredIDs.includes(information.id)) {
+        // if (requiredIDs.includes(information.id)) {
+            let checboxValue = form.value[information.checbox]
             if (!form.value[information.checbox]) {
                 props.firstStepErrors[information.checbox] = [`This field is required.`];
+            }else if(checboxValue === "YES"){
+                if (!form.value[information.checbox + '_text']) {
+                    props.firstStepErrors[information.checbox] = [`This field is required.`];
+                }
             }
-        }
+        // }
     }
     // Check if there are any errors
+
     const hasErrors = Object.values(props.firstStepErrors).some(errors => errors.length > 0);
     if (!hasErrors) {
         emits("changeTab");
@@ -196,7 +202,7 @@ let ChangeTabBack = () => {
                 <p>
                     <strong>
                         <span style="font-size: 18px;" class="mr-2">{{ information.question }}.</span>{{ information.heading
-                        }}<span v-if="requiredIDs.includes(information.id)" class="text-red-500 ml-1">*</span>
+                        }}<span  class="text-red-500 ml-1">*</span>
                     </strong>
                 </p>
 
@@ -217,6 +223,8 @@ let ChangeTabBack = () => {
                     </div>
 
                 </div>
+                
+                <input type="text" v-show="form[information.checbox] === 'YES'" v-model="form[information.checbox + '_text']"  class="bg-gray-50 mt-5 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <div v-if="firstStepErrors[information.checbox]" class="text-red-500 mt-3"
                     v-text="firstStepErrors[information.checbox][0]"></div>
             </div>
