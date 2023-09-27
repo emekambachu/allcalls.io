@@ -1,3 +1,8 @@
+<style>
+.spnClassLocked{
+    color:#fb4040;
+}
+</style>
 <script setup>
 import { ref, reactive, defineEmits, onMounted } from "vue";
 import TextInput from "@/Components/TextInput.vue";
@@ -72,10 +77,11 @@ let openEdit = () => {
       </div>
       <div class="p-6">
         <div v-if="callDetail">
-          <div class="flex justify-between items-center">
+          <span class="spnClassLocked" v-if = "callDetail.get_client.unlocked == 1">Client is locked</span>
+          <div class="flex justify-between items-center" v-if = "callDetail.get_client.unlocked != 1">
             <h4 class="text-2xl font-small text-custom-sky mb-2">Personal Details</h4>
 
-            <PrimaryButton @click="openEdit"> Edit Client </PrimaryButton>
+            <PrimaryButton @click="openEdit" > Edit Client </PrimaryButton>
           </div>
 
           <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-10">
@@ -87,38 +93,38 @@ let openEdit = () => {
               <strong class="text-lg">Last Name: </strong>
               {{ callDetail.get_client.last_name }}
             </div>
-            <div>
+            <div v-if = "callDetail.get_client.unlocked != 1">
               <strong class="text-lg">Date of Birth: </strong>
               {{ callDetail.get_client.dob || "N/A" }}
             </div>
           </div>
 
-          <h4 class="text-2xl font-small text-custom-sky mb-2">Contact Information</h4>
-          <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-10">
-            <div>
+          <h4 class="text-2xl font-small text-custom-sky mb-2" >Contact Information</h4>
+          <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-10" >
+            <div v-if = "callDetail.get_client.unlocked != 1">
               <strong class="text-lg">Phone: </strong>
               {{ callDetail.get_client.phone }}
             </div>
-            <div>
+            <div v-if = "callDetail.get_client.unlocked != 1">
               <strong class="text-lg">Email: </strong>
               {{ callDetail.get_client.email || "N/A" }}
             </div>
-            <div>
+            <div v-if = "callDetail.get_client.unlocked != 1">
               <strong class="text-lg">Address: </strong>
               {{ callDetail.get_client.address || "N/A" }}
             </div>
-            <div>
+            <div >
               <strong class="text-lg">State: </strong>
               {{ callDetail.get_client.state || "N/A" }}
             </div>
-            <div>
+            <div v-if = "callDetail.get_client.unlocked != 1">
               <strong class="text-lg">Zip Code: </strong>
               {{ callDetail.get_client.zipCode || "N/A" }}
             </div>
           </div>
 
-          <h4 class="text-2xl font-small text-custom-sky mb-2">Call Details</h4>
-          <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-10">
+          <h4 class="text-2xl font-small text-custom-sky mb-2" v-if = "callDetail.get_client.unlocked != 1">Call Details</h4>
+          <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-10" v-if = "callDetail.get_client.unlocked != 1">
             <div>
               <strong class="text-lg">Call Taken: </strong>
               {{ callDetail.call_taken || "N/A" }}
@@ -154,8 +160,8 @@ let openEdit = () => {
             </div>
           </div>
 
-          <h4 class="text-2xl font-small text-custom-sky mb-2">Financial Details</h4>
-          <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-10">
+          <h4 class="text-2xl font-small text-custom-sky mb-2" v-if = "callDetail.get_client.unlocked != 1">Financial Details</h4>
+          <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-10" v-if = "callDetail.get_client.unlocked != 1">
             <div>
               <strong class="text-lg">Amount Spent: </strong>
               {{ "$" + (callDetail.amount_spent / 100).toFixed(2) }}

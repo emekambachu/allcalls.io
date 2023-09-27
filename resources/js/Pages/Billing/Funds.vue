@@ -22,6 +22,8 @@ let name = ref('');
 let number = ref('');
 let expiry = ref('');
 let cvv = ref('');
+let year = ref('');
+let month = ref('');
 
 let address = ref('');
 let city = ref('');
@@ -34,6 +36,19 @@ let isLoading = ref(false);
 
 
 onMounted(() => {
+    // make option for year dropdown
+    var i, currentYear, startYear, endYear, newOption, dropdownYear;
+    dropdownYear = document.getElementById("year");
+    currentYear = (new Date()).getFullYear();
+    startYear = currentYear - 0;
+    endYear = currentYear + 10;
+
+    for (i=startYear;i<=endYear;i++) {
+      newOption = document.createElement("option");
+      newOption.value = i;
+      newOption.label = i;
+      dropdownYear.appendChild(newOption);
+    }
     showSuccessNotificationIfAvailable();
     selectDefaultCardIfAvailable();
 });
@@ -61,7 +76,9 @@ let addFunds = async () => {
     isLoading.value = true;
 
     // Extract month and year from the expiry.value
-    let [monthFromExpiry, yearFromExpiry] = expiry.value.split(' / ');
+    // let [monthFromExpiry, yearFromExpiry] = expiry.value.split(' / ');
+    let monthFromExpiry = month.value;
+    let yearFromExpiry = year.value;
 
     let requestData;
 
@@ -169,56 +186,93 @@ let total = computed(() => {
                                         <InputError class="mt-2" :message="$page.props.errors.name" />
                                     </div>
 
-                                    <div class="mb-4">
-                                        <label class="block mb-2 text-sm font-medium text-gray-500">Card Details</label>
-
+                                    
+                                    <div class="grid grid-cols-2 gap-4 mb-4">
                                         <div>
-                                            <!-- Use grid instead of flex -->
-                                            <div
-                                                style="display: grid; grid-template-columns: 1fr auto auto; grid-template-rows: auto auto;">
-                                                <!-- Card Number -->
-                                                <div class="p-0.5 rounded-tl rounded-bl" style="background-color: #E8F0FE;">
-                                                    <input
+                                            <label for="address"
+                                                class="block mb-2 text-sm font-medium text-gray-500">Card Number</label>
+                                            <TextInput
                                                         class="text-sm border-transparent focus:border-transparent focus:ring-0 bg-transparent"
-                                                        type="text" placeholder="Card Number" name="cardNumber"
+                                                        type="text" placeholder="4242 4242 4242 4242" name="cardNumber"
                                                         v-cardformat:formatCardNumber required
-                                                        v-model="number">
-                                                </div>
-                                                <!-- Display errors on a new row under the input -->
-                                                <div style="grid-column: 1 / 2; grid-row: 2 / 3;">
-                                                    <InputError class="mt-2" :message="$page.props.errors.number" />
-                                                </div>
-
-                                                <!-- Expiry Date -->
-                                                <div class="p-0.5" style="background-color: #E8F0FE;">
-                                                    <input
-                                                        class="text-sm w-18 border-transparent focus:border-transparent focus:ring-0 bg-transparent"
-                                                        type="text" placeholder="MM / YYYY" name="" v-model="expiry"
-                                                        required pattern="(0[1-9]|1[0-2])" v-cardformat:formatCardExpiry>
-                                                </div>
-                                                <!-- Display errors on a new row under the input -->
-                                                <div style="grid-column: 2 / 3; grid-row: 2 / 3;">
-                                                    <InputError v-if="$page.props.errors.month" :message="$page.props.errors.month" />
-                                                    <InputError v-if="$page.props.errors.year" :message="$page.props.errors.year" />
-                                                </div>
-
-                                                <!-- CVV -->
-                                                <div class="p-0.5 rounded-tr rounded-br" style="background-color: #E8F0FE;">
-                                                    <input
-                                                        class="text-sm w-18 border-transparent focus:border-transparent focus:ring-0 bg-transparent"
-                                                        type="text" placeholder="CVV" name="CVV" required pattern="\d{3,4}"
-                                                        v-model="cvv" maxlength="4" v-cardformat:formatCardCVC>
-                                                </div>
-                                                <!-- Display errors on a new row under the input -->
-                                                <div style="grid-column: 3 / 4; grid-row: 2 / 3;">
-                                                    <InputError class="mt-2" :message="$page.props.errors.cvv" />
-                                                </div>
-
-                                            </div>
+                                                        v-model="number" />    
+                                            <InputError class="mt-2" :message="$page.props.errors.number" />
                                         </div>
 
-                                    </div>
+                                        <div>
+                                            <label for="month"
+                                                class="block mb-2 text-sm font-medium text-gray-700">Select Expiration Month</label>
+                                            <select v-model="month" name="month" id="month" class="select-custom" required>
+                                                <option selected="" disabled="" value="">Select Month</option>
+                                                <option value="01">01</option>
+                                                <option value="02">02</option>
+                                                <option value="03">03</option>
+                                                <option value="04">04</option>
+                                                <option value="05">05</option>
+                                                <option value="06">06</option>
+                                                <option value="07">07</option>
+                                                <option value="08">08</option>
+                                                <option value="09">09</option>
+                                                <option value="10">10</option>
+                                                <option value="11">11</option>
+                                                <option value="12">12</option>
+                                            </select>
+                                            <InputError class="mt-2" :message="$page.props.errors.month" />
+                                        </div>
+                                        <div>
+                                            <label for="year"
+                                                class="block mb-2 text-sm font-medium text-gray-700">Select Expiration Year</label>
+                                            <select v-model="year" id='year' name="year"  class="select-custom" required>
+                                                <option selected="" disabled="" value="">Select Year</option>
+                                                <!-- <option value="2023">2023</option>
+                                                <option value="2024">2024</option>
+                                                <option value="2025">2025</option>
+                                                <option value="2026">2026</option>
+                                                <option value="2027">2027</option>
+                                                <option value="2028">2028</option>
+                                                <option value="2029">2029</option>
+                                                <option value="2030">2030</option>
+                                                <option value="2031">2031</option>
+                                                <option value="2032">2032</option>
+                                                <option value="2033">2033</option>
+                                                <option value="2034">2034</option>
+                                                <option value="2035">2035</option>
+                                                <option value="2036">2036</option>
+                                                <option value="2037">2037</option>
+                                                <option value="2038">2038</option>
+                                                <option value="2039">2039</option>
+                                                <option value="2040">2040</option>
+                                                <option value="2041">2041</option>
+                                                <option value="2042">2042</option>
+                                                <option value="2043">2043</option>
+                                                <option value="2044">2044</option>
+                                                <option value="2045">2045</option>
+                                                <option value="2046">2046</option>
+                                                <option value="2047">2047</option>
+                                                <option value="2048">2048</option>
+                                                <option value="2049">2049</option>
+                                                <option value="2050">2050</option>
+                                                <option value="2051">2051</option>
+                                                <option value="2052">2052</option>
+                                                <option value="2053">2053</option>
+                                                <option value="2054">2054</option>
+                                                <option value="2055">2055</option>
+                                                <option value="2056">2056</option>
+                                                <option value="2057">2057</option>
+                                                <option value="2058">2058</option>
+                                                <option value="2059">2059</option>
+                                                <option value="2060">2060</option> -->
+                                            </select>
+                                            <InputError class="mt-2" :message="$page.props.errors.year" />
+                                        </div>
 
+                                        <div>
+                                            <label for="zip" class="block mb-2 text-sm font-medium text-gray-500">CVV</label>
+                                            <TextInput type="text" placeholder="0000" name="CVV" required pattern="\d{3,4}"
+                                                        v-model="cvv" maxlength="4" v-cardformat:formatCardCVC />
+                                            <InputError class="mt-2" :message="$page.props.errors.cvv" />
+                                        </div>
+                                    </div>
 
 
                                     <div class="grid grid-cols-2 gap-4 mb-4">
