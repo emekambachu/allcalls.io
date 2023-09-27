@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\InternalAgent;
 use App\Http\Middleware\notBanned;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -73,5 +74,6 @@ class Kernel extends HttpKernel
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
         'user' => \App\Http\Middleware\UserMiddleware::class,
         'twilio' => \App\Http\Middleware\TwilioRequestValidator::class,
+        'internal-agent' => InternalAgent::class,
     ];
 }

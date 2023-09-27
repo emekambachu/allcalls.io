@@ -185,7 +185,7 @@ let formatMoney = (amount) => {
 
 let fetechDashboard = async (val) => {
   try {
-    console.log('api call');
+    // console.log('api call');
     const from = new Date(dateRange.value[0]);
     const to = new Date(dateRange.value[1]);
 

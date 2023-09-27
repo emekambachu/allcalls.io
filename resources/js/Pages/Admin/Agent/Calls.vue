@@ -78,7 +78,7 @@ let openClientModal = (call) => {
                 <th scope="col" class="px-4 py-3">HANG UP BY</th>
                 <th scope="col" class="px-4 py-3">CALL DURATION</th>
                 <th scope="col" class="px-4 py-3">CALL TAKEN</th>
-                <th scope="col" class="px-4 py-3">AMMOUNT SPENT</th>
+                <th scope="col" class="px-4 py-3">AMOUNT SPENT</th>
                 <th scope="col" class="px-4 py-3">CALL TYPE</th>
                 <th scope="col" class="px-4 py-3">URL</th>
                 <th scope="col" class="px-4 py-3 text-end">Actions</th>
@@ -101,7 +101,7 @@ let openClientModal = (call) => {
                   }}
                 </td>
                 <th class="text-gray-600 px-4 py-3">{{ call.call_taken }}</th>
-                <td class="text-gray-600 px-4 py-3">{{ call.amount_spent }}</td>
+                <td class="text-gray-600 px-4 py-3">${{ call.amount_spent }}</td>
                 <td class="text-gray-600 px-4 py-3">{{ call.call_type.type }}</td>
                 <td class="text-gray-600 px-4 py-3">
                   <a v-if="call.recording_url" target="_blank" :href="call.recording_url" class="flex"><svg
