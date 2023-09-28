@@ -38,8 +38,8 @@ class RegistrationStepController extends Controller
             'ssn' => 'required',
             'gender' => 'required',
             'dob' => 'required',
-            'martial_status' => 'required',
-            'cell_phone' => 'required|regex:/^\+?1?[-.\s]?(\([2-9]\d{2}\)|[2-9]\d{2})[-.\s]?\d{3}[-.\s]?\d{4}$/',
+            'marital_status' => 'required',
+            'cell_phone' => 'required',
             'email' => 'required',
             'driver_license_no' => 'required',
             'driver_license_state' => 'required',
@@ -61,7 +61,7 @@ class RegistrationStepController extends Controller
             'business_company_type' => 'nullable|required_with:business_name,business_tax_id,business_agent_name,business_agent_title,business_insu_license_no,business_office_fax,business_office_phone,business_email,business_website,business_address,business_city_state,business_zip,business_move_in_date',
             'business_insu_license_no' => 'nullable|required_with:business_name,business_tax_id,business_agent_name,business_agent_title,business_company_type,business_office_fax,business_office_phone,business_email,business_website,business_address,business_city_state,business_zip,business_move_in_date',
             'business_office_fax' => 'nullable|required_with:business_name,business_tax_id,business_agent_name,business_agent_title,business_company_type,business_insu_license_no,business_office_phone,business_email,business_website,business_address,business_city_state,business_zip,business_move_in_date',
-            'business_office_phone' => 'nullable|required_with:business_name,business_tax_id,business_agent_name,business_agent_title,business_company_type,business_insu_license_no,business_office_fax,business_email,business_website,business_address,business_city_state,business_zip,business_move_in_date|regex:/^\+?1?[-.\s]?(\([2-9]\d{2}\)|[2-9]\d{2})[-.\s]?\d{3}[-.\s]?\d{4}$/',
+            'business_office_phone' => 'nullable|required_with:business_name,business_tax_id,business_agent_name,business_agent_title,business_company_type,business_insu_license_no,business_office_fax,business_email,business_website,business_address,business_city_state,business_zip,business_move_in_date',
             'business_email' => 'nullable|required_with:business_name,business_tax_id,business_agent_name,business_agent_title,business_company_type,business_insu_license_no,business_office_fax,business_office_phone,business_website,business_address,business_city_state,business_zip,business_move_in_date',
             'business_website' => 'nullable|required_with:business_name,business_tax_id,business_agent_name,business_agent_title,business_company_type,business_insu_license_no,business_office_fax,business_office_phone,business_email,business_address,business_city_state,business_zip,business_move_in_date',
             'business_address' => 'nullable|required_with:business_name,business_tax_id,business_agent_name,business_agent_title,business_company_type,business_insu_license_no,business_office_fax,business_office_phone,business_email,business_website,business_city_state,business_zip,business_move_in_date',
@@ -76,9 +76,8 @@ class RegistrationStepController extends Controller
             'ssn.required' => 'This field is required.',
             'gender.required' => 'This field is required.',
             'dob.required' => 'This field is required.',
-            'martial_status.required' => 'This field is required.',
+            'marital_status.required' => 'This field is required.',
             'cell_phone.required' => 'This field is required.',
-            'cell_phone.regex' => 'Phone number format is not valid.',
             'email.required' => 'This field is required.',
             'driver_license_no.required' => 'This field is required.',
             'driver_license_state.required' => 'This field is required.',
@@ -101,7 +100,6 @@ class RegistrationStepController extends Controller
             'business_insu_license_no.required_with' => 'This field is required.',
             'business_office_fax.required_with' => 'This field is required.',
             'business_office_phone.required_with' => 'This field is required.',
-            'business_office_phone.regex' => 'Phone number format is not valid.',
             'business_email.required_with' => 'This field is required.',
             'business_website.required_with' => 'This field is required.',
             'business_address.required_with' => 'This field is required.',
@@ -312,11 +310,11 @@ class RegistrationStepController extends Controller
 
 
         $step1SubStep4Validation = Validator::make($request->all(), [
-             'resident_country' => 'required',
-             'resident_your_home' => 'required',
-             'resident_city' => 'required',
-             'resident_state' => 'required',
-        ],[
+            'resident_country' => 'required',
+            'resident_your_home' => 'required',
+            'resident_city' => 'required',
+            'resident_state' => 'required',
+        ], [
             'resident_country.required' => 'This field is required.',
             'resident_your_home.required' => 'This field is required.',
             'resident_city.required' => 'This field is required.',
@@ -392,7 +390,7 @@ class RegistrationStepController extends Controller
                     'ssn' => isset($request->ssn) ? $request->ssn : null,
                     'gender' => isset($request->gender) ? $request->gender : null,
                     'dob' => isset($request->dob) ? date('m/d/Y', strtotime($request->dob)) : null,
-                    'marital_status' => isset($request->martial_status) ? $request->martial_status : null,
+                    'marital_status' => isset($request->marital_status) ? $request->marital_status : null,
                     'cell_phone' => isset($request->cell_phone) ? $request->cell_phone : null,
                     'home_phone' => isset($request->home_phone) ? $request->home_phone : null,
                     'fax' => isset($request->fax) ? $request->fax : null,
@@ -437,7 +435,7 @@ class RegistrationStepController extends Controller
                     'ssn' => isset($request->ssn) ? $request->ssn : null,
                     'gender' => isset($request->gender) ? $request->gender : null,
                     'dob' => isset($request->dob) ? date('m/d/Y', strtotime($request->dob)) : null,
-                    'marital_status' => isset($request->martial_status) ? $request->martial_status : null,
+                    'marital_status' => isset($request->marital_status) ? $request->marital_status : null,
                     'cell_phone' => isset($request->cell_phone) ? $request->cell_phone : null,
                     'home_phone' => isset($request->home_phone) ? $request->home_phone : null,
                     'fax' => isset($request->fax) ? $request->fax : null,
@@ -479,10 +477,10 @@ class RegistrationStepController extends Controller
 
             $legalQuestions = [];
 
-            if(isset($request->convicted_checkbox_1)) {
+            if (isset($request->convicted_checkbox_1)) {
                 $name = 'convicted_checkbox_1';
                 $value = $request->convicted_checkbox_1;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -490,10 +488,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->convicted_checkbox_1a)) {
+            if (isset($request->convicted_checkbox_1a)) {
                 $name = 'convicted_checkbox_1a';
                 $value = $request->convicted_checkbox_1a;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -501,10 +499,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->convicted_checkbox_1b)) {
+            if (isset($request->convicted_checkbox_1b)) {
                 $name = 'convicted_checkbox_1b';
                 $value = $request->convicted_checkbox_1b;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -512,10 +510,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->convicted_checkbox_1c)) {
+            if (isset($request->convicted_checkbox_1c)) {
                 $name = 'convicted_checkbox_1c';
                 $value = $request->convicted_checkbox_1c;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -523,10 +521,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->convicted_checkbox_1d)) {
+            if (isset($request->convicted_checkbox_1d)) {
                 $name = 'convicted_checkbox_1d';
                 $value = $request->convicted_checkbox_1d;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -534,10 +532,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->convicted_checkbox_1e)) {
+            if (isset($request->convicted_checkbox_1e)) {
                 $name = 'convicted_checkbox_1e';
                 $value = $request->convicted_checkbox_1e;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -545,10 +543,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->convicted_checkbox_1f)) {
+            if (isset($request->convicted_checkbox_1f)) {
                 $name = 'convicted_checkbox_1f';
                 $value = $request->convicted_checkbox_1f;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -556,10 +554,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->convicted_checkbox_1g)) {
+            if (isset($request->convicted_checkbox_1g)) {
                 $name = 'convicted_checkbox_1g';
                 $value = $request->convicted_checkbox_1g;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -567,10 +565,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->convicted_checkbox_1h)) {
+            if (isset($request->convicted_checkbox_1h)) {
                 $name = 'convicted_checkbox_1h';
                 $value = $request->convicted_checkbox_1h;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -578,10 +576,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->lawsuit_checkbox_2)) {
+            if (isset($request->lawsuit_checkbox_2)) {
                 $name = 'lawsuit_checkbox_2';
                 $value = $request->lawsuit_checkbox_2;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -589,10 +587,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->lawsuit_checkbox_2a)) {
+            if (isset($request->lawsuit_checkbox_2a)) {
                 $name = 'lawsuit_checkbox_2a';
                 $value = $request->lawsuit_checkbox_2a;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -600,10 +598,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->lawsuit_checkbox_2b)) {
+            if (isset($request->lawsuit_checkbox_2b)) {
                 $name = 'lawsuit_checkbox_2b';
                 $value = $request->lawsuit_checkbox_2b;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -611,10 +609,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->lawsuit_checkbox_2c)) {
+            if (isset($request->lawsuit_checkbox_2c)) {
                 $name = 'lawsuit_checkbox_2c';
                 $value = $request->lawsuit_checkbox_2c;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -622,10 +620,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->lawsuit_checkbox_2d)) {
+            if (isset($request->lawsuit_checkbox_2d)) {
                 $name = 'lawsuit_checkbox_2d';
                 $value = $request->lawsuit_checkbox_2d;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -633,10 +631,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->alleged_engaged_checkbox_3)) {
+            if (isset($request->alleged_engaged_checkbox_3)) {
                 $name = 'alleged_engaged_checkbox_3';
                 $value = $request->alleged_engaged_checkbox_3;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -644,10 +642,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->found_engaged_checkbox_4)) {
+            if (isset($request->found_engaged_checkbox_4)) {
                 $name = 'found_engaged_checkbox_4';
                 $value = $request->found_engaged_checkbox_4;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -655,10 +653,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->terminate_contract_checkbox_5)) {
+            if (isset($request->terminate_contract_checkbox_5)) {
                 $name = 'terminate_contract_checkbox_5';
                 $value = $request->terminate_contract_checkbox_5;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -666,10 +664,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->terminate_contract_checkbox_5a)) {
+            if (isset($request->terminate_contract_checkbox_5a)) {
                 $name = 'terminate_contract_checkbox_5a';
                 $value = $request->terminate_contract_checkbox_5a;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -677,10 +675,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->terminate_contract_checkbox_5b)) {
+            if (isset($request->terminate_contract_checkbox_5b)) {
                 $name = 'terminate_contract_checkbox_5b';
                 $value = $request->terminate_contract_checkbox_5b;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -688,10 +686,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->terminate_contract_checkbox_5c)) {
+            if (isset($request->terminate_contract_checkbox_5c)) {
                 $name = 'terminate_contract_checkbox_5c';
                 $value = $request->terminate_contract_checkbox_5c;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -699,10 +697,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->cancel_insu_cause_checkbox_6)) {
+            if (isset($request->cancel_insu_cause_checkbox_6)) {
                 $name = 'cancel_insu_cause_checkbox_6';
                 $value = $request->cancel_insu_cause_checkbox_6;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -710,10 +708,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->insurer_checkbox_7)) {
+            if (isset($request->insurer_checkbox_7)) {
                 $name = 'insurer_checkbox_7';
                 $value = $request->insurer_checkbox_7;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -721,10 +719,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->lawsuit_checkbox_8)) {
+            if (isset($request->lawsuit_checkbox_8)) {
                 $name = 'lawsuit_checkbox_8';
                 $value = $request->lawsuit_checkbox_8;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -732,10 +730,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->lawsuit_checkbox_8a)) {
+            if (isset($request->lawsuit_checkbox_8a)) {
                 $name = 'lawsuit_checkbox_8a';
                 $value = $request->lawsuit_checkbox_8a;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -743,10 +741,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->lawsuit_checkbox_8b)) {
+            if (isset($request->lawsuit_checkbox_8b)) {
                 $name = 'lawsuit_checkbox_8b';
                 $value = $request->lawsuit_checkbox_8b;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -754,10 +752,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->license_denied_checkbox_9)) {
+            if (isset($request->license_denied_checkbox_9)) {
                 $name = 'license_denied_checkbox_9';
                 $value = $request->license_denied_checkbox_9;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -765,10 +763,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->regulatory_checkbox_10)) {
+            if (isset($request->regulatory_checkbox_10)) {
                 $name = 'regulatory_checkbox_10';
                 $value = $request->regulatory_checkbox_10;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -776,10 +774,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->regulatory_revoked_checkbox_11)) {
+            if (isset($request->regulatory_revoked_checkbox_11)) {
                 $name = 'regulatory_revoked_checkbox_11';
                 $value = $request->regulatory_revoked_checkbox_11;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -787,10 +785,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->regulatory_found_checkbox_12)) {
+            if (isset($request->regulatory_found_checkbox_12)) {
                 $name = 'regulatory_found_checkbox_12';
                 $value = $request->regulatory_found_checkbox_12;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -798,10 +796,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->interr_licensing_checkbox_13)) {
+            if (isset($request->interr_licensing_checkbox_13)) {
                 $name = 'interr_licensing_checkbox_13';
                 $value = $request->interr_licensing_checkbox_13;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -809,10 +807,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->self_regularity_checkbox_14)) {
+            if (isset($request->self_regularity_checkbox_14)) {
                 $name = 'self_regularity_checkbox_14';
                 $value = $request->self_regularity_checkbox_14;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -820,10 +818,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->self_regularity_checkbox_14a)) {
+            if (isset($request->self_regularity_checkbox_14a)) {
                 $name = 'self_regularity_checkbox_14a';
                 $value = $request->self_regularity_checkbox_14a;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -831,10 +829,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->self_regularity_checkbox_14b)) {
+            if (isset($request->self_regularity_checkbox_14b)) {
                 $name = 'self_regularity_checkbox_14b';
                 $value = $request->self_regularity_checkbox_14b;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -842,10 +840,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->self_regularity_checkbox_14c)) {
+            if (isset($request->self_regularity_checkbox_14c)) {
                 $name = 'self_regularity_checkbox_14c';
                 $value = $request->self_regularity_checkbox_14c;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -853,10 +851,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->bankruptcy_checkbox_15)) {
+            if (isset($request->bankruptcy_checkbox_15)) {
                 $name = 'bankruptcy_checkbox_15';
                 $value = $request->bankruptcy_checkbox_15;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -864,10 +862,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->bankruptcy_checkbox_15a)) {
+            if (isset($request->bankruptcy_checkbox_15a)) {
                 $name = 'bankruptcy_checkbox_15a';
                 $value = $request->bankruptcy_checkbox_15a;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -875,10 +873,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->bankruptcy_checkbox_15b)) {
+            if (isset($request->bankruptcy_checkbox_15b)) {
                 $name = 'bankruptcy_checkbox_15b';
                 $value = $request->bankruptcy_checkbox_15b;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -886,10 +884,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->bankruptcy_checkbox_15c)) {
+            if (isset($request->bankruptcy_checkbox_15c)) {
                 $name = 'bankruptcy_checkbox_15c';
                 $value = $request->bankruptcy_checkbox_15c;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -897,10 +895,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->liens_against_checkbox_16)) {
+            if (isset($request->liens_against_checkbox_16)) {
                 $name = 'liens_against_checkbox_16';
                 $value = $request->liens_against_checkbox_16;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -908,10 +906,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->connected_checkbox_17)) {
+            if (isset($request->connected_checkbox_17)) {
                 $name = 'connected_checkbox_17';
                 $value = $request->connected_checkbox_17;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -919,10 +917,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->aliases_checkbox_18)) {
+            if (isset($request->aliases_checkbox_18)) {
                 $name = 'aliases_checkbox_18';
                 $value = $request->aliases_checkbox_18;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -930,10 +928,10 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(isset($request->unresolved_matter_checkbox_19)) {
+            if (isset($request->unresolved_matter_checkbox_19)) {
                 $name = 'unresolved_matter_checkbox_19';
                 $value = $request->unresolved_matter_checkbox_19;
-                array_push($legalQuestions,[
+                array_push($legalQuestions, [
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
@@ -941,7 +939,7 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-            if(count($legalQuestions)) {
+            if (count($legalQuestions)) {
                 InternalAgentLegalQuestion::where('reg_info_id', $basicInfoId)->delete();
                 DB::table('internal_agent_legal_questions')->insert($legalQuestions);
             }
@@ -1139,9 +1137,11 @@ class RegistrationStepController extends Controller
             }
 
             DB::commit();
-
-            return Inertia::render('InternalAgent/ContractSteps')
-                ->with('message', 'Internal agent registration completed successfully.');
+            return response()->json([
+                'success' => true,
+                'message' => 'Registration steps completed successfully',
+            ], 200);
+            
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([

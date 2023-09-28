@@ -2,8 +2,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
 import InputError from "@/Components/InputError.vue";
-import { router } from "@inertiajs/vue3";
-import { Head, Link, useForm } from "@inertiajs/vue3";
+import { Head, Link, useForm , usePage ,router } from "@inertiajs/vue3";
 import ContactDetail from "@/Pages/InternalAgent/ContactDetail.vue";
 import Tabs from '@/Pages/InternalAgent/Tabs.vue'
 import LegalInformation from '@/Pages/InternalAgent/LegalInformation.vue'
@@ -14,9 +13,13 @@ import UploadLicence from '@/Pages/InternalAgent/UploadLicence.vue'
 import BankInformationUpload from '@/Pages/InternalAgent/BankInformationUpload.vue'
 import AmLCourse from '@/Pages/InternalAgent/AmLCourse.vue'
 import ErrorsAndEmissions from '@/Pages/InternalAgent/ErrorsAndEmissions.vue'
-
-
 import { toaster } from "@/helper.js";
+
+
+let page = usePage();
+if (page.props.flash.message) {
+  toaster("success", page.props.flash.message);
+}
 let props = defineProps({
     userData: Object,
     states: Array,
@@ -105,12 +108,12 @@ let uploadBankingInfo = (val) => {
 }
 
 let uploadPdfAml = (val) => {
-    uploadAmlPdf.value = val
-    // console.log('uploadPdfAml', val);
+    uploadAmlPdf.value = val.selectedFile
+    form.value.aml_course = val.aml_course
 }
 let uploadPdfOmmision = (val) => {
-    uploadOmmisionPdf.value = val
-    // console.log('parent uploadPdfOmmision', val);
+    uploadOmmisionPdf.value = val.selectedFile
+    form.value.omissions_insurance = val.omissions_insurance
 }
 let errorHandle = (data) => {
     const stepMapping = {
@@ -176,7 +179,6 @@ let submit = () => {
             }
         })
         .then((response) => {
-            close();
             toaster("success", response.data.message);
             router.visit("/dashboard");
             isLoading.value = false;

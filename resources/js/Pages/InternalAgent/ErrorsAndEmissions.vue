@@ -24,11 +24,11 @@ let ChangeTab = () => {
             props.firstStepErrors[key] = [];
         }
     }
-   
-    if(!selectedFile.value){
+
+    if (!selectedFile.value) {
         props.firstStepErrors.omissions_insurance = [`The Omissions Insurances certificate is required.`];
-    }else{
-        emits("uploadPdfOmmision" , selectedFile.value);
+    } else {
+        emits("uploadPdfOmmision", { selectedFile: selectedFile.value, omissions_insurance: form.value.omissions_insurance });
         emits("changeTab");
     }
 }
@@ -44,7 +44,7 @@ const handleFileChange = (event) => {
         fileError.value = false; // Reset the error message
         selectedFileName.value = files[0].name; // Set the selected file name
         selectedFile.value = files[0]
-        if(props.firstStepErrors.omissions_insurance){
+        if (props.firstStepErrors.omissions_insurance) {
             props.firstStepErrors.omissions_insurance = null
         }
     } else if (files.length > 1) {
@@ -70,7 +70,7 @@ const handleDrop = (event) => {
         fileError.value = false; // Reset the error message
         selectedFileName.value = files[0].name; // Set the selected file name
         selectedFile.value = files[0]
-        if(props.firstStepErrors.omissions_insurance){
+        if (props.firstStepErrors.omissions_insurance) {
             props.firstStepErrors.omissions_insurance = null
         }
     } else if (files.length > 1) {
@@ -124,9 +124,10 @@ let goBack = () => {
                     <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
                         <span class="font-semibold">Click to upload</span> or drag and drop
                     </p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">PDF files only<span class="text-red-500 ">*</span></p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">PDF files only<span class="text-red-500 ">*</span>
+                    </p>
                 </div>
-                <input id="dropzone-file-ommision" type="file" class="hidden" @change="handleFileChange" accept=".pdf"  />
+                <input id="dropzone-file-ommision" type="file" class="hidden" @change="handleFileChange" accept=".pdf" />
             </label>
         </div>
         <p v-if="fileError" class="text-red-500 mt-4">{{ fileErrorMessage }}</p>
@@ -145,8 +146,10 @@ let goBack = () => {
                 Omissions Insurances.<span class="text-red-500 ">*</span></label>
         </div>
     </div>
-    
+
     <div v-if="firstStepErrors.omissions_insurance" class="text-red-500" v-text="firstStepErrors.omissions_insurance[0]">
+    </div>
+    <div v-if="firstStepErrors.uploadOmmisionPdf" class="text-red-500" v-text="firstStepErrors.uploadOmmisionPdf[0]">
     </div>
     <div class="px-5 pb-6">
         <div class="flex justify-between flex-wrap">

@@ -28,7 +28,7 @@ let ChangeTab = () => {
     if(!selectedFile.value){
         props.firstStepErrors.aml_course = [`The AML course certificate is required.`];
     }else{
-        emits("uploadPdfAml" , selectedFile.value);
+        emits("uploadPdfAml", { selectedFile: selectedFile.value, aml_course: form.value.aml_course });
         emits("changeTab");
     }
 }
@@ -36,6 +36,7 @@ let ChangeTab = () => {
 let goBack = () => {
     emits("goback");
 }
+
 const fileError = ref(false);
 const selectedFileName = ref(""); // To store the selected file name
 
@@ -155,6 +156,7 @@ const fileErrorMessage = ref("Please select a single PDF file.");
         </div>
     </div>
     <div v-if="firstStepErrors.aml_course" class="text-red-500 mt-4" v-text="firstStepErrors.aml_course[0]"></div> 
+    <div v-if="firstStepErrors.uploadAmlPdf" class="text-red-500 mt-4" v-text="firstStepErrors.uploadAmlPdf[0]"></div> 
     <!-- <div v-if="firstStepErrors.aml_course" class="text-red-500" v-text="firstStepErrors.aml_course[0]"></div> -->
     <div class="px-5 pb-6">
         <div class="flex justify-between flex-wrap">

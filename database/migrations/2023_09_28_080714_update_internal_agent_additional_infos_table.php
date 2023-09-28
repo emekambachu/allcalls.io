@@ -16,8 +16,8 @@ return new class extends Migration
             $table->dropColumn('aml_provider');
             $table->dropColumn('training_completion_date');
             $table->dropColumn('limra_password');
-            $table->string('resident_city')->nullable();
-            $table->integer('resident_state')->nullable();
+            $table->string('resident_city')->nullable()->after('resident_maiden_name');
+            $table->integer('resident_state')->nullable()->after('resident_city');
         });
     }
 
