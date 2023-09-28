@@ -8,6 +8,7 @@ use App\Http\Controllers\ActiveUserChannelController;
 use App\Http\Controllers\Admin\OnlineAgentsController;
 use App\Http\Controllers\Admin\InternalAgentController;
 use App\Http\Controllers\Admin\AvailableNumberController;
+use App\Http\Controllers\Admin\CallsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,4 +71,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::get('/agent-invites', [AgentInvitesController::class, 'index'])->name('admin.agent-invites.index');
     Route::post('/agent-invites', [AgentInvitesController::class, 'store'])->name('admin.agent-invites.store');
     Route::delete('/agent-invites/{id}', [AgentInvitesController::class, 'destroy'])->name('admin.agent-invites.destroy');
+
+    //Calls
+    Route::get('/calls', [CallsController::class, 'index'])->name('admin.calls.index');
 });

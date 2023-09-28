@@ -15,7 +15,7 @@ class CallController extends Controller
 
         $calls = Call::where('user_id', $user_id)
                         ->with(['getClient', 'callType'])
-                        ->orderBy('id', 'desc')
+                        ->orderBy('created_at', 'desc')
                         ->paginate(10);
         
         $totalCalls = Call::where('user_id', $user_id)->count();
