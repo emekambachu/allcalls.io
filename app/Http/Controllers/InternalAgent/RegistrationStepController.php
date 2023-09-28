@@ -209,6 +209,7 @@ class RegistrationStepController extends Controller
             'insurer_checkbox_7.required' => 'This field is required.',
             'insurer_checkbox_7_text.required_if' => 'This field is required.',
         ]);
+
         if ($step1SubStep2Validation->fails()) {
             return response()->json([
                 'success' => false,
@@ -321,6 +322,7 @@ class RegistrationStepController extends Controller
             'resident_city.required' => 'This field is required.',
             'resident_state.required' => 'This field is required.',
         ]);
+
         if ($step1SubStep4Validation->fails()) {
             return response()->json([
                 'success' => false,
@@ -345,6 +347,7 @@ class RegistrationStepController extends Controller
             'omissions_insurance' => 'required',
             'uploadOmmisionPdf' => 'required|mimetypes:application/pdf|max:2048',
         ]);
+
         if ($step3Validation->fails()) {
             return response()->json([
                 'success' => false,
@@ -356,6 +359,7 @@ class RegistrationStepController extends Controller
         $step4Validation = Validator::make($request->all(), [
             'residentLicensePdf' => 'required|mimetypes:application/pdf|max:2048',
         ]);
+
         if ($step4Validation->fails()) {
             return response()->json([
                 'success' => false,
@@ -367,6 +371,7 @@ class RegistrationStepController extends Controller
         $step5Validation = Validator::make($request->all(), [
             'bankingInfoPdf' => 'required|mimetypes:application/pdf|max:2048',
         ]);
+
         if ($step5Validation->fails()) {
             return response()->json([
                 'success' => false,
@@ -1134,6 +1139,7 @@ class RegistrationStepController extends Controller
             }
 
             DB::commit();
+
             return Inertia::render('InternalAgent/ContractSteps')
                 ->with('message', 'Internal agent registration completed successfully.');
         } catch (\Exception $e) {
