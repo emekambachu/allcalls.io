@@ -39,7 +39,7 @@ let ChangeTab = () => {
     ];
     requiredFields.forEach(fieldName => {
         if (form.value[fieldName] === null || form.value[fieldName] === "" || form.value[fieldName] === "Choose") {
-            props.firstStepErrors[fieldName] = [`The ${fieldName.replace(/_/g, ' ')} field is required.`];
+            props.firstStepErrors[fieldName] = [`This  field is required.`];
         }
     });
     // Check if there are any errors

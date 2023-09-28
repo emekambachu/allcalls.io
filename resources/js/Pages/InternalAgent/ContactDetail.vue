@@ -15,13 +15,13 @@ let form = ref({
     ssn: null,
     gender: 'Choose',
     dob: null,
-    martial_status: 'Choose',
+    marital_status: 'Choose',
     cell_phone: null,
     home_phone: null,
     fax: null,
     email: null,
     driver_license_no: null,
-    driver_license_state: null,
+    driver_license_state: 'Choose',
     address: null,
     city: null,
     state: "Choose",
@@ -96,7 +96,7 @@ let ChangeTab = () => {
         "business_city", "business_zip", "business_move_in_date", 'business_state'
     ]
     const requiredFields = [
-        "first_name", "last_name", "middle_name", "ssn", "gender", "dob", "martial_status",
+        "first_name", "last_name", "middle_name", "ssn", "gender", "dob", "marital_status",
         "cell_phone", "email", "driver_license_no", "driver_license_state",
         "address", "city", 'state', "zip", "move_in_date", "resident_insu_license_no", "resident_insu_license_state",
     ];
@@ -112,7 +112,8 @@ let ChangeTab = () => {
 
     mergedFields.forEach(fieldName => {
         if (form.value[fieldName] === null || form.value[fieldName] === "" || form.value[fieldName] === "Choose") {
-            props.firstStepErrors[fieldName] = [`The ${fieldName.replace(/_/g, ' ')} field is required.`];
+            // props.firstStepErrors[fieldName] = [`The ${fieldName.replace(/_/g, ' ')} field is required.`];
+            props.firstStepErrors[fieldName] = [`This  field is required.`];
         }
     });
     // Check if there are any errors
@@ -125,7 +126,7 @@ let ChangeTab = () => {
     }
 }
 let enforceFiveDigitInput = (fieldName, val) => {
-    if(form.value[fieldName]){
+    if (form.value[fieldName]) {
         form.value[fieldName] = form.value[fieldName].toString().replace(/[^0-9]/g, '');
         if (form.value[fieldName].length > 5) {
             form.value[fieldName] = form.value[fieldName].slice(0, 5);
@@ -228,13 +229,13 @@ let enforceFiveDigitInput = (fieldName, val) => {
             <div>
                 <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Married
                     Status<span class="text-red-500">*</span></label>
-                <select v-model="form.martial_status" id="countries"
+                <select v-model="form.marital_status" id="countries"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <option>Choose </option>
                     <option value="married">Married</option>
                     <option value="unmarried">UnMarried</option>
                 </select>
-                <div v-if="firstStepErrors.martial_status" class="text-red-500" v-text="firstStepErrors.martial_status[0]">
+                <div v-if="firstStepErrors.marital_status" class="text-red-500" v-text="firstStepErrors.marital_status[0]">
                 </div>
             </div>
 
@@ -253,8 +254,12 @@ let enforceFiveDigitInput = (fieldName, val) => {
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Driver Licence
                     State<span class="text-red-500">*</span></label>
-                <input type="text" v-model="form.driver_license_state" id="default-input"
+
+                <select v-model="form.driver_license_state" id="countries"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option>Choose </option>
+                    <option v-for="state in states" :value="state.id">{{ state.full_name }} </option>
+                </select>
                 <div v-if="firstStepErrors.driver_license_state" class="text-red-500"
                     v-text="firstStepErrors.driver_license_state[0]"></div>
             </div>
@@ -427,7 +432,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
             <div class="grid lg:grid-cols-4 mb-2 mt-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
                 <div>
                     <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Business
-                        Name</label>
+                        Name<span class="text-red-500">*</span></label>
                     <div>
 
                     </div>
@@ -440,7 +445,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
                 </div>
                 <div>
                     <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Tax
-                        ID</label>
+                        ID<span class="text-red-500">*</span></label>
                     <input type="number" v-model="form.business_tax_id" id="default-input"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <div v-if="firstStepErrors.business_tax_id" class="text-red-500"
@@ -449,7 +454,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
                 <div>
                     <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Principle
                         Agent
-                        Name</label>
+                        Name<span class="text-red-500">*</span></label>
                     <input type="text" v-model="form.business_agent_name" id="default-input"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <div v-if="firstStepErrors.business_agent_name" class="text-red-500"
@@ -458,7 +463,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
                 <div>
                     <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Priciple
                         Agent
-                        Title
+                        Title<span class="text-red-500">*</span>
                     </label>
                     <input type="text" v-model="form.business_agent_title" id="default-input"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -470,7 +475,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
             <div class="grid lg:grid-cols-4 mb-2 mt-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
                 <div>
                     <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Business
-                        Insurance Licence #</label>
+                        Insurance Licence #<span class="text-red-500">*</span></label>
                     <input type="text" v-model="form.business_insu_license_no" id="default-input"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <div v-if="firstStepErrors.business_insu_license_no" class="text-red-500"
@@ -479,7 +484,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
                 </div>
                 <div>
                     <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Cell
-                        Fax</label>
+                        Fax<span class="text-red-500">*</span></label>
                     <input type="text" maxLength="15" v-model="form.business_office_fax" id="default-input"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <div v-if="firstStepErrors.business_office_fax" class="text-red-500"
@@ -487,7 +492,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
                 </div>
                 <div>
                     <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Office
-                        Phone</label>
+                        Phone<span class="text-red-500">*</span></label>
                     <input type="text" maxLength="10" v-model="form.business_office_phone" id="default-input"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <div v-if="firstStepErrors.business_office_phone" class="text-red-500"
@@ -495,7 +500,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
                 </div>
                 <div>
                     <label for="middle_name"
-                        class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Email</label>
+                        class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Email<span class="text-red-500">*</span></label>
                     <input type="text" v-model="form.business_email" id="default-input"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <div v-if="firstStepErrors.business_email" class="text-red-500"
@@ -507,7 +512,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
             <div class="grid lg:grid-cols-4 mb-2 mt-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
                 <div>
                     <label for="middle_name"
-                        class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Website</label>
+                        class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Website<span class="text-red-500">*</span></label>
                     <input type="text" v-model="form.business_website" id="default-input"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <div v-if="firstStepErrors.business_website" class="text-red-500"
@@ -515,18 +520,18 @@ let enforceFiveDigitInput = (fieldName, val) => {
                 </div>
                 <div>
                     <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Business
-                        Address
+                        Address<span class="text-red-500">*</span>
                     </label>
                     <div>
                         <input type="text" v-model="form.business_address" id="default-input"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <span style="font-size: 14px;">Include Apt/Unit #</span>
+                        <span style="font-size: 14px;">Include Apt/Unit #<span class="text-red-500">*</span></span>
                     </div>
                     <div v-if="firstStepErrors.business_address" class="text-red-500"
                         v-text="firstStepErrors.business_address[0]"></div>
                 </div>
                 <div>
-                    <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">City</label>
+                    <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">City<span class="text-red-500">*</span></label>
                     <input type="text" v-model="form.business_city" id="default-input"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <div v-if="firstStepErrors.business_city" class="text-red-500"
@@ -545,15 +550,16 @@ let enforceFiveDigitInput = (fieldName, val) => {
                 </div>
                 <div>
                     <label for="first_name" class="block mb-0 text-sm font-black text-gray-900 dark:text-white">Zip
-                        Code</label>
-                    <input type="number" @input="enforceFiveDigitInput('business_zip')" v-model="form.business_zip" id="default-input"
+                        Code<span class="text-red-500">*</span></label>
+                    <input type="number" @input="enforceFiveDigitInput('business_zip')" v-model="form.business_zip"
+                        id="default-input"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <div v-if="firstStepErrors.business_zip" class="text-red-500" v-text="firstStepErrors.business_zip[0]">
                     </div>
                 </div>
                 <div>
                     <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 dark:text-white">Move-In
-                        Date</label>
+                        Date<span class="text-red-500">*</span></label>
                     <VueDatePicker v-model="form.business_move_in_date" format="dd-MMM-yyyy" :maxDate="maxDate">
                     </VueDatePicker>
                     <div v-if="firstStepErrors.business_move_in_date" class="text-red-500"
@@ -563,7 +569,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
 
                     <div>
                         <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company
-                            Type</label>
+                            Type<span class="text-red-500">*</span></label>
                         <select v-model="form.business_company_type" id="countries"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                             <option>Choose </option>

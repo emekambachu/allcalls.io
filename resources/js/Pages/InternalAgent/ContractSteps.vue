@@ -47,7 +47,7 @@ let goBack = () => {
         contractStep.value = 5
     }
     step.value -= 1;
-   
+
 
 };
 
@@ -136,7 +136,7 @@ let submit = () => {
 
     const requestData = {};
 
-    console.log('contactDetailData.value',contactDetailData.value);
+    console.log('contactDetailData.value', contactDetailData.value);
     Object.assign(requestData, {
         aml_course: form.value.aml_course ? 1 : null, // Send 1 if true, 0 if false
         omissions_insurance: form.value.omissions_insurance ? 1 : null, // Send 1 if true, 0 if false
@@ -158,7 +158,7 @@ let submit = () => {
         }
     }
     // console.log(requestData);
-   
+
     isLoading.value = true;
 
     return axios
@@ -263,12 +263,20 @@ input[type=number] {
             leave-active-class="transition ease-in duration-200 transform"
             leave-from-class="opacity-100 translate-y-0 sm:scale-100"
             leave-to-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+
             <div id="defaultModal" v-show="StepsModal" tabindex="-1"
                 class="flex items-center justify-center fixed inset-0 z-50 w-full h-full overflow-x-hidden overflow-y-auto max-h-full mx-4 sm:mx-0">
+
                 <div class="fixed inset-0 bg-black opacity-90 blurred-overlay"></div>
                 <!-- This is the overlay -->
                 <div style="width: 75%;" class="relative w-full py-10  max-h-full mx-auto" id="modal_main_id">
                     <div class="relative bg-white rounded-lg shadow-lg ">
+                        <div  class="flex justify-end">
+                            <Link :href="route('logout')" method="post" as="button"
+                                class="underline text-sm text-gray-600 mr-5 mt-5  dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
+                            Log Out</Link>
+                        </div>
+
                         <div class="px-12 py-2">
 
                             <Tabs :step="step" />
@@ -295,8 +303,8 @@ input[type=number] {
                                     @goback="ChangeTabBack()" />
                             </div>
                             <div v-show="step === 2" class="pt-6">
-                                <AmLCourse :firstStepErrors="firstStepErrors" @uploadPdfAml="uploadPdfAml" @changeTab="NextStep()"
-                                    @goback="goBack()"  />
+                                <AmLCourse :firstStepErrors="firstStepErrors" @uploadPdfAml="uploadPdfAml"
+                                    @changeTab="NextStep()" @goback="goBack()" />
                                 <!-- <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
                                     AML Course
                                 </h1>
@@ -358,8 +366,8 @@ input[type=number] {
                             </div>
 
                             <div v-show="step === 3" class="pt-6">
-                                <ErrorsAndEmissions :firstStepErrors="firstStepErrors" @uploadPdfOmmision="uploadPdfOmmision" @changeTab="NextStep()"
-                                    @goback="goBack()" />
+                                <ErrorsAndEmissions :firstStepErrors="firstStepErrors"
+                                    @uploadPdfOmmision="uploadPdfOmmision" @changeTab="NextStep()" @goback="goBack()" />
                                 <!-- <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
                                     Errors and Omissions Insurances
                                 </h1>
@@ -423,7 +431,7 @@ input[type=number] {
                                     :firstStepErrors="firstStepErrors" @submit="submit()" @goback="goBack()" />
                             </div>
 
-                           
+
 
                             <!-- <div class="px-5 pb-6">
                                 <div class="flex justify-between flex-wrap">
