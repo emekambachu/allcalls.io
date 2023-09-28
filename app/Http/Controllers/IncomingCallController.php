@@ -66,7 +66,11 @@ class IncomingCallController extends Controller
             $twiml .= $this->handleAvailableNumberCall($to);
 
             $isFromClient = strpos($request->input('From'), 'client:') === 0;
+
+
             Log::debug('Professional: This is a professional log right before checking dialler call');
+            Log::debug('Professional:' . $request->input('From'));
+            
             if ( $isFromClient ) {
                 Log::debug('Omega: call coming from client:');
             }
