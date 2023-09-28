@@ -31,22 +31,29 @@ let addres_history = ref([
     },
 ])
 let form = ref({
-    history_address1: { id: 1, state:"Choose" },
-    history_address2: { id: 2, state:"Choose" },
-    history_address3: { id: 3, state:"Choose" },
-    history_address4: { id: 4, state:"Choose" },
-    history_address5: { id: 5, state:"Choose" },
-    history_address6: { id: 6, state:"Choose" },
-    history_address7: { id: 7, state:"Choose" },
+    history_address1: { id: 1, state: "Choose" },
+    history_address2: { id: 2, state: "Choose" },
+    history_address3: { id: 3, state: "Choose" },
+    history_address4: { id: 4, state: "Choose" },
+    history_address5: { id: 5, state: "Choose" },
+    history_address6: { id: 6, state: "Choose" },
+    history_address7: { id: 7, state: "Choose" },
 })
 let hasValidationErrors = ref({});
+
 const ChangeTab = () => {
     hasValidationErrors.value = {};
     for (const history of addres_history.value) {
         const formData = form.value[history.address];
         Object.assign(formData, form.value[history.id]);
         if (Object.keys(formData).length != 2) {
-            if (formData.address === '' && formData.address === '' && formData.address === '' && formData.address === '') {
+            const isAllFieldsEmpty = Object.keys(formData)
+            .filter(key => key !== 'id')
+            .every(key => formData[key] === '' || (key === 'state' && formData[key] === 'Choose'));
+
+            console.log('isAllFieldsEmpty',isAllFieldsEmpty);
+            console.log('formData',formData);
+            if (formData.address === '' && formData.city === '' && formData.zip_code === '' && formData.state === 'Choose') {
                 emits("changeTab");
                 return
             }
@@ -82,6 +89,18 @@ let ChangeTabBack = () => {
 watch(form.value, (newForm, oldForm) => {
     emits("addRessHistory", newForm);
 });
+let enforceFiveDigitInput = (fieldName, val) => {
+    addres_history.value.forEach((history) => {
+        let field = form.value[history.address][fieldName];
+        if (field) {
+            field = field.toString().replace(/[^0-9]/g, '');
+            if (field.length > 5) {
+                field = field.slice(0, 5);
+                form.value[history.address][fieldName] = field
+            }
+        }
+    })
+}
 </script>
 <template>
     <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
@@ -108,7 +127,7 @@ watch(form.value, (newForm, oldForm) => {
 
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">City
-                    </label>
+                </label>
                 <input type="text" v-model="form[history.address].city" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <div v-if="hasValidationErrors[history.address]">
@@ -120,11 +139,11 @@ watch(form.value, (newForm, oldForm) => {
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">
                     State</label>
-                    <select v-model="form[history.address].state" id="countries"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <option>Choose </option>
-                        <option v-for="state in states" :value="state.id">{{ state.full_name }} </option>
-                    </select>
+                <select v-model="form[history.address].state" id="countries"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option>Choose </option>
+                    <option v-for="state in states" :value="state.id">{{ state.full_name }} </option>
+                </select>
                 <div v-if="hasValidationErrors[history.address]">
                     <span v-if="hasValidationErrors[history.address].state" class="text-red-600"> State is
                         required</span>
@@ -133,7 +152,8 @@ watch(form.value, (newForm, oldForm) => {
 
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Zip Code</label>
-                <input type="text" maxlength="5" v-model="form[history.address].zip_code" id="default-input"
+                <input type="number" @input="enforceFiveDigitInput('zip_code')" v-model="form[history.address].zip_code"
+                    id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <div v-if="hasValidationErrors[history.address]">
                     <span v-if="hasValidationErrors[history.address].zip_code" class="text-red-600">Zip Code is
@@ -156,7 +176,7 @@ watch(form.value, (newForm, oldForm) => {
 
         </div>
 
-      
+
 
         <hr class="w-100 h-1 my-4 bg-gray-600 border-0 rounded dark:bg-gray-700">
     </div>
@@ -174,7 +194,7 @@ watch(form.value, (newForm, oldForm) => {
             </div>
             <div class="mt-4">
                 <button type="button" @click="ChangeTab" class="button-custom px-3 py-2 rounded-md">
-                    Next 
+                    Next
                 </button>
 
             </div>

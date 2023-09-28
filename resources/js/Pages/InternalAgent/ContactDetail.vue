@@ -105,7 +105,7 @@ let ChangeTab = () => {
         const value = form.value[fieldName];
         return value !== null && value !== "Choose" && value !== '';
     });
-    if(!hasBusinessValue && individual_business.value){
+    if (!hasBusinessValue && individual_business.value) {
         hasBusinessValue = true
     }
     const mergedFields = hasBusinessValue ? [...requiredFields, ...businessInputs] : requiredFields;
@@ -122,6 +122,14 @@ let ChangeTab = () => {
     } else {
         var element = document.getElementById("modal_main_id");
         element.scrollIntoView();
+    }
+}
+let enforceFiveDigitInput = (fieldName, val) => {
+    if(form.value[fieldName]){
+        form.value[fieldName] = form.value[fieldName].toString().replace(/[^0-9]/g, '');
+        if (form.value[fieldName].length > 5) {
+            form.value[fieldName] = form.value[fieldName].slice(0, 5);
+        }
     }
 }
 </script>
@@ -285,7 +293,7 @@ let ChangeTab = () => {
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Zip Code<span
                         class="text-red-500">*</span></label>
-                <input type="text" maxLength="5" v-model="form.zip" id="default-input"
+                <input type="number" @input="enforceFiveDigitInput('zip')" v-model="form.zip" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <div v-if="firstStepErrors.zip" class="text-red-500" v-text="firstStepErrors.zip[0]"></div>
             </div>
@@ -332,7 +340,8 @@ let ChangeTab = () => {
             </div>
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Zip Code</label>
-                <input type="text" v-model="form.move_in_zip" maxLength="5" id="default-input"
+                <input type="number" @input="enforceFiveDigitInput('move_in_zip')" v-model="form.move_in_zip" maxLength="5"
+                    id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <div v-if="firstStepErrors.move_in_zip" class="text-red-500" v-text="firstStepErrors.move_in_zip[0]"></div>
             </div>
@@ -354,11 +363,11 @@ let ChangeTab = () => {
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Resident
                     Insurance License
                     State<span class="text-red-500">*</span></label>
-                    <select v-model="form.resident_insu_license_state" id="countries"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <option>Choose </option>
-                        <option v-for="state in states" :value="state.id">{{ state.full_name }} </option>
-                    </select>
+                <select v-model="form.resident_insu_license_state" id="countries"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option>Choose </option>
+                    <option v-for="state in states" :value="state.id">{{ state.full_name }} </option>
+                </select>
                 <!-- <input type="text" v-model="form.resident_insu_license_state" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"> -->
                 <div v-if="firstStepErrors.resident_insu_license_state" class="text-red-500"
@@ -537,7 +546,7 @@ let ChangeTab = () => {
                 <div>
                     <label for="first_name" class="block mb-0 text-sm font-black text-gray-900 dark:text-white">Zip
                         Code</label>
-                    <input type="number" v-model="form.business_zip" id="default-input"
+                    <input type="number" @input="enforceFiveDigitInput('business_zip')" v-model="form.business_zip" id="default-input"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <div v-if="firstStepErrors.business_zip" class="text-red-500" v-text="firstStepErrors.business_zip[0]">
                     </div>
