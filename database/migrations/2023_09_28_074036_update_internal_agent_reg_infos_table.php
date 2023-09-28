@@ -19,7 +19,6 @@ return new class extends Migration
             $table->dropColumn('business_city_state');
             $table->string('city')->nullable()->after('address');
             $table->integer('state')->nullable()->after('city');
-            $table->integer('state')->nullable()->after('city');
             $table->string('move_in_city')->nullable()->after('move_in_address');
             $table->integer('move_in_state')->nullable()->after('move_in_city');
             $table->string('business_city')->nullable()->after('business_address');

@@ -10,4 +10,8 @@ class InternalAgentResidentLicense extends Model
     use HasFactory;
     protected $guarded = ['id'];
 
+    public function agentDetail() {
+        return $this->belongsTo(InternalAgentRegInfo::class);
+    }
+
 }

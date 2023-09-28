@@ -42,6 +42,8 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
+Route::get('/pdf', [\App\Http\Controllers\InternalAgent\RegistrationStepController::class, 'pdf'])->name('dashboard');
+
 require __DIR__.'/auth.php';
 require 'admin.php';
 

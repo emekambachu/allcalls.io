@@ -12,6 +12,7 @@ use App\Models\InternalAgentLegalQuestion;
 use App\Models\InternalAgentRegInfo;
 use App\Models\InternalAgentResidentLicense;
 use App\Models\State;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -108,6 +109,7 @@ class RegistrationStepController extends Controller
             'business_zip.required_with' => 'This field is required.',
             'business_move_in_date.required_with' => 'This field is required.',
         ]);
+
         if ($step1Validation->fails()) {
             return response()->json([
                 'success' => false,
@@ -472,11 +474,7 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-
-
-
             $legalQuestions = [];
-
             if (isset($request->convicted_checkbox_1)) {
                 $name = 'convicted_checkbox_1';
                 $value = $request->convicted_checkbox_1;
@@ -1141,7 +1139,7 @@ class RegistrationStepController extends Controller
                 'success' => true,
                 'message' => 'Registration steps completed successfully',
             ], 200);
-            
+
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -1149,5 +1147,20 @@ class RegistrationStepController extends Controller
                 'errors' => $e->getMessage(),
             ], 400);
         }
+    }
+
+    public function pdf()
+    {
+        $returnArr['questions'] = InternalAgentLegalQuestion::where('reg_info_id', auth()->user()->internalAgentContract->id)->get(['name', 'value', 'description'])->toArray();
+//        dd(isset($returnArr['questions'][1]) && $returnArr['questions'][1]['name'] == 'convicted_checkbox_1a' && $returnArr['questions'][1]['value'] == 'NO');
+
+        $pdf = PDF::loadView('PDF.legal-questions', $returnArr);
+        return $pdf->stream();
+        dd('ds');
+        return $pdf->download('legal-questions.pdf');
+
+
+//        dd('pdf');
+//        return view('PDF.legal-questions');
     }
 }
