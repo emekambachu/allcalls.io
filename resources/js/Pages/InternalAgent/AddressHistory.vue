@@ -31,58 +31,117 @@ let addres_history = ref([
     },
 ])
 let form = ref({
-    history_address1: { id: 1, state: "Choose" },
-    history_address2: { id: 2, state: "Choose" },
-    history_address3: { id: 3, state: "Choose" },
-    history_address4: { id: 4, state: "Choose" },
-    history_address5: { id: 5, state: "Choose" },
-    history_address6: { id: 6, state: "Choose" },
-    history_address7: { id: 7, state: "Choose" },
+    history_address1: { id: 1, state: "Choose", zip_code: '', address: '', city: '', zip_code: '' },
+    history_address2: { id: 2, state: "Choose", zip_code: '', address: '', city: '', zip_code: '' },
+    history_address3: { id: 3, state: "Choose", zip_code: '', address: '', city: '', zip_code: '' },
+    history_address4: { id: 4, state: "Choose", zip_code: '', address: '', city: '', zip_code: '' },
+    history_address5: { id: 5, state: "Choose", zip_code: '', address: '', city: '', zip_code: '' },
+    history_address6: { id: 6, state: "Choose", zip_code: '', address: '', city: '', zip_code: '' },
+    history_address7: { id: 7, state: "Choose", zip_code: '', address: '', city: '', zip_code: '' },
 })
 let hasValidationErrors = ref({});
 
+// const ChangeTab = () => {
+//     hasValidationErrors.value = {};
+//     for (const history of addres_history.value) {
+//         const formData = form.value[history.address];
+//         console.log('formData',formData);
+//         if (formData.address === '' && formData.city === '' && formData.zip_code === '' && formData.state === 'Choose') {
+//                 emits("changeTab");
+//                 return
+//         }
+//         if (!formData.address || !formData.city || !formData.zip_code || !formData.state === 'Choose') {
+//                 hasValidationErrors.value[history.address] = {
+//                     address: !formData.address,
+//                     city: !formData.city,
+//                     state: formData.state === 'Choose',
+//                     zip_code: !formData.zip_code,
+//                 };
+
+//                 var element = document.getElementById("modal_main_id");
+//                 element.scrollIntoView();
+
+//                 return; // Stop tab change
+//             }
+//         return
+//         // Object.assign(formData, form.value[history.id]);
+//         if (Object.keys(formData).length != 2) {
+//             // const isAllFieldsEmpty = Object.keys(formData)
+//             // .filter(key => key !== 'id')
+//             // .every(key => formData[key] === '' || (key === 'state' && formData[key] === 'Choose'));
+
+//             // console.log('isAllFieldsEmpty',isAllFieldsEmpty);
+//             console.log('formData',formData);
+//             if (formData.address === '' && formData.city === '' && formData.zip_code === '' && formData.state === 'Choose') {
+//                 emits("changeTab");
+//                 return
+//             }
+//             if (!formData.address || !formData.city || !formData.zip_code || formData.state === 'Choose') {
+//                 hasValidationErrors.value[history.address] = {
+//                     address: !formData.address,
+//                     city: !formData.city,
+//                     state: formData.state === 'Choose',
+//                     zip_code: !formData.zip_code,
+//                 };
+
+//                 var element = document.getElementById("modal_main_id");
+//                 element.scrollIntoView();
+
+//                 return; // Stop tab change
+//             }
+//             if (formData.id === 7) {
+//                 if (formData.address && formData.city && formData.zip_code && formData.state) {
+//                     emits("changeTab");
+//                     return
+//                 }
+//             }
+//         } else {
+//             emits("changeTab");
+//             return
+//         }
+//     }
+
+// }
 const ChangeTab = () => {
     hasValidationErrors.value = {};
+    let isValid = true; // Initialize a flag to check if all elements are valid
+
     for (const history of addres_history.value) {
         const formData = form.value[history.address];
-        Object.assign(formData, form.value[history.id]);
-        if (Object.keys(formData).length != 2) {
-            const isAllFieldsEmpty = Object.keys(formData)
-            .filter(key => key !== 'id')
-            .every(key => formData[key] === '' || (key === 'state' && formData[key] === 'Choose'));
+        console.log('formData', formData);
 
-            console.log('isAllFieldsEmpty',isAllFieldsEmpty);
-            console.log('formData',formData);
-            if (formData.address === '' && formData.city === '' && formData.zip_code === '' && formData.state === 'Choose') {
-                emits("changeTab");
-                return
-            }
-            if (!formData.address || !formData.city || !formData.zip_code || formData.state === 'Choose') {
+        // Check if any field is filled and if it's a string
+        if (
+            (typeof formData.address === 'string' && formData.address.trim() !== '') ||
+            (typeof formData.city === 'string' && formData.city.trim() !== '') ||
+            (typeof formData.zip_code === 'string' && formData.zip_code.trim() !== '') ||
+            formData.state !== 'Choose'
+        ) {
+            // If any field is filled, check if all fields are filled for the current address
+            if (
+                (typeof formData.address !== 'string' || formData.address.trim() === '') ||
+                (typeof formData.city !== 'string' || formData.city.trim() === '') ||
+                (typeof formData.zip_code !== 'string' || formData.zip_code.trim() === '') ||
+                formData.state === 'Choose'
+            ) {
                 hasValidationErrors.value[history.address] = {
-                    address: !formData.address,
-                    city: !formData.city,
+                    address: !formData.address || typeof formData.address !== 'string',
+                    city: !formData.city || typeof formData.city !== 'string',
                     state: formData.state === 'Choose',
-                    zip_code: !formData.zip_code,
+                    zip_code: !formData.zip_code || typeof formData.zip_code !== 'string',
                 };
-
-                var element = document.getElementById("modal_main_id");
-                element.scrollIntoView();
-
-                return; // Stop tab change
+                isValid = false; // Set isValid to false if there's a validation error
             }
-            if (formData.id === 7) {
-                if (formData.address && formData.city && formData.zip_code && formData.state) {
-                    emits("changeTab");
-                    return
-                }
-            }
-        } else {
-            emits("changeTab");
-            return
         }
     }
 
+    // If isValid is still true, it means there are no validation errors
+    if (isValid) {
+        emits("changeTab");
+    }
 }
+
+
 let ChangeTabBack = () => {
     emits("goback");
 }
@@ -94,6 +153,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
         let field = form.value[history.address][fieldName];
         if (field) {
             field = field.toString().replace(/[^0-9]/g, '');
+            form.value[history.address][fieldName] = field
             if (field.length > 5) {
                 field = field.slice(0, 5);
                 form.value[history.address][fieldName] = field

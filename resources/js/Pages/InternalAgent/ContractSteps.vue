@@ -28,7 +28,7 @@ let form = ref({
 });
 
 let step = ref(1);
-let contractStep = ref(4);
+let contractStep = ref(1);
 let emit = defineEmits(["close"]);
 let close = () => {
     emit("close");

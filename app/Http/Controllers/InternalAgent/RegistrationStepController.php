@@ -31,7 +31,7 @@ class RegistrationStepController extends Controller
 
     public function store(Request $request)
     {   
-        dd($request->all());
+        // dd($request->all());
         $step1Validation = Validator::make($request->all(), [
             'first_name' => 'required',
             'last_name' => 'required',

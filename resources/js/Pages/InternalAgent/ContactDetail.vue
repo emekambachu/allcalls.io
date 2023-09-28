@@ -197,20 +197,20 @@ let enforceFiveDigitInput = (fieldName, val) => {
             <div>
                 <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Cell
                     Phone#<span class="text-red-500">*</span></label>
-                <input type="number" v-model="form.cell_phone" id="default-input"
+                <input type="text" maxLength="10" v-model="form.cell_phone" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <div v-if="firstStepErrors.cell_phone" class="text-red-500" v-text="firstStepErrors.cell_phone[0]"></div>
             </div>
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Home
                     Phone#</label>
-                <input type="number" v-model="form.home_phone" id="default-input"
+                <input type="text" v-model="form.home_phone" maxLength="10" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <div v-if="firstStepErrors.home_phone" class="text-red-500" v-text="firstStepErrors.home_phone[0]"></div>
             </div>
             <div>
                 <label for="middle_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Fax#</label>
-                <input type="number" v-model="form.fax" id="default-input"
+                <input type="text" maxLength="15" v-model="form.fax" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <div v-if="firstStepErrors.fax" class="text-red-500" v-text="firstStepErrors.fax[0]"></div>
             </div>
@@ -480,7 +480,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
                 <div>
                     <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Cell
                         Fax</label>
-                    <input type="number" v-model="form.business_office_fax" id="default-input"
+                    <input type="text" maxLength="15" v-model="form.business_office_fax" id="default-input"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <div v-if="firstStepErrors.business_office_fax" class="text-red-500"
                         v-text="firstStepErrors.business_office_fax[0]"></div>
@@ -488,7 +488,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
                 <div>
                     <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Office
                         Phone</label>
-                    <input type="number" v-model="form.business_office_phone" id="default-input"
+                    <input type="text" maxLength="10" v-model="form.business_office_phone" id="default-input"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <div v-if="firstStepErrors.business_office_phone" class="text-red-500"
                         v-text="firstStepErrors.business_office_phone[0]"></div>
