@@ -1,11 +1,12 @@
 <script setup>
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import Edit from "@//Pages/Admin/User/Edit.vue";
+import { Head, router, usePage, useForm } from "@inertiajs/vue3";
 import ClientDetailsModal from "@/Components/ClientDetailsModal.vue";
-import { Head, router, usePage } from "@inertiajs/vue3";
 import { ref } from "vue";
 import { toaster } from "@/helper.js";
 import Modal from "@/Components/Modal.vue";
+import SearchFilter from "@/Components/SearchFilter.vue";
 let page = usePage();
 if (page.props.flash.message) {
   toaster("success", page.props.flash.message);
@@ -14,23 +15,10 @@ if (page.props.flash.message) {
 let props = defineProps({
   calls: {
     type: Object,
-  },
+  }
 
-  totalCalls: {
-    type: Number,
-  },
-
-  totalAmountSpent: {
-    type: Number,
-  },
-
-  averageCallDuration: {
-    type: Number,
-  },
-  states:Array,
 });
-
-console.log(props.calls);
+let slidingLoader = ref(false)
 
 let fetchCalls = (page) => {
   // Create URL object from page
@@ -54,38 +42,6 @@ let openClientModal = (call) => {
   callDetail.value = call;
   showModal.value = true;
 };
-
-let formatTime = (duration) => {
-  const minutes = Math.floor(duration / 60);
-  const seconds = Math.floor(duration % 60);
-  return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-};
-
-let formatMoney = (amount) => {
-  return parseFloat(amount)
-    .toFixed(2)
-    .replace(/\d(?=(\d{3})+\.)/g, "$&,");
-};
-
-let formatDate = (inputDate) => {
-  // Split the input date by the hyphen ("-") to get year, month, and day
-  const [year, month, day] = inputDate.split("-");
-
-  // Rearrange the components in the "mm-dd-yyyy" format
-  const formattedDate = `${month}-${day}-${year}`;
-
-  return formattedDate;
-};
-
-let capitalizeAndReplaceUnderscore = (str) => {
-  // Replace underscores with spaces
-  let result = str.replace(/_/g, " ");
-
-  // Capitalize the first letter of each word
-  result = result.replace(/\b(\w)/g, (match) => match.toUpperCase());
-
-  return result;
-};
 </script>
 
 <template>
@@ -105,29 +61,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
         </div>
       </div>
     </div>
-
-    <div class="mx-auto px-4 sm:px-8 md:px-16 py-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto">
-        <p class="mb-1 text-sm text-gray-300">Total Calls</p>
-        <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
-          {{ totalCalls }}
-        </h2>
-      </div>
-      <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto">
-        <p class="mb-1 text-sm text-gray-300">Total Spent</p>
-        <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
-          ${{ formatMoney(totalAmountSpent) }}
-        </h2>
-      </div>
-      <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto">
-        <p class="mb-1 text-sm text-gray-300">Average Call Duration</p>
-        <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
-          {{ formatTime(averageCallDuration) }}
-        </h2>
-      </div>
-    </div>
-
-    <section v-if="calls.data.length" class="p-3">
+    <section  class="p-3">
       <div class="mx-auto max-w-screen-xl sm:px-12">
         <div class="relative sm:rounded-lg overflow-hidden">
           <div class="overflow-x-auto">
@@ -135,6 +69,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
               <thead class="text-xs text-gray-300 uppercase bg-sky-900">
                 <tr>
                   <th scope="col" class="px-4 py-3">ID</th>
+                  <th scope="col" class="px-4 py-3">Name</th> 
                   <th scope="col" class="px-4 py-3">HANG UP BY</th>
                   <th scope="col" class="px-4 py-3">CALL DURATION</th>
                   <th scope="col" class="px-4 py-3">CALL TAKEN</th>
@@ -147,25 +82,27 @@ let capitalizeAndReplaceUnderscore = (str) => {
               </thead>
               <tbody>
                 <tr v-for="call in calls.data" :key="call.id" class="border-b border-gray-500">
-                  <td class="text-gray-600 px-4 py-3">{{ call.id }}</td>
-                  <td class="text-gray-600 px-4 py-3">{{ call.hung_up_by }}</td>
-                  <td class="text-gray-600 px-4 py-3">
-                    {{
-                      String(Math.floor(call.call_duration_in_seconds / 60)).padStart(
-                        2,
-                        "0"
-                      ) +
-                      ":" +
-                      String(call.call_duration_in_seconds % 60).padStart(2, "0")
-                    }}
-                  </td>
+                <td class="text-gray-600 px-4 py-3">{{ call.id }}</td>
+                <td class="text-gray-600 px-4 py-3">{{ call.user.first_name }} {{ call.user.last_name }}</td>
+                <td class="text-gray-600 px-4 py-3">{{ call.hung_up_by }}</td>
+                <td class="text-gray-600 px-4 py-3">
+                  {{
+                    String(
+                      Math.floor(call.call_duration_in_seconds / 60)
+                    ).padStart(2, "0") +
+                    ":" +
+                    String(
+                      call.call_duration_in_seconds % 60
+                    ).padStart(2, "0")
+                  }}
+                </td>
+                <th class="text-gray-600 px-4 py-3">{{ call.call_taken }}</th>
+                <td class="text-gray-600 px-4 py-3">${{ call.amount_spent }}</td>
+               <td class="text-gray-600 px-4 py-3">{{ call.call_type.type }}</td>
+                <td class="text-gray-600 px-4 py-3">{{ call.from }}</td>
 
-                  <th class="text-gray-600 px-4 py-3">{{ call.call_taken }}</th>
-                  <td class="text-gray-600 px-4 py-3">{{ call.amount_spent }}</td>
-                  <td class="text-gray-600 px-4 py-3">{{ call.call_type.type }}</td>
-                  <td class="text-gray-600 px-4 py-3">{{ call.from }}</td>
-                  <td class="text-gray-600 px-4 py-3">
-                    <a v-if="call.recording_url" target="_blank" :href="call.recording_url" class="flex"><svg
+                <td class="text-gray-600 px-4 py-3">
+                  <a v-if="call.recording_url" target="_blank" :href="call.recording_url" class="flex"><svg
                         xmlns="http://www.w3.org/2000/svg" height="1.5em" class="pr-1" viewBox="0 0 512 512">
                         <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
                         <path
@@ -173,8 +110,8 @@ let capitalizeAndReplaceUnderscore = (str) => {
                       </svg>Open Recording
                     </a>
                     <span v-else>_</span>
-                  </td>
-                  <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
+                </td>
+                <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
                     <button v-if="call.get_client" @click="openClientModal(call)"
                       class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
                       type="button">
@@ -182,13 +119,14 @@ let capitalizeAndReplaceUnderscore = (str) => {
                     </button>
                     <button v-else class="text-center" type="button">-</button>
                   </td>
-                </tr>
+              </tr>
               </tbody>
             </table>
             <div class="p-4">
               <nav
                 class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
-                aria-label="Table navigation">
+                aria-label="Table navigation"
+              >
                 <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
                   Showing
                   <span class="font-semibold text-custom-blue">{{
@@ -201,34 +139,54 @@ let capitalizeAndReplaceUnderscore = (str) => {
                 </span>
                 <ul class="inline-flex items-stretch -space-x-px cursor-pointer">
                   <li>
-                    <a v-if="calls.prev_page_url" @click="fetchCalls(calls.prev_page_url)"
-                      class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-custom-white rounded-l-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white">
+                    <a
+                      v-if="calls.prev_page_url"
+                      @click="fetchCalls(calls.prev_page_url)"
+                      class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-custom-white rounded-l-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white"
+                    >
                       <span class="sr-only">Previous</span>
-                      <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
+                      <svg
+                        class="w-5 h-5"
+                        aria-hidden="true"
+                        fill="currentColor"
+                        viewbox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill-rule="evenodd"
                           d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                          clip-rule="evenodd" />
+                          clip-rule="evenodd"
+                        />
                       </svg>
                     </a>
                   </li>
 
                   <li>
                     <a
-                      class="flex items-center justify-center text-sm py-2 px-3 leading-tight font-extrabold text-gray-500 bg-custom-white shadow-2xl hover:bg-sky-950 hover:shadow-2xl hover:text-white">{{
-                        calls.current_page }}
+                      class="flex items-center justify-center text-sm py-2 px-3 leading-tight font-extrabold text-gray-500 bg-custom-white shadow-2xl hover:bg-sky-950 hover:shadow-2xl hover:text-white"
+                      >{{ calls.current_page }}
                     </a>
                   </li>
 
                   <li>
-                    <a v-if="calls.next_page_url" @click="fetchCalls(calls.next_page_url)"
-                      class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-custom-white rounded-r-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white">
+                    <a
+                      v-if="calls.next_page_url"
+                      @click="fetchCalls(calls.next_page_url)"
+                      class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-custom-white rounded-r-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white"
+                    >
                       <span class="sr-only">Next</span>
-                      <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
+                      <svg
+                        class="w-5 h-5"
+                        aria-hidden="true"
+                        fill="currentColor"
+                        viewbox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill-rule="evenodd"
                           d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                          clip-rule="evenodd" />
+                          clip-rule="evenodd"
+                        />
                       </svg>
                     </a>
                   </li>
@@ -240,11 +198,40 @@ let capitalizeAndReplaceUnderscore = (str) => {
       </div>
     </section>
 
-    <section v-else class="p-3">
-      <p class="text-center text-gray-600">No clients yet.</p>
-    </section>
+    
     <Modal :show="showModal" @close="showModal = false">
       <ClientDetailsModal :showModal="showModal" :callDetail="callDetail" :states="states" @close="showModal = false"></ClientDetailsModal>
     </Modal>
   </AuthenticatedLayout>
 </template>
+
+<style src="@vueform/multiselect/themes/default.css"></style>
+<style>
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.multiselect {
+  color: black !important;
+  border: none;
+  border-radius: 10px;
+}
+
+.multiselect-wrapper {
+  background-color: #d7d7d7;
+  border-radius: 5px;
+}
+
+.box-shadow {
+  padding: 20px;
+  width: 97%;
+  margin: auto;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+</style>
