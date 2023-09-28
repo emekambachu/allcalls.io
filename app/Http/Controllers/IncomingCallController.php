@@ -54,6 +54,19 @@ class IncomingCallController extends Controller
         // Remove the "+1" from the beginning of the "To" number
         $to = substr($to, 2);
 
+
+
+
+        $isFromClient = strpos($request->input('From'), 'client:') === 0;
+
+        Log::debug('Professional: This is a professional log right before checking dialler call');
+        Log::debug('Professional:' . $request->input('From'));
+        Log::debug('asdasdasdasdadas');
+        if ( $isFromClient ) {
+            Log::debug('Omega: call coming from client:');
+        }
+
+
         // Check if the number exists in the AvailableNumber model
         $availableNumber = AvailableNumber::where('phone', $to)->first();
 
@@ -65,15 +78,7 @@ class IncomingCallController extends Controller
             Log::debug('Number found in AvailableNumber model: ' . $to);
             $twiml .= $this->handleAvailableNumberCall($to);
 
-            $isFromClient = strpos($request->input('From'), 'client:') === 0;
-
-
-            Log::debug('Professional: This is a professional log right before checking dialler call');
-            Log::debug('Professional:' . $request->input('From'));
-            Log::debug('asdasdasdasdadas');
-            if ( $isFromClient ) {
-                Log::debug('Omega: call coming from client:');
-            }
+  
 
             // if ($user->device_token) {
             //     $response = Http::post(route('call.pushNotification'), [
