@@ -70,7 +70,7 @@ class IncomingCallController extends Controller
 
             Log::debug('Professional: This is a professional log right before checking dialler call');
             Log::debug('Professional:' . $request->input('From'));
-            
+            Log::debug('asdasdasdasdadas');
             if ( $isFromClient ) {
                 Log::debug('Omega: call coming from client:');
             }
