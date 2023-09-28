@@ -65,6 +65,12 @@ class IncomingCallController extends Controller
             Log::debug('Number found in AvailableNumber model: ' . $to);
             $twiml .= $this->handleAvailableNumberCall($to);
 
+            $isFromClient = strpos($request->input('From'), 'client:') === 0;
+            
+            if ( $isFromClient ) {
+                Log::debug('Omega: call coming from client:');
+            }
+
             // if ($user->device_token) {
             //     $response = Http::post(route('call.pushNotification'), [
             //         'deviceToken' => $user->device_token, // Replace with the actual field name
