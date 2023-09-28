@@ -81,6 +81,8 @@ class IncomingCallController extends Controller
             Log::debug('Number found in CallTypeNumber model: ' . $to);
             $fromAttribute = $this->getFromAttribute($request->input('From'));
 
+            Log::debug($request->input('From'));
+
             $isFromClient = strpos($request->input('From'), 'client:') === 0;
 
             if ( $isFromClient ) {
