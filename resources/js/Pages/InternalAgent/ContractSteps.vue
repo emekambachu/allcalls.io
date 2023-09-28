@@ -28,7 +28,7 @@ let form = ref({
 });
 
 let step = ref(1);
-let contractStep = ref(1);
+let contractStep = ref(4);
 let emit = defineEmits(["close"]);
 let close = () => {
     emit("close");
@@ -136,7 +136,14 @@ let submit = () => {
 
     const requestData = {};
 
-    console.log('contactDetailData.value', contactDetailData.value);
+    const filteredAddressHistory = {};
+    for (const key in AddressHistoryData.value) {
+        if (key !== 'id' && AddressHistoryData.value[key].state !== 'Choose' && AddressHistoryData.value[key].address.trim() !== '') {
+            filteredAddressHistory[key] = AddressHistoryData.value[key];
+        }
+    }
+
+    console.log('AddressHistoryData.value', AddressHistoryData.value);
     Object.assign(requestData, {
         aml_course: form.value.aml_course ? 1 : null, // Send 1 if true, 0 if false
         omissions_insurance: form.value.omissions_insurance ? 1 : null, // Send 1 if true, 0 if false
@@ -144,8 +151,8 @@ let submit = () => {
     Object.assign(requestData, contactDetailData.value);
     Object.assign(requestData, legalFormData1.value);
     Object.assign(requestData, legalFormData2.value);
-    Object.assign(requestData, AddressHistoryData.value);
-    // Object.assign(requestData, additionalInfoD.value);
+    Object.assign(requestData, filteredAddressHistory);
+    Object.assign(requestData, additionalInfoD.value);
     requestData.residentLicensePdf = uploadLicensePdf.value;
     requestData.bankingInfoPdf = uploadBankingInfoPdf.value;
     requestData.uploadAmlPdf = uploadAmlPdf.value
@@ -157,8 +164,8 @@ let submit = () => {
             requestData[key] = null
         }
     }
-    // console.log(requestData);
-
+    console.log(requestData);
+    return
     isLoading.value = true;
 
     return axios
