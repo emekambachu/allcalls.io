@@ -17,6 +17,7 @@ return new class extends Migration
                 ->constrained('internal_agent_reg_infos')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
+            $table->boolean('omissions_insurance')->default(0);
             $table->string('name')->nullable();
             $table->text('url')->nullable();
             $table->timestamps();

@@ -21,19 +21,20 @@ let props = defineProps({
     userData: Object,
     states: Array,
 });
+
 let StepsModal = ref(true)
+
 let form = ref({
     aml_course: false,
     omissions_insurance: false
 });
 
 let step = ref(1);
-let contractStep = ref(4);
+let contractStep = ref(1);
 let emit = defineEmits(["close"]);
 let close = () => {
     emit("close");
 };
-
 
 let NextStep = () => {
     var element = document.getElementById("modal_main_id");
@@ -41,13 +42,14 @@ let NextStep = () => {
     step.value += 1;
     contractStep.value = 0
 };
+
 let goBack = () => {
 
     if (step.value === 2) {
         contractStep.value = 5
     }
     step.value -= 1;
-   
+
 
 };
 
@@ -158,7 +160,7 @@ let submit = () => {
         }
     }
     // console.log(requestData);
-   
+
     isLoading.value = true;
 
     return axios
@@ -423,7 +425,7 @@ input[type=number] {
                                     :firstStepErrors="firstStepErrors" @submit="submit()" @goback="goBack()" />
                             </div>
 
-                           
+
 
                             <!-- <div class="px-5 pb-6">
                                 <div class="flex justify-between flex-wrap">
