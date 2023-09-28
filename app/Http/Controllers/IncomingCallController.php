@@ -83,19 +83,19 @@ class IncomingCallController extends Controller
 
             Log::debug($request->input('From'));
 
-            $isFromClient = strpos($request->input('From'), 'client:') === 0;
+            // $isFromClient = strpos($request->input('From'), 'client:') === 0;
 
-            if ( $isFromClient ) {
-                Log::debug('Omega: call coming from client:');
-                // $clientTwiml = "";
-                // $numberToDial = '+15736523170';
+            // if ( $isFromClient ) {
+            //     Log::debug('Omega: call coming from client:');
+            //     // $clientTwiml = "";
+            //     // $numberToDial = '+15736523170';
 
-                // Manually construct the TwiML
-                $clientTwiml = '<?xml version="1.0" encoding="UTF-8"?>'; 
-                $clientTwiml .= '<Response><Dial answerOnBridge="true"><Client callerId="+15736523170">alice</Client></Dial></Response>';
+            //     // Manually construct the TwiML
+            /*    $clientTwiml = '<?xml version="1.0" encoding="UTF-8"?>'; */ 
+            //     $clientTwiml .= '<Response><Dial answerOnBridge="true"><Client callerId="+15736523170">alice</Client></Dial></Response>';
 
-                return response($clientTwiml, 200)->header('Content-Type', 'text/xml');
-            }
+            //     return response($clientTwiml, 200)->header('Content-Type', 'text/xml');
+            // }
 
 
         
