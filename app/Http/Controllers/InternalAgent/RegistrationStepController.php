@@ -15,6 +15,7 @@ use App\Models\State;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
@@ -940,6 +941,17 @@ class RegistrationStepController extends Controller
             if (count($legalQuestions)) {
                 InternalAgentLegalQuestion::where('reg_info_id', $basicInfoId)->delete();
                 DB::table('internal_agent_legal_questions')->insert($legalQuestions);
+                $returnArr['questions'] = InternalAgentLegalQuestion::where('reg_info_id', $basicInfoId)->get(['name', 'value', 'description'])->toArray();
+                $pdf = PDF::loadView('PDF.legal-questions', $returnArr);
+                $pdfFileName = auth()->user()->email."_legal_questions.pdf";
+
+                $directory = public_path('internal-agents/legal-questions');
+
+                if(!File::exists($directory)) {
+                    File::makeDirectory($directory, $mode = 0755, true, true);
+                }
+
+                $pdf->save($directory . '/' . $pdfFileName);
             }
 
             InternalAgentAdditionalInfo::updateOrCreate(['reg_info_id' => $basicInfoId], [
@@ -1063,7 +1075,6 @@ class RegistrationStepController extends Controller
                     }
                     $amlCoursePdf->delete();
                 }
-
                 $name = $request->file('uploadAmlPdf')->getClientOriginalName();
                 $request->file('uploadAmlPdf')->move(public_path('internal-agents/aml-course'), $name);
                 $path = asset('internal-agents/aml-course/' . $name);
