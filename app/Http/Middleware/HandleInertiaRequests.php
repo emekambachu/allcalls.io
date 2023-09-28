@@ -56,6 +56,7 @@ class HandleInertiaRequests extends Middleware
             'flash' => [
                 'message' => fn () => $request->session()->get('message'),
                 'bonus' => fn () => $request->session()->get('bonus'),
+                'agentInvitationLink' => fn () => $request->session()->get('agentInvitationLink'),
             ],
         ]);
     }

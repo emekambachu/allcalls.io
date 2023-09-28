@@ -4,17 +4,12 @@ import InputError from "@/Components/InputError.vue";
 import GuestInputLabel from "@/Components/GuestInputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import GuestTextInput from "@/Components/GuestTextInput.vue";
-import SelectInput from "@/Components/SelectInput.vue";
 import NewGuestLayout from "@/Layouts/NewGuestLayout.vue";
 import Footer from "@/Components/Footer.vue";
-import { Head, Link, useForm } from "@inertiajs/vue3";
-import Multiselect from "@vueform/multiselect";
-import { ref, reactive, computed } from "vue";
-// import { useVeeValidate } from '@vee-validate/vue3';
+import { Head, useForm } from "@inertiajs/vue3";
+import { ref, computed } from "vue";
 import axios from "axios";
-// If you are using PurgeCSS, make sure to whitelist the carousel CSS classes
 import "vue3-carousel/dist/carousel.css";
-import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
 import { router } from "@inertiajs/vue3"
 
 let step = ref(0);
@@ -63,14 +58,7 @@ let customLabel = function (options, select$) {
 let props = defineProps({
   callTypes: Array,
   states: Array,
-  agentToken: {
-    required: false,
-    type: String,
-  }
 });
-
-
-console.log(props);
 
 let stateOptions = computed(() => {
   return props.states.map((state) => {
@@ -106,23 +94,10 @@ const isLoading = ref(false);
 let submit = () => {
   isLoading.value = true
   if (validateEmail(form.email)) {
-
-    let registerUrl = "/register";
-
-    if (props.agentToken) {
-      registerUrl += `?agentToken=${props.agentToken}`;
-    }
-
     return axios
-      .post(registerUrl, form)
+      .post("/internal-agents/register", form)
       .then((response) => {
-
-        let postRegistrationUrl = '/login';
-        if (props.agentToken) {
-          postRegistrationUrl = '/registration-steps?agentToken=' + props.agentToken
-        }
-
-        router.visit(postRegistrationUrl)
+        router.visit('/login')
         isLoading.value = false
       })
       .catch((error) => {
@@ -157,13 +132,9 @@ let submit = () => {
   }
 };
 
-// let goBack = () => {
-//   step.value = 0;
-// };
 </script>
 
 <template>
-  <!-- <GuestLayout> -->
   <NewGuestLayout>
 
     <Head title="Register" />
@@ -185,7 +156,6 @@ let submit = () => {
 
           <GuestTextInput id="first_name" type="text" class="mt-1 block w-full" v-model="form.first_name" minlength="2"
             required pattern="[A-Za-z]{1,32}" onkeyup="this.value=this.value.replace(/[0-9]/g,'');" />
-          <!-- <InputError class="mt-2" :message="form.errors.first_name" /> -->
           <div v-if="firstStepErrors.first_name" class="text-red-500" v-text="firstStepErrors.first_name[0]"></div>
         </div>
 
@@ -194,8 +164,6 @@ let submit = () => {
 
           <GuestTextInput id="last_name" type="text" class="mt-1 block w-full" v-model="form.last_name" required
             pattern="[A-Za-z]{1,32}" onkeyup="this.value=this.value.replace(/[0-9]/g,'');" />
-
-          <!-- <InputError class="mt-2" :message="form.errors.last_name" /> -->
           <div v-if="firstStepErrors.last_name" class="text-red-500" v-text="firstStepErrors.last_name[0]"></div>
         </div>
 
@@ -205,7 +173,6 @@ let submit = () => {
           <GuestTextInput id="email" type="email" class="mt-1 block w-full" v-model="form.email" required
             pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}" />
           <div v-if="uiEmailValidation.isValid" class="text-red-500">Please enter valid email address.</div>
-          <!-- <InputError class="mt-2" :message="form.errors.email" /> -->
           <div v-if="firstStepErrors.email" class="text-red-500" v-text="firstStepErrors.email[0]"></div>
         </div>
 
@@ -213,8 +180,6 @@ let submit = () => {
           <GuestInputLabel for="phone" value="Phone" />
 
           <GuestTextInput id="phone" type="text" class="mt-1 block w-full" v-model="form.phone" minlength="10" />
-
-          <!-- <InputError class="mt-2" :message="form.errors.phone" /> -->
           <div v-if="firstStepErrors.phone" class="text-red-500" v-text="firstStepErrors.phone[0]"></div>
         </div>
 
@@ -223,8 +188,6 @@ let submit = () => {
 
           <GuestTextInput id="password" type="password" class="mt-1 block w-full" v-model="form.password"
             autocomplete="new-password" />
-
-          <!-- <InputError class="mt-2" :message="form.errors.password" /> -->
           <div v-if="firstStepErrors.password" class="text-red-500" v-text="firstStepErrors.password[0]"></div>
         </div>
 
@@ -261,10 +224,9 @@ let submit = () => {
           </label>
         </div>
         <div v-if="firstStepErrors.consent" class="text-red-500 ml-5" v-text="firstStepErrors.consent[0]"></div>
-        <div class="flex items-center justify-end mt-4" :class="{ 'opacity-25': form.processing || isLoading }"
-          :disabled="form.processing">
+        <div class="flex items-center justify-end mt-4" :class="{ 'opacity-25': form.processing ||  isLoading}" :disabled="form.processing">
           <PrimaryButton type="button" class="ml-4" @click.prevent="submit">
-            <global-spinner :spinner="isLoading" />Submit
+              <global-spinner :spinner="isLoading" />Submit
           </PrimaryButton>
         </div>
       </div>
@@ -289,7 +251,6 @@ let submit = () => {
       </div>
     </template>
   </NewGuestLayout>
-  <!-- </GuestLayout> -->
 
   <Footer />
 </template>
@@ -316,27 +277,4 @@ input[type="number"] {
   background-color: #d7d7d7;
   border-radius: 5px;
 }
-
-/*
-.carousel__item {
-  min-height: 200px;
-  width: 100%;
-  background-color: var(--vc-clr-primary);
-  color: var(--vc-clr-white);
-  font-size: 20px;
-  border-radius: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.carousel__slide {
-  padding: 10px;
-}
-
-.carousel__prev,
-.carousel__next {
-  box-sizing: content-box;
-  border: 5px solid white;
-} */
 </style>

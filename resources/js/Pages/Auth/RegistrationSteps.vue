@@ -38,6 +38,7 @@ const props = defineProps({
     averageCallDuration: Number,
     callTypes: Array,
     states: Array,
+    agentToken: String,
 });
 let stateOptions = computed(() => {
     return props.states.map((state) => {
@@ -195,7 +196,7 @@ let goBack = () => {
 <template>
     <Head title="Dashboard" />
     <AuthenticatedLayout>
-        <StepsModalView :StepsModal="StepsModal" :callTypes="callTypes" :states="states" @close="StepsModal = false">
+        <StepsModalView :StepsModal="StepsModal" :callTypes="callTypes" :states="states" :agentToken="agentToken" @close="StepsModal = false">
         </StepsModalView>
     </AuthenticatedLayout>
 </template>
