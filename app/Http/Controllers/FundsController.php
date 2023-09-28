@@ -82,7 +82,7 @@ class FundsController extends Controller
             ],
             'number' => 'required_without:cardId|numeric|digits_between:15,16',
             'month' => 'required_without:cardId|numeric|min:1|max:12',
-            'year' => 'required_without:cardId|numeric|min:' . date('Y') . '|max:' . (date('Y') + 10),
+            'year' => 'required_without:cardId|numeric|max:' . (date('Y') + 10),
             'cvv' => 'required_without:cardId|numeric|digits_between:3,4',
             'address' => 'required_without:cardId|string|max:255',
             'city' => 'required_without:cardId|string|max:255',

@@ -63,7 +63,14 @@ let customLabel = function (options, select$) {
 let props = defineProps({
   callTypes: Array,
   states: Array,
+  agentToken: {
+    required: false,
+    type: String,
+  }
 });
+
+
+console.log(props);
 
 let stateOptions = computed(() => {
   return props.states.map((state) => {
@@ -99,10 +106,23 @@ const isLoading = ref(false);
 let submit = () => {
   isLoading.value = true
   if (validateEmail(form.email)) {
+
+    let registerUrl = "/register";
+
+    if (props.agentToken) {
+      registerUrl += `?agentToken=${props.agentToken}`;
+    }
+
     return axios
-      .post("/register", form)
+      .post(registerUrl, form)
       .then((response) => {
-        router.visit('/login')
+
+        let postRegistrationUrl = '/login';
+        if (props.agentToken) {
+          postRegistrationUrl = '/registration-steps?agentToken=' + props.agentToken
+        }
+
+        router.visit(postRegistrationUrl)
         isLoading.value = false
       })
       .catch((error) => {
@@ -241,9 +261,10 @@ let submit = () => {
           </label>
         </div>
         <div v-if="firstStepErrors.consent" class="text-red-500 ml-5" v-text="firstStepErrors.consent[0]"></div>
-        <div class="flex items-center justify-end mt-4" :class="{ 'opacity-25': form.processing ||  isLoading}" :disabled="form.processing">
+        <div class="flex items-center justify-end mt-4" :class="{ 'opacity-25': form.processing || isLoading }"
+          :disabled="form.processing">
           <PrimaryButton type="button" class="ml-4" @click.prevent="submit">
-              <global-spinner :spinner="isLoading" />Submit
+            <global-spinner :spinner="isLoading" />Submit
           </PrimaryButton>
         </div>
       </div>

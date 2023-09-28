@@ -55,6 +55,7 @@ class ClientsAPIController extends Controller
             'dob' => $request->dob ?? $client->dob,
             'status' => $request->status ?? $client->status,
             'state' => $request->state ?? $client->state,
+            'beneficiary' => $request->beneficiary ?? $client->beneficiary,
         ]);
 
         if ($updated) {

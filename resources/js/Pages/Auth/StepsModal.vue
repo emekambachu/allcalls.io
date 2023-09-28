@@ -15,6 +15,7 @@ let props = defineProps({
 
   callTypes: Array,
   states: Array,
+  agentToken: String,
 });
 let stateOptions = computed(() => {
   return props.states.map((state) => {
@@ -173,37 +174,66 @@ let submit = () => {
     >
       <div class="fixed inset-0 bg-black opacity-90 blurred-overlay"></div>
       <!-- This is the overlay -->
-      <div class="relative w-full max-w-md max-h-full mx-auto">
-        <div class="relative bg-white rounded-lg shadow-lg">
+      <div class="relative w-full max-w-xl max-h-full mx-auto">
+        <div class="relative bg-white rounded-lg shadow-lg transition-all">
+          <div class="px-12 py-2">
+            <h1 class="mt-8 text-gray-800 text-3xl font-bold">Welcome to AllCalls.io!</h1>
+          </div>
           <div>
-            <div v-if="step === 0" class="pt-6">
-              <div class="px-12 py-2">
+            <!-- Step 0 -->
+            <div v-if="step === 0 && !agentToken">
+              <div class="px-12">
                 <p class="text-gray-700 text-lg text-left leading-relaxed">
-                  Our dynamic bidding system allows you to set a maximum bid for each type
-                  of call you're interested in as you configure your account.
+                  Our dynamic bidding system allows you to set a maximum bid for
+                  each type of call you're interested in as you configure your
+                  account.
                 </p>
               </div>
             </div>
-            <div v-if="step === 1" class="pt-6">
-              <div class="px-12 py-2">
-                <p class="text-gray-700 text-lg text-left leading-relaxed">
-                  Each call type has minimum price of $25, but you can bid higher to
-                  increase your chances of receiving a call. The user with the highest bid
-                  wins the call but pays only $1 more than the second highest bid.
-                </p>
-              </div>
-            </div>
-            <div v-if="step === 2" class="pt-6">
-              <div class="px-12 py-2">
-                <p class="text-gray-700 text-lg text-left leading-relaxed">
-                  To start, select your desired call types and indicate the maximum price
-                  you are willing to pay for each call. Don't forget to select the states
-                  where you're licensed to operate.
+            <div v-if="step === 0 && agentToken">
+              <div class="px-12">
+                <p class="text-gray-700 text-sm text-left leading-relaxed">
+                  Hello, {{ $page.props.auth.user.first_name }}! Let's tailor your experience. Begin by indicating which call types resonate with your expertise. The perfect leads are just a few taps away!
                 </p>
               </div>
             </div>
 
-            <div v-if="step === 3" class="pt-6">
+            <!-- Step 1 -->
+            <div v-if="step === 1 && !agentToken">
+              <div class="px-12">
+                <p class="text-gray-700 text-sm text-left leading-relaxed">
+                  Each call type has a minimum price of $25. Bid higher to
+                  increase your chances of receiving a call. The highest bid
+                  wins but pays only $1 more than the second-highest bid.
+                </p>
+              </div>
+            </div>
+            <div v-if="step === 1 && agentToken">
+              <div class="px-12">
+                <p class="text-gray-700 text-sm text-left leading-relaxed">
+                  Special note for you, {{ $page.props.auth.user.first_name }}! As an esteemed agent, you hold priority for each category over our entire user base. Here, quality leads meet unmatched privilege.
+                </p>
+              </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div v-if="step === 2 && !agentToken">
+              <div class="px-12">
+                <p class="text-gray-700 text-sm text-left leading-relaxed">
+                  Select your desired call types and set your maximum price.
+                  Ensure you select the states where you're licensed to operate.
+                </p>
+              </div>
+            </div>
+            <div v-if="step === 2 && agentToken">
+              <div class="px-12">
+                <p class="text-gray-700 text-sm text-left leading-relaxed">
+                  Select your preferred call types and cross-verify the states you're officially licensed in. Every detail here fine-tunes your lead matching.
+                </p>
+              </div>
+            </div>
+
+            <div v-if="step === 3">
               <div class="px-12">
                 <div class="mt-4">
                   <GuestInputLabel
@@ -232,8 +262,11 @@ let submit = () => {
                       v-text="callType.type"
                     ></label>
 
-                    <div v-if="selectedTypes.includes(callType.id)" class="pt-2 mb-8">
-                      <div>
+                    <div
+                      v-if="selectedTypes.includes(callType.id)"
+                      class="pt-2 mb-8"
+                    >
+                      <div v-if="!agentToken">
                         <label class="ml-2 text-xs font-medium">Your Bid</label>
                         <div class="relative mb-2">
                           <div
@@ -267,7 +300,10 @@ let submit = () => {
                     </div>
                   </div>
 
-                  <InputError class="mt-2" :message="form.errors.insurance_type" />
+                  <InputError
+                    class="mt-2"
+                    :message="form.errors.insurance_type"
+                  />
                   <div v-if="firstStepErrors">
                     <div
                       v-if="firstStepErrors.typesWithStates"
@@ -279,7 +315,7 @@ let submit = () => {
               </div>
             </div>
 
-            <div class="px-12 pb-6">
+            <div class="px-12 pb-6 mt-10">
               <div class="flex justify-between">
                 <div class="mt-4">
                   <a
@@ -294,14 +330,15 @@ let submit = () => {
                       viewBox="0 0 24 24"
                       stroke-width="1.5"
                       stroke="currentColor"
-                      class="w-4 h-4 mr-2"
+                      class="w-4 h-4 mr-1"
                     >
                       <path
                         stroke-linecap="round"
                         stroke-linejoin="round"
-                        d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"
+                        d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18"
                       />
                     </svg>
+
                     Back</a
                   >
                 </div>
@@ -310,9 +347,24 @@ let submit = () => {
                     v-if="step != 3"
                     type="button"
                     @click.prevent="NextStep"
-                    class="button-custom px-3 py-2 rounded-md"
+                    class="button-custom px-3 py-2 rounded-md flex items-center"
                   >
                     Next
+
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-4 h-4 ml-1"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
+                      />
+                    </svg>
                   </button>
                   <button
                     @click="submit"

@@ -22,6 +22,8 @@ let name = ref('');
 let number = ref('');
 let expiry = ref('');
 let cvv = ref('');
+let year = ref('');
+let month = ref('');
 
 let address = ref('');
 let city = ref('');
@@ -34,6 +36,19 @@ let isLoading = ref(false);
 
 
 onMounted(() => {
+    // make option for year dropdown
+    var i, currentYear, startYear, endYear, newOption, dropdownYear;
+    dropdownYear = document.getElementById("year");
+    currentYear = (new Date()).getFullYear();
+    startYear = currentYear - 0;
+    endYear = currentYear + 10;
+
+    for (i=startYear;i<=endYear;i++) {
+      newOption = document.createElement("option");
+      newOption.value = i;
+      newOption.label = i;
+      dropdownYear.appendChild(newOption);
+    }
     showSuccessNotificationIfAvailable();
     selectDefaultCardIfAvailable();
 });
@@ -209,7 +224,7 @@ let total = computed(() => {
                                                 class="block mb-2 text-sm font-medium text-gray-700">Select Expiration Year</label>
                                             <select v-model="year" id='year' name="year"  class="select-custom" required>
                                                 <option selected="" disabled="" value="">Select Year</option>
-                                                <option value="2023">2023</option>
+                                                <!-- <option value="2023">2023</option>
                                                 <option value="2024">2024</option>
                                                 <option value="2025">2025</option>
                                                 <option value="2026">2026</option>
@@ -246,7 +261,7 @@ let total = computed(() => {
                                                 <option value="2057">2057</option>
                                                 <option value="2058">2058</option>
                                                 <option value="2059">2059</option>
-                                                <option value="2060">2060</option>
+                                                <option value="2060">2060</option> -->
                                             </select>
                                             <InputError class="mt-2" :message="$page.props.errors.year" />
                                         </div>
@@ -255,7 +270,7 @@ let total = computed(() => {
                                             <label for="zip" class="block mb-2 text-sm font-medium text-gray-500">CVV</label>
                                             <TextInput type="text" placeholder="0000" name="CVV" required pattern="\d{3,4}"
                                                         v-model="cvv" maxlength="4" v-cardformat:formatCardCVC />
-                                            <InputError class="mt-2" :message="$page.props.errors.zip" />
+                                            <InputError class="mt-2" :message="$page.props.errors.cvv" />
                                         </div>
                                     </div>
 
