@@ -62,12 +62,13 @@ class IncomingCallController extends Controller
         Log::debug('asdasdasdasdadas');
         if ( $isFromClient ) {
             Log::debug('Omega: call coming from client:');
-
+            $uniqueCallId = uniqid();
             $twiml = '<?xml version="1.0" encoding="UTF-8"?>'; 
-            $twiml .= '<Response><Dial answerOnBridge="true"><Client callerId="+15736523170">alice</Client></Dial></Response>';
-            
+            $twiml .= '<Response><Dial answerOnBridge="true"><Client callerId="+15736523170">alice';
+            $twiml .= '<Parameter name="unique_call_id" value="' . $uniqueCallId . '"/>';
+            $twiml .= '</Client></Dial></Response>';
             Log::debug($twiml);
-            
+            // right, so unique_call_id won't be getting passed in because it gets attached in the routing process and currently when you call from the dialler, it's coming directly to you
             return response($twiml, 200)->header('Content-Type', 'text/xml');
         }
 
