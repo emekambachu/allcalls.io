@@ -18,9 +18,9 @@ class RegistrationStepCheckerMiddleware
     {
         if (DB::table('users_call_type_state')->where('user_id', auth()->user()->id)->count()) {
             if(auth()->user()->roles->contains('name', 'internal-agent')) {
-                if(!auth()->user()->internalAgentContract) {
-                    return redirect()->route('contract.steps');
-                }
+                // if(!auth()->user()->internalAgentContract) {
+                //     return redirect()->route('contract.steps');
+                // }
                 return $next($request);
             }
             return $next($request);
