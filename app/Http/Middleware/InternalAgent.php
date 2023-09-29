@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class UserMiddleware
+class InternalAgent
 {
     /**
      * Handle an incoming request.
@@ -15,9 +15,10 @@ class UserMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(auth()->user()->roles->contains('name', 'user')) {
+        if(auth()->user()->roles->contains('name', 'internal-agent')) {
             return $next($request);
         }
         return redirect()->back();
+
     }
 }
