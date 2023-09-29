@@ -64,6 +64,7 @@ class CustomerController extends Controller
             })
             ->with('states')
             ->with('callTypes')
+            ->orderBy("created_at","DESC")
             ->paginate(10);
 
         $callTypes = CallType::get();

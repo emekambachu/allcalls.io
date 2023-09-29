@@ -1,0 +1,237 @@
+<script setup>
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import Edit from "@//Pages/Admin/User/Edit.vue";
+import { Head, router, usePage, useForm } from "@inertiajs/vue3";
+import ClientDetailsModal from "@/Components/ClientDetailsModal.vue";
+import { ref } from "vue";
+import { toaster } from "@/helper.js";
+import Modal from "@/Components/Modal.vue";
+import SearchFilter from "@/Components/SearchFilter.vue";
+let page = usePage();
+if (page.props.flash.message) {
+  toaster("success", page.props.flash.message);
+}
+
+let props = defineProps({
+  calls: {
+    type: Object,
+  }
+
+});
+let slidingLoader = ref(false)
+
+let fetchCalls = (page) => {
+  // Create URL object from page
+  let url = new URL(page);
+
+  // Ensure the protocol is https
+  if (url.protocol !== "https:") {
+    url.protocol = "https:";
+  }
+
+  // Get the https URL as a string
+  let httpsPage = url.toString();
+
+  router.visit(httpsPage, { method: "get" });
+};
+
+let showModal = ref(false);
+let callDetail = ref(null);
+
+let openClientModal = (call) => {
+  callDetail.value = call;
+  showModal.value = true;
+};
+</script>
+
+<template>
+  <Head title="Client Information" />
+  <AuthenticatedLayout>
+    <template #header>
+      <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+        Calls
+      </h2>
+    </template>
+
+    <div class="pt-14">
+      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+        <div class="px-4 sm:px-8 sm:rounded-lg">
+          <div class="text-4xl text-custom-sky font-bold mb-6">Calls</div>
+          <hr class="mb-4" />
+        </div>
+      </div>
+    </div>
+    <section  class="p-3">
+      <div class="mx-auto max-w-screen-xl sm:px-12">
+        <div class="relative sm:rounded-lg overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-400">
+              <thead class="text-xs text-gray-300 uppercase bg-sky-900">
+                <tr>
+                  <th scope="col" class="px-4 py-3">ID</th>
+                  <th scope="col" class="px-4 py-3">Name</th> 
+                  <th scope="col" class="px-4 py-3">HANG UP BY</th>
+                  <th scope="col" class="px-4 py-3">CALL DURATION</th>
+                  <th scope="col" class="px-4 py-3">CALL TAKEN</th>
+                  <th scope="col" class="px-4 py-3">AMOUNT SPENT</th>
+                  <th scope="col" class="px-4 py-3">CALL TYPE</th>
+                  <th scope="col" class="px-4 py-3">CALLER ID</th>
+                  <th scope="col" class="px-4 py-3">URL</th>
+                  <th scope="col" class="px-4 py-3 text-end">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="call in calls.data" :key="call.id" class="border-b border-gray-500">
+                <td class="text-gray-600 px-4 py-3">{{ call.id }}</td>
+                <td class="text-gray-600 px-4 py-3">{{ call.user.first_name }} {{ call.user.last_name }}</td>
+                <td class="text-gray-600 px-4 py-3">{{ call.hung_up_by }}</td>
+                <td class="text-gray-600 px-4 py-3">
+                  {{
+                    String(
+                      Math.floor(call.call_duration_in_seconds / 60)
+                    ).padStart(2, "0") +
+                    ":" +
+                    String(
+                      call.call_duration_in_seconds % 60
+                    ).padStart(2, "0")
+                  }}
+                </td>
+                <th class="text-gray-600 px-4 py-3">{{ call.call_taken }}</th>
+                <td class="text-gray-600 px-4 py-3">${{ call.amount_spent }}</td>
+               <td class="text-gray-600 px-4 py-3">{{ call.call_type.type }}</td>
+                <td class="text-gray-600 px-4 py-3">{{ call.from }}</td>
+
+                <td class="text-gray-600 px-4 py-3">
+                  <a v-if="call.recording_url" target="_blank" :href="call.recording_url" class="flex"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="1.5em" class="pr-1" viewBox="0 0 512 512">
+                        <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                        <path
+                          d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm256-96a96 96 0 1 1 0 192 96 96 0 1 1 0-192zm0 224a128 128 0 1 0 0-256 128 128 0 1 0 0 256zm0-96a32 32 0 1 0 0-64 32 32 0 1 0 0 64z" />
+                      </svg>Open Recording
+                    </a>
+                    <span v-else>_</span>
+                </td>
+                <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
+                    <button v-if="call.get_client" @click="openClientModal(call)"
+                      class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
+                      type="button">
+                      View Client
+                    </button>
+                    <button v-else class="text-center" type="button">-</button>
+                  </td>
+              </tr>
+              </tbody>
+            </table>
+            <div class="p-4">
+              <nav
+                class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
+                aria-label="Table navigation"
+              >
+                <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
+                  Showing
+                  <span class="font-semibold text-custom-blue">{{
+                    calls.current_page
+                  }}</span>
+                  of
+                  <span class="font-semibold text-custom-blue">{{
+                    calls.last_page
+                  }}</span>
+                </span>
+                <ul class="inline-flex items-stretch -space-x-px cursor-pointer">
+                  <li>
+                    <a
+                      v-if="calls.prev_page_url"
+                      @click="fetchCalls(calls.prev_page_url)"
+                      class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-custom-white rounded-l-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white"
+                    >
+                      <span class="sr-only">Previous</span>
+                      <svg
+                        class="w-5 h-5"
+                        aria-hidden="true"
+                        fill="currentColor"
+                        viewbox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
+                    </a>
+                  </li>
+
+                  <li>
+                    <a
+                      class="flex items-center justify-center text-sm py-2 px-3 leading-tight font-extrabold text-gray-500 bg-custom-white shadow-2xl hover:bg-sky-950 hover:shadow-2xl hover:text-white"
+                      >{{ calls.current_page }}
+                    </a>
+                  </li>
+
+                  <li>
+                    <a
+                      v-if="calls.next_page_url"
+                      @click="fetchCalls(calls.next_page_url)"
+                      class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-custom-white rounded-r-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white"
+                    >
+                      <span class="sr-only">Next</span>
+                      <svg
+                        class="w-5 h-5"
+                        aria-hidden="true"
+                        fill="currentColor"
+                        viewbox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    
+    <Modal :show="showModal" @close="showModal = false">
+      <ClientDetailsModal :showModal="showModal" :callDetail="callDetail" :states="states" @close="showModal = false"></ClientDetailsModal>
+    </Modal>
+  </AuthenticatedLayout>
+</template>
+
+<style src="@vueform/multiselect/themes/default.css"></style>
+<style>
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.multiselect {
+  color: black !important;
+  border: none;
+  border-radius: 10px;
+}
+
+.multiselect-wrapper {
+  background-color: #d7d7d7;
+  border-radius: 5px;
+}
+
+.box-shadow {
+  padding: 20px;
+  width: 97%;
+  margin: auto;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+</style>

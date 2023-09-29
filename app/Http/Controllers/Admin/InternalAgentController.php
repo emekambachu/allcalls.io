@@ -62,6 +62,7 @@ class InternalAgentController extends Controller
         })
         ->with('states')
         ->with('callTypes')
+        ->orderBy('created_at','desc')
         ->paginate(10);
 
         $callTypes = CallType::get();
