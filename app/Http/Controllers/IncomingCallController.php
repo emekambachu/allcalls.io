@@ -68,7 +68,7 @@ class IncomingCallController extends Controller
             $twiml .= '<Parameter name="unique_call_id" value="' . $uniqueCallId . '"/>';
             $twiml .= '</Client></Dial></Response>';
             Log::debug($twiml);
-            // right, so unique_call_id won't be getting passed in because it gets attached in the routing process and currently when you call from the dialler, it's coming directly to you
+
             return response($twiml, 200)->header('Content-Type', 'text/xml');
         }
 
