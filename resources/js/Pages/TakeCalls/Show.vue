@@ -253,7 +253,7 @@ watchEffect(async () => {
       </div>
     </Modal>
 
-    <Modal :show="true" maxWidth="lg" :closeable="false">
+    <Modal :show="false" maxWidth="lg" :closeable="false">
       <div
         class="flex flex-col items-center justify-between h-full p-8 bg-white space-y-8"
       >
