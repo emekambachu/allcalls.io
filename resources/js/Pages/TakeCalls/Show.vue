@@ -129,13 +129,13 @@ let setupTwilioDevice = () => {
 
 let showIncomingCall = (conn) => {
   console.log("show incoming call now");
+  console.log(conn);
 };
 
 watchEffect(async () => {
   setOnlineCallType();
   setupFlashMessages();
   setupTwilioDevice();
-  showIncomingCall({});
 });
 </script>
 
