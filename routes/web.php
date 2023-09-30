@@ -13,6 +13,7 @@ use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupportController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\TakeCallsController;
 use App\Http\Controllers\StripeTestController;
 use App\Http\Controllers\DefaultCardController;
 use App\Http\Controllers\StripeFundsController;
@@ -23,6 +24,8 @@ use App\Http\Controllers\UsageActivityController;
 use App\Http\Controllers\ActiveUserChannelController;
 use App\Http\Controllers\Admin\OnlineAgentsController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\TakeCallsOnlineUsersController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -44,21 +47,21 @@ Route::get('/', function () {
 
 Route::get('/pdf', [\App\Http\Controllers\InternalAgent\RegistrationStepController::class, 'pdf'])->name('dashboard');
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 require 'admin.php';
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 require 'internal-agent.php';
 
-Route::get('/transactions', [TransactionsController::class, 'index'])->middleware(['auth', 'verified','notBanned'])->name('transactions.index');
-Route::delete('/transactions/{transaction}', [TransactionsController::class, 'destroy'])->middleware(['auth', 'verified','notBanned'])->name('transactions.destroy');
+Route::get('/transactions', [TransactionsController::class, 'index'])->middleware(['auth', 'verified', 'notBanned'])->name('transactions.index');
+Route::delete('/transactions/{transaction}', [TransactionsController::class, 'destroy'])->middleware(['auth', 'verified', 'notBanned'])->name('transactions.destroy');
 
-Route::middleware(['auth', 'verified','notBanned'])->group(function () {
+Route::middleware(['auth', 'verified', 'notBanned'])->group(function () {
     Route::get('/registration-steps', [RegisteredUserController::class, 'steps'])->name('registration.steps');
     Route::post('/store-registration-steps', [RegisteredUserController::class, 'storeSteps'])->name('store.registration.steps');
 });
 
-Route::middleware(['auth', 'verified', 'registration-step-check','notBanned'])->group(function () {
+Route::middleware(['auth', 'verified', 'registration-step-check', 'notBanned'])->group(function () {
     //User Routes
     Route::get('/dashboard', [DashboardController::class, 'show'])->name('dashboard');
     Route::get('/transactions', [TransactionsController::class, 'index'])->name('transactions.index');
@@ -79,16 +82,19 @@ Route::middleware(['auth', 'verified', 'registration-step-check','notBanned'])->
     Route::patch('/clients/{client}', [ClientsController::class, 'update'])->name('clients.update');
     Route::get('/support', [SupportController::class, 'index'])->name('support.index');
     Route::get('/calls', [CallController::class, 'index'])->name('calls.index');
+    Route::get('/take-calls', [TakeCallsController::class, 'show'])->name('take-calls.show');
+    Route::post('/take-calls/online-users', [TakeCallsOnlineUsersController::class, 'store'])->name('take-calls.online-users.store');
+    Route::delete('/take-calls/online-users/{callTypeId}', [TakeCallsOnlineUsersController::class, 'destroy'])->name('take-calls.online-users.destroy');
 });
 
-Route::middleware(['auth','notBanned'])->group(function () {
+Route::middleware(['auth', 'notBanned'])->group(function () {
     Route::get('/profile/view', [ProfileController::class, 'view'])->name('profile.view');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::patch('/bids', [BidsController::class, 'update'])->middleware(['auth', 'verified','notBanned'])->name('bids.update');
+Route::patch('/bids', [BidsController::class, 'update'])->middleware(['auth', 'verified', 'notBanned'])->name('bids.update');
 
 
 
@@ -110,7 +116,7 @@ Route::get('/usage-activities', [UsageActivityController::class, 'index'])->midd
 
 Route::get('/device/token', [TwilioTokenController::class, 'show'])->middleware('auth');
 
-Route::get('/device/incoming', function() {
+Route::get('/device/incoming', function () {
     return view('incoming');
 })->middleware('auth');
 
@@ -124,11 +130,11 @@ Route::get('/stripe-test-redirect', [StripeTestController::class, 'store']);
 
 // Route::get('/active-users/join', [ActiveUserChannelController::class, 'join']);
 
-Route::get('/vince', function() {
+Route::get('/vince', function () {
     return redirect('/');
 });
 
-Route::get('/ryan', function() {
+Route::get('/ryan', function () {
     Log::debug('TEST!!!');
     return redirect('/');
 });
