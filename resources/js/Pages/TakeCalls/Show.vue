@@ -116,13 +116,26 @@ let setupTwilioDevice = () => {
     device.on("disconnect", function (conn) {
       console.log("Call ended.");
     });
+
+    device.on("incoming", (conn) => {
+      console.log(conn.parameters);
+      console.log("Incoming connection from " + conn.parameters.From);
+      showIncomingCall(conn);
+    });
+
+    device.register();
   });
+};
+
+let showIncomingCall = (conn) => {
+  console.log("show incoming call now");
 };
 
 watchEffect(async () => {
   setOnlineCallType();
   setupFlashMessages();
   setupTwilioDevice();
+  showIncomingCall({});
 });
 </script>
 
@@ -240,8 +253,60 @@ watchEffect(async () => {
       </div>
     </Modal>
 
-    <Modal :show="true" maxWidth="sm" :closeable="false">
-      <div class="bg-white text-black">Hello, world!</div>
+    <Modal :show="true" maxWidth="lg" :closeable="false">
+      <div
+        class="flex flex-col items-center justify-between h-full p-8 bg-white space-y-8"
+      >
+        <!-- Call Duration -->
+        <!-- <div>
+          <p class="text-2xl font-medium text-black">00:05</p>
+        </div> -->
+
+        <!-- Client's Basic Info -->
+        <!-- <div class="w-full">
+          <p class="text-md text-center text-black mb-2">Client's Basic Info</p>
+          <ul class="w-full p-4 bg-gray-100 rounded-md space-y-2">
+            <li class="flex justify-between">
+              <span class="text-gray-600">Name:</span>
+              <span class="text-black">John Doe</span>
+            </li>
+            <li class="flex justify-between">
+              <span class="text-gray-600">Age:</span>
+              <span class="text-black">32</span>
+            </li>
+            <li class="flex justify-between">
+              <span class="text-gray-600">Contact:</span>
+              <span class="text-black">+1 (234) 567-8900</span>
+            </li>
+          </ul>
+        </div> -->
+
+        <!-- Info Populating After 60 seconds -->
+        <!-- <div class="w-full">
+          <p class="text-md text-center text-black mb-2">
+            Info will populate after 60 seconds
+          </p>
+          <ul class="w-full p-4 bg-gray-100 rounded-md space-y-2">
+            <li class="flex justify-between">
+              <span class="text-gray-600">Address:</span>
+              <span class="text-black">123 Main St</span>
+            </li>
+            <li class="flex justify-between">
+              <span class="text-gray-600">Email:</span>
+              <span class="text-black">johndoe@email.com</span>
+            </li>
+          </ul>
+        </div> -->
+
+        <h3 class="text-2xl font-medium">Ongoing Call</h3>
+
+        <!-- Hang Up Button -->
+        <div>
+          <button class="bg-red-500 hover:bg-red-400 text-white rounded-full py-2 px-6">
+            Hang Up
+          </button>
+        </div>
+      </div>
     </Modal>
   </AuthenticatedLayout>
 </template>
