@@ -12,6 +12,9 @@ let props = defineProps({
   onlineCallType: Object,
 });
 
+let showRinging = ref(false);
+let showOngoing = ref(false);
+
 let setupFlashMessages = () => {
   console.log(page.props.flash);
   if (page.props.flash.message) {
@@ -130,6 +133,7 @@ let setupTwilioDevice = () => {
 let showIncomingCall = (conn) => {
   console.log("show incoming call now");
   console.log(conn);
+  showRinging.value = true;
 };
 
 watchEffect(async () => {
@@ -137,6 +141,14 @@ watchEffect(async () => {
   setupFlashMessages();
   setupTwilioDevice();
 });
+
+let acceptCall = () => {
+  console.log('accept call now');
+};
+
+let rejectCall = () => {
+  console.log('reject call now');
+}
 </script>
 
 <template>
@@ -190,7 +202,7 @@ watchEffect(async () => {
       </div>
     </section>
 
-    <Modal :show="false" maxWidth="sm" :closeable="false">
+    <Modal :show="showRinging" maxWidth="sm" :closeable="false">
       <div class="bg-white p-8 py-24 rounded-lg shadow-xl w-full">
         <div class="flex flex-col items-center">
           <svg
@@ -215,7 +227,7 @@ watchEffect(async () => {
           <p class="text-md text-gray-600 mt-2">AllCalls Client</p>
 
           <div class="flex mt-20 space-x-10">
-            <div class="bg-red-500 hover:bg-red-600 p-3 rounded-full">
+            <div @click="rejectCall()" class="bg-red-500 hover:bg-red-600 p-3 rounded-full">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -232,7 +244,7 @@ watchEffect(async () => {
                 />
               </svg>
             </div>
-            <div class="bg-green-500 hover:bg-green-400 p-3 rounded-full">
+            <div @click="acceptCall()" class="bg-green-500 hover:bg-green-400 p-3 rounded-full">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -253,7 +265,7 @@ watchEffect(async () => {
       </div>
     </Modal>
 
-    <Modal :show="false" maxWidth="lg" :closeable="false">
+    <Modal :show="showOngoing" maxWidth="lg" :closeable="false">
       <div
         class="flex flex-col items-center justify-between h-full p-8 bg-white space-y-8"
       >
