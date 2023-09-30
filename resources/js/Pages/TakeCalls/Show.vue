@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watchEffect } from "vue";
+import { ref, reactive, watchEffect } from "vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { toaster } from "@/helper.js";
@@ -14,7 +14,7 @@ let props = defineProps({
 
 let showRinging = ref(false);
 let showOngoing = ref(false);
-let call = ref(null);
+let call = reactive(null);
 
 let setupFlashMessages = () => {
   console.log(page.props.flash);
@@ -123,7 +123,7 @@ let setupTwilioDevice = () => {
 
     device.on("incoming", incomingCall => {
       console.log("Incoming!");
-      call.value = incomingCall;
+      call = incomingCall;
       showIncomingCall(call);
     });
 
@@ -145,8 +145,10 @@ watchEffect(async () => {
 
 let acceptCall = () => {
   console.log('accept call now');
-  if (call.value) {
-    call.value.accept();
+  if (call) {
+    call.accept();
+  } else {
+    console.log('call not found');
   }
 };
 
