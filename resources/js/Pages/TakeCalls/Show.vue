@@ -158,6 +158,7 @@ let rejectCall = () => {
   console.log('reject call now');
   if (call) {
     call.disconnect();
+    showOngoing.value = false;
   } else {
     console.log('call not found while disconnecting')
   }
