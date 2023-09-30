@@ -117,10 +117,10 @@ let setupTwilioDevice = () => {
       console.log("Call ended.");
     });
 
-    device.on("incoming", (conn) => {
-      console.log(conn.parameters);
-      console.log("Incoming connection from " + conn.parameters.From);
-      showIncomingCall(conn);
+    device.on("incoming", call => {
+      console.log("Incoming!");
+      console.log(call);
+      showIncomingCall(call);
     });
 
     device.register();
