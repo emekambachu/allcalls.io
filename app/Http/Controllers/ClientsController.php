@@ -16,7 +16,7 @@ class ClientsController extends Controller
         $user_id = $request->user()->id;
         
         $Clients = Client::where('user_id', $user_id)
-                        ->orderBy('id', 'desc')
+                        ->orderBy('created_at', 'desc')
                         ->paginate(10);
         
         $totalClients = Client::where('user_id', $user_id)->count();

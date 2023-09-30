@@ -11,4 +11,7 @@ class InternalAgentAddress extends Model
     protected $guarded = ['id'];
     protected $table = "internal_agent_addresses";
 
+    public function agentDetail() {
+        return $this->belongsTo(InternalAgentRegInfo::class);
+    }
 }
