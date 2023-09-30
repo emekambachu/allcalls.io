@@ -156,7 +156,11 @@ let acceptCall = () => {
 
 let rejectCall = () => {
   console.log('reject call now');
-  call.disconnect();
+  if (call) {
+    call.disconnect();
+  } else {
+    console.log('call not found while disconnecting')
+  }
 }
 </script>
 
