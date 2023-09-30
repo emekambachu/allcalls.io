@@ -54,7 +54,7 @@ class IncomingCallController extends Controller
         // Remove the "+1" from the beginning of the "To" number
         $to = substr($to, 2);
 
-/*      hardcode call from dialler */
+/*      hardcode call from dialler 
         $isFromClient = strpos($request->input('From'), 'client:') === 0;
 
         Log::debug('Professional: This is a professional log right before checking dialler call');
@@ -71,7 +71,7 @@ class IncomingCallController extends Controller
 
             return response($twiml, 200)->header('Content-Type', 'text/xml');
         }
-
+*/
 
         // Check if the number exists in the AvailableNumber model
         $availableNumber = AvailableNumber::where('phone', $to)->first();
