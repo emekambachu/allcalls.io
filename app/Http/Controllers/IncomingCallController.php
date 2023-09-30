@@ -62,7 +62,7 @@ class IncomingCallController extends Controller
         Log::debug('asdasdasdasdadas');
         if ( $isFromClient ) {
             Log::debug('Omega: call coming from client:');
-            $uniqueCallId = uniqid();
+            $uniqueCallId = '64e92bac620d5';
             $twiml .= '<Response><Dial answerOnBridge="true"><Client callerId="+15736523170">alice';
             $twiml .= '<Parameter name="unique_call_id" value="' . $uniqueCallId . '"/>';
             $twiml .= '</Client></Dial></Response>';
