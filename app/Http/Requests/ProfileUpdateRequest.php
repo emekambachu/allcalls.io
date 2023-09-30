@@ -24,7 +24,7 @@ class ProfileUpdateRequest extends FormRequest
             'selected_states' => ['required', 'array'],
             'selected_states.*.typeId' => ['required', 'exists:call_types,id'],
             'selected_states.*.selectedStateIds.*' => ['nullable', 'exists:states,id'],
-
+            'timezone' => ['string']
         ];
     }
 }

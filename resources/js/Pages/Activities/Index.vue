@@ -1,7 +1,8 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, router } from "@inertiajs/vue3";
-
+import { ref,onMounted } from "vue";
+import moment from 'moment-timezone'
 defineProps({
     activities: {
         type: Object,
@@ -41,7 +42,10 @@ let fetchActivities = page => {
 
     router.visit(httpsPage, { method: 'get', });
 }
-
+let timezone = "UTC";
+onMounted(() => {
+  timezone = document.querySelector("meta[name='user-timezone']").getAttribute('content');
+});
 </script>
 
 <template>
@@ -81,10 +85,13 @@ let fetchActivities = page => {
                                     <th scope="row"
                                         class="px-4 py-3 font-medium text-custom-blue font-semibold whitespace-nowrap">{{
                                             activity.user.first_name }} {{ activity.user.last_name }}</th>
-                                    <td class="text-gray-700 px-4 py-3">{{ activity.user.email }}</td>
-                                    <td class="text-gray-700 px-4 py-3">{{ formatDate(activity.last_activity_at) }}</td>
-                                    <td class="text-gray-700 px-4 py-3">{{ formatDate(activity.created_at) }}</td>
-                                    <td class="text-gray-700 px-4 py-3">{{ formatDate(activity.logout_time) }}</td>
+                                    <td class="text-gray-700 px-4 py-3">
+                                        {{ activity.user.email }}
+                                        
+                                    </td>
+                                    <td class="text-gray-700 px-4 py-3">{{ formatDate(moment(moment(activity.last_activity_at).utc().format("YYYY-MM-DD HH:mm:ss")).tz(timezone).format("YYYY-MM-DD HH:mm:ss")) }}</td>
+                                    <td class="text-gray-700 px-4 py-3">{{ formatDate(moment(moment(activity.created_at).utc().format("YYYY-MM-DD HH:mm:ss")).tz(timezone).format("YYYY-MM-DD HH:mm:ss")) }}</td>
+                                    <td class="text-gray-700 px-4 py-3">{{ !(activity.logout_time)? '': formatDate(moment(moment(activity.logout_time).utc().format("YYYY-MM-DD HH:mm:ss")).tz(timezone).format("YYYY-MM-DD HH:mm:ss")) }} </td>
                                 </tr>
 
                             </tbody>

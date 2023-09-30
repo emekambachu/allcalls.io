@@ -95,7 +95,7 @@ let fetchTransactions = (page) => {
                     {{ formatMoney(transaction.amount) }}
                   </td>
                   <td class="text-gray-600 px-4 py-3">
-                    {{ formatDate(transaction.created_at) }}
+                    {{ formatDate(moment(moment(transaction.created_at).utc().format("YYYY-MM-DD HH:mm:ss")).tz(timezone).format("YYYY-MM-DD HH:mm:ss")) }}
                   </td>
                   <td class="text-gray-600 px-4 py-3">{{ transaction.label ? transaction.label : '-' }}</td>
                   <td class="text-gray-300 px-4 py-3">

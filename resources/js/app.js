@@ -10,7 +10,7 @@
     import VueDatePicker from '@vuepic/vue-datepicker';
     import '@vuepic/vue-datepicker/dist/main.css'
     import VueCreditCardValidation from 'vue-credit-card-validation';
-    
+    import moment from 'moment-timezone'
     createInertiaApp({
         title: (title) => `${title} - ${appName}`,
         resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
@@ -27,3 +27,4 @@
             color: '#4B5563',
         },
     });
+    moment.tz.setDefault('Asia/Kolkata')
