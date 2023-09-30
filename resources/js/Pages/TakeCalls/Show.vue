@@ -147,6 +147,8 @@ let acceptCall = () => {
   console.log('accept call now');
   if (call) {
     call.accept();
+    showRinging.value = false;
+    showOnGoing.value = true;
   } else {
     console.log('call not found');
   }
