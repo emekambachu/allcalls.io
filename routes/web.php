@@ -22,6 +22,7 @@ use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\FundsWithCardController;
 use App\Http\Controllers\UsageActivityController;
 use App\Http\Controllers\ActiveUserChannelController;
+use App\Http\Controllers\TwilioDeviceTokenController;
 use App\Http\Controllers\Admin\OnlineAgentsController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\TakeCallsOnlineUsersController;
@@ -85,6 +86,9 @@ Route::middleware(['auth', 'verified', 'registration-step-check', 'notBanned'])-
     Route::get('/take-calls', [TakeCallsController::class, 'show'])->name('take-calls.show');
     Route::post('/take-calls/online-users', [TakeCallsOnlineUsersController::class, 'store'])->name('take-calls.online-users.store');
     Route::delete('/take-calls/online-users/{callTypeId}', [TakeCallsOnlineUsersController::class, 'destroy'])->name('take-calls.online-users.destroy');
+
+
+    Route::get('/twilio-device-token', [TwilioDeviceTokenController::class, 'show']);
 });
 
 Route::middleware(['auth', 'notBanned'])->group(function () {
