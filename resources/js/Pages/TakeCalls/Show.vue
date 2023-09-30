@@ -154,7 +154,7 @@ let acceptCall = () => {
 
 let rejectCall = () => {
   console.log('reject call now');
-  call.value.disconnect();
+  call.disconnect();
 }
 </script>
 
