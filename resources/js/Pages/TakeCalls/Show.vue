@@ -157,7 +157,17 @@ let acceptCall = () => {
 let rejectCall = () => {
   console.log('reject call now');
   if (call) {
-    call.disconnect();
+    call.reject();
+    showRinging.value = false;
+  } else {
+    console.log('call not found while rejecting')
+  }
+}
+
+let disconnectCall = () => {
+  console.log('disconnect call now');
+  if (call) {
+    call.reject();
     showOngoing.value = false;
   } else {
     console.log('call not found while disconnecting')
@@ -328,7 +338,7 @@ let rejectCall = () => {
 
         <!-- Hang Up Button -->
         <div>
-          <button @click.prevent="rejectCall()" class="bg-red-500 hover:bg-red-400 text-white rounded-full py-2 px-6">
+          <button @click.prevent="disconnectCall()" class="bg-red-500 hover:bg-red-400 text-white rounded-full py-2 px-6">
             Hang Up
           </button>
         </div>
