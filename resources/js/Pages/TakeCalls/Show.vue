@@ -327,7 +327,7 @@ let rejectCall = () => {
 
         <!-- Hang Up Button -->
         <div>
-          <button class="bg-red-500 hover:bg-red-400 text-white rounded-full py-2 px-6">
+          <button @click.prevent="rejectCall()" class="bg-red-500 hover:bg-red-400 text-white rounded-full py-2 px-6">
             Hang Up
           </button>
         </div>
