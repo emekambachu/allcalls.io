@@ -52,11 +52,8 @@ class TakeCallsOnlineUsersController extends Controller
 
             // Dispatch the event
             OnlineUserListUpdated::dispatch();
-
-            return redirect()->back()->with(['message' => 'Stopped listening for calls.']);
         }
 
-        // If no record found, return a response indicating the absence of the record
-        return redirect()->back()->withErrors(['message' => 'Error occured']);
+        return redirect()->back()->with(['message' => 'Stopped listening for calls.']);
     }
 }
