@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class InternalAgentResidentLicense extends Model
+class InternalAgentAmlCourse extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
@@ -13,5 +13,4 @@ class InternalAgentResidentLicense extends Model
     public function agentDetail() {
         return $this->belongsTo(InternalAgentRegInfo::class);
     }
-
 }

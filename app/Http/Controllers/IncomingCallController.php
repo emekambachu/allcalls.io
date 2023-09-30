@@ -54,6 +54,26 @@ class IncomingCallController extends Controller
         // Remove the "+1" from the beginning of the "To" number
         $to = substr($to, 2);
 
+
+
+
+        $isFromClient = strpos($request->input('From'), 'client:') === 0;
+
+        Log::debug('Professional: This is a professional log right before checking dialler call');
+        Log::debug('Professional:' . $request->input('From'));
+        Log::debug('asdasdasdasdadas');
+        if ( $isFromClient ) {
+            Log::debug('Omega: call coming from client:');
+
+            $twiml = '<?xml version="1.0" encoding="UTF-8"?>'; 
+            $twiml .= '<Response><Dial answerOnBridge="true"><Client callerId="+15736523170">alice</Client></Dial></Response>';
+            
+            Log::debug($twiml);
+            
+            return response($twiml, 200)->header('Content-Type', 'text/xml');
+        }
+
+
         // Check if the number exists in the AvailableNumber model
         $availableNumber = AvailableNumber::where('phone', $to)->first();
 
@@ -64,6 +84,8 @@ class IncomingCallController extends Controller
 
             Log::debug('Number found in AvailableNumber model: ' . $to);
             $twiml .= $this->handleAvailableNumberCall($to);
+
+  
 
             // if ($user->device_token) {
             //     $response = Http::post(route('call.pushNotification'), [
@@ -80,6 +102,26 @@ class IncomingCallController extends Controller
         if ($callTypeNumber) {
             Log::debug('Number found in CallTypeNumber model: ' . $to);
             $fromAttribute = $this->getFromAttribute($request->input('From'));
+
+            Log::debug($request->input('From'));
+
+            // $isFromClient = strpos($request->input('From'), 'client:') === 0;
+
+            // if ( $isFromClient ) {
+            //     Log::debug('Omega: call coming from client:');
+            //     // $clientTwiml = "";
+            //     // $numberToDial = '+15736523170';
+
+            //     // Manually construct the TwiML
+            /*    $clientTwiml = '<?xml version="1.0" encoding="UTF-8"?>'; */ 
+            //     $clientTwiml .= '<Response><Dial answerOnBridge="true"><Client callerId="+15736523170">alice</Client></Dial></Response>';
+
+            //     return response($clientTwiml, 200)->header('Content-Type', 'text/xml');
+            // }
+
+
+        
+
             $twiml .= $this->handleCallTypeNumberCall($to, $fromAttribute);
             return response($twiml, 200)->header('Content-Type', 'text/xml');
         }
