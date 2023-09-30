@@ -67,11 +67,10 @@ class IncomingCallController extends Controller
             $twiml .= '<Response><Dial answerOnBridge="true"><Client callerId="+15736523170">alice';
             $twiml .= '<Parameter name="unique_call_id" value="' . $uniqueCallId . '"/>';
             $twiml .= '</Client></Dial></Response>';
-            Log::debug($twiml);
+            // Log::debug($twiml);
 
-            return response($twiml, 200)->header('Content-Type', 'text/xml');
+            // return response($twiml, 200)->header('Content-Type', 'text/xml');
         }
-// */
 
         // Check if the number exists in the AvailableNumber model
         $availableNumber = AvailableNumber::where('phone', $to)->first();
