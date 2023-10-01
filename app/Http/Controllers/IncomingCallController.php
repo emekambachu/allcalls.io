@@ -145,7 +145,7 @@ class IncomingCallController extends Controller
         if (strpos($fromString, 'client:') === 0) {
             Log::debug('String starts with "client:". Processing accordingly.');
             // return '2055551234';  // Return a dummy number
-            return '123123123'; // from AR
+            return '4791424156'; // from AR
         }
     
         // If it's a phone number
