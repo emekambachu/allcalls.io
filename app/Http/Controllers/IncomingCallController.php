@@ -72,6 +72,9 @@ class IncomingCallController extends Controller
         }
 */
 
+        // getting from number from request
+        $requestFromNumber = $request->input('From');
+
         // Check if the number exists in the AvailableNumber model
         $availableNumber = AvailableNumber::where('phone', $to)->first();
 
@@ -81,7 +84,7 @@ class IncomingCallController extends Controller
             Log::debug('current user based on available number is: ' . $user);
 
             Log::debug('Number found in AvailableNumber model: ' . $to);
-            $twiml .= $this->handleAvailableNumberCall($to);
+            $twiml .= $this->handleAvailableNumberCall($to, $requestFromNumber);
 
   
 
@@ -155,7 +158,7 @@ class IncomingCallController extends Controller
         return $fromString;  // Return as-is
     }
 
-    public function handleAvailableNumberCall($to)
+    public function handleAvailableNumberCall($to, $requestFrom)
     {
         // Assume that the user_id is associated with the number in AvailableNumber
         $availableNumber = AvailableNumber::where('phone', $to)->first();
@@ -206,6 +209,7 @@ class IncomingCallController extends Controller
             $twimlBody .= '<Client statusCallbackMethod="GET" statusCallbackEvent="initiated ringing answered completed" statusCallback="https://allcalls.io/api/handle-call-status?user_id=' . $user_id . '&amp;call_type_id=' . $call_type_id . '&amp;from=' . urlencode($availableNumber->from) . '&amp;unique_call_id=' . $uniqueCallId . '">';
             $twimlBody .= '<Identity>' . $user_id . '</Identity>';
             $twimlBody .= '<Parameter name="unique_call_id" value="' . $uniqueCallId . '"/>';
+            $twimlBody .= '<Parameter name="request_from_number" value="' . $requestFrom . '"/>';
             $twimlBody .= '</Client>';
             $twimlBody .= '</Dial>';
         }
