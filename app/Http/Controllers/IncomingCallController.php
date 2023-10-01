@@ -54,7 +54,7 @@ class IncomingCallController extends Controller
         // Remove the "+1" from the beginning of the "To" number
         $to = substr($to, 2);
 
-/*      hardcode call from dialler */
+/*      hardcode call from dialler 
         $isFromClient = strpos($request->input('From'), 'client:') === 0;
 
         Log::debug('Professional: This is a professional log right before checking dialler call');
@@ -62,14 +62,18 @@ class IncomingCallController extends Controller
         Log::debug('asdasdasdasdadas');
         if ( $isFromClient ) {
             Log::debug('Omega: call coming from client:');
-            $uniqueCallId = uniqid();
-            // $twiml .= '<Response><Dial answerOnBridge="true"><Client callerId="+15736523170">alice';
-            // $twiml .= '<Parameter name="unique_call_id" value="' . $uniqueCallId . '"/>';
-            // $twiml .= '</Client></Dial></Response>';
-            // Log::debug($twiml);
+            $uniqueCallId = '64e92bac620d5';
+            $twiml .= '<Response><Dial answerOnBridge="true"><Client callerId="+15736523170">alice';
+            $twiml .= '<Parameter name="unique_call_id" value="' . $uniqueCallId . '"/>';
+            $twiml .= '</Client></Dial></Response>';
+            Log::debug($twiml);
 
-            // return response($twiml, 200)->header('Content-Type', 'text/xml');
+            return response($twiml, 200)->header('Content-Type', 'text/xml');
         }
+*/
+
+        // getting from number from request
+        $requestFromNumber = $request->input('From');
 
         // Check if the number exists in the AvailableNumber model
         $availableNumber = AvailableNumber::where('phone', $to)->first();
@@ -80,7 +84,7 @@ class IncomingCallController extends Controller
             Log::debug('current user based on available number is: ' . $user);
 
             Log::debug('Number found in AvailableNumber model: ' . $to);
-            $twiml .= $this->handleAvailableNumberCall($to);
+            $twiml .= $this->handleAvailableNumberCall($to, $requestFromNumber);
 
   
 
@@ -154,7 +158,7 @@ class IncomingCallController extends Controller
         return $fromString;  // Return as-is
     }
 
-    public function handleAvailableNumberCall($to)
+    public function handleAvailableNumberCall($to, $requestFrom)
     {
         // Assume that the user_id is associated with the number in AvailableNumber
         $availableNumber = AvailableNumber::where('phone', $to)->first();
@@ -205,6 +209,7 @@ class IncomingCallController extends Controller
             $twimlBody .= '<Client statusCallbackMethod="GET" statusCallbackEvent="initiated ringing answered completed" statusCallback="https://allcalls.io/api/handle-call-status?user_id=' . $user_id . '&amp;call_type_id=' . $call_type_id . '&amp;from=' . urlencode($availableNumber->from) . '&amp;unique_call_id=' . $uniqueCallId . '">';
             $twimlBody .= '<Identity>' . $user_id . '</Identity>';
             $twimlBody .= '<Parameter name="unique_call_id" value="' . $uniqueCallId . '"/>';
+            $twimlBody .= '<Parameter name="request_from_number" value="' . $requestFrom . '"/>';
             $twimlBody .= '</Client>';
             $twimlBody .= '</Dial>';
         }
