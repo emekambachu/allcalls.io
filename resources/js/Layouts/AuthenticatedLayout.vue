@@ -29,7 +29,9 @@ let showIncomingCall = (conn) => {
 
 let acceptCall = () => {
   console.log('accept call now');
-  Echo.private('calls.' + page.props.auth.user.id).whisper('psst');
+  Echo.private('calls.' + page.props.auth.user.id).whisper('psst', {
+    action: 'accept'
+  });
 
   if (call) {
     call.accept();
@@ -42,7 +44,10 @@ let acceptCall = () => {
 
 let rejectCall = () => {
   console.log('reject call now');
-  Echo.private('calls.' + page.props.auth.user.id).whisper('psst');
+  Echo.private('calls.' + page.props.auth.user.id).whisper('psst', {
+    action: 'reject'
+  });
+
   if (call) {
     call.reject();
     showRinging.value = false;
@@ -53,7 +58,9 @@ let rejectCall = () => {
 
 let disconnectCall = () => {
   console.log('disconnect call now');
-  Echo.private('calls.' + page.props.auth.user.id).whisper('psst');
+  Echo.private('calls.' + page.props.auth.user.id).whisper('psst', {
+    action: 'disconnect'
+  });
   if (call) {
     call.disconnect();
     showOngoing.value = false;
@@ -125,8 +132,9 @@ let setupTwilioDevice = () => {
 onMounted(() => {
   console.log("mounted AuthenticatedLayout");
   Echo.private("calls." + page.props.auth.user.id)
-  .listenForWhisper("psst", () => {
-    console.log('Heard someone!');
+  .listenForWhisper("psst", e => {
+    console.log('call event:');
+    console.log(e);
   })
 
   setupTwilioDevice();
