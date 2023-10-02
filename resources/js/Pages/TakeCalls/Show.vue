@@ -3,18 +3,12 @@ import { ref, reactive, watchEffect } from "vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { toaster } from "@/helper.js";
-import Modal from "@/Components/Modal.vue";
-import { Device } from "@twilio/voice-sdk";
 
 let page = usePage();
 let props = defineProps({
   callTypes: Array,
   onlineCallType: Object,
 });
-
-let showRinging = ref(false);
-let showOngoing = ref(false);
-let call = reactive(null);
 
 let setupFlashMessages = () => {
   console.log(page.props.flash);
@@ -76,103 +70,10 @@ let toggled = (event, callType) => {
     });
   }
 };
-
-let setupTwilioDevice = () => {
-  axios.get("/twilio-device-token").then((response) => {
-    let token = response.data.token;
-    console.log("token is ", token);
-
-    let device = new Device(token, {
-      // Set Opus as our preferred codec. Opus generally performs better, requiring less bandwidth and
-      // providing better audio quality in restrained network conditions. Opus will be default in 2.0.
-      codecPreferences: ["opus", "pcmu"],
-      // Use fake DTMF tones client-side. Real tones are still sent to the other end of the call,
-      // but the client-side DTMF tones are fake. This prevents the local mic capturing the DTMF tone
-      // a second time and sending the tone twice. This will be default in 2.0.
-      fakeLocalDTMF: true,
-      // Use `enableRingingState` to enable the device to emit the `ringing`
-      // state. The TwiML backend also needs to have the attribute
-      // `answerOnBridge` also set to true in the `Dial` verb. This option
-      // changes the behavior of the SDK to consider a call `ringing` starting
-      // from the connection to the TwiML backend to when the recipient of
-      // the `Dial` verb answers.
-      enableRingingState: true,
-      debug: true,
-    });
-    console.log("deviceee", device);
-
-    device.on("ready", function (device) {
-      console.log("Twilio.Device Ready!");
-    });
-
-    device.on("registered", function () {
-      console.log("REGISTERED!");
-    });
-
-    device.on("error", function (error) {
-      console.log("Twilio.Device Error: " + error.message);
-    });
-
-    device.on("connect", function (conn) {
-      console.log("Successfully established call ! ");
-    });
-
-    device.on("disconnect", function (conn) {
-      console.log("Call ended.");
-    });
-
-    device.on("incoming", incomingCall => {
-      console.log("Incoming!");
-      call = incomingCall;
-      showIncomingCall(call);
-    });
-
-    device.register();
-  });
-};
-
-let showIncomingCall = (conn) => {
-  console.log("show incoming call now");
-  console.log(conn);
-  showRinging.value = true;
-};
-
 watchEffect(async () => {
   setOnlineCallType();
   setupFlashMessages();
-  // setupTwilioDevice();
 });
-
-let acceptCall = () => {
-  console.log('accept call now');
-  if (call) {
-    call.accept();
-    showRinging.value = false;
-    showOngoing.value = true;
-  } else {
-    console.log('call not found');
-  }
-};
-
-let rejectCall = () => {
-  console.log('reject call now');
-  if (call) {
-    call.reject();
-    showRinging.value = false;
-  } else {
-    console.log('call not found while rejecting')
-  }
-}
-
-let disconnectCall = () => {
-  console.log('disconnect call now');
-  if (call) {
-    call.disconnect();
-    showOngoing.value = false;
-  } else {
-    console.log('call not found while disconnecting')
-  }
-}
 </script>
 
 <template>
