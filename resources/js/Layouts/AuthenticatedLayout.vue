@@ -29,13 +29,10 @@ let showIncomingCall = (conn) => {
   console.log('Params:');
   console.log(conn.parameters.Params);
 
-  const params = new URLSearchParams(conn.parameters.Params);
-  const uniqueCallId = params.get('unique_call_id');
+  let params = new URLSearchParams(conn.parameters.Params);
+  let uniqueCallId = params.get('unique_call_id');
 
-
-  console.log(conn.customParameters.get('unique_call_id'));
-
-  axios.get("/call-client-info?unique_call_id=" + customParameters.get('unique_call_id')).then((response) => {
+  axios.get("/call-client-info?unique_call_id=" + uniqueCallId).then((response) => {
     console.log(response.data.client);
     connectedClient.value = response.data.client;
 
