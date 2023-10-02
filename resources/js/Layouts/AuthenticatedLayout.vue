@@ -8,7 +8,15 @@ import DashboardFooter from "@/Components/DashboardFooter.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import Modal from "@/Components/Modal.vue";
 import { Device } from "@twilio/voice-sdk";
+import { usePage } from "@inertiajs/vue3";
 
+
+let page = usePage();
+
+Echo.private("calls." + page.props.auth.user.id)
+  .listenForWhisper("psst", (e) => {
+    console.log('Heard someone!');
+  })
 
 
 
@@ -25,6 +33,8 @@ let showIncomingCall = (conn) => {
 
 let acceptCall = () => {
   console.log('accept call now');
+  Echo.private('calls.' + page.props.auth.user.id).whisper('psst');
+
   if (call) {
     call.accept();
     showRinging.value = false;
@@ -36,6 +46,7 @@ let acceptCall = () => {
 
 let rejectCall = () => {
   console.log('reject call now');
+  Echo.private('calls.' + page.props.auth.user.id).whisper('psst');
   if (call) {
     call.reject();
     showRinging.value = false;
@@ -46,6 +57,7 @@ let rejectCall = () => {
 
 let disconnectCall = () => {
   console.log('disconnect call now');
+  Echo.private('calls.' + page.props.auth.user.id).whisper('psst');
   if (call) {
     call.disconnect();
     showOngoing.value = false;
