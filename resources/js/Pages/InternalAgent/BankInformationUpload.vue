@@ -1,10 +1,18 @@
   
 <script setup>
 import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
-import { Head, Link, useForm } from "@inertiajs/vue3";
+import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
 let props = defineProps({
     firstStepErrors:Object,
+    userData: Object,
 });
+let page = usePage();
+let bankingInfotUrl = ref(null)
+// console.log('props.userData.internal_agent_contract.banking_info',props.userData.internal_agent_contract);
+if (page.props.auth.role === 'admin' && props.userData.internal_agent_contract) {
+    bankingInfotUrl.value = props.userData.internal_agent_contract.banking_info.url
+}
+
 const fileError = ref(false);
 const selectedFileName = ref(""); // To store the selected file name
 const selectedFile = ref(null)
@@ -70,7 +78,7 @@ let submit = () => {
         }
     }
    
-    if(!selectedFile.value){
+    if(!selectedFile.value && page.props.auth.role === 'internal-agent'){
         fileError.value = false;
         props.firstStepErrors.bankingInfoPdf = [`The Banking Information field is required.`];
     }else{
@@ -89,7 +97,7 @@ let ChangeTabBack = () => {
         </h1>
 
         
-    <div class="bg-blue-50 py-7 px-6 mb-5 rounded-lg shadow-md">
+    <div v-show="page.props.auth.role === 'internal-agent'" class="bg-blue-50 py-7 px-6 mb-5 rounded-lg shadow-md">
         <div class="">
             <a target="_blank"
                 href="https://www.financialservicecareers.com/_files/ugd/0fb1f5_f3cad5300c3b4706ae1b5daf6fe16908.pdf">
@@ -97,8 +105,19 @@ let ChangeTabBack = () => {
             </a>for banking information.
         </div>
     </div>
+    <div v-show="page.props.auth.role === 'admin'" class="bg-blue-50 py-7 px-6 mb-5 rounded-lg shadow-md">
+        <div class="">
+            <a target="_blank"
+                :href="bankingInfotUrl"
+                :disabled="!bankingInfotUrl"
+                :class="{ 'opacity-25': !bankingInfotUrl }"
+                >
+                <strong class="text-blue-600 mr-1 hover:underline">Click here</strong>
+            </a>Preview / Download banking information.
+        </div>
+    </div>
 
-        <div class="flex items-center justify-center mb-2 w-full">
+        <div v-show="page.props.auth.role === 'internal-agent'"  class="flex items-center justify-center mb-2 w-full">
             <label for="dropzone-file-bank-info"
                 class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
                 @dragover.prevent @drop="handleDrop">
@@ -136,7 +155,7 @@ let ChangeTabBack = () => {
                     Back Step
                 </button>
             </div>
-            <div class="mt-4">
+            <div v-show="$page.props.auth.role === 'internal-agent'" class="mt-4">
                 <button type="button" @click="submit" class="button-custom px-3 py-2 rounded-md">
                     <global-spinner :spinner="isLoading" /> Start Signature Process
                 </button>

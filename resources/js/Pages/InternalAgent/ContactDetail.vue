@@ -1,12 +1,14 @@
 <script setup>
 import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
-import { Head, Link, useForm } from "@inertiajs/vue3";
+import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
+let page = usePage();
 let props = defineProps({
     firstStepErrors: Object,
     userData: Object,
     states: Array,
 });
 let individual_business = ref(false)
+// console.log('user dagta', props.userData.internal_agent_contract);
 let maxDate = ref(new Date)
 let form = ref({
     first_name: null,
@@ -53,11 +55,16 @@ let form = ref({
     business_move_in_date: null,
 })
 onMounted(() => {
-    form.value.first_name = props.userData.first_name
-    form.value.last_name = props.userData.last_name
-    form.value.email = props.userData.email
-    form.value.cell_phone = props.userData.phone
-    emits("updateFormData", form.value);
+    if (page.props.auth.role === 'admin' && props.userData?.internal_agent_contract) {
+        form.value = props.userData.internal_agent_contract
+    } else {
+        form.value.first_name = props.userData.first_name
+        form.value.last_name = props.userData.last_name
+        form.value.email = props.userData.email
+        form.value.cell_phone = props.userData.phone
+        emits("updateFormData", form.value);
+    }
+
 })
 const emits = defineEmits();
 watch(form.value, (newForm, oldForm) => {
@@ -111,10 +118,12 @@ let ChangeTab = () => {
     const mergedFields = hasBusinessValue ? [...requiredFields, ...businessInputs] : requiredFields;
 
     mergedFields.forEach(fieldName => {
-        if (form.value[fieldName] === null || form.value[fieldName] === "" || form.value[fieldName] === "Choose") {
-            // props.firstStepErrors[fieldName] = [`The ${fieldName.replace(/_/g, ' ')} field is required.`];
-            props.firstStepErrors[fieldName] = [`This  field is required.`];
+        if (page.props.auth.role === 'internal-agent') {
+            if (form.value[fieldName] === null || form.value[fieldName] === "" || form.value[fieldName] === "Choose") {
+                props.firstStepErrors[fieldName] = [`This  field is required.`];
+            }
         }
+
     });
     // Check if there are any errors
     const hasErrors = Object.values(props.firstStepErrors).some(errors => errors.length > 0);
@@ -499,8 +508,8 @@ let enforceFiveDigitInput = (fieldName, val) => {
                         v-text="firstStepErrors.business_office_phone[0]"></div>
                 </div>
                 <div>
-                    <label for="middle_name"
-                        class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Email<span class="text-red-500">*</span></label>
+                    <label for="middle_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Email<span
+                            class="text-red-500">*</span></label>
                     <input type="text" v-model="form.business_email" id="default-input"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <div v-if="firstStepErrors.business_email" class="text-red-500"
@@ -512,7 +521,8 @@ let enforceFiveDigitInput = (fieldName, val) => {
             <div class="grid lg:grid-cols-4 mb-2 mt-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
                 <div>
                     <label for="middle_name"
-                        class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Website<span class="text-red-500">*</span></label>
+                        class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Website<span
+                            class="text-red-500">*</span></label>
                     <input type="text" v-model="form.business_website" id="default-input"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <div v-if="firstStepErrors.business_website" class="text-red-500"
@@ -531,7 +541,8 @@ let enforceFiveDigitInput = (fieldName, val) => {
                         v-text="firstStepErrors.business_address[0]"></div>
                 </div>
                 <div>
-                    <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">City<span class="text-red-500">*</span></label>
+                    <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">City<span
+                            class="text-red-500">*</span></label>
                     <input type="text" v-model="form.business_city" id="default-input"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <div v-if="firstStepErrors.business_city" class="text-red-500"

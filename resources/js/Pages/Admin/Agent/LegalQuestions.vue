@@ -9,6 +9,7 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Modal from "@/Components/Modal.vue";
 import SearchFilter from "@/Components/SearchFilter.vue";
 import ContractSteps from '@/Pages/InternalAgent/ContractSteps.vue'
+import LegalQuestionsView from "@/Pages/Admin/Agent/LegalQuestionsView.vue";
 let page = usePage();
 if (page.props.flash.message) {
   toaster("success", page.props.flash.message);
@@ -73,6 +74,13 @@ let openAgentModal = (user, page) => {
   currentPage.value = page;
   showModal.value = true;
 };
+let legalQuestions = ref(null)
+let viewPdf = (val) => {
+    // console.log('agent', val);
+    legalQuestions.value = val.internal_agent_contract.legal_question
+    showModal.value = true;
+
+}
 let userData = ({})
 let openContractModal = (agent) =>{
   // console.log('agent',agent);
@@ -122,7 +130,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
   <AuthenticatedLayout>
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-        Agents
+        Legal Questions
       </h2>
     </template>
 
@@ -134,10 +142,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
                 </div>
             </div> -->
       <div>
-        <div class="text-4xl text-custom-sky font-bold mb-6">Agents</div>
-      </div>
-      <div>
-        <PrimaryButton @click="addAgentModal(agents.current_page)">Add New</PrimaryButton>
+        <div class="text-4xl text-custom-sky font-bold mb-6">Legal Questions</div>
       </div>
     </div>
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
@@ -177,16 +182,9 @@ let capitalizeAndReplaceUnderscore = (str) => {
                   </td>
                   <td class="text-gray-600 px-4 py-3">{{ agent.phone }}</td>
                   <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
-                    <a :href="route('admin.agent.detail', agent.id)">View</a>
+                    <button @click="viewPdf(agent)">View Pdf</button>
                     
-                    <button
-                      @click="openAgentModal(agent, agents.current_page)"
-                      class="inline-flex items-center mx-2 p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
-                      type="button"
-                    >
-                      Edit
-                    </button>
-                    <button v-show="agent.internal_agent_contract" @click="openContractModal(agent)">Contract</button>
+                    
                   </td>
                 </tr>
               </tbody>
@@ -268,29 +266,10 @@ let capitalizeAndReplaceUnderscore = (str) => {
     </section>
 
     <section v-else class="p-3">
-      <p class="text-center text-gray-600">No clients yet.</p>
+      <p class="text-center text-gray-600">No Questions yet.</p>
     </section>
-    <ContractSteps v-if="contractModal" @close="contractModal = false" :states="states" :userData="userData" />
-
     <Modal :show="showModal" @close="showModal = false">
-      <Edit
-        :showModal="showModal"
-        :userDetail="userDetail"
-        :currentPage="currentPage"
-        @close="showModal = false"
-        :callTypes="callTypes"
-        :states="states"
-        :route="'/admin/agent'"
-      ></Edit>
-    </Modal>
-    <Modal :show="agentModal" @close="agentModal = false">
-      <Create
-        :agentModal="agentModal"
-        :currentPage="currentPage"
-        :callTypes="callTypes"
-        :states="states"
-        @close="agentModal = false"
-      ></Create>
+        <LegalQuestionsView @close="showModal = false" :legalQuestions="legalQuestions" />
     </Modal>
   </AuthenticatedLayout>
 </template>

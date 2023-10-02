@@ -2,7 +2,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
 import InputError from "@/Components/InputError.vue";
-import { Head, Link, useForm , usePage ,router } from "@inertiajs/vue3";
+import { Head, Link, useForm, usePage, router } from "@inertiajs/vue3";
 import ContactDetail from "@/Pages/InternalAgent/ContactDetail.vue";
 import Tabs from '@/Pages/InternalAgent/Tabs.vue'
 import LegalInformation from '@/Pages/InternalAgent/LegalInformation.vue'
@@ -18,13 +18,13 @@ import { toaster } from "@/helper.js";
 
 let page = usePage();
 if (page.props.flash.message) {
-  toaster("success", page.props.flash.message);
+    toaster("success", page.props.flash.message);
 }
 let props = defineProps({
     userData: Object,
     states: Array,
 });
-
+console.log('userData',props.userData.value);
 let StepsModal = ref(true)
 
 let form = ref({
@@ -281,10 +281,21 @@ input[type=number] {
                 <!-- This is the overlay -->
                 <div style="width: 75%;" class="relative w-full py-10  max-h-full mx-auto" id="modal_main_id">
                     <div class="relative bg-white rounded-lg shadow-lg ">
-                        <div  class="flex justify-end">
-                            <Link :href="route('logout')" method="post" as="button"
+                        <div class="flex justify-end">
+                            <Link v-show="$page.props.auth.role != 'admin'" :href="route('logout')" method="post"
+                                as="button"
                                 class="underline text-sm text-gray-600 mr-5 mt-5  dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
                             Log Out</Link>
+                            <button v-show="$page.props.auth.role === 'admin'" @click="close" type="button"
+                                class="text-gray-400 bg-transparent mr-2 mt-2 hover:bg-gray-200 hover:text-gray-700 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
+                                data-modal-hide="defaultModal">
+                                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 14 14">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                </svg>
+                                <span class="sr-only">Close modal</span>
+                            </button>
                         </div>
 
                         <div class="px-12 py-2">
@@ -292,29 +303,31 @@ input[type=number] {
                             <Tabs :step="step" />
 
                             <div v-show="contractStep === 1" class="">
+
                                 <ContactDetail @updateFormData="updateFormData" :firstStepErrors="firstStepErrors"
-                                    @changeTab="ChangeTab()" :states="states" :userData="userData" />
+                                    @changeTab="ChangeTab()" :states="states"
+                                    :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="contractStep === 2">
                                 <LegalInformation @updateFormData="updateLegalFormData1" :firstStepErrors="firstStepErrors"
-                                    @changeTab="ChangeTab()" @goback="ChangeTabBack()" />
+                                    @changeTab="ChangeTab()" @goback="ChangeTabBack()" :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="contractStep === 3">
                                 <LegalInformation2 @updateFormData="updateLegalFormData2" :firstStepErrors="firstStepErrors"
-                                    @changeTab="ChangeTab()" @goback="ChangeTabBack()" />
+                                    @changeTab="ChangeTab()" @goback="ChangeTabBack()" :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="contractStep === 4">
                                 <AddressHistory @addRessHistory="AddressHistoryfun" @changeTab="ChangeTab()"
-                                    @goback="ChangeTabBack()" :states="states" />
+                                    @goback="ChangeTabBack()" :states="states" :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="contractStep === 5">
                                 <AdditionalInfo @additionalInfoData="additionalInformation"
                                     :firstStepErrors="firstStepErrors" :states="states" @changeTab="NextStep()"
-                                    @goback="ChangeTabBack()" />
+                                    @goback="ChangeTabBack()" :userData="$page.props.auth.role === 'admin' ? userData.value : userData"  />
                             </div>
                             <div v-show="step === 2" class="pt-6">
                                 <AmLCourse :firstStepErrors="firstStepErrors" @uploadPdfAml="uploadPdfAml"
-                                    @changeTab="NextStep()" @goback="goBack()" />
+                                    @changeTab="NextStep()" @goback="goBack()" :userData="$page.props.auth.role === 'admin' ? userData.value : userData"  />
                                 <!-- <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
                                     AML Course
                                 </h1>
@@ -377,7 +390,7 @@ input[type=number] {
 
                             <div v-show="step === 3" class="pt-6">
                                 <ErrorsAndEmissions :firstStepErrors="firstStepErrors"
-                                    @uploadPdfOmmision="uploadPdfOmmision" @changeTab="NextStep()" @goback="goBack()" />
+                                    @uploadPdfOmmision="uploadPdfOmmision" @changeTab="NextStep()" @goback="goBack()" :userData="$page.props.auth.role === 'admin' ? userData.value : userData"  />
                                 <!-- <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
                                     Errors and Omissions Insurances
                                 </h1>
@@ -434,11 +447,11 @@ input[type=number] {
 
                             <div v-show="step === 4">
                                 <UploadLicence @uploadLicense="uploadLicense" :firstStepErrors="firstStepErrors"
-                                    @changeTab="NextStep()" @goback="goBack()" />
+                                    @changeTab="NextStep()" @goback="goBack()" :userData="$page.props.auth.role === 'admin' ? userData.value : userData"  />
                             </div>
                             <div v-show="step === 5">
                                 <BankInformationUpload @uploadBankingInfo="uploadBankingInfo"
-                                    :firstStepErrors="firstStepErrors" @submit="submit()" @goback="goBack()" />
+                                    :firstStepErrors="firstStepErrors" @submit="submit()" @goback="goBack()" :userData="$page.props.auth.role === 'admin' ? userData.value : userData"  />
                             </div>
 
 

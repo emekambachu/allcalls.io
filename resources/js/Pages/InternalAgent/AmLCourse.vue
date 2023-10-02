@@ -1,14 +1,28 @@
 <script setup>
 import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
 import UploadPdfFile from "@/Components/UploadPdfFile.vue";
+import { Head, Link, useForm , usePage } from "@inertiajs/vue3";
 let emits = defineEmits();
 let props = defineProps({
     firstStepErrors: Object,
+    userData: Object,
 });
+let page = usePage();
+
 const selectedFile = ref(null)
+let amlUrl = ref(null)
 let form = ref({
     aml_course: false,
 });
+if(page.props.auth.role === 'admin'){
+    form.value.aml_course = true
+}
+if (page.props.auth.role === 'admin' && props.userData.internal_agent_contract) {
+    if(props.userData.internal_agent_contract.aml_course.aml_course === 1){
+        form.value.aml_course = true
+        amlUrl.value = props.userData.internal_agent_contract.aml_course.url
+    }
+}
 let amlCourseRead = ref(true)
 watch(form.value, (newVal, oldVal) => {
     if (newVal.aml_course == true) {
@@ -25,7 +39,7 @@ let ChangeTab = () => {
         }
     }
    
-    if(!selectedFile.value){
+    if(!selectedFile.value && page.props.auth.role === 'internal-agent'){
         props.firstStepErrors.aml_course = [`The AML course certificate is required.`];
     }else{
         emits("uploadPdfAml", { selectedFile: selectedFile.value, aml_course: form.value.aml_course });
@@ -100,7 +114,7 @@ const fileErrorMessage = ref("Please select a single PDF file.");
         AML Course
     </h1>
 
-    <div class="bg-blue-50 py-10 px-6 rounded-lg shadow-md">
+    <div v-show="page.props.auth.role === 'internal-agent'" class="bg-blue-50 py-10 px-6 rounded-lg shadow-md">
         <div class="mb-4">
             <a target="_blank"
                 href="https://www.financialservicecareers.com/_files/ugd/0fb1f5_0a18cb8e43734547b1c42be4c1a0a52b.pdf">
@@ -117,9 +131,20 @@ const fileErrorMessage = ref("Please select a single PDF file.");
             Please download PDF for course completion after completing the course.
         </div>
     </div>
+    <div v-show="page.props.auth.role === 'admin'" class="bg-blue-50 py-10 px-6 rounded-lg shadow-md">
+        <div >
+            <a target="_blank"
+                :href="amlUrl"
+                :disabled="!amlUrl"
+                :class="{ 'opacity-25': !amlUrl }"
+                >
+                <strong class="text-blue-600 mr-1 hover:underline">Click Here </strong>
+            </a> Preview / Download AML course
+        </div>
+    </div>
 
     <div class="mt-5">
-        <div class="flex items-center justify-center w-full">
+        <div v-show="page.props.auth.role === 'internal-agent'" class="flex items-center justify-center w-full">
             <label for="dropzone-file-aml"
                 class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
                 @dragover.prevent @drop="handleDrop">
@@ -171,7 +196,7 @@ const fileErrorMessage = ref("Please select a single PDF file.");
                 </button>
             </div>
             <div class="mt-4">
-                <button type="button" :class="{ 'opacity-25': amlCourseRead }" :disabled="amlCourseRead"
+                <button type="button" :class="{ 'opacity-25': form.aml_course === false }" :disabled="form.aml_course === false"
                     @click.prevent="ChangeTab" class="button-custom px-3 py-2 rounded-md">
                     Next Step
                 </button>

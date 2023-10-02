@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\OnlineAgentsController;
 use App\Http\Controllers\Admin\InternalAgentController;
 use App\Http\Controllers\Admin\AvailableNumberController;
 use App\Http\Controllers\Admin\CallsController;
+use App\Http\Controllers\Admin\LegalQuestionPdfController;
 
 /*
 |--------------------------------------------------------------------------
@@ -74,4 +75,6 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
     //Calls
     Route::get('/calls', [CallsController::class, 'index'])->name('admin.calls.index');
+
+    Route::get('/agents/legal-questions', [LegalQuestionPdfController::class, 'index'])->name('admin.agent.internal.agent');
 });

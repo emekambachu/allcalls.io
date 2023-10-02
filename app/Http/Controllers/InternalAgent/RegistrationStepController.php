@@ -484,6 +484,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->convicted_checkbox_1_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -495,6 +497,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->convicted_checkbox_1a_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -506,6 +510,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->convicted_checkbox_1b_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -517,6 +523,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->convicted_checkbox_1c_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -528,6 +536,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->convicted_checkbox_1d_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -539,6 +549,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->convicted_checkbox_1e_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -550,6 +562,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->convicted_checkbox_1f_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -561,6 +575,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->convicted_checkbox_1g_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -572,6 +588,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->convicted_checkbox_1h_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -583,6 +601,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->lawsuit_checkbox_2_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -594,6 +614,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->lawsuit_checkbox_2a_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -605,6 +627,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->lawsuit_checkbox_2b_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -616,6 +640,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->lawsuit_checkbox_2c_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -627,6 +653,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->lawsuit_checkbox_2d_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -638,6 +666,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->alleged_engaged_checkbox_3_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -649,6 +679,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->found_engaged_checkbox_4_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -660,6 +692,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->terminate_contract_checkbox_5_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -671,6 +705,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->terminate_contract_checkbox_5a_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -682,6 +718,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->terminate_contract_checkbox_5b_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -693,6 +731,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->terminate_contract_checkbox_5c_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -703,7 +743,9 @@ class RegistrationStepController extends Controller
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
-                    'description' => $value == 'YES' ? $request->cancel_insu_cause_checkbox_text : null,
+                    'description' => $value == 'YES' ? $request->cancel_insu_cause_checkbox_6_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -715,6 +757,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->insurer_checkbox_7_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -726,6 +770,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->lawsuit_checkbox_8_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -737,6 +783,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->lawsuit_checkbox_8a_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -748,6 +796,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->lawsuit_checkbox_8b_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -758,7 +808,9 @@ class RegistrationStepController extends Controller
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
-                    'description' => $value == 'YES' ? $request->license_denied_checkbox_text : null,
+                    'description' => $value == 'YES' ? $request->license_denied_checkbox_9_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -770,6 +822,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->regulatory_checkbox_10_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -781,6 +835,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->regulatory_revoked_checkbox_11_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -792,6 +848,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->regulatory_found_checkbox_12_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -803,6 +861,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->interr_licensing_checkbox_13_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -814,6 +874,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->self_regularity_checkbox_14_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -825,6 +887,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->self_regularity_checkbox_14a_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -836,6 +900,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->self_regularity_checkbox_14b_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -847,6 +913,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->self_regularity_checkbox_14c_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -858,6 +926,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->bankruptcy_checkbox_15_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -869,6 +939,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->bankruptcy_checkbox_15a_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -880,6 +952,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->bankruptcy_checkbox_15b_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -891,6 +965,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->bankruptcy_checkbox_15c_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -902,6 +978,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->liens_against_checkbox_16_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -913,6 +991,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->connected_checkbox_17_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -924,6 +1004,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->aliases_checkbox_18_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -935,6 +1017,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->unresolved_matter_checkbox_19_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 

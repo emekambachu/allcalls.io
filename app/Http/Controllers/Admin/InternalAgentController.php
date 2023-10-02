@@ -60,10 +60,18 @@ class InternalAgentController extends Controller
                 });
             }
         })
+        ->with('internalAgentContract.additionalInfo')
+        ->with('internalAgentContract.addresses')
+        ->with('internalAgentContract.amlCourse')
+        ->with('internalAgentContract.bankingInfo')
+        ->with('internalAgentContract.errorAndEmission')
+        ->with('internalAgentContract.legalQuestion')
+        ->with('internalAgentContract.residentLicense')
         ->with('states')
         ->with('callTypes')
         ->orderBy('created_at','desc')
         ->paginate(10);
+   
 
         $callTypes = CallType::get();
         $states = State::get();

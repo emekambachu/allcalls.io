@@ -1,10 +1,17 @@
   
 <script setup>
 import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
-import { Head, Link, useForm } from "@inertiajs/vue3";
+import { Head, Link, useForm , usePage } from "@inertiajs/vue3";
 let props = defineProps({
     firstStepErrors:Object,
+    userData: Object,
 });
+let page = usePage();
+let residentUrl = ref(null)
+
+if (page.props.auth.role === 'admin' && props.userData.internal_agent_contract) {
+    residentUrl.value = props.userData.internal_agent_contract.resident_license.url
+}
 const fileError = ref(false);
 const selectedFileName = ref(""); // To store the selected file name
 const selectedFile = ref(null)
@@ -72,7 +79,7 @@ let ChangeTab = () => {
         }
     }
    
-    if(!selectedFile.value){
+    if(!selectedFile.value && page.props.auth.role === 'internal-agent'){
         fileError.value = false;
         props.firstStepErrors.residentLicensePdf = [`The Resident License field is required.`];
     }else{
@@ -88,7 +95,19 @@ let ChangeTabBack = () => {
         <h1 style="background-color: #134576;" class="mb-4 text-center rounded-md py-2 text-white">
             Upload Resident License PDF
         </h1>
-        <div class="flex items-center justify-center w-full">
+        <div v-show="page.props.auth.role === 'admin'" class="bg-blue-50 py-10 px-6 rounded-lg shadow-md">
+        <div >
+            <a target="_blank"
+                :href="residentUrl"
+                :disabled="!residentUrl"
+                :class="{ 'opacity-25': !residentUrl }"
+                >
+                <strong class="text-blue-600 mr-1 hover:underline">Click here
+                </strong>
+            </a>Preview / Download Resident License.
+        </div>
+    </div>
+        <div v-show="page.props.auth.role === 'internal-agent'" class="flex items-center justify-center w-full">
             <label for="dropzone-file"
                 class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
                 @dragover.prevent @drop="handleDrop">

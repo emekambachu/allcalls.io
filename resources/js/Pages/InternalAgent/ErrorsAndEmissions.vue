@@ -1,23 +1,29 @@
 <script setup>
 import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
 import UploadPdfFile from "@/Components/UploadPdfFile.vue";
+import { Head, Link, useForm , usePage } from "@inertiajs/vue3";
 let emits = defineEmits()
 let props = defineProps({
     firstStepErrors: Object,
+    userData: Object,
 });
+let page = usePage();
+let omissionUrl = ref(null)
 let form = ref({
     omissions_insurance: false,
 });
+if(page.props.auth.role === 'admin'){
+    form.value.omissions_insurance = true
+}
+if (page.props.auth.role === 'admin' && props.userData.internal_agent_contract) {
+    if(props.userData.internal_agent_contract.error_and_emission.omissions_insurance === 1){
+        form.value.omissions_insurance = true
+        omissionUrl.value = props.userData.internal_agent_contract.error_and_emission.url
+    }
+}
 let omissionsInsurance = ref(true)
 const selectedFile = ref(null)
-watch(form.value, (newVal, oldVal) => {
-    if (newVal.omissions_insurance == true) {
-        omissionsInsurance.value = false
-    } else {
-        omissionsInsurance.value = true
-    }
 
-})
 let ChangeTab = () => {
     for (const key in props.firstStepErrors) {
         if (props.firstStepErrors.hasOwnProperty(key)) {
@@ -25,7 +31,7 @@ let ChangeTab = () => {
         }
     }
 
-    if (!selectedFile.value) {
+    if (!selectedFile.value && page.props.auth.role === 'internal-agent') {
         props.firstStepErrors.omissions_insurance = [`The Omissions Insurances certificate is required.`];
     } else {
         emits("uploadPdfOmmision", { selectedFile: selectedFile.value, omissions_insurance: form.value.omissions_insurance });
@@ -98,7 +104,7 @@ let goBack = () => {
     <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
         Errors and Omissions Insurances
     </h1>
-    <div class="bg-blue-50 py-10 px-6 rounded-lg shadow-md">
+    <div v-show="page.props.auth.role === 'internal-agent'" class="bg-blue-50 py-10 px-6 rounded-lg shadow-md">
         <div class="text-gray-600 mb-4">
             Complete the sign-up process and apply for Errors and Omissions Insurance.
         </div>
@@ -110,8 +116,20 @@ let goBack = () => {
             </a>for registration and application.
         </div>
     </div>
+    <div v-show="page.props.auth.role === 'admin'" class="bg-blue-50 py-10 px-6 rounded-lg shadow-md">
+        <div >
+            <a target="_blank"
+                :href="omissionUrl"
+                :disabled="!omissionUrl"
+                :class="{ 'opacity-25': !omissionUrl }"
+                >
+                <strong class="text-blue-600 mr-1 hover:underline">Click here
+                </strong>
+            </a>Preview / Download omissions insurances
+        </div>
+    </div>
     <div class="mt-5">
-        <div class="flex items-center justify-center w-full">
+        <div v-show="page.props.auth.role === 'internal-agent'" class="flex items-center justify-center w-full">
             <label for="dropzone-file-ommision"
                 class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
                 @dragover.prevent @drop="handleDrop">
@@ -164,7 +182,7 @@ let goBack = () => {
                 </button>
             </div>
             <div class="mt-4">
-                <button type="button" :class="{ 'opacity-25': omissionsInsurance }" :disabled="omissionsInsurance"
+                <button type="button" :class="{ 'opacity-25': form.omissions_insurance === false }" :disabled="form.omissions_insurance === false"
                     @click.prevent="ChangeTab" class="button-custom px-3 py-2 rounded-md">
                     Next Step
                 </button>
