@@ -20,12 +20,7 @@ use Illuminate\Support\Facades\Broadcast;
 // });
 
 Broadcast::channel('calls.{userId}', function ($user, $userId) {
-    Log::debug($user->id . ' is listening to calls.' . $userId);
-    if ($user) {
-        return (int) $user->id === (int) $userId;
-    }
-
-    return false;
+    return (int) $user->id === (int) $userId;
 });
 
 Broadcast::channel('user.{userId}.callStatus', function ($user, $userId) {
