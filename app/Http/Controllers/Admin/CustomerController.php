@@ -69,7 +69,7 @@ class CustomerController extends Controller
 
         $callTypes = CallType::get();
         $states = State::get();
-
+        //dd($users->roles);
         return Inertia::render('Admin/User/Index', [
             'requestData' => $request->all(),
             'users' => $users,

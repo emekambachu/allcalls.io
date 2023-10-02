@@ -70,14 +70,14 @@ onMounted(() => {
             <div class="mx-auto max-w-screen-xl sm:px-12">
                 <div class="relative sm:rounded-lg overflow-hidden">
                     <div class="overflow-x-auto">
-                        <table class="w-full text-sm text-left text-gray-400 ">
+                        <table class="w-full text-sm text-left text-gray-400 table-responsive">
                             <thead class="text-xs text-gray-300 uppercase bg-sky-900">
                                 <tr>
                                     <th scope="col" class="px-4 py-3">FULL NAME</th>
                                     <th scope="col" class="px-4 py-3">EMAIL</th>
-                                    <th scope="col" class="px-4 py-3">LAST ACTIVITY AT</th>
-                                    <th scope="col" class="px-4 py-3">SIGNED IN AT</th>
-                                    <th scope="col" class="px-4 py-3">LOGOUT AT</th>
+                                    <th scope="col" class="px-4 py-3" style="min-width:240px">LAST ACTIVITY AT</th>
+                                    <th scope="col" class="px-4 py-3" style="min-width:240px">SIGNED IN AT</th>
+                                    <th scope="col" class="px-4 py-3" style="min-width:240px">LOGOUT AT</th>
                                 </tr>
                             </thead>
                             <tbody>

@@ -29,7 +29,6 @@ let props = defineProps({
 });
 let emit = defineEmits(["close"]);
 let originalClient = props.userDetail;
-
 let close = () => {
   emit("close");
 };
@@ -37,7 +36,7 @@ let firstStepErrors = ref({});
 let uiEmailValidation = ref({
   isValid: false,
 });
-
+console.log("userdetails",props.userDetail);
 let balanceChange = ref(false);
 let form = useForm({
   first_name: props.userDetail.first_name,
