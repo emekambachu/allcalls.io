@@ -135,6 +135,8 @@ onMounted(() => {
   .listenForWhisper("psst", e => {
     console.log('call event:');
     console.log(e);
+    showRinging.value = false;
+    showOngoing.value = false;
   })
 
   setupTwilioDevice();
