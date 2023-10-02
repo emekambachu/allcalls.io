@@ -13,10 +13,6 @@ import { usePage } from "@inertiajs/vue3";
 
 let page = usePage();
 
-Echo.private("calls." + page.props.auth.user.id)
-  .listenForWhisper("psst", (e) => {
-    console.log('Heard someone!');
-  })
 
 
 
@@ -128,6 +124,11 @@ let setupTwilioDevice = () => {
 
 onMounted(() => {
   console.log("mounted AuthenticatedLayout");
+  Echo.private("calls." + page.props.auth.user.id)
+  .listenForWhisper("psst", () => {
+    console.log('Heard someone!');
+  })
+
   setupTwilioDevice();
 });
 
