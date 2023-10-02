@@ -26,9 +26,9 @@ let showIncomingCall = (conn) => {
   console.log(conn);
 
 
-  console.log(conn.customParameters.unique_call_id);
+  console.log(conn.customParameters.get('unique_call_id'));
 
-  axios.get("/call-client-info?unique_call_id=" + conn.customParameters.unique_call_id).then((response) => {
+  axios.get("/call-client-info?unique_call_id=" + customParameters.get('unique_call_id')).then((response) => {
     console.log(response.data.client);
     connectedClient.value = response.data.client;
 
