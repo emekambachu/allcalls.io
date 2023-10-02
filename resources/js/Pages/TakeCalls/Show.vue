@@ -140,7 +140,7 @@ let showIncomingCall = (conn) => {
 watchEffect(async () => {
   setOnlineCallType();
   setupFlashMessages();
-  setupTwilioDevice();
+  // setupTwilioDevice();
 });
 
 let acceptCall = () => {
@@ -226,123 +226,5 @@ let disconnectCall = () => {
       </div>
     </section>
 
-    <Modal :show="showRinging" maxWidth="sm" :closeable="false">
-      <div class="bg-white p-8 py-24 rounded-lg shadow-xl w-full">
-        <div class="flex flex-col items-center">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            class="w-16 h-16 text-green-700 animate-pulse mb-4"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M19.5 9.75a.75.75 0 01-.75.75h-4.5a.75.75 0 01-.75-.75v-4.5a.75.75 0 011.5 0v2.69l4.72-4.72a.75.75 0 111.06 1.06L16.06 9h2.69a.75.75 0 01.75.75z"
-              clip-rule="evenodd"
-            />
-            <path
-              fill-rule="evenodd"
-              d="M1.5 4.5a3 3 0 013-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 01-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 006.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 011.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 01-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5z"
-              clip-rule="evenodd"
-            />
-          </svg>
-
-          <h1 class="text-2xl font-bold text-black">Incoming Call</h1>
-          <p class="text-md text-gray-600 mt-2">AllCalls Client</p>
-
-          <div class="flex mt-20 space-x-10">
-            <div @click="rejectCall()" class="bg-red-500 hover:bg-red-600 p-3 rounded-full">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="w-6 h-6 text-white cursor-pointer"
-                style="transform: rotate(133deg)"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"
-                />
-              </svg>
-            </div>
-            <div @click="acceptCall()" class="bg-green-500 hover:bg-green-400 p-3 rounded-full">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="w-6 h-6 text-white cursor-pointer"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"
-                />
-              </svg>
-            </div>
-          </div>
-        </div>
-      </div>
-    </Modal>
-
-    <Modal :show="showOngoing" maxWidth="lg" :closeable="false">
-      <div
-        class="flex flex-col items-center justify-between h-full p-8 bg-white space-y-8"
-      >
-        <!-- Call Duration -->
-        <!-- <div>
-          <p class="text-2xl font-medium text-black">00:05</p>
-        </div> -->
-
-        <!-- Client's Basic Info -->
-        <!-- <div class="w-full">
-          <p class="text-md text-center text-black mb-2">Client's Basic Info</p>
-          <ul class="w-full p-4 bg-gray-100 rounded-md space-y-2">
-            <li class="flex justify-between">
-              <span class="text-gray-600">Name:</span>
-              <span class="text-black">John Doe</span>
-            </li>
-            <li class="flex justify-between">
-              <span class="text-gray-600">Age:</span>
-              <span class="text-black">32</span>
-            </li>
-            <li class="flex justify-between">
-              <span class="text-gray-600">Contact:</span>
-              <span class="text-black">+1 (234) 567-8900</span>
-            </li>
-          </ul>
-        </div> -->
-
-        <!-- Info Populating After 60 seconds -->
-        <!-- <div class="w-full">
-          <p class="text-md text-center text-black mb-2">
-            Info will populate after 60 seconds
-          </p>
-          <ul class="w-full p-4 bg-gray-100 rounded-md space-y-2">
-            <li class="flex justify-between">
-              <span class="text-gray-600">Address:</span>
-              <span class="text-black">123 Main St</span>
-            </li>
-            <li class="flex justify-between">
-              <span class="text-gray-600">Email:</span>
-              <span class="text-black">johndoe@email.com</span>
-            </li>
-          </ul>
-        </div> -->
-
-        <h3 class="text-2xl font-medium">Ongoing Call</h3>
-
-        <!-- Hang Up Button -->
-        <div>
-          <button @click.prevent="disconnectCall()" class="bg-red-500 hover:bg-red-400 text-white rounded-full py-2 px-6">
-            Hang Up
-          </button>
-        </div>
-      </div>
-    </Modal>
   </AuthenticatedLayout>
 </template>
