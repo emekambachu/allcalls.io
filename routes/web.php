@@ -21,6 +21,7 @@ use App\Http\Controllers\TwilioTokenController;
 use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\FundsWithCardController;
 use App\Http\Controllers\UsageActivityController;
+use App\Http\Controllers\CallClientInfoController;
 use App\Http\Controllers\ActiveUserChannelController;
 use App\Http\Controllers\TwilioDeviceTokenController;
 use App\Http\Controllers\Admin\OnlineAgentsController;
@@ -89,6 +90,7 @@ Route::middleware(['auth', 'verified', 'registration-step-check', 'notBanned'])-
 
 
     Route::get('/twilio-device-token', [TwilioDeviceTokenController::class, 'show']);
+    Route::get('/call-client-info', [CallClientInfoController::class, 'show']);
 });
 
 Route::middleware(['auth', 'notBanned'])->group(function () {

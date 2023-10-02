@@ -16,7 +16,7 @@ let page = usePage();
 
 
 
-
+let connectedClient = ref(null);
 let showRinging = ref(false);
 let showOngoing = ref(false);
 let call = reactive(null);
@@ -24,6 +24,18 @@ let call = reactive(null);
 let showIncomingCall = (conn) => {
   console.log("show incoming call now");
   console.log(conn);
+
+
+  console.log(conn.customParameters.unique_call_id);
+
+  axios.get("/call-client-info?unique_call_id=" + conn.customParameters.unique_call_id).then((response) => {
+    console.log(response.data.client);
+    connectedClient.value = response.data.client;
+
+    console.log('connected client now: ');
+    console.log(connectedClient.value);
+  });
+
   showRinging.value = true;
 };
 
@@ -799,6 +811,7 @@ let appDownloadModal = ref(false);
     </Modal>
 
     <Modal :show="showOngoing" maxWidth="lg" :closeable="false">
+    <!-- <Modal :show="true" maxWidth="lg" :closeable="false"> -->
       <div
         class="flex flex-col items-center justify-between h-full p-8 bg-white space-y-8"
       >
@@ -807,8 +820,10 @@ let appDownloadModal = ref(false);
           <p class="text-2xl font-medium text-black">00:05</p>
         </div> -->
 
+        <h3 class="text-2xl font-medium">Ongoing Call</h3>
+
         <!-- Client's Basic Info -->
-        <!-- <div class="w-full">
+        <div class="w-full">
           <p class="text-md text-center text-black mb-2">Client's Basic Info</p>
           <ul class="w-full p-4 bg-gray-100 rounded-md space-y-2">
             <li class="flex justify-between">
@@ -824,10 +839,10 @@ let appDownloadModal = ref(false);
               <span class="text-black">+1 (234) 567-8900</span>
             </li>
           </ul>
-        </div> -->
+        </div>
 
         <!-- Info Populating After 60 seconds -->
-        <!-- <div class="w-full">
+        <div class="w-full">
           <p class="text-md text-center text-black mb-2">
             Info will populate after 60 seconds
           </p>
@@ -841,9 +856,9 @@ let appDownloadModal = ref(false);
               <span class="text-black">johndoe@email.com</span>
             </li>
           </ul>
-        </div> -->
+        </div>
 
-        <h3 class="text-2xl font-medium">Ongoing Call</h3>
+
 
         <!-- Hang Up Button -->
         <div>
