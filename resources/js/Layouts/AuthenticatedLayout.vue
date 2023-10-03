@@ -1171,7 +1171,7 @@ let appDownloadModal = ref(false);
             </li>
             <li class="flex justify-between">
               <span class="text-gray-600">Contact:</span>
-              <span class="text-black">+1 (234) 567-8900</span>
+              <span class="text-black">{{ connectedClient.phone }}</span>
             </li>
           </ul>
         </div>
@@ -1184,7 +1184,7 @@ let appDownloadModal = ref(false);
           <ul class="w-full p-4 bg-gray-100 rounded-md space-y-2">
             <li class="flex justify-between">
               <span class="text-gray-600">Address:</span>
-              <span class="text-black">123 Main St</span>
+              <span class="text-black">{{ connectedClient.address }}</span>
             </li>
             <li class="flex justify-between">
               <span class="text-gray-600">Email:</span>
