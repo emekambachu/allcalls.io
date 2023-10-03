@@ -92,7 +92,7 @@ let acceptCall = () => {
 let saveClient = () => {
   console.log('saving client now');
   axios
-    .patch("/clients/" + connectedClient.value.id, {
+    .patch("/web-api/clients/" + connectedClient.value.id, {
       first_name: connectedClient.value.first_name,
       last_name: connectedClient.value.last_name,
       email: connectedClient.value.email,
