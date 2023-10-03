@@ -44,6 +44,7 @@ let showIncomingCall = (conn) => {
 
 let acceptCall = () => {
   console.log("accept call now");
+
   Echo.private("calls." + page.props.auth.user.id).whisper("psst", {
     action: "accept",
   });
@@ -52,9 +53,28 @@ let acceptCall = () => {
     call.accept();
     showRinging.value = false;
     showOngoing.value = true;
+
+    // Set a timeout to refetch the client after 60 seconds
+    setTimeout(refetchClient, 60000); // 60000 milliseconds is 60 seconds
   } else {
     console.log("call not found");
   }
+};
+
+let refetchClient = () => {
+  axios
+    .get("/call-client-info?unique_call_id=" + uniqueCallId)
+    .then((response) => {
+      console.log(response.data.client);
+      connectedClient.value = response.data.client;
+
+      console.log("connected client now: ");
+      console.log(connectedClient.value);
+    })
+    .catch((error) => {
+      // Handle any error that occurred during the request
+      console.error("Error refetching the client:", error);
+    });
 };
 
 let rejectCall = () => {
@@ -1167,7 +1187,11 @@ let appDownloadModal = ref(false);
           <ul class="w-full p-4 bg-gray-100 rounded-md space-y-2">
             <li class="flex justify-between">
               <span class="text-gray-600">Name:</span>
-              {{ (connectedClient.first_name || connectedClient.last_name) ? (connectedClient.first_name + ' ' + connectedClient.last_name) : 'N/A' }}
+              {{
+                connectedClient.first_name || connectedClient.last_name
+                  ? connectedClient.first_name + " " + connectedClient.last_name
+                  : "N/A"
+              }}
             </li>
             <li class="flex justify-between">
               <span class="text-gray-600">State:</span>
@@ -1184,23 +1208,107 @@ let appDownloadModal = ref(false);
           <ul class="w-full p-4 bg-gray-100 rounded-md space-y-2">
             <li class="flex justify-between">
               <span class="text-gray-600">Email:</span>
-              <span class="text-black">{{ connectedClient.email }}</span>
+              <span
+                class="text-black"
+                v-if="connectedClient.unlocked"
+                v-text="connectedClient.email"
+              ></span>
+              <span class="text-black" v-else>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
+                  />
+                </svg>
+              </span>
             </li>
             <li class="flex justify-between">
               <span class="text-gray-600">Date of Birth:</span>
-              <span class="text-black">{{ connectedClient.dob }}</span>
+              <span class="text-black" v-if="connectedClick.unlocked">{{ connectedClient.dob }}</span>
+              <span class="text-black" v-else>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
+                  />
+                </svg>
+              </span>
             </li>
             <li class="flex justify-between">
               <span class="text-gray-600">Phone:</span>
-              <span class="text-black">{{ connectedClient.phone }}</span>
+              <span class="text-black" v-if="connectedClient.unlocked">{{ connectedClient.phone }}</span>
+              <span class="text-black" v-else>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
+                  />
+                </svg>
+              </span>
             </li>
             <li class="flex justify-between">
               <span class="text-gray-600">Address:</span>
-              <span class="text-black">{{ connectedClient.address }}</span>
+              <span class="text-black" v-if="connectedClient.unlocked">{{ connectedClient.address }}</span>
+              <span class="text-black" v-else>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
+                  />
+                </svg>
+              </span>
             </li>
             <li class="flex justify-between">
               <span class="text-gray-600">Zip code:</span>
-              <span class="text-black">{{ connectedClient.zipCode }}</span>
+              <span class="text-black" v-if="connectedClient.unlocked">{{ connectedClient.zipCode }}</span>
+              <span class="text-black" v-else>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
+                  />
+                </svg>
+              </span>
             </li>
           </ul>
         </div>
