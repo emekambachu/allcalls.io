@@ -1,9 +1,7 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { router } from "@inertiajs/vue3";
 import { onMounted } from "vue";
 import { Head, router } from "@inertiajs/vue3";
-import toaster from "@/helper.js";
 
 const props = defineProps({
   onlineUsers: {
