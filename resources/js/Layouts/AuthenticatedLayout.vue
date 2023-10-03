@@ -8,8 +8,10 @@ import DashboardFooter from "@/Components/DashboardFooter.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import Modal from "@/Components/Modal.vue";
 import TextInput from "@/Components/TextInput.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { Device } from "@twilio/voice-sdk";
 import { usePage } from "@inertiajs/vue3";
+
 
 let page = usePage();
 
@@ -85,6 +87,10 @@ let acceptCall = () => {
   } else {
     console.log("call not found");
   }
+};
+
+let saveClient = () => {
+  console.log('saving client now');
 };
 
 let refetchClient = () => {
@@ -1348,8 +1354,8 @@ let appDownloadModal = ref(false);
         </div>
 
 
-        <div v-if="connectedClient && hasSixtySecondsPassed" class="w-full">
-          <ul class="w-full p-4 bg-gray-100 rounded-md space-y-2">
+        <div v-if="connectedClient && hasSixtySecondsPassed" class="w-full bg-gray-100">
+          <ul class="w-full p-4 rounded-md space-y-2">
             <li class="flex justify-between items-center">
               <span class="text-gray-600">First Name:</span>
               <TextInput style="width: 200px;" v-model="connectedClient.first_name" />
@@ -1375,6 +1381,11 @@ let appDownloadModal = ref(false);
               <TextInput style="width: 200px;" v-model="connectedClient.zipCode" />
             </li>
           </ul>
+
+          <div class="flex justify-end">
+            <PrimaryButton @click.prevent="saveClient">Save Changes</PrimaryButton>
+          </div>
+
         </div>
 
         <!-- Hang Up Button -->
