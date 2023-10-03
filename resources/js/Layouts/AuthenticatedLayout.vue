@@ -19,6 +19,7 @@ let connectedUniqueCallId = ref(null);
 let showRinging = ref(false);
 let showOngoing = ref(false);
 let call = reactive(null);
+let hasSixtySecondsPassed = ref(false);
 
 let getFormattedTime = (startTime) => {
   const now = new Date();
@@ -71,20 +72,19 @@ let acceptCall = () => {
 
     setInterval(() => {
       callDuration.value = getFormattedTime(callConnectionTime);
+
+      let now = new Date();
+      let differenceInSeconds = (now - callConnectionTime) / 1000;
+
+      if (differenceInSeconds >= 60 && !hasSixtySecondsPassed.value) {
+        hasSixtySecondsPassed.value = true;
+        console.log("Sixty seconds have passed!");
+      }
     }, 1000);
   } else {
     console.log("call not found");
   }
 };
-
-let hasSixtySecondsPassed = computed(() => {
-  if (callConnectionTime) {
-    let currentTime = new Date();
-    let differenceInSeconds = (currentTime - callConnectionTime) / 1000;
-    return differenceInSeconds >= 60;
-  }
-  return false;
-});
 
 let refetchClient = () => {
   axios
