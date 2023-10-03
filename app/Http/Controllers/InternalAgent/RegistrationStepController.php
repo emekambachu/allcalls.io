@@ -1025,17 +1025,6 @@ class RegistrationStepController extends Controller
             if (count($legalQuestions)) {
                 InternalAgentLegalQuestion::where('reg_info_id', $basicInfoId)->delete();
                 DB::table('internal_agent_legal_questions')->insert($legalQuestions);
-                $returnArr['questions'] = InternalAgentLegalQuestion::where('reg_info_id', $basicInfoId)->get(['name', 'value', 'description'])->toArray();
-                $pdf = PDF::loadView('PDF.legal-questions', $returnArr);
-                $pdfFileName = auth()->user()->email."_legal_questions.pdf";
-
-                $directory = public_path('internal-agents/legal-questions');
-
-                if(!File::exists($directory)) {
-                    File::makeDirectory($directory, $mode = 0755, true, true);
-                }
-
-                $pdf->save($directory . '/' . $pdfFileName);
             }
 
             InternalAgentAdditionalInfo::updateOrCreate(['reg_info_id' => $basicInfoId], [
@@ -1246,13 +1235,22 @@ class RegistrationStepController extends Controller
 
     public function pdf()
     {
-        $returnArr['questions'] = InternalAgentLegalQuestion::where('reg_info_id', auth()->user()->internalAgentContract->id)->get(['name', 'value', 'description'])->toArray();
+//        $returnArr['questions'] = InternalAgentLegalQuestion::where('reg_info_id', auth()->user()->internalAgentContract->id)->get(['name', 'value', 'description'])->toArray();
 //        dd(isset($returnArr['questions'][1]) && $returnArr['questions'][1]['name'] == 'convicted_checkbox_1a' && $returnArr['questions'][1]['value'] == 'NO');
-
+        $returnArr['question'] = InternalAgentLegalQuestion::find(414);
         $pdf = PDF::loadView('PDF.legal-questions', $returnArr);
         return $pdf->stream();
         dd('ds');
-        return $pdf->download('legal-questions.pdf');
+        return $pdf->download('legal-question.pdf');
+
+        //                $returnArr['questions'] = InternalAgentLegalQuestion::where('reg_info_id', $basicInfoId)->get(['name', 'value', 'description'])->toArray();
+//                $pdf = PDF::loadView('PDF.legal-questions', $returnArr);
+//                $pdfFileName = auth()->user()->email."_legal_questions.pdf";
+//                $directory = public_path('internal-agents/legal-questions');
+//                if(!File::exists($directory)) {
+//                    File::makeDirectory($directory, $mode = 0755, true, true);
+//                }
+//                $pdf->save($directory . '/' . $pdfFileName);
 
 
 //        dd('pdf');

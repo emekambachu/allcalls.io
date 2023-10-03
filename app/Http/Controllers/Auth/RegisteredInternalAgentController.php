@@ -65,6 +65,7 @@ class RegisteredInternalAgentController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
+            'legacy_key' => false,
         ]);
 
         $agentRole = Role::whereName('internal-agent')->first();
