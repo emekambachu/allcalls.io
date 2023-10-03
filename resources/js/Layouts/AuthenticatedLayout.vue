@@ -91,6 +91,8 @@ let acceptCall = () => {
 
 let saveClient = () => {
   console.log('saving client now');
+  // first name, last name, email, phone, address, state, zipCode
+
 };
 
 let refetchClient = () => {
@@ -1377,12 +1379,16 @@ let appDownloadModal = ref(false);
               <TextInput style="width: 200px;" v-model="connectedClient.address" />
             </li>
             <li class="flex justify-between items-center">
+              <span class="text-gray-600">State:</span>
+              <TextInput style="width: 200px;" v-model="connectedClient.state" />
+            </li>
+            <li class="flex justify-between items-center">
               <span class="text-gray-600">Zip Code:</span>
               <TextInput style="width: 200px;" v-model="connectedClient.zipCode" />
             </li>
           </ul>
 
-          <div class="flex justify-end">
+          <div class="flex justify-center py-3">
             <PrimaryButton @click.prevent="saveClient">Save Changes</PrimaryButton>
           </div>
 
