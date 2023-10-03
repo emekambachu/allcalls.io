@@ -13,11 +13,20 @@ import { usePage } from "@inertiajs/vue3";
 let page = usePage();
 
 let connectedClient = ref(null);
+let callDuration = ref("00:00");
 let callConnectionTime = reactive(null);
 let connectedUniqueCallId = ref(null);
 let showRinging = ref(false);
 let showOngoing = ref(false);
 let call = reactive(null);
+
+let getFormattedTime = (startTime) => {
+  const now = new Date();
+  const difference = new Date(now - startTime);
+  const minutes = String(difference.getMinutes()).padStart(2, "0");
+  const seconds = String(difference.getSeconds()).padStart(2, "0");
+  return `${minutes}:${seconds}`;
+};
 
 let showIncomingCall = (conn) => {
   console.log("show incoming call now");
@@ -59,6 +68,10 @@ let acceptCall = () => {
     showOngoing.value = true;
 
     callConnectionTime = new Date();
+
+    setInterval(() => {
+      callDuration.value = getFormattedTime(callConnectionTime.value);
+    }, 1000);
   } else {
     console.log("call not found");
   }
@@ -1187,9 +1200,9 @@ let appDownloadModal = ref(false);
         class="flex flex-col items-center justify-between h-full p-8 bg-white space-y-8"
       >
         <!-- Call Duration -->
-        <!-- <div>
-          <p class="text-2xl font-medium text-black">00:05</p>
-        </div> -->
+        <div>
+          <p class="text-2xl font-medium text-black" v-text="callDuration"></p>
+        </div>
 
         <h3 class="text-2xl font-medium">Ongoing Call</h3>
 
