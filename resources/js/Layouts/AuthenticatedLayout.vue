@@ -13,7 +13,7 @@ import { usePage } from "@inertiajs/vue3";
 let page = usePage();
 
 let connectedClient = ref(null);
-let callConnectionTime = ref(null);
+let callConnectionTime = reactive(null);
 let connectedUniqueCallId = ref(null);
 let showRinging = ref(false);
 let showOngoing = ref(false);
@@ -58,18 +58,16 @@ let acceptCall = () => {
     showRinging.value = false;
     showOngoing.value = true;
 
-    // save the current time in a state variable as "callConnectionTime"
-    // this will be used to calculate the call duration as well as "unlocking" the client info
-    callConnectionTime.value = new Date();
+    callConnectionTime = new Date();
   } else {
     console.log("call not found");
   }
 };
 
 let hasSixtySecondsPassed = computed(() => {
-  if (callConnectionTime.value) {
+  if (callConnectionTime) {
     let currentTime = new Date();
-    let differenceInSeconds = (currentTime - callConnectionTime.value) / 1000;
+    let differenceInSeconds = (currentTime - callConnectionTime) / 1000;
     return differenceInSeconds >= 60;
   }
   return false;
