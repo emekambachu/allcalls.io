@@ -1170,8 +1170,8 @@ let appDownloadModal = ref(false);
               {{ (connectedClient.first_name || connectedClient.last_name) ? (connectedClient.first_name + ' ' + connectedClient.last_name) : 'N/A' }}
             </li>
             <li class="flex justify-between">
-              <span class="text-gray-600">Contact:</span>
-              <span class="text-black">{{ connectedClient.phone }}</span>
+              <span class="text-gray-600">State:</span>
+              <span class="text-black">{{ connectedClient.state }}</span>
             </li>
           </ul>
         </div>
@@ -1183,12 +1183,24 @@ let appDownloadModal = ref(false);
           </p>
           <ul class="w-full p-4 bg-gray-100 rounded-md space-y-2">
             <li class="flex justify-between">
+              <span class="text-gray-600">Email:</span>
+              <span class="text-black">{{ connectedClient.email }}</span>
+            </li>
+            <li class="flex justify-between">
+              <span class="text-gray-600">Date of Birth:</span>
+              <span class="text-black">{{ connectedClient.dob }}</span>
+            </li>
+            <li class="flex justify-between">
+              <span class="text-gray-600">Phone:</span>
+              <span class="text-black">{{ connectedClient.phone }}</span>
+            </li>
+            <li class="flex justify-between">
               <span class="text-gray-600">Address:</span>
               <span class="text-black">{{ connectedClient.address }}</span>
             </li>
             <li class="flex justify-between">
-              <span class="text-gray-600">Email:</span>
-              <span class="text-black">{{ connectedClient.email }}</span>
+              <span class="text-gray-600">Zip code:</span>
+              <span class="text-black">{{ connectedClient.zipCode }}</span>
             </li>
           </ul>
         </div>
