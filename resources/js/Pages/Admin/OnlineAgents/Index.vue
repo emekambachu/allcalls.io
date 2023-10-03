@@ -136,7 +136,7 @@ let removeAgent = userId => {
                       />
                     </svg>
 
-                    Delete
+                    Remove
                   </button>
                 </td>
               </tr>
