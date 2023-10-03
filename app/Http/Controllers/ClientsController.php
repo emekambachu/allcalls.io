@@ -54,8 +54,8 @@ class ClientsController extends Controller
             "state" => $request->state,
         ]);
 
-        return response()->json([
-            'message' => 'Client updated successfully',
+        return redirect()->back()->with([
+            'message' => 'Client updated successfully.'
         ]);
     }
 }
