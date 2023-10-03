@@ -2,6 +2,7 @@
 import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
 import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
 let maxDate = ref(new Date)
+maxDate.value.setHours(23, 59, 59, 999);
 const emits = defineEmits();
 let props = defineProps({
     states: Array,
@@ -187,13 +188,13 @@ let enforceFiveDigitInput = (fieldName, val) => {
             <div>
                 <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 dark:text-white">Move-In
                     Date</label>
-                <VueDatePicker v-model="form[history.address].move_in_date" format="dd-MMM-yyyy" :maxDate="maxDate">
+                <VueDatePicker v-model="form[history.address].move_in_date" format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply>
                 </VueDatePicker>
             </div>
             <div>
                 <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 dark:text-white">Move-Out
                     Date</label>
-                <VueDatePicker v-model="form[history.address].move_out_date" format="dd-MMM-yyyy" :maxDate="maxDate">
+                <VueDatePicker v-model="form[history.address].move_out_date" format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply>
                 </VueDatePicker>
             </div>
 

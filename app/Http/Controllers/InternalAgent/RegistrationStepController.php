@@ -22,7 +22,10 @@ use Inertia\Inertia;
 class RegistrationStepController extends Controller
 {
     public function contractSteps()
-    {
+    { 
+        if(auth()->user()->legacy_key) {
+            return redirect()->route('dashboard');
+        }
         $userData = auth()->user();
         $states = State::all();
         return Inertia::render('InternalAgent/ContractSteps', [
@@ -385,8 +388,9 @@ class RegistrationStepController extends Controller
         try {
             $basicInfo = InternalAgentRegInfo::where('user_id', auth()->user()->id)->first();
             if (!$basicInfo) {
+                $user = auth()->user();
                 $basicInfo = InternalAgentRegInfo::create([
-                    'user_id' => auth()->user()->id,
+                    'user_id' => $user->id,
                     'first_name' => $request->first_name,
                     'last_name' => $request->last_name,
                     'middle_name' => isset($request->middle_name) ? $request->middle_name : null,
@@ -429,6 +433,8 @@ class RegistrationStepController extends Controller
                     'business_move_in_date' => isset($request->business_move_in_date) ? date('m/d/Y', strtotime($request->business_move_in_date)) : null,
                 ]);
                 $basicInfoId = $basicInfo->id;
+                $user->legacy_key = true;
+                $user->save();
             } else {
                 $basicInfoId = $basicInfo->id;
                 $basicInfo->update([
@@ -1217,7 +1223,7 @@ class RegistrationStepController extends Controller
                     'url' => $path,
                 ]);
             }
-
+            
             DB::commit();
             return response()->json([
                 'success' => true,

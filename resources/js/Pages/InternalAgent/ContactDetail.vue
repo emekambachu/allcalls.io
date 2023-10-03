@@ -10,6 +10,7 @@ let props = defineProps({
 let individual_business = ref(false)
 // console.log('user dagta', props.userData.internal_agent_contract);
 let maxDate = ref(new Date)
+maxDate.value.setHours(23, 59, 59, 999);
 let form = ref({
     first_name: null,
     last_name: null,
@@ -197,7 +198,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
             <div>
                 <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date of
                     Birth<span class="text-red-500">*</span></label>
-                <VueDatePicker v-model="form.dob" format="dd-MMM-yyyy" :maxDate="maxDate"></VueDatePicker>
+                <VueDatePicker v-model="form.dob" format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply></VueDatePicker>
                 <div v-if="firstStepErrors.dob" class="text-red-500" v-text="firstStepErrors.dob[0]"></div>
             </div>
 
@@ -314,7 +315,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
             <div>
                 <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 dark:text-white">Move-In
                     Date<span class="text-red-500">*</span></label>
-                <VueDatePicker v-model="form.move_in_date" format="dd-MMM-yyyy" :maxDate="maxDate"></VueDatePicker>
+                <VueDatePicker v-model="form.move_in_date" format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply></VueDatePicker>
                 <div v-if="firstStepErrors.move_in_date" class="text-red-500" v-text="firstStepErrors.move_in_date[0]">
                 </div>
             </div>
@@ -571,7 +572,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
                 <div>
                     <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 dark:text-white">Move-In
                         Date<span class="text-red-500">*</span></label>
-                    <VueDatePicker v-model="form.business_move_in_date" format="dd-MMM-yyyy" :maxDate="maxDate">
+                    <VueDatePicker v-model="form.business_move_in_date" format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply>
                     </VueDatePicker>
                     <div v-if="firstStepErrors.business_move_in_date" class="text-red-500"
                         v-text="firstStepErrors.business_move_in_date[0]"></div>
