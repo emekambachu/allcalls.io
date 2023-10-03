@@ -132,3 +132,5 @@ Route::middleware('auth:sanctum')->get('/twilio-android-access-token', [TwilioAn
 Route::middleware('auth:sanctum')->get('/twilio-android-access-token-guest', [TwilioAndroidAccessTokenGuestController::class, 'show']);
 
 Route::match(['get', 'post'], '/agent-status', [AgentStatusAPIController::class, 'show']);
+
+Route::middleware('auth:sanctum')->post('/app-events', [AppEventsController::class, 'store']);
