@@ -13,7 +13,7 @@ import { usePage } from "@inertiajs/vue3";
 let page = usePage();
 
 let connectedClient = ref(null);
-let uniqueCallId = ref(null);
+let connectedUniqueCallId = ref(null);
 let showRinging = ref(false);
 let showOngoing = ref(false);
 let call = reactive(null);
@@ -27,11 +27,12 @@ let showIncomingCall = (conn) => {
 
   let params = new URLSearchParams(conn.parameters.Params);
   let uniqueCallId = params.get("unique_call_id");
-  uniqueCallId.value = uniqueCallId;
+
+  connectedUniqueCallId.value = uniqueCallId;
 
   setTimeout(() => {
     axios
-      .get("/call-client-info?unique_call_id=" + uniqueCallId)
+      .get("/call-client-info?unique_call_id=" + connectedUniqueCallId.value)
       .then((response) => {
         console.log(response.data.client);
         connectedClient.value = response.data.client;
@@ -65,7 +66,7 @@ let acceptCall = () => {
 
 let refetchClient = () => {
   axios
-    .get("/call-client-info?unique_call_id=" + uniqueCallId.value)
+    .get("/call-client-info?unique_call_id=" + connectedUniqueCallId.value)
     .then((response) => {
       console.log(response.data.client);
       connectedClient.value = response.data.client;
