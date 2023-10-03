@@ -1162,41 +1162,33 @@ let appDownloadModal = ref(false);
         <h3 class="text-2xl font-medium">Ongoing Call</h3>
 
         <!-- Client's Basic Info -->
-        <div class="w-full">
-          <p class="text-md text-center text-black mb-2">Client's Basic Info</p>
-          <ul class="w-full p-4 bg-gray-100 rounded-md space-y-2">
-            <li class="flex justify-between">
-              <span class="text-gray-600">Name:</span>
-              <span class="text-black">John Doe</span>
-            </li>
-            <li class="flex justify-between">
-              <span class="text-gray-600">Age:</span>
-              <span class="text-black">32</span>
-            </li>
-            <li class="flex justify-between">
-              <span class="text-gray-600">Contact:</span>
-              <span class="text-black">+1 (234) 567-8900</span>
-            </li>
-          </ul>
-        </div>
+        <div v-if="connectedClient" class="w-full">
+            <p class="text-md text-center text-black mb-2">Client's Basic Info</p>
+            <ul class="w-full p-4 bg-gray-100 rounded-md space-y-2">
+              <li class="flex justify-between">
+            <span class="text-gray-600">Name:</span>
+            <span class="text-black">
+                {{ (connectedClient.first_name || connectedClient.last_name) ? (connectedClient.first_name + ' ' + connectedClient.last_name) : 'N/A' }}
+            </span>
+        </li>
+    </ul>
+</div>
 
-        <!-- Info Populating After 60 seconds -->
-        <div class="w-full">
-          <p class="text-md text-center text-black mb-2">
-            Info will populate after 60 seconds
-          </p>
-          <ul class="w-full p-4 bg-gray-100 rounded-md space-y-2">
-            <li class="flex justify-between">
-              <span class="text-gray-600">Address:</span>
-              <span class="text-black">123 Main St</span>
-            </li>
-            <li class="flex justify-between">
-              <span class="text-gray-600">Email:</span>
-              <span class="text-black">johndoe@email.com</span>
-            </li>
-          </ul>
-        </div>
-
+<!-- Info Populating After 60 seconds -->
+<div v-if="connectedClient" class="w-full">
+    <p class="text-md text-center text-black mb-2">
+        Info will populate after 60 seconds
+    </p>
+    <ul class="w-full p-4 bg-gray-100 rounded-md space-y-2">
+        <li class="flex justify-between">
+            <span class="text-gray-600">Address:</span>
+            <span class="text-black">{{ connectedClient.address ? connectedClient.address : 'N/A' }}</span>
+        </li>
+        <li class="flex justify-between">
+            <span class="text-gray-600">Email:</span>
+            <span class="text-black">{{ connectedClient.email ? connectedClient.email : 'N/A' }}</span>
+        </li>
+    </ul>
         <!-- Hang Up Button -->
         <div>
           <button
