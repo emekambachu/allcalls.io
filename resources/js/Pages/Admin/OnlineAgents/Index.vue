@@ -50,6 +50,7 @@ let removeAgent = userId => {
         method: 'DELETE'
     });
 }
+
 </script>
 
 <template>
