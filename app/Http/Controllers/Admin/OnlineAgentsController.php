@@ -17,4 +17,13 @@ class OnlineAgentsController extends Controller
 
         return Inertia::render('Admin/OnlineAgents/Index', compact('onlineUsers'));
     }
+
+    public function destroy($userId)
+    {
+        OnlineUser::whereUserId($userId)->delete();
+
+        return redirect()->back()->with([
+            'message' => 'Agent removed from online list.'
+        ]);
+    }
 }
