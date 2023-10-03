@@ -1232,7 +1232,7 @@ let appDownloadModal = ref(false);
             </li>
             <li class="flex justify-between">
               <span class="text-gray-600">Date of Birth:</span>
-              <span class="text-black" v-if="connectedClick.unlocked">{{ connectedClient.dob }}</span>
+              <span class="text-black" v-if="connectedClient.unlocked">{{ connectedClient.dob }}</span>
               <span class="text-black" v-else>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
