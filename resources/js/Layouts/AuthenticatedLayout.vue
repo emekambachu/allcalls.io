@@ -13,7 +13,6 @@ import { toaster } from "@/helper.js";
 import { Device } from "@twilio/voice-sdk";
 import { usePage } from "@inertiajs/vue3";
 
-
 let page = usePage();
 
 let connectedClient = ref(null);
@@ -39,6 +38,13 @@ let showIncomingCall = (conn) => {
 
   console.log("Params:");
   console.log(conn.parameters.Params);
+
+  // add a timeout for 25 seconds to hide the ringing screen in case the user doesn't accept the call in 25 seconds
+  setTimeout(() => {
+    if (!showOngoing.value) {
+      showRinging.value = false;
+    }
+  }, 25000);
 
   let params = new URLSearchParams(conn.parameters.Params);
   let uniqueCallId = params.get("unique_call_id");
@@ -91,7 +97,7 @@ let acceptCall = () => {
 };
 
 let saveClient = () => {
-  console.log('saving client now');
+  console.log("saving client now");
   axios
     .patch("/web-api/clients/" + connectedClient.value.id, {
       first_name: connectedClient.value.first_name,
@@ -105,7 +111,6 @@ let saveClient = () => {
       dob: connectedClient.value.dob,
     })
     .then((response) => {
-
       console.log(response.data);
       console.log("client saved successfully");
       toaster("success", "Client updated.");
@@ -1376,47 +1381,62 @@ let appDownloadModal = ref(false);
           </ul>
         </div>
 
-
-        <div v-if="connectedClient && hasSixtySecondsPassed" class="w-full bg-gray-100">
+        <div
+          v-if="connectedClient && hasSixtySecondsPassed"
+          class="w-full bg-gray-100"
+        >
           <ul class="w-full p-4 rounded-md space-y-2">
             <li class="flex justify-between items-center">
               <span class="text-gray-600">First Name:</span>
-              <TextInput style="width: 200px;" v-model="connectedClient.first_name" />
+              <TextInput
+                style="width: 200px"
+                v-model="connectedClient.first_name"
+              />
             </li>
             <li class="flex justify-between items-center">
               <span class="text-gray-600">Last Name:</span>
-              <TextInput style="width: 200px;" v-model="connectedClient.last_name" />
+              <TextInput
+                style="width: 200px"
+                v-model="connectedClient.last_name"
+              />
             </li>
             <li class="flex justify-between items-center">
               <span class="text-gray-600">Email:</span>
-              <TextInput style="width: 200px;" v-model="connectedClient.email" />
+              <TextInput style="width: 200px" v-model="connectedClient.email" />
             </li>
             <li class="flex justify-between items-center">
               <span class="text-gray-600">Phone:</span>
-              <TextInput style="width: 200px;" v-model="connectedClient.phone" />
+              <TextInput style="width: 200px" v-model="connectedClient.phone" />
             </li>
             <li class="flex justify-between items-center">
               <span class="text-gray-600">Date of Birth:</span>
-              <TextInput style="width: 200px;" v-model="connectedClient.dob" />
+              <TextInput style="width: 200px" v-model="connectedClient.dob" />
             </li>
             <li class="flex justify-between items-center">
               <span class="text-gray-600">Address:</span>
-              <TextInput style="width: 200px;" v-model="connectedClient.address" />
+              <TextInput
+                style="width: 200px"
+                v-model="connectedClient.address"
+              />
             </li>
             <li class="flex justify-between items-center">
               <span class="text-gray-600">State:</span>
-              <TextInput style="width: 200px;" v-model="connectedClient.state" />
+              <TextInput style="width: 200px" v-model="connectedClient.state" />
             </li>
             <li class="flex justify-between items-center">
               <span class="text-gray-600">Zip Code:</span>
-              <TextInput style="width: 200px;" v-model="connectedClient.zipCode" />
+              <TextInput
+                style="width: 200px"
+                v-model="connectedClient.zipCode"
+              />
             </li>
           </ul>
 
           <div class="flex justify-center py-3">
-            <PrimaryButton @click.prevent="saveClient">Save Changes</PrimaryButton>
+            <PrimaryButton @click.prevent="saveClient"
+              >Save Changes</PrimaryButton
+            >
           </div>
-
         </div>
 
         <!-- Hang Up Button -->
