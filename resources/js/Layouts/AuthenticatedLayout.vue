@@ -13,6 +13,7 @@ import { usePage } from "@inertiajs/vue3";
 let page = usePage();
 
 let connectedClient = ref(null);
+let callConnectionTime = ref(null);
 let connectedUniqueCallId = ref(null);
 let showRinging = ref(false);
 let showOngoing = ref(false);
@@ -57,12 +58,22 @@ let acceptCall = () => {
     showRinging.value = false;
     showOngoing.value = true;
 
-    // Set a timeout to refetch the client after 60 seconds
-    setTimeout(refetchClient, 60000); // 60000 milliseconds is 60 seconds
+    // save the current time in a state variable as "callConnectionTime"
+    // this will be used to calculate the call duration as well as "unlocking" the client info
+    callConnectionTime.value = new Date();
   } else {
     console.log("call not found");
   }
 };
+
+let hasSixtySecondsPassed = computed(() => {
+  if (callConnectionTime.value) {
+    let currentTime = new Date();
+    let differenceInSeconds = (currentTime - callConnectionTime.value) / 1000;
+    return differenceInSeconds >= 60;
+  }
+  return false;
+});
 
 let refetchClient = () => {
   axios
@@ -1213,7 +1224,7 @@ let appDownloadModal = ref(false);
               <span class="text-gray-600">Email:</span>
               <span
                 class="text-black"
-                v-if="connectedClient.unlocked"
+                v-if="hasSixtySecondsPassed"
                 v-text="connectedClient.email"
               ></span>
               <span class="text-black" v-else>
@@ -1235,7 +1246,9 @@ let appDownloadModal = ref(false);
             </li>
             <li class="flex justify-between">
               <span class="text-gray-600">Date of Birth:</span>
-              <span class="text-black" v-if="connectedClient.unlocked">{{ connectedClient.dob }}</span>
+              <span class="text-black" v-if="hasSixtySecondsPassed">{{
+                connectedClient.dob
+              }}</span>
               <span class="text-black" v-else>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -1255,7 +1268,9 @@ let appDownloadModal = ref(false);
             </li>
             <li class="flex justify-between">
               <span class="text-gray-600">Phone:</span>
-              <span class="text-black" v-if="connectedClient.unlocked">{{ connectedClient.phone }}</span>
+              <span class="text-black" v-if="hasSixtySecondsPassed">{{
+                connectedClient.phone
+              }}</span>
               <span class="text-black" v-else>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -1275,7 +1290,9 @@ let appDownloadModal = ref(false);
             </li>
             <li class="flex justify-between">
               <span class="text-gray-600">Address:</span>
-              <span class="text-black" v-if="connectedClient.unlocked">{{ connectedClient.address }}</span>
+              <span class="text-black" v-if="hasSixtySecondsPassed">{{
+                connectedClient.address
+              }}</span>
               <span class="text-black" v-else>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -1295,7 +1312,9 @@ let appDownloadModal = ref(false);
             </li>
             <li class="flex justify-between">
               <span class="text-gray-600">Zip code:</span>
-              <span class="text-black" v-if="connectedClient.unlocked">{{ connectedClient.zipCode }}</span>
+              <span class="text-black" v-if="hasSixtySecondsPassed">{{
+                connectedClient.zipCode
+              }}</span>
               <span class="text-black" v-else>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
