@@ -70,7 +70,7 @@ let acceptCall = () => {
     callConnectionTime = new Date();
 
     setInterval(() => {
-      callDuration.value = getFormattedTime(callConnectionTime.value);
+      callDuration.value = getFormattedTime(callConnectionTime);
     }, 1000);
   } else {
     console.log("call not found");
