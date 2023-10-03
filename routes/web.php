@@ -21,6 +21,7 @@ use App\Http\Controllers\TwilioTokenController;
 use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\FundsWithCardController;
 use App\Http\Controllers\UsageActivityController;
+use App\Http\Controllers\WebAPIClientsController;
 use App\Http\Controllers\CallClientInfoController;
 use App\Http\Controllers\ActiveUserChannelController;
 use App\Http\Controllers\TwilioDeviceTokenController;
@@ -120,6 +121,7 @@ Route::get('/device/incoming', function () {
 
 Route::get('/clients', [ClientsController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.index');
 Route::patch('/clients/{client}', [ClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.update');
+Route::patch('/web-api/clients/{client}', [WebAPIClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.web-api.update');
 
 Route::get('/support', [SupportController::class, 'index'])->name('support.index');
 
