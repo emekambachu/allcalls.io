@@ -9,6 +9,7 @@ import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import Modal from "@/Components/Modal.vue";
 import TextInput from "@/Components/TextInput.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import { toaster } from "@/helper.js";
 import { Device } from "@twilio/voice-sdk";
 import { usePage } from "@inertiajs/vue3";
 
@@ -104,8 +105,10 @@ let saveClient = () => {
       dob: connectedClient.value.dob,
     })
     .then((response) => {
+
       console.log(response.data);
       console.log("client saved successfully");
+      toaster("success", "Client updated.");
     })
     .catch((error) => {
       // Handle any error that occurred during the request
