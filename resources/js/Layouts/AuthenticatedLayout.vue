@@ -91,8 +91,26 @@ let acceptCall = () => {
 
 let saveClient = () => {
   console.log('saving client now');
-  // first name, last name, email, phone, address, state, zipCode
-
+  axios
+    .patch("/clients/" + connectedClient.value.id, {
+      first_name: connectedClient.value.first_name,
+      last_name: connectedClient.value.last_name,
+      email: connectedClient.value.email,
+      phone: connectedClient.value.phone,
+      address: connectedClient.value.address,
+      state: connectedClient.value.state,
+      zipCode: connectedClient.value.zipCode,
+      status: connectedClient.value.status,
+      dob: connectedClient.value.dob,
+    })
+    .then((response) => {
+      console.log(response.data);
+      console.log("client saved successfully");
+    })
+    .catch((error) => {
+      // Handle any error that occurred during the request
+      console.error("Error saving the client:", error);
+    });
 };
 
 let refetchClient = () => {
@@ -1373,6 +1391,10 @@ let appDownloadModal = ref(false);
             <li class="flex justify-between items-center">
               <span class="text-gray-600">Phone:</span>
               <TextInput style="width: 200px;" v-model="connectedClient.phone" />
+            </li>
+            <li class="flex justify-between items-center">
+              <span class="text-gray-600">Date of Birth:</span>
+              <TextInput style="width: 200px;" v-model="connectedClient.dob" />
             </li>
             <li class="flex justify-between items-center">
               <span class="text-gray-600">Address:</span>
