@@ -7,8 +7,10 @@ import NavLink from "@/Components/NavLink.vue";
 import DashboardFooter from "@/Components/DashboardFooter.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import Modal from "@/Components/Modal.vue";
+import TextInput from "@/Components/TextInput.vue";
 import { Device } from "@twilio/voice-sdk";
 import { usePage } from "@inertiajs/vue3";
+import TextInput from "vendor/laravel/breeze/stubs/inertia-react/resources/js/Components/TextInput";
 
 let page = usePage();
 
@@ -1207,7 +1209,7 @@ let appDownloadModal = ref(false);
         <h3 class="text-2xl font-medium">Ongoing Call</h3>
 
         <!-- Client's Basic Info -->
-        <div v-if="connectedClient" class="w-full">
+        <div v-if="connectedClient && !hasSixtySecondsPassed" class="w-full">
           <p class="text-md text-center text-black mb-2">Client's Basic Info</p>
           <ul class="w-full p-4 bg-gray-100 rounded-md space-y-2">
             <li class="flex justify-between">
@@ -1226,7 +1228,7 @@ let appDownloadModal = ref(false);
         </div>
 
         <!-- Info Populating After 60 seconds -->
-        <div v-if="connectedClient" class="w-full">
+        <div v-if="connectedClient && !hasSixtySecondsPassed" class="w-full">
           <p class="text-md text-center text-black mb-2">
             Info will populate after 60 seconds
           </p>
@@ -1342,6 +1344,16 @@ let appDownloadModal = ref(false);
                   />
                 </svg>
               </span>
+            </li>
+          </ul>
+        </div>
+
+
+        <div v-if="connectedClient && hasSixtySecondsPassed" class="w-full">
+          <ul class="w-full p-4 bg-gray-100 rounded-md space-y-2">
+            <li class="flex justify-between">
+              <span class="text-gray-600">First Name:</span>
+              <TextInput :value="connectedClient.first_name" />
             </li>
           </ul>
         </div>
