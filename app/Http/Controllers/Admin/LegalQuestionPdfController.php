@@ -56,4 +56,6 @@ class LegalQuestionPdfController extends Controller
             'agents' => $agents,
         ]);
     }
+
+    
 }
