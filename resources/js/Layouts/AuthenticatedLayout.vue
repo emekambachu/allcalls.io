@@ -10,7 +10,6 @@ import Modal from "@/Components/Modal.vue";
 import TextInput from "@/Components/TextInput.vue";
 import { Device } from "@twilio/voice-sdk";
 import { usePage } from "@inertiajs/vue3";
-import TextInput from "vendor/laravel/breeze/stubs/inertia-react/resources/js/Components/TextInput";
 
 let page = usePage();
 
