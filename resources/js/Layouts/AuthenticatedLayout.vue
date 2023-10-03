@@ -1352,27 +1352,27 @@ let appDownloadModal = ref(false);
           <ul class="w-full p-4 bg-gray-100 rounded-md space-y-2">
             <li class="flex justify-between items-center">
               <span class="text-gray-600">First Name:</span>
-              <TextInput style="width: 200px;" :value="connectedClient.first_name" />
+              <TextInput style="width: 200px;" v-model="connectedClient.first_name" />
             </li>
             <li class="flex justify-between items-center">
               <span class="text-gray-600">Last Name:</span>
-              <TextInput style="width: 200px;" :value="connectedClient.last_name" />
+              <TextInput style="width: 200px;" v-model="connectedClient.last_name" />
             </li>
             <li class="flex justify-between items-center">
               <span class="text-gray-600">Email:</span>
-              <TextInput style="width: 200px;" :value="connectedClient.email" />
+              <TextInput style="width: 200px;" v-model="connectedClient.email" />
             </li>
             <li class="flex justify-between items-center">
               <span class="text-gray-600">Phone:</span>
-              <TextInput style="width: 200px;" :value="connectedClient.phone" />
+              <TextInput style="width: 200px;" v-model="connectedClient.phone" />
             </li>
             <li class="flex justify-between items-center">
               <span class="text-gray-600">Address:</span>
-              <TextInput style="width: 200px;" :value="connectedClient.address" />
+              <TextInput style="width: 200px;" v-model="connectedClient.address" />
             </li>
             <li class="flex justify-between items-center">
               <span class="text-gray-600">Zip Code:</span>
-              <TextInput style="width: 200px;" :value="connectedClient.zipCode" />
+              <TextInput style="width: 200px;" v-model="connectedClient.zipCode" />
             </li>
           </ul>
         </div>
