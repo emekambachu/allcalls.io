@@ -3,12 +3,15 @@
 namespace Tests\Unit;
 
 use App\Models\Bid;
+use Tests\TestCase;
 use App\Models\User;
 use App\Models\CallType;
-use PHPUnit\Framework\TestCase;
+use App\Events\CompletedCallEvent;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ChargeUserForCompletedCallTest extends TestCase
 {
+    use RefreshDatabase;
     /**
      * A basic unit test example.
      */
@@ -16,7 +19,7 @@ class ChargeUserForCompletedCallTest extends TestCase
     {
         // Create a call type
         $callType = CallType::create([
-            'name' => 'Sample Call Type',
+            'type' => 'Auto Insurance',
         ]);
 
         // Create some users
@@ -24,10 +27,6 @@ class ChargeUserForCompletedCallTest extends TestCase
         $buyer2 = User::factory()->create(['balance' => 100]);
         $buyer3 = User::factory()->create(['balance' => 100]);
         $buyer4 = User::factory()->create(['balance' => 100]);
-
-        // Assuming you have some kind of roles set up in your system
-        // $buyer1->assignRole('regular-user');
-        // ...
 
         // Create some bids
         Bid::create([
