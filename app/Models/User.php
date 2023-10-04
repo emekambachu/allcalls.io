@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Bid;
 use App\Models\Card;
 use App\Models\State;
 use App\Models\Activity;
@@ -131,5 +132,10 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function internalAgentContract() {
         return $this->hasOne(InternalAgentRegInfo::class);
+    }
+
+    public function bids()
+    {
+        return $this->hasMany(Bid::class);
     }
 }
