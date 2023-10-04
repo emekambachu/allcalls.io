@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PingAPIController;
 use App\Http\Controllers\CallStatusController;
 use App\Http\Controllers\ClientsAPIController;
 use Illuminate\Validation\ValidationException;
@@ -134,3 +135,5 @@ Route::middleware('auth:sanctum')->get('/twilio-android-access-token-guest', [Tw
 Route::match(['get', 'post'], '/agent-status', [AgentStatusAPIController::class, 'show']);
 
 Route::middleware('auth:sanctum')->post('/app-events', [AppEventsController::class, 'store']);
+
+Route::match(['get', 'post'], '/ping', [PingAPIController::class, 'show']);
