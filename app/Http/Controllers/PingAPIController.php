@@ -27,4 +27,17 @@ class PingAPIController extends Controller
             'callerid' => ['Invalid callerid format.']
         ]);
     }
+
+    public function formatPhoneNumber($callerid)
+    {
+        $callerid = preg_replace('/[^0-9]/', '', $callerid);
+
+        if (strlen($callerid) == 10) {
+            return $callerid;
+        } elseif (strlen($callerid) == 11 && $callerid[0] == '1') {
+            return substr($callerid, 1);
+        }
+
+        return false;
+    }
 }
