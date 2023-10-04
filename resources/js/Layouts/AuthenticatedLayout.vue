@@ -1143,7 +1143,7 @@ let appDownloadModal = ref(false);
 
           <div>
             <a
-              href="https://play.google.com/apps/internaltest/4700422138103121465"
+              href="https://play.google.com/store/apps/details?id=io.allcalls"
               ><img
                 style="max-width: 200px; margin: auto"
                 src="/img/google-store.png"
