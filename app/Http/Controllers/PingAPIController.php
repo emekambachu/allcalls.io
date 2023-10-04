@@ -20,7 +20,9 @@ class PingAPIController extends Controller
 
             $response = file_get_contents($url);
 
-            return response($response, 200, ['Content-Type' => 'text/html']);
+            return response()->json([
+                'data' => $response
+            ]);
         }
 
         throw ValidationException::withMessages([
