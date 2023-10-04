@@ -19,7 +19,7 @@ class PingAPIController extends Controller
             $response = file_get_contents($url);
 
             return response()->json([
-                'data' => $response
+                'response' => json_encode($response)
             ]);
         }
 
