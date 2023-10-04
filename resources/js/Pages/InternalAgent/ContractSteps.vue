@@ -24,7 +24,7 @@ let props = defineProps({
     userData: Object,
     states: Array,
 });
-console.log('userData',props.userData.value);
+console.log('userData', props.userData.value);
 let StepsModal = ref(true)
 
 let form = ref({
@@ -310,202 +310,51 @@ input[type=number] {
                             </div>
                             <div v-show="contractStep === 2">
                                 <LegalInformation @updateFormData="updateLegalFormData1" :firstStepErrors="firstStepErrors"
-                                    @changeTab="ChangeTab()" @goback="ChangeTabBack()" :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
+                                    @changeTab="ChangeTab()" @goback="ChangeTabBack()"
+                                    :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="contractStep === 3">
                                 <LegalInformation2 @updateFormData="updateLegalFormData2" :firstStepErrors="firstStepErrors"
-                                    @changeTab="ChangeTab()" @goback="ChangeTabBack()" :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
+                                    @changeTab="ChangeTab()" @goback="ChangeTabBack()"
+                                    :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="contractStep === 4">
                                 <AddressHistory @addRessHistory="AddressHistoryfun" @changeTab="ChangeTab()"
-                                    @goback="ChangeTabBack()" :states="states" :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
+                                    @goback="ChangeTabBack()" :states="states"
+                                    :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="contractStep === 5">
                                 <AdditionalInfo @additionalInfoData="additionalInformation"
                                     :firstStepErrors="firstStepErrors" :states="states" @changeTab="NextStep()"
-                                    @goback="ChangeTabBack()" :userData="$page.props.auth.role === 'admin' ? userData.value : userData"  />
+                                    @goback="ChangeTabBack()"
+                                    :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="step === 2" class="pt-6">
                                 <AmLCourse :firstStepErrors="firstStepErrors" @uploadPdfAml="uploadPdfAml"
-                                    @changeTab="NextStep()" @goback="goBack()" :userData="$page.props.auth.role === 'admin' ? userData.value : userData"  />
-                                <!-- <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
-                                    AML Course
-                                </h1>
-
-                                <div class="bg-blue-50 py-10 px-6 rounded-lg shadow-md">
-                                    <div class="mb-4">
-                                        <a target="_blank"
-                                            href="https://www.financialservicecareers.com/_files/ugd/0fb1f5_0a18cb8e43734547b1c42be4c1a0a52b.pdf">
-                                            <strong class="text-blue-600 mr-1 hover:underline">Detailed PDF Guide</strong>
-                                        </a>outlining the required steps within the AML
-                                        course.
-                                    </div>
-                                    <div class="mb-4">
-                                        <a target="_blank" href="https://secure.reged.com/Login/vu/VirtualUniversity/EQUIS">
-                                            <strong class="text-blue-600 mr-1  hover:underline">Click Here</strong>
-                                        </a> <span>for the registration and course completion</span>
-                                    </div>
-                                    <div class="text-gray-600">
-                                        Please download PDF for course completion after completing the course.
-                                    </div>
-                                </div>
-                                <div class="flex justify-between my-5">
-                                    <div></div>
-                                    <div>
-                                        <input id="link-checkbox" v-model="form.aml_course" type="checkbox" value=""
-                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                        <label for="link-checkbox"
-                                            class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">I have
-                                            completed
-                                            the AML course.<span class="text-red-500 ">*</span></label>
-                                    </div>
-                                </div>
-                                <div v-if="firstStepErrors.aml_course" class="text-red-500"
-                                    v-text="firstStepErrors.aml_course[0]"></div>
-                                <div class="px-5 pb-6">
-                                    <div class="flex justify-between flex-wrap">
-                                        <div class="mt-4">
-
-                                            <button type="button" @click.prevent="goBack"
-                                                class="button-custom-back px-3 py-2 rounded-md">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                    stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
-                                                </svg>
-                                                Back
-                                            </button>
-                                        </div>
-                                        <div class="mt-4">
-                                            <button type="button" :class="{ 'opacity-25': amlCourseRead }"
-                                                :disabled="amlCourseRead" @click.prevent="NextStep"
-                                                class="button-custom px-3 py-2 rounded-md">
-                                                Next Step
-                                            </button>
-
-                                        </div>
-                                    </div>
-                                </div> -->
+                                    @changeTab="NextStep()" @goback="goBack()"
+                                    :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
 
                             <div v-show="step === 3" class="pt-6">
                                 <ErrorsAndEmissions :firstStepErrors="firstStepErrors"
-                                    @uploadPdfOmmision="uploadPdfOmmision" @changeTab="NextStep()" @goback="goBack()" :userData="$page.props.auth.role === 'admin' ? userData.value : userData"  />
-                                <!-- <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
-                                    Errors and Omissions Insurances
-                                </h1>
-                                <div class="bg-blue-50 py-10 px-6 rounded-lg shadow-md">
-                                    <div class="text-gray-600 mb-4">
-                                        Complete the sign-up process and apply for Errors and Omissions Insurance.
-                                    </div>
-                                    <div class="mb-4">
-                                        <a target="_blank"
-                                            href="https://mga-eo.com/apply/nd/lh-eo?_ga=2.22742075.1083085069.1638818057-1601577075.1638818057">
-                                            <strong class="text-blue-600 mr-1 hover:underline">MGA E&O Insurance Application
-                                            </strong>
-                                        </a>for registration and application.
-                                    </div>
-                                </div>
-                                <div class="flex justify-between my-5">
-                                    <div></div>
-                                    <div>
-                                        <input id="link-omissions_insurance" v-model="form.omissions_insurance"
-                                            type="checkbox" value=""
-                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                        <label for="link-omissions_insurance"
-                                            class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Errors and
-                                            Omissions Insurances.<span class="text-red-500 ">*</span></label>
-                                    </div>
-                                </div>
-                                <div v-if="firstStepErrors.omissions_insurance" class="text-red-500"
-                                    v-text="firstStepErrors.omissions_insurance[0]"></div>
-                                <div class="px-5 pb-6">
-                                    <div class="flex justify-between flex-wrap">
-                                        <div class="mt-4">
-
-                                            <button type="button" @click.prevent="goBack"
-                                                class="button-custom-back px-3 py-2 rounded-md">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                    stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
-                                                </svg>
-                                                Back
-                                            </button>
-                                        </div>
-                                        <div class="mt-4">
-                                            <button type="button" :class="{ 'opacity-25': omissionsInsurance }"
-                                                :disabled="omissionsInsurance" @click.prevent="NextStep"
-                                                class="button-custom px-3 py-2 rounded-md">
-                                                Next Step
-                                            </button>
-
-                                        </div>
-                                    </div>
-                                </div> -->
+                                    @uploadPdfOmmision="uploadPdfOmmision" @changeTab="NextStep()" @goback="goBack()"
+                                    :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
 
                             <div v-show="step === 4">
                                 <UploadLicence @uploadLicense="uploadLicense" :firstStepErrors="firstStepErrors"
-                                    @changeTab="NextStep()" @goback="goBack()" :userData="$page.props.auth.role === 'admin' ? userData.value : userData"  />
+                                    @changeTab="NextStep()" @goback="goBack()"
+                                    :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="step === 5">
                                 <BankInformationUpload @uploadBankingInfo="uploadBankingInfo"
-                                    :firstStepErrors="firstStepErrors" @submit="submit()" :isLoading="isLoading" @goback="goBack()" :userData="$page.props.auth.role === 'admin' ? userData.value : userData"  />
+                                    :firstStepErrors="firstStepErrors" @submit="submit()" :isLoading="isLoading"
+                                    @goback="goBack()"
+                                    :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
-
-
-
-                            <!-- <div class="px-5 pb-6">
-                                <div class="flex justify-between flex-wrap">
-                                    <div class="mt-4">
-                                        <a v-show="step > 1" href="#" @click.prevent="goBack"
-                                            class="button-custom-back px-3 py-2 rounded-md">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
-                                            </svg>
-                                            Step Back</a>
-                                        <a v-show="step != 2 && contractStep != 6 && contractStep != 1 && contractStep != 0 && contractStep != 4"
-                                            href="#" @click.prevent="ChangeTabBack"
-                                            class="button-custom-back px-3 py-2 rounded-md">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
-                                            </svg>
-                                            Back
-                                        </a>
-                                    </div>
-                                    <div class="mt-4">
-                                        <button :class="{ 'opacity-25': amlCourseRead }" :disabled="amlCourseRead"
-                                            v-show="contractStep === 5 || step > 1 && step != 5 && step != 3" type="button"
-                                            @click.prevent="NextStep" class="button-custom px-3 py-2 rounded-md">
-                                            Next Step
-                                        </button>
-                                        <button :class="{ 'opacity-25': omissionsInsurance }" :disabled="omissionsInsurance"
-                                            v-show="contractStep != 5 && step != 5 && step === 3" type="button"
-                                            @click.prevent="NextStep" class="button-custom px-3 py-2 rounded-md">
-                                            Next Step
-                                        </button>
-                                        <button v-show="contractStep != 5 && step === 1 && contractStep != 4" type="button"
-                                            @click.prevent="ChangeTab" class="button-custom px-3 py-2 rounded-md">
-                                            Next
-                                        </button>
-                                        <button @click="submit" type="button" v-show="step === 5"
-                                            class="button-custom px-3 py-2 rounded-md"
-                                            :class="{ 'opacity-25': areAllArraysEmpty || isLoading }"
-                                            :disabled="areAllArraysEmpty || isLoading">
-                                            <global-spinner :spinner="isLoading" /> Register
-                                        </button>
-                                    </div>
-                                </div>
-                            </div> -->
                         </div>
                     </div>
-                </div>
             </div>
-        </Transition>
-    </AuthenticatedLayout>
-</template>
+        </div>
+    </Transition>
+</AuthenticatedLayout></template>
