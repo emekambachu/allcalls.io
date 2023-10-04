@@ -18,9 +18,7 @@ class PingAPIController extends Controller
 
             $response = file_get_contents($url);
 
-            return response()->json([
-                'response' => json_decode($response)
-            ]);
+            return response()->json(json_decode($response));
         }
 
         throw ValidationException::withMessages([
