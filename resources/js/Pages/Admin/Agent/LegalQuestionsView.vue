@@ -14,7 +14,7 @@ if (page.props.flash.message) {
     toaster("success", page.props.flash.message);
 }
 let props = defineProps({
-    showModal: {
+    legalModal: {
         type: Boolean,
     },
     legalQuestions: Array,
@@ -22,6 +22,7 @@ let props = defineProps({
         type: Object,
     },
     currentPage: Number,
+    slidingLoader:Boolean,
 });
 let emit = defineEmits(["close"]);
 let originalClient = props.userDetail;
@@ -73,7 +74,7 @@ let formatData = (val) => {
 
 <template>
     <!-- This is the overlay -->
-
+    
     <div class="relative w-full max-w-4xl max-h-full mx-auto">
         <div class="relative bg-white border border-gray-300 rounded-lg shadow-lg">
             <div class="flex items-start justify-between p-4 border-b border-gray-300 rounded-t">
@@ -89,7 +90,8 @@ let formatData = (val) => {
                     <span class="sr-only">Close modal</span>
                 </button>
             </div>
-            <div class="mb-5">
+            <animation-slider class="mt-3" :slidingLoader="slidingLoader" />
+            <div v-show="!slidingLoader" class="mb-5">
                 <div v-for="question in legalQuestions" class="flex justify-between">
                     <div class="px-5 py-2">{{ formatData(question.name) }}</div>
                     <button class="px-5 py-2">download pdf</button>

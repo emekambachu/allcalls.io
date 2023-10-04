@@ -76,5 +76,6 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     //Calls
     Route::get('/calls', [CallsController::class, 'index'])->name('admin.calls.index');
 
-    Route::get('/agents/legal-questions', [LegalQuestionPdfController::class, 'index'])->name('admin.agent.internal.agent');
+    // Route::get('/agents/legal-questions', [LegalQuestionPdfController::class, 'index'])->name('admin.agent.internal.agent');
+    Route::post('/agents/legal-questions', [LegalQuestionPdfController::class, 'legalQuestions']);
 });

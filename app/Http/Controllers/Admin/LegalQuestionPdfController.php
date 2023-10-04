@@ -11,6 +11,7 @@ use Inertia\Inertia;
 class LegalQuestionPdfController extends Controller
 {
     public function index(Request $request) {
+   
         $agent = Role::whereName('internal-agent')->first();
 
         $agents = User::whereHas('roles', function ($query) use ($agent) {
@@ -56,6 +57,17 @@ class LegalQuestionPdfController extends Controller
             'agents' => $agents,
         ]);
     }
+    function legalQuestions(Request $request)  {
+        $legalQuestion = User::where('id',$request->id)
+        ->with(['internalAgentContract.legalQuestion' => function ($query) {
+            $query->where('value', 'YES')->whereNotNull('description');
+        }])
+        ->first();
 
+        return response()->json([
+            'success' => true,
+            'pdfData' => $legalQuestion
+        ]);
+    }
     
 }

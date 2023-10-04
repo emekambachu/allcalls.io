@@ -3,8 +3,9 @@
 import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
 import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
 let props = defineProps({
-    firstStepErrors:Object,
+    firstStepErrors: Object,
     userData: Object,
+    isLoading: Boolean,
 });
 let page = usePage();
 let bankingInfotUrl = ref(null)
@@ -23,7 +24,7 @@ const handleFileChange = (event) => {
         fileError.value = false; // Reset the error message
         selectedFileName.value = files[0].name; // Set the selected file name
         selectedFile.value = files[0]
-        if(props.firstStepErrors.bankingInfoPdf){
+        if (props.firstStepErrors.bankingInfoPdf) {
             props.firstStepErrors.bankingInfoPdf = null
         }
     } else if (files.length > 1) {
@@ -47,7 +48,7 @@ const handleDrop = (event) => {
         fileError.value = false; // Reset the error message
         selectedFileName.value = files[0].name; // Set the selected file name
         selectedFile.value = files[0]
-        if(props.firstStepErrors.bankingInfoPdf){
+        if (props.firstStepErrors.bankingInfoPdf) {
             props.firstStepErrors.bankingInfoPdf = null
         }
         // console.log('handleDrop', selectedFile.value);
@@ -72,16 +73,17 @@ watch(selectedFile, (newForm, oldForm) => {
     emits("uploadBankingInfo", newForm);
 });
 let submit = () => {
+
     for (const key in props.firstStepErrors) {
         if (props.firstStepErrors.hasOwnProperty(key)) {
             props.firstStepErrors[key] = [];
         }
     }
-   
-    if(!selectedFile.value && page.props.auth.role === 'internal-agent'){
+
+    if (!selectedFile.value && page.props.auth.role === 'internal-agent') {
         fileError.value = false;
         props.firstStepErrors.bankingInfoPdf = [`The Banking Information field is required.`];
-    }else{
+    } else {
         emits("submit");
         console.log('else');
     }
@@ -96,28 +98,25 @@ let ChangeTabBack = () => {
             Banking Information
         </h1>
 
-        
-    <div v-show="page.props.auth.role === 'internal-agent'" class="bg-blue-50 py-7 px-6 mb-5 rounded-lg shadow-md">
-        <div class="">
-            <a target="_blank"
-                href="https://www.financialservicecareers.com/_files/ugd/0fb1f5_f3cad5300c3b4706ae1b5daf6fe16908.pdf">
-                <strong class="text-blue-600 mr-1 hover:underline">Detailed PDF Guide</strong>
-            </a>for banking information.
-        </div>
-    </div>
-    <div v-show="page.props.auth.role === 'admin'" class="bg-blue-50 py-7 px-6 mb-5 rounded-lg shadow-md">
-        <div class="">
-            <a target="_blank"
-                :href="bankingInfotUrl"
-                :disabled="!bankingInfotUrl"
-                :class="{ 'opacity-25': !bankingInfotUrl }"
-                >
-                <strong class="text-blue-600 mr-1 hover:underline">Click here</strong>
-            </a>Preview / Download banking information.
-        </div>
-    </div>
 
-        <div v-show="page.props.auth.role === 'internal-agent'"  class="flex items-center justify-center mb-2 w-full">
+        <div v-show="page.props.auth.role === 'internal-agent'" class="bg-blue-50 py-7 px-6 mb-5 rounded-lg shadow-md">
+            <div class="">
+                <a target="_blank"
+                    href="https://www.financialservicecareers.com/_files/ugd/0fb1f5_f3cad5300c3b4706ae1b5daf6fe16908.pdf">
+                    <strong class="text-blue-600 mr-1 hover:underline">Detailed PDF Guide</strong>
+                </a>for banking information.
+            </div>
+        </div>
+        <div v-show="page.props.auth.role === 'admin'" class="bg-blue-50 py-7 px-6 mb-5 rounded-lg shadow-md">
+            <div class="">
+                <a target="_blank" :href="bankingInfotUrl" :disabled="!bankingInfotUrl"
+                    :class="{ 'opacity-25': !bankingInfotUrl }">
+                    <strong class="text-blue-600 mr-1 hover:underline">Click here</strong>
+                </a>Preview / Download banking information.
+            </div>
+        </div>
+
+        <div v-show="page.props.auth.role === 'internal-agent'" class="flex items-center justify-center mb-2 w-full">
             <label for="dropzone-file-bank-info"
                 class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
                 @dragover.prevent @drop="handleDrop">
@@ -130,10 +129,10 @@ let ChangeTabBack = () => {
                     <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
                         <span class="font-semibold">Click to upload</span> or drag and drop
                     </p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">PDF files only<span class="text-red-500 ">*</span></p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">PDF files only<span class="text-red-500 ">*</span>
+                    </p>
                 </div>
-                <input id="dropzone-file-bank-info" type="file" class="hidden" @change="handleFileChange" accept=".pdf"
-                     />
+                <input id="dropzone-file-bank-info" type="file" class="hidden" @change="handleFileChange" accept=".pdf" />
             </label>
         </div>
         <p v-if="fileError" class="text-red-500 mt-4">{{ fileErrorMessage }}</p>
@@ -141,7 +140,8 @@ let ChangeTabBack = () => {
         <div v-if="selectedFileName" class="text-green-500 mt-4">
             Selected File: {{ selectedFileName }}
         </div>
-        <div v-if="firstStepErrors.bankingInfoPdf" class="text-red-500 mt-4" v-text="firstStepErrors.bankingInfoPdf[0]"></div> 
+        <div v-if="firstStepErrors.bankingInfoPdf" class="text-red-500 mt-4" v-text="firstStepErrors.bankingInfoPdf[0]">
+        </div>
     </div>
     <div class="px-5 pb-6">
         <div class="flex justify-between flex-wrap">
@@ -156,7 +156,8 @@ let ChangeTabBack = () => {
                 </button>
             </div>
             <div v-show="$page.props.auth.role === 'internal-agent'" class="mt-4">
-                <button type="button" @click="submit" class="button-custom px-3 py-2 rounded-md">
+                <button type="button" :class="{ 'opacity-25': isLoading }" :disabled="isLoading" @click="submit"
+                    class="button-custom px-3 py-2 rounded-md">
                     <global-spinner :spinner="isLoading" /> Start Signature Process
                 </button>
 

@@ -451,7 +451,7 @@ input[type=number] {
                             </div>
                             <div v-show="step === 5">
                                 <BankInformationUpload @uploadBankingInfo="uploadBankingInfo"
-                                    :firstStepErrors="firstStepErrors" @submit="submit()" @goback="goBack()" :userData="$page.props.auth.role === 'admin' ? userData.value : userData"  />
+                                    :firstStepErrors="firstStepErrors" @submit="submit()" :isLoading="isLoading" @goback="goBack()" :userData="$page.props.auth.role === 'admin' ? userData.value : userData"  />
                             </div>
 
 
