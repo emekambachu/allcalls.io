@@ -128,13 +128,10 @@ Route::get('/support', [SupportController::class, 'index'])->name('support.index
 Route::get('/stripe-test', [StripeTestController::class, 'show']);
 Route::get('/stripe-test-redirect', [StripeTestController::class, 'store']);
 
-// Route::get('/active-users/join', [ActiveUserChannelController::class, 'join']);
-
 Route::get('/vince', function () {
     return redirect('/');
 });
 
 Route::get('/ryan', function () {
-    Log::debug('TEST!!!');
     return redirect('/');
 });
