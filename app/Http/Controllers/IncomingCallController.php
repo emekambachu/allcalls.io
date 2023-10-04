@@ -178,6 +178,7 @@ class IncomingCallController extends Controller
             ->withCallStatusWaiting()
             ->get();
 
+        // $onlineUsers = OnlineUser::prioritizeInternalAgents($onlineUsers);
         $onlineUsers = OnlineUser::sortByCallPriority($onlineUsers, $callType);
 
         if (!$onlineUsers->count()) {
