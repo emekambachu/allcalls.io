@@ -178,7 +178,7 @@ class IncomingCallController extends Controller
             ->withCallStatusWaiting()
             ->get();
 
-        $onlineUsers = OnlineUser::prioritizeInternalAgents($onlineUsers);
+        $onlineUsers = OnlineUser::sortByCallPriority($onlineUsers, $callType);
 
         if (!$onlineUsers->count()) {
             Log::debug('No online user found.');
@@ -252,7 +252,8 @@ class IncomingCallController extends Controller
             'onlineUsers' => $onlineUsers,
         ]);
 
-        $onlineUsers = OnlineUser::prioritizeInternalAgents($onlineUsers);
+        // $onlineUsers = OnlineUser::prioritizeInternalAgents($onlineUsers);
+        $onlineUsers = OnlineUser::sortByCallPriority($onlineUsers, $callType);
 
         Log::debug('onlineUsersAfterPrioritize:', [
             'onlineUsers' => $onlineUsers,
