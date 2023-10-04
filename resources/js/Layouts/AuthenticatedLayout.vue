@@ -1148,7 +1148,7 @@ let appDownloadModal = ref(false);
                 style="max-width: 200px; margin: auto"
                 src="/img/google-store.png"
             /></a>
-            <a href="https://testflight.apple.com/join/ZI91F5fv"
+            <a href="https://apps.apple.com/us/app/allcalls-io/id6464440586"
               ><img
                 style="max-width: 200px; margin: auto"
                 src="/img/app-store.png"
