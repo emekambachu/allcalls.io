@@ -191,7 +191,7 @@
     </table>
 
     <p class="section-border mt-3 mb-30"></p>
-    <table class="w-100">
+    <table class="w-100 line-h30">
         <tr class="w-100">
             <td style="width: 33.3%;">
                 <span class="basic-info-element">
@@ -217,7 +217,7 @@
     </table>
     <p class="section-border mt-3 mb-30"></p>
 
-    <table class="w-100">
+    <table class="w-100 line-h30">
         <tr class="w-100">
             <td style="width: 33.3%;">
                 <span class="basic-info-element">
@@ -242,7 +242,7 @@
         </tr>
     </table>
 
-    <table class="w-100">
+    <table class="w-100 line-h30">
         <tr class="w-100">
             <td style="width: 33.3%;">
                 <span class="basic-info-element">
@@ -267,7 +267,7 @@
         </tr>
     </table>
 
-    <table class="w-100">
+    <table class="w-100 line-h30">
         <tr class="w-100">
             <td style="width: 33.3%;">
                 <span class="basic-info-element">
@@ -292,7 +292,7 @@
         </tr>
     </table>
 
-    <table class="w-100">
+    <table class="w-100 line-h30">
         <tr class="w-100">
             <td style="width: 33.3%;">
                 <span class="basic-info-element">
@@ -317,7 +317,7 @@
         </tr>
     </table>
 
-    <table class="w-100">
+    <table class="w-100 line-h30">
         <tr class="w-100">
             <td style="width: 33.3%;">
                 <span class="basic-info-element">
