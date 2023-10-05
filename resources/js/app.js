@@ -8,6 +8,8 @@
     import GlobalSpinnerPlugin from './spinner.js'
     const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
     import VueDatePicker from '@vuepic/vue-datepicker';
+    // import vueSignature from "vue-signature";
+    import VueSignature from "vue-signature-pad";
     import '@vuepic/vue-datepicker/dist/main.css'
     import VueCreditCardValidation from 'vue-credit-card-validation';
     
@@ -20,6 +22,8 @@
                 .use(ZiggyVue, Ziggy)
                 .use(GlobalSpinnerPlugin)
                 .use(VueCreditCardValidation)
+                .use(VueSignature)
+                // .component('VueSignaturePad', VueSignature)
                 .component('VueDatePicker', VueDatePicker)
                 .mount(el);
         },

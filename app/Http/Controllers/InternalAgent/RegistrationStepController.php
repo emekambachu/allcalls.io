@@ -12,6 +12,7 @@ use App\Models\InternalAgentLegalQuestion;
 use App\Models\InternalAgentRegInfo;
 use App\Models\InternalAgentResidentLicense;
 use App\Models\State;
+use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -22,11 +23,18 @@ use Inertia\Inertia;
 class RegistrationStepController extends Controller
 {
     public function contractSteps()
-    { 
-        if(auth()->user()->legacy_key) {
-            return redirect()->route('dashboard');
-        }
-        $userData = auth()->user();
+    {
+        // if (auth()->user()->legacy_key) {
+        //     return redirect()->route('dashboard');
+        // }
+        $user = auth()->user();
+        $userData = User::where('id', $user->id)->with('internalAgentContract.additionalInfo')
+        ->with('internalAgentContract.addresses')
+        ->with('internalAgentContract.amlCourse')
+        ->with('internalAgentContract.bankingInfo')
+        ->with('internalAgentContract.errorAndEmission')
+        ->with('internalAgentContract.legalQuestion')
+        ->with('internalAgentContract.residentLicense')->first();
         $states = State::all();
         return Inertia::render('InternalAgent/ContractSteps', [
             'userData' => $userData,
@@ -1223,13 +1231,23 @@ class RegistrationStepController extends Controller
                     'url' => $path,
                 ]);
             }
-            
+
             DB::commit();
+
+            $contractData = User::where('id', auth()->user()->id)
+                ->with('internalAgentContract.additionalInfo')
+                ->with('internalAgentContract.addresses')
+                ->with('internalAgentContract.amlCourse')
+                ->with('internalAgentContract.bankingInfo')
+                ->with('internalAgentContract.errorAndEmission')
+                ->with('internalAgentContract.legalQuestion')
+                ->with('internalAgentContract.residentLicense')->first();
+
+           
             return response()->json([
                 'success' => true,
-                'message' => 'Registration steps completed successfully',
+                'contractData' => $contractData
             ], 200);
-
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -1241,8 +1259,8 @@ class RegistrationStepController extends Controller
 
     public function pdf()
     {
-//        $returnArr['questions'] = InternalAgentLegalQuestion::where('reg_info_id', auth()->user()->internalAgentContract->id)->get(['name', 'value', 'description'])->toArray();
-//        dd(isset($returnArr['questions'][1]) && $returnArr['questions'][1]['name'] == 'convicted_checkbox_1a' && $returnArr['questions'][1]['value'] == 'NO');
+        //        $returnArr['questions'] = InternalAgentLegalQuestion::where('reg_info_id', auth()->user()->internalAgentContract->id)->get(['name', 'value', 'description'])->toArray();
+        //        dd(isset($returnArr['questions'][1]) && $returnArr['questions'][1]['name'] == 'convicted_checkbox_1a' && $returnArr['questions'][1]['value'] == 'NO');
         $returnArr['question'] = InternalAgentLegalQuestion::find(414);
         $pdf = PDF::loadView('PDF.legal-questions', $returnArr);
         return $pdf->stream();
@@ -1250,16 +1268,16 @@ class RegistrationStepController extends Controller
         return $pdf->download('legal-question.pdf');
 
         //                $returnArr['questions'] = InternalAgentLegalQuestion::where('reg_info_id', $basicInfoId)->get(['name', 'value', 'description'])->toArray();
-//                $pdf = PDF::loadView('PDF.legal-questions', $returnArr);
-//                $pdfFileName = auth()->user()->email."_legal_questions.pdf";
-//                $directory = public_path('internal-agents/legal-questions');
-//                if(!File::exists($directory)) {
-//                    File::makeDirectory($directory, $mode = 0755, true, true);
-//                }
-//                $pdf->save($directory . '/' . $pdfFileName);
+        //                $pdf = PDF::loadView('PDF.legal-questions', $returnArr);
+        //                $pdfFileName = auth()->user()->email."_legal_questions.pdf";
+        //                $directory = public_path('internal-agents/legal-questions');
+        //                if(!File::exists($directory)) {
+        //                    File::makeDirectory($directory, $mode = 0755, true, true);
+        //                }
+        //                $pdf->save($directory . '/' . $pdfFileName);
 
 
-//        dd('pdf');
-//        return view('PDF.legal-questions');
+        //        dd('pdf');
+        //        return view('PDF.legal-questions');
     }
 }

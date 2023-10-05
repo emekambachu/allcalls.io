@@ -13,6 +13,8 @@ import UploadLicence from '@/Pages/InternalAgent/UploadLicence.vue'
 import BankInformationUpload from '@/Pages/InternalAgent/BankInformationUpload.vue'
 import AmLCourse from '@/Pages/InternalAgent/AmLCourse.vue'
 import ErrorsAndEmissions from '@/Pages/InternalAgent/ErrorsAndEmissions.vue'
+import ContractDetailPage from '@/Pages/InternalAgent/ContractDetailPage.vue'
+
 import { toaster } from "@/helper.js";
 
 
@@ -24,8 +26,9 @@ let props = defineProps({
     userData: Object,
     states: Array,
 });
-console.log('userData', props.userData.value);
-let StepsModal = ref(true)
+
+// console.log('userData', props.userData.value);
+let StepsModal = ref(false)
 
 let form = ref({
     aml_course: false,
@@ -136,9 +139,46 @@ let errorHandle = (data) => {
 }
 
 
+let contractModal = ref(true)
+
+const options = ref({
+    penColor: '#c0f',
+});
+let signaturePadRef = ref(null);
+// Methods
+const undo = () => {
+    console.log('signaturePadRef', signaturePadRef.value);
+    if (signaturePadRef.value) {
+        signaturePadRef.value.undoSignature();
+    }
+};
+
+const save = () => {
+    const { isEmpty, data } = $refs.signaturePad.saveSignature();
+
+    alert('Open DevTools to see the save data.');
+    console.log(isEmpty);
+    console.log(data);
+};
+
+const change = () => {
+    options.value = {
+        penColor: '#00f',
+    };
+};
+
+const resume = () => {
+    options.value = {
+        penColor: '#c0f',
+    };
+};
+
 
 let submit = () => {
-
+    // StepsModal.value = false
+    // contractModal.value = true
+    // console.log('llll');
+  
     const requestData = {};
 
     const filteredAddressHistory = {};
@@ -179,8 +219,12 @@ let submit = () => {
             }
         })
         .then((response) => {
-            toaster("success", response.data.message);
-            router.visit("/dashboard");
+            props.userData.value = {}
+            console.log('what is res', response.data.contractData);
+            StepsModal.value = false
+            contractModal.value = true
+            // toaster("success", response.data.message);
+            // router.visit("/dashboard");
             isLoading.value = false;
         })
         .catch((error) => {
@@ -200,10 +244,36 @@ let submit = () => {
             }
         });
 };
-
+let editContract = () =>{
+    contractModal.value = false
+    StepsModal.value = true
+    step.value = 1
+    contractStep.value = 4
+}
 
 </script>
 <style >
+#signature {
+    border: double 3px transparent;
+    border-radius: 5px;
+    background-image: linear-gradient(white, white),
+        radial-gradient(circle at top left, #4bc5e8, #9f6274);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+}
+
+.container {
+    width: "100%";
+    padding: 8px 16px;
+}
+
+.buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 8px;
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -352,9 +422,70 @@ input[type=number] {
                                     @goback="goBack()"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
+                            <button @click="submit">show Contract</button>
+                            <!-- <vueSignature /> -->
                         </div>
                     </div>
+                </div>
             </div>
-        </div>
-    </Transition>
-</AuthenticatedLayout></template>
+
+        </Transition>
+        <Transition name="modal" enter-active-class="transition ease-out  duration-300 transform"
+            enter-from-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            enter-to-class="opacity-100 translate-y-0 sm:scale-100"
+            leave-active-class="transition ease-in duration-200 transform"
+            leave-from-class="opacity-100 translate-y-0 sm:scale-100"
+            leave-to-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+
+            <div id="defaultModal" v-if="contractModal" tabindex="-1"
+                class="flex items-center justify-center fixed inset-0 z-50 w-full h-full overflow-x-hidden overflow-y-auto max-h-full mx-4 sm:mx-0">
+
+                <div class="fixed inset-0 bg-black opacity-90 blurred-overlay"></div>
+                <!-- This is the overlay -->
+                <div style="width: 75%;" class="relative w-full py-10  max-h-full mx-auto" id="modal_main_id">
+                    <div class="relative bg-white rounded-lg shadow-lg ">
+                        <div class="flex justify-end">
+                            <Link v-show="$page.props.auth.role != 'admin'" :href="route('logout')" method="post"
+                                as="button"
+                                class="underline text-sm text-gray-600 mr-5 mt-5  dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
+                            Log Out</Link>
+                            <button @click="editContract()"
+                                class=" text-sm text-gray-600 mr-5 mt-5  dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                    stroke="currentColor" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                                </svg>
+                            </button>
+                            <button v-show="$page.props.auth.role === 'admin'" @click="close" type="button"
+                                class="text-gray-400 bg-transparent mr-2 mt-2 hover:bg-gray-200 hover:text-gray-700 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
+                                data-modal-hide="defaultModal">
+                                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 14 14">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                </svg>
+                                <span class="sr-only">Close modal</span>
+                            </button>
+                        </div>
+
+                        <div class="px-12 py-2">
+                            <ContractDetailPage :userData="userData"  />
+                            <div class="container">
+                                <VueSignaturePad id="signature" width="400px" height="100px" v-model="signaturePadRef" />
+                            </div>
+                            <div class="buttons">
+                                <button @click="undo">Undo</button>
+                                <button @click="save">Save</button>
+                                <button @click="change">Change Color</button>
+                                <button @click="resume">Resume Color</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Transition>
+    </AuthenticatedLayout>
+</template>
+
+
