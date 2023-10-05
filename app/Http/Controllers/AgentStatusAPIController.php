@@ -103,8 +103,11 @@ class AgentStatusAPIController extends Controller
 
     private function isAgentAvailable(string $state, string $vertical): bool
     {
-        // Map the state string to the corresponding State model
-        $stateModel = State::whereName($state)->firstOrFail();
+        if (strlen($state) == 2) {
+            $stateModel = State::whereName($state)->firstOrFail();
+        } else {
+            $stateModel = State::whereFullName($state)->firstOrFail();
+        }
     
         // Query for the call type
         $callTypeModel = CallType::whereType($vertical)->firstOrFail();
