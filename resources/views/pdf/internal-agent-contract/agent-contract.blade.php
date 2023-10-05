@@ -32,7 +32,15 @@
         }
 
         .w-25 {
-         ;
+         width: 25% !important;
+        }
+
+        .mt-2 {
+            margin-top: 20px;
+        }
+
+        .mb-2 {
+            margin-bottom: 20px;
         }
 
         .mt-3 {
@@ -55,6 +63,10 @@
             line-height: 35px !important;
         }
 
+        .line-h40 {
+            line-height: 40px !important;
+        }
+
         .d-flex {
             display: flex !important;
             flex-direction: row;
@@ -69,38 +81,49 @@
             text-align: end;
         }
 
+        .basic-info-element
+        {
+            border: 1px solid lightgray;
+            padding:0px 2px;
+            border-radius: 5px;
+            display: flex;
+            width: 95%;
+            margin-bottom: 10px;
+            margin-top: 10px
+        }
     </style>
 </head>
 <body>
 
 {{--Start Inforamtion--}}
 @if($contractData->internalAgentContract)
-    @include('PDF.basic-information')
+    @include('pdf.internal-agent-contract.basic-information')
 @endif
 {{--End Inforamtion--}}
 
 
 {{--Start Legal Question Section--}}
 @if(isset($contractData->internalAgentContract) && count($contractData->internalAgentContract->legalQuestion))
-    @include('PDF.legal-questions')
+    @include('pdf.internal-agent-contract.legal-questions')
+    @include('pdf.internal-agent-contract.accompanying-sign')
 @endif
 {{--End Legal Question Section--}}
 
 {{--Start Address History--}}
 @if(isset($contractData->internalAgentContract) && count($contractData->internalAgentContract->addresses))
-    @include('PDF.address-history')
+    @include('pdf.internal-agent-contract.address-history')
 @endif
 {{--End Address History--}}
 
 {{--Start Additional Info--}}
 @if(isset($contractData->internalAgentContract) && isset($contractData->internalAgentContract->additionalInfo))
-    @include('PDF.additional-info')
+    @include('pdf.internal-agent-contract.additional-info')
 @endif
 {{--End Additional Info--}}
 
 {{--Start Signature--}}
 {{--@if(isset($contractData->internalAgentContract) && isset($contractData->internalAgentContract->additionalInfo))--}}
-    @include('PDF.signature')
+    @include('pdf.internal-agent-contract.signature')
 {{--@endif--}}
 {{--End Signature--}}
 

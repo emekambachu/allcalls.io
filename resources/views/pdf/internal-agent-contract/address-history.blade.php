@@ -7,35 +7,47 @@
             </tr>
             <tr class="w-100">
                 <td style="width: 33.3%;">
-                    <strong>Home Address: &nbsp;</strong>
+                   <span class="basic-info-element">
+                        <strong>Home Address: &nbsp;</strong>
                     {{$contractData->internalAgentContract->address}}
+                   </span>
                 </td>
 
                 <td style="width: 33.3%;">
-                    <strong>City: &nbsp;</strong>
-                    {{$contractData->internalAgentContract->city}}
+                     <span class="basic-info-element">
+                        <strong>City: &nbsp;</strong>
+                        {{$contractData->internalAgentContract->city}}
+                     </span>
                 </td>
 
                 <td style="width: 33.3%;">
-                    <strong>State: &nbsp;</strong>
-                    {{$contractData->internalAgentContract->state}}
+                     <span class="basic-info-element">
+                        <strong>State: &nbsp;</strong>
+                        {{$contractData->internalAgentContract->state}}
+                     </span>
                 </td>
             </tr>
 
             <tr class="w-100">
                 <td style="width: 33.3%;">
+                 <span class="basic-info-element">
                     <strong>Zip Code: &nbsp;</strong>
                     {{$contractData->internalAgentContract->zip}}
+                 </span>
                 </td>
 
                 <td style="width: 33.3%;">
+                 <span class="basic-info-element">
                     <strong>Move-In Date: &nbsp;</strong>
                     {{$contractData->internalAgentContract->move_in_date}}
+                 </span>
                 </td>
 
                 <td style="width: 33.3%;">
+                 <span class="basic-info-element">
                     <strong>Move-Out Date: &nbsp;</strong>
                     {{$contractData->internalAgentContract->move_out_date}}
+                 </span>
                 </td>
             </tr>
         </table>
