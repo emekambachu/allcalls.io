@@ -1291,4 +1291,8 @@ class RegistrationStepController extends Controller
         //        dd('pdf');
         //        return view('PDF.legal-questions');
     }
+
+    function registrationSignature(Request $request)  {
+        dd($request);
+    }
 }

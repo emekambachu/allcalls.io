@@ -14,6 +14,7 @@ import BankInformationUpload from '@/Pages/InternalAgent/BankInformationUpload.v
 import AmLCourse from '@/Pages/InternalAgent/AmLCourse.vue'
 import ErrorsAndEmissions from '@/Pages/InternalAgent/ErrorsAndEmissions.vue'
 import ContractDetailPage from '@/Pages/InternalAgent/ContractDetailPage.vue'
+import SingnaturePad from '@/Pages/InternalAgent/SingnaturePad.vue'
 
 import { toaster } from "@/helper.js";
 
@@ -36,7 +37,7 @@ let form = ref({
 });
 
 let step = ref(1);
-let contractStep = ref(1);
+let contractStep = ref(3);
 let emit = defineEmits(["close"]);
 let close = () => {
     emit("close");
@@ -141,37 +142,12 @@ let errorHandle = (data) => {
 
 let contractModal = ref(true)
 
-const options = ref({
-    penColor: '#c0f',
-});
-let signaturePadRef = ref(null);
-// Methods
-const undo = () => {
-    console.log('signaturePadRef', signaturePadRef.value);
-    if (signaturePadRef.value) {
-        signaturePadRef.value.undoSignature();
-    }
-};
 
-const save = () => {
-    const { isEmpty, data } = $refs.signaturePad.saveSignature();
 
-    alert('Open DevTools to see the save data.');
-    console.log(isEmpty);
-    console.log(data);
-};
 
-const change = () => {
-    options.value = {
-        penColor: '#00f',
-    };
-};
 
-const resume = () => {
-    options.value = {
-        penColor: '#c0f',
-    };
-};
+
+
 
 
 let submit = () => {
@@ -250,17 +226,12 @@ let editContract = () =>{
     step.value = 1
     contractStep.value = 4
 }
-
+let parentFun = (val) => {
+    console.log('parent val', val);
+}
 </script>
 <style >
-#signature {
-    border: double 3px transparent;
-    border-radius: 5px;
-    background-image: linear-gradient(white, white),
-        radial-gradient(circle at top left, #4bc5e8, #9f6274);
-    background-origin: border-box;
-    background-clip: content-box, border-box;
-}
+
 
 .container {
     width: "100%";
@@ -470,16 +441,8 @@ input[type=number] {
                         </div>
 
                         <div class="px-12 py-2">
-                            <ContractDetailPage :userData="userData"  />
-                            <div class="container">
-                                <VueSignaturePad id="signature" width="400px" height="100px" v-model="signaturePadRef" />
-                            </div>
-                            <div class="buttons">
-                                <button @click="undo">Undo</button>
-                                <button @click="save">Save</button>
-                                <button @click="change">Change Color</button>
-                                <button @click="resume">Resume Color</button>
-                            </div>
+                            <ContractDetailPage :userData="$page.props.auth.role === 'admin' ? userData.value : userData"  />
+                            <SingnaturePad @test-fun="parentFun" />
                         </div>
                     </div>
                 </div>

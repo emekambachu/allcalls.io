@@ -264,6 +264,7 @@ let LegalInformation = ref([
 let form = ref({
 
 })
+console.log('');
 // if (page.props.auth.role === 'admin' && props.userData.internal_agent_contract) {
 props.userData.internal_agent_contract.legal_question.forEach((question) => {
     const matchingLegalInfo = LegalInformation.value.find((info) => info.name === question.name);
@@ -273,6 +274,10 @@ props.userData.internal_agent_contract.legal_question.forEach((question) => {
     }
 });
 // }
+console.log('props.userData.internal_agent_contract.aml_course.url', props.userData.internal_agent_contract.aml_course.url);
+
+// Set the URL of the PDF file
+// pdfViewer.src = props.userData.internal_agent_contract.aml_course.url;
 </script>
 <template>
     <div class="container mx-auto p-5">
@@ -424,18 +429,81 @@ props.userData.internal_agent_contract.legal_question.forEach((question) => {
         <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
             Your Address History for the Past 7 Years
         </h1>
-        <div  class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 bg-white rounded-lg shadow-md gap-4">
+        <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 bg-white rounded-lg shadow-md gap-4">
             <div v-for="address in userData.internal_agent_contract.addresses" class="bg-white  p-4">
                 <p class="text-gray-600"><strong>Home Address:</strong> {{ address.address }}</p>
-                <p class="text-gray-600"><strong>City:</strong> {{ userData.internal_agent_contract.first_name }}</p>
-                <p class="text-gray-600"><strong>State:</strong> {{ userData.internal_agent_contract.middle_name }}
+                <p class="text-gray-600"><strong>City:</strong> {{ address.city }}</p>
+                <p class="text-gray-600"><strong>State:</strong> {{ address.state }}
                 </p>
                 <p class="text-gray-600"><strong>Zip Code:</strong> {{
-                    userData.internal_agent_contract.ssn }}</p>
-                <p class="text-gray-600"><strong>Move-In Date:</strong> {{ userData.internal_agent_contract.gender }}</p>
-                <p class="text-gray-600"><strong>Move-Out Date:</strong> {{ userData.internal_agent_contract.dob }}</p>
+                    address.zip }}</p>
+                <p class="text-gray-600"><strong>Move-In Date:</strong> {{ address.move_in_date }}</p>
+                <p class="text-gray-600"><strong>Move-Out Date:</strong> {{ address.move_out_date }}</p>
                 <!-- Add more data fields as needed -->
+            </div>
+        </div>
+        <h1 style="background-color: #134576;" class="mb-4 mt-4	text-center rounded-md py-2 text-white">
+            Additional Information
+        </h1>
+        <div class="grid grid-cols-2 p-4 md:grid-cols-2 lg:grid-cols-3 bg-white rounded-lg shadow-md gap-4">
+            <div class="bg-white  ">
+                <p class="text-gray-600"><strong>Resident Country:</strong> {{
+                    userData.internal_agent_contract.additional_info.resident_country
+                }}</p>
+            </div>
+
+            <div class="bg-white  ">
+                <p class="text-gray-600"><strong>Do you own your home?:</strong> {{
+                    userData.internal_agent_contract.additional_info.resident_your_home }}</p>
+            </div>
+            <div class="bg-white  ">
+                <p class="text-gray-600"><strong>City of Birth:</strong> {{
+                    userData.internal_agent_contract.additional_info.resident_city }}
+                </p>
+            </div>
+            <div class="bg-white  ">
+                <p class="text-gray-600"><strong>State of Birth:</strong> {{
+                    userData.internal_agent_contract.additional_info.resident_state }}</p>
+            </div>
+            <div class="bg-white  ">
+                <p class="text-gray-600"><strong>Maiden Name:</strong> {{
+                    userData.internal_agent_contract.additional_info.resident_maiden_name }}</p>
+            </div>
+        </div>
+        <h1 style="background-color: #134576;" class="mb-4 mt-4	text-center rounded-md py-2 text-white">
+            AML Course
+        </h1>
+        <div class="container mx-auto p-5">
+            <div class="mb-4">
+                <iframe :src="userData.internal_agent_contract.aml_course.url" width="100%" height="300px"></iframe>
+
+            </div>
+        </div>
+        <h1 style="background-color: #134576;" class="mb-4 mt-4	text-center rounded-md py-2 text-white">
+            Errors and Omissions Insurances 
+        </h1>
+        <div class="container mx-auto p-5">
+            <div class="mb-4">
+                <iframe :src="userData.internal_agent_contract.error_and_emission.url" width="100%" height="300px"></iframe>
+            </div>
+        </div>
+        <h1 style="background-color: #134576;" class="mb-4 mt-4	text-center rounded-md py-2 text-white">
+             Resident License 
+        </h1>
+        <div class="container mx-auto p-5">
+            <div class="mb-4">
+                <iframe :src="userData.internal_agent_contract.resident_license.url" width="100%" height="300px"></iframe>
+            </div>
+        </div>
+        <h1 style="background-color: #134576;" class="mb-4 mt-4	text-center rounded-md py-2 text-white">
+            Banking Information 
+        </h1>
+        <div class="container mx-auto p-5">
+            <div class="mb-4">
+                <iframe :src="userData.internal_agent_contract.banking_info.url" width="100%" height="300px"></iframe>
             </div>
         </div>
     </div>
 </template>
+<script>
+</script>
