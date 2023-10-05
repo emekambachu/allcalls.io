@@ -9,7 +9,7 @@
                 <!-- Signature Pad Component -->
 
                 <!-- Undo Button (if needed) -->
-                <VueSignaturePad id="signature" @change="handleSignatureChange"   ref="signaturePad" :options="options" />
+                <VueSignaturePad id="signature"    ref="signaturePad" :options="options" />
                 <button @click="undo" class=" button-custom mt-2 px-2 py-2 rounded-md">
                     Undo
                 </button>
@@ -43,10 +43,11 @@ export default {
             penColor: "black",
         },
         date: new Date(),
-        isLoading: false,
         sigError: '',
     }),
-
+    props: {
+        isLoading: Boolean,
+    },
     methods: {
         undo() {
             this.$refs.signaturePad.undoSignature();
@@ -66,55 +67,46 @@ export default {
         async save() {
             const { isEmpty, data } = this.$refs.signaturePad.saveSignature();
             this.sigError = ''
-            this.isLoading = true
+            
             if (!isEmpty) {
-                axios
-                    .post("/internal-agent/registration-signature", {
-                        signatue:data
-                    }, {
-                        headers: {
-                            'Content-Type': 'multipart/form-data' // Set the content type to multipart/form-data
-                        }
-                    }).then((response) => {
-                        console.log('response', response);
-                        this.isLoading = false
-                    })
-                    .catch((error) => {
-                        this.isLoading = false
-                        if (error.response) {
-                            if (error.response.status === 400) {
-                               console.log('erros', error.response);
-                            } else {
-                                console.log("Other errors", error.response.data);
-                            }
-                        } else if (error.request) {
-                            console.log("No response received", error.request);
-                        } else {
-                            console.log("Error", error.message);
-                        }
-                    });
+                this.$emit("signature", data);
+                // axios
+                //     .post("/internal-agent/registration-signature", {
+                //         signatue:data
+                //     }, {
+                //         headers: {
+                //             'Content-Type': 'multipart/form-data' // Set the content type to multipart/form-data
+                //         }
+                //     }).then((response) => {
+                //         console.log('response', response);
+                //         this.isLoading = false
+                //     })
+                //     .catch((error) => {
+                //         this.isLoading = false
+                //         if (error.response) {
+                //             if (error.response.status === 400) {
+                //                console.log('erros', error.response);
+                //             } else {
+                //                 console.log("Other errors", error.response.data);
+                //             }
+                //         } else if (error.request) {
+                //             console.log("No response received", error.request);
+                //         } else {
+                //             console.log("Error", error.message);
+                //         }
+                //     });
             } else {
-                this.isLoading = false
                 this.sigError = 'Please provide a signature.';
             }
 
             
         },
-        change() {
-            this.options = {
-                penColor: "#00f",
-            };
-        },
-        resume() {
-            this.options = {
-                penColor: "#c0f",
-            };
-        },
+        
     },
 };
 </script>
   
-<style>
+<style scoped>
 #signature {
     border: solid 1px black;
     padding: 10px;

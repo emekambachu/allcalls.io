@@ -39,7 +39,7 @@ let form = ref({
 });
 
 let step = ref(1);
-let contractStep = ref(3);
+let contractStep = ref(1);
 let emit = defineEmits(["close"]);
 let close = () => {
     emit("close");
@@ -153,14 +153,11 @@ let errorHandle = (data) => {
 
 
 
+let previewData = ref(null)
 
 
 
-
-
-
-let submit = () => {
-   
+let previewContract = () => {
     const requestData = {};
 
     const filteredAddressHistory = {};
@@ -170,7 +167,7 @@ let submit = () => {
         }
     }
 
-    console.log('AddressHistoryData.value', AddressHistoryData.value);
+    // console.log('AddressHistoryData.value', AddressHistoryData.value);
     Object.assign(requestData, {
         aml_course: form.value.aml_course ? 1 : null, // Send 1 if true, 0 if false
         omissions_insurance: form.value.omissions_insurance ? 1 : null, // Send 1 if true, 0 if false
@@ -192,6 +189,53 @@ let submit = () => {
             requestData[key] = null
         }
     }
+    previewData.value = requestData
+    StepsModal.value = false
+    contractModal.value = true
+
+}
+let SingnaturePre = ref(null)
+let signaturePreview = (val) => {
+    isLoading.value = true
+    SingnaturePre.value = val
+    // console.log('parent val', val);
+    submit()
+}
+let submit = () => {
+
+    const requestData = {};
+
+    const filteredAddressHistory = {};
+    for (const key in AddressHistoryData.value) {
+        if (key !== 'id' && AddressHistoryData.value[key].state !== 'Choose' && AddressHistoryData.value[key].address.trim() !== '') {
+            filteredAddressHistory[key] = AddressHistoryData.value[key];
+        }
+    }
+
+    // console.log('AddressHistoryData.value', AddressHistoryData.value);
+    Object.assign(requestData, {
+        aml_course: form.value.aml_course ? 1 : null, // Send 1 if true, 0 if false
+        omissions_insurance: form.value.omissions_insurance ? 1 : null, // Send 1 if true, 0 if false
+    });
+    Object.assign(requestData, contactDetailData.value);
+    Object.assign(requestData, legalFormData1.value);
+    Object.assign(requestData, legalFormData2.value);
+    Object.assign(requestData, filteredAddressHistory);
+    Object.assign(requestData, additionalInfoD.value);
+    requestData.residentLicensePdf = uploadLicensePdf.value;
+    requestData.bankingInfoPdf = uploadBankingInfoPdf.value;
+    requestData.uploadAmlPdf = uploadAmlPdf.value
+    requestData.uploadOmmisionPdf = uploadOmmisionPdf.value
+    requestData.accompanying_sign = accompanying_sign.value
+    requestData.accompanying_sign2 = SingnaturePre.value
+
+
+    for (const key in requestData) {
+        if (requestData.hasOwnProperty(key) && requestData[key] === 'Choose') {
+            requestData[key] = null
+        }
+    }
+
 
     isLoading.value = true;
 
@@ -202,15 +246,16 @@ let submit = () => {
             }
         })
         .then((response) => {
-            props.userData.value = {}
-            // console.log('what is res', response.data.contractData);
-            StepsModal.value = false
-            contractModal.value = true
-            // toaster("success", response.data.message);
-            // router.visit("/dashboard");
+            // props.userData.value = {}
+            // // console.log('what is res', response.data.contractData);
+            // StepsModal.value = false
+            // contractModal.value = true
+            toaster("success", response.data.message);
+            router.visit("/dashboard");
             isLoading.value = false;
         })
         .catch((error) => {
+            isLoading.value = false;
             if (error.response) {
                 if (error.response.status === 400) {
                     // console.log(error.response.data.step);
@@ -233,9 +278,7 @@ let editContract = () => {
     step.value = 1
     contractStep.value = 4
 }
-let parentFun = (val) => {
-    console.log('parent val', val);
-}
+
 </script>
 <style >
 .container {
@@ -394,11 +437,11 @@ input[type=number] {
                             </div>
                             <div v-show="step === 5">
                                 <BankInformationUpload @uploadBankingInfo="uploadBankingInfo"
-                                    :firstStepErrors="firstStepErrors" @submit="submit()" :isLoading="isLoading"
+                                    :firstStepErrors="firstStepErrors" @submit="previewContract" :isLoading="isLoading"
                                     @goback="goBack()"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
-                            <button @click="submit">show Contract</button>
+                            <!-- <button @click="previewContract">show Contract</button> -->
                             <!-- <vueSignature /> -->
                         </div>
                     </div>
@@ -446,8 +489,8 @@ input[type=number] {
                         </div>
 
                         <div class="px-12 py-2">
-                            <ContractDetailPage :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
-                            <SingnaturePad @test-fun="parentFun" />
+                            <ContractDetailPage :previewData="previewData" />
+                            <SingnaturePad  :isLoading="isLoading" @signature="signaturePreview" />
                         </div>
                     </div>
                 </div>

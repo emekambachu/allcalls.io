@@ -246,7 +246,7 @@ let ChangeTabBack = () => {
                     v-text="firstStepErrors[information.name][0]"></div>
             </div>
         </div>
-
+        
         <hr class="w-100 h-1 my-4 bg-gray-600 border-0 rounded dark:bg-gray-700">
     </div>
     <div class="px-5 pb-6">
