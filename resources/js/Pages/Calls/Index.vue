@@ -1,15 +1,21 @@
+
 <script setup>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import ClientDetailsModal from "@/Components/ClientDetailsModal.vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
-import { ref } from "vue";
+import { ref,onMounted } from "vue";
 import { toaster } from "@/helper.js";
 import Modal from "@/Components/Modal.vue";
+import moment from 'moment-timezone'
 let page = usePage();
 if (page.props.flash.message) {
   toaster("success", page.props.flash.message);
 }
+let timezone = "UTC";
+onMounted(() => {
+  timezone = document.querySelector("meta[name='user-timezone']").getAttribute('content');
+});
 
 let props = defineProps({
   calls: {
@@ -29,8 +35,6 @@ let props = defineProps({
   },
   states:Array,
 });
-
-console.log(props.calls);
 
 let fetchCalls = (page) => {
   // Create URL object from page
@@ -86,8 +90,8 @@ let capitalizeAndReplaceUnderscore = (str) => {
 
   return result;
 };
-</script>
 
+</script>
 <template>
   <Head title="Client Information" />
   <AuthenticatedLayout>
@@ -131,18 +135,18 @@ let capitalizeAndReplaceUnderscore = (str) => {
       <div class="mx-auto max-w-screen-xl sm:px-12">
         <div class="relative sm:rounded-lg overflow-hidden">
           <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left text-gray-400">
+            <table class="w-full text-sm text-left text-gray-400 table-responsive">
               <thead class="text-xs text-gray-300 uppercase bg-sky-900">
                 <tr>
                   <th scope="col" class="px-4 py-3">ID</th>
                   <th scope="col" class="px-4 py-3">HANG UP BY</th>
                   <th scope="col" class="px-4 py-3">CALL DURATION</th>
-                  <th scope="col" class="px-4 py-3">CALL TAKEN</th>
+                  <th scope="col" class="px-4 py-3" style="min-width:175px">CALL TAKEN</th>
                   <th scope="col" class="px-4 py-3">AMOUNT SPENT</th>
-                  <th scope="col" class="px-4 py-3">CALL TYPE</th>
-                  <th scope="col" class="px-4 py-3">CALLER ID</th>
-                  <th scope="col" class="px-4 py-3">URL</th>
-                  <th scope="col" class="px-4 py-3 text-end">Actions</th>
+                  <th scope="col" class="px-4 py-3" style="min-width:130px">CALL TYPE</th>
+                  <th scope="col" class="px-4 py-3" style="min-width:100px">CALLER ID</th>
+                  <th scope="col" class="px-4 py-3" style="min-width:175px">URL</th>
+                  <th scope="col" class="px-4 py-3  text-end" style="min-width:110px">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -159,8 +163,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
                       String(call.call_duration_in_seconds % 60).padStart(2, "0")
                     }}
                   </td>
-
-                  <th class="text-gray-600 px-4 py-3">{{ call.call_taken }}</th>
+                  <th class="text-gray-600 px-4 py-3">{{ moment(moment(call.call_taken).utc().format("YYYY-MM-DD HH:mm:ss")).tz(timezone).format("YYYY-MM-DD HH:mm:ss") }}</th>
                   <td class="text-gray-600 px-4 py-3">{{ call.amount_spent }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ call.call_type.type }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ call.from }}</td>

@@ -24,12 +24,14 @@ let props = defineProps({
   },
   currentPage: Number,
   callTypes: Array,
+  roles: {
+    type: Object,
+  },
   states: Array,
   route: String,
 });
 let emit = defineEmits(["close"]);
 let originalClient = props.userDetail;
-
 let close = () => {
   emit("close");
 };
@@ -37,7 +39,6 @@ let firstStepErrors = ref({});
 let uiEmailValidation = ref({
   isValid: false,
 });
-
 let balanceChange = ref(false);
 let form = useForm({
   first_name: props.userDetail.first_name,
@@ -47,6 +48,7 @@ let form = useForm({
   balance: props.userDetail.balance,
   comment: "",
   call_types: props.callTypes,
+  roles: props.roles,
   selected_states: props.callTypes.map((type) => {
     return {
       typeId: type.id,
@@ -102,6 +104,12 @@ let validateEmail = (email) => {
 const isLoading = ref(false);
 let saveChanges = () => {
   isLoading.value = true;
+  console.log(form.roles)
+  if (typeof form.roles !== 'object') {
+    form.roles = form.roles;
+  }else{
+    form.roles = "";
+  }
   if (validateEmail(form.email)) {
     if (changeBalance(form.balance) && !balanceChange.value) {
       balanceChange.value = true;
@@ -219,6 +227,13 @@ let ChangeTab = (val) => {
               <!-- <span class="chemical-formula">{{ transactionsCount }}</span>  -->
             </button>
           </li>
+          <li @click="ChangeTab(2)" class="mr-2  " :class="{ 'active-tab': tab == 2 }" role="presentation">
+            <button
+              class="inline-block py-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+              id="profile-tab" type="button" role="tab" aria-controls="profile" aria-selected="false">Roles
+              <!-- <span class="chemical-formula">{{ transactionsCount }}</span>  -->
+            </button>
+          </li>
         </ul>
 
       </div>
@@ -292,6 +307,25 @@ let ChangeTab = (val) => {
                   " track-by="value" label="label" mode="tags" :close-on-select="false" placeholder="Select a state">
                 </Multiselect>
               </div>
+            </div>
+            <div v-if="firstStepErrors">
+              <div v-if="firstStepErrors.selected_states" class="text-red-500"
+                v-text="firstStepErrors.selected_states[0]"></div>
+            </div>
+          </div>
+        </div>
+        <div v-if="tab == 2">
+          <div>
+            <div class="mb-4">
+              <label for="roles"
+                  class="block mb-2 text-sm font-medium text-gray-700">Select Role</label>
+              <!-- <select v-model="role" id='role' name="role"  class="select-custom" required>
+                  <option v-for="roles in form.roles" :key="roles" :value="roles" selected="">Select Role</option>
+              </select> -->
+               <select v-model="form.roles" id='roles' name="roles"  class="select-custom" required>
+                  <option selected="" disabled="" value="">Select Role</option>
+                  <option v-for="role in roles" if :value="role.id">{{role.name}}</option>
+              </select>
             </div>
             <div v-if="firstStepErrors">
               <div v-if="firstStepErrors.selected_states" class="text-red-500"

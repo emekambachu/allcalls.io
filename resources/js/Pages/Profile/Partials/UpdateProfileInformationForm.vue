@@ -19,6 +19,9 @@ let props = defineProps({
   callTypes: {
     type: Array,
   },
+  timezones:{
+    type: Object,
+  }
 });
 
 let user = usePage().props.auth.user;
@@ -41,6 +44,7 @@ let form = useForm({
         }),
     };
   }),
+  timezone:user.timezone
 });
 
 let selectedTypes = ref([]);
@@ -54,6 +58,7 @@ let onTypeUpdate = (event) => {
       1
     );
   }
+  console.log("selectedTypes",selectedTypes);
 };
 
 let customLabel = function (options, select$) {
@@ -63,6 +68,7 @@ let customLabel = function (options, select$) {
 };
 
 let submitForm = () => {
+  console.log("form",form);
   form.patch(route("profile.update"));
 };
 
@@ -144,6 +150,19 @@ let optionsForStates = (callType) => {
         />
 
         <InputError class="mt-2" :message="form.errors.phone" />
+      </div>
+
+      <div>
+        <InputLabel for="last_name" value="Timezone" />
+
+       <select  id='timezone' name="timezone"  class="select-custom" required v-model="form.timezone">
+          <option selected="" disabled="" value="">Select Timezone</option>
+          <option v-for="timezone in timezones" :value="timezone.name">{{timezone.name}}
+            </option>
+       
+      </select>
+
+        <InputError class="mt-2" :message="form.errors.last_name" />
       </div>
 
       <div v-if="mustVerifyEmail && user.email_verified_at === null">
