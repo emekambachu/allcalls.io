@@ -23,7 +23,11 @@
             <td style="width: 10%;" class="text-end"></td>
             <td style="width: 50%;" class="text-15">
                 <p style="text-align: center">
-                   Signature: ---------------------------------------------------
+
+                    <span>
+                <strong>Signature:-------------------------- &nbsp;</strong>
+                    <img src="{{asset('internal-agents/sign/dummy-sign.png')}}" alt="" width="150" height="150">
+                </span>
                 </p>
             </td>
             <td style="width: 30%;" class="text-end">

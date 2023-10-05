@@ -1270,7 +1270,7 @@ class RegistrationStepController extends Controller
             ->with('internalAgentContract.legalQuestion')
             ->with('internalAgentContract.residentLicense')->first();
 
-//        return view('pdf.internal-agent-contract.agent-contract', $returnArr);
+        return view('pdf.internal-agent-contract.agent-contract', $returnArr);
 
         $pdf = PDF::loadView('pdf.internal-agent-contract.agent-contract', $returnArr);
 
