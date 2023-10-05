@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\State;
 use App\Models\CallType;
 use App\Models\OnlineUser;
@@ -71,10 +72,24 @@ class AgentStatusAPIController extends Controller
 
     private function zipToState(string $zip): ?string
     {
-        // hard coded for now
-        return "NY";
+        $url = "https://zip-api.eu/api/v1/info/US-{$zip}";
+    
+        try {
+            $response = file_get_contents($url);
+    
+            if ($response === false) {
+                return null;
+            }
+    
+            $data = json_decode($response, true);
+    
+            return $data['state'] ?? null;
+        } catch (Exception $e) {
+            Log::error("Error fetching state from ZIP API: " . $e->getMessage());
+            return null;
+        }
     }
-
+    
     /**
      * Extract the first 3 characters (area code) from a phone number.
      *
