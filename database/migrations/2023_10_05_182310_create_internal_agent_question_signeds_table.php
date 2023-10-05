@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('internal_agent_contract_signeds', function (Blueprint $table) {
+        Schema::create('internal_agent_question_signeds', function (Blueprint $table) {
             $table->id();
             $table->foreignId('reg_info_id')
                 ->constrained('internal_agent_reg_infos')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
-            $table->string('signature_authorization')->nullable();
-            $table->text('signature_authorization_url')->nullable();
+            $table->string('accompanying_sign')->nullable();
+            $table->text('accompanying_sign_url')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('internal_agent_contract_signeds');
+        Schema::dropIfExists('internal_agent_question_signeds');
     }
 };

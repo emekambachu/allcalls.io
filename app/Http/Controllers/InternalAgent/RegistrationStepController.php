@@ -16,7 +16,6 @@ use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
@@ -29,12 +28,12 @@ class RegistrationStepController extends Controller
         // }
         $user = auth()->user();
         $userData = User::where('id', $user->id)->with('internalAgentContract.additionalInfo')
-        ->with('internalAgentContract.addresses')
-        ->with('internalAgentContract.amlCourse')
-        ->with('internalAgentContract.bankingInfo')
-        ->with('internalAgentContract.errorAndEmission')
-        ->with('internalAgentContract.legalQuestion')
-        ->with('internalAgentContract.residentLicense')->first();
+            ->with('internalAgentContract.addresses')
+            ->with('internalAgentContract.amlCourse')
+            ->with('internalAgentContract.bankingInfo')
+            ->with('internalAgentContract.errorAndEmission')
+            ->with('internalAgentContract.legalQuestion')
+            ->with('internalAgentContract.residentLicense')->first();
         $states = State::all();
         return Inertia::render('InternalAgent/ContractSteps', [
             'userData' => $userData,
@@ -315,6 +314,7 @@ class RegistrationStepController extends Controller
             'unresolved_matter_checkbox_19.required' => 'This field is required.',
             'unresolved_matter_checkbox_19_text.required_if' => 'This field is required.',
         ]);
+
         if ($step1SubStep3Validation->fails()) {
             return response()->json([
                 'success' => false,
@@ -322,7 +322,6 @@ class RegistrationStepController extends Controller
                 'errors' => $step1SubStep3Validation->errors(),
             ], 400);
         }
-
 
         $step1SubStep4Validation = Validator::make($request->all(), [
             'resident_country' => 'required',
@@ -335,7 +334,6 @@ class RegistrationStepController extends Controller
             'resident_city.required' => 'This field is required.',
             'resident_state.required' => 'This field is required.',
         ]);
-
         if ($step1SubStep4Validation->fails()) {
             return response()->json([
                 'success' => false,
@@ -1276,8 +1274,7 @@ class RegistrationStepController extends Controller
         $pdf = PDF::loadView('pdf.internal-agent-contract.agent-contract', $returnArr);
 
         return $pdf->stream();
-        dd('ds');
-        return $pdf->download('legal-question.pdf');
+
 
         //                $returnArr['questions'] = InternalAgentLegalQuestion::where('reg_info_id', $basicInfoId)->get(['name', 'value', 'description'])->toArray();
         //                $pdf = PDF::loadView('PDF.legal-questions', $returnArr);
@@ -1293,7 +1290,8 @@ class RegistrationStepController extends Controller
         //        return view('PDF.legal-questions');
     }
 
-    function registrationSignature(Request $request)  {
+    function registrationSignature(Request $request)
+    {
         dd($request);
     }
 }
