@@ -1,228 +1,3 @@
-<script setup>
-import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
-import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
-const props = defineProps({
-    contractStep: String,
-    firstStepErrors: Object,
-    userData: Object,
-});
-const emits = defineEmits();
-let page = usePage();
-
-let LegalInformation = ref([
-    {
-        id: 23,
-        name: 'lawsuit_checkbox_8',
-        heading: 'Has any lawsuit or claim ever been made against you, your surety company, or errors and omissions insurer, arising out of your sales or practices, or have you been refused surety bonding or E&O coverage?',
-        question: '8'
-    },
-    {
-        id: 24,
-        name: 'lawsuit_checkbox_8a',
-        heading: 'Has a bonding or surety company ever denied, paid on, or revoked a bond for you? 8B. Has any Errors & Omissions company ever denied, paid claims on, or cancelled your coverage?',
-        question: '8A'
-    },
-    {
-        id: 25,
-        name: 'lawsuit_checkbox_8b',
-        heading: 'Has any Errors & Ommisions company ever denied, paid claims on, or cancelled your coverage?',
-        question: '8b'
-    },
-    {
-        id: 26,
-        name: 'license_denied_checkbox_9',
-        heading: 'Have you ever had an insurance or securities license denied, suspended, cancelled, or revoked?',
-        question: '9'
-    },
-    {
-        id: 27,
-        name: 'regulatory_checkbox_10',
-        heading: 'Has any state or federal regulatory body found you to have been a cause of an investment or insurance-related business having its authorization to do business denied, suspended, revoked, or restricted?',
-        question: '10'
-    },
-    {
-        id: 28,
-        name: 'regulatory_revoked_checkbox_11',
-        heading: 'Has any state or federal regulatory agency revoked or suspended your license as an attorney, accountant, or federal contractor?',
-        question: '11'
-    },
-    {
-        id: 29,
-        name: 'regulatory_found_checkbox_12',
-        heading: 'Has any state or federal regulatory agency found you to have made a false statement or omission or been dishonest, unfair, or unethical?',
-        question: '12'
-    },
-    {
-        id: 30,
-        name: 'interr_licensing_checkbox_13',
-        heading: 'Have you ever had any interruptions in licensing?',
-        question: '13'
-    },
-    {
-        id: 31,
-        name: 'self_regularity_checkbox_14',
-        heading: 'Has any state, federal, or self-regulatory agency filed a complaint against you, fined, sanctioned, censured, penalized, or otherwise disciplined you for a violation of their regulations or state or federal statuses?',
-        question: '14'
-    },
-    {
-        id: 32,
-        name: 'self_regularity_checkbox_14a',
-        heading: 'Has any regulatory body ever sanctioned, censured, penalized, or otherwise disciplined you?',
-        question: '14A'
-    },
-    {
-        id: 33,
-        name: 'self_regularity_checkbox_14b',
-        heading: 'Has any state, federal, or self-regulatory agency filed a complaint against you, fined, or sanctioned you?',
-        question: '14B'
-    },
-    {
-        id: 34,
-        name: 'self_regularity_checkbox_14c',
-        heading: 'Have you ever been the subject of a consumer-initiated complaint?',
-        question: '14C'
-    },
-    {
-        id: 35,
-        name: 'bankruptcy_checkbox_15',
-        heading: 'Have you personally, or any insurance or securities brokerage firm with whom you have been associated, filed a bankruptcy petition, or declared bankruptcy? 15A. Have you personally filed a bankruptcy petition or declared bankruptcy?',
-        question: '15'
-    },
-    {
-        id: 36,
-        name: 'bankruptcy_checkbox_15a',
-        heading: 'Have you personally, or any insurance or securities brokerage firm with whom you have been associated, filed a bankruptcy petition, or declared bankruptcy? 15A. Have you personally filed a bankruptcy petition or declared bankruptcy?',
-        question: '15a'
-    },
-    {
-        id: 37,
-        name: 'bankruptcy_checkbox_15b',
-        heading: 'Has any insurance or securities brokerage firm, with whom you have been associated, filed a bankruptcy petition, or been declared bankrupt, either during your association with them or within 5 years after termination of such an association?',
-        question: '15B'
-    },
-    {
-        id: 38,
-        name: 'bankruptcy_checkbox_15c',
-        heading: 'Is the bankruptcy pending?',
-        question: '15C'
-    },
-    {
-        id: 39,
-        name: 'liens_against_checkbox_16',
-        heading: 'Are there any unsatisfied judgements or liens against you?',
-        question: '16'
-    },
-    {
-        id: 40,
-        name: 'connected_checkbox_17',
-        heading: 'Are you connected in any way with a bank, savings & loan association, or other lending or financial institution?',
-        question: '17'
-    },
-    {
-        id: 41,
-        name: 'aliases_checkbox_18',
-        heading: 'Have you ever used any other names or aliases?',
-        question: '18'
-    },
-    {
-        id: 42,
-        name: 'unresolved_matter_checkbox_19',
-        heading: 'Do you have any unresolved matters pending with the Internal Revenue Service, or other taxing authority?',
-        question: '19'
-    },
-
-
-
-])
-let form = ref({
-
-})
-if (page.props.auth.role === 'admin' && props.userData.internal_agent_contract) {
-    props.userData.internal_agent_contract.legal_question.forEach((question) => {
-        const matchingLegalInfo = LegalInformation.value.find((info) => info.name === question.name);
-        if (matchingLegalInfo) {
-            form.value[matchingLegalInfo.name] = question.value;
-            form.value[matchingLegalInfo.name + '_text'] = question.description
-        }
-    });
-}
-watch(form.value, (newForm, oldForm) => {
-    emits("updateFormData", newForm);
-});
-const requiredIDs = [37, 39, 40, 41, 42];
-let ChangeTab = () => {
-    for (const key in props.firstStepErrors) {
-        if (props.firstStepErrors.hasOwnProperty(key)) {
-            props.firstStepErrors[key] = [];
-        }
-    }
-    // Define an array of field names that are required
-    if (page.props.auth.role === 'internal-agent') {
-        for (const information of LegalInformation.value) {
-            // if (requiredIDs.includes(information.id)) {
-            let checboxValue = form.value[information.name]
-            if (!form.value[information.name]) {
-                props.firstStepErrors[information.name] = [`This field is required.`];
-            } else if (checboxValue === "YES") {
-                if (!form.value[information.name + '_text']) {
-                    props.firstStepErrors[information.name] = [`This field is required.`];
-                }
-            }
-            // }
-        }
-    }
-    // Check if there are any errors
-    const hasErrors = Object.values(props.firstStepErrors).some(errors => errors.length > 0);
-    if (!hasErrors) {
-        props.firstStepErrors = {}
-        emits("changeTab");
-    } else {
-        var element = document.getElementById("modal_main_id");
-        element.scrollIntoView();
-    }
-}
-let ChangeTabBack = () => {
-    emits("goback");
-}
-
-const signaturePadRef = ref(null);
-let signatureFun = (val) => {
-    console.log('what is val');
-}
-
-const options = {
-    penColor: '#c0f',
-};
-const undo = () => {
-    console.log('signaturePadRef', signaturePadRef.value);
-    if (signaturePadRef.value) {
-        signaturePadRef.value.undoSignature();
-    }
-};
-</script>
-<style>
-#signature {
-    border: solid 1px black;
-    padding: 10px;
-
-}
-
-#signature canvas {
-    height: 60px !important;
-}
-
-.container {
-    width: "100%";
-
-}
-
-.buttons {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    margin-top: 8px;
-}
-</style>
 <template>
     <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
         Legal Questions
@@ -275,8 +50,45 @@ const undo = () => {
                 any information changes, I will notify my agency office within 5 days of such change. Further, I understand
                 that my agency may contact me when I need to answer carrier-specific questions.</strong></p>
     </div>
-    <!-- <VueSignaturePad id="signature" @change="signatureFun" :options="options" /> -->
-    <button @click="undo">Undo</button>
+    <div class="mx-auto mb-5" style="width: 70%;">
+        <hr class="w-100 h-1 my-4 bg-gray-600 border-0 rounded dark:bg-gray-700">
+        <p class="text-center">
+            By signing below, l hereby authorize the Company to initiate credit entries and, if
+            necessary, adjustments for credit entries in error to the checking and/or savings account
+            indicated on this form. This authority is to remain in full effect until the Company has
+            received written notice from me for its termination. I understand that this authorization
+            is subject to the terms of any agent or representative contract, commission agreement,
+            or loan agreement that I may have now, or in the future, with the Company.
+        </p>
+    </div>
+    <div style="width: 70%;" class="container mx-auto p-5 flex justify-between">
+
+
+        <div class="" style="width: 60%;">
+            <!-- Signature Box -->
+            <div class=" mb-10 ">
+                <div>Signature:</div>
+                <!-- Signature Pad Component -->
+
+                <!-- Undo Button (if needed) -->
+                <!-- <VueSignaturePad id="signature2"  ref="signature2Pad" :options="options" /> -->
+                <VueSignaturePad id="signature"    ref="signature2Pad" :options="options" />
+                <button @click="undo" class=" button-custom mt-2 px-2 py-2 rounded-md">
+                    Undo
+                </button>
+                <p v-if="sigError" class="text-red-500 mt-2">{{ sigError }}</p>
+            </div>
+        </div>
+
+
+        <!-- Right Side (Date) -->
+        <div class="w-30 " style="margin-top: 73px;">
+            <div class="mb-2"><strong>Date:</strong> <span class="mx-2">{{ dateFormat(date) }}</span></div>
+            <!-- Underscore -->
+            <div style="width: 200px;" class="border-b border-black "></div>
+        </div>
+
+    </div>
     <div class="px-5 pb-6">
         <div class="flex justify-between flex-wrap">
             <div class="mt-4">
@@ -298,3 +110,223 @@ const undo = () => {
         </div>
     </div>
 </template>
+<script>
+export default {
+    name: "App",
+    data() {
+        return {
+            options: {
+                penColor: "black",
+            },
+            date: new Date(),
+            isLoading: false,
+            sigError: '',
+            LegalInformation: [
+                {
+                    id: 23,
+                    name: 'lawsuit_checkbox_8',
+                    heading: 'Has any lawsuit or claim ever been made against you, your surety company, or errors and omissions insurer, arising out of your sales or practices, or have you been refused surety bonding or E&O coverage?',
+                    question: '8'
+                },
+                {
+                    id: 24,
+                    name: 'lawsuit_checkbox_8a',
+                    heading: 'Has a bonding or surety company ever denied, paid on, or revoked a bond for you? 8B. Has any Errors & Omissions company ever denied, paid claims on, or cancelled your coverage?',
+                    question: '8A'
+                },
+                {
+                    id: 25,
+                    name: 'lawsuit_checkbox_8b',
+                    heading: 'Has any Errors & Ommisions company ever denied, paid claims on, or cancelled your coverage?',
+                    question: '8b'
+                },
+                {
+                    id: 26,
+                    name: 'license_denied_checkbox_9',
+                    heading: 'Have you ever had an insurance or securities license denied, suspended, cancelled, or revoked?',
+                    question: '9'
+                },
+                {
+                    id: 27,
+                    name: 'regulatory_checkbox_10',
+                    heading: 'Has any state or federal regulatory body found you to have been a cause of an investment or insurance-related business having its authorization to do business denied, suspended, revoked, or restricted?',
+                    question: '10'
+                },
+                {
+                    id: 28,
+                    name: 'regulatory_revoked_checkbox_11',
+                    heading: 'Has any state or federal regulatory agency revoked or suspended your license as an attorney, accountant, or federal contractor?',
+                    question: '11'
+                },
+                {
+                    id: 29,
+                    name: 'regulatory_found_checkbox_12',
+                    heading: 'Has any state or federal regulatory agency found you to have made a false statement or omission or been dishonest, unfair, or unethical?',
+                    question: '12'
+                },
+                {
+                    id: 30,
+                    name: 'interr_licensing_checkbox_13',
+                    heading: 'Have you ever had any interruptions in licensing?',
+                    question: '13'
+                },
+                {
+                    id: 31,
+                    name: 'self_regularity_checkbox_14',
+                    heading: 'Has any state, federal, or self-regulatory agency filed a complaint against you, fined, sanctioned, censured, penalized, or otherwise disciplined you for a violation of their regulations or state or federal statuses?',
+                    question: '14'
+                },
+                {
+                    id: 32,
+                    name: 'self_regularity_checkbox_14a',
+                    heading: 'Has any regulatory body ever sanctioned, censured, penalized, or otherwise disciplined you?',
+                    question: '14A'
+                },
+                {
+                    id: 33,
+                    name: 'self_regularity_checkbox_14b',
+                    heading: 'Has any state, federal, or self-regulatory agency filed a complaint against you, fined, or sanctioned you?',
+                    question: '14B'
+                },
+                {
+                    id: 34,
+                    name: 'self_regularity_checkbox_14c',
+                    heading: 'Have you ever been the subject of a consumer-initiated complaint?',
+                    question: '14C'
+                },
+                {
+                    id: 35,
+                    name: 'bankruptcy_checkbox_15',
+                    heading: 'Have you personally, or any insurance or securities brokerage firm with whom you have been associated, filed a bankruptcy petition, or declared bankruptcy? 15A. Have you personally filed a bankruptcy petition or declared bankruptcy?',
+                    question: '15'
+                },
+                {
+                    id: 36,
+                    name: 'bankruptcy_checkbox_15a',
+                    heading: 'Have you personally, or any insurance or securities brokerage firm with whom you have been associated, filed a bankruptcy petition, or declared bankruptcy? 15A. Have you personally filed a bankruptcy petition or declared bankruptcy?',
+                    question: '15a'
+                },
+                {
+                    id: 37,
+                    name: 'bankruptcy_checkbox_15b',
+                    heading: 'Has any insurance or securities brokerage firm, with whom you have been associated, filed a bankruptcy petition, or been declared bankrupt, either during your association with them or within 5 years after termination of such an association?',
+                    question: '15B'
+                },
+                {
+                    id: 38,
+                    name: 'bankruptcy_checkbox_15c',
+                    heading: 'Is the bankruptcy pending?',
+                    question: '15C'
+                },
+                {
+                    id: 39,
+                    name: 'liens_against_checkbox_16',
+                    heading: 'Are there any unsatisfied judgements or liens against you?',
+                    question: '16'
+                },
+                {
+                    id: 40,
+                    name: 'connected_checkbox_17',
+                    heading: 'Are you connected in any way with a bank, savings & loan association, or other lending or financial institution?',
+                    question: '17'
+                },
+                {
+                    id: 41,
+                    name: 'aliases_checkbox_18',
+                    heading: 'Have you ever used any other names or aliases?',
+                    question: '18'
+                },
+                {
+                    id: 42,
+                    name: 'unresolved_matter_checkbox_19',
+                    heading: 'Do you have any unresolved matters pending with the Internal Revenue Service, or other taxing authority?',
+                    question: '19'
+                },
+            ],
+            form: {},
+            accompanying_sign:null,
+        };
+    },
+    methods: {
+        undo() {
+            this.$refs.signature2Pad.undoSignature();
+        },
+        
+        dateFormat(date) {
+            const day = date.getDate().toString().padStart(2, "0"); // Add leading zero if needed
+            const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Month is zero-based, so add 1
+            const year = date.getFullYear();
+
+            // Create the formatted date string
+            return `${day}/${month}/${year}`;
+        },
+
+        ChangeTab() {
+            for (const key in this.firstStepErrors) {
+                if (this.firstStepErrors.hasOwnProperty(key)) {
+                    this.firstStepErrors[key] = [];
+                }
+            }
+           
+            if (this.page.auth.role === 'internal-agent') {
+                for (const information of this.LegalInformation) {
+                    let checboxValue = this.form[information.name];
+                    if (!this.form[information.name]) {
+                        this.firstStepErrors[information.name] = [`This field is required.`];
+                    } else if (checboxValue === "YES") {
+                        if (!this.form[information.name + '_text']) {
+                            this.firstStepErrors[information.name] = [`This field is required.`];
+                        }
+                    }
+                }
+            }
+
+            const hasErrors = Object.values(this.firstStepErrors).some(errors => errors.length > 0);
+
+            if (!hasErrors) {
+                const { isEmpty, data } = this.$refs.signature2Pad.saveSignature();
+                this.$emit("changeTab", {form:this.form, accompanying_sign:data});
+                this.firstStepErrors = {}; // Clear the errors by assigning a new empty object
+            } else {
+                var element = document.getElementById("modal_main_id");
+                element.scrollIntoView();
+            }
+        },
+        ChangeTabBack() {
+            this.$emit("goback");
+        },
+    },
+    props: {
+        contractStep: String,
+        firstStepErrors: Object,
+        userData: Object,
+        page: Object,
+    },
+
+};
+</script>
+
+<style>
+#signature {
+    border: solid 1px black;
+    padding: 10px;
+
+}
+
+#signature canvas {
+    height: 60px !important;
+}
+
+.container {
+    width: "100%";
+
+}
+
+.buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 8px;
+}
+</style>
+

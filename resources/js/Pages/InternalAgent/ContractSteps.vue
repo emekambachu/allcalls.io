@@ -17,6 +17,7 @@ import ContractDetailPage from '@/Pages/InternalAgent/ContractDetailPage.vue'
 import SingnaturePad from '@/Pages/InternalAgent/SingnaturePad.vue'
 
 import { toaster } from "@/helper.js";
+import { triggerRef } from "vue";
 
 
 let page = usePage();
@@ -29,7 +30,8 @@ let props = defineProps({
 });
 
 // console.log('userData', props.userData.value);
-let StepsModal = ref(false)
+let StepsModal = ref(true)
+let contractModal = ref(false)
 
 let form = ref({
     aml_course: false,
@@ -59,8 +61,16 @@ let goBack = () => {
 
 
 };
+const legalFormData1 = ref(null);
+const legalFormData2 = ref(null);
+let accompanying_sign = ref(null);
+let ChangeTab = (val) => {
 
-let ChangeTab = () => {
+    if (val) {
+        accompanying_sign.value = val.accompanying_sign
+        legalFormData1.value = val.form
+        // console.log('what is value', val);
+    }
     contractStep.value += 1
     var element = document.getElementById("modal_main_id");
     element.scrollIntoView();
@@ -81,8 +91,7 @@ let updateFormData = (val) => {
 }
 
 // Use an object to store the legal form data
-const legalFormData1 = ref(null);
-const legalFormData2 = ref(null);
+
 let uploadAmlPdf = ref(null)
 let uploadOmmisionPdf = ref(null)
 // Function to update the legal form data
@@ -140,7 +149,7 @@ let errorHandle = (data) => {
 }
 
 
-let contractModal = ref(true)
+
 
 
 
@@ -151,10 +160,7 @@ let contractModal = ref(true)
 
 
 let submit = () => {
-    // StepsModal.value = false
-    // contractModal.value = true
-    // console.log('llll');
-  
+   
     const requestData = {};
 
     const filteredAddressHistory = {};
@@ -178,6 +184,7 @@ let submit = () => {
     requestData.bankingInfoPdf = uploadBankingInfoPdf.value;
     requestData.uploadAmlPdf = uploadAmlPdf.value
     requestData.uploadOmmisionPdf = uploadOmmisionPdf.value
+    requestData.accompanying_sign = accompanying_sign.value
 
 
     for (const key in requestData) {
@@ -196,7 +203,7 @@ let submit = () => {
         })
         .then((response) => {
             props.userData.value = {}
-            console.log('what is res', response.data.contractData);
+            // console.log('what is res', response.data.contractData);
             StepsModal.value = false
             contractModal.value = true
             // toaster("success", response.data.message);
@@ -220,7 +227,7 @@ let submit = () => {
             }
         });
 };
-let editContract = () =>{
+let editContract = () => {
     contractModal.value = false
     StepsModal.value = true
     step.value = 1
@@ -231,8 +238,6 @@ let parentFun = (val) => {
 }
 </script>
 <style >
-
-
 .container {
     width: "100%";
     padding: 8px 16px;
@@ -356,7 +361,7 @@ input[type=number] {
                             </div>
                             <div v-show="contractStep === 3">
                                 <LegalInformation2 @updateFormData="updateLegalFormData2" :firstStepErrors="firstStepErrors"
-                                    @changeTab="ChangeTab()" @goback="ChangeTabBack()"
+                                    @changeTab="ChangeTab" :page="$page.props" @goback="ChangeTabBack()"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="contractStep === 4">
@@ -441,7 +446,7 @@ input[type=number] {
                         </div>
 
                         <div class="px-12 py-2">
-                            <ContractDetailPage :userData="$page.props.auth.role === 'admin' ? userData.value : userData"  />
+                            <ContractDetailPage :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             <SingnaturePad @test-fun="parentFun" />
                         </div>
                     </div>

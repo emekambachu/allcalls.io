@@ -10,7 +10,7 @@
 
                 <!-- Undo Button (if needed) -->
                 <VueSignaturePad id="signature" @change="handleSignatureChange"   ref="signaturePad" :options="options" />
-                <button @click="undo" class=" mt-1 bg-blue-500 text-white px-2 py-1 rounded-md">
+                <button @click="undo" class=" button-custom mt-2 px-2 py-2 rounded-md">
                     Undo
                 </button>
                 <p v-if="sigError" class="text-red-500 mt-2">{{ sigError }}</p>
@@ -46,16 +46,7 @@ export default {
         isLoading: false,
         sigError: '',
     }),
-    watch: {
-    // Watch for changes in the signature data
-    '$refs.signaturePad.signatureData'(newData, oldData) {
-      if (newData !== oldData) {
-        // Signature data has changed
-        console.log('Signature changed:', newData);
-        // You can perform any actions or updates here based on the new signature data
-      }
-    },
-  },
+
     methods: {
         undo() {
             this.$refs.signaturePad.undoSignature();
