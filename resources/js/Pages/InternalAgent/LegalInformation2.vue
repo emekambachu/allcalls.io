@@ -184,7 +184,45 @@ let ChangeTab = () => {
 let ChangeTabBack = () => {
     emits("goback");
 }
+
+const signaturePadRef = ref(null);
+let signatureFun = (val) => {
+    console.log('what is val');
+}
+
+const options = {
+    penColor: '#c0f',
+};
+const undo = () => {
+    console.log('signaturePadRef', signaturePadRef.value);
+    if (signaturePadRef.value) {
+        signaturePadRef.value.undoSignature();
+    }
+};
 </script>
+<style>
+#signature {
+    border: solid 1px black;
+    padding: 10px;
+
+}
+
+#signature canvas {
+    height: 60px !important;
+}
+
+.container {
+    width: "100%";
+
+}
+
+.buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 8px;
+}
+</style>
 <template>
     <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
         Legal Questions
@@ -237,6 +275,8 @@ let ChangeTabBack = () => {
                 any information changes, I will notify my agency office within 5 days of such change. Further, I understand
                 that my agency may contact me when I need to answer carrier-specific questions.</strong></p>
     </div>
+    <!-- <VueSignaturePad id="signature" @change="signatureFun" :options="options" /> -->
+    <button @click="undo">Undo</button>
     <div class="px-5 pb-6">
         <div class="flex justify-between flex-wrap">
             <div class="mt-4">
