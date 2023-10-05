@@ -1259,10 +1259,19 @@ class RegistrationStepController extends Controller
 
     public function pdf()
     {
-        //        $returnArr['questions'] = InternalAgentLegalQuestion::where('reg_info_id', auth()->user()->internalAgentContract->id)->get(['name', 'value', 'description'])->toArray();
-        //        dd(isset($returnArr['questions'][1]) && $returnArr['questions'][1]['name'] == 'convicted_checkbox_1a' && $returnArr['questions'][1]['value'] == 'NO');
-        $returnArr['question'] = InternalAgentLegalQuestion::find(414);
-        $pdf = PDF::loadView('PDF.legal-questions', $returnArr);
+        set_time_limit(0);
+
+        $returnArr['contractData'] = User::where('id', 308)
+            ->with('internalAgentContract.additionalInfo')
+            ->with('internalAgentContract.addresses')
+            ->with('internalAgentContract.amlCourse')
+            ->with('internalAgentContract.bankingInfo')
+            ->with('internalAgentContract.errorAndEmission')
+            ->with('internalAgentContract.legalQuestion')
+            ->with('internalAgentContract.residentLicense')->first();
+
+        $pdf = PDF::loadView('PDF.agent-contract', $returnArr);
+
         return $pdf->stream();
         dd('ds');
         return $pdf->download('legal-question.pdf');
