@@ -34,8 +34,8 @@
             <td style="width: 20%;" class="text-end"></td>
             <td style="width: 20%;" class="text-end"></td>
             <td style="width: 50%;" class="text-end">
-                <strong>Signature: &nbsp;</strong>
                 <span>
+                <strong>Signature:-------------------------- &nbsp;</strong>
                     <img src="{{asset('internal-agents/sign/dummy-sign.png')}}" alt="" width="150" height="150">
                 </span>
             </td>
