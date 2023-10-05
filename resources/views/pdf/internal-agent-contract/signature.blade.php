@@ -29,15 +29,6 @@
         authorization.
     </p>
 
-    <p>
-        By signing below, I hereby authorize the Company to Initiate credit entries and, if necessary,
-        adjustments for credit entries in error to the checking and/or savings account indicated on this form.
-        This authority is to remain in full effect until the Company has received written notice from me for its
-        termination. I understand that this authorization is subject to the terms of any agent or representative
-        contract, commission agreement, or loan agreement that I may have now, or in the future, with the
-        Company.
-    </p>
-
     <table class="w-100" style="margin-top: 30px; margin-bottom: 30px">
         <tr>
             <td style="width: 20%;" class="text-end"></td>

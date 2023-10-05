@@ -38,4 +38,8 @@ class InternalAgentRegInfo extends Model
         return $this->hasOne(InternalAgentResidentLicense::class, 'reg_info_id', 'id');
     }
 
+    public function getContractSign() {
+        return $this->hasOne(InternalAgentContractSigned::class, 'reg_info_id', 'id');
+    }
+
 }

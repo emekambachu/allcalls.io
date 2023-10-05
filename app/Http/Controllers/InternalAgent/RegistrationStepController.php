@@ -1243,7 +1243,7 @@ class RegistrationStepController extends Controller
                 ->with('internalAgentContract.legalQuestion')
                 ->with('internalAgentContract.residentLicense')->first();
 
-           
+
             return response()->json([
                 'success' => true,
                 'contractData' => $contractData
@@ -1270,7 +1270,9 @@ class RegistrationStepController extends Controller
             ->with('internalAgentContract.legalQuestion')
             ->with('internalAgentContract.residentLicense')->first();
 
-        $pdf = PDF::loadView('PDF.agent-contract', $returnArr);
+//        return view('pdf.internal-agent-contract.agent-contract', $returnArr);
+
+        $pdf = PDF::loadView('pdf.internal-agent-contract.agent-contract', $returnArr);
 
         return $pdf->stream();
         dd('ds');
