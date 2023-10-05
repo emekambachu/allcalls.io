@@ -37,21 +37,26 @@ class AgentStatusAPIController extends Controller
         ];
 
         $request->validate([
-            'phone' => 'required',
+            'phone' => 'sometimes|required_without_all:zip,state',
+            'zip' => 'sometimes|required_without_all:phone,state',
+            'state' => 'sometimes|required_without_all:phone,zip',
             'vertical' => 'required|in:' . $validVerticals,
         ], $customMessages);
 
-
-        $phone = $request->input('phone');
         $vertical = $verticalMapping[$request->input('vertical')];
 
-        // Get state of the phone number
-        $state = config("states.area_codes.{$this->extractAreaCode($phone)}");
 
-        if (! $state) {
-            return response()->json(['message' => 'Could not map the state for the given phone number.'], 400);
+        if ($request->has('phone')) {
+            $state = config("states.area_codes.{$this->extractAreaCode($request->input('phone'))}");
+        } elseif ($request->has('state')) {
+            $state = $request->input('state');
+        } elseif ($request->has('zip')) {
+            $state = $this->zipToState($request->input('zip'));
         }
-
+        if (!$state) {
+            return response()->json(['message' => 'Could not map the state for the given input.'], 400);
+        }    
+    
         Log::debug('Omega: ' . $state . ', vertical: ' . $vertical);
 
         // Agent lookup
@@ -62,6 +67,12 @@ class AgentStatusAPIController extends Controller
         } else {
             return response()->json(['online' => false], 200);
         }
+    }
+
+    private function zipToState(string $zip): ?string
+    {
+        // hard coded for now
+        return "NY";
     }
 
     /**
