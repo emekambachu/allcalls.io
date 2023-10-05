@@ -37,12 +37,12 @@ class OnlineUserTest extends TestCase
         OnlineUser::create(['user_id' => $user2->id, 'call_type_id' => $callType->id]);
         OnlineUser::create(['user_id' => $internalAgent->id, 'call_type_id' => $callType->id]);
 
-        $usersWithSufficientBalance = OnlineUser::withSufficientBalance()->get();
+        $usersWithSufficientBalance = OnlineUser::withSufficientBalance($callType)->get();
 
-        // Assert only $user1 (the highest bidder with $1 more than the second-highest bid) is in the list
+        // Assert only $user1 (who has enough balance to cover the bid right below theirs) is in the list
         $this->assertCount(1, $usersWithSufficientBalance);
         $this->assertEquals($user1->id, $usersWithSufficientBalance->first()->user_id);
-
+    
     }
 
     public function testScopeWithSufficientBalanceForInternalUsers(): void
@@ -59,19 +59,27 @@ class OnlineUserTest extends TestCase
         $internalAgentWithInsufficientBalance = User::factory()->create(['balance' => 30.0]);
         $internalAgentWithInsufficientBalance->roles()->attach(Role::where('name', 'internal-agent')->first());
 
+
+
         $callType = CallType::create(['type' => 'Auto Insurance']);
+
+        // Placing some bids
+        Bid::create(['user_id' => $internalAgentWithSufficientBalance->id, 'call_type_id' => $callType->id, 'amount' => 40.0]);
+        Bid::create(['user_id' => $internalAgentWithInsufficientBalance->id, 'call_type_id' => $callType->id, 'amount' => 30.0]);
+
 
         OnlineUser::create(['user_id' => $internalAgentWithSufficientBalance->id, 'call_type_id' => $callType->id]);
         OnlineUser::create(['user_id' => $internalAgentWithInsufficientBalance->id, 'call_type_id' => $callType->id]);
 
-        $usersWithSufficientBalanceForInternal = OnlineUser::withSufficientBalance()->get();
+        $usersWithSufficientBalanceForInternal = OnlineUser::withSufficientBalance($callType)->get();
 
         // Assert only the internal agent with sufficient balance is in the list
         $this->assertCount(1, $usersWithSufficientBalanceForInternal);
         $this->assertEquals($internalAgentWithSufficientBalance->id, $usersWithSufficientBalanceForInternal->first()->user_id);
-
+    
         // Additionally, verify that no regular user is in this list
         $this->assertEmpty($usersWithSufficientBalanceForInternal->where('user_id', '<>', $internalAgentWithSufficientBalance->id));
+    
     }
 
     public function testSortByCallPriority(): void

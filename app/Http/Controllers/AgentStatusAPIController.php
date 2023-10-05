@@ -85,7 +85,7 @@ class AgentStatusAPIController extends Controller
     
         // Check for online users matching the criteria
         $onlineUsers = OnlineUser::byCallTypeAndState($callTypeModel, $stateModel)
-            ->withSufficientBalance()
+            ->withSufficientBalance($callTypeModel)
             ->withCallStatusWaiting()
             ->get();
     

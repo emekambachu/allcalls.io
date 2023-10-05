@@ -56,10 +56,19 @@ class ChargeUserForCompletedCallTest extends TestCase
         // Trigger the CompletedCallEvent for each user
         $uniqueCallId = 'some-unique-id'; // This should be generated dynamically in a real-world scenario
 
-        event(new CompletedCallEvent($buyer1, $callType, $uniqueCallId));
 
-        // Assertions for buyer1...
-        $this->assertEquals(59, $buyer1->fresh()->balance); // As buyer1 should be charged $41 (1 more than the second highest bid of $40)
+        // Trigger the CompletedCallEvent for each user and check the resulting balance
+        event(new CompletedCallEvent($buyer1, $callType, $uniqueCallId));
+        $this->assertEquals(59, $buyer1->fresh()->balance); // buyer1 should be charged $41 (1 more than the second highest bid of $40)
+
+        event(new CompletedCallEvent($buyer2, $callType, $uniqueCallId));
+        $this->assertEquals(69, $buyer2->fresh()->balance); // buyer2 should be charged $31 (1 more than the next highest bid of $30)
+
+        event(new CompletedCallEvent($buyer3, $callType, $uniqueCallId));
+        $this->assertEquals(69, $buyer3->fresh()->balance); // buyer3 should be charged $31 (1 more than the next highest bid of $30)
+
+        event(new CompletedCallEvent($buyer4, $callType, $uniqueCallId));
+        $this->assertEquals(70, $buyer4->fresh()->balance); // buyer4 should also be charged $30 (their bid amount, since there's a tie)
 
     }
 }

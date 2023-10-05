@@ -174,7 +174,7 @@ class IncomingCallController extends Controller
         $callType = CallType::find($availableNumber->call_type_id);
 
         $onlineUsers = OnlineUser::byCallTypeAndState($callType, $stateModel)
-            ->withSufficientBalance()
+            ->withSufficientBalance($callType)
             ->withCallStatusWaiting()
             ->get();
 
@@ -244,7 +244,7 @@ class IncomingCallController extends Controller
 
         // Fetch all online users who have selected the same call type and state
         $onlineUsers = OnlineUser::byCallTypeAndState($callType, $stateModel)
-            ->withSufficientBalance()
+            ->withSufficientBalance($callType)
             ->withCallStatusWaiting()
             ->get();
 

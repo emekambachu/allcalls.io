@@ -38,23 +38,27 @@ class ChargeUserForCompletedCall
 
         // If the user is not an internal agent, find their bid for the call type
         if (!$isInternalAgent) {
-            // Fetch the two highest bids for the call type
-            $topTwoBids = Bid::where('call_type_id', $event->callType->id)
+            // Fetch all the bids for the call type in descending order
+            $allBids = Bid::where('call_type_id', $event->callType->id)
                 ->orderBy('amount', 'desc')
-                ->take(2)
                 ->get();
-                
-            if ($topTwoBids->count() == 2) {
-                // If our user has the highest bid
-                if ($topTwoBids->first()->user_id == $event->user->id) {
-                    $chargeAmount = $topTwoBids->last()->amount + 1; // Charge one more than the second highest bid
+
+            $userBid = $allBids->firstWhere('user_id', $event->user->id);
+
+            if ($userBid) {
+                $userBidIndex = $allBids->search(function ($bid) use ($userBid) {
+                    return $bid->id == $userBid->id;
+                });
+
+                if ($userBidIndex == 0) { // if the user has the highest bid
+                    $chargeAmount = $allBids[1]->amount + 1; // second highest bid + 1
                 } else {
-                    // If our user does not have the highest bid, then their charge is their own bid amount
-                    $chargeAmount = $topTwoBids->first()->amount;
+                    if (isset($allBids[$userBidIndex + 1])) { // if there's a lower bid
+                        $chargeAmount = $allBids[$userBidIndex + 1]->amount + 1; // next lower bid + 1
+                    } else {
+                        $chargeAmount = $userBid->amount; // lowest bid pays their amount
+                    }
                 }
-            } else {
-                Log::warning("Not enough bids found for CallType ID {$event->callType->id}. Defaulting to user's bid amount.");
-                $chargeAmount = $topTwoBids->first()->amount; // Defaulting to the only bid amount available
             }
         }
 

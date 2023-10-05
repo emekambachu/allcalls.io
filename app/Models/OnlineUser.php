@@ -46,19 +46,33 @@ class OnlineUser extends Model
             ->where('call_type_id', $callType->id);
     }
 
-    public function scopeWithSufficientBalance($query)
+
+    public function scopeWithSufficientBalance($query, $callType)
     {
-        return $query->whereHas('user', function ($query) {
+        return $query->whereHas('user', function ($query) use ($callType) {
             $query->where(function ($query) {
                 // For internal agents, they should always have a balance of at least $35
                 $query->whereHas('roles', function ($subQuery) {
                     $subQuery->where('name', 'internal-agent');
                 })->where('balance', '>=', 35);
-            })->orWhere(function ($query) {
-                // For normal users, determine the required minimum balance based on the second-highest bid
-                $secondHighestBid = DB::table('bids')->orderBy('amount', 'desc')->skip(1)->take(1)->value('amount');
+            })->orWhere(function ($query) use ($callType) {
+                // For normal users, determine the required minimum balance based on the bid below theirs for the specific call type
+                $userBid = DB::table('bids')
+                    ->where('call_type_id', $callType->id)
+                    ->where('user_id', $query->getModel()->getAttribute('id'))
+                    ->value('amount');
 
-                $minimumRequiredBalance = $secondHighestBid ? ($secondHighestBid + 1) : 35; // If there's no bid, fall back to $35
+                $minimumRequiredBalance = 35; // Default
+
+                if ($userBid !== null) {
+                    $lowerBid = DB::table('bids')
+                        ->where('call_type_id', $callType->id)
+                        ->where('amount', '<', $userBid)
+                        ->orderBy('amount', 'desc')
+                        ->value('amount');
+
+                    $minimumRequiredBalance = $lowerBid ? ($lowerBid + 1) : 35;
+                }
 
                 $query->whereDoesntHave('roles', function ($subQuery) {
                     $subQuery->where('name', 'internal-agent');
@@ -66,6 +80,7 @@ class OnlineUser extends Model
             });
         });
     }
+
 
 
     public function user()
