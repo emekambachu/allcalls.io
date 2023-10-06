@@ -65,19 +65,19 @@ let openClientModal = (call) => {
       <div class="mx-auto max-w-screen-xl sm:px-12">
         <div class="relative sm:rounded-lg overflow-hidden">
           <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left text-gray-400">
+            <table class="w-full text-sm text-left text-gray-400 table-responsive">
               <thead class="text-xs text-gray-300 uppercase bg-sky-900">
                 <tr>
                   <th scope="col" class="px-4 py-3">ID</th>
-                  <th scope="col" class="px-4 py-3">Name</th> 
+                  <th scope="col" class="px-4 py-3" style="min-width:150px">Name</th> 
                   <th scope="col" class="px-4 py-3">HANG UP BY</th>
                   <th scope="col" class="px-4 py-3">CALL DURATION</th>
-                  <th scope="col" class="px-4 py-3">CALL TAKEN</th>
+                  <th scope="col" class="px-4 py-3" style="min-width:175px">CALL TAKEN</th>
                   <th scope="col" class="px-4 py-3">AMOUNT SPENT</th>
-                  <th scope="col" class="px-4 py-3">CALL TYPE</th>
-                  <th scope="col" class="px-4 py-3">CALLER ID</th>
-                  <th scope="col" class="px-4 py-3">URL</th>
-                  <th scope="col" class="px-4 py-3 text-end">Actions</th>
+                  <th scope="col" class="px-4 py-3" style="min-width:130px">CALL TYPE</th>
+                  <th scope="col" class="px-4 py-3" style="min-width:100px">CALLER ID</th>
+                  <th scope="col" class="px-4 py-3" style="min-width:160px">URL</th>
+                  <th scope="col" class="px-4 py-3 text-end" style="min-width:110px">Actions</th>
                 </tr>
               </thead>
               <tbody>

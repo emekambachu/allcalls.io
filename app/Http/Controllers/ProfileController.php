@@ -15,7 +15,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-
+use App\Models\Timezone;
 class ProfileController extends Controller
 {
     /**
@@ -99,7 +99,7 @@ class ProfileController extends Controller
 
         $callTypes = CallType::all();
         $states = State::all();
-
+        $timezone = Timezone::all();
         $callTypes = $callTypes->map(function ($callType) use ($userCallTypesWithStates, $states) {
             // Find the corresponding call type in $userCallTypesWithStates, if it exists
             $userCallType = $userCallTypesWithStates->firstWhere('id', $callType->id);
@@ -122,13 +122,13 @@ class ProfileController extends Controller
         });
 
         $bids = Bid::whereUserId($request->user()->id)->with('callType')->get();
-
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
             'callTypes' => $callTypes,
             'bids' => $bids,
-            'internalAgent'=>$internalAgent
+            'internalAgent'=>$internalAgent,
+            'timezones' => $timezone
         ]);
     }
 
@@ -136,13 +136,10 @@ class ProfileController extends Controller
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $user = $request->user();
-
         $user->fill($request->validated());
-
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
         }
-
         $user->save();
 
         $incomingData = $this->buildIncomingData($request->selected_states);
