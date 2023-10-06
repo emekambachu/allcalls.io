@@ -235,7 +235,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
             <div>
                 <label for="middle_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Email<span
                         class="text-red-500">*</span></label>
-                <input type="text" v-model="form.email" id="default-input"
+                <input type="email" v-model="form.email" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <div v-if="firstStepErrors.email" class="text-red-500" v-text="firstStepErrors.email[0]"></div>
             </div>
@@ -515,7 +515,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
                 <div>
                     <label for="middle_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Email<span
                             class="text-red-500">*</span></label>
-                    <input type="text" v-model="form.business_email" id="default-input"
+                    <input type="email" v-model="form.business_email" id="default-input"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <div v-if="firstStepErrors.business_email" class="text-red-500"
                         v-text="firstStepErrors.business_email[0]">
@@ -528,7 +528,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
                     <label for="middle_name"
                         class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Website<span
                             class="text-red-500">*</span></label>
-                    <input type="text" v-model="form.business_website" id="default-input"
+                    <input type="url" v-model="form.business_website" id="default-input"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <div v-if="firstStepErrors.business_website" class="text-red-500"
                         v-text="firstStepErrors.business_website[0]"></div>
