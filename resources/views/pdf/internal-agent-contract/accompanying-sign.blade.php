@@ -20,13 +20,14 @@
 
     <table class="w-100" style="margin-bottom: 30px">
         <tr>
-            <td style="width: 10%;" class="text-end"></td>
+            <td style="width: 20%;" class="text-end">
+                <strong>Signature: &nbsp;</strong>
+            </td>
 
-            <td style="width: 50%;" class="text-15">
-                <p style="text-align: center;display: flex;align-items: center;">
+            <td style="width: 40%;" class="text-15">
+                <p style="text-align: start;display: flex;align-items: center;">
                     <span>
-                    <strong>Signature: &nbsp;</strong>
-                        <img src="{{asset(asset($contractData->internalAgentContract->getQuestionSign->sign_url))}}" alt="" width="250" height="100">
+                        <img src="{{asset(asset($contractData->internalAgentContract->getQuestionSign->sign_url))}}" alt="" width="250">
                 </span>
                 </p>
             </td>
