@@ -20,12 +20,13 @@
 
     <table class="w-100" style="margin-bottom: 30px">
         <tr>
-            <td style="width: 60%;" class="text-15">
-                <p style="text-align: center">
+            <td style="width: 10%;" class="text-end"></td>
 
+            <td style="width: 50%;" class="text-15">
+                <p style="text-align: center;display: flex;align-items: center;">
                     <span>
-                <strong>Signature: &nbsp;</strong>
-                    <img src="{{asset(asset($contractData->internalAgentContract->getQuestionSign->sign_url))}}" alt="" width="250" height="100">
+                    <strong>Signature: &nbsp;</strong>
+                        <img src="{{asset(asset($contractData->internalAgentContract->getQuestionSign->sign_url))}}" alt="" width="250" height="100">
                 </span>
                 </p>
             </td>
@@ -35,7 +36,7 @@
                         <strong>
                             Date: &nbsp;
                         </strong>
-                        {{\Carbon\Carbon::parse($contractData->internalAgentContract->getContractSign->created_at)->format('m/d/Y')}}
+                        {{\Carbon\Carbon::parse($contractData->internalAgentContract->getQuestionSign->created_at)->format('m/d/Y')}}
                     </span>
                 </p>
             </td>
