@@ -32,10 +32,10 @@ onMounted(() => {
             <div class="mb-4 text-gray-200">support@allcalls.io</div>
           </div>
         </div>
-		<div class="footer__wrap"><h2>Get mobile updates on new resources releases and important information</h2>
+	<!--	<div class="footer__wrap"><h2>Get mobile updates on new resources releases and important information</h2>
 <p>Text INSURED to 800-677-8036 signup for recurring marketing alerts. Message and data rates may apply.</p>
 
-<p>By subscribing above, you confirm you are authorized to add the telephone number and hereby give consent to receive SMS/text messages from you at the telephone number. You understand that your consent is not required as a condition to purchase products or services. When you subscribe to “AllCalls.io” program by AllCalls LLC. Message & data rates may apply. You also accept our <a href="/terms.php">Terms and Conditions</a> and our <a href="/privacy.php"> Privacy Policy</a>. Message frequency will be up to 1 message per day. You may revoke future alerts and messages via the online portal or by texting “STOP” to 800-677-8036 opt out. For help text “HELP” to 800-677-8036. T-Mobile is not liable for delayed or undelivered messages</p></div>
+<p>By subscribing above, you confirm you are authorized to add the telephone number and hereby give consent to receive SMS/text messages from you at the telephone number. You understand that your consent is not required as a condition to purchase products or services. When you subscribe to “AllCalls.io” program by AllCalls LLC. Message & data rates may apply. You also accept our <a href="/terms.php">Terms and Conditions</a> and our <a href="/privacy.php"> Privacy Policy</a>. Message frequency will be up to 1 message per day. You may revoke future alerts and messages via the online portal or by texting “STOP” to 800-677-8036 opt out. For help text “HELP” to 800-677-8036. T-Mobile is not liable for delayed or undelivered messages</p></div> -->
         <!-- <div class="footer__list">
             <ul>
               <li class="footer__label">Platform</li>
