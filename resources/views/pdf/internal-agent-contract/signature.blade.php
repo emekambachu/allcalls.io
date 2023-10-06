@@ -30,7 +30,7 @@
     </p>
 
 
-    <div style="width:35%; border-bottom:solid; height:120px; float: right;margin-top:30px;">
+    <div style="width:35%; border-bottom:solid; height:150px; float: right;margin-top:30px;">
         <img  src="{{ asset($contractData->internalAgentContract->getContractSign->sign_url)}}" style="width: 300px;margin-top:40px;margin-left:-8px;">
     </div>
     <br>
