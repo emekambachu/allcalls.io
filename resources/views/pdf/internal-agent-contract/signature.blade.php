@@ -36,7 +36,7 @@
             <td style="width: 50%;" class="text-end">
                 <span>
                 <strong>Signature: &nbsp;</strong>
-                    <img src="{{asset($contractData->internalAgentContract->getContractSign->sign_url)}}" alt="" width="150" height="150">
+                    <img src="{{asset($contractData->internalAgentContract->getContractSign->sign_url)}}" alt="" width="300" height="100">
                 </span>
             </td>
             <td style="width: 10%;" class="text-end"></td>

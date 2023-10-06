@@ -26,7 +26,7 @@
 
                     <span>
                 <strong>Signature: &nbsp;</strong>
-                    <img src="{{asset(asset($contractData->internalAgentContract->getQuestionSign->sign_url))}}" alt="" width="150" height="150">
+                    <img src="{{asset(asset($contractData->internalAgentContract->getQuestionSign->sign_url))}}" alt="" width="250" height="100">
                 </span>
                 </p>
             </td>
