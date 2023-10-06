@@ -1,5 +1,5 @@
 <div class="mt-3">
-    <h3 class="title">Contract - Signature Authorization</h3>
+    <h3 class="title">Contracting - Signature Authorization</h3>
     <p style="font-weight: bold">
         PLEASE READ THIS AUTHORIZATION, SIGN IN THE BOX BELOW AND SUBMIT THIS FORM BY FOLLOWING THE INSTRUCTIONS
         PROVIDED ON THE COVER PAGE.

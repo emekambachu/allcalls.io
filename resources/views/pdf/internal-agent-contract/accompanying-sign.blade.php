@@ -1,5 +1,5 @@
 <div class="mt-3">
-    <h3 class="title">Contract - Accompanying Documents</h3>
+    <h3 class="title">Contracting - Accompanying Documents</h3>
 
     <table class="w-100" style="margin-bottom: 15px">
         <tr>

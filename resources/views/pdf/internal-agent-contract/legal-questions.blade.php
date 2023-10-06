@@ -1,5 +1,5 @@
 <div class="mt-3">
-    <h3 class="title">Contract - Legal Question Explanation</h3>
+    <h3 class="title">Contracting - Legal Question Explanation</h3>
     <p style="font-weight: bold">
         For contracting and appointment requests, please answer the following questions. If you answer YES to any
         question, you must provide documentation including a full, detailed explanation and specific dates. Please

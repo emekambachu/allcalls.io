@@ -1,5 +1,5 @@
 <div class="mt-3">
-    <h3 class="title">Contract - Address History For The Past 7 Years</h3>
+    <h3 class="title">Contracting - Address History For The Past 7 Years</h3>
     @foreach($contractData->internalAgentContract->addresses as $key=>$address)
         <table class="w-100 line-h30">
             <tr>

@@ -1,5 +1,5 @@
 <div>
-    <h3 class="title">Contract - Basic Information</h3>
+    <h3 class="title">Contracting - Basic Information</h3>
 
     <table class="w-100 line-h30">
         <tr class="w-100">

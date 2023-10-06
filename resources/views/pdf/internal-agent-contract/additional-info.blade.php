@@ -1,5 +1,5 @@
 <div class="mt-3">
-    <h3 class="title">Contract - Additional Information</h3>
+    <h3 class="title">Contracting - Additional Information</h3>
     <table class="w-100 line-h30">
         <tr class="w-100">
             <td style="width: 30%;">
