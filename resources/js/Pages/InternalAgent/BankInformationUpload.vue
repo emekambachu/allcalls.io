@@ -85,7 +85,7 @@ let submit = () => {
         props.firstStepErrors.bankingInfoPdf = [`The Banking Information field is required.`];
     } else {
         emits("submit");
-        console.log('else');
+        // console.log('else');
     }
 }
 let ChangeTabBack = () => {
