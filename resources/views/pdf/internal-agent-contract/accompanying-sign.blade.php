@@ -20,8 +20,7 @@
 
     <table class="w-100" style="margin-bottom: 30px">
         <tr>
-            <td style="width: 10%;" class="text-end"></td>
-            <td style="width: 50%;" class="text-15">
+            <td style="width: 60%;" class="text-15">
                 <p style="text-align: center">
 
                     <span>
@@ -32,7 +31,12 @@
             </td>
             <td style="width: 30%;" class="text-end">
                 <p style="text-align: center">
-                    Date: -----------------------
+                    <span>
+                        <strong>
+                            Date: &nbsp;
+                        </strong>
+                        {{\Carbon\Carbon::parse($contractData->internalAgentContract->getContractSign->created_at)->format('m/d/Y')}}
+                    </span>
                 </p>
             </td>
             <td style="width: 10%;" class="text-end"></td>

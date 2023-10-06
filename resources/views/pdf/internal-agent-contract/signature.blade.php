@@ -31,12 +31,18 @@
 
     <table class="w-100" style="margin-top: 30px; margin-bottom: 30px">
         <tr>
-            <td style="width: 20%;" class="text-end"></td>
-            <td style="width: 20%;" class="text-end"></td>
-            <td style="width: 50%;" class="text-end">
+            <td style="width: 10%;" class="text-end"></td>
+            <td style="width: 10%;" class="text-end"></td>
+            <td style="width: 70%;" class="text-end">
                 <span>
                 <strong>Signature: &nbsp;</strong>
                     <img src="{{asset($contractData->internalAgentContract->getContractSign->sign_url)}}" alt="" width="300" height="100">
+                    <span>
+                        <strong>
+                            Date: &nbsp;
+                        </strong>
+                        {{\Carbon\Carbon::parse($contractData->internalAgentContract->getContractSign->created_at)->format('m/d/Y')}}
+                    </span>
                 </span>
             </td>
             <td style="width: 10%;" class="text-end"></td>
