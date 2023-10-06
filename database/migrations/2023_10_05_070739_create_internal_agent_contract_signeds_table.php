@@ -17,8 +17,8 @@ return new class extends Migration
                 ->constrained('internal_agent_reg_infos')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
-            $table->string('signature_authorization')->nullable();
-            $table->text('signature_authorization_url')->nullable();
+            $table->string('name')->nullable();
+            $table->text('sign_url')->nullable();
             $table->timestamps();
         });
     }

@@ -7,8 +7,10 @@ use App\Models\InternalAgentAdditionalInfo;
 use App\Models\InternalAgentAddress;
 use App\Models\InternalAgentAmlCourse;
 use App\Models\InternalAgentBankingInfo;
+use App\Models\InternalAgentContractSigned;
 use App\Models\InternalAgentErrorAndEmission;
 use App\Models\InternalAgentLegalQuestion;
+use App\Models\InternalAgentQuestionSigned;
 use App\Models\InternalAgentRegInfo;
 use App\Models\InternalAgentResidentLicense;
 use App\Models\State;
@@ -1232,25 +1234,72 @@ class RegistrationStepController extends Controller
             }
 
 
+            if (isset($request->accompanying_sign)) {
+                $accompanyingSign = InternalAgentQuestionSigned::where('reg_info_id', $basicInfoId)->first();
 
-            if ($request->file('bankingInfoPdf') && $request->file('bankingInfoPdf')->isValid()) {
-                $bankingInfoPdf = InternalAgentBankingInfo::where('reg_info_id', $basicInfoId)->first();
-                if ($bankingInfoPdf) {
-                    if (file_exists(asset('internal-agents/banking-info/' . $bankingInfoPdf->name))) {
-                        unlink(asset('internal-agents/banking-info/' . $bankingInfoPdf->name));
+                if ($accompanyingSign) {
+                    if (file_exists(asset('internal-agents/legal-question-signed/' . $accompanyingSign->name))) {
+                        unlink(asset('internal-agents/legal-question-signed/' . $accompanyingSign->name));
                     }
-                    $bankingInfoPdf->delete();
+                    $accompanyingSign->delete();
+                } else {
+                    $directory = public_path() . '/internal-agents/legal-question-signed/';
+                    if (!file_exists($directory)) {
+                        mkdir($directory, 0777, true);
+                    }
+
+                    $base64Content = $request->accompanying_sign;
+                    $folderPath = public_path() . '/internal-agents/legal-question-signed/';
+                    $base64Image = explode(";base64,", $base64Content);
+                    $explodeImage = explode("image/", $base64Image[0]);
+                    $imageType = trim($explodeImage[1]);
+                    $image_base64 = base64_decode($base64Image[1]);
+                    $fileName = $user->id . time();
+                    $file = $folderPath . $fileName . '.' . $imageType;
+                    file_put_contents($file, $image_base64);
+
+                    $path = asset('internal-agents/legal-question-signed/' . $fileName);
+
+                    InternalAgentQuestionSigned::updateOrCreate(['reg_info_id' => $basicInfoId], [
+                        'name' => $fileName,
+                        'sign_url' => $path,
+                    ]);
                 }
-
-                $name = $request->file('bankingInfoPdf')->getClientOriginalName();
-                $request->file('bankingInfoPdf')->move(public_path('internal-agents/banking-info'), $name);
-                $path = asset('internal-agents/banking-info/' . $name);
-
-                InternalAgentBankingInfo::updateOrCreate(['reg_info_id' => $basicInfoId], [
-                    'name' => $name,
-                    'url' => $path,
-                ]);
             }
+
+            if (isset($request->signature_authorization)) {
+                $signatureAuthorization = InternalAgentContractSigned::where('reg_info_id', $basicInfoId)->first();
+
+                if ($signatureAuthorization) {
+                    if (file_exists(asset('internal-agents/contract-signed/' . $signatureAuthorization->name))) {
+                        unlink(asset('internal-agents/contract-signed/' . $signatureAuthorization->name));
+                    }
+                    $signatureAuthorization->delete();
+                } else {
+                    $directory = public_path() . '/internal-agents/contract-signed/';
+                    if (!file_exists($directory)) {
+                        mkdir($directory, 0777, true);
+                    }
+
+                    $base64Content = $request->signature_authorization;
+                    $folderPath = public_path() . '/internal-agents/contract-signed/';
+                    $base64Image = explode(";base64,", $base64Content);
+                    $explodeImage = explode("image/", $base64Image[0]);
+                    $imageType = trim($explodeImage[1]);
+                    $image_base64 = base64_decode($base64Image[1]);
+                    $fileName = $user->id . time();
+                    $file = $folderPath . $fileName . '.' . $imageType;
+                    file_put_contents($file, $image_base64);
+
+                    $path = asset('internal-agents/legal-question-signed/' . $fileName);
+
+                    InternalAgentContractSigned::updateOrCreate(['reg_info_id' => $basicInfoId], [
+                        'name' => $fileName,
+                        'sign_url' => $path,
+                    ]);
+                }
+            }
+
 
 
             DB::commit();
@@ -1282,20 +1331,19 @@ class RegistrationStepController extends Controller
     {
         set_time_limit(0);
 
-
-        $directory = public_path().'/internal-agents/legal-question-sign/'; // Replace with your desired directory path
+        $directory = public_path() . '/internal-agents/legal-question-sign/'; // Replace with your desired directory path
 
         if (!file_exists($directory)) {
             mkdir($directory, 0777, true);
         }
 
         $base64Content = 'data:image/png;base64,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';
-        $folderPath = public_path().'/internal-agents/legal-question-sign/';
+        $folderPath = public_path() . '/internal-agents/legal-question-sign/';
         $base64Image = explode(";base64,", $base64Content);
         $explodeImage = explode("image/", $base64Image[0]);
         $imageType = trim($explodeImage[1]);
         $image_base64 = base64_decode($base64Image[1]);
-        $file = $folderPath . 'sign' . '.'.$imageType;
+        $file = $folderPath . 'sign' . '.' . $imageType;
         file_put_contents($file, $image_base64);
 
         dd('save');
