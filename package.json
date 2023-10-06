@@ -29,6 +29,7 @@
         "@vuepic/vue-datepicker": "^6.0.2",
         "chart.js": "^4.3.2",
         "date-fns": "^2.30.0",
+        "signature_pad": "^4.1.6",
         "moment-timezone": "^0.5.43",
         "tippy.js": "^6.3.7",
         "tourguidejs": "^1.1.2",
@@ -38,6 +39,8 @@
         "vue-multi-select": "^4.6.0",
         "vue-multiselect": "^2.1.7",
         "vue-shepherd": "^3.0.0",
+        "vue-signature": "^2.6.0",
+        "vue-signature-pad": "^3.0.2",
         "vue-tour": "^2.0.0",
         "vue3-carousel": "^0.3.1",
         "vue3-tour": "^0.3.4"

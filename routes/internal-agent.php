@@ -22,4 +22,7 @@ Route::prefix('internal-agent')->middleware(['auth', 'verified', 'internal-agent
         ->name('contract.steps');
     Route::post('registration-steps', [RegistrationStepController::class, 'store'])
         ->name('registration.steps');
+        Route::post('registration-signature', [RegistrationStepController::class, 'registrationSignature'])
+        ->name('registration.signature');
+        
 });

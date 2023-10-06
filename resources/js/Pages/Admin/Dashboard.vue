@@ -267,7 +267,7 @@ let formatNumberWith5DecimalPlaces = (number) => {
     <div class="px-16">
       <div class="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
         <VueDatePicker v-model="dateRange" range :preset-dates="presetDates" placeholder="Picker date range"
-          format="dd-MMM-yyyy" :multi-calendars="{ solo: true }" />
+          format="dd-MMM-yyyy" :multi-calendars="{ solo: true }" auto-apply />
       </div>
     </div>
     <div class="px-16">

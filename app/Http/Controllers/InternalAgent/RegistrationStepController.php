@@ -7,15 +7,17 @@ use App\Models\InternalAgentAdditionalInfo;
 use App\Models\InternalAgentAddress;
 use App\Models\InternalAgentAmlCourse;
 use App\Models\InternalAgentBankingInfo;
+use App\Models\InternalAgentContractSigned;
 use App\Models\InternalAgentErrorAndEmission;
 use App\Models\InternalAgentLegalQuestion;
+use App\Models\InternalAgentQuestionSigned;
 use App\Models\InternalAgentRegInfo;
 use App\Models\InternalAgentResidentLicense;
 use App\Models\State;
+use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
@@ -23,11 +25,14 @@ class RegistrationStepController extends Controller
 {
     public function contractSteps()
     {
-        $userData = auth()->user();
+        if (auth()->user()->legacy_key) {
+            return redirect()->route('dashboard');
+        }
+        $user = auth()->user();
         $states = State::all();
         return Inertia::render('InternalAgent/ContractSteps', [
-            'userData' => $userData,
             'states' => $states,
+            'userData' => $user,
         ]);
     }
 
@@ -303,6 +308,7 @@ class RegistrationStepController extends Controller
             'unresolved_matter_checkbox_19.required' => 'This field is required.',
             'unresolved_matter_checkbox_19_text.required_if' => 'This field is required.',
         ]);
+
         if ($step1SubStep3Validation->fails()) {
             return response()->json([
                 'success' => false,
@@ -310,7 +316,6 @@ class RegistrationStepController extends Controller
                 'errors' => $step1SubStep3Validation->errors(),
             ], 400);
         }
-
 
         $step1SubStep4Validation = Validator::make($request->all(), [
             'resident_country' => 'required',
@@ -323,7 +328,6 @@ class RegistrationStepController extends Controller
             'resident_city.required' => 'This field is required.',
             'resident_state.required' => 'This field is required.',
         ]);
-
         if ($step1SubStep4Validation->fails()) {
             return response()->json([
                 'success' => false,
@@ -385,8 +389,9 @@ class RegistrationStepController extends Controller
         try {
             $basicInfo = InternalAgentRegInfo::where('user_id', auth()->user()->id)->first();
             if (!$basicInfo) {
+                $user = auth()->user();
                 $basicInfo = InternalAgentRegInfo::create([
-                    'user_id' => auth()->user()->id,
+                    'user_id' => $user->id,
                     'first_name' => $request->first_name,
                     'last_name' => $request->last_name,
                     'middle_name' => isset($request->middle_name) ? $request->middle_name : null,
@@ -429,6 +434,8 @@ class RegistrationStepController extends Controller
                     'business_move_in_date' => isset($request->business_move_in_date) ? date('m/d/Y', strtotime($request->business_move_in_date)) : null,
                 ]);
                 $basicInfoId = $basicInfo->id;
+                $user->legacy_key = true;
+                $user->save();
             } else {
                 $basicInfoId = $basicInfo->id;
                 $basicInfo->update([
@@ -484,6 +491,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->convicted_checkbox_1_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -495,6 +504,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->convicted_checkbox_1a_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -506,6 +517,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->convicted_checkbox_1b_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -517,6 +530,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->convicted_checkbox_1c_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -528,6 +543,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->convicted_checkbox_1d_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -539,6 +556,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->convicted_checkbox_1e_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -550,6 +569,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->convicted_checkbox_1f_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -561,6 +582,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->convicted_checkbox_1g_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -572,6 +595,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->convicted_checkbox_1h_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -583,6 +608,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->lawsuit_checkbox_2_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -594,6 +621,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->lawsuit_checkbox_2a_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -605,6 +634,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->lawsuit_checkbox_2b_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -616,6 +647,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->lawsuit_checkbox_2c_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -627,6 +660,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->lawsuit_checkbox_2d_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -638,6 +673,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->alleged_engaged_checkbox_3_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -649,6 +686,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->found_engaged_checkbox_4_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -660,6 +699,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->terminate_contract_checkbox_5_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -671,6 +712,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->terminate_contract_checkbox_5a_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -682,6 +725,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->terminate_contract_checkbox_5b_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -693,6 +738,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->terminate_contract_checkbox_5c_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -703,7 +750,9 @@ class RegistrationStepController extends Controller
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
-                    'description' => $value == 'YES' ? $request->cancel_insu_cause_checkbox_text : null,
+                    'description' => $value == 'YES' ? $request->cancel_insu_cause_checkbox_6_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -715,6 +764,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->insurer_checkbox_7_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -726,6 +777,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->lawsuit_checkbox_8_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -737,6 +790,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->lawsuit_checkbox_8a_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -748,6 +803,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->lawsuit_checkbox_8b_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -758,7 +815,9 @@ class RegistrationStepController extends Controller
                     'reg_info_id' => $basicInfoId,
                     'name' => $name,
                     'value' => $value,
-                    'description' => $value == 'YES' ? $request->license_denied_checkbox_text : null,
+                    'description' => $value == 'YES' ? $request->license_denied_checkbox_9_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -770,6 +829,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->regulatory_checkbox_10_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -781,6 +842,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->regulatory_revoked_checkbox_11_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -792,6 +855,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->regulatory_found_checkbox_12_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -803,6 +868,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->interr_licensing_checkbox_13_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -814,6 +881,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->self_regularity_checkbox_14_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -825,6 +894,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->self_regularity_checkbox_14a_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -836,6 +907,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->self_regularity_checkbox_14b_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -847,6 +920,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->self_regularity_checkbox_14c_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -858,6 +933,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->bankruptcy_checkbox_15_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -869,6 +946,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->bankruptcy_checkbox_15a_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -880,6 +959,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->bankruptcy_checkbox_15b_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -891,6 +972,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->bankruptcy_checkbox_15c_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -902,6 +985,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->liens_against_checkbox_16_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -913,6 +998,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->connected_checkbox_17_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -924,6 +1011,8 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->aliases_checkbox_18_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -935,23 +1024,14 @@ class RegistrationStepController extends Controller
                     'name' => $name,
                     'value' => $value,
                     'description' => $value == 'YES' ? $request->unresolved_matter_checkbox_19_text : null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
             if (count($legalQuestions)) {
                 InternalAgentLegalQuestion::where('reg_info_id', $basicInfoId)->delete();
                 DB::table('internal_agent_legal_questions')->insert($legalQuestions);
-                $returnArr['questions'] = InternalAgentLegalQuestion::where('reg_info_id', $basicInfoId)->get(['name', 'value', 'description'])->toArray();
-                $pdf = PDF::loadView('PDF.legal-questions', $returnArr);
-                $pdfFileName = auth()->user()->email."_legal_questions.pdf";
-
-                $directory = public_path('internal-agents/legal-questions');
-
-                if(!File::exists($directory)) {
-                    File::makeDirectory($directory, $mode = 0755, true, true);
-                }
-
-                $pdf->save($directory . '/' . $pdfFileName);
             }
 
             InternalAgentAdditionalInfo::updateOrCreate(['reg_info_id' => $basicInfoId], [
@@ -1106,7 +1186,6 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
-
             if ($request->file('residentLicensePdf') && $request->file('residentLicensePdf')->isValid()) {
 
                 $residentPDf = InternalAgentResidentLicense::where('reg_info_id', $basicInfoId)->first();
@@ -1145,12 +1224,79 @@ class RegistrationStepController extends Controller
                 ]);
             }
 
+
+            if (isset($request->accompanying_sign)) {
+                $accompanyingSign = InternalAgentQuestionSigned::where('reg_info_id', $basicInfoId)->first();
+
+                if ($accompanyingSign) {
+                    if (file_exists(asset('internal-agents/legal-question-signed/' . $accompanyingSign->name))) {
+                        unlink(asset('internal-agents/legal-question-signed/' . $accompanyingSign->name));
+                    }
+                    $accompanyingSign->delete();
+                } else {
+                    $directory = public_path() . '/internal-agents/legal-question-signed/';
+                    if (!file_exists($directory)) {
+                        mkdir($directory, 0777, true);
+                    }
+
+                    $base64Content = $request->accompanying_sign;
+                    $folderPath = public_path() . '/internal-agents/legal-question-signed/';
+                    $base64Image = explode(";base64,", $base64Content);
+                    $explodeImage = explode("image/", $base64Image[0]);
+                    $imageType = trim($explodeImage[1]);
+                    $image_base64 = base64_decode($base64Image[1]);
+                    $fileName = $user->id . time();
+                    $file = $folderPath . $fileName . '.' . $imageType;
+                    file_put_contents($file, $image_base64);
+
+                    $path = asset('internal-agents/legal-question-signed/'. $fileName.'.'.$imageType);
+
+                    InternalAgentQuestionSigned::updateOrCreate(['reg_info_id' => $basicInfoId], [
+                        'name' => $fileName.'.'.$imageType,
+                        'sign_url' => $path,
+                    ]);
+                }
+            }
+
+            if (isset($request->signature_authorization)) {
+                $signatureAuthorization = InternalAgentContractSigned::where('reg_info_id', $basicInfoId)->first();
+
+                if ($signatureAuthorization) {
+                    if (file_exists(asset('internal-agents/contract-signed/' . $signatureAuthorization->name))) {
+                        unlink(asset('internal-agents/contract-signed/' . $signatureAuthorization->name));
+                    }
+                    $signatureAuthorization->delete();
+                } else {
+                    $directory = public_path() . '/internal-agents/contract-signed/';
+                    if (!file_exists($directory)) {
+                        mkdir($directory, 0777, true);
+                    }
+
+                    $base64Content = $request->signature_authorization;
+                    $folderPath = public_path() . '/internal-agents/contract-signed/';
+                    $base64Image = explode(";base64,", $base64Content);
+                    $explodeImage = explode("image/", $base64Image[0]);
+                    $imageType = trim($explodeImage[1]);
+                    $image_base64 = base64_decode($base64Image[1]);
+                    $fileName = $user->id . time();
+                    $file = $folderPath . $fileName . '.' . $imageType;
+                    file_put_contents($file, $image_base64);
+
+                    $path = asset('internal-agents/contract-signed/'.$fileName.'.'.$imageType);
+
+                    InternalAgentContractSigned::updateOrCreate(['reg_info_id' => $basicInfoId], [
+                        'name' => $fileName.'.'.$imageType,
+                        'sign_url' => $path,
+                    ]);
+                }
+            }
+
             DB::commit();
+
             return response()->json([
                 'success' => true,
-                'message' => 'Registration steps completed successfully',
+                'message' => 'Contract signed successfully.'
             ], 200);
-
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -1162,16 +1308,27 @@ class RegistrationStepController extends Controller
 
     public function pdf()
     {
-        $returnArr['questions'] = InternalAgentLegalQuestion::where('reg_info_id', auth()->user()->internalAgentContract->id)->get(['name', 'value', 'description'])->toArray();
-//        dd(isset($returnArr['questions'][1]) && $returnArr['questions'][1]['name'] == 'convicted_checkbox_1a' && $returnArr['questions'][1]['value'] == 'NO');
+        set_time_limit(0);
 
-        $pdf = PDF::loadView('PDF.legal-questions', $returnArr);
+        $returnArr['contractData'] = User::where('id', 3)
+            ->with('internalAgentContract.additionalInfo')
+            ->with('internalAgentContract.addresses')
+            ->with('internalAgentContract.amlCourse')
+            ->with('internalAgentContract.bankingInfo')
+            ->with('internalAgentContract.errorAndEmission')
+            ->with('internalAgentContract.legalQuestion')
+            ->with('internalAgentContract.residentLicense')
+            ->with('internalAgentContract.getQuestionSign')
+            ->with('internalAgentContract.getContractSign')->first();
+//        return view('pdf.internal-agent-contract.agent-contract', $returnArr);
+
+        $pdf = PDF::loadView('pdf.internal-agent-contract.agent-contract', $returnArr);
+
         return $pdf->stream();
-        dd('ds');
-        return $pdf->download('legal-questions.pdf');
+    }
 
-
-//        dd('pdf');
-//        return view('PDF.legal-questions');
+    function registrationSignature(Request $request)
+    {
+        dd($request);
     }
 }

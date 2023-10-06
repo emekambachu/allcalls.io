@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\OnlineAgentsController;
 use App\Http\Controllers\Admin\InternalAgentController;
 use App\Http\Controllers\Admin\AvailableNumberController;
 use App\Http\Controllers\Admin\CallsController;
+use App\Http\Controllers\Admin\LegalQuestionPdfController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,10 +58,12 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
     Route::get('/agent/clients/{id}', [InternalAgentController::class, 'getAgentClients']);
 
+    Route::get('/download/agent/contract/pdf/{id}', [InternalAgentController::class, 'downloadAgentContractPdf'])->name('admin.agent.contract.pdf');
+
     // Available Number
     Route::get('/available-numbers',[AvailableNumberController::class,'index']);
     Route::post('/available-number/store',[AvailableNumberController::class,'store']);
-    Route::post('/available-number/{id}', [AvailableNumbertController::class, 'update']);
+    Route::post('/available-number/{id}', [AvailableNumberController::class, 'update']);
 
 
     // Route::get('/active-users', [ActiveUsersController::class, 'index'])->name('admin.active-users.index');

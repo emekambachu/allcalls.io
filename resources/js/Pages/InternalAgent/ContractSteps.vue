@@ -2,7 +2,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
 import InputError from "@/Components/InputError.vue";
-import { Head, Link, useForm , usePage ,router } from "@inertiajs/vue3";
+import { Head, Link, useForm, usePage, router } from "@inertiajs/vue3";
 import ContactDetail from "@/Pages/InternalAgent/ContactDetail.vue";
 import Tabs from '@/Pages/InternalAgent/Tabs.vue'
 import LegalInformation from '@/Pages/InternalAgent/LegalInformation.vue'
@@ -13,19 +13,25 @@ import UploadLicence from '@/Pages/InternalAgent/UploadLicence.vue'
 import BankInformationUpload from '@/Pages/InternalAgent/BankInformationUpload.vue'
 import AmLCourse from '@/Pages/InternalAgent/AmLCourse.vue'
 import ErrorsAndEmissions from '@/Pages/InternalAgent/ErrorsAndEmissions.vue'
+import ContractDetailPage from '@/Pages/InternalAgent/ContractDetailPage.vue'
+import SingnaturePad from '@/Pages/InternalAgent/SingnaturePad.vue'
+
 import { toaster } from "@/helper.js";
+import { triggerRef } from "vue";
 
 
 let page = usePage();
 if (page.props.flash.message) {
-  toaster("success", page.props.flash.message);
+    toaster("success", page.props.flash.message);
 }
 let props = defineProps({
     userData: Object,
     states: Array,
 });
 
+// console.log('userData', props.userData.value);
 let StepsModal = ref(true)
+let contractModal = ref(false)
 
 let form = ref({
     aml_course: false,
@@ -55,8 +61,17 @@ let goBack = () => {
 
 
 };
-
-let ChangeTab = () => {
+let legalFormData1 = ref(null);
+let legalFormData2 = ref(null);
+let accompanying_sign = ref(null);
+let ChangeTab = (data) => {
+    if (data && contractStep.value === 2) {
+        legalFormData1.value = data
+    }
+    if (data && contractStep.value === 3) {
+        accompanying_sign.value = data.accompanying_sign
+        legalFormData2.value = data.form
+    }
     contractStep.value += 1
     var element = document.getElementById("modal_main_id");
     element.scrollIntoView();
@@ -73,22 +88,16 @@ let firstStepErrors = ref({});
 let contactDetailData = ref(null)
 let updateFormData = (val) => {
     contactDetailData.value = val
-    // console.log('contactDetailData', contactDetailData.value);
 }
 
 // Use an object to store the legal form data
-const legalFormData1 = ref(null);
-const legalFormData2 = ref(null);
+
 let uploadAmlPdf = ref(null)
 let uploadOmmisionPdf = ref(null)
 // Function to update the legal form data
 
-const updateLegalFormData1 = (val) => {
-    legalFormData1.value = val
-};
-const updateLegalFormData2 = (val) => {
-    legalFormData2.value = val
-};
+
+
 let AddressHistoryData = ref(null)
 let AddressHistoryfun = (val) => {
     AddressHistoryData.value = val
@@ -137,8 +146,14 @@ let errorHandle = (data) => {
 
 
 
-let submit = () => {
 
+
+
+let previewData = ref(null)
+
+
+
+let previewContract = () => {
     const requestData = {};
 
     const filteredAddressHistory = {};
@@ -148,7 +163,7 @@ let submit = () => {
         }
     }
 
-    console.log('AddressHistoryData.value', AddressHistoryData.value);
+    // console.log('AddressHistoryData.value', AddressHistoryData.value);
     Object.assign(requestData, {
         aml_course: form.value.aml_course ? 1 : null, // Send 1 if true, 0 if false
         omissions_insurance: form.value.omissions_insurance ? 1 : null, // Send 1 if true, 0 if false
@@ -162,6 +177,7 @@ let submit = () => {
     requestData.bankingInfoPdf = uploadBankingInfoPdf.value;
     requestData.uploadAmlPdf = uploadAmlPdf.value
     requestData.uploadOmmisionPdf = uploadOmmisionPdf.value
+    requestData.accompanying_sign = accompanying_sign.value
 
 
     for (const key in requestData) {
@@ -169,6 +185,52 @@ let submit = () => {
             requestData[key] = null
         }
     }
+    previewData.value = requestData
+    StepsModal.value = false
+    contractModal.value = true
+
+}
+let signature_authorization = ref(null)
+let signaturePreview = (val) => {
+    isLoading.value = true
+    signature_authorization.value = val
+    submit()
+}
+let submit = () => {
+
+    const requestData = {};
+
+    const filteredAddressHistory = {};
+    for (const key in AddressHistoryData.value) {
+        if (key !== 'id' && AddressHistoryData.value[key].state !== 'Choose' && AddressHistoryData.value[key].address.trim() !== '') {
+            filteredAddressHistory[key] = AddressHistoryData.value[key];
+        }
+    }
+
+    // console.log('AddressHistoryData.value', AddressHistoryData.value);
+    Object.assign(requestData, {
+        aml_course: form.value.aml_course ? 1 : null, // Send 1 if true, 0 if false
+        omissions_insurance: form.value.omissions_insurance ? 1 : null, // Send 1 if true, 0 if false
+    });
+    Object.assign(requestData, contactDetailData.value);
+    Object.assign(requestData, legalFormData1.value);
+    Object.assign(requestData, legalFormData2.value);
+    Object.assign(requestData, filteredAddressHistory);
+    Object.assign(requestData, additionalInfoD.value);
+    requestData.residentLicensePdf = uploadLicensePdf.value;
+    requestData.bankingInfoPdf = uploadBankingInfoPdf.value;
+    requestData.uploadAmlPdf = uploadAmlPdf.value
+    requestData.uploadOmmisionPdf = uploadOmmisionPdf.value
+    requestData.accompanying_sign = accompanying_sign.value
+    requestData.signature_authorization = signature_authorization.value
+
+
+    for (const key in requestData) {
+        if (requestData.hasOwnProperty(key) && requestData[key] === 'Choose') {
+            requestData[key] = null
+        }
+    }
+
 
     isLoading.value = true;
 
@@ -179,11 +241,16 @@ let submit = () => {
             }
         })
         .then((response) => {
+            // props.userData.value = {}
+            // // console.log('what is res', response.data.contractData);
+            // StepsModal.value = false
+            // contractModal.value = true
             toaster("success", response.data.message);
             router.visit("/dashboard");
             isLoading.value = false;
         })
         .catch((error) => {
+            isLoading.value = false;
             if (error.response) {
                 if (error.response.status === 400) {
                     // console.log(error.response.data.step);
@@ -200,10 +267,27 @@ let submit = () => {
             }
         });
 };
-
+let editContract = () => {
+    contractModal.value = false
+    StepsModal.value = true
+    step.value = 1
+    contractStep.value = 1
+}
 
 </script>
 <style >
+.container {
+    width: "100%";
+    padding: 8px 16px;
+}
+
+.buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 8px;
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -281,10 +365,21 @@ input[type=number] {
                 <!-- This is the overlay -->
                 <div style="width: 75%;" class="relative w-full py-10  max-h-full mx-auto" id="modal_main_id">
                     <div class="relative bg-white rounded-lg shadow-lg ">
-                        <div  class="flex justify-end">
-                            <Link :href="route('logout')" method="post" as="button"
+                        <div class="flex justify-end">
+                            <Link v-show="$page.props.auth.role != 'admin'" :href="route('logout')" method="post"
+                                as="button"
                                 class="underline text-sm text-gray-600 mr-5 mt-5  dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
                             Log Out</Link>
+                            <button v-show="$page.props.auth.role === 'admin'" @click="close" type="button"
+                                class="text-gray-400 bg-transparent mr-2 mt-2 hover:bg-gray-200 hover:text-gray-700 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
+                                data-modal-hide="defaultModal">
+                                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 14 14">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                </svg>
+                                <span class="sr-only">Close modal</span>
+                            </button>
                         </div>
 
                         <div class="px-12 py-2">
@@ -292,203 +387,98 @@ input[type=number] {
                             <Tabs :step="step" />
 
                             <div v-show="contractStep === 1" class="">
+
                                 <ContactDetail @updateFormData="updateFormData" :firstStepErrors="firstStepErrors"
-                                    @changeTab="ChangeTab()" :states="states" :userData="userData" />
+                                    @changeTab="ChangeTab" :states="states"
+                                    :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="contractStep === 2">
-                                <LegalInformation @updateFormData="updateLegalFormData1" :firstStepErrors="firstStepErrors"
-                                    @changeTab="ChangeTab()" @goback="ChangeTabBack()" />
+                                <LegalInformation  :firstStepErrors="firstStepErrors"
+                                    @changeTab="ChangeTab" @goback="ChangeTabBack()"
+                                    :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="contractStep === 3">
-                                <LegalInformation2 @updateFormData="updateLegalFormData2" :firstStepErrors="firstStepErrors"
-                                    @changeTab="ChangeTab()" @goback="ChangeTabBack()" />
+                                <LegalInformation2  :firstStepErrors="firstStepErrors"
+                                    @changeTab="ChangeTab" :page="$page.props" @goback="ChangeTabBack()"
+                                    :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="contractStep === 4">
                                 <AddressHistory @addRessHistory="AddressHistoryfun" @changeTab="ChangeTab()"
-                                    @goback="ChangeTabBack()" :states="states" />
+                                    @goback="ChangeTabBack()" :states="states"
+                                    :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="contractStep === 5">
                                 <AdditionalInfo @additionalInfoData="additionalInformation"
                                     :firstStepErrors="firstStepErrors" :states="states" @changeTab="NextStep()"
-                                    @goback="ChangeTabBack()" />
+                                    @goback="ChangeTabBack()"
+                                    :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="step === 2" class="pt-6">
                                 <AmLCourse :firstStepErrors="firstStepErrors" @uploadPdfAml="uploadPdfAml"
-                                    @changeTab="NextStep()" @goback="goBack()" />
-                                <!-- <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
-                                    AML Course
-                                </h1>
-
-                                <div class="bg-blue-50 py-10 px-6 rounded-lg shadow-md">
-                                    <div class="mb-4">
-                                        <a target="_blank"
-                                            href="https://www.financialservicecareers.com/_files/ugd/0fb1f5_0a18cb8e43734547b1c42be4c1a0a52b.pdf">
-                                            <strong class="text-blue-600 mr-1 hover:underline">Detailed PDF Guide</strong>
-                                        </a>outlining the required steps within the AML
-                                        course.
-                                    </div>
-                                    <div class="mb-4">
-                                        <a target="_blank" href="https://secure.reged.com/Login/vu/VirtualUniversity/EQUIS">
-                                            <strong class="text-blue-600 mr-1  hover:underline">Click Here</strong>
-                                        </a> <span>for the registration and course completion</span>
-                                    </div>
-                                    <div class="text-gray-600">
-                                        Please download PDF for course completion after completing the course.
-                                    </div>
-                                </div>
-                                <div class="flex justify-between my-5">
-                                    <div></div>
-                                    <div>
-                                        <input id="link-checkbox" v-model="form.aml_course" type="checkbox" value=""
-                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                        <label for="link-checkbox"
-                                            class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">I have
-                                            completed
-                                            the AML course.<span class="text-red-500 ">*</span></label>
-                                    </div>
-                                </div>
-                                <div v-if="firstStepErrors.aml_course" class="text-red-500"
-                                    v-text="firstStepErrors.aml_course[0]"></div>
-                                <div class="px-5 pb-6">
-                                    <div class="flex justify-between flex-wrap">
-                                        <div class="mt-4">
-
-                                            <button type="button" @click.prevent="goBack"
-                                                class="button-custom-back px-3 py-2 rounded-md">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                    stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
-                                                </svg>
-                                                Back
-                                            </button>
-                                        </div>
-                                        <div class="mt-4">
-                                            <button type="button" :class="{ 'opacity-25': amlCourseRead }"
-                                                :disabled="amlCourseRead" @click.prevent="NextStep"
-                                                class="button-custom px-3 py-2 rounded-md">
-                                                Next Step
-                                            </button>
-
-                                        </div>
-                                    </div>
-                                </div> -->
+                                    @changeTab="NextStep()" @goback="goBack()"
+                                    :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
 
                             <div v-show="step === 3" class="pt-6">
                                 <ErrorsAndEmissions :firstStepErrors="firstStepErrors"
-                                    @uploadPdfOmmision="uploadPdfOmmision" @changeTab="NextStep()" @goback="goBack()" />
-                                <!-- <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
-                                    Errors and Omissions Insurances
-                                </h1>
-                                <div class="bg-blue-50 py-10 px-6 rounded-lg shadow-md">
-                                    <div class="text-gray-600 mb-4">
-                                        Complete the sign-up process and apply for Errors and Omissions Insurance.
-                                    </div>
-                                    <div class="mb-4">
-                                        <a target="_blank"
-                                            href="https://mga-eo.com/apply/nd/lh-eo?_ga=2.22742075.1083085069.1638818057-1601577075.1638818057">
-                                            <strong class="text-blue-600 mr-1 hover:underline">MGA E&O Insurance Application
-                                            </strong>
-                                        </a>for registration and application.
-                                    </div>
-                                </div>
-                                <div class="flex justify-between my-5">
-                                    <div></div>
-                                    <div>
-                                        <input id="link-omissions_insurance" v-model="form.omissions_insurance"
-                                            type="checkbox" value=""
-                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                        <label for="link-omissions_insurance"
-                                            class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Errors and
-                                            Omissions Insurances.<span class="text-red-500 ">*</span></label>
-                                    </div>
-                                </div>
-                                <div v-if="firstStepErrors.omissions_insurance" class="text-red-500"
-                                    v-text="firstStepErrors.omissions_insurance[0]"></div>
-                                <div class="px-5 pb-6">
-                                    <div class="flex justify-between flex-wrap">
-                                        <div class="mt-4">
-
-                                            <button type="button" @click.prevent="goBack"
-                                                class="button-custom-back px-3 py-2 rounded-md">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                    stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
-                                                </svg>
-                                                Back
-                                            </button>
-                                        </div>
-                                        <div class="mt-4">
-                                            <button type="button" :class="{ 'opacity-25': omissionsInsurance }"
-                                                :disabled="omissionsInsurance" @click.prevent="NextStep"
-                                                class="button-custom px-3 py-2 rounded-md">
-                                                Next Step
-                                            </button>
-
-                                        </div>
-                                    </div>
-                                </div> -->
+                                    @uploadPdfOmmision="uploadPdfOmmision" @changeTab="NextStep()" @goback="goBack()"
+                                    :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
 
                             <div v-show="step === 4">
                                 <UploadLicence @uploadLicense="uploadLicense" :firstStepErrors="firstStepErrors"
-                                    @changeTab="NextStep()" @goback="goBack()" />
+                                    @changeTab="NextStep()" @goback="goBack()"
+                                    :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="step === 5">
                                 <BankInformationUpload @uploadBankingInfo="uploadBankingInfo"
-                                    :firstStepErrors="firstStepErrors" @submit="submit()" @goback="goBack()" />
+                                    :firstStepErrors="firstStepErrors" @submit="previewContract" :isLoading="isLoading"
+                                    @goback="goBack()"
+                                    :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
+                            <!-- <button @click="previewContract">show Contract</button> -->
+                            <!-- <vueSignature /> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+        </Transition>
+        <Transition name="modal" enter-active-class="transition ease-out  duration-300 transform"
+            enter-from-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            enter-to-class="opacity-100 translate-y-0 sm:scale-100"
+            leave-active-class="transition ease-in duration-200 transform"
+            leave-from-class="opacity-100 translate-y-0 sm:scale-100"
+            leave-to-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
 
+            <div id="defaultModal" v-if="contractModal" tabindex="-1"
+                class="flex items-center justify-center fixed inset-0 z-50 w-full h-full overflow-x-hidden overflow-y-auto max-h-full mx-4 sm:mx-0">
 
-                            <!-- <div class="px-5 pb-6">
-                                <div class="flex justify-between flex-wrap">
-                                    <div class="mt-4">
-                                        <a v-show="step > 1" href="#" @click.prevent="goBack"
-                                            class="button-custom-back px-3 py-2 rounded-md">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
-                                            </svg>
-                                            Step Back</a>
-                                        <a v-show="step != 2 && contractStep != 6 && contractStep != 1 && contractStep != 0 && contractStep != 4"
-                                            href="#" @click.prevent="ChangeTabBack"
-                                            class="button-custom-back px-3 py-2 rounded-md">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
-                                            </svg>
-                                            Back
-                                        </a>
-                                    </div>
-                                    <div class="mt-4">
-                                        <button :class="{ 'opacity-25': amlCourseRead }" :disabled="amlCourseRead"
-                                            v-show="contractStep === 5 || step > 1 && step != 5 && step != 3" type="button"
-                                            @click.prevent="NextStep" class="button-custom px-3 py-2 rounded-md">
-                                            Next Step
-                                        </button>
-                                        <button :class="{ 'opacity-25': omissionsInsurance }" :disabled="omissionsInsurance"
-                                            v-show="contractStep != 5 && step != 5 && step === 3" type="button"
-                                            @click.prevent="NextStep" class="button-custom px-3 py-2 rounded-md">
-                                            Next Step
-                                        </button>
-                                        <button v-show="contractStep != 5 && step === 1 && contractStep != 4" type="button"
-                                            @click.prevent="ChangeTab" class="button-custom px-3 py-2 rounded-md">
-                                            Next
-                                        </button>
-                                        <button @click="submit" type="button" v-show="step === 5"
-                                            class="button-custom px-3 py-2 rounded-md"
-                                            :class="{ 'opacity-25': areAllArraysEmpty || isLoading }"
-                                            :disabled="areAllArraysEmpty || isLoading">
-                                            <global-spinner :spinner="isLoading" /> Register
-                                        </button>
-                                    </div>
-                                </div>
-                            </div> -->
+                <div class="fixed inset-0 bg-black opacity-90 blurred-overlay"></div>
+                <!-- This is the overlay -->
+                <div style="width: 75%;" class="relative w-full py-10  max-h-full mx-auto" id="modal_main_id">
+                    <div class="relative bg-white rounded-lg shadow-lg ">
+                        <div class="flex justify-end">
+                            <Link v-show="$page.props.auth.role != 'admin'" :href="route('logout')" method="post"
+                                as="button"
+                                class="underline text-sm text-gray-600 mr-5 mt-5  dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
+                            Log Out</Link>
+                            
+                            <button v-show="$page.props.auth.role === 'admin'" @click="close" type="button"
+                                class="text-gray-400 bg-transparent mr-2 mt-2 hover:bg-gray-200 hover:text-gray-700 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
+                                data-modal-hide="defaultModal">
+                                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 14 14">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                </svg>
+                                <span class="sr-only">Close modal</span>
+                            </button>
+                        </div>
+
+                        <div class="px-12 py-2">
+                            <ContractDetailPage :previewData="previewData" />
+                            <SingnaturePad :userData="userData" @editContract="editContract"  :isLoading="isLoading" @signature="signaturePreview" />
                         </div>
                     </div>
                 </div>
@@ -496,3 +486,5 @@ input[type=number] {
         </Transition>
     </AuthenticatedLayout>
 </template>
+
+

@@ -122,13 +122,39 @@ let appDownloadModal = ref(false);
               </ResponsiveNavLink>
             </div>
             <div class="pt-2 pb-3 space-y-1">
+              <ResponsiveNavLink :href="route('admin.calls.index')" :active="route().current('admin.calls.index') ||
+                route().current('admin.calls.detail')
+                ">
+                Calls
+              </ResponsiveNavLink>
+            </div>
+            <div class="pt-2 pb-3 space-y-1">
               <ResponsiveNavLink :href="route('admin.customer.index')" :active="route().current('admin.customer.index') ||
                 route().current('admin.customer.detail')
                 ">
                 Customers
               </ResponsiveNavLink>
             </div>
-
+            <div class="pt-2 pb-3 space-y-1">
+              <ResponsiveNavLink :href="route('admin.agent.index')" :active="route().current('admin.agent.index') ||
+                route().current('admin.agent.detail')
+                ">
+                Internal Agents
+              </ResponsiveNavLink>
+            </div>
+          
+            <div class="pt-2 pb-3 space-y-1">
+              <ResponsiveNavLink :href="route('admin.online-agents.index')"
+                :active="route().current('admin.online-agents.index')">
+                Online Agents
+              </ResponsiveNavLink>
+            </div>
+            <div class="pt-2 pb-3 space-y-1">
+              <ResponsiveNavLink :href="route('admin.agent-invites.index')"
+                :active="route().current('admin.agent-invites.index')">
+                Agent Invites
+              </ResponsiveNavLink>
+            </div>
             <!-- Responsive Settings Options -->
             <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
               <div class="px-4">
@@ -181,6 +207,7 @@ let appDownloadModal = ref(false);
               <img src="/img/clients.png" alt="" />
               Internal Agents
             </NavLink>
+            
             <NavLink class="mb-10 gap-2" :href="route('admin.online-agents.index')"
               :active="route().current('admin.online-agents.index')">
               <img src="/img/clients.png" alt="" />

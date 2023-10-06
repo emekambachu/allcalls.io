@@ -36,7 +36,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'device_token',
         'banned',
         'call_status',
-        'timezone'
+        'legacy_key',
+        'timezone',
     ];
 
     /**

@@ -12,6 +12,7 @@ use App\Models\State;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Rules\CallTypeIdEixst;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -60,10 +61,20 @@ class InternalAgentController extends Controller
                 });
             }
         })
+        ->with('internalAgentContract.additionalInfo')
+        ->with('internalAgentContract.addresses')
+        ->with('internalAgentContract.amlCourse')
+        ->with('internalAgentContract.bankingInfo')
+        ->with('internalAgentContract.errorAndEmission')
+        ->with('internalAgentContract.legalQuestion')
+        ->with('internalAgentContract.residentLicense')
+        ->with('internalAgentContract.getQuestionSign')
+        ->with('internalAgentContract.getContractSign')
         ->with('states')
         ->with('callTypes')
         ->orderBy('created_at','desc')
         ->paginate(10);
+
 
         $callTypes = CallType::get();
         $states = State::get();
@@ -90,7 +101,6 @@ class InternalAgentController extends Controller
             'ClientCount' => $ClientCount,
         ]);
     }
-
 
     public function store(Request $request){
         $validator = Validator::make($request->all(), [
@@ -197,12 +207,14 @@ class InternalAgentController extends Controller
             'activities' => $activities
         ]);
     }
+
     public function getAgentClients($id){
         $Clients = Client::where('user_id', $id)->paginate(10);
         return response()->json([
             'clients' => $Clients
         ]);
     }
+
     public function update(Request $request, $id)
     {
         // echo $request->all();
@@ -280,5 +292,24 @@ class InternalAgentController extends Controller
         return response()->json(['error'=>$e], 500);
     }
 
+    }
+
+    public function downloadAgentContractPdf($id) {
+        set_time_limit(0);
+
+        $returnArr['contractData'] = User::where('id', $id)
+            ->with('internalAgentContract.additionalInfo')
+            ->with('internalAgentContract.addresses')
+            ->with('internalAgentContract.amlCourse')
+            ->with('internalAgentContract.bankingInfo')
+            ->with('internalAgentContract.errorAndEmission')
+            ->with('internalAgentContract.legalQuestion')
+            ->with('internalAgentContract.residentLicense')
+            ->with('internalAgentContract.getQuestionSign')
+            ->with('internalAgentContract.getContractSign')->first();
+
+        $pdf = PDF::loadView('pdf.internal-agent-contract.agent-contract', $returnArr);
+        $fileName = $returnArr['contractData']->internalAgentContract->first_name;
+        return $pdf->download($fileName.'-contract.pdf');
     }
 }
