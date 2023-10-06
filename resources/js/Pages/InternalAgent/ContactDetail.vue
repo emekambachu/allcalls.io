@@ -56,6 +56,7 @@ let form = ref({
     business_move_in_date: null,
 })
 onMounted(() => {
+    console.log('mounted CALL')
     if (page.props.auth.role === 'admin' && props.userData?.internal_agent_contract) {
         form.value = props.userData.internal_agent_contract
     } else {
@@ -68,9 +69,9 @@ onMounted(() => {
 
 })
 const emits = defineEmits();
-watch(form.value, (newForm, oldForm) => {
-    emits("updateFormData", newForm);
-});
+// watch(form.value, (newForm, oldForm) => {
+//     emits("updateFormData", newForm);
+// });
 watch(individual_business, (newVal) => {
     if (newVal === false) {
         form.value.business_name = null,
@@ -130,6 +131,7 @@ let ChangeTab = () => {
     const hasErrors = Object.values(props.firstStepErrors).some(errors => errors.length > 0);
     if (!hasErrors) {
         emits("changeTab");
+        emits("updateFormData", form.value);
     } else {
         var element = document.getElementById("modal_main_id");
         element.scrollIntoView();

@@ -1,7 +1,8 @@
 <style scoped>
 #signature {
-    border: solid 1px black;
+    border: solid 1px lightgray;
     padding: 10px;
+    border-radius: 10px;
     
 }
 
@@ -277,8 +278,9 @@ export default {
     }),
     mounted() {
         const canvasElement = this.$refs.signature2Pad.$el.querySelector('canvas');
-        canvasElement.width = 300;
-        canvasElement.height = 60;
+        // console.log('canvasElement',canvasElement);
+        canvasElement.width = 400; // Set the width you desire
+        canvasElement.height = 100; // Set the height you desire
        
     },
     methods: {

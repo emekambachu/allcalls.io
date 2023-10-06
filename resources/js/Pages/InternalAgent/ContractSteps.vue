@@ -61,15 +61,16 @@ let goBack = () => {
 
 
 };
-const legalFormData1 = ref(null);
-const legalFormData2 = ref(null);
+let legalFormData1 = ref(null);
+let legalFormData2 = ref(null);
 let accompanying_sign = ref(null);
-let ChangeTab = (val) => {
-
-    if (val) {
-        accompanying_sign.value = val.accompanying_sign
-        legalFormData1.value = val.form
-        // console.log('what is value', val);
+let ChangeTab = (data) => {
+    if (data && contractStep.value === 2) {
+        legalFormData1.value = data
+    }
+    if (data && contractStep.value === 3) {
+        accompanying_sign.value = data.accompanying_sign
+        legalFormData2.value = data.form
     }
     contractStep.value += 1
     var element = document.getElementById("modal_main_id");
@@ -87,7 +88,6 @@ let firstStepErrors = ref({});
 let contactDetailData = ref(null)
 let updateFormData = (val) => {
     contactDetailData.value = val
-    // console.log('contactDetailData', contactDetailData.value);
 }
 
 // Use an object to store the legal form data
@@ -96,12 +96,8 @@ let uploadAmlPdf = ref(null)
 let uploadOmmisionPdf = ref(null)
 // Function to update the legal form data
 
-const updateLegalFormData1 = (val) => {
-    legalFormData1.value = val
-};
-const updateLegalFormData2 = (val) => {
-    legalFormData2.value = val
-};
+
+
 let AddressHistoryData = ref(null)
 let AddressHistoryfun = (val) => {
     AddressHistoryData.value = val
@@ -194,11 +190,10 @@ let previewContract = () => {
     contractModal.value = true
 
 }
-let SingnaturePre = ref(null)
+let signature_authorization = ref(null)
 let signaturePreview = (val) => {
     isLoading.value = true
-    SingnaturePre.value = val
-    // console.log('parent val', val);
+    signature_authorization.value = val
     submit()
 }
 let submit = () => {
@@ -227,7 +222,7 @@ let submit = () => {
     requestData.uploadAmlPdf = uploadAmlPdf.value
     requestData.uploadOmmisionPdf = uploadOmmisionPdf.value
     requestData.accompanying_sign = accompanying_sign.value
-    requestData.accompanying_sign2 = SingnaturePre.value
+    requestData.signature_authorization = signature_authorization.value
 
 
     for (const key in requestData) {
@@ -276,7 +271,7 @@ let editContract = () => {
     contractModal.value = false
     StepsModal.value = true
     step.value = 1
-    contractStep.value = 4
+    contractStep.value = 1
 }
 
 </script>
@@ -394,16 +389,16 @@ input[type=number] {
                             <div v-show="contractStep === 1" class="">
 
                                 <ContactDetail @updateFormData="updateFormData" :firstStepErrors="firstStepErrors"
-                                    @changeTab="ChangeTab()" :states="states"
+                                    @changeTab="ChangeTab" :states="states"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="contractStep === 2">
-                                <LegalInformation @updateFormData="updateLegalFormData1" :firstStepErrors="firstStepErrors"
-                                    @changeTab="ChangeTab()" @goback="ChangeTabBack()"
+                                <LegalInformation  :firstStepErrors="firstStepErrors"
+                                    @changeTab="ChangeTab" @goback="ChangeTabBack()"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="contractStep === 3">
-                                <LegalInformation2 @updateFormData="updateLegalFormData2" :firstStepErrors="firstStepErrors"
+                                <LegalInformation2  :firstStepErrors="firstStepErrors"
                                     @changeTab="ChangeTab" :page="$page.props" @goback="ChangeTabBack()"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
@@ -468,14 +463,7 @@ input[type=number] {
                                 as="button"
                                 class="underline text-sm text-gray-600 mr-5 mt-5  dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
                             Log Out</Link>
-                            <button @click="editContract()"
-                                class=" text-sm text-gray-600 mr-5 mt-5  dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                    stroke="currentColor" class="w-5 h-5">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-                                </svg>
-                            </button>
+                            
                             <button v-show="$page.props.auth.role === 'admin'" @click="close" type="button"
                                 class="text-gray-400 bg-transparent mr-2 mt-2 hover:bg-gray-200 hover:text-gray-700 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
                                 data-modal-hide="defaultModal">
@@ -490,7 +478,7 @@ input[type=number] {
 
                         <div class="px-12 py-2">
                             <ContractDetailPage :previewData="previewData" />
-                            <SingnaturePad  :isLoading="isLoading" @signature="signaturePreview" />
+                            <SingnaturePad @editContract="editContract"  :isLoading="isLoading" @signature="signaturePreview" />
                         </div>
                     </div>
                 </div>

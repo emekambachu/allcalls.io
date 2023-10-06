@@ -42,24 +42,24 @@ let form = ref({
     history_address6: { id: 6, state: "Choose", zip_code: '', address: '', city: '', move_in_date: null, move_out_date: null, },
     history_address7: { id: 7, state: "Choose", zip_code: '', address: '', city: '', move_in_date: null, move_out_date: null, },
 })
-if (page.props.auth.role === 'admin' && props.userData.internal_agent_contract) {
-    props.userData.internal_agent_contract.addresses.forEach((address, index) => {
-        // Check if the index is within the range of your form addresses
-        if (index < addres_history.value.length) {
-            const formKey = `history_address${index + 1}`;
-            form.value[formKey].address = address.address;
-            // Set other properties such as city, state, zip_code as needed
-            form.value[formKey].city = address.city;
-            form.value[formKey].state = address.state;
-            form.value[formKey].zip_code = address.zip;
-            form.value[formKey].state = address.state;
-            form.value[formKey].move_in_date = address.move_in_date;
-            form.value[formKey].move_out_date = address.move_out_date;
+// if (page.props.auth.role === 'admin' && props.userData.internal_agent_contract) {
+//     props.userData.internal_agent_contract.addresses.forEach((address, index) => {
+//         // Check if the index is within the range of your form addresses
+//         if (index < addres_history.value.length) {
+//             const formKey = `history_address${index + 1}`;
+//             form.value[formKey].address = address.address;
+//             // Set other properties such as city, state, zip_code as needed
+//             form.value[formKey].city = address.city;
+//             form.value[formKey].state = address.state;
+//             form.value[formKey].zip_code = address.zip;
+//             form.value[formKey].state = address.state;
+//             form.value[formKey].move_in_date = address.move_in_date;
+//             form.value[formKey].move_out_date = address.move_out_date;
 
-            // Add more properties as needed
-        }
-    });
-}
+//             // Add more properties as needed
+//         }
+//     });
+// }
 
 let hasValidationErrors = ref({});
 
@@ -99,6 +99,7 @@ const ChangeTab = () => {
     // If isValid is still true, it means there are no validation errors
     if (isValid) {
         emits("changeTab");
+        emits("addRessHistory", form.value);
     } else {
         var element = document.getElementById("modal_main_id");
         element.scrollIntoView();
@@ -109,9 +110,9 @@ const ChangeTab = () => {
 let ChangeTabBack = () => {
     emits("goback");
 }
-watch(form.value, (newForm, oldForm) => {
-    emits("addRessHistory", newForm);
-});
+// watch(form.value, (newForm, oldForm) => {
+//     emits("addRessHistory", newForm);
+// });
 let enforceFiveDigitInput = (fieldName, val) => {
     addres_history.value.forEach((history) => {
         let field = form.value[history.address][fieldName];

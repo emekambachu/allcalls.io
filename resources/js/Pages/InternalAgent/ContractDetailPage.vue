@@ -8,296 +8,296 @@ let props = defineProps({
 console.log('previewData', props.previewData);
 let LegalInformation = ref([
     {
-        id: 1,
+        id: 43,
         name: 'convicted_checkbox_1',
         description: 'convicted_checkbox_1_text',
         heading: 'Have you ever been charged or convicted of, or pled guilty or no contest to, any felony, misdemeanor, federal/state insurance and/or securities or investments regulations or statutes?',
         question: '1',
     },
     {
-        id: 2,
+        id: 44,
         name: 'convicted_checkbox_1a',
         description: 'convicted_checkbox_1a_text',
         heading: 'Have you ever been convicted of, or pled guilty or no contest to, any felony?',
         question: '1A',
     },
     {
-        id: 3,
+        id: 45,
         name: 'convicted_checkbox_1b',
         description: 'convicted_checkbox_1b_text',
         heading: 'Have you ever been convicted of, or pled guilty or no contest to, any misdemeanor?',
         question: '1B',
     },
     {
-        id: 4,
+        id: 46,
         name: 'convicted_checkbox_1c',
         description: 'convicted_checkbox_1c_text',
         heading: 'Have you ever been convicted of, or pled guilty or no contest to, a violation of federal or state securities or investment-related regulations?',
         question: '1C',
     },
     {
-        id: 5,
+        id: 47,
         name: 'convicted_checkbox_1d',
         description: 'convicted_checkbox_1d_text',
         heading: 'Have you ever been convicted of, or pled guilty or no contest to, a violation of state insurance department regulation or statute?',
         question: '1D',
     },
     {
-        id: 6,
+        id: 48,
         name: 'convicted_checkbox_1e',
         description: 'convicted_checkbox_1e_text',
         heading: 'Has any foreign government, court, regulatory agency, or exchange ever entered an order against you related to income investments or fraud?',
         question: '1E',
     },
     {
-        id: 7,
+        id: 49,
         name: 'convicted_checkbox_1f',
         description: 'convicted_checkbox_1f_text',
         heading: 'Have you ever been charged with a felony?',
         question: '1F',
     },
     {
-        id: 8,
+        id: 50,
         name: 'convicted_checkbox_1g',
         description: 'convicted_checkbox_1g_text',
         heading: 'Have you ever been charged with a misdemeanor?',
         question: '1G',
     },
     {
-        id: 9,
+        id: 51,
         name: 'convicted_checkbox_1h',
         description: 'convicted_checkbox_1h_text',
         heading: 'Have you ever been on probation?',
         question: '1H',
     },
     {
-        id: 10,
+        id: 52,
         name: 'lawsuit_checkbox_2',
-        description: 'convicted_checkbox_2_text',
+        description: 'lawsuit_checkbox_2_text',
         heading: 'Have you ever been, or are you currently being investigated, have any pending indictments, lawsuits, or have you ever been in a lawsuit with an insurance company?',
         question: '2',
     },
     {
-        id: 11,
+        id: 53,
         name: 'lawsuit_checkbox_2a',
-        description: 'convicted_checkbox_2a_text',
+        description: 'lawsuit_checkbox_2a_text',
         heading: 'Are you currently under investigation by any legal or regulatory agency?',
         question: '2A'
     },
     {
-        id: 12,
+        id: 54,
         name: 'lawsuit_checkbox_2b',
-        description: 'convicted_checkbox_1b_text',
+        description: 'lawsuit_checkbox_2b_text',
         heading: 'Have you been under investigation by any insurance company?',
         question: '2B',
     },
     {
-        id: 13,
+        id: 55,
         name: 'lawsuit_checkbox_2c',
-        description: 'convicted_checkbox_1c_text',
+        description: 'lawsuit_checkbox_2c_text',
         heading: 'Have you ever been, or are you currently involved in any pending indictments, lawsuits, civil judgements or other legal proceedings (civil or criminal) (you may omit family court)?',
         question: '2C'
     },
     {
-        id: 14,
+        id: 56,
         name: 'lawsuit_checkbox_2d',
-        description: 'convicted_checkbox_1d_text',
+        description: 'lawsuit_checkbox_2d_text',
         heading: 'Have you ever been named as a defendant or co-defendant in a lawsuit, or have you ever sued or been sued by an insurance company?',
         question: '2D',
     },
     {
-        id: 15,
+        id: 57,
         name: 'alleged_engaged_checkbox_3',
-        description: 'convicted_checkbox_3_text',
+        description: 'alleged_engaged_checkbox_3_text',
         heading: 'Have you ever been alleged to have engaged in any fraud?',
         question: '3',
     },
     {
-        id: 16,
+        id: 58,
         name: 'found_engaged_checkbox_4',
-        description: 'convicted_checkbox_4_text',
+        description: 'found_engaged_checkbox_4_text',
         heading: 'Have you ever been found to have engaged in any fraud?',
         question: '4',
     },
     {
-        id: 17,
+        id: 59,
         name: 'terminate_contract_checkbox_5',
-        description: 'convicted_checkbox_5_text',
+        description: 'terminate_contract_checkbox_5_text',
         heading: 'Has any insurance or financial services company or broker-dealer terminated your contract or appointment or permitted you to resign for reason other than lack of sales?',
         question: '5'
     },
     {
-        id: 18,
+        id: 60,
         name: 'terminate_contract_checkbox_5a',
-        description: 'convicted_checkbox_5a_text',
+        description: 'terminate_contract_checkbox_5a_text',
         heading: 'Were you fired because you were accused of violating insurance or investment-related statutes, regulations, rules, or industry standards of conduct?',
         question: '5A',
     },
     {
-        id: 19,
+        id: 61,
         name: 'terminate_contract_checkbox_5b',
-        description: 'convicted_checkbox_5b_text',
+        description: 'terminate_contract_checkbox_5b_text',
         heading: 'Were you fired because you were accused of fraud or the wrongful taking of property?',
         question: '5B',
     },
     {
-        id: 20,
+        id: 62,
         name: 'terminate_contract_checkbox_5c',
-        description: 'convicted_checkbox_5c_text',
+        description: 'terminate_contract_checkbox_5c_text',
         heading: 'Failure to supervise in connection with insurance or investment-related statutes, regulations, rules, or industry standards of conduct?',
         question: '5C',
     },
     {
-        id: 21,
+        id: 63,
         name: 'cancel_insu_cause_checkbox_6',
-        description: 'convicted_checkbox_6_text',
+        description: 'cancel_insu_cause_checkbox_6_text',
         heading: 'Have you ever had an appointment with any insurance company denied or terminated for cause? (If you have been reported to Vector One, answer YES) ',
         question: '6',
     },
     {
-        id: 22,
+        id: 64,
         name: 'insurer_checkbox_7',
-        description: 'convicted_checkbox_7_text',
+        description: 'insurer_checkbox_7_text',
         heading: 'Does any insurer, insured, or other person claim any commission chargeback or other indebtedness from you as a result of any insurance transactions or business? (If you have been reported to Vector One, answer YES)',
         question: '7',
     },
     {
-        id: 23,
+        id: 65,
         name: 'lawsuit_checkbox_8',
-        description: 'convicted_checkbox_8_text',
+        description: 'lawsuit_checkbox_8_text',
         heading: 'Has any lawsuit or claim ever been made against you, your surety company, or errors and omissions insurer, arising out of your sales or practices, or have you been refused surety bonding or E&O coverage?',
         question: '8'
     },
     {
-        id: 24,
+        id: 66,
         name: 'lawsuit_checkbox_8a',
-        description: 'convicted_checkbox_8a_text',
+        description: 'lawsuit_checkbox_8a_text',
         heading: 'Has a bonding or surety company ever denied, paid on, or revoked a bond for you? 8B. Has any Errors & Omissions company ever denied, paid claims on, or cancelled your coverage?',
         question: '8A'
     },
     {
-        id: 25,
+        id: 67,
         name: 'lawsuit_checkbox_8b',
-        description: 'convicted_checkbox_8b_text',
+        description: 'lawsuit_checkbox_8b_text',
         heading: 'Has any Errors & Ommisions company ever denied, paid claims on, or cancelled your coverage?',
         question: '8b'
     },
     {
-        id: 26,
+        id: 68,
         name: 'license_denied_checkbox_9',
-        description: 'convicted_checkbox_9_text',
+        description: 'license_denied_checkbox_9_text',
         heading: 'Have you ever had an insurance or securities license denied, suspended, cancelled, or revoked?',
         question: '9'
     },
     {
-        id: 27,
+        id: 69,
         name: 'regulatory_checkbox_10',
-        description: 'convicted_checkbox_10_text',
+        description: 'regulatory_checkbox_10_text',
         heading: 'Has any state or federal regulatory body found you to have been a cause of an investment or insurance-related business having its authorization to do business denied, suspended, revoked, or restricted?',
         question: '10'
     },
     {
-        id: 28,
+        id: 70,
         name: 'regulatory_revoked_checkbox_11',
-        description: 'convicted_checkbox_11_text',
+        description: 'regulatory_revoked_checkbox_11_text',
         heading: 'Has any state or federal regulatory agency revoked or suspended your license as an attorney, accountant, or federal contractor?',
         question: '11'
     },
     {
-        id: 29,
+        id: 71,
         name: 'regulatory_found_checkbox_12',
-        description: 'convicted_checkbox_12_text',
+        description: 'regulatory_found_checkbox_12_text',
         heading: 'Has any state or federal regulatory agency found you to have made a false statement or omission or been dishonest, unfair, or unethical?',
         question: '12'
     },
     {
-        id: 30,
+        id: 72,
         name: 'interr_licensing_checkbox_13',
-        description: 'convicted_checkbox_13_text',
+        description: 'interr_licensing_checkbox_13_text',
         heading: 'Have you ever had any interruptions in licensing?',
         question: '13'
     },
     {
-        id: 31,
+        id: 73,
         name: 'self_regularity_checkbox_14',
-        description: 'convicted_checkbox_14_text',
+        description: 'self_regularity_checkbox_14_text',
         heading: 'Has any state, federal, or self-regulatory agency filed a complaint against you, fined, sanctioned, censured, penalized, or otherwise disciplined you for a violation of their regulations or state or federal statuses?',
         question: '14'
     },
     {
-        id: 32,
+        id: 74,
         name: 'self_regularity_checkbox_14a',
-        description: 'convicted_checkbox_14a_text',
+        description: 'self_regularity_checkbox_14a_text',
         heading: 'Has any regulatory body ever sanctioned, censured, penalized, or otherwise disciplined you?',
         question: '14A'
     },
     {
-        id: 33,
+        id: 75,
         name: 'self_regularity_checkbox_14b',
-        description: 'convicted_checkbox_14b_text',
+        description: 'self_regularity_checkbox_14b_text',
         heading: 'Has any state, federal, or self-regulatory agency filed a complaint against you, fined, or sanctioned you?',
         question: '14B'
     },
     {
-        id: 34,
+        id: 76,
         name: 'self_regularity_checkbox_14c',
-        description: 'convicted_checkbox_14c_text',
+        description: 'self_regularity_checkbox_14c_text',
         heading: 'Have you ever been the subject of a consumer-initiated complaint?',
         question: '14C'
     },
     {
-        id: 35,
+        id: 77,
         name: 'bankruptcy_checkbox_15',
-        description: 'convicted_checkbox_15_text',
+        description: 'bankruptcy_checkbox_15_text',
         heading: 'Have you personally, or any insurance or securities brokerage firm with whom you have been associated, filed a bankruptcy petition, or declared bankruptcy? 15A. Have you personally filed a bankruptcy petition or declared bankruptcy?',
         question: '15'
     },
     {
-        id: 36,
+        id: 78,
         name: 'bankruptcy_checkbox_15a',
-        description: 'convicted_checkbox_15a_text',
+        description: 'bankruptcy_checkbox_15a_text',
         heading: 'Have you personally, or any insurance or securities brokerage firm with whom you have been associated, filed a bankruptcy petition, or declared bankruptcy? 15A. Have you personally filed a bankruptcy petition or declared bankruptcy?',
         question: '15a'
     },
     {
-        id: 37,
+        id: 79,
         name: 'bankruptcy_checkbox_15b',
-        description: 'convicted_checkbox_15b_text',
+        description: 'bankruptcy_checkbox_15b_text',
         heading: 'Has any insurance or securities brokerage firm, with whom you have been associated, filed a bankruptcy petition, or been declared bankrupt, either during your association with them or within 5 years after termination of such an association?',
         question: '15B'
     },
     {
-        id: 38,
+        id: 80,
         name: 'bankruptcy_checkbox_15c',
-        description: 'convicted_checkbox_15c_text',
+        description: 'bankruptcy_checkbox_15c_text',
         heading: 'Is the bankruptcy pending?',
         question: '15C'
     },
     {
-        id: 39,
+        id: 81,
         name: 'liens_against_checkbox_16',
-        description: 'convicted_checkbox_16_text',
+        description: 'liens_against_checkbox_16_text',
         heading: 'Are there any unsatisfied judgements or liens against you?',
         question: '16'
     },
     {
-        id: 40,
+        id: 82,
         name: 'connected_checkbox_17',
-        description: 'convicted_checkbox_17_text',
+        description: 'connected_checkbox_17_text',
         heading: 'Are you connected in any way with a bank, savings & loan association, or other lending or financial institution?',
         question: '17'
     },
     {
-        id: 41,
+        id: 83,
         name: 'aliases_checkbox_18',
-        description: 'convicted_checkbox_18_text',
+        description: 'aliases_checkbox_18_text',
         heading: 'Have you ever used any other names or aliases?',
         question: '18'
     },
     {
-        id: 42,
+        id: 84,
         name: 'unresolved_matter_checkbox_19',
-        description: 'convicted_checkbox_19_text',
+        description: 'unresolved_matter_checkbox_19_text',
         heading: 'Do you have any unresolved matters pending with the Internal Revenue Service, or other taxing authority?',
         question: '19'
     },
@@ -308,15 +308,18 @@ let LegalInformation = ref([
 let form = ref({
 
 })
-let date =  new Date()
-let dateFormat = (date) => {
-            const day = date.getDate().toString().padStart(2, "0"); // Add leading zero if needed
-            const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Month is zero-based, so add 1
-            const year = date.getFullYear();
+let date = new Date()
+let dateFormat = (data) => {
+    if (data) {
+        const day = data.getDate().toString().padStart(2, "0"); // Add leading zero if needed
+        const month = (data.getMonth() + 1).toString().padStart(2, "0"); // Month is zero-based, so add 1
+        const year = data.getFullYear();
 
-            // Create the formatted date string
-            return `${day}/${month}/${year}`;
-        }
+        // Create the formatted date string
+        return `${day}/${month}/${year}`;
+    }
+
+}
 if (props.previewData) {
     const keys = Object.keys(props.previewData);
     keys.forEach(key => {
@@ -349,7 +352,7 @@ if (props.previewData) {
                 <p class="text-gray-600"><strong>Social Security Number (SSN):</strong> {{
                     previewData?.ssn }}</p>
                 <p class="text-gray-600"><strong>Gender:</strong> {{ previewData?.gender }}</p>
-                <p class="text-gray-600"><strong>Date of Birth:</strong> {{ previewData?.dob }}</p>
+                <p class="text-gray-600"><strong>Date of Birth:</strong> {{dateFormat(previewData?.dob)  }}</p>
                 <p class="text-gray-600"><strong>Cell Phone: </strong> {{ previewData?.cell_phone }}</p>
                 <p class="text-gray-600"><strong>Home Phone: </strong> {{ previewData?.home_phone }}</p>
                 <!-- Add more data fields as needed -->
@@ -371,7 +374,7 @@ if (props.previewData) {
             </div>
             <div class="bg-white  p-4">
                 <p class="text-gray-600"><strong>Zip Code: </strong> {{ previewData?.zip }}</p>
-                <p class="text-gray-600"><strong>Move-In Date: </strong> {{ previewData?.move_in_date }}
+                <p class="text-gray-600"><strong>Move-In Date: </strong> {{ dateFormat(previewData?.move_in_date)  }}
                 </p>
                 <p class="text-gray-600"><strong>Mailing Address (If Diffrent From Residence): </strong> {{
                     previewData?.move_in_address }}</p>
@@ -426,7 +429,7 @@ if (props.previewData) {
             <div class="bg-white  p-4">
                 <p class="text-gray-600"><strong>Zip Code: </strong> {{ previewData?.business_zip }}</p>
                 <p class="text-gray-600"><strong>Move-In Date: </strong> {{
-                    previewData?.business_move_in_date }}</p>
+                    dateFormat(previewData?.business_move_in_date ) }}</p>
                 <p class="text-gray-600"><strong>Company Type: </strong> {{
                     previewData?.business_company_type }}</p>
             </div>
@@ -484,7 +487,7 @@ if (props.previewData) {
 
         </div>
         <div class=" flex bg-white rounded-lg  gap-4 mt-4 mb-4">
-            <div  style="padding: 10px; width: 30%; background: #ebe8e8;">
+            <div style="padding: 10px; width: 30%; background: #ebe8e8;">
                 <img class="mb-5" :src="previewData.accompanying_sign" alt="signature" />
                 <div> <strong class="mx-2">Date: </strong> {{ dateFormat(date) }}</div>
             </div>
@@ -503,9 +506,11 @@ if (props.previewData) {
                 <p class="text-gray-600"><strong>State:</strong> {{ previewData.history_address1.state }}
                 </p>
                 <p class="text-gray-600"><strong>Zip Code:</strong> {{
-                    previewData.history_address1.zip }}</p>
-                <p class="text-gray-600"><strong>Move-In Date:</strong> {{ previewData.history_address1.move_in_date }}</p>
-                <p class="text-gray-600"><strong>Move-Out Date:</strong> {{ previewData.history_address1.move_out_date }}
+                    previewData.history_address1.zip_code }}</p>
+                <p class="text-gray-600"><strong>Move-In Date:</strong> {{
+                    dateFormat(previewData.history_address1.move_in_date) }}</p>
+                <p class="text-gray-600"><strong>Move-Out Date:</strong> {{
+                    dateFormat(previewData.history_address1.move_out_date) }}
                 </p>
                 <!-- Add more data fields as needed -->
             </div>
@@ -515,9 +520,11 @@ if (props.previewData) {
                 <p class="text-gray-600"><strong>State:</strong> {{ previewData.history_address2.state }}
                 </p>
                 <p class="text-gray-600"><strong>Zip Code:</strong> {{
-                    previewData.history_address2.zip }}</p>
-                <p class="text-gray-600"><strong>Move-In Date:</strong> {{ previewData.history_address2.move_in_date }}</p>
-                <p class="text-gray-600"><strong>Move-Out Date:</strong> {{ previewData.history_address2.move_out_date }}
+                    previewData.history_address2.zip_code }}</p>
+                <p class="text-gray-600"><strong>Move-In Date:</strong> {{
+                    dateFormat(previewData.history_address2.move_in_date) }}</p>
+                <p class="text-gray-600"><strong>Move-Out Date:</strong> {{
+                    dateFormat(previewData.history_address2.move_out_date) }}
                 </p>
                 <!-- Add more data fields as needed -->
             </div>
@@ -527,9 +534,11 @@ if (props.previewData) {
                 <p class="text-gray-600"><strong>State:</strong> {{ previewData.history_address3.state }}
                 </p>
                 <p class="text-gray-600"><strong>Zip Code:</strong> {{
-                    previewData.history_address3.zip }}</p>
-                <p class="text-gray-600"><strong>Move-In Date:</strong> {{ previewData.history_address3.move_in_date }}</p>
-                <p class="text-gray-600"><strong>Move-Out Date:</strong> {{ previewData.history_address3.move_out_date }}
+                    previewData.history_address3.zip_code }}</p>
+                <p class="text-gray-600"><strong>Move-In Date:</strong> {{
+                    dateFormat(previewData.history_address3.move_in_date) }}</p>
+                <p class="text-gray-600"><strong>Move-Out Date:</strong> {{
+                    dateFormat(previewData.history_address3.move_out_date) }}
                 </p>
                 <!-- Add more data fields as needed -->
             </div>
@@ -540,9 +549,11 @@ if (props.previewData) {
                 <p class="text-gray-600"><strong>State:</strong> {{ previewData.history_address4.state }}
                 </p>
                 <p class="text-gray-600"><strong>Zip Code:</strong> {{
-                    previewData.history_address4.zip }}</p>
-                <p class="text-gray-600"><strong>Move-In Date:</strong> {{ previewData.history_address4.move_in_date }}</p>
-                <p class="text-gray-600"><strong>Move-Out Date:</strong> {{ previewData.history_address4.move_out_date }}
+                    previewData.history_address4.zip_code }}</p>
+                <p class="text-gray-600"><strong>Move-In Date:</strong> {{
+                    dateFormat(previewData.history_address4.move_in_date) }}</p>
+                <p class="text-gray-600"><strong>Move-Out Date:</strong> {{
+                    dateFormat(previewData.history_address4.move_out_date) }}
                 </p>
                 <!-- Add more data fields as needed -->
             </div>
@@ -553,9 +564,11 @@ if (props.previewData) {
                 <p class="text-gray-600"><strong>State:</strong> {{ previewData.history_address5.state }}
                 </p>
                 <p class="text-gray-600"><strong>Zip Code:</strong> {{
-                    previewData.history_address5.zip }}</p>
-                <p class="text-gray-600"><strong>Move-In Date:</strong> {{ previewData.history_address5.move_in_date }}</p>
-                <p class="text-gray-600"><strong>Move-Out Date:</strong> {{ previewData.history_address5.move_out_date }}
+                    previewData.history_address5.zip_code }}</p>
+                <p class="text-gray-600"><strong>Move-In Date:</strong> {{
+                    dateFormat(previewData.history_address5.move_in_date) }}</p>
+                <p class="text-gray-600"><strong>Move-Out Date:</strong> {{
+                    dateFormat(previewData.history_address5.move_out_date) }}
                 </p>
                 <!-- Add more data fields as needed -->
             </div>
@@ -567,8 +580,10 @@ if (props.previewData) {
                 </p>
                 <p class="text-gray-600"><strong>Zip Code:</strong> {{
                     previewData.history_address6.zip }}</p>
-                <p class="text-gray-600"><strong>Move-In Date:</strong> {{ previewData.history_address6.move_in_date }}</p>
-                <p class="text-gray-600"><strong>Move-Out Date:</strong> {{ previewData.history_address6.move_out_date }}
+                <p class="text-gray-600"><strong>Move-In Date:</strong> {{
+                    dateFormat(previewData.history_address6.move_in_date) }}</p>
+                <p class="text-gray-600"><strong>Move-Out Date:</strong> {{
+                    dateFormat(previewData.history_address6.move_out_date) }}
                 </p>
                 <!-- Add more data fields as needed -->
             </div>
@@ -578,9 +593,11 @@ if (props.previewData) {
                 <p class="text-gray-600"><strong>State:</strong> {{ previewData.history_address7.state }}
                 </p>
                 <p class="text-gray-600"><strong>Zip Code:</strong> {{
-                    previewData.history_address7.zip }}</p>
-                <p class="text-gray-600"><strong>Move-In Date:</strong> {{ previewData.history_address7.move_in_date }}</p>
-                <p class="text-gray-600"><strong>Move-Out Date:</strong> {{ previewData.history_address7.move_out_date }}
+                    previewData.history_address7.zip_code }}</p>
+                <p class="text-gray-600"><strong>Move-In Date:</strong> {{
+                    dateFormat(previewData.history_address7.move_in_date) }}</p>
+                <p class="text-gray-600"><strong>Move-Out Date:</strong>
+                    {{ dateFormat(previewData.history_address7.move_out_date) }}
                 </p>
                 <!-- Add more data fields as needed -->
             </div>
@@ -604,16 +621,15 @@ if (props.previewData) {
                     previewData?.resident_city }}
                 </p>
             </div>
-            <div class="bg-white  ">
-                <p class="text-gray-600"><strong>State of Birth:</strong> {{
-                    previewData?.resident_state }}</p>
-            </div>
-            <div class="bg-white  ">
-                <p class="text-gray-600"><strong>Maiden Name:</strong> {{
-                    previewData?.resident_maiden_name }}</p>
-            </div>
+        <div class="bg-white  ">
+            <p class="text-gray-600"><strong>State of Birth:</strong> {{
+                previewData?.resident_state }}</p>
+        </div>
+        <div class="bg-white  ">
+            <p class="text-gray-600"><strong>Maiden Name:</strong> {{
+                previewData?.resident_maiden_name }}</p>
         </div>
     </div>
-</template>
+</div></template>
 <script>
 </script>

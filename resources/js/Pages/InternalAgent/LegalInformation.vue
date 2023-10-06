@@ -159,10 +159,10 @@ if (page.props.auth.role === 'admin' && props.userData.internal_agent_contract) 
 
 
 const emits = defineEmits();
-watch(form.value, (newForm, oldForm) => {
-    emits("updateFormData", newForm);
-});
-const requiredIDs = [1, 2, 3, 4];
+// watch(form.value, (newForm, oldForm) => {
+//     emits("updateFormData", newForm);
+// });
+
 let ChangeTab = () => {
     for (const key in props.firstStepErrors) {
         if (props.firstStepErrors.hasOwnProperty(key)) {
@@ -173,7 +173,6 @@ let ChangeTab = () => {
     // Define an array of field names that are required
     if (page.props.auth.role === 'internal-agent') {
         for (const information of LegalInformation.value) {
-            // if (requiredIDs.includes(information.id)) {
             let checboxValue = form.value[information.name]
             if (!form.value[information.name]) {
                 props.firstStepErrors[information.name] = [`This field is required.`];
@@ -182,14 +181,13 @@ let ChangeTab = () => {
                     props.firstStepErrors[information.name] = [`This field is required.`];
                 }
             }
-            // }
         }
     }
     // Check if there are any errors
 
     const hasErrors = Object.values(props.firstStepErrors).some(errors => errors.length > 0);
     if (!hasErrors) {
-        emits("changeTab");
+        emits("changeTab", form.value);
     } else {
         var element = document.getElementById("modal_main_id");
         element.scrollIntoView();

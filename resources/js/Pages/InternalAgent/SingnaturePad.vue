@@ -9,7 +9,7 @@
                 <!-- Signature Pad Component -->
 
                 <!-- Undo Button (if needed) -->
-                <VueSignaturePad id="signature"    ref="signaturePad" :options="options" />
+                <VueSignaturePad id="signature" ref="signaturePad" :options="options" />
                 <button @click="undo" class=" button-custom mt-2 px-2 py-2 rounded-md">
                     Undo
                 </button>
@@ -26,11 +26,16 @@
         </div>
 
     </div>
-    <div class="flex justify-end">
+    <div class="flex mb-5 justify-between">
+        <button @click="editContract()"
+        class="button-custom-back px-3 py-2 rounded-md">
+           Edit
+        </button>
         <button type="button" :class="{ 'opacity-25': isLoading }" :disabled="isLoading" @click="save"
             class="button-custom  px-3 py-2 rounded-md">
             <global-spinner :spinner="isLoading" /> Submit
         </button>
+
     </div>
 </template>
   
@@ -52,9 +57,9 @@ export default {
         undo() {
             this.$refs.signaturePad.undoSignature();
         },
-       
-        changeFun(val){
-            console.log('what is change',val);
+
+        changeFun(val) {
+            console.log('what is change', val);
         },
         dateFormat(date) {
             const day = date.getDate().toString().padStart(2, "0"); // Add leading zero if needed
@@ -64,10 +69,13 @@ export default {
             // Create the formatted date string
             return `${day}/${month}/${year}`;
         },
+        editContract(){
+            this.$emit("editContract");
+        },
         async save() {
             const { isEmpty, data } = this.$refs.signaturePad.saveSignature();
             this.sigError = ''
-            
+
             if (!isEmpty) {
                 this.$emit("signature", data);
                 // axios
@@ -99,17 +107,18 @@ export default {
                 this.sigError = 'Please provide a signature.';
             }
 
-            
+
         },
-        
+
     },
 };
 </script>
   
 <style scoped>
 #signature {
-    border: solid 1px black;
+    border: solid 1px lightgray;
     padding: 10px;
+    border-radius: 10px;
 
 }
 
