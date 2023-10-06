@@ -106,7 +106,7 @@
             <td style="width: 33.3%;">
                 <span class="basic-info-element">
                 <strong>Driver License State: &nbsp;</strong>
-                {{$contractData->internalAgentContract->driver_license_state}}
+                {{getStateName($contractData->internalAgentContract->driver_license_state)}}
                 </span>
             </td>
 
@@ -131,7 +131,7 @@
             <td style="width: 33.3%;">
                 <span class="basic-info-element">
                 <strong>State: &nbsp;</strong>
-                {{$contractData->internalAgentContract->state}}
+                {{getStateName($contractData->internalAgentContract->state)}}
                 </span>
             </td>
 
@@ -170,7 +170,7 @@
             <td style="width: 33.3%;">
                 <span class="basic-info-element">
                 <strong>Move-In State: &nbsp;</strong>
-                {{$contractData->internalAgentContract->move_in_state}}
+                {{getStateName($contractData->internalAgentContract->move_in_state)}}
                 </span>
             </td>
         </tr>
@@ -203,7 +203,7 @@
             <td style="width: 33.3%;">
                 <span class="basic-info-element">
                 <strong>Resident Insurance License State: &nbsp;</strong>
-                {{$contractData->internalAgentContract->resident_insu_license_state}}
+                {{getStateName($contractData->internalAgentContract->resident_insu_license_state)}}
                 </span>
             </td>
 
@@ -311,7 +311,7 @@
             <td style="width: 33.3%;">
                 <span class="basic-info-element">
                 <strong>State: &nbsp;</strong>
-                {{$contractData->internalAgentContract->business_state}}
+                {{getStateName($contractData->internalAgentContract->business_state)}}
                 </span>
             </td>
         </tr>

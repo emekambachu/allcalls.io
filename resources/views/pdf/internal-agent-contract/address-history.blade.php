@@ -23,7 +23,7 @@
                 <td style="width: 33.3%;">
                      <span class="basic-info-element">
                         <strong>State: &nbsp;</strong>
-                        {{$contractData->internalAgentContract->state}}
+                        {{getStateName($contractData->internalAgentContract->state)}}
                      </span>
                 </td>
             </tr>

@@ -28,6 +28,7 @@ class RegistrationStepController extends Controller
         if (auth()->user()->legacy_key) {
             return redirect()->route('dashboard');
         }
+
         $user = auth()->user();
         $userData = User::where('id', $user->id)->with('internalAgentContract.additionalInfo')
             ->with('internalAgentContract.addresses')
@@ -1256,10 +1257,10 @@ class RegistrationStepController extends Controller
                     $file = $folderPath . $fileName . '.' . $imageType;
                     file_put_contents($file, $image_base64);
 
-                    $path = asset('internal-agents/legal-question-signed/' . $fileName);
+                    $path = asset('internal-agents/legal-question-signed/'. $fileName.'.'.$imageType);
 
                     InternalAgentQuestionSigned::updateOrCreate(['reg_info_id' => $basicInfoId], [
-                        'name' => $fileName,
+                        'name' => $fileName.'.'.$imageType,
                         'sign_url' => $path,
                     ]);
                 }
@@ -1289,10 +1290,10 @@ class RegistrationStepController extends Controller
                     $file = $folderPath . $fileName . '.' . $imageType;
                     file_put_contents($file, $image_base64);
 
-                    $path = asset('internal-agents/legal-question-signed/' . $fileName);
+                    $path = asset('internal-agents/contract-signed/'.$fileName.'.'.$imageType);
 
                     InternalAgentContractSigned::updateOrCreate(['reg_info_id' => $basicInfoId], [
-                        'name' => $fileName,
+                        'name' => $fileName.'.'.$imageType,
                         'sign_url' => $path,
                     ]);
                 }
@@ -1317,34 +1318,21 @@ class RegistrationStepController extends Controller
     {
         set_time_limit(0);
 
-        $returnArr['contractData'] = User::where('id', 304)
+        $returnArr['contractData'] = User::where('id', 3)
             ->with('internalAgentContract.additionalInfo')
             ->with('internalAgentContract.addresses')
             ->with('internalAgentContract.amlCourse')
             ->with('internalAgentContract.bankingInfo')
             ->with('internalAgentContract.errorAndEmission')
             ->with('internalAgentContract.legalQuestion')
-            ->with('internalAgentContract.residentLicense')->first();
-
+            ->with('internalAgentContract.residentLicense')
+            ->with('internalAgentContract.getQuestionSign')
+            ->with('internalAgentContract.getContractSign')->first();
         return view('pdf.internal-agent-contract.agent-contract', $returnArr);
 
         $pdf = PDF::loadView('pdf.internal-agent-contract.agent-contract', $returnArr);
 
         return $pdf->stream();
-
-
-        //                $returnArr['questions'] = InternalAgentLegalQuestion::where('reg_info_id', $basicInfoId)->get(['name', 'value', 'description'])->toArray();
-        //                $pdf = PDF::loadView('PDF.legal-questions', $returnArr);
-        //                $pdfFileName = auth()->user()->email."_legal_questions.pdf";
-        //                $directory = public_path('internal-agents/legal-questions');
-        //                if(!File::exists($directory)) {
-        //                    File::makeDirectory($directory, $mode = 0755, true, true);
-        //                }
-        //                $pdf->save($directory . '/' . $pdfFileName);
-
-
-        //        dd('pdf');
-        //        return view('PDF.legal-questions');
     }
 
     function registrationSignature(Request $request)

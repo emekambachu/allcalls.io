@@ -25,8 +25,8 @@
                 <p style="text-align: center">
 
                     <span>
-                <strong>Signature:-------------------------- &nbsp;</strong>
-                    <img src="{{asset('internal-agents/sign/dummy-sign.png')}}" alt="" width="150" height="150">
+                <strong>Signature: &nbsp;</strong>
+                    <img src="{{asset(asset($contractData->internalAgentContract->getQuestionSign->sign_url))}}" alt="" width="150" height="150">
                 </span>
                 </p>
             </td>

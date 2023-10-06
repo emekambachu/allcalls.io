@@ -45,5 +45,4 @@ class InternalAgentRegInfo extends Model
     public function getContractSign() {
         return $this->hasOne(InternalAgentContractSigned::class, 'reg_info_id', 'id');
     }
-
 }

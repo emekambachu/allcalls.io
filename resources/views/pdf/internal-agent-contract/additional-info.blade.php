@@ -33,7 +33,7 @@
 
             <td style="width: 33.3%;">
                 <strong>State Of Birth: &nbsp;</strong>
-                {{$contractData->internalAgentContract->additionalInfo->resident_state}}
+                {{getStateName($contractData->internalAgentContract->additionalInfo->resident_state)}}
             </td>
 
             <td style="width: 33.3%;">
