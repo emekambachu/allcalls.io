@@ -3,7 +3,7 @@
     border: solid 1px lightgray;
     padding: 10px;
     border-radius: 10px;
-    
+
 }
 
 #signature canvas {
@@ -22,8 +22,6 @@
     justify-content: center;
     margin-top: 8px;
 }
-
-
 </style>
 <template>
     <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
@@ -86,10 +84,19 @@
             received written notice from me for its termination. I understand that this authorization
             is subject to the terms of any agent or representative contract, commission agreement,
             or loan agreement that I may have now, or in the future, with the Company.
-            
+
         </p>
     </div>
-    <div style="width: 70%;" class="container mx-auto p-5 flex justify-between">
+    <div v-if="page.auth.role === 'admin'">
+        <div class=" flex bg-white rounded-lg  gap-4 mt-4 mb-4">
+            <div style="padding: 10px; width: 30%; background: #ebe8e8;">
+                <img width="250" height="100" class="mb-5"
+                    :src="userData.internal_agent_contract.get_question_sign.sign_url" alt="signature" />
+                <div> <strong class="mx-2">Date: </strong> {{ dateFormat(userData.internal_agent_contract.get_question_sign.created_at) }}</div>
+            </div>
+        </div>
+    </div>
+    <div v-if="page.auth.role === 'internal-agent'" style="width: 70%;" class="container mx-auto p-5 flex justify-between">
 
 
         <div class="" style="width: 60%;">
@@ -277,24 +284,47 @@ export default {
 
     }),
     mounted() {
-        const canvasElement = this.$refs.signature2Pad.$el.querySelector('canvas');
-        // console.log('canvasElement',canvasElement);
-        canvasElement.width = 400; // Set the width you desire
-        canvasElement.height = 100; // Set the height you desire
-       
+        if (this.page.auth.role === 'internal-agent') {
+            const canvasElement = this.$refs.signature2Pad.$el.querySelector('canvas');
+            // console.log('canvasElement',canvasElement);
+            canvasElement.width = 400; // Set the width you desire
+            canvasElement.height = 100; // Set the height you desire
+        }
+
+
+        if (this.page.auth.role === 'admin' && this.userData.internal_agent_contract) {
+            this.userData.internal_agent_contract.legal_question.forEach((question) => {
+                const matchingLegalInfo = this.LegalInformation.find((info) => info.name === question.name);
+                if (matchingLegalInfo) {
+                    this.form[matchingLegalInfo.name] = question.value;
+                    this.form[matchingLegalInfo.name + '_text'] = question.description
+                }
+            });
+        }
+
     },
     methods: {
         undo() {
             this.$refs.signature2Pad.undoSignature();
         },
 
-        dateFormat(date) {
-            const day = date.getDate().toString().padStart(2, "0"); // Add leading zero if needed
-            const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Month is zero-based, so add 1
-            const year = date.getFullYear();
+        // dateFormat(date) {
+        //     console.log('date', date);
+        //     const day = date.getDate().toString().padStart(2, "0"); // Add leading zero if needed
+        //     const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Month is zero-based, so add 1
+        //     const year = date.getFullYear();
 
-            // Create the formatted date string
-            return `${day}/${month}/${year}`;
+        //     // Create the formatted date string
+        //     return `${day}/${month}/${year}`;
+        // },
+        dateFormat(dateString) {
+            const dateObj = new Date(dateString);
+
+            const day = dateObj.getDate().toString().padStart(2, "0");
+            const month = dateObj.toLocaleString("en-US", { month: "short" }).toLowerCase();
+            const year = dateObj.getFullYear();
+
+            return `${day}-${month}-${year}`;
         },
 
         ChangeTab() {
@@ -320,14 +350,19 @@ export default {
             const hasErrors = Object.values(this.firstStepErrors).some(errors => errors.length > 0);
 
             if (!hasErrors) {
-                const { isEmpty, data } = this.$refs.signature2Pad.saveSignature();
-                if(!isEmpty){
-                    this.$emit("changeTab", { form: this.form, accompanying_sign: data });
-                    this.firstStepErrors = {}; // Clear the errors by assigning a new empty object
-                }else{
-                    this.sigError = 'Please provide a signature.';
+                if (this.page.auth.role === 'internal-agent') {
+                    const { isEmpty, data } = this.$refs.signature2Pad.saveSignature();
+                    if (!isEmpty) {
+                        this.$emit("changeTab", { form: this.form, accompanying_sign: data });
+                        this.firstStepErrors = {}; // Clear the errors by assigning a new empty object
+                    } else {
+                        this.sigError = 'Please provide a signature.';
+                    }
+                } else {
+                    this.$emit("changeTab");
                 }
-                
+
+
             } else {
                 var element = document.getElementById("modal_main_id");
                 element.scrollIntoView();
@@ -342,7 +377,7 @@ export default {
         firstStepErrors: Object,
         userData: Object,
         page: Object,
-        
+
     },
 
 };

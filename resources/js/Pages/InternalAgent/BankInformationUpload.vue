@@ -66,7 +66,15 @@ const handleDrop = (event) => {
         selectedFile.value = null
     }
 };
+let dateFormat = (dateString) => {
+    const dateObj = new Date(dateString);
 
+    const day = dateObj.getDate().toString().padStart(2, "0");
+    const month = dateObj.toLocaleString("en-US", { month: "short" }).toLowerCase();
+    const year = dateObj.getFullYear();
+
+    return `${day}-${month}-${year}`;
+}
 const fileErrorMessage = ref("Please select a single PDF file.");
 const emits = defineEmits();
 watch(selectedFile, (newForm, oldForm) => {
@@ -141,6 +149,16 @@ let ChangeTabBack = () => {
             Selected File: {{ selectedFileName }}
         </div>
         <div v-if="firstStepErrors.bankingInfoPdf" class="text-red-500 mt-4" v-text="firstStepErrors.bankingInfoPdf[0]">
+        </div>
+    </div>
+    <div v-if="page.props.auth.role === 'admin'">
+        <div class=" flex bg-white rounded-lg  gap-4 mt-4 mb-4">
+            <div style="padding: 10px; width: 30%; background: #ebe8e8;">
+                <img width="250" height="100" class="mb-5"
+                    :src="userData.internal_agent_contract.get_contract_sign.sign_url" alt="signature" />
+                <div> <strong class="mx-2">Date: </strong> {{ dateFormat(userData.internal_agent_contract.get_contract_sign.created_at) 
+                }}</div>
+            </div>
         </div>
     </div>
     <div class="px-5 pb-6">

@@ -436,7 +436,7 @@ input[type=number] {
                                     @goback="goBack()"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
-                            <!-- <button @click="previewContract">show Contract</button> -->
+                            <button @click="previewContract">show Contract</button>
                             <!-- <vueSignature /> -->
                         </div>
                     </div>
@@ -478,7 +478,7 @@ input[type=number] {
 
                         <div class="px-12 py-2">
                             <ContractDetailPage :previewData="previewData" />
-                            <SingnaturePad @editContract="editContract"  :isLoading="isLoading" @signature="signaturePreview" />
+                            <SingnaturePad :userData="userData" @editContract="editContract"  :isLoading="isLoading" @signature="signaturePreview" />
                         </div>
                     </div>
                 </div>

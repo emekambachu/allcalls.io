@@ -67,6 +67,8 @@ class InternalAgentController extends Controller
         ->with('internalAgentContract.errorAndEmission')
         ->with('internalAgentContract.legalQuestion')
         ->with('internalAgentContract.residentLicense')
+        ->with('internalAgentContract.getQuestionSign')
+        ->with('internalAgentContract.getContractSign')
         ->with('states')
         ->with('callTypes')
         ->orderBy('created_at','desc')

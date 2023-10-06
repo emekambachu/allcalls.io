@@ -8,6 +8,9 @@ let props = defineProps({
     states: Array,
 });
 let individual_business = ref(false)
+if(page.props.auth.role === 'admin'){
+    individual_business.value = true
+}
 // console.log('user dagta', props.userData.internal_agent_contract);
 let maxDate = ref(new Date)
 maxDate.value.setHours(23, 59, 59, 999);

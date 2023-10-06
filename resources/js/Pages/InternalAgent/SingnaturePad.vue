@@ -1,4 +1,28 @@
 <template>
+    <p class="p-4 ">
+    <div class="mb-2"> PLEASE READ THIS AUTHORIZATION, SIGN IN THE BOX BELOW AND SUBMIT THIS
+        FORM BY FOLLOWING THE INSTRUCTIONS PROVIDED ON THE COVER PAGE.</div>
+
+    I <span class="mx-2" style="border-bottom: 2px solid black;"><strong> {{ userData.first_name }} {{ userData.last_name }}
+        </strong>, </span> hereby authorize AllCalls.io, LLC and its general agency customers (the "Authorized Parties")
+    to affix or append a copy of my signature, as set forth below, to any and all required signature fields on forms
+    and agreements of any insurance carrier (a "Carrier") designated by me through the SureLC software or
+    through any other means, including without limitation, by e-mail or orally. The Authorized Parties shall be
+    permitted to complete and submit all such forms and agreements on my behalf for the purpose of becoming
+    authorized to sell Carrier insurance products. I hereby release, indemnify and hold harmless the Authorized
+    Parties against any and all claims, demands, losses, damages, and causes of action, including expenses, costs
+    and reasonable attorneys' fees which they may sustain or incur as a result of carrying out the authority
+    granted hereunder.
+    <div class="my-2">
+        By my signature below, I certify that the information I have submitted to the Authorized Parties is correct to
+        the best of my knowledge and acknowledge that I have read and reviewed the forms and agreements which
+        the Authorized Parties have been authorized to affix my signature. I agree to indemnify and hold any third
+        party harmless from and against any and all claims, demands, losses, damages, and causes of action,
+        including expenses, costs and reasonable attorneys' fees which such third party may incur as a result of its
+        reliance on any form or agreement bearing my signature pursuant to this authorization.
+    </div>
+    </p>
+    <hr>
     <div class="container mx-auto p-5 flex justify-between">
 
         <!-- Left Side (Signature) -->
@@ -27,9 +51,8 @@
 
     </div>
     <div class="flex mb-5 justify-between">
-        <button @click="editContract()"
-        class="button-custom-back px-3 py-2 rounded-md">
-           Edit
+        <button @click="editContract()" class="button-custom-back px-3 py-2 rounded-md">
+            Edit
         </button>
         <button type="button" :class="{ 'opacity-25': isLoading }" :disabled="isLoading" @click="save"
             class="button-custom  px-3 py-2 rounded-md">
@@ -52,6 +75,7 @@ export default {
     }),
     props: {
         isLoading: Boolean,
+        userData: Object,
     },
     methods: {
         undo() {
@@ -69,7 +93,7 @@ export default {
             // Create the formatted date string
             return `${day}/${month}/${year}`;
         },
-        editContract(){
+        editContract() {
             this.$emit("editContract");
         },
         async save() {
