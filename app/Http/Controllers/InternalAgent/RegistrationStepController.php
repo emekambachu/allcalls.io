@@ -28,9 +28,11 @@ class RegistrationStepController extends Controller
         if (auth()->user()->legacy_key) {
             return redirect()->route('dashboard');
         }
+        $user = auth()->user();
         $states = State::all();
         return Inertia::render('InternalAgent/ContractSteps', [
             'states' => $states,
+            'userData' => $user,
         ]);
     }
 

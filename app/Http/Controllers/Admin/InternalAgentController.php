@@ -309,7 +309,7 @@ class InternalAgentController extends Controller
             ->with('internalAgentContract.getContractSign')->first();
 
         $pdf = PDF::loadView('pdf.internal-agent-contract.agent-contract', $returnArr);
-
-        return $pdf->download();
+        $fileName = $returnArr['contractData']->internalAgentContract->first_name;
+        return $pdf->download($fileName.'-contract.pdf');
     }
 }

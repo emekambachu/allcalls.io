@@ -221,7 +221,7 @@ let legaQuestionPdf = (id) => {
 
 
                     </button>
-                    <button @click="legaQuestionPdf(agent.id)" v-show="agent.internal_agent_contract"
+                    <a :href="route('admin.agent.contract.pdf', agent.id)" v-show="agent.internal_agent_contract"
                       title="Legal Question PDF">
                       <svg class="w-5 h-5 " version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
                         xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 303.188 303.188" xml:space="preserve">
@@ -268,7 +268,7 @@ let legaQuestionPdf = (id) => {
                           <polygon style="fill:#D1D3D3;" points="219.821,50.525 270.346,50.525 219.821,0 	" />
                         </g>
                       </svg>
-                    </button>
+                    </a>
                   </td>
                 </tr>
               </tbody>

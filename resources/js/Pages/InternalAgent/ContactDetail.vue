@@ -59,7 +59,6 @@ let form = ref({
     business_move_in_date: null,
 })
 onMounted(() => {
-    console.log('mounted CALL')
     if (page.props.auth.role === 'admin' && props.userData?.internal_agent_contract) {
         form.value = props.userData.internal_agent_contract
     } else {
