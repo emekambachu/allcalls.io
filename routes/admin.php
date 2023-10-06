@@ -63,7 +63,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     // Available Number
     Route::get('/available-numbers',[AvailableNumberController::class,'index']);
     Route::post('/available-number/store',[AvailableNumberController::class,'store']);
-    Route::post('/available-number/{id}', [AvailableNumbertController::class, 'update']);
+    Route::post('/available-number/{id}', [AvailableNumberController::class, 'update']);
 
 
     // Route::get('/active-users', [ActiveUsersController::class, 'index'])->name('admin.active-users.index');
