@@ -105,9 +105,14 @@
 {{--Start Legal Question Section--}}
 @if(isset($contractData->internalAgentContract) && count($contractData->internalAgentContract->legalQuestion))
     @include('pdf.internal-agent-contract.legal-questions')
-    @include('pdf.internal-agent-contract.accompanying-sign')
 @endif
 {{--End Legal Question Section--}}
+
+{{--Start Signature--}}
+@if(isset($contractData->internalAgentContract) && $contractData->internalAgentContract->getQuestionSign)
+    @include('pdf.internal-agent-contract.accompanying-sign')
+@endif
+{{--End Signature--}}
 
 {{--Start Address History--}}
 @if(isset($contractData->internalAgentContract) && count($contractData->internalAgentContract->addresses))
@@ -121,11 +126,11 @@
 @endif
 {{--End Additional Info--}}
 
-{{--Start Signature--}}
-{{--@if(isset($contractData->internalAgentContract) && isset($contractData->internalAgentContract->additionalInfo))--}}
+{{--Start Signature Authorization--}}
+@if(isset($contractData->internalAgentContract) && $contractData->internalAgentContract->getContractSign)
     @include('pdf.internal-agent-contract.signature')
-{{--@endif--}}
-{{--End Signature--}}
+@endif
+{{--End Signature Authorization--}}
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"

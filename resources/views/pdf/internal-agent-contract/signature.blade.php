@@ -29,17 +29,13 @@
         authorization.
     </p>
 
-    <table class="w-100" style="margin-top: 30px; margin-bottom: 30px">
-        <tr>
-            <td style="width: 20%;" class="text-end"></td>
-            <td style="width: 20%;" class="text-end"></td>
-            <td style="width: 50%;" class="text-end">
-                <span>
-                <strong>Signature:-------------------------- &nbsp;</strong>
-                    <img src="{{asset('internal-agents/sign/dummy-sign.png')}}" alt="" width="150" height="150">
-                </span>
-            </td>
-            <td style="width: 10%;" class="text-end"></td>
-        </tr>
-    </table>
+
+    <div style="width:35%; border-bottom:solid; height:120px; float: right;margin-top:30px;">
+        <img  src="{{ asset($contractData->internalAgentContract->getContractSign->sign_url)}}" style="width: 300px;margin-top:40px;margin-left:-8px;">
+    </div>
+    <br>
+    <div style="width:35%; height:100px; margin-right:-230px;  float: right;margin-top:170px;">
+        <div><strong>Name</strong>:&nbsp; {{$contractData->internalAgentContract->first_name.' '.$contractData->internalAgentContract->last_name}}</div>
+        <div><strong>Date</strong>:&nbsp; {{\Carbon\Carbon::parse($contractData->internalAgentContract->getContractSign->created_at)->format('m/d/Y')}}  </div>
+    </div>
 </div>

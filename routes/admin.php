@@ -58,10 +58,12 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
     Route::get('/agent/clients/{id}', [InternalAgentController::class, 'getAgentClients']);
 
+    Route::get('/download/agent/contract/pdf/{id}', [InternalAgentController::class, 'downloadAgentContractPdf']);
+
     // Available Number
     Route::get('/available-numbers',[AvailableNumberController::class,'index']);
     Route::post('/available-number/store',[AvailableNumberController::class,'store']);
-    Route::post('/available-number/{id}', [AvailableNumbertController::class, 'update']);
+    Route::post('/available-number/{id}', [AvailableNumberController::class, 'update']);
 
 
     // Route::get('/active-users', [ActiveUsersController::class, 'index'])->name('admin.active-users.index');
@@ -75,7 +77,4 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
     //Calls
     Route::get('/calls', [CallsController::class, 'index'])->name('admin.calls.index');
-
-    // Route::get('/agents/legal-questions', [LegalQuestionPdfController::class, 'index'])->name('admin.agent.internal.agent');
-    Route::post('/agents/legal-questions', [LegalQuestionPdfController::class, 'legalQuestions']);
 });
