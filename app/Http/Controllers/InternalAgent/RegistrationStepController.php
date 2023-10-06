@@ -25,9 +25,9 @@ class RegistrationStepController extends Controller
 {
     public function contractSteps()
     {
-        // if (auth()->user()->legacy_key) {
-        //     return redirect()->route('dashboard');
-        // }
+        if (auth()->user()->legacy_key) {
+            return redirect()->route('dashboard');
+        }
         $user = auth()->user();
         $userData = User::where('id', $user->id)->with('internalAgentContract.additionalInfo')
             ->with('internalAgentContract.addresses')
@@ -1298,19 +1298,7 @@ class RegistrationStepController extends Controller
                 }
             }
 
-
-
             DB::commit();
-
-//            $contractData = User::where('id', auth()->user()->id)
-//                ->with('internalAgentContract.additionalInfo')
-//                ->with('internalAgentContract.addresses')
-//                ->with('internalAgentContract.amlCourse')
-//                ->with('internalAgentContract.bankingInfo')
-//                ->with('internalAgentContract.errorAndEmission')
-//                ->with('internalAgentContract.legalQuestion')
-//                ->with('internalAgentContract.residentLicense')->first();
-
 
             return response()->json([
                 'success' => true,
