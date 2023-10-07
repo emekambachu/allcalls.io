@@ -1,28 +1,4 @@
-<style scoped>
-#signature {
-    border: solid 1px lightgray;
-    padding: 10px;
-    border-radius: 10px;
 
-}
-
-#signature canvas {
-    padding: 5px;
-    height: 60px !important;
-}
-
-.container {
-    width: "100%";
-
-}
-
-.buttons {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    margin-top: 8px;
-}
-</style>
 <template>
     <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
         Legal Questions
@@ -61,8 +37,19 @@
                             class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">NO</label>
                     </div>
                 </div>
-                <input type="text" v-show="form[information.name] === 'YES'" v-model="form[information.name + '_text']"
+                <input type="text"
+                    v-show="form[information.name] === 'YES' && information.name != 'contract_commission_checkbox_20'"
+                    v-model="form[information.name + '_text']"
                     class="bg-gray-50 mt-5 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <div>
+                    <select
+                        v-show="form[information.name] === 'YES' && information.name === 'contract_commission_checkbox_20'"
+                        v-model="form[information.name + '_text']" id="countries"
+                        class="bg-gray-50 border mt-5 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option>Choose </option>
+                        <option v-for="contract_commission in contract_commissions" :value="contract_commission">{{ contract_commission }}</option>
+                    </select>
+                </div>
                 <div v-if="firstStepErrors[information.name]" class="text-red-500 mt-3"
                     v-text="firstStepErrors[information.name][0]"></div>
             </div>
@@ -75,8 +62,8 @@
                 any information changes, I will notify my agency office within 5 days of such change. Further, I understand
                 that my agency may contact me when I need to answer carrier-specific questions.</strong></p>
     </div>
-    
-   
+
+
     <div class="px-5 pb-6">
         <div class="flex justify-between flex-wrap">
             <div class="mt-4">
@@ -102,12 +89,8 @@
 export default {
     name: "App",
     data: () => ({
-        options: {
-            penColor: "black",
-        },
         date: new Date(),
         isLoading: false,
-        sigError: '',
         LegalInformation: [
             {
                 id: 23,
@@ -229,9 +212,41 @@ export default {
                 heading: 'Do you have any unresolved matters pending with the Internal Revenue Service, or other taxing authority?',
                 question: '19'
             },
+            {
+                id: 43,
+                name: 'contract_commission_checkbox_20',
+                heading: 'Have you SIGNED CONTRACTS or BEEN PAID COMMISSIONS with any insurance carriers in the last 6 months?',
+                question: '20'
+            },
         ],
-        form: {},
+        form: {
+            contract_commission_checkbox_20_text: "Choose",
+        },
         accompanying_sign: null,
+         contract_commissions : [
+            'Aetna/Accendo',
+            'Aig',
+            'American Amicable',
+            'Americo',
+            'Ameritas',
+            'Assurant',
+            'Athene',
+            'Columbian Financial Group',
+            'Columbus Life',
+            'Ethos',
+            'Fidelity and Guaranty Life',
+            'Foresters',
+            'Gerber Life',
+            'Government Personnel Mutual',
+            'Great Western',
+            'John Hancock',
+            'Mutual Of Omaha',
+            'National Life Group',
+            'Occidental',
+            'Prosperity Life',
+            'Royal Neighbors',
+            'TransAmerica'
+        ]
 
     }),
     mounted() {
@@ -270,7 +285,7 @@ export default {
                     if (!this.form[information.name]) {
                         this.firstStepErrors[information.name] = [`This field is required.`];
                     } else if (checboxValue === "YES") {
-                        if (!this.form[information.name + '_text']) {
+                        if (!this.form[information.name + '_text'] || this.form[information.name + '_text'] === 'Choose') {
                             this.firstStepErrors[information.name] = [`This field is required.`];
                         }
                     }

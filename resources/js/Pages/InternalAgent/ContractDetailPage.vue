@@ -6,7 +6,7 @@ let props = defineProps({
     previewData: Object
 });
 console.log('previewData', props.previewData);
-let LegalInformation = ref([
+let LegalInformation = ref([        
     {
         id: 43,
         name: 'convicted_checkbox_1',
@@ -301,7 +301,13 @@ let LegalInformation = ref([
         heading: 'Do you have any unresolved matters pending with the Internal Revenue Service, or other taxing authority?',
         question: '19'
     },
-
+    {
+        id: 85,
+        name: 'contract_commission_checkbox_20',
+        description: 'contract_commission_checkbox_20_text',
+        heading: 'Have you SIGNED CONTRACTS or BEEN PAID COMMISSIONS with any insurance carriers in the last 6 months?',
+        question: '20'
+    },
 
 ]);
 
@@ -332,7 +338,9 @@ if (props.previewData) {
         if (matchingLegalInfo2) {
             form.value[matchingLegalInfo2.name + '_text'] = value
         }
-        // console.log(key);
+        console.log(key);
+        console.log(value);
+
     });
 
 }
@@ -352,7 +360,7 @@ if (props.previewData) {
                 <p class="text-gray-600"><strong>Social Security Number (SSN):</strong> {{
                     previewData?.ssn }}</p>
                 <p class="text-gray-600"><strong>Gender:</strong> {{ previewData?.gender }}</p>
-                <p class="text-gray-600"><strong>Date of Birth:</strong> {{dateFormat(previewData?.dob)  }}</p>
+                <p class="text-gray-600"><strong>Date of Birth:</strong> {{ dateFormat(previewData?.dob) }}</p>
                 <p class="text-gray-600"><strong>Cell Phone: </strong> {{ previewData?.cell_phone }}</p>
                 <p class="text-gray-600"><strong>Home Phone: </strong> {{ previewData?.home_phone }}</p>
                 <!-- Add more data fields as needed -->
@@ -374,7 +382,7 @@ if (props.previewData) {
             </div>
             <div class="bg-white  p-4">
                 <p class="text-gray-600"><strong>Zip Code: </strong> {{ previewData?.zip }}</p>
-                <p class="text-gray-600"><strong>Move-In Date: </strong> {{ dateFormat(previewData?.move_in_date)  }}
+                <p class="text-gray-600"><strong>Move-In Date: </strong> {{ dateFormat(previewData?.move_in_date) }}
                 </p>
                 <p class="text-gray-600"><strong>Mailing Address (If Diffrent From Residence): </strong> {{
                     previewData?.move_in_address }}</p>
@@ -429,7 +437,7 @@ if (props.previewData) {
             <div class="bg-white  p-4">
                 <p class="text-gray-600"><strong>Zip Code: </strong> {{ previewData?.business_zip }}</p>
                 <p class="text-gray-600"><strong>Move-In Date: </strong> {{
-                    dateFormat(previewData?.business_move_in_date ) }}</p>
+                    dateFormat(previewData?.business_move_in_date) }}</p>
                 <p class="text-gray-600"><strong>Company Type: </strong> {{
                     previewData?.business_company_type }}</p>
             </div>
@@ -474,7 +482,7 @@ if (props.previewData) {
 
                         </div>
 
-
+                        
                         <input type="text" disabled v-show="form[information.name] === 'YES'"
                             v-model="form[information.name + '_text']"
                             class="bg-gray-50 mt-5 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -488,7 +496,7 @@ if (props.previewData) {
         </div>
         <div class=" flex bg-white rounded-lg  gap-4 mt-4 mb-4">
             <div style="padding: 10px; width: 30%; background: #ebe8e8;">
-                <img class="mb-5" :src="previewData.accompanying_sign" alt="signature" />
+                <img class="mb-5" :src="previewData?.accompanying_sign" alt="signature" />
                 <div> <strong class="mx-2">Date: </strong> {{ dateFormat(date) }}</div>
             </div>
         </div>
@@ -621,15 +629,16 @@ if (props.previewData) {
                     previewData?.resident_city }}
                 </p>
             </div>
-        <div class="bg-white  ">
-            <p class="text-gray-600"><strong>State of Birth:</strong> {{
-                previewData?.resident_state_name }}</p>
-        </div>
-        <div class="bg-white  ">
-            <p class="text-gray-600"><strong>Maiden Name:</strong> {{
-                previewData?.resident_maiden_name }}</p>
+            <div class="bg-white  ">
+                <p class="text-gray-600"><strong>State of Birth:</strong> {{
+                    previewData?.resident_state_name }}</p>
+            </div>
+            <div class="bg-white  ">
+                <p class="text-gray-600"><strong>Maiden Name:</strong> {{
+                    previewData?.resident_maiden_name }}</p>
+            </div>
         </div>
     </div>
-</div></template>
+</template>
 <script>
 </script>

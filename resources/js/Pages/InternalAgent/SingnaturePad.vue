@@ -23,7 +23,7 @@
     </div>
     </p>
     <hr>
-    <div class="container mx-auto p-5 flex justify-between">
+    <div class="container mx-auto p-5 flex justify-between flex-wrap">
 
         <!-- Left Side (Signature) -->
         <div class="" style="width: 70%;">
@@ -43,7 +43,7 @@
 
 
         <!-- Right Side (Date) -->
-        <div class="w-30 " style="margin-top: 73px;">
+        <div class="w-30 " style="margin-top: 132px;">
             <div class="mb-2"><strong>Date:</strong> <span class="mx-2">{{ dateFormat(date) }}</span></div>
             <!-- Underscore -->
             <div style="width: 200px;" class="border-b border-black "></div>
@@ -76,6 +76,16 @@ export default {
     props: {
         isLoading: Boolean,
         userData: Object,
+        page:Object,
+    },
+    mounted() {
+        if (this.page.auth.role === 'internal-agent') {
+            // console.log('i am running ');
+            const canvasElement = this.$refs.signaturePad.$el.querySelector('canvas');
+            console.log('signaturePad',canvasElement);
+            canvasElement.width = 670; // Set the width you desire
+            canvasElement.height = 100; // Set the height you desire
+        }
     },
     methods: {
         undo() {
@@ -147,7 +157,7 @@ export default {
 }
 
 #signature canvas {
-    height: 60px !important;
+    /* height: 60px !important; */
 }
 
 .container {

@@ -69,7 +69,6 @@ let ChangeTab = (data) => {
         legalFormData1.value = data
     }
     if (data && contractStep.value === 3) {
-        // accompanying_sign.value = data.accompanying_sign
         legalFormData2.value = data
     }
     contractStep.value += 1
@@ -186,6 +185,7 @@ let previewContract = () => {
         }
     }
     previewData.value = requestData
+    console.log('previewData.value',previewData.value);
     StepsModal.value = false
     contractModal.value = true
 
@@ -369,7 +369,7 @@ input[type=number] {
                             <Link v-show="$page.props.auth.role != 'admin'" :href="route('logout')" method="post"
                                 as="button"
                                 class="underline text-sm text-gray-600 mr-5 mt-5  dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
-                            Log Out</Link>
+                            Logout</Link>
                             <button v-show="$page.props.auth.role === 'admin'" @click="close" type="button"
                                 class="text-gray-400 bg-transparent mr-2 mt-2 hover:bg-gray-200 hover:text-gray-700 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
                                 data-modal-hide="defaultModal">
@@ -436,7 +436,7 @@ input[type=number] {
                                     @goback="goBack()"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
-                            <!-- <button @click="previewContract">show Contract</button> -->
+                            <button @click="previewContract">show Contract</button>
                             <!-- <vueSignature /> -->
                         </div>
                     </div>
@@ -462,7 +462,7 @@ input[type=number] {
                             <Link v-show="$page.props.auth.role != 'admin'" :href="route('logout')" method="post"
                                 as="button"
                                 class="underline text-sm text-gray-600 mr-5 mt-5  dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
-                            Log Out</Link>
+                            Logout</Link>
 
                             <button v-show="$page.props.auth.role === 'admin'" @click="close" type="button"
                                 class="text-gray-400 bg-transparent mr-2 mt-2 hover:bg-gray-200 hover:text-gray-700 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
@@ -478,7 +478,7 @@ input[type=number] {
 
                         <div class="px-12 py-2">
                             <ContractDetailPage :previewData="previewData" />
-                            <SingnaturePad :userData="userData" @editContract="editContract" :isLoading="isLoading"
+                            <SingnaturePad :page="$page.props" :userData="userData" @editContract="editContract" :isLoading="isLoading"
                                 @signature="signaturePreview" />
                         </div>
                     </div>

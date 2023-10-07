@@ -9,7 +9,7 @@
 
 #signature canvas {
     padding: 5px;
-    height: 60px !important;
+
 }
 
 .input-custom {
@@ -31,6 +31,42 @@
     text-align: center;
     padding: 10px;
     border: 1px solid #000;
+}
+
+.container {
+    width: 70%;
+}
+
+.child-singnature {
+    width: 60%;
+}
+
+.child-singnature-date {
+    width: 30% !important;
+    margin-top: 113px;
+}
+
+.instructions-main {
+    width: 70%;
+}
+
+@media (min-width: 200px) and (max-width: 1024px) {
+    .container {
+        width: 100% !important;
+    }
+
+    .instructions-main {
+        width: 100%;
+    }
+
+    .child-singnature {
+        width: 100% !important;
+    }
+
+    .child-singnature-date {
+        width: 100% !important;
+        margin-top: 0px;
+    }
 }
 </style>
 <template>
@@ -107,7 +143,7 @@
                     v-text="firstStepErrors.resident_maiden_name[0]"></div>
             </div>
         </div>
-        <div class="mx-auto mb-5" style="width: 70%;">
+        <div class="mx-auto mb-5 instructions-main">
             <hr class="w-100 h-1 my-4 bg-gray-600 border-0 rounded dark:bg-gray-700">
             <p class="text-center">
                 By signing below, l hereby authorize the Company to initiate credit entries and, if
@@ -119,11 +155,10 @@
 
             </p>
         </div>
-        <div v-if="page.auth.role === 'internal-agent'" style="width: 70%;"
-            class="container mx-auto p-5 flex justify-between">
+        <div v-if="page.auth.role === 'internal-agent'" class="container mx-auto p-5 flex justify-between flex-wrap">
 
 
-            <div class="" style="width: 60%;">
+            <div class="child-singnature">
                 <!-- Signature Box -->
                 <div class=" mb-10 ">
                     <div>Signature: </div>
@@ -143,7 +178,7 @@
 
 
             <!-- Right Side (Date) -->
-            <div class="w-30 " style="margin-top: 133px;">
+            <div class="child-singnature-date">
                 <div class="mb-2"><strong>Date:</strong> <span class="mx-2">{{ dateFormat(date) }}</span></div>
                 <!-- Underscore -->
                 <div style="width: 200px;" class="border-b border-black "></div>
@@ -276,6 +311,9 @@ export default {
         return {
             maxDate: new Date(),
             date: new Date(),
+            options: {
+                penColor: "black",
+            },
             form: {
                 resident_country: 'USA',
                 resident_your_home: null,
@@ -296,9 +334,10 @@ export default {
             this.form = this.userData.internal_agent_contract.additional_info
         }
         if (this.page.auth.role === 'internal-agent') {
+            // console.log('i am running ');
             const canvasElement = this.$refs.signature2Pad.$el.querySelector('canvas');
-            // console.log('canvasElement',canvasElement);
-            canvasElement.width = 400; // Set the width you desire
+            console.log('canvasElement', canvasElement);
+            canvasElement.width = 390; // Set the width you desire
             canvasElement.height = 100; // Set the height you desire
         }
     },
