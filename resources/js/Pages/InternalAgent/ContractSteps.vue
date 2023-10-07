@@ -436,7 +436,7 @@ input[type=number] {
                                     @goback="goBack()"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
-                            <button @click="previewContract">show Contract</button>
+                            <!-- <button @click="previewContract">show Contract</button> -->
                             <!-- <vueSignature /> -->
                         </div>
                     </div>
