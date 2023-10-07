@@ -247,19 +247,6 @@ export default {
 
     },
     methods: {
-        undo() {
-            this.$refs.signature2Pad.undoSignature();
-        },
-
-        // dateFormat(date) {
-        //     console.log('date', date);
-        //     const day = date.getDate().toString().padStart(2, "0"); // Add leading zero if needed
-        //     const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Month is zero-based, so add 1
-        //     const year = date.getFullYear();
-
-        //     // Create the formatted date string
-        //     return `${day}/${month}/${year}`;
-        // },
         dateFormat(dateString) {
             const dateObj = new Date(dateString);
 
