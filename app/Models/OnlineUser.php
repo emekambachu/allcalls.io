@@ -46,42 +46,56 @@ class OnlineUser extends Model
             ->where('call_type_id', $callType->id);
     }
 
-
     public function scopeWithSufficientBalance($query, $callType)
     {
+        Log::debug('Entering scopeWithSufficientBalance method');
+    
         return $query->whereHas('user', function ($query) use ($callType) {
+            
+            Log::debug('Filtering by user relationship');
+            
             $query->where(function ($query) {
+                Log::debug('Checking for internal agents');
+                
                 // For internal agents, they should always have a balance of at least $35
                 $query->whereHas('roles', function ($subQuery) {
+                    Log::debug('Filtering by roles for internal-agent');
                     $subQuery->where('name', 'internal-agent');
                 })->where('balance', '>=', 35);
             })->orWhere(function ($query) use ($callType) {
+                Log::debug('Checking for normal users');
+    
                 // For normal users, determine the required minimum balance based on the bid below theirs for the specific call type
                 $userBid = DB::table('bids')
                     ->where('call_type_id', $callType->id)
                     ->where('user_id', $query->getModel()->getAttribute('id'))
                     ->value('amount');
-
+    
+                Log::debug("User bid for call type {$callType->id}: {$userBid}");
+    
                 $minimumRequiredBalance = 35; // Default
-
+    
                 if ($userBid !== null) {
                     $lowerBid = DB::table('bids')
                         ->where('call_type_id', $callType->id)
                         ->where('amount', '<', $userBid)
                         ->orderBy('amount', 'desc')
                         ->value('amount');
-
+    
+                    Log::debug("Lower bid for call type {$callType->id}: {$lowerBid}");
+    
                     $minimumRequiredBalance = $lowerBid ? ($lowerBid + 1) : 35;
                 }
-
+    
+                Log::debug("Minimum required balance for user: {$minimumRequiredBalance}");
+    
                 $query->whereDoesntHave('roles', function ($subQuery) {
+                    Log::debug('Filtering out internal-agent roles for normal users');
                     $subQuery->where('name', 'internal-agent');
                 })->where('balance', '>=', $minimumRequiredBalance);
             });
         });
     }
-
-
 
     public function user()
     {
