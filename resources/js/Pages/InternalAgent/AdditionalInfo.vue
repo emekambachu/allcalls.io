@@ -1,68 +1,17 @@
-<script setup>
-import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
-import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
-import { format } from 'date-fns';
-let maxDate = ref(new Date)
-let props = defineProps({
-    firstStepErrors: Object,
-    states: Array,
-    userData: Object,
-});
-let page = usePage();
-console.log('userData address additional info', props.userData);
-const emits = defineEmits();
-let countries = ref([{
-    'name': 'United States of America',
-    'code': "USA"
-}])
-let form = ref({
-    resident_country: 'USA',
-    resident_your_home: null,
-    resident_city: null,
-    resident_state: 'Choose',
-    resident_maiden_name: null,
-    aml_provider: null,
-    training_completion_date: null,
-    limra_password: null,
 
-})
-if (page.props.auth.role === 'admin' && props.userData.internal_agent_contract) {
-    form.value = props.userData.internal_agent_contract.additional_info
-}
-watch(form.value, (newForm, oldForm) => {
-    emits("additionalInfoData", newForm);
-});
-let ChangeTab = () => {
-    for (const key in props.firstStepErrors) {
-        if (props.firstStepErrors.hasOwnProperty(key)) {
-            props.firstStepErrors[key] = [];
-        }
-    }
-    // Define an array of field names that are required
-    const requiredFields = [
-        "resident_country", "resident_your_home", "resident_city", 'resident_state',
-    ];
-    if (page.props.auth.role === 'internal-agent') {
-        requiredFields.forEach(fieldName => {
-            if (form.value[fieldName] === null || form.value[fieldName] === "" || form.value[fieldName] === "Choose") {
-                props.firstStepErrors[fieldName] = [`This  field is required.`];
-            }
-        });
-    }
-    // Check if there are any errors
-    const hasErrors = Object.values(props.firstStepErrors).some(errors => errors.length > 0);
-    if (!hasErrors) {
-        emits("changeTab");
-    } else {
-        var element = document.getElementById("modal_main_id");
-        element.scrollIntoView();
-    }
-}
-let ChangeTabBack = () => {
-    emits("goback");
-}
-</script>
 <style scoped>
+#signature {
+    border: solid 1px lightgray;
+    padding: 10px;
+    border-radius: 10px;
+
+}
+
+#signature canvas {
+    padding: 5px;
+    height: 60px !important;
+}
+
 .input-custom {
     background-color: #d3e4eb;
     border: solid 2px #a7d4ea;
@@ -140,7 +89,7 @@ let ChangeTabBack = () => {
             <div>
                 <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white"> State of
                     Birth<span class="text-red-500 ">*</span></label>
-                <select v-model="form.resident_state" id="countries"
+                <select @change="ChangeState()" v-model="form.resident_state" id="countries"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <option>Choose </option>
                     <option v-for="state in states" :value="state.id">{{ state.full_name }} </option>
@@ -158,7 +107,59 @@ let ChangeTabBack = () => {
                     v-text="firstStepErrors.resident_maiden_name[0]"></div>
             </div>
         </div>
+        <div class="mx-auto mb-5" style="width: 70%;">
+            <hr class="w-100 h-1 my-4 bg-gray-600 border-0 rounded dark:bg-gray-700">
+            <p class="text-center">
+                By signing below, l hereby authorize the Company to initiate credit entries and, if
+                necessary, adjustments for credit entries in error to the checking and/or savings account
+                indicated on this form. This authority is to remain in full effect until the Company has
+                received written notice from me for its termination. I understand that this authorization
+                is subject to the terms of any agent or representative contract, commission agreement,
+                or loan agreement that I may have now, or in the future, with the Company.
 
+            </p>
+        </div>
+        <div v-if="page.auth.role === 'internal-agent'" style="width: 70%;"
+            class="container mx-auto p-5 flex justify-between">
+
+
+            <div class="" style="width: 60%;">
+                <!-- Signature Box -->
+                <div class=" mb-10 ">
+                    <div>Signature: </div>
+                    <!-- Signature Pad Component -->
+
+                    <!-- Undo Button (if needed) -->
+
+
+                    <VueSignaturePad id="signature" ref="signature2Pad" :options="options" />
+
+                    <button @click="undo" class=" button-custom mt-2 px-2 py-2 rounded-md">
+                        Undo
+                    </button>
+                    <p v-if="sigError" class="text-red-500 mt-2">{{ sigError }}</p>
+                </div>
+            </div>
+
+
+            <!-- Right Side (Date) -->
+            <div class="w-30 " style="margin-top: 133px;">
+                <div class="mb-2"><strong>Date:</strong> <span class="mx-2">{{ dateFormat(date) }}</span></div>
+                <!-- Underscore -->
+                <div style="width: 200px;" class="border-b border-black "></div>
+            </div>
+
+        </div>
+        <div v-if="page.auth.role === 'admin'">
+            <div class=" flex bg-white rounded-lg justify-end  gap-4 mt-4 mb-4">
+                <div style="padding: 10px; width: 30%; background: #ebe8e8;">
+                    <img width="250" height="100" class="mb-5"
+                        :src="userData.internal_agent_contract.get_question_sign.sign_url" alt="signature" />
+                    <div> <strong class="mx-2">Date: </strong> {{
+                        dateFormat(userData.internal_agent_contract.get_question_sign.created_at) }}</div>
+                </div>
+            </div>
+        </div>
         <!-- <h1 style="background-color: #134576;" class="mb-4 mt-4	text-center rounded-md py-2 text-white">
             Anti-Money Loundering
         </h1>
@@ -263,3 +264,109 @@ let ChangeTabBack = () => {
         </div>
     </div>
 </template>
+<script>
+export default {
+    props: {
+        firstStepErrors: Object,
+        states: Array,
+        userData: Object,
+        page: Object,
+    },
+    data() {
+        return {
+            maxDate: new Date(),
+            date: new Date(),
+            form: {
+                resident_country: 'USA',
+                resident_your_home: null,
+                resident_city: null,
+                resident_state: 'Choose',
+                resident_maiden_name: null,
+                resident_state_name: null,
+            },
+            countries: [{
+                'name': 'United States of America',
+                'code': "USA"
+            }],
+            sigError: null,
+        };
+    },
+    mounted() {
+        if (this.page.auth.role === 'admin' && this.userData.internal_agent_contract) {
+            this.form = this.userData.internal_agent_contract.additional_info
+        }
+        if (this.page.auth.role === 'internal-agent') {
+            const canvasElement = this.$refs.signature2Pad.$el.querySelector('canvas');
+            // console.log('canvasElement',canvasElement);
+            canvasElement.width = 400; // Set the width you desire
+            canvasElement.height = 100; // Set the height you desire
+        }
+    },
+    methods: {
+        ChangeState() {
+            const selectedStateId = this.form.resident_state;
+            const selectedState = this.states.find(state => state.id === selectedStateId);
+
+            if (selectedState) {
+                this.form.resident_state_name = selectedState.full_name
+            }
+        },
+        dateFormat(dateString) {
+            const dateObj = new Date(dateString);
+
+            const day = dateObj.getDate().toString().padStart(2, "0");
+            const month = dateObj.toLocaleString("en-US", { month: "short" }).toLowerCase();
+            const year = dateObj.getFullYear();
+
+            return `${day}-${month}-${year}`;
+        },
+        ChangeTab() {
+            for (const key in this.firstStepErrors) {
+                if (this.firstStepErrors.hasOwnProperty(key)) {
+                    this.firstStepErrors[key] = [];
+                }
+            }
+            // Define an array of field names that are required
+            const requiredFields = [
+                "resident_country", "resident_your_home", "resident_city", 'resident_state',
+            ];
+            if (this.page.auth.role === 'internal-agent') {
+                requiredFields.forEach(fieldName => {
+                    if (this.form[fieldName] === null || this.form[fieldName] === "" || this.form[fieldName] === "Choose") {
+                        this.firstStepErrors[fieldName] = [`This field is required.`];
+                    }
+                });
+            }
+            // Check if there are any errors
+            const hasErrors = Object.values(this.firstStepErrors).some(errors => errors.length > 0);
+            if (this.page.auth.role === 'internal-agent') {
+                if (!hasErrors) {
+                    const { isEmpty, data } = this.$refs.signature2Pad.saveSignature();
+                    if (!isEmpty) {
+                        this.sigError = null
+                        // this.$emit("changeTab", { form: this.form, accompanying_sign: data });
+                        this.$emit("changeTab");
+                        this.$emit("additionalInfoData", { form: this.form, accompanying_sign: data });
+                        this.firstStepErrors = {}; // Clear the errors by assigning a new empty object
+                    } else {
+                        this.sigError = 'Please provide a signature.';
+                    }
+                } else {
+                    var element = document.getElementById("modal_main_id");
+                    element.scrollIntoView();
+                }
+            } else {
+                this.$emit("changeTab");
+                this.$emit("additionalInfoData", this.form);
+            }
+
+        },
+        undo() {
+            this.$refs.signature2Pad.undoSignature();
+        },
+        ChangeTabBack() {
+            this.$emit("goback");
+        },
+    },
+};
+</script>

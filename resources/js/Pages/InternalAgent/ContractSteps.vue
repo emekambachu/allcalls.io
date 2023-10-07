@@ -69,8 +69,8 @@ let ChangeTab = (data) => {
         legalFormData1.value = data
     }
     if (data && contractStep.value === 3) {
-        accompanying_sign.value = data.accompanying_sign
-        legalFormData2.value = data.form
+        // accompanying_sign.value = data.accompanying_sign
+        legalFormData2.value = data
     }
     contractStep.value += 1
     var element = document.getElementById("modal_main_id");
@@ -104,8 +104,8 @@ let AddressHistoryfun = (val) => {
 }
 let additionalInfoD = ref(null)
 let additionalInformation = (val) => {
-    additionalInfoD.value = val
-    // console.log('new values', additionalInfoD.value);
+    accompanying_sign.value = val.accompanying_sign
+    additionalInfoD.value = val.form
 }
 let uploadLicensePdf = ref(null)
 let uploadLicense = (val) => {
@@ -393,13 +393,13 @@ input[type=number] {
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="contractStep === 2">
-                                <LegalInformation  :firstStepErrors="firstStepErrors"
-                                    @changeTab="ChangeTab" @goback="ChangeTabBack()"
+                                <LegalInformation :firstStepErrors="firstStepErrors" @changeTab="ChangeTab"
+                                    @goback="ChangeTabBack()"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="contractStep === 3">
-                                <LegalInformation2  :firstStepErrors="firstStepErrors"
-                                    @changeTab="ChangeTab" :page="$page.props" @goback="ChangeTabBack()"
+                                <LegalInformation2 :firstStepErrors="firstStepErrors" @changeTab="ChangeTab"
+                                    :page="$page.props" @goback="ChangeTabBack()"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="contractStep === 4">
@@ -409,8 +409,8 @@ input[type=number] {
                             </div>
                             <div v-show="contractStep === 5">
                                 <AdditionalInfo @additionalInfoData="additionalInformation"
-                                    :firstStepErrors="firstStepErrors" :states="states" @changeTab="NextStep()"
-                                    @goback="ChangeTabBack()"
+                                    :firstStepErrors="firstStepErrors" :page="$page.props" :states="states"
+                                    @changeTab="NextStep()" @goback="ChangeTabBack()"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="step === 2" class="pt-6">
@@ -463,7 +463,7 @@ input[type=number] {
                                 as="button"
                                 class="underline text-sm text-gray-600 mr-5 mt-5  dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
                             Log Out</Link>
-                            
+
                             <button v-show="$page.props.auth.role === 'admin'" @click="close" type="button"
                                 class="text-gray-400 bg-transparent mr-2 mt-2 hover:bg-gray-200 hover:text-gray-700 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
                                 data-modal-hide="defaultModal">
@@ -478,7 +478,8 @@ input[type=number] {
 
                         <div class="px-12 py-2">
                             <ContractDetailPage :previewData="previewData" />
-                            <SingnaturePad :userData="userData" @editContract="editContract"  :isLoading="isLoading" @signature="signaturePreview" />
+                            <SingnaturePad :userData="userData" @editContract="editContract" :isLoading="isLoading"
+                                @signature="signaturePreview" />
                         </div>
                     </div>
                 </div>

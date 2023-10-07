@@ -623,7 +623,7 @@ if (props.previewData) {
             </div>
         <div class="bg-white  ">
             <p class="text-gray-600"><strong>State of Birth:</strong> {{
-                previewData?.resident_state }}</p>
+                previewData?.resident_state_name }}</p>
         </div>
         <div class="bg-white  ">
             <p class="text-gray-600"><strong>Maiden Name:</strong> {{

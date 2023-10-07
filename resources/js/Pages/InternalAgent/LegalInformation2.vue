@@ -75,57 +75,8 @@
                 any information changes, I will notify my agency office within 5 days of such change. Further, I understand
                 that my agency may contact me when I need to answer carrier-specific questions.</strong></p>
     </div>
-    <div class="mx-auto mb-5" style="width: 70%;">
-        <hr class="w-100 h-1 my-4 bg-gray-600 border-0 rounded dark:bg-gray-700">
-        <p class="text-center">
-            By signing below, l hereby authorize the Company to initiate credit entries and, if
-            necessary, adjustments for credit entries in error to the checking and/or savings account
-            indicated on this form. This authority is to remain in full effect until the Company has
-            received written notice from me for its termination. I understand that this authorization
-            is subject to the terms of any agent or representative contract, commission agreement,
-            or loan agreement that I may have now, or in the future, with the Company.
-
-        </p>
-    </div>
-    <div v-if="page.auth.role === 'admin'">
-        <div class=" flex bg-white rounded-lg justify-end  gap-4 mt-4 mb-4">
-            <div style="padding: 10px; width: 30%; background: #ebe8e8;">
-                <img width="250" height="100" class="mb-5"
-                    :src="userData.internal_agent_contract.get_question_sign.sign_url" alt="signature" />
-                <div> <strong class="mx-2">Date: </strong> {{ dateFormat(userData.internal_agent_contract.get_question_sign.created_at) }}</div>
-            </div>
-        </div>
-    </div>
-    <div v-if="page.auth.role === 'internal-agent'" style="width: 70%;" class="container mx-auto p-5 flex justify-between">
-
-
-        <div class="" style="width: 60%;">
-            <!-- Signature Box -->
-            <div class=" mb-10 ">
-                <div>Signature: </div>
-                <!-- Signature Pad Component -->
-
-                <!-- Undo Button (if needed) -->
-
-
-                <VueSignaturePad id="signature" ref="signature2Pad" :options="options" />
-
-                <button @click="undo" class=" button-custom mt-2 px-2 py-2 rounded-md">
-                    Undo
-                </button>
-                <p v-if="sigError" class="text-red-500 mt-2">{{ sigError }}</p>
-            </div>
-        </div>
-
-
-        <!-- Right Side (Date) -->
-        <div class="w-30 " style="margin-top: 73px;">
-            <div class="mb-2"><strong>Date:</strong> <span class="mx-2">{{ dateFormat(date) }}</span></div>
-            <!-- Underscore -->
-            <div style="width: 200px;" class="border-b border-black "></div>
-        </div>
-
-    </div>
+    
+   
     <div class="px-5 pb-6">
         <div class="flex justify-between flex-wrap">
             <div class="mt-4">
@@ -284,14 +235,6 @@ export default {
 
     }),
     mounted() {
-        if (this.page.auth.role === 'internal-agent') {
-            const canvasElement = this.$refs.signature2Pad.$el.querySelector('canvas');
-            // console.log('canvasElement',canvasElement);
-            canvasElement.width = 400; // Set the width you desire
-            canvasElement.height = 100; // Set the height you desire
-        }
-
-
         if (this.page.auth.role === 'admin' && this.userData.internal_agent_contract) {
             this.userData.internal_agent_contract.legal_question.forEach((question) => {
                 const matchingLegalInfo = this.LegalInformation.find((info) => info.name === question.name);
@@ -351,13 +294,9 @@ export default {
 
             if (!hasErrors) {
                 if (this.page.auth.role === 'internal-agent') {
-                    const { isEmpty, data } = this.$refs.signature2Pad.saveSignature();
-                    if (!isEmpty) {
-                        this.$emit("changeTab", { form: this.form, accompanying_sign: data });
-                        this.firstStepErrors = {}; // Clear the errors by assigning a new empty object
-                    } else {
-                        this.sigError = 'Please provide a signature.';
-                    }
+                    this.$emit("changeTab", this.form);
+                    this.firstStepErrors = {}; // Clear the errors by assigning a new empty object
+
                 } else {
                     this.$emit("changeTab");
                 }
