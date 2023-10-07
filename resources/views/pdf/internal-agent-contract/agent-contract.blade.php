@@ -108,12 +108,6 @@
 @endif
 {{--End Legal Question Section--}}
 
-{{--Start Signature--}}
-@if(isset($contractData->internalAgentContract) && $contractData->internalAgentContract->getQuestionSign)
-    @include('pdf.internal-agent-contract.accompanying-sign')
-@endif
-{{--End Signature--}}
-
 {{--Start Address History--}}
 @if(isset($contractData->internalAgentContract) && count($contractData->internalAgentContract->addresses))
     @include('pdf.internal-agent-contract.address-history')
@@ -125,6 +119,12 @@
     @include('pdf.internal-agent-contract.additional-info')
 @endif
 {{--End Additional Info--}}
+
+{{--Start Signature--}}
+@if(isset($contractData->internalAgentContract) && $contractData->internalAgentContract->getQuestionSign)
+    @include('pdf.internal-agent-contract.accompanying-sign')
+@endif
+{{--End Signature--}}
 
 {{--Start Signature Authorization--}}
 @if(isset($contractData->internalAgentContract) && $contractData->internalAgentContract->getContractSign)
