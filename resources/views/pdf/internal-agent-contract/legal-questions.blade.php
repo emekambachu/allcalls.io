@@ -993,9 +993,4 @@
             </div>
         @endif
     @endforeach
-    <p style="font-weight: bold">
-        I attest that the information I have provided is true to the best of my knowledge. I acknowledge that if any
-        information changes, I will notify my agency office within 5 days of such change. Further, I understand that my
-        agency may contact me when I need to answer carrier-specific questions.
-    </p>
 </div>

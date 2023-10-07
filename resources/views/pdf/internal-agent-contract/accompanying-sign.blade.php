@@ -1,6 +1,12 @@
 <div class="mt-3">
     <h3 class="title">Contracting - Accompanying Documents</h3>
 
+    <p style="font-weight: bold; text-align: justify;margin-top: 15px; padding-bottom: 20px;" class="section-border">
+        I attest that the information I have provided is true to the best of my knowledge. I acknowledge that if any
+        information changes, I will notify my agency office within 5 days of such change. Further, I understand that my
+        agency may contact me when I need to answer carrier-specific questions.
+    </p>
+
     <table class="w-100" style="margin-bottom: 15px">
         <tr>
             <td style="width: 10%;" class="text-end"></td>
