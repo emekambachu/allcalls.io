@@ -16,7 +16,7 @@ let form = ref({
 if (page.props.auth.role === 'admin') {
     form.value.omissions_insurance = true
 }
-if (page.props.auth.role === 'admin' && props.userData.internal_agent_contract) {
+if (props.userData.internal_agent_contract) {
     if (props.userData.internal_agent_contract.error_and_emission.omissions_insurance === 1) {
         form.value.omissions_insurance = true
         omissionUrl.value = props.userData.internal_agent_contract.error_and_emission.url

@@ -10,7 +10,7 @@ let props = defineProps({
 let page = usePage();
 let residentUrl = ref(null)
 
-if (page.props.auth.role === 'admin' && props.userData.internal_agent_contract) {
+if (props.userData.internal_agent_contract) {
     residentUrl.value = props.userData.internal_agent_contract.resident_license.url
 }
 const fileError = ref(false);

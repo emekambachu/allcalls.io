@@ -18,7 +18,7 @@ let form = ref({
 if (page.props.auth.role === 'admin') {
     form.value.aml_course = true
 }
-if (page.props.auth.role === 'admin' && props.userData.internal_agent_contract) {
+if (props.userData.internal_agent_contract) {
     if (props.userData.internal_agent_contract.aml_course.aml_course === 1) {
         form.value.aml_course = true
         amlUrl.value = props.userData.internal_agent_contract.aml_course.url
