@@ -251,7 +251,7 @@ export default {
 
     }),
     mounted() {
-        if (this.userData.internal_agent_contract) {
+        if (this.userData.internal_agent_contract.legal_question) {
             this.userData.internal_agent_contract.legal_question.forEach((question) => {
                 const matchingLegalInfo = this.LegalInformation.find((info) => info.name === question.name);
                 if (matchingLegalInfo) {

@@ -341,7 +341,7 @@ export default {
         };
     },
     mounted() {
-        if (this.userData.internal_agent_contract) {
+        if (this.userData.internal_agent_contract.additional_info) {
             console.log('userdata',  this.userData);
             this.form = this.userData.internal_agent_contract.additional_info
             this.signAture = this.userData.internal_agent_contract.get_question_sign

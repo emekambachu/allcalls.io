@@ -148,7 +148,7 @@ let LegalInformation = ref([
 let form = ref({
 
 })
-if (props.userData.internal_agent_contract) {
+if (props.userData.internal_agent_contract.legal_question) {
     props.userData.internal_agent_contract.legal_question.forEach((question) => {
         const matchingLegalInfo = LegalInformation.value.find((info) => info.name === question.name);
         if (matchingLegalInfo) {

@@ -43,7 +43,7 @@ let form = ref({
     history_address6: { id: 6, state: "Choose", zip_code: '', address: '', city: '', move_in_date: null, move_out_date: null, },
     history_address7: { id: 7, state: "Choose", zip_code: '', address: '', city: '', move_in_date: null, move_out_date: null, },
 })
-if (props.userData.internal_agent_contract) {
+if (props.userData.internal_agent_contract.addresses) {
     props.userData.internal_agent_contract.addresses.forEach((address, index) => {
         // Check if the index is within the range of your form addresses
         if (index < addres_history.value.length) {
