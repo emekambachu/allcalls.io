@@ -1,4 +1,4 @@
-<div class="mt-3">
+<div class="mt-3 signature-authorization">
     <h3 class="title">Contracting - Accompanying Documents</h3>
 
     <p style="font-weight: bold; text-align: justify;margin-top: 15px; padding-bottom: 20px;" class="section-border">
