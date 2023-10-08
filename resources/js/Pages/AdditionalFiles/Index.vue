@@ -2,6 +2,10 @@
 import { ref } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm, Link } from "@inertiajs/vue3";
+import TextInput from "@/Components/TextInput.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
 
 defineProps(["additionalFiles"]);
 
@@ -44,7 +48,7 @@ const form = useForm({
 const submit = () => {
   if (form.file) {
     form.post("/additional-files", {
-        preserveState: false,
+      preserveState: false,
     });
   }
 };
@@ -71,40 +75,37 @@ const submit = () => {
     </div>
     <section class="p-3 px-16">
       <div
-        class="bg-gray-300 h-28 w-full rounded-lg text-center flex items-center justify-center text-sm text-gray-800"
+        class="bg-gray-300 p-4 w-full rounded-lg text-center flex items-center justify-center text-sm text-gray-800"
       >
         <!-- If there's an uploaded file, display its name -->
         <span v-if="form.file">
-          <span class="mr-6">
-            {{ form.file.name }}
-          </span>
+          <div class="my-6 mt-8 text-left">
+            <InputLabel class="mb-1" for="label" :value="`Label (${form.file.name})`" />
+            <TextInput
+              id="label"
+              v-model="form.file.name"
+              style="width: 400px"
+            />
+          </div>
 
-          <button
-            @click="submit"
-            class="bg-green-500 text-white px-4 py-2 rounded shadow hover:bg-green-600 active:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition-transform duration-150 mr-1"
-          >
-            Upload
-          </button>
-          <button
-            @click="remove"
-            class="bg-red-500 text-white px-4 py-2 ml-2 rounded shadow hover:bg-red-600 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 transition-transform duration-150"
-          >
-            Cancel
-          </button>
+          <PrimaryButton @click="submit" class="mr-4">Upload</PrimaryButton>
+          <PrimaryButton @click="remove">Cancel</PrimaryButton>
         </span>
         <!-- Otherwise, display the drag & drop message -->
-        <span v-else>
-          <input
-            type="file"
-            id="fileInput"
-            ref="file"
-            @change="onChange"
-            class="hidden"
-          />
-          <label for="fileInput" class="cursor-pointer underline">
-            Click and choose file
-          </label>
-        </span>
+        <div v-else>
+          <div>
+            <input
+              type="file"
+              id="fileInput"
+              ref="file"
+              @change="onChange"
+              class="hidden"
+            />
+            <label for="fileInput" class="cursor-pointer underline">
+              Click and choose file
+            </label>
+          </div>
+        </div>
 
         <progress
           v-if="form.progress"
@@ -146,7 +147,12 @@ const submit = () => {
                   ></th>
                   <td class="text-gray-700 px-4 py-3" v-text="file.label"></td>
                   <td class="text-gray-700 px-4 py-3">
-                    <a :href="`/additional-files/${file.id}`" target="_blank" class="text-blue-500 mr-2">Open</a>
+                    <a
+                      :href="`/additional-files/${file.id}`"
+                      target="_blank"
+                      class="text-blue-500 mr-2"
+                      >Open</a
+                    >
                     <button class="mr-2 text-red-500">Delete</button>
                   </td>
                 </tr>
