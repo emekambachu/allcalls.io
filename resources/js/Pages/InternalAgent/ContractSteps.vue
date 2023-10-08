@@ -442,7 +442,7 @@ input[type=number] {
                             <Link v-show="$page.props.auth.role != 'admin'" :href="route('logout')" method="post"
                                 as="button"
                                 class="underline text-sm text-gray-600 mr-5 mt-5  dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
-                            Logout {{ contractStep }}</Link>
+                            Logout </Link>
                             <button v-show="$page.props.auth.role === 'admin'" @click="close" type="button"
                                 class="text-gray-400 bg-transparent mr-2 mt-2 hover:bg-gray-200 hover:text-gray-700 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
                                 data-modal-hide="defaultModal">

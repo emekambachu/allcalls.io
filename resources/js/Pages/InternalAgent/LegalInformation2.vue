@@ -251,7 +251,7 @@ export default {
 
     }),
     mounted() {
-        if (this.userData.internal_agent_contract.legal_question) {
+        if (this.userData.internal_agent_contract && this.userData.internal_agent_contract.legal_question) {
             this.userData.internal_agent_contract.legal_question.forEach((question) => {
                 const matchingLegalInfo = this.LegalInformation.find((info) => info.name === question.name);
                 if (matchingLegalInfo) {
@@ -260,7 +260,6 @@ export default {
                 }
             });
         }
-
     },
     methods: {
         dateFormat(dateString) {

@@ -337,14 +337,13 @@ export default {
                 'code': "USA"
             }],
             sigError: null,
-            signAture:null
+            signAture: null
         };
     },
     mounted() {
-        if (this.userData.internal_agent_contract.additional_info) {
-            console.log('userdata',  this.userData);
-            this.form = this.userData.internal_agent_contract.additional_info
-            this.signAture = this.userData.internal_agent_contract.get_question_sign
+        if (this.userData.internal_agent_contract && this.userData.internal_agent_contract.additional_info) {
+                this.form = this.userData.internal_agent_contract.additional_info
+                this.signAture = this.userData.internal_agent_contract.get_question_sign
         }
         if (this.page.auth.role === 'internal-agent') {
             // console.log('i am running ');

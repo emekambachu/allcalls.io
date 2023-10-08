@@ -16,11 +16,12 @@ let form = ref({
 if (page.props.auth.role === 'admin') {
     form.value.omissions_insurance = true
 }
-if (props.userData.internal_agent_contract.error_and_emission) {
+if (props.userData.internal_agent_contract && props.userData.internal_agent_contract.error_and_emission) {
     if (props.userData.internal_agent_contract.error_and_emission.omissions_insurance === 1) {
         form.value.omissions_insurance = true
         omissionUrl.value = props.userData.internal_agent_contract.error_and_emission.url
     }
+
 }
 let omissionsInsurance = ref(true)
 const selectedFile = ref(null)
@@ -148,7 +149,8 @@ let goBack = () => {
                 <input id="dropzone-file-ommision" type="file" class="hidden" @change="handleFileChange" accept=".pdf" />
             </label>
         </div>
-        <div v-if="firstStepErrors.uploadOmmisionPdf" class="text-red-500 mt-1" v-text="firstStepErrors.uploadOmmisionPdf[0]">
+        <div v-if="firstStepErrors.uploadOmmisionPdf" class="text-red-500 mt-1"
+            v-text="firstStepErrors.uploadOmmisionPdf[0]">
         </div>
         <p v-if="fileError" class="text-red-500 mt-4">{{ fileErrorMessage }}</p>
         <!-- Display the selected file name with styling -->

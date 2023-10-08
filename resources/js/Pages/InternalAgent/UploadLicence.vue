@@ -10,7 +10,7 @@ let props = defineProps({
 let page = usePage();
 let residentUrl = ref(null)
 
-if (props.userData.internal_agent_contract.resident_license) {
+if (props.userData.internal_agent_contract && props.userData.internal_agent_contract.resident_license) {
     residentUrl.value = props.userData.internal_agent_contract.resident_license.url
 }
 const fileError = ref(false);
@@ -134,7 +134,7 @@ let ChangeTabBack = () => {
         <div v-if="selectedFileName" class="text-green-500 mt-4">
             Selected File: {{ selectedFileName }}
         </div>
-        
+
     </div>
     <div class="px-5 pb-6">
         <div class="flex justify-between flex-wrap">
