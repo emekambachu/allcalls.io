@@ -100,7 +100,7 @@ const deleteFile = file => {
             <InputLabel class="mb-1" for="label" :value="`Label (${form.file.name})`" />
             <TextInput
               id="label"
-              v-model="form.file.name"
+              v-model="form.label"
               style="width: 400px"
             />
           </div>
