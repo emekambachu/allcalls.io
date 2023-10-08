@@ -91,6 +91,12 @@
             margin-bottom: 10px;
             margin-top: 10px
         }
+
+        .signature-authorization {
+            page-break-after: always;
+            page-break-before: always;
+            page-break-inside: avoid;
+        }
     </style>
 </head>
 <body>

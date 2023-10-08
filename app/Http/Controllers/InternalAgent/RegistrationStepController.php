@@ -718,6 +718,8 @@ class RegistrationStepController extends Controller
                 'aliases_checkbox_18_text' => 'nullable|required_if:aliases_checkbox_18,=,YES',
                 'unresolved_matter_checkbox_19' => 'required',
                 'unresolved_matter_checkbox_19_text' => 'nullable|required_if:unresolved_matter_checkbox_19,=,YES',
+                'contract_commission_checkbox_20' => 'required',
+                'contract_commission_checkbox_20_text' => 'nullable|required_if:contract_commission_checkbox_20,=,YES|array',
 
             ], [
                 'lawsuit_checkbox_8.required' => 'This field is required.',
@@ -760,6 +762,8 @@ class RegistrationStepController extends Controller
                 'aliases_checkbox_18_text.required_if' => 'This field is required.',
                 'unresolved_matter_checkbox_19.required' => 'This field is required.',
                 'unresolved_matter_checkbox_19_text.required_if' => 'This field is required.',
+                'contract_commission_checkbox_20.required' => 'This field is required.',
+                'contract_commission_checkbox_20_text.required_if' => 'This field is required.',
             ]);
             if ($step1SubStep3Validation->fails()) {
                 return response()->json([
@@ -1027,6 +1031,19 @@ class RegistrationStepController extends Controller
                         'name' => $name,
                         'value' => $value,
                         'description' => $value == 'YES' ? $request->unresolved_matter_checkbox_19_text : null,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+
+                if (isset($request->contract_commission_checkbox_20)) {
+                    $name = 'contract_commission_checkbox_20';
+                    $value = $request->contract_commission_checkbox_20;
+                    array_push($legalQuestions, [
+                        'reg_info_id' => $basicInfo->id,
+                        'name' => $name,
+                        'value' => $value,
+                        'description' => $value == 'YES' ? implode(',', $request->contract_commission_checkbox_20_text) : null,
                         'created_at' => now(),
                         'updated_at' => now(),
                     ]);

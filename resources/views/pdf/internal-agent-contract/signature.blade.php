@@ -1,4 +1,4 @@
-<div class="mt-3">
+<div class="mt-3 signature-authorization">
     <h3 class="title">Contracting - Signature Authorization</h3>
     <p style="font-weight: bold">
         PLEASE READ THIS AUTHORIZATION, SIGN IN THE BOX BELOW AND SUBMIT THIS FORM BY FOLLOWING THE INSTRUCTIONS
