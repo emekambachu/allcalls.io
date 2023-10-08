@@ -128,7 +128,7 @@ const deleteFile = file => {
           v-if="form.progress"
           :value="form.progress.percentage"
           max="100"
-          class="ml-4"
+          class="ml-4 progress-bar-custom w-4xl"
         >
           {{ form.progress.percentage }}%
         </progress>
@@ -140,6 +140,7 @@ const deleteFile = file => {
         <div class="relative sm:rounded-lg overflow-hidden">
           <div class="overflow-x-auto">
             <table
+              v-if="additionalFiles.length"
               class="w-full text-sm text-left text-gray-400 table-responsive"
             >
               <thead class="text-xs text-gray-300 uppercase bg-sky-900">
@@ -175,9 +176,33 @@ const deleteFile = file => {
                 </tr>
               </tbody>
             </table>
+
+            <div v-else>
+                <div class="text-center text-gray-500 py-8">
+                    No additional files uploaded yet.
+                </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
   </AuthenticatedLayout>
 </template>
+
+
+<style scoped>
+.progress-bar-custom::-webkit-progress-bar {
+  background-color: #cbd5e1; /* Slate 300 */
+  border-radius: 0.5rem;
+}
+
+.progress-bar-custom::-webkit-progress-value {
+  background-color: #0f172a; /* Slate 900 for the filled value */
+  border-radius: 0.5rem;
+}
+
+.progress-bar-custom::-moz-progress-bar {
+  background-color: #0f172a; /* Slate 900 for the filled value */
+  border-radius: 0.5rem;
+}
+</style>
