@@ -1179,9 +1179,9 @@ class RegistrationStepController extends Controller
                 if (count($addresses)) {
                     InternalAgentAddress::where('reg_info_id', $basicInfo->id)->delete();
                     DB::table('internal_agent_addresses')->insert($addresses);
-                    $user->contract_step = 5;
-                    $user->save();
                 }
+                $user->contract_step = 5;
+                $user->save();
                 DB::commit();
                 return response()->json([
                     'success' => true,

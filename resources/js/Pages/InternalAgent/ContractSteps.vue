@@ -188,7 +188,7 @@ let previewContract = () => {
 }
 
 let errorHandle = (data) => {
-    console.log('data',data);
+    // console.log('data', data);
     if (data < 5) {
         ChangeTab()
     } else if (data < 9) {
@@ -224,18 +224,18 @@ let errorHandle = (data) => {
 
 }
 if (props.userData?.internal_agent_contract) {
-    if (props.userData.contract_step < 5) {
+    if (props.userData.contract_step <= 5) {
         step.value = 1
         contractStep.value = props.userData.contract_step
     } else if (props.userData.contract_step <= 9) {
         contractStep.value = 0
-        if(props.userData.contract_step === 6){
+        if (props.userData.contract_step === 6) {
             step.value = 2
-        }else if(props.userData.contract_step === 7){
+        } else if (props.userData.contract_step === 7) {
             step.value = 3
-        }else if(props.userData.contract_step === 8){
+        } else if (props.userData.contract_step === 8) {
             step.value = 4
-        }else if(props.userData.contract_step === 9){
+        } else if (props.userData.contract_step === 9) {
             step.value = 5
         }
     } else if (props.userData.contract_step === 10) {
@@ -314,10 +314,10 @@ let submit = (step) => {
             }
         })
         .then((response) => {
-            if(step === 10){
+            if (step === 10) {
                 toaster("success", response.data.message);
                 router.visit("/dashboard");
-            }else{
+            } else {
                 errorHandle(step)
             }
             isLoading.value = false;
@@ -442,7 +442,7 @@ input[type=number] {
                             <Link v-show="$page.props.auth.role != 'admin'" :href="route('logout')" method="post"
                                 as="button"
                                 class="underline text-sm text-gray-600 mr-5 mt-5  dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
-                            Logout</Link>
+                            Logout {{ contractStep }}</Link>
                             <button v-show="$page.props.auth.role === 'admin'" @click="close" type="button"
                                 class="text-gray-400 bg-transparent mr-2 mt-2 hover:bg-gray-200 hover:text-gray-700 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
                                 data-modal-hide="defaultModal">
@@ -511,7 +511,7 @@ input[type=number] {
                                     @goback="goBack()"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
-                            <button @click="previewContract">show Contract</button>
+                            <!-- <button @click="previewContract">show Contract</button> -->
                             <!-- <vueSignature /> -->
                         </div>
                     </div>
