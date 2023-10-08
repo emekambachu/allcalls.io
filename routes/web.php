@@ -92,6 +92,7 @@ Route::middleware(['auth', 'verified', 'registration-step-check', 'notBanned'])-
 
     Route::get('/additional-files', [AdditionalFilesController::class, 'index'])->name('additional-files.index');
     Route::post('/additional-files', [AdditionalFilesController::class, 'store'])->name('additional-files.store');
+    Route::get('/additional-files/{additionalFile}', [AdditionalFilesController::class, 'show'])->name('additional-files.show');
 
     Route::get('/twilio-device-token', [TwilioDeviceTokenController::class, 'show']);
     Route::get('/call-client-info', [CallClientInfoController::class, 'show']);

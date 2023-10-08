@@ -1,7 +1,9 @@
 <script setup>
 import { ref } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { useForm } from "@inertiajs/vue3";
+import { Head, useForm, Link } from "@inertiajs/vue3";
+
+defineProps(["additionalFiles"]);
 
 let file = ref(null); // Store the selected file
 
@@ -41,7 +43,9 @@ const form = useForm({
 
 const submit = () => {
   if (form.file) {
-    form.post("/additional-files");
+    form.post("/additional-files", {
+        preserveState: false,
+    });
   }
 };
 </script>
@@ -67,16 +71,13 @@ const submit = () => {
     </div>
     <section class="p-3 px-16">
       <div
-        @dragover="dragover"
-        @dragleave="dragleave"
-        @drop="drop"
         class="bg-gray-300 h-28 w-full rounded-lg text-center flex items-center justify-center text-sm text-gray-800"
       >
         <!-- If there's an uploaded file, display its name -->
         <span v-if="form.file">
-            <span class="mr-6">
-                {{ form.file.name }}
-            </span>
+          <span class="mr-6">
+            {{ form.file.name }}
+          </span>
 
           <button
             @click="submit"
@@ -93,7 +94,6 @@ const submit = () => {
         </span>
         <!-- Otherwise, display the drag & drop message -->
         <span v-else>
-          Drag and drop files here or&nbsp;
           <input
             type="file"
             id="fileInput"
@@ -102,7 +102,7 @@ const submit = () => {
             class="hidden"
           />
           <label for="fileInput" class="cursor-pointer underline">
-            click and choose file
+            Click and choose file
           </label>
         </span>
 
@@ -115,8 +115,6 @@ const submit = () => {
           {{ form.progress.percentage }}%
         </progress>
       </div>
-
-
     </section>
 
     <section class="p-3">
@@ -136,17 +134,19 @@ const submit = () => {
                 </tr>
               </thead>
               <tbody>
-                <!-- Static row as an example -->
-                <tr class="border-b border-gray-500">
+                <tr
+                  class="border-b border-gray-500"
+                  v-for="file in additionalFiles"
+                  :key="file.id"
+                >
                   <th
                     scope="row"
                     class="px-4 py-3 font-medium text-custom-blue whitespace-nowrap"
-                  >
-                    1
-                  </th>
-                  <td class="text-gray-700 px-4 py-3">Sample Label</td>
+                    v-text="file.id"
+                  ></th>
+                  <td class="text-gray-700 px-4 py-3" v-text="file.label"></td>
                   <td class="text-gray-700 px-4 py-3">
-                    <button class="text-blue-500 mr-2">Open</button>
+                    <a :href="`/additional-files/${file.id}`" target="_blank" class="text-blue-500 mr-2">Open</a>
                     <button class="mr-2 text-red-500">Delete</button>
                   </td>
                 </tr>
