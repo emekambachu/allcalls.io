@@ -21,6 +21,8 @@ use App\Http\Controllers\TwilioTokenController;
 use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\FundsWithCardController;
 use App\Http\Controllers\UsageActivityController;
+use App\Http\Controllers\WebAPIClientsController;
+use App\Http\Controllers\CallClientInfoController;
 use App\Http\Controllers\ActiveUserChannelController;
 use App\Http\Controllers\TwilioDeviceTokenController;
 use App\Http\Controllers\Admin\OnlineAgentsController;
@@ -89,6 +91,7 @@ Route::middleware(['auth', 'verified', 'registration-step-check', 'notBanned'])-
 
 
     Route::get('/twilio-device-token', [TwilioDeviceTokenController::class, 'show']);
+    Route::get('/call-client-info', [CallClientInfoController::class, 'show']);
 });
 
 Route::middleware(['auth', 'notBanned'])->group(function () {
@@ -118,19 +121,17 @@ Route::get('/device/incoming', function () {
 
 Route::get('/clients', [ClientsController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.index');
 Route::patch('/clients/{client}', [ClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.update');
+Route::patch('/web-api/clients/{client}', [WebAPIClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.web-api.update');
 
 Route::get('/support', [SupportController::class, 'index'])->name('support.index');
 
 Route::get('/stripe-test', [StripeTestController::class, 'show']);
 Route::get('/stripe-test-redirect', [StripeTestController::class, 'store']);
 
-// Route::get('/active-users/join', [ActiveUserChannelController::class, 'join']);
-
 Route::get('/vince', function () {
     return redirect('/');
 });
 
 Route::get('/ryan', function () {
-    Log::debug('TEST!!!');
     return redirect('/');
 });

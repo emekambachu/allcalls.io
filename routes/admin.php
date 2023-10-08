@@ -70,6 +70,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     // Route::get('/active-users/join', [ActiveUserChannelController::class, 'join']);
 
     Route::get('/online-agents', [OnlineAgentsController::class, 'index'])->name('admin.online-agents.index');
+    Route::delete('/online-agents/{userId}', [OnlineAgentsController::class, 'destroy'])->name('admin.online-agents.destroy');
 
     Route::get('/agent-invites', [AgentInvitesController::class, 'index'])->name('admin.agent-invites.index');
     Route::post('/agent-invites', [AgentInvitesController::class, 'store'])->name('admin.agent-invites.store');

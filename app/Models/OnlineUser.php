@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\User;
 use App\Models\State;
 use App\Models\CallType;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
@@ -45,19 +46,56 @@ class OnlineUser extends Model
             ->where('call_type_id', $callType->id);
     }
 
-    /**
-     * Scope a query to include online users who have a sufficient minimum balance.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeWithSufficientBalance($query)
+    public function scopeWithSufficientBalance($query, $callType)
     {
-        return $query->whereHas('user', function ($query) {
-            $query->where('balance', '>=', self::$minimumBalance);
+        Log::debug('Entering scopeWithSufficientBalance method');
+    
+        return $query->whereHas('user', function ($query) use ($callType) {
+            
+            Log::debug('Filtering by user relationship');
+            
+            $query->where(function ($query) {
+                Log::debug('Checking for internal agents');
+                
+                // For internal agents, they should always have a balance of at least $35
+                $query->whereHas('roles', function ($subQuery) {
+                    Log::debug('Filtering by roles for internal-agent');
+                    $subQuery->where('name', 'internal-agent');
+                })->where('balance', '>=', 35);
+            })->orWhere(function ($query) use ($callType) {
+                Log::debug('Checking for normal users');
+    
+                // For normal users, determine the required minimum balance based on the bid below theirs for the specific call type
+                $userBid = DB::table('bids')
+                    ->where('call_type_id', $callType->id)
+                    ->where('user_id', $query->getModel()->getAttribute('id'))
+                    ->value('amount');
+    
+                Log::debug("User bid for call type {$callType->id}: {$userBid}");
+    
+                $minimumRequiredBalance = 35; // Default
+    
+                if ($userBid !== null) {
+                    $lowerBid = DB::table('bids')
+                        ->where('call_type_id', $callType->id)
+                        ->where('amount', '<', $userBid)
+                        ->orderBy('amount', 'desc')
+                        ->value('amount');
+    
+                    Log::debug("Lower bid for call type {$callType->id}: {$lowerBid}");
+    
+                    $minimumRequiredBalance = $lowerBid ? ($lowerBid + 1) : 35;
+                }
+    
+                Log::debug("Minimum required balance for user: {$minimumRequiredBalance}");
+    
+                $query->whereDoesntHave('roles', function ($subQuery) {
+                    Log::debug('Filtering out internal-agent roles for normal users');
+                    $subQuery->where('name', 'internal-agent');
+                })->where('balance', '>=', $minimumRequiredBalance);
+            });
         });
     }
-
 
     public function user()
     {
@@ -84,7 +122,7 @@ class OnlineUser extends Model
     {
         return $onlineUsers->sortBy(function ($onlineUser, $key) {
             // Determine if the user is an internal agent (1 for yes, 0 for no)
-            $isInternalAgent = $onlineUser->user->roles->contains('id', 3) ? 1 : 0;
+            $isInternalAgent = $onlineUser->user->roles->contains('name', 'internal-agent') ? 1 : 0;
 
             // Flip 1 and 0 to sort internal agents first
             $priorityForInternal = 1 - $isInternalAgent;
@@ -126,4 +164,41 @@ class OnlineUser extends Model
             });
         });
     }
+
+    /**
+     * Prioritize internal agents and then sort regular users by their bid amounts for a specific call type.
+     *
+     * @param  \Illuminate\Support\Collection $onlineUsers Collection of online users.
+     * @param  \App\Models\CallType $callType The specific call type.
+     * @return \Illuminate\Support\Collection Sorted collection of online users.
+     */
+    public static function sortByCallPriority(Collection $onlineUsers, CallType $callType)
+    {
+        return $onlineUsers->sortBy(function ($onlineUser, $key) use ($callType) {
+            // Determine if the user is an internal agent (1 for yes, 0 for no)
+            $isInternalAgent = $onlineUser->user->roles->contains('name', 'internal-agent') ? 1 : 0;
+
+            // Handle nullable "last_called_at" by replacing it with a future date to ensure it comes last
+            $lastCalledAt = $onlineUser->last_called_at ?? now()->addYears(10);
+
+            // For internal agents, give them top priority and sort by last_called_at
+            if ($isInternalAgent) {
+                return [0, $lastCalledAt];
+            }
+
+            // For non-internal agents, fetch their bid amount for the specific call type
+            $bidAmount = $onlineUser->user->bids
+                ->where('call_type_id', $callType->id)
+                ->first()
+                ->amount ?? 0;
+
+            // Return an array with:
+            // - 1 to place them below internal agents
+            // - negative bidAmount to sort in descending order by bid
+            // - lastCalledAt to sort by time
+            return [1, -$bidAmount, $lastCalledAt];
+
+        })->values();
+    }
+
 }

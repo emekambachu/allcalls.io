@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\State;
 use App\Models\CallType;
 use App\Models\OnlineUser;
@@ -37,21 +38,26 @@ class AgentStatusAPIController extends Controller
         ];
 
         $request->validate([
-            'phone' => 'required',
+            'phone' => 'sometimes|required_without_all:zip,state',
+            'zip' => 'sometimes|required_without_all:phone,state',
+            'state' => 'sometimes|required_without_all:phone,zip',
             'vertical' => 'required|in:' . $validVerticals,
         ], $customMessages);
 
-
-        $phone = $request->input('phone');
         $vertical = $verticalMapping[$request->input('vertical')];
 
-        // Get state of the phone number
-        $state = config("states.area_codes.{$this->extractAreaCode($phone)}");
 
-        if (! $state) {
-            return response()->json(['message' => 'Could not map the state for the given phone number.'], 400);
+        if ($request->has('phone')) {
+            $state = config("states.area_codes.{$this->extractAreaCode($request->input('phone'))}");
+        } elseif ($request->has('state')) {
+            $state = $request->input('state');
+        } elseif ($request->has('zip')) {
+            $state = $this->zipToState($request->input('zip'));
         }
-
+        if (!$state) {
+            return response()->json(['message' => 'Could not map the state for the given input.'], 400);
+        }    
+    
         Log::debug('Omega: ' . $state . ', vertical: ' . $vertical);
 
         // Agent lookup
@@ -64,6 +70,26 @@ class AgentStatusAPIController extends Controller
         }
     }
 
+    private function zipToState(string $zip): ?string
+    {
+        $url = "https://zip-api.eu/api/v1/info/US-{$zip}";
+    
+        try {
+            $response = file_get_contents($url);
+    
+            if ($response === false) {
+                return null;
+            }
+    
+            $data = json_decode($response, true);
+    
+            return $data['state'] ?? null;
+        } catch (Exception $e) {
+            Log::error("Error fetching state from ZIP API: " . $e->getMessage());
+            return null;
+        }
+    }
+    
     /**
      * Extract the first 3 characters (area code) from a phone number.
      *
@@ -77,15 +103,18 @@ class AgentStatusAPIController extends Controller
 
     private function isAgentAvailable(string $state, string $vertical): bool
     {
-        // Map the state string to the corresponding State model
-        $stateModel = State::whereName($state)->firstOrFail();
+        if (strlen($state) == 2) {
+            $stateModel = State::whereName($state)->firstOrFail();
+        } else {
+            $stateModel = State::whereFullName($state)->firstOrFail();
+        }
     
         // Query for the call type
         $callTypeModel = CallType::whereType($vertical)->firstOrFail();
     
         // Check for online users matching the criteria
         $onlineUsers = OnlineUser::byCallTypeAndState($callTypeModel, $stateModel)
-            ->withSufficientBalance()
+            ->withSufficientBalance($callTypeModel)
             ->withCallStatusWaiting()
             ->get();
     

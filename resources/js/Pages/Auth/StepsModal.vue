@@ -202,7 +202,7 @@ let submit = () => {
             <div v-if="step === 1 && !agentToken">
               <div class="px-12">
                 <p class="text-gray-700 text-sm text-left leading-relaxed">
-                  Each call type has a minimum price of $25. Bid higher to
+                  Each call type has a minimum price of $35. Bid higher to
                   increase your chances of receiving a call. The highest bid
                   wins but pays only $1 more than the second-highest bid.
                 </p>
