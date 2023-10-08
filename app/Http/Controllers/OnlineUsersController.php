@@ -35,6 +35,10 @@ class OnlineUsersController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'call_type_id' => 'required|exists:call_types,id',
+        ]);
+
         // Retrieve the authenticated user's ID
         $userId = $request->user()->id;
 
