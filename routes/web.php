@@ -23,6 +23,7 @@ use App\Http\Controllers\FundsWithCardController;
 use App\Http\Controllers\UsageActivityController;
 use App\Http\Controllers\WebAPIClientsController;
 use App\Http\Controllers\CallClientInfoController;
+use App\Http\Controllers\AdditionalFilesController;
 use App\Http\Controllers\ActiveUserChannelController;
 use App\Http\Controllers\TwilioDeviceTokenController;
 use App\Http\Controllers\Admin\OnlineAgentsController;
@@ -89,6 +90,8 @@ Route::middleware(['auth', 'verified', 'registration-step-check', 'notBanned'])-
     Route::post('/take-calls/online-users', [TakeCallsOnlineUsersController::class, 'store'])->name('take-calls.online-users.store');
     Route::delete('/take-calls/online-users/{callTypeId}', [TakeCallsOnlineUsersController::class, 'destroy'])->name('take-calls.online-users.destroy');
 
+    Route::get('/additional-files', [AdditionalFilesController::class, 'index'])->name('additional-files.index');
+    Route::post('/additional-files', [AdditionalFilesController::class, 'store'])->name('additional-files.store');
 
     Route::get('/twilio-device-token', [TwilioDeviceTokenController::class, 'show']);
     Route::get('/call-client-info', [CallClientInfoController::class, 'show']);
