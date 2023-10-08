@@ -1,22 +1,23 @@
 <script setup>
 import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
 import UploadPdfFile from "@/Components/UploadPdfFile.vue";
-import { Head, Link, useForm , usePage } from "@inertiajs/vue3";
+import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
 let emits = defineEmits()
 let props = defineProps({
     firstStepErrors: Object,
     userData: Object,
+    isLoading: Boolean,
 });
 let page = usePage();
 let omissionUrl = ref(null)
 let form = ref({
     omissions_insurance: false,
 });
-if(page.props.auth.role === 'admin'){
+if (page.props.auth.role === 'admin') {
     form.value.omissions_insurance = true
 }
 if (page.props.auth.role === 'admin' && props.userData.internal_agent_contract) {
-    if(props.userData.internal_agent_contract.error_and_emission.omissions_insurance === 1){
+    if (props.userData.internal_agent_contract.error_and_emission.omissions_insurance === 1) {
         form.value.omissions_insurance = true
         omissionUrl.value = props.userData.internal_agent_contract.error_and_emission.url
     }
@@ -34,8 +35,11 @@ let ChangeTab = () => {
     if (!selectedFile.value && page.props.auth.role === 'internal-agent') {
         props.firstStepErrors.omissions_insurance = [`The Omissions Insurances certificate is required.`];
     } else {
-        emits("uploadPdfOmmision", { selectedFile: selectedFile.value, omissions_insurance: form.value.omissions_insurance });
-        emits("changeTab");
+        if (page.props.auth.role === 'internal-agent') {
+            emits("uploadPdfOmmision", { selectedFile: selectedFile.value, omissions_insurance: form.value.omissions_insurance });
+        } else {
+            emits("changeTab");
+        }
     }
 }
 
@@ -117,12 +121,8 @@ let goBack = () => {
         </div>
     </div>
     <div v-show="page.props.auth.role === 'admin'" class="bg-blue-50 py-10 px-6 rounded-lg shadow-md">
-        <div >
-            <a target="_blank"
-                :href="omissionUrl"
-                :disabled="!omissionUrl"
-                :class="{ 'opacity-25': !omissionUrl }"
-                >
+        <div>
+            <a target="_blank" :href="omissionUrl" :disabled="!omissionUrl" :class="{ 'opacity-25': !omissionUrl }">
                 <strong class="text-blue-600 mr-1 hover:underline">Click here
                 </strong>
             </a>Preview / Download omissions insurances
@@ -148,6 +148,8 @@ let goBack = () => {
                 <input id="dropzone-file-ommision" type="file" class="hidden" @change="handleFileChange" accept=".pdf" />
             </label>
         </div>
+        <div v-if="firstStepErrors.uploadOmmisionPdf" class="text-red-500 mt-1" v-text="firstStepErrors.uploadOmmisionPdf[0]">
+        </div>
         <p v-if="fileError" class="text-red-500 mt-4">{{ fileErrorMessage }}</p>
         <!-- Display the selected file name with styling -->
         <div v-if="selectedFileName" class="text-green-500 mt-4">
@@ -162,12 +164,10 @@ let goBack = () => {
             <label for="link-omissions_insurance" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Errors
                 and
                 Omissions Insurances.<span class="text-red-500 ">*</span></label>
+            <div v-if="firstStepErrors.omissions_insurance" class="text-red-500 mt-1"
+                v-text="firstStepErrors.omissions_insurance[0]">
+            </div>
         </div>
-    </div>
-
-    <div v-if="firstStepErrors.omissions_insurance" class="text-red-500" v-text="firstStepErrors.omissions_insurance[0]">
-    </div>
-    <div v-if="firstStepErrors.uploadOmmisionPdf" class="text-red-500" v-text="firstStepErrors.uploadOmmisionPdf[0]">
     </div>
     <div class="px-5 pb-6">
         <div class="flex justify-between flex-wrap">
@@ -182,9 +182,10 @@ let goBack = () => {
                 </button>
             </div>
             <div class="mt-4">
-                <button type="button" :class="{ 'opacity-25': form.omissions_insurance === false }" :disabled="form.omissions_insurance === false"
-                    @click.prevent="ChangeTab" class="button-custom px-3 py-2 rounded-md">
-                    Next Step
+                <button type="button" :class="{ 'opacity-25': form.omissions_insurance === false || isLoading }"
+                    :disabled="form.omissions_insurance === false || isLoading" @click.prevent="ChangeTab"
+                    class="button-custom px-3 py-2 rounded-md">
+                    <global-spinner :spinner="isLoading" /> Next Step
                 </button>
 
             </div>

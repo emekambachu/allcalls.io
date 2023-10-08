@@ -77,23 +77,22 @@ let dateFormat = (dateString) => {
 }
 const fileErrorMessage = ref("Please select a single PDF file.");
 const emits = defineEmits();
-watch(selectedFile, (newForm, oldForm) => {
-    emits("uploadBankingInfo", newForm);
-});
-let submit = () => {
 
+let submit = () => {
     for (const key in props.firstStepErrors) {
         if (props.firstStepErrors.hasOwnProperty(key)) {
             props.firstStepErrors[key] = [];
         }
     }
-
     if (!selectedFile.value && page.props.auth.role === 'internal-agent') {
         fileError.value = false;
         props.firstStepErrors.bankingInfoPdf = [`The Banking Information field is required.`];
     } else {
-        emits("submit");
-        // console.log('else');
+        if (page.props.auth.role === 'internal-agent') {
+            emits("uploadBankingInfo", selectedFile.value);
+        } else {
+            emits("submit");
+        }
     }
 }
 let ChangeTabBack = () => {
@@ -143,20 +142,22 @@ let ChangeTabBack = () => {
                 <input id="dropzone-file-bank-info" type="file" class="hidden" @change="handleFileChange" accept=".pdf" />
             </label>
         </div>
+        <div v-if="firstStepErrors.bankingInfoPdf" class="text-red-500 mt-1" v-text="firstStepErrors.bankingInfoPdf[0]">
+        </div>
         <p v-if="fileError" class="text-red-500 mt-4">{{ fileErrorMessage }}</p>
         <!-- Display the selected file name with styling -->
         <div v-if="selectedFileName" class="text-green-500 mt-4">
             Selected File: {{ selectedFileName }}
         </div>
-        <div v-if="firstStepErrors.bankingInfoPdf" class="text-red-500 mt-4" v-text="firstStepErrors.bankingInfoPdf[0]">
-        </div>
+        
     </div>
     <div v-if="page.props.auth.role === 'admin'">
         <div class=" flex bg-white justify-end rounded-lg  gap-4 mt-4 mb-4">
             <div style="padding: 10px; width: 30%; background: #ebe8e8;">
                 <img width="250" height="100" class="mb-5"
                     :src="userData.internal_agent_contract.get_contract_sign.sign_url" alt="signature" />
-                <div> <strong class="mx-2">Date: </strong> {{ dateFormat(userData.internal_agent_contract.get_contract_sign.created_at) 
+                <div> <strong class="mx-2">Date: </strong> {{
+                    dateFormat(userData.internal_agent_contract.get_contract_sign.created_at)
                 }}</div>
             </div>
         </div>

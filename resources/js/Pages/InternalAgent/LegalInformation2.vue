@@ -41,14 +41,12 @@
                     v-show="form[information.name] === 'YES' && information.name != 'contract_commission_checkbox_20'"
                     v-model="form[information.name + '_text']"
                     class="bg-gray-50 mt-5 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                <div>
-                    <select
+                <div class="mt-5">
+                    <Multiselect
                         v-show="form[information.name] === 'YES' && information.name === 'contract_commission_checkbox_20'"
-                        v-model="form[information.name + '_text']" id="countries"
-                        class="bg-gray-50 border mt-5 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <option>Choose </option>
-                        <option v-for="contract_commission in contract_commissions" :value="contract_commission">{{ contract_commission }}</option>
-                    </select>
+                        v-model="form[information.name + '_text']" :options="contract_commissions" track-by="value"
+                        label="label" mode="tags" :close-on-select="false" placeholder="Choose">
+                    </Multiselect>
                 </div>
                 <div v-if="firstStepErrors[information.name]" class="text-red-500 mt-3"
                     v-text="firstStepErrors[information.name][0]"></div>
@@ -77,8 +75,9 @@
                 </button>
             </div>
             <div class="mt-4">
-                <button type="button" @click="ChangeTab" class="button-custom px-3 py-2 rounded-md">
-                    Next
+                <button type="button" :class="{ 'opacity-25': isLoading }" :disabled="isLoading" @click="ChangeTab"
+                    class="button-custom px-3 py-2 rounded-md">
+                    <global-spinner :spinner="isLoading" /> Next
                 </button>
 
             </div>
@@ -86,7 +85,9 @@
     </div>
 </template>
 <script>
+import Multiselect from "@vueform/multiselect";
 export default {
+    components: { Multiselect },
     name: "App",
     data: () => ({
         date: new Date(),
@@ -220,10 +221,10 @@ export default {
             },
         ],
         form: {
-            contract_commission_checkbox_20_text: "Choose",
+            contract_commission_checkbox_20_text: [],
         },
         accompanying_sign: null,
-         contract_commissions : [
+        contract_commissions: [
             'Aetna/Accendo',
             'Aig',
             'American Amicable',
@@ -250,7 +251,7 @@ export default {
 
     }),
     mounted() {
-        if (this.page.auth.role === 'admin' && this.userData.internal_agent_contract) {
+        if (this.userData.internal_agent_contract) {
             this.userData.internal_agent_contract.legal_question.forEach((question) => {
                 const matchingLegalInfo = this.LegalInformation.find((info) => info.name === question.name);
                 if (matchingLegalInfo) {
@@ -285,8 +286,13 @@ export default {
                     if (!this.form[information.name]) {
                         this.firstStepErrors[information.name] = [`This field is required.`];
                     } else if (checboxValue === "YES") {
-                        if (!this.form[information.name + '_text'] || this.form[information.name + '_text'] === 'Choose') {
+                        if (!this.form[information.name + '_text']) {
                             this.firstStepErrors[information.name] = [`This field is required.`];
+                        }
+                        if (this.form[information.name + '_text'] === this.form.contract_commission_checkbox_20_text) {
+                            if (this.form.contract_commission_checkbox_20_text.length === 0) {
+                                this.firstStepErrors[information.name] = [`This field is required.`];
+                            }
                         }
                     }
                 }
@@ -296,7 +302,8 @@ export default {
 
             if (!hasErrors) {
                 if (this.page.auth.role === 'internal-agent') {
-                    this.$emit("changeTab", this.form);
+                    this.$emit("legalFormDataStep2", this.form);
+                    // emits("legalFormDataStep2", this.form);
                     this.firstStepErrors = {}; // Clear the errors by assigning a new empty object
 
                 } else {
@@ -318,11 +325,35 @@ export default {
         firstStepErrors: Object,
         userData: Object,
         page: Object,
-
+        isLoading: Boolean,
     },
 
 };
 </script>
+
+<style src="@vueform/multiselect/themes/default.css"></style>
+<style>
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.multiselect {
+    color: black !important;
+    border: none;
+    border-radius: 10px;
+}
+
+.multiselect-wrapper {
+    background-color: #d7d7d7;
+    border-radius: 5px;
+}
+</style>
 
 
 

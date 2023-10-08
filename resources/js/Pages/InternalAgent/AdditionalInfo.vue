@@ -157,6 +157,12 @@
         </div>
         <div v-if="page.auth.role === 'internal-agent'" class="container mx-auto p-5 flex justify-between flex-wrap">
 
+            <div v-if="signAture?.sign_url" class=" flex bg-white rounded-lg  gap-4 mt-4 mb-4">
+                <div style="padding: 10px; width: 30%; background: #ebe8e8;">
+                    <img class="mb-5" :src="signAture?.sign_url" alt="signature" />
+                    <div> <strong class="mx-2">Date: </strong> {{ dateFormat(signAture?.created_at) }}</div>
+                </div>
+            </div>
 
             <div class="child-singnature">
                 <!-- Signature Box -->
@@ -172,6 +178,8 @@
                     <button @click="undo" class=" button-custom mt-2 px-2 py-2 rounded-md">
                         Undo
                     </button>
+                    <div v-if="firstStepErrors.accompanying_sign" class="text-red-500 mt-2"
+                        v-text="firstStepErrors.accompanying_sign[0]"></div>
                     <p v-if="sigError" class="text-red-500 mt-2">{{ sigError }}</p>
                 </div>
             </div>
@@ -290,8 +298,9 @@
                     </button>
                 </div>
                 <div class="mt-4">
-                    <button type="button" @click="ChangeTab" class="button-custom px-3 py-2 rounded-md">
-                        Next Step
+                    <button type="button" :class="{ 'opacity-25': isLoading }" :disabled="isLoading" @click="ChangeTab"
+                        class="button-custom px-3 py-2 rounded-md">
+                        <global-spinner :spinner="isLoading" /> Next Step
                     </button>
 
                 </div>
@@ -306,6 +315,7 @@ export default {
         states: Array,
         userData: Object,
         page: Object,
+        isLoading: Boolean,
     },
     data() {
         return {
@@ -327,16 +337,19 @@ export default {
                 'code': "USA"
             }],
             sigError: null,
+            signAture:null
         };
     },
     mounted() {
-        if (this.page.auth.role === 'admin' && this.userData.internal_agent_contract) {
+        if (this.userData.internal_agent_contract) {
+            console.log('userdata',  this.userData);
             this.form = this.userData.internal_agent_contract.additional_info
+            this.signAture = this.userData.internal_agent_contract.get_question_sign
         }
         if (this.page.auth.role === 'internal-agent') {
             // console.log('i am running ');
             const canvasElement = this.$refs.signature2Pad.$el.querySelector('canvas');
-            console.log('canvasElement', canvasElement);
+            // console.log('canvasElement', canvasElement);
             canvasElement.width = 390; // Set the width you desire
             canvasElement.height = 100; // Set the height you desire
         }
@@ -383,8 +396,6 @@ export default {
                     const { isEmpty, data } = this.$refs.signature2Pad.saveSignature();
                     if (!isEmpty) {
                         this.sigError = null
-                        // this.$emit("changeTab", { form: this.form, accompanying_sign: data });
-                        this.$emit("changeTab");
                         this.$emit("additionalInfoData", { form: this.form, accompanying_sign: data });
                         this.firstStepErrors = {}; // Clear the errors by assigning a new empty object
                     } else {
@@ -396,7 +407,6 @@ export default {
                 }
             } else {
                 this.$emit("changeTab");
-                this.$emit("additionalInfoData", this.form);
             }
 
         },

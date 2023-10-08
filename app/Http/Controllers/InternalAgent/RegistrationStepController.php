@@ -771,6 +771,7 @@ class RegistrationStepController extends Controller
 
             DB::beginTransaction();
             try {
+                $legalQuestions = [];
                 if (isset($request->lawsuit_checkbox_8)) {
                     $name = 'lawsuit_checkbox_8';
                     $value = $request->lawsuit_checkbox_8;

@@ -420,49 +420,28 @@ let StepChange = (val) => {
   <Footer />
 </template>
 
-<style src="@vueform/multiselect/themes/default.css"></style>
-<style>
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
+  <style src="@vueform/multiselect/themes/default.css"></style>
+  <style>
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
 
-input[type="number"] {
-  -moz-appearance: textfield;
-}
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
 
-.multiselect {
-  color: black !important;
-  border: none;
-  border-radius: 10px;
-}
+  .multiselect {
+    color: black !important;
+    border: none;
+    border-radius: 10px;
+  }
 
-.multiselect-wrapper {
-  background-color: #d7d7d7;
-  border-radius: 5px;
-}
+  .multiselect-wrapper {
+    background-color: #d7d7d7;
+    border-radius: 5px;
+  }
 
-/*
-.carousel__item {
-  min-height: 200px;
-  width: 100%;
-  background-color: var(--vc-clr-primary);
-  color: var(--vc-clr-white);
-  font-size: 20px;
-  border-radius: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 
-.carousel__slide {
-  padding: 10px;
-}
-
-.carousel__prev,
-.carousel__next {
-  box-sizing: content-box;
-  border: 5px solid white;
-} */
-</style>
+  </style>

@@ -1,11 +1,12 @@
 <script setup>
 import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
 import UploadPdfFile from "@/Components/UploadPdfFile.vue";
-import { Head, Link, useForm , usePage } from "@inertiajs/vue3";
+import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
 let emits = defineEmits();
 let props = defineProps({
     firstStepErrors: Object,
     userData: Object,
+    isLoading: Boolean,
 });
 let page = usePage();
 
@@ -14,11 +15,11 @@ let amlUrl = ref(null)
 let form = ref({
     aml_course: false,
 });
-if(page.props.auth.role === 'admin'){
+if (page.props.auth.role === 'admin') {
     form.value.aml_course = true
 }
 if (page.props.auth.role === 'admin' && props.userData.internal_agent_contract) {
-    if(props.userData.internal_agent_contract.aml_course.aml_course === 1){
+    if (props.userData.internal_agent_contract.aml_course.aml_course === 1) {
         form.value.aml_course = true
         amlUrl.value = props.userData.internal_agent_contract.aml_course.url
     }
@@ -38,12 +39,17 @@ let ChangeTab = () => {
             props.firstStepErrors[key] = [];
         }
     }
-   
-    if(!selectedFile.value && page.props.auth.role === 'internal-agent'){
+
+    if (!selectedFile.value && page.props.auth.role === 'internal-agent') {
         props.firstStepErrors.aml_course = [`The AML course certificate is required.`];
-    }else{
-        emits("uploadPdfAml", { selectedFile: selectedFile.value, aml_course: form.value.aml_course });
-        emits("changeTab");
+    } else {
+        if (page.props.auth.role === 'internal-agent') {
+            emits("uploadPdfAml", { selectedFile: selectedFile.value, aml_course: form.value.aml_course });
+        } else {
+            emits("changeTab");
+        }
+
+
     }
 }
 
@@ -62,7 +68,7 @@ const handleFileChange = (event) => {
         fileError.value = false; // Reset the error message
         selectedFileName.value = files[0].name; // Set the selected file name
         selectedFile.value = files[0]
-        if(props.firstStepErrors.aml_course){
+        if (props.firstStepErrors.aml_course) {
             props.firstStepErrors.aml_course = null
         }
     } else if (files.length > 1) {
@@ -88,7 +94,7 @@ const handleDrop = (event) => {
         fileError.value = false; // Reset the error message
         selectedFileName.value = files[0].name; // Set the selected file name
         selectedFile.value = files[0]
-        if(props.firstStepErrors.aml_course){
+        if (props.firstStepErrors.aml_course) {
             props.firstStepErrors.aml_course = null
         }
     } else if (files.length > 1) {
@@ -132,12 +138,8 @@ const fileErrorMessage = ref("Please select a single PDF file.");
         </div>
     </div>
     <div v-show="page.props.auth.role === 'admin'" class="bg-blue-50 py-10 px-6 rounded-lg shadow-md">
-        <div >
-            <a target="_blank"
-                :href="amlUrl"
-                :disabled="!amlUrl"
-                :class="{ 'opacity-25': !amlUrl }"
-                >
+        <div>
+            <a target="_blank" :href="amlUrl" :disabled="!amlUrl" :class="{ 'opacity-25': !amlUrl }">
                 <strong class="text-blue-600 mr-1 hover:underline">Click Here </strong>
             </a> Preview / Download AML course
         </div>
@@ -157,19 +159,21 @@ const fileErrorMessage = ref("Please select a single PDF file.");
                     <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
                         <span class="font-semibold">Click to upload</span> or drag and drop
                     </p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">PDF files only<span class="text-red-500 ">*</span></p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">PDF files only<span class="text-red-500 ">*</span>
+                    </p>
                 </div>
-                <input id="dropzone-file-aml" type="file" class="hidden" @change="handleFileChange" accept=".pdf"  />
+                <input id="dropzone-file-aml" type="file" class="hidden" @change="handleFileChange" accept=".pdf" />
             </label>
         </div>
+        <div v-if="firstStepErrors.aml_course" class="text-red-500 mt-1" v-text="firstStepErrors.aml_course[0]"></div>
         <p v-if="fileError" class="text-red-500 mt-4">{{ fileErrorMessage }}</p>
         <!-- Display the selected file name with styling -->
         <div v-if="selectedFileName" class="text-green-500 mt-4">
             Selected File: {{ selectedFileName }}
         </div>
     </div>
-   
-    
+
+
     <div class="flex justify-between my-5">
         <div></div>
         <div>
@@ -178,10 +182,13 @@ const fileErrorMessage = ref("Please select a single PDF file.");
             <label for="link-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">I have
                 completed
                 the AML course.<span class="text-red-500 ">*</span></label>
+            <div v-if="firstStepErrors.uploadAmlPdf" class="text-red-500 mt-1" v-text="firstStepErrors.uploadAmlPdf[0]">
+            </div>
+
         </div>
+
     </div>
-    <div v-if="firstStepErrors.aml_course" class="text-red-500 mt-4" v-text="firstStepErrors.aml_course[0]"></div> 
-    <div v-if="firstStepErrors.uploadAmlPdf" class="text-red-500 mt-4" v-text="firstStepErrors.uploadAmlPdf[0]"></div> 
+
     <!-- <div v-if="firstStepErrors.aml_course" class="text-red-500" v-text="firstStepErrors.aml_course[0]"></div> -->
     <div class="px-5 pb-6">
         <div class="flex justify-between flex-wrap">
@@ -196,9 +203,10 @@ const fileErrorMessage = ref("Please select a single PDF file.");
                 </button>
             </div>
             <div class="mt-4">
-                <button type="button" :class="{ 'opacity-25': form.aml_course === false }" :disabled="form.aml_course === false"
-                    @click.prevent="ChangeTab" class="button-custom px-3 py-2 rounded-md">
-                    Next Step
+                <button type="button" :class="{ 'opacity-25': form.aml_course === false || isLoading }"
+                    :disabled="form.aml_course === false || isLoading" @click.prevent="ChangeTab"
+                    class="button-custom px-3 py-2 rounded-md">
+                    <global-spinner :spinner="isLoading" /> Next Step
                 </button>
 
             </div>

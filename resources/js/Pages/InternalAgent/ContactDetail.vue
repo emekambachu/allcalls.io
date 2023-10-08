@@ -6,11 +6,10 @@ let props = defineProps({
     firstStepErrors: Object,
     userData: Object,
     states: Array,
+    isLoading:Boolean,
 });
 let individual_business = ref(false)
-if(page.props.auth.role === 'admin'){
-    individual_business.value = true
-}
+
 // console.log('user dagta', props.userData.internal_agent_contract);
 let maxDate = ref(new Date)
 maxDate.value.setHours(23, 59, 59, 999);
@@ -59,14 +58,14 @@ let form = ref({
     business_move_in_date: null,
 })
 onMounted(() => {
-    if (page.props.auth.role === 'admin' && props.userData?.internal_agent_contract) {
+    if (props.userData?.internal_agent_contract) {
         form.value = props.userData.internal_agent_contract
-    } else {
+        individual_business.value = true
+    } else  {
         form.value.first_name = props.userData.first_name
         form.value.last_name = props.userData.last_name
         form.value.email = props.userData.email
         form.value.cell_phone = props.userData.phone
-        emits("updateFormData", form.value);
     }
 
 })
@@ -94,6 +93,7 @@ watch(individual_business, (newVal) => {
     }
 })
 let ChangeTab = () => {
+   
     for (const key in props.firstStepErrors) {
         if (props.firstStepErrors.hasOwnProperty(key)) {
             props.firstStepErrors[key] = [];
@@ -132,8 +132,8 @@ let ChangeTab = () => {
     // Check if there are any errors
     const hasErrors = Object.values(props.firstStepErrors).some(errors => errors.length > 0);
     if (!hasErrors) {
-        emits("changeTab");
-        emits("updateFormData", form.value);
+        // emits("changeTab");
+        emits("updateFormData", {form:form.value,individual_business:individual_business.value});
     } else {
         var element = document.getElementById("modal_main_id");
         element.scrollIntoView();
@@ -604,8 +604,8 @@ let enforceFiveDigitInput = (fieldName, val) => {
     <div class="px-5 pb-6">
         <div class="flex justify-end flex-wrap">
             <div class="mt-4">
-                <button type="button" @click="ChangeTab" class="button-custom px-3 py-2 rounded-md">
-                    Next
+                <button type="button" :class="{ 'opacity-25': isLoading }" :disabled="isLoading" @click="ChangeTab" class="button-custom px-3 py-2 rounded-md">
+                    <global-spinner :spinner="isLoading" />   Next
                 </button>
             </div>
         </div>

@@ -37,6 +37,9 @@
                 <button @click="undo" class=" button-custom mt-2 px-2 py-2 rounded-md">
                     Undo
                 </button>
+                <div v-if="firstStepErrors.signature_authorization" class="text-red-500 mt-4"
+                    v-text="firstStepErrors.signature_authorization[0]">
+                </div>
                 <p v-if="sigError" class="text-red-500 mt-2">{{ sigError }}</p>
             </div>
         </div>
@@ -76,13 +79,13 @@ export default {
     props: {
         isLoading: Boolean,
         userData: Object,
-        page:Object,
+        page: Object,
+        firstStepErrors: Object,
     },
     mounted() {
         if (this.page.auth.role === 'internal-agent') {
             // console.log('i am running ');
             const canvasElement = this.$refs.signaturePad.$el.querySelector('canvas');
-            console.log('signaturePad',canvasElement);
             canvasElement.width = 670; // Set the width you desire
             canvasElement.height = 100; // Set the height you desire
         }
@@ -91,15 +94,10 @@ export default {
         undo() {
             this.$refs.signaturePad.undoSignature();
         },
-
-        changeFun(val) {
-            console.log('what is change', val);
-        },
         dateFormat(date) {
             const day = date.getDate().toString().padStart(2, "0"); // Add leading zero if needed
             const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Month is zero-based, so add 1
             const year = date.getFullYear();
-
             // Create the formatted date string
             return `${day}/${month}/${year}`;
         },
@@ -109,39 +107,11 @@ export default {
         async save() {
             const { isEmpty, data } = this.$refs.signaturePad.saveSignature();
             this.sigError = ''
-
             if (!isEmpty) {
                 this.$emit("signature", data);
-                // axios
-                //     .post("/internal-agent/registration-signature", {
-                //         signatue:data
-                //     }, {
-                //         headers: {
-                //             'Content-Type': 'multipart/form-data' // Set the content type to multipart/form-data
-                //         }
-                //     }).then((response) => {
-                //         console.log('response', response);
-                //         this.isLoading = false
-                //     })
-                //     .catch((error) => {
-                //         this.isLoading = false
-                //         if (error.response) {
-                //             if (error.response.status === 400) {
-                //                console.log('erros', error.response);
-                //             } else {
-                //                 console.log("Other errors", error.response.data);
-                //             }
-                //         } else if (error.request) {
-                //             console.log("No response received", error.request);
-                //         } else {
-                //             console.log("Error", error.message);
-                //         }
-                //     });
             } else {
                 this.sigError = 'Please provide a signature.';
             }
-
-
         },
 
     },

@@ -7,6 +7,7 @@ const emits = defineEmits();
 let props = defineProps({
     states: Array,
     userData: Object,
+    isLoading: Boolean,
 });
 let page = usePage();
 let addres_history = ref([
@@ -42,7 +43,7 @@ let form = ref({
     history_address6: { id: 6, state: "Choose", zip_code: '', address: '', city: '', move_in_date: null, move_out_date: null, },
     history_address7: { id: 7, state: "Choose", zip_code: '', address: '', city: '', move_in_date: null, move_out_date: null, },
 })
-if (page.props.auth.role === 'admin' && props.userData.internal_agent_contract) {
+if (props.userData.internal_agent_contract) {
     props.userData.internal_agent_contract.addresses.forEach((address, index) => {
         // Check if the index is within the range of your form addresses
         if (index < addres_history.value.length) {
@@ -98,8 +99,11 @@ const ChangeTab = () => {
     }
     // If isValid is still true, it means there are no validation errors
     if (isValid) {
-        emits("changeTab");
-        emits("addRessHistory", form.value);
+        if (page.props.auth.role === 'internal-agent') {
+            emits("addRessHistory", form.value);
+        } else {
+            emits("changeTab");
+        }
     } else {
         var element = document.getElementById("modal_main_id");
         element.scrollIntoView();
@@ -189,13 +193,15 @@ let enforceFiveDigitInput = (fieldName, val) => {
             <div>
                 <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 dark:text-white">Move-In
                     Date</label>
-                <VueDatePicker v-model="form[history.address].move_in_date" format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply>
+                <VueDatePicker v-model="form[history.address].move_in_date" format="dd-MMM-yyyy" :maxDate="maxDate"
+                    auto-apply>
                 </VueDatePicker>
             </div>
             <div>
                 <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 dark:text-white">Move-Out
                     Date</label>
-                <VueDatePicker v-model="form[history.address].move_out_date" format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply>
+                <VueDatePicker v-model="form[history.address].move_out_date" format="dd-MMM-yyyy" :maxDate="maxDate"
+                    auto-apply>
                 </VueDatePicker>
             </div>
 
@@ -218,11 +224,11 @@ let enforceFiveDigitInput = (fieldName, val) => {
                 </button>
             </div>
             <div class="mt-4">
-                <button type="button" @click="ChangeTab" class="button-custom px-3 py-2 rounded-md">
-                    Next
+                <button type="button" :class="{ 'opacity-25': isLoading }" :disabled="isLoading" @click="ChangeTab"
+                    class="button-custom px-3 py-2 rounded-md">
+                    <global-spinner :spinner="isLoading" /> Next
                 </button>
 
             </div>
         </div>
-    </div>
-</template>
+</div></template>
