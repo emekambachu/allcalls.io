@@ -10,7 +10,7 @@ let props = defineProps({
 let page = usePage();
 let bankingInfotUrl = ref(null)
 // console.log('props.userData.internal_agent_contract.banking_info',props.userData.internal_agent_contract);
-if (props.userData.internal_agent_contract) {
+if (props.userData.internal_agent_contract.banking_info) {
     bankingInfotUrl.value = props.userData.internal_agent_contract.banking_info.url
 }
 
