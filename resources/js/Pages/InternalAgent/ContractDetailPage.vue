@@ -6,8 +6,7 @@ let props = defineProps({
     previewData: Object,
     userData:Object,
 });
-console.log('previewData', props.previewData);
-console.log('userData', props.userData.internal_agent_contract);
+
 let LegalInformation = ref([        
     {
         id: 43,
@@ -329,7 +328,7 @@ let dateFormat = (data) => {
     }
 
 }
-if (props.userData.internal_agent_contract.legal_question) {
+if (props.userData.internal_agent_contract && props.userData.internal_agent_contract.legal_question) {
     props.userData.internal_agent_contract.legal_question.forEach((question) => {
     const matchingLegalInfo = LegalInformation.value.find((info) => info.name === question.name);
     if (matchingLegalInfo) {
