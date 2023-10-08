@@ -1,11 +1,18 @@
 <script setup>
 import { ref } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, useForm, Link } from "@inertiajs/vue3";
+import { Head, useForm, router, usePage } from "@inertiajs/vue3";
 import TextInput from "@/Components/TextInput.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import SecondaryButton from "@/Components/SecondaryButton.vue";
+import { toaster } from "@/helper.js";
+
+let page = usePage();
+
+
+if (page.props.flash.message) {
+    toaster("success", page.props.flash.message);
+}
 
 defineProps(["additionalFiles"]);
 
@@ -13,6 +20,7 @@ let file = ref(null); // Store the selected file
 
 const onChange = () => {
   form.file = file.value.files[0]; // Bind selected file to Inertia form
+  form.label = file.value.files[0].name;
 };
 
 const remove = () => {
@@ -42,6 +50,7 @@ const drop = (event) => {
 };
 
 const form = useForm({
+  label: "",
   file: null,
 });
 
@@ -49,6 +58,14 @@ const submit = () => {
   if (form.file) {
     form.post("/additional-files", {
       preserveState: false,
+    });
+  }
+};
+
+const deleteFile = file => {
+  if (confirm("Are you sure you want to delete this file?")) {
+    router.visit(`/additional-files/${file.id}`, {
+      method: "DELETE",
     });
   }
 };
@@ -153,7 +170,7 @@ const submit = () => {
                       class="text-blue-500 mr-2"
                       >Open</a
                     >
-                    <button class="mr-2 text-red-500">Delete</button>
+                    <button @click.prevent="deleteFile(file)" class="mr-2 text-red-500">Delete</button>
                   </td>
                 </tr>
               </tbody>

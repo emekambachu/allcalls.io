@@ -21,6 +21,7 @@ class AdditionalFilesController extends Controller
         // Validate the incoming request
         $request->validate([
             'file' => 'required|file|max:1024',
+            'label' => 'required',
         ]);
 
         // Retrieve the uploaded file
@@ -38,7 +39,7 @@ class AdditionalFilesController extends Controller
         // Create a new record in the database
         AdditionalFile::create([
             'path' => $path,
-            'label' => $uploadedFile->getClientOriginalName(),
+            'label' => $request->label,
             'user_id' => $request->user()->id
         ]);
 
@@ -54,5 +55,18 @@ class AdditionalFilesController extends Controller
         $path = Storage::disk('additional-files')->path($additionalFile->path);
 
         return response()->file($path);
+    }
+
+    public function destroy(Request $request, AdditionalFile $additionalFile)
+    {
+        if ($additionalFile->user_id !== $request->user()->id) {
+            return abort(403);
+        }
+
+        Storage::disk('additional-files')->delete($additionalFile->path);
+
+        $additionalFile->delete();
+
+        return redirect()->back()->with('message', 'File deleted successfully.');
     }
 }
