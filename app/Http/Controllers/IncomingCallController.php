@@ -206,8 +206,8 @@ class IncomingCallController extends Controller
             $call_type_id = $availableNumber->call_type_id;
             $uniqueCallId = uniqid();
 
-            $statusCallbackBaseUrl = env('STATUS_CALLBACK_BASE_URL', url('/api/handle-call-status'));
-            $recordingStatusCallBackBaseUrl = env('RECORDING_STATUS_CALLBACK_BASE_URL', url('/api/handle-call-status'));
+            $statusCallbackBaseUrl = env('APP_URL') . '/api/handle-call-status';
+            $recordingStatusCallBackBaseUrl = env('APP_URL') . '/api/handle-call-recording';
             
             $twimlBody .= '<Dial record="record-from-answer" recordingStatusCallbackMethod="GET" recordingStatusCallbackEvent="completed" recordingStatusCallback="' . $recordingStatusCallBackBaseUrl . '?user_id=' . $user_id . '&amp;call_type_id=' . $call_type_id . '&amp;unique_call_id=' . $uniqueCallId . '&amp;from=' . urlencode($availableNumber->from) . '" callerId="+12518626328" timeout="20">';
             $twimlBody .= '<Client statusCallbackMethod="GET" statusCallbackEvent="initiated ringing answered completed" statusCallback="' . $statusCallbackBaseUrl . '?user_id=' . $user_id . '&amp;call_type_id=' . $call_type_id . '&amp;from=' . urlencode($availableNumber->from) . '&amp;unique_call_id=' . $uniqueCallId . '">';
