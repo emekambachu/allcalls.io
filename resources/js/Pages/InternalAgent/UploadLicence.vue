@@ -10,7 +10,7 @@ let props = defineProps({
 let page = usePage();
 let residentUrl = ref(null)
 
-if (props.userData.internal_agent_contract) {
+if (props.userData.internal_agent_contract.resident_license) {
     residentUrl.value = props.userData.internal_agent_contract.resident_license.url
 }
 const fileError = ref(false);
