@@ -1,13 +1,13 @@
 <script setup>
 import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
 import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
+import Multiselect from "@vueform/multiselect";
 let page = usePage();
 let props = defineProps({
-    previewData: Object,
-    userData:Object,
+    userData: Object,
 });
-
-let LegalInformation = ref([        
+console.log('props.userData?.internal_agent_contract',props.userData?.internal_agent_contract);
+let LegalInformation = ref([
     {
         id: 43,
         name: 'convicted_checkbox_1',
@@ -311,9 +311,32 @@ let LegalInformation = ref([
     },
 
 ]);
-
+let contract_commissions = ref([
+    'Aetna/Accendo',
+    'Aig',
+    'American Amicable',
+    'Americo',
+    'Ameritas',
+    'Assurant',
+    'Athene',
+    'Columbian Financial Group',
+    'Columbus Life',
+    'Ethos',
+    'Fidelity and Guaranty Life',
+    'Foresters',
+    'Gerber Life',
+    'Government Personnel Mutual',
+    'Great Western',
+    'John Hancock',
+    'Mutual Of Omaha',
+    'National Life Group',
+    'Occidental',
+    'Prosperity Life',
+    'Royal Neighbors',
+    'TransAmerica'
+]);
 let form = ref({
-
+    contract_commission_checkbox_20_text: [],
 })
 let date = new Date()
 let dateFormat = (data) => {
@@ -330,14 +353,17 @@ let dateFormat = (data) => {
 }
 if (props.userData.internal_agent_contract && props.userData.internal_agent_contract.legal_question) {
     props.userData.internal_agent_contract.legal_question.forEach((question) => {
-    const matchingLegalInfo = LegalInformation.value.find((info) => info.name === question.name);
-    if (matchingLegalInfo) {
-        form.value[matchingLegalInfo.name] = question.value;
-        form.value[matchingLegalInfo.name + '_text'] = question.description;
-    }
-});
-
-
+        const matchingLegalInfo = LegalInformation.value.find((info) => info.name === question.name);
+        if (matchingLegalInfo && question.name != 'contract_commission_checkbox_20') {
+            form.value[matchingLegalInfo.name] = question.value;
+            form.value[matchingLegalInfo.name + '_text'] = question.description;
+        } else if (question.name === 'contract_commission_checkbox_20') {
+            form.value[matchingLegalInfo.name] = question.value;
+            if (question.value === "YES") {
+                form.value[matchingLegalInfo.name + '_text'] = question.description.split(',');
+            } 
+        }
+    });
 }
 
 </script>
@@ -355,9 +381,12 @@ if (props.userData.internal_agent_contract && props.userData.internal_agent_cont
                 <p class="text-gray-600"><strong>Social Security Number (SSN):</strong> {{
                     userData.internal_agent_contract?.ssn }}</p>
                 <p class="text-gray-600"><strong>Gender:</strong> {{ userData.internal_agent_contract?.gender }}</p>
-                <p class="text-gray-600"><strong>Date of Birth:</strong> {{ dateFormat(userData.internal_agent_contract?.dob) }}</p>
-                <p class="text-gray-600"><strong>Cell Phone: </strong> {{ userData.internal_agent_contract?.cell_phone }}</p>
-                <p class="text-gray-600"><strong>Home Phone: </strong> {{ userData.internal_agent_contract?.home_phone }}</p>
+                <p class="text-gray-600"><strong>Date of Birth:</strong> {{
+                    dateFormat(userData.internal_agent_contract?.dob) }}</p>
+                <p class="text-gray-600"><strong>Cell Phone: </strong> {{ userData.internal_agent_contract?.cell_phone }}
+                </p>
+                <p class="text-gray-600"><strong>Home Phone: </strong> {{ userData.internal_agent_contract?.home_phone }}
+                </p>
                 <!-- Add more data fields as needed -->
             </div>
             <div class="bg-white  p-4">
@@ -369,20 +398,21 @@ if (props.userData.internal_agent_contract && props.userData.internal_agent_cont
                 <p class="text-gray-600"><strong>Drivers License: </strong> {{
                     userData.internal_agent_contract?.driver_license_no }}</p>
                 <p class="text-gray-600"><strong>Driver Licence State: </strong> {{
-                    userData.internal_agent_contract?.driver_license_state }}</p>
+                    userData.internal_agent_contract?.get_driver_license_state.full_name }}</p>
                 <p class="text-gray-600"><strong>Current Address (Residence): </strong> {{
                     userData.internal_agent_contract?.address }}</p>
                 <p class="text-gray-600"><strong>City: </strong> {{ userData.internal_agent_contract?.city }}</p>
-                <p class="text-gray-600"><strong>State: </strong> {{ userData.internal_agent_contract?.state }}</p>
+                <p class="text-gray-600"><strong>State: </strong> {{ userData.internal_agent_contract?.get_state?.full_name }}</p>
             </div>
             <div class="bg-white  p-4">
                 <p class="text-gray-600"><strong>Zip Code: </strong> {{ userData.internal_agent_contract?.zip }}</p>
-                <p class="text-gray-600"><strong>Move-In Date: </strong> {{ dateFormat(userData.internal_agent_contract?.move_in_date) }}
+                <p class="text-gray-600"><strong>Move-In Date: </strong> {{
+                    dateFormat(userData.internal_agent_contract?.move_in_date) }}
                 </p>
                 <p class="text-gray-600"><strong>Mailing Address (If Diffrent From Residence): </strong> {{
                     userData.internal_agent_contract?.move_in_address }}</p>
                 <p class="text-gray-600"><strong>City: </strong> {{ userData.internal_agent_contract?.move_in_city }}</p>
-                <p class="text-gray-600"><strong>State: </strong> {{ userData.internal_agent_contract?.move_in_state }}</p>
+                <p class="text-gray-600"><strong>State: </strong> {{ userData.internal_agent_contract?.get_move_in_state?.full_name }}</p>
                 <p class="text-gray-600"><strong>Zip Code: </strong> {{ userData.internal_agent_contract?.move_in_zip }}</p>
             </div>
         </div>
@@ -394,7 +424,7 @@ if (props.userData.internal_agent_contract && props.userData.internal_agent_cont
             </div>
             <div class="bg-white  p-4">
                 <p class="text-gray-600"><strong>Resident Insurance License State: </strong> {{
-                    userData.internal_agent_contract?.resident_insu_license_state }}</p>
+                    userData.internal_agent_contract?.get_resident_ins_license_state?.full_name }}</p>
             </div>
             <div class="bg-white  p-4">
                 <p class="text-gray-600"><strong>Doing Business As: </strong> {{
@@ -415,7 +445,8 @@ if (props.userData.internal_agent_contract && props.userData.internal_agent_cont
                     userData.internal_agent_contract?.business_agent_title }}</p>
                 <p class="text-gray-600"><strong>Business Insurance Licence: </strong> {{
                     userData.internal_agent_contract?.business_insu_license_no }}</p>
-                <p class="text-gray-600"><strong>Cell Fax: </strong> {{ userData.internal_agent_contract?.business_office_fax
+                <p class="text-gray-600"><strong>Cell Fax: </strong> {{
+                    userData.internal_agent_contract?.business_office_fax
                 }}</p>
             </div>
             <div class="bg-white  p-4">
@@ -427,10 +458,11 @@ if (props.userData.internal_agent_contract && props.userData.internal_agent_cont
                 <p class="text-gray-600"><strong>Business Address: </strong> {{
                     userData.internal_agent_contract?.business_address }}</p>
                 <p class="text-gray-600"><strong>City: </strong> {{ userData.internal_agent_contract?.business_city }}</p>
-                <p class="text-gray-600"><strong>State: </strong> {{ userData.internal_agent_contract?.business_state }}</p>
+                <p class="text-gray-600"><strong>State: </strong> {{ userData.internal_agent_contract?.get_business_state?.full_name }}</p>
             </div>
             <div class="bg-white  p-4">
-                <p class="text-gray-600"><strong>Zip Code: </strong> {{ userData.internal_agent_contract?.business_zip }}</p>
+                <p class="text-gray-600"><strong>Zip Code: </strong> {{ userData.internal_agent_contract?.business_zip }}
+                </p>
                 <p class="text-gray-600"><strong>Move-In Date: </strong> {{
                     dateFormat(userData.internal_agent_contract?.business_move_in_date) }}</p>
                 <p class="text-gray-600"><strong>Company Type: </strong> {{
@@ -477,10 +509,19 @@ if (props.userData.internal_agent_contract && props.userData.internal_agent_cont
 
                         </div>
 
-                        
-                        <input type="text" disabled v-show="form[information.name] === 'YES'"
+
+                        <input type="text" disabled
+                            v-show="form[information.name] === 'YES' && information.name != 'contract_commission_checkbox_20'"
                             v-model="form[information.name + '_text']"
                             class="bg-gray-50 mt-5 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+
+                        <div class="mt-5">
+                            <Multiselect
+                                v-if="form[information.name] === 'YES' && information.name === 'contract_commission_checkbox_20'"
+                                :options="contract_commissions" disabled  v-model="form[information.name + '_text']" track-by="value"
+                                label="label" mode="tags" :close-on-select="false" placeholder="Choose">
+                            </Multiselect>
+                        </div>
 
                     </div>
                 </div>
@@ -491,8 +532,9 @@ if (props.userData.internal_agent_contract && props.userData.internal_agent_cont
         </div>
         <div class=" flex bg-white rounded-lg  gap-4 mt-4 mb-4">
             <div style="padding: 10px; width: 30%; background: #ebe8e8;">
-                <img class="mb-5" :src="userData.internal_agent_contract?.get_question_sign.sign_url" alt="signature" />
-                <div> <strong class="mx-2">Date: </strong> {{ dateFormat(userData.internal_agent_contract?.get_question_sign.created_at) }}</div>
+                <img class="mb-5" :src="userData.internal_agent_contract?.get_question_sign?.sign_url" alt="signature" />
+                <div> <strong class="mx-2">Date: </strong> {{
+                    dateFormat(userData.internal_agent_contract?.get_question_sign?.created_at) }}</div>
             </div>
         </div>
         <hr class="mb-5">
@@ -504,10 +546,10 @@ if (props.userData.internal_agent_contract && props.userData.internal_agent_cont
             <div v-for="address in userData.internal_agent_contract?.addresses" class="bg-white  p-4">
                 <p class="text-gray-600"><strong>Home Address:</strong> {{ address.address }}</p>
                 <p class="text-gray-600"><strong>City:</strong> {{ address.city }}</p>
-                <p class="text-gray-600"><strong>State:</strong> {{ address.state }}
+                <p class="text-gray-600"><strong>State:</strong> {{ address.get_state?.full_name }}
                 </p>
                 <p class="text-gray-600"><strong>Zip Code:</strong> {{
-                    address.zip_code }}</p>
+                    address.zip}}</p>
                 <p class="text-gray-600"><strong>Move-In Date:</strong> {{
                     dateFormat(address.move_in_date) }}</p>
                 <p class="text-gray-600"><strong>Move-Out Date:</strong> {{
@@ -537,7 +579,7 @@ if (props.userData.internal_agent_contract && props.userData.internal_agent_cont
             </div>
             <div class="bg-white  ">
                 <p class="text-gray-600"><strong>State of Birth:</strong> {{
-                    userData.internal_agent_contract?.additional_info.resident_state }}</p>
+                    userData.internal_agent_contract?.additional_info?.get_state?.full_name }}</p>
             </div>
             <div class="bg-white  ">
                 <p class="text-gray-600"><strong>Maiden Name:</strong> {{

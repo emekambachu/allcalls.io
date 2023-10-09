@@ -80,7 +80,7 @@ let ChangeTab = () => {
         }
     }
 
-    if (!selectedFile.value && page.props.auth.role === 'internal-agent') {
+    if (!selectedFile.value && page.props.auth.role === 'internal-agent' && !props.userData.internal_agent_contract.resident_license) {
         fileError.value = false;
         props.firstStepErrors.residentLicensePdf = [`The Resident License field is required.`];
     } else {

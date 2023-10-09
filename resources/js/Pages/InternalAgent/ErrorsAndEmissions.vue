@@ -33,8 +33,8 @@ let ChangeTab = () => {
         }
     }
 
-    if (!selectedFile.value && page.props.auth.role === 'internal-agent') {
-        props.firstStepErrors.omissions_insurance = [`The Omissions Insurances certificate is required.`];
+    if (!selectedFile.value && page.props.auth.role === 'internal-agent' && !props.userData.internal_agent_contract.error_and_emission) {
+        props.firstStepErrors.uploadOmmisionPdf = [`The Omissions Insurances certificate is required.`];
     } else {
         if (page.props.auth.role === 'internal-agent') {
             emits("uploadPdfOmmision", { selectedFile: selectedFile.value, omissions_insurance: form.value.omissions_insurance });

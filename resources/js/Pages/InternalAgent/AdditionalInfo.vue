@@ -155,7 +155,7 @@
 
             </p>
         </div>
-        <div v-if="page.auth.role === 'internal-agent'" class="container mx-auto p-5 flex justify-between flex-wrap">
+        <div  class="container mx-auto p-5 flex justify-between flex-wrap">
 
             <div v-if="signAture?.sign_url" class=" flex bg-white rounded-lg  gap-4 mt-4 mb-4">
                 <div style="padding: 10px; width: 30%; background: #ebe8e8;">
@@ -345,13 +345,13 @@ export default {
                 this.form = this.userData.internal_agent_contract.additional_info
                 this.signAture = this.userData.internal_agent_contract.get_question_sign
         }
-        if (this.page.auth.role === 'internal-agent') {
+        // if (this.page.auth.role === 'internal-agent') {
             // console.log('i am running ');
             const canvasElement = this.$refs.signature2Pad.$el.querySelector('canvas');
             // console.log('canvasElement', canvasElement);
             canvasElement.width = 390; // Set the width you desire
             canvasElement.height = 100; // Set the height you desire
-        }
+        // }
     },
     methods: {
         ChangeState() {
@@ -393,7 +393,7 @@ export default {
             if (this.page.auth.role === 'internal-agent') {
                 if (!hasErrors) {
                     const { isEmpty, data } = this.$refs.signature2Pad.saveSignature();
-                    if (!isEmpty) {
+                    if (!isEmpty || this.userData.internal_agent_contract.get_question_sign) {
                         this.sigError = null
                         this.$emit("additionalInfoData", { form: this.form, accompanying_sign: data });
                         this.firstStepErrors = {}; // Clear the errors by assigning a new empty object
