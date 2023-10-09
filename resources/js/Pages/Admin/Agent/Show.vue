@@ -402,12 +402,6 @@ let ChangeTab = (val) => {
                   class="text-blue-500 mr-2"
                   >Open</a
                 >
-                <button
-                  @click.prevent="deleteFile(file)"
-                  class="mr-2 text-red-500"
-                >
-                  Delete
-                </button>
               </td>
             </tr>
           </tbody>
