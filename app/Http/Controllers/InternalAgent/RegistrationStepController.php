@@ -1483,9 +1483,6 @@ class RegistrationStepController extends Controller
                         'name' => $name,
                         'url' => $path,
                     ]);
-
-                    $user->contract_step = 10;
-                    $user->save();
                 }
                 $user->contract_step = 10;
                 $user->save();
