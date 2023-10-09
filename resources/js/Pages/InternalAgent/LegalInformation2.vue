@@ -254,9 +254,14 @@ export default {
         if (this.userData.internal_agent_contract && this.userData.internal_agent_contract.legal_question) {
             this.userData.internal_agent_contract.legal_question.forEach((question) => {
                 const matchingLegalInfo = this.LegalInformation.find((info) => info.name === question.name);
-                if (matchingLegalInfo) {
+                if (matchingLegalInfo && question.name != 'contract_commission_checkbox_20') {
                     this.form[matchingLegalInfo.name] = question.value;
                     this.form[matchingLegalInfo.name + '_text'] = question.description
+                }else if(question.name === 'contract_commission_checkbox_20'){
+                    this.form[matchingLegalInfo.name] = question.value;
+                    if(question.value === "YES"){
+                        this.form[matchingLegalInfo.name + '_text'] = question.description.split(',');
+                    }
                 }
             });
         }

@@ -70,8 +70,13 @@ let firstStepErrors = ref({});
 
 
 
-let ChangeTab = (data) => {
-    contractStep.value += 1
+let ChangeTab = () => {
+    if(contractStep.value === 4){
+        router.visit('contract-steps')
+    }else{
+        contractStep.value += 1
+    }
+    
     var element = document.getElementById("modal_main_id");
     element.scrollIntoView();
 }
@@ -143,48 +148,9 @@ let uploadBankingInfo = (val) => {
     uploadBankingInfoPdf.value = val
     submit(9)
 }
-
-let previewData = ref(null)
-
-
-
 let previewContract = () => {
-    const requestData = {};
-
-    const filteredAddressHistory = {};
-    for (const key in AddressHistoryData.value) {
-        if (key !== 'id' && AddressHistoryData.value[key].state !== 'Choose' && AddressHistoryData.value[key].address.trim() !== '') {
-            filteredAddressHistory[key] = AddressHistoryData.value[key];
-        }
-    }
-
-    // console.log('AddressHistoryData.value', AddressHistoryData.value);
-    Object.assign(requestData, {
-        aml_course: form.value.aml_course ? 1 : null, // Send 1 if true, 0 if false
-        omissions_insurance: form.value.omissions_insurance ? 1 : null, // Send 1 if true, 0 if false
-    });
-    Object.assign(requestData, contactDetailData.value);
-    Object.assign(requestData, legalFormData1.value);
-    Object.assign(requestData, legalFormData2.value);
-    Object.assign(requestData, filteredAddressHistory);
-    Object.assign(requestData, additionalInfoD.value);
-    requestData.residentLicensePdf = uploadLicensePdf.value;
-    requestData.bankingInfoPdf = uploadBankingInfoPdf.value;
-    requestData.uploadAmlPdf = uploadAmlPdf.value
-    requestData.uploadOmmisionPdf = uploadOmmisionPdf.value
-    requestData.accompanying_sign = accompanying_sign.value
-
-
-    for (const key in requestData) {
-        if (requestData.hasOwnProperty(key) && requestData[key] === 'Choose') {
-            requestData[key] = null
-        }
-    }
-    previewData.value = requestData
-    console.log('previewData.value', previewData.value);
     StepsModal.value = false
     contractModal.value = true
-
 }
 
 let errorHandle = (data) => {
@@ -203,25 +169,8 @@ let errorHandle = (data) => {
         }
         contractStep.value = 0
     } else if (data === 9) {
-        previewContract()
+        router.visit('contract-steps')
     }
-    // const stepMapping = {
-    //     1: { contractStep: data.step, step: 1 },
-    //     2: { contractStep: data.step, step: 1 },
-    //     3: { contractStep: data.step, step: 1 },
-    //     4: { contractStep: 5, step: 1 },
-    //     5: { contractStep: 6, step: 2 },
-    //     6: { contractStep: 6, step: 3 },
-    //     7: { contractStep: 6, step: 4 },
-    //     8: { contractStep: 6, step: 5 },
-    // };
-
-    // if (stepMapping.hasOwnProperty(data.step)) {
-    //     const { contractStep: newContractStep, step: newStep } = stepMapping[data.step];
-    //     contractStep.value = newContractStep;
-    //     step.value = newStep;
-    // }
-
 }
 if (props.userData?.internal_agent_contract) {
     if (props.userData.contract_step <= 5) {
@@ -239,7 +188,8 @@ if (props.userData?.internal_agent_contract) {
             step.value = 5
         }
     } else if (props.userData.contract_step === 10) {
-        previewContract()
+        StepsModal.value = false
+        contractModal.value = true
     }
 }
 
@@ -315,6 +265,8 @@ let submit = (step) => {
         })
         .then((response) => {
             if (step === 10) {
+                StepsModal.value = false
+                contractModal.value = false
                 toaster("success", response.data.message);
                 router.visit("/dashboard");
             } else {
@@ -552,7 +504,7 @@ input[type=number] {
                         </div>
 
                         <div class="px-12 py-2">
-                            <ContractDetailPage :previewData="previewData" :userData="userData" />
+                            <ContractDetailPage  :userData="userData" />
                             <SingnaturePad :page="$page.props" :userData="userData" @editContract="editContract"
                                 :firstStepErrors="firstStepErrors" :isLoading="isLoading" @signature="signaturePreview" />
                         </div>

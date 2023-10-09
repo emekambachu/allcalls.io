@@ -252,10 +252,6 @@ let enforceFiveDigitInput = (fieldName, val) => {
                 <div v-if="firstStepErrors.marital_status" class="text-red-500" v-text="firstStepErrors.marital_status[0]">
                 </div>
             </div>
-
-        </div>
-
-        <div class="grid lg:grid-cols-3 mb-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
             <div>
                 <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Drivers
                     License#<span class="text-red-500">*</span></label>
@@ -264,7 +260,6 @@ let enforceFiveDigitInput = (fieldName, val) => {
                 <div v-if="firstStepErrors.driver_license_no" class="text-red-500"
                     v-text="firstStepErrors.driver_license_no[0]"></div>
             </div>
-
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Driver Licence
                     State<span class="text-red-500">*</span></label>
@@ -277,9 +272,6 @@ let enforceFiveDigitInput = (fieldName, val) => {
                 <div v-if="firstStepErrors.driver_license_state" class="text-red-500"
                     v-text="firstStepErrors.driver_license_state[0]"></div>
             </div>
-        </div>
-
-        <div class="grid lg:grid-cols-3 mb-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
             <div>
                 <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Current Address
                     (Residence)<span class="text-red-500">*</span></label>
@@ -324,9 +316,6 @@ let enforceFiveDigitInput = (fieldName, val) => {
                 </div>
             </div>
         </div>
-
-
-
         <div class="grid lg:grid-cols-3 mb-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
             <div>
                 <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Mailing Address

@@ -41,7 +41,7 @@ let ChangeTab = () => {
         }
     }
 
-    if (!selectedFile.value && page.props.auth.role === 'internal-agent') {
+    if (!selectedFile.value && page.props.auth.role === 'internal-agent' && !props.userData.internal_agent_contract.aml_course) {
         props.firstStepErrors.aml_course = [`The AML course certificate is required.`];
     } else {
         if (page.props.auth.role === 'internal-agent') {
@@ -166,7 +166,7 @@ const fileErrorMessage = ref("Please select a single PDF file.");
                 <input id="dropzone-file-aml" type="file" class="hidden" @change="handleFileChange" accept=".pdf" />
             </label>
         </div>
-        <div v-if="firstStepErrors.aml_course" class="text-red-500 mt-1" v-text="firstStepErrors.aml_course[0]"></div>
+        <div v-if="firstStepErrors.uploadAmlPdf" class="text-red-500 mt-1" v-text="firstStepErrors.uploadAmlPdf[0]"></div>
         <p v-if="fileError" class="text-red-500 mt-4">{{ fileErrorMessage }}</p>
         <!-- Display the selected file name with styling -->
         <div v-if="selectedFileName" class="text-green-500 mt-4">
@@ -183,7 +183,7 @@ const fileErrorMessage = ref("Please select a single PDF file.");
             <label for="link-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">I have
                 completed
                 the AML course.<span class="text-red-500 ">*</span></label>
-            <div v-if="firstStepErrors.uploadAmlPdf" class="text-red-500 mt-1" v-text="firstStepErrors.uploadAmlPdf[0]">
+            <div v-if="firstStepErrors.aml_course" class="text-red-500 mt-1" v-text="firstStepErrors.aml_course[0]">
             </div>
 
         </div>

@@ -84,7 +84,7 @@ let submit = () => {
             props.firstStepErrors[key] = [];
         }
     }
-    if (!selectedFile.value && page.props.auth.role === 'internal-agent') {
+    if (!selectedFile.value && page.props.auth.role === 'internal-agent' && !props.userData.internal_agent_contract.banking_info) {
         fileError.value = false;
         props.firstStepErrors.bankingInfoPdf = [`The Banking Information field is required.`];
     } else {
