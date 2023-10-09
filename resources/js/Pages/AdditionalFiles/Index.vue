@@ -62,13 +62,6 @@ const submit = () => {
   }
 };
 
-const deleteFile = file => {
-  if (confirm("Are you sure you want to delete this file?")) {
-    router.visit(`/additional-files/${file.id}`, {
-      method: "DELETE",
-    });
-  }
-};
 </script>
 <template>
   <Head title="Additional Files" />
@@ -171,7 +164,6 @@ const deleteFile = file => {
                       class="text-blue-500 mr-2"
                       >Open</a
                     >
-                    <button @click.prevent="deleteFile(file)" class="mr-2 text-red-500">Delete</button>
                   </td>
                 </tr>
               </tbody>

@@ -3,8 +3,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Transactions from "@/Pages/Admin/Agent/Transactions.vue";
 import Calls from "@/Pages/Admin/Agent/Calls.vue";
 import Activities from "@/Pages/Admin/Agent/Activities.vue";
-import { Head, usePage } from "@inertiajs/vue3";
-import { Bar } from "vue-chartjs";
+import { Head, usePage, router } from "@inertiajs/vue3";
 import { ref } from "vue";
 import { toaster } from "@/helper.js";
 import Clients from "@/Pages/Admin/Clients/Index.vue";
@@ -46,6 +45,14 @@ let openTransactionModal = (type) => {
 let ChangeTab = (val) => {
   tab.value = val;
   localStorage.setItem("tab", val);
+};
+
+const deleteFile = file => {
+  if (confirm("Are you sure you want to delete this file?")) {
+    router.visit(`/additional-files/${file.id}`, {
+      method: "DELETE",
+    });
+  }
 };
 </script>
 <style>
@@ -399,8 +406,15 @@ let ChangeTab = (val) => {
                 <a
                   :href="`/additional-files/${file.id}`"
                   target="_blank"
-                  class="text-blue-500 mr-2"
+                  class="text-blue-500 hover:text-blue-600 mr-2"
                   >Open</a
+                >
+
+                <a
+                  href="#"
+                  class="text-red-500 hover:text-red-600 mr-2"
+                  @click.prevent="deleteFile(file)"
+                  >Delete</a
                 >
               </td>
             </tr>
@@ -414,11 +428,5 @@ let ChangeTab = (val) => {
         </div>
       </section>
     </transition>
-
-    <!-- <Transaction :showTransactionModal="showTransactionModal" :detailType="detailType" :user="user"
-      @close="showTransactionModal = false"></Transaction> -->
-
-    <!-- <Calls :showCallsModal="showCallsModal" :detailType="detailType" :user="user"
-      @close="showCallsModal = false"></Calls> -->
   </AuthenticatedLayout>
 </template>
