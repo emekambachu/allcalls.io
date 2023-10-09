@@ -66,7 +66,8 @@ class AdditionalFilesController extends Controller
 
     public function destroy(Request $request, AdditionalFile $additionalFile)
     {
-        if ($additionalFile->user_id !== $request->user()->id) {
+        // if $request->user()->roles->contains('name', 'admin') is not true return abort(403):
+        if (!$request->user()->roles->contains('name', 'admin')) {
             return abort(403);
         }
 
