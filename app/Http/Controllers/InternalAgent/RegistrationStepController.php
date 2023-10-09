@@ -30,8 +30,13 @@ class RegistrationStepController extends Controller
         }
 
         $user = User::where('id', auth()->user()->id)
-            ->with('internalAgentContract.additionalInfo')
-            ->with('internalAgentContract.addresses')
+            ->with('internalAgentContract.getState')
+            ->with('internalAgentContract.getDriverLicenseState')
+            ->with('internalAgentContract.getMoveInState')
+            ->with('internalAgentContract.getResidentInsLicenseState')
+            ->with('internalAgentContract.getBusinessState')
+            ->with('internalAgentContract.additionalInfo.getState')
+            ->with('internalAgentContract.addresses.getState')
             ->with('internalAgentContract.amlCourse')
             ->with('internalAgentContract.bankingInfo')
             ->with('internalAgentContract.errorAndEmission')
@@ -1568,8 +1573,13 @@ class RegistrationStepController extends Controller
         set_time_limit(0);
 
         $returnArr['contractData'] = User::where('id', 3)
-            ->with('internalAgentContract.additionalInfo')
-            ->with('internalAgentContract.addresses')
+            ->with('internalAgentContract.getState')
+            ->with('internalAgentContract.getDriverLicenseState')
+            ->with('internalAgentContract.getMoveInState')
+            ->with('internalAgentContract.getResidentInsLicenseState')
+            ->with('internalAgentContract.getBusinessState')
+            ->with('internalAgentContract.additionalInfo.getState')
+            ->with('internalAgentContract.addresses.getState')
             ->with('internalAgentContract.amlCourse')
             ->with('internalAgentContract.bankingInfo')
             ->with('internalAgentContract.errorAndEmission')
@@ -1577,8 +1587,9 @@ class RegistrationStepController extends Controller
             ->with('internalAgentContract.residentLicense')
             ->with('internalAgentContract.getQuestionSign')
             ->with('internalAgentContract.getContractSign')->first();
+        dd($returnArr['contractData']);
 
-//        return view('pdf.internal-agent-contract.agent-contract', $returnArr);
+        return view('pdf.internal-agent-contract.agent-contract', $returnArr);
 
         $pdf = PDF::loadView('pdf.internal-agent-contract.agent-contract', $returnArr);
 

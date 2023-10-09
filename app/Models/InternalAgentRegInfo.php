@@ -45,4 +45,24 @@ class InternalAgentRegInfo extends Model
     public function getContractSign() {
         return $this->hasOne(InternalAgentContractSigned::class, 'reg_info_id', 'id');
     }
+
+    public function getState() {
+        return $this->hasOne(State::class, 'id', 'state');
+    }
+
+    public function getDriverLicenseState() {
+        return $this->hasOne(State::class, 'id', 'driver_license_state');
+    }
+
+    public function getMoveInState() {
+        return $this->hasOne(State::class, 'id', 'move_in_state');
+    }
+
+    public function getResidentInsLicenseState() {
+        return $this->hasOne(State::class, 'id', 'resident_insu_license_state');
+    }
+
+    public function getBusinessState() {
+        return $this->hasOne(State::class, 'id', 'business_state');
+    }
 }
