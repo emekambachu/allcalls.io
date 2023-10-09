@@ -71,7 +71,7 @@ let firstStepErrors = ref({});
 
 
 let ChangeTab = () => {
-    if(contractStep.value === 4){
+    if(contractStep.value === 4 && page.props.auth.role === 'internal-agent'){
         router.visit('contract-steps')
     }else{
         contractStep.value += 1
@@ -413,7 +413,7 @@ input[type=number] {
 
                             <div v-show="contractStep === 1" class="">
 
-                                <ContactDetail @updateFormData="updateFormData" :firstStepErrors="firstStepErrors"
+                                <ContactDetail @updateFormData="updateFormData" @changeTab="ChangeTab()" :firstStepErrors="firstStepErrors"
                                     :states="states" :isLoading="isLoading"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>

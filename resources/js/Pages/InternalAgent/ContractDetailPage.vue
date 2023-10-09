@@ -6,7 +6,6 @@ let page = usePage();
 let props = defineProps({
     userData: Object,
 });
-console.log('props.userData?.internal_agent_contract',props.userData?.internal_agent_contract);
 let LegalInformation = ref([
     {
         id: 43,
@@ -361,7 +360,7 @@ if (props.userData.internal_agent_contract && props.userData.internal_agent_cont
             form.value[matchingLegalInfo.name] = question.value;
             if (question.value === "YES") {
                 form.value[matchingLegalInfo.name + '_text'] = question.description.split(',');
-            } 
+            }
         }
     });
 }
@@ -402,7 +401,8 @@ if (props.userData.internal_agent_contract && props.userData.internal_agent_cont
                 <p class="text-gray-600"><strong>Current Address (Residence): </strong> {{
                     userData.internal_agent_contract?.address }}</p>
                 <p class="text-gray-600"><strong>City: </strong> {{ userData.internal_agent_contract?.city }}</p>
-                <p class="text-gray-600"><strong>State: </strong> {{ userData.internal_agent_contract?.get_state?.full_name }}</p>
+                <p class="text-gray-600"><strong>State: </strong> {{ userData.internal_agent_contract?.get_state?.full_name
+                }}</p>
             </div>
             <div class="bg-white  p-4">
                 <p class="text-gray-600"><strong>Zip Code: </strong> {{ userData.internal_agent_contract?.zip }}</p>
@@ -412,7 +412,8 @@ if (props.userData.internal_agent_contract && props.userData.internal_agent_cont
                 <p class="text-gray-600"><strong>Mailing Address (If Diffrent From Residence): </strong> {{
                     userData.internal_agent_contract?.move_in_address }}</p>
                 <p class="text-gray-600"><strong>City: </strong> {{ userData.internal_agent_contract?.move_in_city }}</p>
-                <p class="text-gray-600"><strong>State: </strong> {{ userData.internal_agent_contract?.get_move_in_state?.full_name }}</p>
+                <p class="text-gray-600"><strong>State: </strong> {{
+                    userData.internal_agent_contract?.get_move_in_state?.full_name }}</p>
                 <p class="text-gray-600"><strong>Zip Code: </strong> {{ userData.internal_agent_contract?.move_in_zip }}</p>
             </div>
         </div>
@@ -458,7 +459,8 @@ if (props.userData.internal_agent_contract && props.userData.internal_agent_cont
                 <p class="text-gray-600"><strong>Business Address: </strong> {{
                     userData.internal_agent_contract?.business_address }}</p>
                 <p class="text-gray-600"><strong>City: </strong> {{ userData.internal_agent_contract?.business_city }}</p>
-                <p class="text-gray-600"><strong>State: </strong> {{ userData.internal_agent_contract?.get_business_state?.full_name }}</p>
+                <p class="text-gray-600"><strong>State: </strong> {{
+                    userData.internal_agent_contract?.get_business_state?.full_name }}</p>
             </div>
             <div class="bg-white  p-4">
                 <p class="text-gray-600"><strong>Zip Code: </strong> {{ userData.internal_agent_contract?.business_zip }}
@@ -518,8 +520,8 @@ if (props.userData.internal_agent_contract && props.userData.internal_agent_cont
                         <div class="mt-5">
                             <Multiselect
                                 v-if="form[information.name] === 'YES' && information.name === 'contract_commission_checkbox_20'"
-                                :options="contract_commissions" disabled  v-model="form[information.name + '_text']" track-by="value"
-                                label="label" mode="tags" :close-on-select="false" placeholder="Choose">
+                                :options="contract_commissions" disabled v-model="form[information.name + '_text']"
+                                track-by="value" label="label" mode="tags" :close-on-select="false" placeholder="Choose">
                             </Multiselect>
                         </div>
 
@@ -542,14 +544,15 @@ if (props.userData.internal_agent_contract && props.userData.internal_agent_cont
         <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
             Your Address History for the Past 7 Years
         </h1>
-        <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 bg-white rounded-lg shadow-md gap-4">
+        <div v-if="userData.internal_agent_contract.addresses.length > 0"
+            class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 bg-white rounded-lg shadow-md gap-4">
             <div v-for="address in userData.internal_agent_contract?.addresses" class="bg-white  p-4">
                 <p class="text-gray-600"><strong>Home Address:</strong> {{ address.address }}</p>
                 <p class="text-gray-600"><strong>City:</strong> {{ address.city }}</p>
                 <p class="text-gray-600"><strong>State:</strong> {{ address.get_state?.full_name }}
                 </p>
                 <p class="text-gray-600"><strong>Zip Code:</strong> {{
-                    address.zip}}</p>
+                    address.zip }}</p>
                 <p class="text-gray-600"><strong>Move-In Date:</strong> {{
                     dateFormat(address.move_in_date) }}</p>
                 <p class="text-gray-600"><strong>Move-Out Date:</strong> {{
@@ -558,23 +561,24 @@ if (props.userData.internal_agent_contract && props.userData.internal_agent_cont
                 <!-- Add more data fields as needed -->
             </div>
         </div>
+        <div class="text-center" v-else>No record Found.</div>
         <h1 style="background-color: #134576;" class="mb-4 mt-4	text-center rounded-md py-2 text-white">
             Additional Information
         </h1>
         <div class="grid grid-cols-2 p-4 md:grid-cols-2 lg:grid-cols-3 bg-white rounded-lg shadow-md gap-4">
             <div class="bg-white  ">
                 <p class="text-gray-600"><strong>Resident Country:</strong> {{
-                    userData.internal_agent_contract?.additional_info.resident_country
+                    userData.internal_agent_contract?.additional_info?.resident_country
                 }}</p>
             </div>
 
             <div class="bg-white  ">
                 <p class="text-gray-600"><strong>Do you own your home?:</strong> {{
-                    userData.internal_agent_contract?.additional_info.resident_your_home }}</p>
+                    userData.internal_agent_contract?.additional_info?.resident_your_home }}</p>
             </div>
             <div class="bg-white  ">
                 <p class="text-gray-600"><strong>City of Birth:</strong> {{
-                    userData.internal_agent_contract?.additional_info.resident_city }}
+                    userData.internal_agent_contract?.additional_info?.resident_city }}
                 </p>
             </div>
             <div class="bg-white  ">
@@ -583,7 +587,7 @@ if (props.userData.internal_agent_contract && props.userData.internal_agent_cont
             </div>
             <div class="bg-white  ">
                 <p class="text-gray-600"><strong>Maiden Name:</strong> {{
-                    userData.internal_agent_contract?.additional_info.resident_maiden_name }}</p>
+                    userData.internal_agent_contract?.additional_info?.resident_maiden_name }}</p>
             </div>
         </div>
     </div>

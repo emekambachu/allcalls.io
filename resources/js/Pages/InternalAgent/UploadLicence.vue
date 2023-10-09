@@ -7,14 +7,15 @@ let props = defineProps({
     userData: Object,
     isLoading: Boolean,
 });
+const selectedFileName = ref(""); // To store the selected file name
 let page = usePage();
 let residentUrl = ref(null)
 
 if (props.userData.internal_agent_contract && props.userData.internal_agent_contract.resident_license) {
+    selectedFileName.value = props.userData.internal_agent_contract.resident_license.name
     residentUrl.value = props.userData.internal_agent_contract.resident_license.url
 }
 const fileError = ref(false);
-const selectedFileName = ref(""); // To store the selected file name
 const selectedFile = ref(null)
 const handleFileChange = (event) => {
     const files = event.target.files;
@@ -131,7 +132,7 @@ let ChangeTabBack = () => {
             v-text="firstStepErrors.residentLicensePdf[0]"></div>
         <p v-if="fileError" class="text-red-500 mt-4">{{ fileErrorMessage }}</p>
         <!-- Display the selected file name with styling -->
-        <div v-if="selectedFileName" class="text-green-500 mt-4">
+        <div v-if="selectedFileName && page.props.auth.role === 'internal-agent'" class="text-green-500 mt-4">
             Selected File: {{ selectedFileName }}
         </div>
 

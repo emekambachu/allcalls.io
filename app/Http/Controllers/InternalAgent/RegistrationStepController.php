@@ -75,10 +75,10 @@ class RegistrationStepController extends Controller
                 'state' => 'required',
                 'zip' => 'required',
                 'move_in_date' => 'required',
-                'move_in_address' => 'required',
-                'move_in_city' => 'required',
-                'move_in_state' => 'required',
-                'move_in_zip' => 'required',
+                'move_in_address' => 'nullable',
+                'move_in_city' => 'nullable',
+                'move_in_state' => 'nullable',
+                'move_in_zip' => 'nullable',
                 'resident_insu_license_no' => 'required',
                 'resident_insu_license_state' => 'required',
                 'business_name' => 'nullable|required_with:business_tax_id,business_agent_name,business_agent_title,business_company_type,business_insu_license_no,business_office_fax,business_office_phone,business_email,business_website,business_address,business_city_state,business_zip,business_move_in_date',
@@ -1247,54 +1247,59 @@ class RegistrationStepController extends Controller
                 ]);
 
                 $accompanyingSign = InternalAgentQuestionSigned::where('reg_info_id', $basicInfo->id)->first();
-                if (!$accompanyingSign) {
-                    $step1SubStep4Validation = Validator::make($request->all(), [
-                        'accompanying_sign' => 'required',
-                    ], [
-                        'accompanying_sign.required' => 'This field is required.',
+                if ($accompanyingSign && isset($request->accompanying_sign)) {
+                    if (file_exists(asset('internal-agents/legal-question-signed/' . $accompanyingSign->name))) {
+                        unlink(asset('internal-agents/legal-question-signed/' . $accompanyingSign->name));
+                    }
+                    $base64Content = $request->accompanying_sign;
+                    $folderPath = public_path() . '/internal-agents/legal-question-signed/';
+                    $base64Image = explode(";base64,", $base64Content);
+                    $explodeImage = explode("image/", $base64Image[0]);
+                    $imageType = trim($explodeImage[1]);
+                    $image_base64 = base64_decode($base64Image[1]);
+                    $fileName = $user->id . time();
+                    $file = $folderPath . $fileName . '.' . $imageType;
+                    file_put_contents($file, $image_base64);
+                    $path = asset('internal-agents/legal-question-signed/' . $fileName . '.' . $imageType);
+                    InternalAgentQuestionSigned::updateOrCreate(['reg_info_id' => $basicInfo->id], [
+                        'name' => $fileName . '.' . $imageType,
+                        'sign_url' => $path,
                     ]);
-                    if ($step1SubStep4Validation->fails()) {
+                } else if(!$accompanyingSign && isset($request->accompanying_sign))  {
+                    $step5Validation = Validator::make($request->all(), [
+                        'accompanying_sign' => 'required',
+                    ]);
+                    if ($step5Validation->fails()) {
                         return response()->json([
                             'success' => false,
                             'step' => 4,
-                            'errors' => $step1SubStep4Validation->errors(),
+                            'errors' => $step5Validation->errors(),
                         ], 400);
                     }
-                }
 
-                if (isset($request->accompanying_sign)) {
-                    if ($accompanyingSign) {
-                        if (file_exists(asset('internal-agents/legal-question-signed/' . $accompanyingSign->name))) {
-                            unlink(asset('internal-agents/legal-question-signed/' . $accompanyingSign->name));
-                        }
-                        $accompanyingSign->delete();
-                    } else {
-                        $directory = public_path() . '/internal-agents/legal-question-signed/';
-                        if (!file_exists($directory)) {
-                            mkdir($directory, 0777, true);
-                        }
 
-                        $base64Content = $request->accompanying_sign;
-                        $folderPath = public_path() . '/internal-agents/legal-question-signed/';
-                        $base64Image = explode(";base64,", $base64Content);
-                        $explodeImage = explode("image/", $base64Image[0]);
-                        $imageType = trim($explodeImage[1]);
-                        $image_base64 = base64_decode($base64Image[1]);
-                        $fileName = $user->id . time();
-                        $file = $folderPath . $fileName . '.' . $imageType;
-                        file_put_contents($file, $image_base64);
-
-                        $path = asset('internal-agents/legal-question-signed/' . $fileName . '.' . $imageType);
-
-                        InternalAgentQuestionSigned::updateOrCreate(['reg_info_id' => $basicInfo->id], [
-                            'name' => $fileName . '.' . $imageType,
-                            'sign_url' => $path,
-                        ]);
+                    $directory = public_path() . '/internal-agents/legal-question-signed/';
+                    if (!file_exists($directory)) {
+                        mkdir($directory, 0777, true);
                     }
+                    $base64Content = $request->accompanying_sign;
+                    $folderPath = public_path() . '/internal-agents/legal-question-signed/';
+                    $base64Image = explode(";base64,", $base64Content);
+                    $explodeImage = explode("image/", $base64Image[0]);
+                    $imageType = trim($explodeImage[1]);
+                    $image_base64 = base64_decode($base64Image[1]);
+                    $fileName = $user->id . time();
+                    $file = $folderPath . $fileName . '.' . $imageType;
+                    file_put_contents($file, $image_base64);
+                    $path = asset('internal-agents/legal-question-signed/' . $fileName . '.' . $imageType);
+
+                    InternalAgentQuestionSigned::updateOrCreate(['reg_info_id' => $basicInfo->id], [
+                        'name' => $fileName . '.' . $imageType,
+                        'sign_url' => $path,
+                    ]);
                 }
                 $user->contract_step = 6;
                 $user->save();
-
                 DB::commit();
                 return response()->json([
                     'success' => true,
@@ -1415,7 +1420,7 @@ class RegistrationStepController extends Controller
             DB::beginTransaction();
             try {
                 $residentPDf = InternalAgentResidentLicense::where('reg_info_id', $basicInfo->id)->first();
-                if(!$residentPDf) {
+                if (!$residentPDf) {
                     $step4Validation = Validator::make($request->all(), [
                         'residentLicensePdf' => 'required|mimetypes:application/pdf|max:2048',
                     ]);
@@ -1461,7 +1466,7 @@ class RegistrationStepController extends Controller
             DB::beginTransaction();
             try {
                 $bankingInfoPdf = InternalAgentBankingInfo::where('reg_info_id', $basicInfo->id)->first();
-                if(!$bankingInfoPdf) {
+                if (!$bankingInfoPdf) {
                     $step5Validation = Validator::make($request->all(), [
                         'bankingInfoPdf' => 'required|mimetypes:application/pdf|max:2048',
                     ]);
@@ -1508,7 +1513,28 @@ class RegistrationStepController extends Controller
             DB::beginTransaction();
             try {
                 $signatureAuthorization = InternalAgentContractSigned::where('reg_info_id', $basicInfo->id)->first();
-                if(!$signatureAuthorization) {
+
+                if ($signatureAuthorization && isset($request->signature_authorization)) {
+                    if (file_exists(asset('internal-agents/contract-signed/' . $signatureAuthorization->name))) {
+                        unlink(asset('internal-agents/contract-signed/' . $signatureAuthorization->name));
+                    }
+                    $base64Content = $request->signature_authorization;
+                    $folderPath = public_path() . '/internal-agents/contract-signed/';
+                    $base64Image = explode(";base64,", $base64Content);
+                    $explodeImage = explode("image/", $base64Image[0]);
+                    $imageType = trim($explodeImage[1]);
+                    $image_base64 = base64_decode($base64Image[1]);
+                    $fileName = $user->id . time();
+                    $file = $folderPath . $fileName . '.' . $imageType;
+                    file_put_contents($file, $image_base64);
+
+                    $path = asset('internal-agents/contract-signed/' . $fileName . '.' . $imageType);
+
+                    InternalAgentContractSigned::updateOrCreate(['reg_info_id' => $basicInfo->id], [
+                        'name' => $fileName . '.' . $imageType,
+                        'sign_url' => $path,
+                    ]);
+                } else if(!$signatureAuthorization && isset($request->signature_authorization)) {
                     $step5Validation = Validator::make($request->all(), [
                         'signature_authorization' => 'required',
                     ]);
@@ -1519,36 +1545,27 @@ class RegistrationStepController extends Controller
                             'errors' => $step5Validation->errors(),
                         ], 400);
                     }
-                }
-                if (isset($request->signature_authorization)) {
-                    if ($signatureAuthorization) {
-                        if (file_exists(asset('internal-agents/contract-signed/' . $signatureAuthorization->name))) {
-                            unlink(asset('internal-agents/contract-signed/' . $signatureAuthorization->name));
-                        }
-                        $signatureAuthorization->delete();
-                    } else {
-                        $directory = public_path() . '/internal-agents/contract-signed/';
-                        if (!file_exists($directory)) {
-                            mkdir($directory, 0777, true);
-                        }
-
-                        $base64Content = $request->signature_authorization;
-                        $folderPath = public_path() . '/internal-agents/contract-signed/';
-                        $base64Image = explode(";base64,", $base64Content);
-                        $explodeImage = explode("image/", $base64Image[0]);
-                        $imageType = trim($explodeImage[1]);
-                        $image_base64 = base64_decode($base64Image[1]);
-                        $fileName = $user->id . time();
-                        $file = $folderPath . $fileName . '.' . $imageType;
-                        file_put_contents($file, $image_base64);
-
-                        $path = asset('internal-agents/contract-signed/' . $fileName . '.' . $imageType);
-
-                        InternalAgentContractSigned::updateOrCreate(['reg_info_id' => $basicInfo->id], [
-                            'name' => $fileName . '.' . $imageType,
-                            'sign_url' => $path,
-                        ]);
+                    $directory = public_path() . '/internal-agents/contract-signed/';
+                    if (!file_exists($directory)) {
+                        mkdir($directory, 0777, true);
                     }
+
+                    $base64Content = $request->signature_authorization;
+                    $folderPath = public_path() . '/internal-agents/contract-signed/';
+                    $base64Image = explode(";base64,", $base64Content);
+                    $explodeImage = explode("image/", $base64Image[0]);
+                    $imageType = trim($explodeImage[1]);
+                    $image_base64 = base64_decode($base64Image[1]);
+                    $fileName = $user->id . time();
+                    $file = $folderPath . $fileName . '.' . $imageType;
+                    file_put_contents($file, $image_base64);
+
+                    $path = asset('internal-agents/contract-signed/' . $fileName . '.' . $imageType);
+
+                    InternalAgentContractSigned::updateOrCreate(['reg_info_id' => $basicInfo->id], [
+                        'name' => $fileName . '.' . $imageType,
+                        'sign_url' => $path,
+                    ]);
                 }
                 $user->contract_step = 10;
                 $user->legacy_key = true;

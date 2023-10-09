@@ -31,12 +31,13 @@ let form = ref({
     city: null,
     state: "Choose",
     zip: null,
-
     move_in_date: null,
+
     move_in_address: null,
     move_in_city: null,
     move_in_state: 'Choose',
     move_in_zip: null,
+
     resident_insu_license_no: null,
     resident_insu_license_state: 'Choose',
     doing_business_as: null,
@@ -60,8 +61,10 @@ let form = ref({
 onMounted(() => {
     if (props.userData?.internal_agent_contract) {
         form.value = props.userData.internal_agent_contract
-        individual_business.value = true
-    } else  {
+        if(props.userData.internal_agent_contract.business_name != null){
+            individual_business.value = true
+        }
+    } else {
         form.value.first_name = props.userData.first_name
         form.value.last_name = props.userData.last_name
         form.value.email = props.userData.email
@@ -93,51 +96,54 @@ watch(individual_business, (newVal) => {
     }
 })
 let ChangeTab = () => {
-   
-    for (const key in props.firstStepErrors) {
-        if (props.firstStepErrors.hasOwnProperty(key)) {
-            props.firstStepErrors[key] = [];
-        }
-    }
-    // Define an array of field names that are required
-    const businessInputs = [
-        "business_name", "business_tax_id", "business_agent_name", "business_agent_title",
-        "business_company_type", "business_insu_license_no", "business_office_fax",
-        "business_office_phone", "business_email", "business_website", "business_address",
-        "business_city", "business_zip", "business_move_in_date", 'business_state'
-    ]
-    const requiredFields = [
-        "first_name", "last_name", "middle_name", "ssn", "gender", "dob", "marital_status",
-        "cell_phone", "email", "driver_license_no", "driver_license_state",
-        "address", "city", 'state', "zip", "move_in_date", "resident_insu_license_no", "resident_insu_license_state",
-    ];
-    // console.log('form', form.value);
-    let hasBusinessValue = individual_business && businessInputs.some(fieldName => {
-        const value = form.value[fieldName];
-        return value !== null && value !== "Choose" && value !== '';
-    });
-    if (!hasBusinessValue && individual_business.value) {
-        hasBusinessValue = true
-    }
-    const mergedFields = hasBusinessValue ? [...requiredFields, ...businessInputs] : requiredFields;
-
-    mergedFields.forEach(fieldName => {
-        if (page.props.auth.role === 'internal-agent') {
-            if (form.value[fieldName] === null || form.value[fieldName] === "" || form.value[fieldName] === "Choose") {
-                props.firstStepErrors[fieldName] = [`This  field is required.`];
+    if (page.props.auth.role === 'admin') {
+        emits("changeTab");
+    } else {
+        for (const key in props.firstStepErrors) {
+            if (props.firstStepErrors.hasOwnProperty(key)) {
+                props.firstStepErrors[key] = [];
             }
         }
+        // Define an array of field names that are required
+        const businessInputs = [
+            "business_name", "business_tax_id", "business_agent_name", "business_agent_title",
+            "business_company_type", "business_insu_license_no", "business_office_fax",
+            "business_office_phone", "business_email", "business_website", "business_address",
+            "business_city", "business_zip", "business_move_in_date", 'business_state'
+        ]
+        const requiredFields = [
+            "first_name", "last_name", "middle_name", "ssn", "gender", "dob", "marital_status",
+            "cell_phone", "email", "driver_license_no", "driver_license_state",
+            "address", "city", 'state', "zip", "move_in_date", "resident_insu_license_no", "resident_insu_license_state",
+        ];
+        // console.log('form', form.value);
+        let hasBusinessValue = individual_business && businessInputs.some(fieldName => {
+            const value = form.value[fieldName];
+            return value !== null && value !== "Choose" && value !== '';
+        });
+        if (!hasBusinessValue && individual_business.value) {
+            hasBusinessValue = true
+        }
+        const mergedFields = hasBusinessValue ? [...requiredFields, ...businessInputs] : requiredFields;
 
-    });
-    // Check if there are any errors
-    const hasErrors = Object.values(props.firstStepErrors).some(errors => errors.length > 0);
-    if (!hasErrors) {
-        // emits("changeTab");
-        emits("updateFormData", {form:form.value,individual_business:individual_business.value});
-    } else {
-        var element = document.getElementById("modal_main_id");
-        element.scrollIntoView();
+        mergedFields.forEach(fieldName => {
+            if (page.props.auth.role === 'internal-agent') {
+                if (form.value[fieldName] === null || form.value[fieldName] === "" || form.value[fieldName] === "Choose") {
+                    props.firstStepErrors[fieldName] = [`This  field is required.`];
+                }
+            }
+
+        });
+        // Check if there are any errors
+        const hasErrors = Object.values(props.firstStepErrors).some(errors => errors.length > 0);
+        if (!hasErrors) {
+            emits("updateFormData", { form: form.value, individual_business: individual_business.value });
+        } else {
+            var element = document.getElementById("modal_main_id");
+            element.scrollIntoView();
+        }
     }
+
 }
 let enforceFiveDigitInput = (fieldName, val) => {
     if (form.value[fieldName]) {
@@ -311,7 +317,8 @@ let enforceFiveDigitInput = (fieldName, val) => {
             <div>
                 <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 dark:text-white">Move-In
                     Date<span class="text-red-500">*</span></label>
-                <VueDatePicker v-model="form.move_in_date" format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply></VueDatePicker>
+                <VueDatePicker v-model="form.move_in_date" format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply>
+                </VueDatePicker>
                 <div v-if="firstStepErrors.move_in_date" class="text-red-500" v-text="firstStepErrors.move_in_date[0]">
                 </div>
             </div>
@@ -593,8 +600,9 @@ let enforceFiveDigitInput = (fieldName, val) => {
     <div class="px-5 pb-6">
         <div class="flex justify-end flex-wrap">
             <div class="mt-4">
-                <button type="button" :class="{ 'opacity-25': isLoading }" :disabled="isLoading" @click="ChangeTab" class="button-custom px-3 py-2 rounded-md">
-                    <global-spinner :spinner="isLoading" />   Next
+                <button type="button" :class="{ 'opacity-25': isLoading }" :disabled="isLoading" @click="ChangeTab"
+                    class="button-custom px-3 py-2 rounded-md">
+                    <global-spinner :spinner="isLoading" /> Next
                 </button>
             </div>
         </div>

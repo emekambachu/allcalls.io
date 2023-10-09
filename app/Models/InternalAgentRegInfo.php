@@ -23,7 +23,7 @@ class InternalAgentRegInfo extends Model
     }
 
     public function bankingInfo() {
-        return $this->hasOne(InternalAgentAmlCourse::class, 'reg_info_id', 'id');
+        return $this->hasOne(InternalAgentBankingInfo::class, 'reg_info_id', 'id');
     }
 
     public function errorAndEmission() {

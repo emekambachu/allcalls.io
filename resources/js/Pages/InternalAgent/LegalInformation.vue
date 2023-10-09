@@ -166,39 +166,43 @@ const emits = defineEmits();
 // });
 
 let ChangeTab = () => {
-
-    for (const key in props.firstStepErrors) {
-        if (props.firstStepErrors.hasOwnProperty(key)) {
-            props.firstStepErrors[key] = [];
+    if (page.props.auth.role === 'admin') {
+        emits("changeTab");
+    } else {
+        for (const key in props.firstStepErrors) {
+            if (props.firstStepErrors.hasOwnProperty(key)) {
+                props.firstStepErrors[key] = [];
+            }
         }
-    }
 
-    // Define an array of field names that are required
-    if (page.props.auth.role === 'internal-agent') {
-        for (const information of LegalInformation.value) {
-            let checboxValue = form.value[information.name]
-            if (!form.value[information.name]) {
-                props.firstStepErrors[information.name] = [`This field is required.`];
-            } else if (checboxValue === "YES") {
-                if (!form.value[information.name + '_text']) {
+        // Define an array of field names that are required
+        if (page.props.auth.role === 'internal-agent') {
+            for (const information of LegalInformation.value) {
+                let checboxValue = form.value[information.name]
+                if (!form.value[information.name]) {
                     props.firstStepErrors[information.name] = [`This field is required.`];
+                } else if (checboxValue === "YES") {
+                    if (!form.value[information.name + '_text']) {
+                        props.firstStepErrors[information.name] = [`This field is required.`];
+                    }
                 }
             }
         }
-    }
-    // Check if there are any errors
+        // Check if there are any errors
 
-    const hasErrors = Object.values(props.firstStepErrors).some(errors => errors.length > 0);
-    if (!hasErrors) {
-        if (page.props.auth.role === 'internal-agent') {
-            emits("legalFormDataStep1", form.value);
+        const hasErrors = Object.values(props.firstStepErrors).some(errors => errors.length > 0);
+        if (!hasErrors) {
+            if (page.props.auth.role === 'internal-agent') {
+                emits("legalFormDataStep1", form.value);
+            } else {
+                emits("changeTab");
+            }
         } else {
-            emits("changeTab");
+            var element = document.getElementById("modal_main_id");
+            element.scrollIntoView();
         }
-    } else {
-        var element = document.getElementById("modal_main_id");
-        element.scrollIntoView();
     }
+
 }
 let ChangeTabBack = () => {
     emits("goback");

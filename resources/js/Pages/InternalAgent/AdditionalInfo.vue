@@ -125,7 +125,7 @@
             <div>
                 <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white"> State of
                     Birth<span class="text-red-500 ">*</span></label>
-                <select @change="ChangeState()" v-model="form.resident_state" id="countries"
+                <select  v-model="form.resident_state" id="countries"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <option>Choose </option>
                     <option v-for="state in states" :value="state.id">{{ state.full_name }} </option>
@@ -155,7 +155,7 @@
 
             </p>
         </div>
-        <div  class="container mx-auto p-5 flex justify-between flex-wrap">
+        <div v-if="page.auth.role === 'internal-agent'" class="container mx-auto p-5 flex justify-between flex-wrap">
 
             <div v-if="signAture?.sign_url" class=" flex bg-white rounded-lg  gap-4 mt-4 mb-4">
                 <div style="padding: 10px; width: 30%; background: #ebe8e8;">
@@ -197,9 +197,9 @@
             <div class=" flex bg-white rounded-lg justify-end  gap-4 mt-4 mb-4">
                 <div style="padding: 10px; width: 30%; background: #ebe8e8;">
                     <img width="250" height="100" class="mb-5"
-                        :src="userData.internal_agent_contract.get_question_sign.sign_url" alt="signature" />
+                        :src="userData.internal_agent_contract?.get_question_sign?.sign_url" alt="signature" />
                     <div> <strong class="mx-2">Date: </strong> {{
-                        dateFormat(userData.internal_agent_contract.get_question_sign.created_at) }}</div>
+                        dateFormat(userData.internal_agent_contract?.get_question_sign?.created_at) }}</div>
                 </div>
             </div>
         </div>
@@ -330,7 +330,6 @@ export default {
                 resident_city: null,
                 resident_state: 'Choose',
                 resident_maiden_name: null,
-                resident_state_name: null,
             },
             countries: [{
                 'name': 'United States of America',
@@ -342,26 +341,16 @@ export default {
     },
     mounted() {
         if (this.userData.internal_agent_contract && this.userData.internal_agent_contract.additional_info) {
-                this.form = this.userData.internal_agent_contract.additional_info
-                this.signAture = this.userData.internal_agent_contract.get_question_sign
+            this.form = this.userData.internal_agent_contract.additional_info
+            this.signAture = this.userData.internal_agent_contract.get_question_sign
         }
-        // if (this.page.auth.role === 'internal-agent') {
-            // console.log('i am running ');
-            const canvasElement = this.$refs.signature2Pad.$el.querySelector('canvas');
-            // console.log('canvasElement', canvasElement);
-            canvasElement.width = 390; // Set the width you desire
-            canvasElement.height = 100; // Set the height you desire
-        // }
+        if (this.page.auth.role === 'internal-agent') {
+        const canvasElement = this.$refs.signature2Pad.$el.querySelector('canvas');
+        canvasElement.width = 390; // Set the width you desire
+        canvasElement.height = 100; // Set the height you desire
+        }
     },
-    methods: {
-        ChangeState() {
-            const selectedStateId = this.form.resident_state;
-            const selectedState = this.states.find(state => state.id === selectedStateId);
-
-            if (selectedState) {
-                this.form.resident_state_name = selectedState.full_name
-            }
-        },
+    methods: {        
         dateFormat(dateString) {
             const dateObj = new Date(dateString);
 
@@ -372,40 +361,44 @@ export default {
             return `${day}-${month}-${year}`;
         },
         ChangeTab() {
-            for (const key in this.firstStepErrors) {
-                if (this.firstStepErrors.hasOwnProperty(key)) {
-                    this.firstStepErrors[key] = [];
-                }
-            }
-            // Define an array of field names that are required
-            const requiredFields = [
-                "resident_country", "resident_your_home", "resident_city", 'resident_state',
-            ];
-            if (this.page.auth.role === 'internal-agent') {
-                requiredFields.forEach(fieldName => {
-                    if (this.form[fieldName] === null || this.form[fieldName] === "" || this.form[fieldName] === "Choose") {
-                        this.firstStepErrors[fieldName] = [`This field is required.`];
+            if (this.page.auth.role === 'admin') {
+                this.$emit("changeTab");
+            } else {
+                for (const key in this.firstStepErrors) {
+                    if (this.firstStepErrors.hasOwnProperty(key)) {
+                        this.firstStepErrors[key] = [];
                     }
-                });
-            }
-            // Check if there are any errors
-            const hasErrors = Object.values(this.firstStepErrors).some(errors => errors.length > 0);
-            if (this.page.auth.role === 'internal-agent') {
-                if (!hasErrors) {
-                    const { isEmpty, data } = this.$refs.signature2Pad.saveSignature();
-                    if (!isEmpty || this.userData.internal_agent_contract.get_question_sign) {
-                        this.sigError = null
-                        this.$emit("additionalInfoData", { form: this.form, accompanying_sign: data });
-                        this.firstStepErrors = {}; // Clear the errors by assigning a new empty object
+                }
+                // Define an array of field names that are required
+                const requiredFields = [
+                    "resident_country", "resident_your_home", "resident_city", 'resident_state',
+                ];
+                if (this.page.auth.role === 'internal-agent') {
+                    requiredFields.forEach(fieldName => {
+                        if (this.form[fieldName] === null || this.form[fieldName] === "" || this.form[fieldName] === "Choose") {
+                            this.firstStepErrors[fieldName] = [`This field is required.`];
+                        }
+                    });
+                }
+                // Check if there are any errors
+                const hasErrors = Object.values(this.firstStepErrors).some(errors => errors.length > 0);
+                if (this.page.auth.role === 'internal-agent') {
+                    if (!hasErrors) {
+                        const { isEmpty, data } = this.$refs.signature2Pad.saveSignature();
+                        if (!isEmpty || this.userData.internal_agent_contract.get_question_sign) {
+                            this.sigError = null
+                            this.$emit("additionalInfoData", { form: this.form, accompanying_sign: data });
+                            this.firstStepErrors = {}; // Clear the errors by assigning a new empty object
+                        } else {
+                            this.sigError = 'Please provide a signature.';
+                        }
                     } else {
-                        this.sigError = 'Please provide a signature.';
+                        var element = document.getElementById("modal_main_id");
+                        element.scrollIntoView();
                     }
                 } else {
-                    var element = document.getElementById("modal_main_id");
-                    element.scrollIntoView();
+                    this.$emit("changeTab");
                 }
-            } else {
-                this.$emit("changeTab");
             }
 
         },
