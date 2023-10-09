@@ -1587,7 +1587,7 @@ class RegistrationStepController extends Controller
             ->with('internalAgentContract.residentLicense')
             ->with('internalAgentContract.getQuestionSign')
             ->with('internalAgentContract.getContractSign')->first();
-        dd($returnArr['contractData']);
+        dd($returnArr['contractData']->internalAgentContract->amlCourse);
 
         return view('pdf.internal-agent-contract.agent-contract', $returnArr);
 
