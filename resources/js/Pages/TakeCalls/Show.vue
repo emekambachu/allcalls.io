@@ -96,36 +96,58 @@ watchEffect(async () => {
       </div>
     </div>
     <section class="p-3">
-      <div class="mx-auto max-w-screen-xl sm:px-12">
-        <!-- List here -->
-        <ul class="max-w-md divide-y divide-gray-200 mb-8">
-          <li
-            v-for="callType in callTypesWithToggles"
-            :key="callType.callType.id"
-            class="py-3 sm:py-4 flex items-center justify-between"
-          >
-            <!-- Title on the left -->
-            <p
-              class="text-xl text-gray-900"
-              v-text="callType.callType.type"
-            ></p>
+      <div class="mx-auto max-w-screen-xl sm:px-12 grid grid-cols-2 gap-3">
+        <div>
+          <h1 class="text-2xl font-bold mb-4 text-gray-700">Guidelines</h1>
+          <ul class="pl-2 max-w-md text-gray-500 list-disc list-inside">
+            <li>
+              Please keep in mind there is a 60-second qualifying timer before
+              you are charged for a call.
+            </li>
+            <li>
+              The client's name, state, and basic info is displayed on your call
+              immediately upon answering. Clients personal contact information
+              will appear after 60 seconds of being connected to the call.
+            </li>
+            <li>
+              If you turn your status to active and miss a call, you will be
+              billed a $5 missed call fee.
+            </li>
+            <li>Please make sure notifications are turned on for this app.</li>
+          </ul>
+        </div>
 
-            <!-- Toggle on the right -->
-            <label class="relative inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                v-model="callType.toggle"
-                class="sr-only peer"
-                @change="toggled($event, callType.callType)"
-              />
-              <div
-                class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"
-              ></div>
-            </label>
-          </li>
-        </ul>
+        <!-- List here -->
+        <div>
+          <h1 class="text-2xl font-bold mb-4 text-gray-700">Verticals</h1>
+          <ul class="max-w-md divide-y divide-gray-200 mb-8">
+            <li
+              v-for="callType in callTypesWithToggles"
+              :key="callType.callType.id"
+              class="py-3 sm:py-4 flex items-center justify-between"
+            >
+              <!-- Title on the left -->
+              <p
+                class="text-xl text-gray-900"
+                v-text="callType.callType.type"
+              ></p>
+
+              <!-- Toggle on the right -->
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  v-model="callType.toggle"
+                  class="sr-only peer"
+                  @change="toggled($event, callType.callType)"
+                />
+                <div
+                  class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"
+                ></div>
+              </label>
+            </li>
+          </ul>
+        </div>
       </div>
     </section>
-
   </AuthenticatedLayout>
 </template>
