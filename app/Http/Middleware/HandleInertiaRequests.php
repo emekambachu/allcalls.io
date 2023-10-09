@@ -35,7 +35,8 @@ class HandleInertiaRequests extends Middleware
             $role = 'admin';
         }
 
-        if(auth()->user() && auth()->user()->roles->contains('name', 'user')) {
+        // if auth user and auth user is NOT internal agent or admin
+        if(auth()->user() && !auth()->user()->roles->contains('name', 'internal-agent') && !auth()->user()->roles->contains('name', 'admin')) {
             $role = 'user';
         }
 

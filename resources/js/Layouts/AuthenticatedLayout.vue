@@ -1008,6 +1008,7 @@ let appDownloadModal = ref(false);
             </NavLink>
 
             <NavLink
+              v-if="$page.props.auth.role === 'internal-agent'"
               class="mb-10 gap-2"
               :href="route('additional-files.index')"
               :active="route().current('additional-files.index')"
