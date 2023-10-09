@@ -1218,13 +1218,11 @@ class RegistrationStepController extends Controller
                 'resident_your_home' => 'required',
                 'resident_city' => 'required',
                 'resident_state' => 'required',
-                'accompanying_sign' => 'required',
             ], [
                 'resident_country.required' => 'This field is required.',
                 'resident_your_home.required' => 'This field is required.',
                 'resident_city.required' => 'This field is required.',
                 'resident_state.required' => 'This field is required.',
-                'accompanying_sign.required' => 'This field is required.',
             ]);
             if ($step1SubStep4Validation->fails()) {
                 return response()->json([
@@ -1242,9 +1240,24 @@ class RegistrationStepController extends Controller
                     'resident_state' => isset($request->resident_state) ? $request->resident_state : null,
                     'resident_maiden_name' => isset($request->resident_maiden_name) ? $request->resident_maiden_name : null,
                 ]);
-                if (isset($request->accompanying_sign)) {
-                    $accompanyingSign = InternalAgentQuestionSigned::where('reg_info_id', $basicInfo->id)->first();
 
+                $accompanyingSign = InternalAgentQuestionSigned::where('reg_info_id', $basicInfo->id)->first();
+                if (!$accompanyingSign) {
+                    $step1SubStep4Validation = Validator::make($request->all(), [
+                        'accompanying_sign' => 'required',
+                    ], [
+                        'accompanying_sign.required' => 'This field is required.',
+                    ]);
+                    if ($step1SubStep4Validation->fails()) {
+                        return response()->json([
+                            'success' => false,
+                            'step' => 4,
+                            'errors' => $step1SubStep4Validation->errors(),
+                        ], 400);
+                    }
+                }
+
+                if (isset($request->accompanying_sign)) {
                     if ($accompanyingSign) {
                         if (file_exists(asset('internal-agents/legal-question-signed/' . $accompanyingSign->name))) {
                             unlink(asset('internal-agents/legal-question-signed/' . $accompanyingSign->name));
@@ -1291,22 +1304,25 @@ class RegistrationStepController extends Controller
         }
 
         if ($request->step == 6) {
-            $step2Validation = Validator::make($request->all(), [
-                'aml_course' => 'required',
-                'uploadAmlPdf' => 'required|mimetypes:application/pdf|max:2048',
-            ]);
-            if ($step2Validation->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'step' => 5,
-                    'errors' => $step2Validation->errors(),
-                ], 400);
-            }
-
             DB::beginTransaction();
             try {
+                $amlCoursePdf = InternalAgentAmlCourse::where('reg_info_id', $basicInfo->id)->first();
+
+                if (!$amlCoursePdf) {
+                    $step2Validation = Validator::make($request->all(), [
+                        'aml_course' => 'required',
+                        'uploadAmlPdf' => 'required|mimetypes:application/pdf|max:2048',
+                    ]);
+                    if ($step2Validation->fails()) {
+                        return response()->json([
+                            'success' => false,
+                            'step' => 5,
+                            'errors' => $step2Validation->errors(),
+                        ], 400);
+                    }
+                }
+
                 if ($request->file('uploadAmlPdf') && $request->file('uploadAmlPdf')->isValid()) {
-                    $amlCoursePdf = InternalAgentAmlCourse::where('reg_info_id', $basicInfo->id)->first();
                     if ($amlCoursePdf) {
                         if (file_exists(asset('internal-agents/aml-course/' . $amlCoursePdf->name))) {
                             unlink(asset('internal-agents/aml-course/' . $amlCoursePdf->name));
@@ -1340,22 +1356,24 @@ class RegistrationStepController extends Controller
         }
 
         if ($request->step == 7) {
-            $step3Validation = Validator::make($request->all(), [
-                'omissions_insurance' => 'required',
-                'uploadOmmisionPdf' => 'required|mimetypes:application/pdf|max:2048',
-            ]);
-            if ($step3Validation->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'step' => 6,
-                    'errors' => $step3Validation->errors(),
-                ], 400);
-            }
-
             DB::beginTransaction();
             try {
+                $uploadOmmisionPdf = InternalAgentErrorAndEmission::where('reg_info_id', $basicInfo->id)->first();
+                if (!$uploadOmmisionPdf) {
+                    $step3Validation = Validator::make($request->all(), [
+                        'omissions_insurance' => 'required',
+                        'uploadOmmisionPdf' => 'required|mimetypes:application/pdf|max:2048',
+                    ]);
+                    if ($step3Validation->fails()) {
+                        return response()->json([
+                            'success' => false,
+                            'step' => 6,
+                            'errors' => $step3Validation->errors(),
+                        ], 400);
+                    }
+                }
+
                 if ($request->file('uploadOmmisionPdf') && $request->file('uploadOmmisionPdf')->isValid()) {
-                    $uploadOmmisionPdf = InternalAgentErrorAndEmission::where('reg_info_id', $basicInfo->id)->first();
                     if ($uploadOmmisionPdf) {
                         if (file_exists(asset('internal-agents/error-and-omission/' . $uploadOmmisionPdf->name))) {
                             unlink(asset('internal-agents/error-and-omission/' . $uploadOmmisionPdf->name));
@@ -1389,29 +1407,28 @@ class RegistrationStepController extends Controller
         }
 
         if ($request->step == 8) {
-            $step4Validation = Validator::make($request->all(), [
-                'residentLicensePdf' => 'required|mimetypes:application/pdf|max:2048',
-            ]);
-            if ($step4Validation->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'step' => 7,
-                    'errors' => $step4Validation->errors(),
-                ], 400);
-            }
-
             DB::beginTransaction();
             try {
+                $residentPDf = InternalAgentResidentLicense::where('reg_info_id', $basicInfo->id)->first();
+                if(!$residentPDf) {
+                    $step4Validation = Validator::make($request->all(), [
+                        'residentLicensePdf' => 'required|mimetypes:application/pdf|max:2048',
+                    ]);
+                    if ($step4Validation->fails()) {
+                        return response()->json([
+                            'success' => false,
+                            'step' => 7,
+                            'errors' => $step4Validation->errors(),
+                        ], 400);
+                    }
+                }
                 if ($request->file('residentLicensePdf') && $request->file('residentLicensePdf')->isValid()) {
-
-                    $residentPDf = InternalAgentResidentLicense::where('reg_info_id', $basicInfo->id)->first();
                     if ($residentPDf) {
                         if (file_exists(asset('internal-agents/resident-license-pdf/' . $residentPDf->name))) {
                             unlink(asset('internal-agents/resident-license-pdf/' . $residentPDf->name));
                         }
                         $residentPDf->delete();
                     }
-
                     $name = $request->file('residentLicensePdf')->getClientOriginalName();
                     $request->file('residentLicensePdf')->move(public_path('internal-agents/resident-license-pdf'), $name);
                     $path = asset('internal-agents/resident-license-pdf/' . $name);
@@ -1436,28 +1453,28 @@ class RegistrationStepController extends Controller
         }
 
         if ($request->step == 9) {
-            $step5Validation = Validator::make($request->all(), [
-                'bankingInfoPdf' => 'required|mimetypes:application/pdf|max:2048',
-            ]);
-            if ($step5Validation->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'step' => 8,
-                    'errors' => $step5Validation->errors(),
-                ], 400);
-            }
-
             DB::beginTransaction();
             try {
+                $bankingInfoPdf = InternalAgentBankingInfo::where('reg_info_id', $basicInfo->id)->first();
+                if(!$bankingInfoPdf) {
+                    $step5Validation = Validator::make($request->all(), [
+                        'bankingInfoPdf' => 'required|mimetypes:application/pdf|max:2048',
+                    ]);
+                    if ($step5Validation->fails()) {
+                        return response()->json([
+                            'success' => false,
+                            'step' => 8,
+                            'errors' => $step5Validation->errors(),
+                        ], 400);
+                    }
+                }
                 if ($request->file('bankingInfoPdf') && $request->file('bankingInfoPdf')->isValid()) {
-                    $bankingInfoPdf = InternalAgentBankingInfo::where('reg_info_id', $basicInfo->id)->first();
                     if ($bankingInfoPdf) {
                         if (file_exists(asset('internal-agents/banking-info/' . $bankingInfoPdf->name))) {
                             unlink(asset('internal-agents/banking-info/' . $bankingInfoPdf->name));
                         }
                         $bankingInfoPdf->delete();
                     }
-
                     $name = $request->file('bankingInfoPdf')->getClientOriginalName();
                     $request->file('bankingInfoPdf')->move(public_path('internal-agents/banking-info'), $name);
                     $path = asset('internal-agents/banking-info/' . $name);
@@ -1486,21 +1503,22 @@ class RegistrationStepController extends Controller
         }
 
         if ($request->step == 10) {
-            $step5Validation = Validator::make($request->all(), [
-                'signature_authorization' => 'required',
-            ]);
-            if ($step5Validation->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'step' => 8,
-                    'errors' => $step5Validation->errors(),
-                ], 400);
-            }
-
             DB::beginTransaction();
             try {
+                $signatureAuthorization = InternalAgentContractSigned::where('reg_info_id', $basicInfo->id)->first();
+                if(!$signatureAuthorization) {
+                    $step5Validation = Validator::make($request->all(), [
+                        'signature_authorization' => 'required',
+                    ]);
+                    if ($step5Validation->fails()) {
+                        return response()->json([
+                            'success' => false,
+                            'step' => 8,
+                            'errors' => $step5Validation->errors(),
+                        ], 400);
+                    }
+                }
                 if (isset($request->signature_authorization)) {
-                    $signatureAuthorization = InternalAgentContractSigned::where('reg_info_id', $basicInfo->id)->first();
                     if ($signatureAuthorization) {
                         if (file_exists(asset('internal-agents/contract-signed/' . $signatureAuthorization->name))) {
                             unlink(asset('internal-agents/contract-signed/' . $signatureAuthorization->name));
