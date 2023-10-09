@@ -95,6 +95,7 @@ class InternalAgentController extends Controller
         $ClientCount = Client::where('user_id', $id)->count();
         return Inertia::render('Admin/Agent/Show', [
             'user' => $user,
+            'additionalFiles' => $user->additionalFiles,
             'callsCount' => $callsCount,
             'transactionsCount' => $transactionsCount,
             'activitiesCount' => $activitiesCount,

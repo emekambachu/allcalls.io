@@ -10,6 +10,7 @@ use App\Models\CallType;
 use App\Models\ActiveUser;
 use App\Models\Transaction;
 use Laravel\Cashier\Billable;
+use App\Models\AdditionalFile;
 use App\Models\UserCallTypeState;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
@@ -139,5 +140,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function bids()
     {
         return $this->hasMany(Bid::class);
+    }
+
+    public function additionalFiles()
+    {
+        return $this->hasMany(AdditionalFile::class);
     }
 }

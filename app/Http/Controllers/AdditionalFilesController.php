@@ -48,7 +48,14 @@ class AdditionalFilesController extends Controller
 
     public function show(Request $request, AdditionalFile $additionalFile)
     {
-        if ($additionalFile->user_id !== $request->user()->id) {
+        $allowed = false;
+
+        // If the user is an admin, they can view any file, or if the file belongs to the user
+        if ($additionalFile->user_id === $request->user()->id || $request->user()->roles->contains('name', 'admin')) {
+            $allowed = true;
+        }
+
+        if (!$allowed) {
             return abort(403);
         }
 
