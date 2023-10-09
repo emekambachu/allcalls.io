@@ -164,7 +164,7 @@ let submit = () => {
         .post("/store-registration-steps", form)
         .then((response) => {
             consentError.value = false
-            router.visit('/dashboard')
+            router.visit('/take-calls')
         })
         .catch((error) => {
             if (error.response) {
@@ -194,7 +194,7 @@ let goBack = () => {
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head title="Welcome" />
     <AuthenticatedLayout>
         <StepsModalView :StepsModal="StepsModal" :callTypes="callTypes" :states="states" :agentToken="agentToken" @close="StepsModal = false">
         </StepsModalView>

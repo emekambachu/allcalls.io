@@ -12,6 +12,8 @@ class DashboardController extends Controller
 {
     public function show(Request $request)
     {
+        return redirect('/take-calls');
+
         $fromTo = [];
         $previousTo = [];
         $sevenDaysAgo = Carbon::now()->subDays(7);
