@@ -18,6 +18,9 @@ let props = defineProps({
     },
     states: Array,
 });
+
+
+console.log('Client Details: ', props.ClientDetail);
 let editScreen = ref(false);
 let emit = defineEmits(["close"]);
 
@@ -65,7 +68,7 @@ let openEdit = () => {
             </div>
             <div class="p-6">
                 <div v-if="ClientDetail">
-                    <span class="spnClassLocked" v-if = "ClientDetail.unlocked == 1">Client is locked</span>
+                    <span class="spnClassLocked" v-if="ClientDetail.unlocked == 1">Client is locked</span>
                     <div class="flex justify-between items-center" v-if = "ClientDetail.unlocked != 1">
                         <h4 class="text-2xl font-small text-custom-sky mb-2">Personal Details</h4>
 
