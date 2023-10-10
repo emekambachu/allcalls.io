@@ -164,41 +164,41 @@ let enforceFiveDigitInput = (fieldName, val) => {
 
         <div class="grid lg:grid-cols-3 mb-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
             <div>
-                <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last
+                <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 ">Last
                     Name<span class="text-red-500">*</span></label>
                 <input type="text" v-model="form.last_name" id="default-input"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                 <div v-if="firstStepErrors.last_name" class="text-red-500" v-text="firstStepErrors.last_name[0]"></div>
             </div>
             <div>
-                <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First
+                <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 ">First
                     Name<span class="text-red-500">*</span></label>
                 <input type="text" v-model="form.first_name" id="default-input"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                 <div v-if="firstStepErrors.first_name" class="text-red-500" v-text="firstStepErrors.first_name[0]"></div>
             </div>
             <div>
-                <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Middle
+                <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 ">Middle
                     Name<span class="text-red-500">*</span></label>
                 <input type="text" v-model="form.middle_name" id="default-input"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                 <div v-if="firstStepErrors.middle_name" class="text-red-500" v-text="firstStepErrors.middle_name[0]"></div>
             </div>
         </div>
 
         <div class="grid lg:grid-cols-3 mb-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
             <div>
-                <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Social
+                <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 ">Social
                     Security Number (SSN)<span class="text-red-500">*</span></label>
                 <input type="number" v-model="form.ssn" id="default-input"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                 <div v-if="firstStepErrors.ssn" class="text-red-500" v-text="firstStepErrors.ssn[0]"></div>
             </div>
             <div>
-                <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Gender<span
+                <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 ">Gender<span
                         class="text-red-500">*</span></label>
                 <select v-model="form.gender" id="countries"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                     <option>Choose </option>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
@@ -206,7 +206,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
                 <div v-if="firstStepErrors.gender" class="text-red-500" v-text="firstStepErrors.gender[0]"></div>
             </div>
             <div>
-                <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date of
+                <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 ">Date of
                     Birth<span class="text-red-500">*</span></label>
                 <VueDatePicker v-model="form.dob" format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply></VueDatePicker>
                 <div v-if="firstStepErrors.dob" class="text-red-500" v-text="firstStepErrors.dob[0]"></div>
@@ -214,43 +214,43 @@ let enforceFiveDigitInput = (fieldName, val) => {
 
         </div>
 
-        <div class="grid lg:grid-cols-3 mb-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
+        <div class="grid lg:grid-cols-3 mb-2 md:grid-cols-2 sm:grid-cols-1 gap-4">
             <div>
-                <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Cell
+                <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 ">Cell
                     Phone#<span class="text-red-500">*</span></label>
                 <input type="text" maxLength="10" v-model="form.cell_phone" id="default-input"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                 <div v-if="firstStepErrors.cell_phone" class="text-red-500" v-text="firstStepErrors.cell_phone[0]"></div>
             </div>
             <div>
-                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Home
+                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">Home
                     Phone#</label>
                 <input type="text" v-model="form.home_phone" maxLength="10" id="default-input"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                 <div v-if="firstStepErrors.home_phone" class="text-red-500" v-text="firstStepErrors.home_phone[0]"></div>
             </div>
             <div>
-                <label for="middle_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Fax#</label>
+                <label for="middle_name" class="block mb-2 text-sm font-black text-gray-900 ">Fax#</label>
                 <input type="text" maxLength="15" v-model="form.fax" id="default-input"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                 <div v-if="firstStepErrors.fax" class="text-red-500" v-text="firstStepErrors.fax[0]"></div>
             </div>
         </div>
 
         <div class="grid lg:grid-cols-3 mb-2  md:grid-cols-1 sm:grid-cols-1 gap-4">
             <div>
-                <label for="middle_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Email<span
+                <label for="middle_name" class="block mb-2 text-sm font-black text-gray-900 ">Email<span
                         class="text-red-500">*</span></label>
                 <input type="email" v-model="form.email" id="default-input"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                 <div v-if="firstStepErrors.email" class="text-red-500" v-text="firstStepErrors.email[0]"></div>
             </div>
 
             <div>
-                <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Married
+                <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 ">Married
                     Status<span class="text-red-500">*</span></label>
                 <select v-model="form.marital_status" id="countries"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                     <option>Choose </option>
                     <option value="married">Married</option>
                     <option value="unmarried">UnMarried</option>
@@ -259,19 +259,19 @@ let enforceFiveDigitInput = (fieldName, val) => {
                 </div>
             </div>
             <div>
-                <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Drivers
+                <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 ">Drivers
                     License#<span class="text-red-500">*</span></label>
                 <input type="text" v-model="form.driver_license_no" id="default-input"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                 <div v-if="firstStepErrors.driver_license_no" class="text-red-500"
                     v-text="firstStepErrors.driver_license_no[0]"></div>
             </div>
             <div>
-                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Driver Licence
+                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">Driver Licence
                     State<span class="text-red-500">*</span></label>
 
                 <select v-model="form.driver_license_state" id="countries"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                     <option>Choose </option>
                     <option v-for="state in states" :value="state.id">{{ state.full_name }} </option>
                 </select>
@@ -279,28 +279,28 @@ let enforceFiveDigitInput = (fieldName, val) => {
                     v-text="firstStepErrors.driver_license_state[0]"></div>
             </div>
             <div>
-                <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Current Address
+                <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 ">Current Address
                     (Residence)<span class="text-red-500">*</span></label>
                 <div>
                     <input type="text" v-model="form.address" id="default-input"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                     <span style="font-size: 14px;">Include Apt/Unit #</span>
                 </div>
                 <div v-if="firstStepErrors.address" class="text-red-500" v-text="firstStepErrors.address[0]"></div>
             </div>
             <div>
-                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">City<span
+                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">City<span
                         class="text-red-500">*</span></label>
                 <input type="text" v-model="form.city" id="default-input"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                 <div v-if="firstStepErrors.city" class="text-red-500" v-text="firstStepErrors.city[0]"></div>
             </div>
 
             <div>
-                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">
+                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">
                     State<span class="text-red-500">*</span></label>
                 <select v-model="form.state" id="countries"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                     <option>Choose </option>
                     <option v-for="state in states" :value="state.id">{{ state.full_name }} </option>
                 </select>
@@ -308,14 +308,14 @@ let enforceFiveDigitInput = (fieldName, val) => {
             </div>
 
             <div>
-                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Zip Code<span
+                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">Zip Code<span
                         class="text-red-500">*</span></label>
                 <input type="number" @input="enforceFiveDigitInput('zip')" v-model="form.zip" id="default-input"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                 <div v-if="firstStepErrors.zip" class="text-red-500" v-text="firstStepErrors.zip[0]"></div>
             </div>
             <div>
-                <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 dark:text-white">Move-In
+                <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 ">Move-In
                     Date<span class="text-red-500">*</span></label>
                 <VueDatePicker v-model="form.move_in_date" format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply>
                 </VueDatePicker>
@@ -325,28 +325,28 @@ let enforceFiveDigitInput = (fieldName, val) => {
         </div>
         <div class="grid lg:grid-cols-3 mb-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
             <div>
-                <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Mailing Address
+                <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 ">Mailing Address
                     (If Diffrent From Residence)</label>
                 <div>
                     <input type="text" v-model="form.move_in_address" id="default-input"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                     <span style="font-size: 14px;">Include Apt/Unit #</span>
                 </div>
                 <div v-if="firstStepErrors.move_in_address" class="text-red-500"
                     v-text="firstStepErrors.move_in_address[0]"></div>
             </div>
             <div>
-                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">City</label>
+                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">City</label>
                 <input type="text" v-model="form.move_in_city" id="default-input"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                 <div v-if="firstStepErrors.move_in_city" class="text-red-500" v-text="firstStepErrors.move_in_city[0]">
                 </div>
             </div>
             <div>
-                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">
+                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">
                     State</label>
                 <select v-model="form.move_in_state" id="countries"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                     <option>Choose </option>
                     <option v-for="state in states" :value="state.id">{{ state.full_name }} </option>
                 </select>
@@ -354,10 +354,10 @@ let enforceFiveDigitInput = (fieldName, val) => {
                 </div>
             </div>
             <div>
-                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Zip Code</label>
+                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">Zip Code</label>
                 <input type="number" @input="enforceFiveDigitInput('move_in_zip')" v-model="form.move_in_zip" maxLength="5"
                     id="default-input"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                 <div v-if="firstStepErrors.move_in_zip" class="text-red-500" v-text="firstStepErrors.move_in_zip[0]"></div>
             </div>
         </div>
@@ -365,35 +365,35 @@ let enforceFiveDigitInput = (fieldName, val) => {
 
         <div class="grid lg:grid-cols-3 mb-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
             <div>
-                <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Resident
+                <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 ">Resident
                     Insurance License #<span class="text-red-500">*</span>
                 </label>
                 <input type="text" v-model="form.resident_insu_license_no" id="default-input"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                 <div v-if="firstStepErrors.resident_insu_license_no" class="text-red-500"
                     v-text="firstStepErrors.resident_insu_license_no[0]"></div>
 
             </div>
             <div>
-                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Resident
+                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">Resident
                     Insurance License
                     State<span class="text-red-500">*</span></label>
                 <select v-model="form.resident_insu_license_state" id="countries"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                     <option>Choose </option>
                     <option v-for="state in states" :value="state.id">{{ state.full_name }} </option>
                 </select>
                 <!-- <input type="text" v-model="form.resident_insu_license_state" id="default-input"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"> -->
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white"> -->
                 <div v-if="firstStepErrors.resident_insu_license_state" class="text-red-500"
                     v-text="firstStepErrors.resident_insu_license_state[0]"></div>
             </div>
             <div>
-                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Doing Business
+                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">Doing Business
                     As</label>
                 <div>
                     <input type="text" v-model="form.doing_business_as" id="default-input"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                     <span style="font-size: 14px;">Individual / Business Entity (Requires Licence)</span>
                 </div>
                 <div v-if="firstStepErrors.doing_business_as" class="text-red-500"
@@ -441,42 +441,42 @@ let enforceFiveDigitInput = (fieldName, val) => {
 
             <div class="grid lg:grid-cols-4 mb-2 mt-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
                 <div>
-                    <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Business
+                    <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 ">Business
                         Name<span class="text-red-500">*</span></label>
                     <div>
 
                     </div>
                     <input type="text" v-model="form.business_name" id="default-input"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                     <div v-if="firstStepErrors.business_name" class="text-red-500"
                         v-text="firstStepErrors.business_name[0]">
                     </div>
 
                 </div>
                 <div>
-                    <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Tax
+                    <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">Tax
                         ID<span class="text-red-500">*</span></label>
                     <input type="number" v-model="form.business_tax_id" id="default-input"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                     <div v-if="firstStepErrors.business_tax_id" class="text-red-500"
                         v-text="firstStepErrors.business_tax_id[0]"></div>
                 </div>
                 <div>
-                    <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Principle
+                    <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">Principle
                         Agent
                         Name<span class="text-red-500">*</span></label>
                     <input type="text" v-model="form.business_agent_name" id="default-input"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                     <div v-if="firstStepErrors.business_agent_name" class="text-red-500"
                         v-text="firstStepErrors.business_agent_name[0]"></div>
                 </div>
                 <div>
-                    <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Priciple
+                    <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 ">Priciple
                         Agent
                         Title<span class="text-red-500">*</span>
                     </label>
                     <input type="text" v-model="form.business_agent_title" id="default-input"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                     <div v-if="firstStepErrors.business_agent_title" class="text-red-500"
                         v-text="firstStepErrors.business_agent_title[0]"></div>
                 </div>
@@ -484,35 +484,35 @@ let enforceFiveDigitInput = (fieldName, val) => {
 
             <div class="grid lg:grid-cols-4 mb-2 mt-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
                 <div>
-                    <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Business
+                    <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">Business
                         Insurance Licence #<span class="text-red-500">*</span></label>
                     <input type="text" v-model="form.business_insu_license_no" id="default-input"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                     <div v-if="firstStepErrors.business_insu_license_no" class="text-red-500"
                         v-text="firstStepErrors.business_insu_license_no[0]"></div>
 
                 </div>
                 <div>
-                    <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Cell
+                    <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 ">Cell
                         Fax<span class="text-red-500">*</span></label>
                     <input type="text" maxLength="15" v-model="form.business_office_fax" id="default-input"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                     <div v-if="firstStepErrors.business_office_fax" class="text-red-500"
                         v-text="firstStepErrors.business_office_fax[0]"></div>
                 </div>
                 <div>
-                    <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Office
+                    <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">Office
                         Phone<span class="text-red-500">*</span></label>
                     <input type="text" maxLength="10" v-model="form.business_office_phone" id="default-input"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                     <div v-if="firstStepErrors.business_office_phone" class="text-red-500"
                         v-text="firstStepErrors.business_office_phone[0]"></div>
                 </div>
                 <div>
-                    <label for="middle_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Email<span
+                    <label for="middle_name" class="block mb-2 text-sm font-black text-gray-900 ">Email<span
                             class="text-red-500">*</span></label>
                     <input type="email" v-model="form.business_email" id="default-input"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                     <div v-if="firstStepErrors.business_email" class="text-red-500"
                         v-text="firstStepErrors.business_email[0]">
                     </div>
@@ -522,38 +522,38 @@ let enforceFiveDigitInput = (fieldName, val) => {
             <div class="grid lg:grid-cols-4 mb-2 mt-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
                 <div>
                     <label for="middle_name"
-                        class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Website<span
+                        class="block mb-2 text-sm font-black text-gray-900 ">Website<span
                             class="text-red-500">*</span></label>
                     <input type="url" v-model="form.business_website" id="default-input"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                     <div v-if="firstStepErrors.business_website" class="text-red-500"
                         v-text="firstStepErrors.business_website[0]"></div>
                 </div>
                 <div>
-                    <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Business
+                    <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 ">Business
                         Address<span class="text-red-500">*</span>
                     </label>
                     <div>
                         <input type="text" v-model="form.business_address" id="default-input"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                         <span style="font-size: 14px;">Include Apt/Unit #<span class="text-red-500">*</span></span>
                     </div>
                     <div v-if="firstStepErrors.business_address" class="text-red-500"
                         v-text="firstStepErrors.business_address[0]"></div>
                 </div>
                 <div>
-                    <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">City<span
+                    <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">City<span
                             class="text-red-500">*</span></label>
                     <input type="text" v-model="form.business_city" id="default-input"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                     <div v-if="firstStepErrors.business_city" class="text-red-500"
                         v-text="firstStepErrors.business_city[0]"></div>
                 </div>
                 <div>
-                    <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">
+                    <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">
                         State<span class="text-red-500">*</span></label>
                     <select v-model="form.business_state" id="countries"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                         <option>Choose </option>
                         <option v-for="state in states" :value="state.id">{{ state.full_name }} </option>
                     </select>
@@ -561,16 +561,16 @@ let enforceFiveDigitInput = (fieldName, val) => {
                         v-text="firstStepErrors.business_state[0]"></div>
                 </div>
                 <div>
-                    <label for="first_name" class="block mb-0 text-sm font-black text-gray-900 dark:text-white">Zip
+                    <label for="first_name" class="block mb-0 text-sm font-black text-gray-900 ">Zip
                         Code<span class="text-red-500">*</span></label>
                     <input type="number" @input="enforceFiveDigitInput('business_zip')" v-model="form.business_zip"
                         id="default-input"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                     <div v-if="firstStepErrors.business_zip" class="text-red-500" v-text="firstStepErrors.business_zip[0]">
                     </div>
                 </div>
                 <div>
-                    <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 dark:text-white">Move-In
+                    <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 ">Move-In
                         Date<span class="text-red-500">*</span></label>
                     <VueDatePicker v-model="form.business_move_in_date" format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply>
                     </VueDatePicker>
@@ -580,10 +580,10 @@ let enforceFiveDigitInput = (fieldName, val) => {
                 <div>
 
                     <div>
-                        <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company
+                        <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 ">Company
                             Type<span class="text-red-500">*</span></label>
                         <select v-model="form.business_company_type" id="countries"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                             <option>Choose </option>
                             <option value="corporation">Corporation</option>
                             <option value="parternership">Parternership</option>
