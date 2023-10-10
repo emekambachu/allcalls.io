@@ -32,7 +32,7 @@
         }
 
         .w-25 {
-         width: 25% !important;
+            width: 25% !important;
         }
 
         .mt-2 {
@@ -100,44 +100,11 @@
 </head>
 <body>
 
-<embed src="{{ $contractData->internalAgentContract->amlCourse->url }}" width="100%" height="600px" type="application/pdf">
-
-{{--Start Inforamtion--}}
-@if($contractData->internalAgentContract)
-    @include('pdf.internal-agent-contract.basic-information')
-@endif
-{{--End Inforamtion--}}
-
-
 {{--Start Legal Question Section--}}
 @if(isset($contractData->internalAgentContract) && count($contractData->internalAgentContract->legalQuestion))
     @include('pdf.internal-agent-contract.legal-questions')
 @endif
 {{--End Legal Question Section--}}
-
-{{--Start Address History--}}
-@if(isset($contractData->internalAgentContract) && count($contractData->internalAgentContract->addresses))
-    @include('pdf.internal-agent-contract.address-history')
-@endif
-{{--End Address History--}}
-
-{{--Start Additional Info--}}
-@if(isset($contractData->internalAgentContract) && isset($contractData->internalAgentContract->additionalInfo))
-    @include('pdf.internal-agent-contract.additional-info')
-@endif
-{{--End Additional Info--}}
-
-{{--Start Signature--}}
-@if(isset($contractData->internalAgentContract) && $contractData->internalAgentContract->getQuestionSign)
-    @include('pdf.internal-agent-contract.accompanying-sign')
-@endif
-{{--End Signature--}}
-
-{{--Start Signature Authorization--}}
-@if(isset($contractData->internalAgentContract) && $contractData->internalAgentContract->getContractSign)
-    @include('pdf.internal-agent-contract.signature')
-@endif
-{{--End Signature Authorization--}}
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"

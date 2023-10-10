@@ -991,11 +991,35 @@
                     </p>
                 @endif
             </div>
-        @endif
+            @endif
+
+            @if($question->name == 'contract_commission_checkbox_20')
+                <div class="section-border">
+                    <p>
+                        <strong>20. &nbsp;</strong>
+                        Have you SIGNED CONTRACTS or BEEN PAID COMMISSIONS with any insurance carriers in the last 6
+                        months?
+                    </p>
+
+                    <p>
+                        <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                        <span class="radio-values">YES</span>
+                        <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                        <span class="radio-values">NO</span>
+                    </p>
+
+                    @if($question->value == 'YES')
+                        <p>
+                            <strong>Explanation: &nbsp;</strong> <br>
+                            @foreach(explode(',',$question->description) as $key=>$commission)
+                                {{$key+1}}- {{$commission}}
+                                @if(!$loop->last)
+                                    &nbsp; &nbsp; &nbsp;
+                                @endif
+                            @endforeach
+                        </p>
+                    @endif
+                </div>
+            @endif
     @endforeach
-    <p style="font-weight: bold">
-        I attest that the information I have provided is true to the best of my knowledge. I acknowledge that if any
-        information changes, I will notify my agency office within 5 days of such change. Further, I understand that my
-        agency may contact me when I need to answer carrier-specific questions.
-    </p>
 </div>

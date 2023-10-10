@@ -1,19 +1,21 @@
   
 <script setup>
 import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
-import { Head, Link, useForm , usePage } from "@inertiajs/vue3";
+import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
 let props = defineProps({
-    firstStepErrors:Object,
+    firstStepErrors: Object,
     userData: Object,
+    isLoading: Boolean,
 });
+const selectedFileName = ref(""); // To store the selected file name
 let page = usePage();
 let residentUrl = ref(null)
 
-if (page.props.auth.role === 'admin' && props.userData.internal_agent_contract) {
+if (props.userData.internal_agent_contract && props.userData.internal_agent_contract.resident_license) {
+    selectedFileName.value = props.userData.internal_agent_contract.resident_license.name
     residentUrl.value = props.userData.internal_agent_contract.resident_license.url
 }
 const fileError = ref(false);
-const selectedFileName = ref(""); // To store the selected file name
 const selectedFile = ref(null)
 const handleFileChange = (event) => {
     const files = event.target.files;
@@ -23,7 +25,7 @@ const handleFileChange = (event) => {
         fileError.value = false; // Reset the error message
         selectedFileName.value = files[0].name; // Set the selected file name
         selectedFile.value = files[0]
-        if(props.firstStepErrors.residentLicensePdf){
+        if (props.firstStepErrors.residentLicensePdf) {
             props.firstStepErrors.residentLicensePdf = null
         }
     } else if (files.length > 1) {
@@ -49,7 +51,7 @@ const handleDrop = (event) => {
         fileError.value = false; // Reset the error message
         selectedFileName.value = files[0].name; // Set the selected file name
         selectedFile.value = files[0]
-        if(props.firstStepErrors.residentLicensePdf){
+        if (props.firstStepErrors.residentLicensePdf) {
             props.firstStepErrors.residentLicensePdf = null
         }
     } else if (files.length > 1) {
@@ -69,21 +71,25 @@ const handleDrop = (event) => {
 
 const fileErrorMessage = ref("Please select a single PDF file.");
 const emits = defineEmits();
-watch(selectedFile, (newForm, oldForm) => {
-    emits("uploadLicense", newForm);
-});
+// watch(selectedFile, (newForm, oldForm) => {
+//     emits("uploadLicense", newForm);
+// });
 let ChangeTab = () => {
     for (const key in props.firstStepErrors) {
         if (props.firstStepErrors.hasOwnProperty(key)) {
             props.firstStepErrors[key] = [];
         }
     }
-   
-    if(!selectedFile.value && page.props.auth.role === 'internal-agent'){
+
+    if (!selectedFile.value && page.props.auth.role === 'internal-agent' && !props.userData.internal_agent_contract.resident_license) {
         fileError.value = false;
         props.firstStepErrors.residentLicensePdf = [`The Resident License field is required.`];
-    }else{
-        emits("changeTab");
+    } else {
+        if (page.props.auth.role === 'internal-agent') {
+            emits("uploadLicense", selectedFile.value);
+        } else {
+            emits("changeTab");
+        }
     }
 }
 let ChangeTabBack = () => {
@@ -96,17 +102,13 @@ let ChangeTabBack = () => {
             Upload Resident License PDF
         </h1>
         <div v-show="page.props.auth.role === 'admin'" class="bg-blue-50 py-10 px-6 rounded-lg shadow-md">
-        <div >
-            <a target="_blank"
-                :href="residentUrl"
-                :disabled="!residentUrl"
-                :class="{ 'opacity-25': !residentUrl }"
-                >
-                <strong class="text-blue-600 mr-1 hover:underline">Click here
-                </strong>
-            </a>Preview / Download Resident License.
+            <div>
+                <a target="_blank" :href="residentUrl" :disabled="!residentUrl" :class="{ 'opacity-25': !residentUrl }">
+                    <strong class="text-blue-600 mr-1 hover:underline">Click here
+                    </strong>
+                </a>Preview / Download Resident License.
+            </div>
         </div>
-    </div>
         <div v-show="page.props.auth.role === 'internal-agent'" class="flex items-center justify-center w-full">
             <label for="dropzone-file"
                 class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
@@ -120,17 +122,20 @@ let ChangeTabBack = () => {
                     <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
                         <span class="font-semibold">Click to upload</span> or drag and drop
                     </p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">PDF files only<span class="text-red-500 ">*</span></p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">PDF files only<span class="text-red-500 ">*</span>
+                    </p>
                 </div>
-                <input id="dropzone-file" type="file" class="hidden" @change="handleFileChange" accept=".pdf"  />
+                <input id="dropzone-file" type="file" class="hidden" @change="handleFileChange" accept=".pdf" />
             </label>
         </div>
+        <div v-if="firstStepErrors.residentLicensePdf" class="text-red-500 mt-1"
+            v-text="firstStepErrors.residentLicensePdf[0]"></div>
         <p v-if="fileError" class="text-red-500 mt-4">{{ fileErrorMessage }}</p>
         <!-- Display the selected file name with styling -->
-        <div v-if="selectedFileName" class="text-green-500 mt-4">
+        <div v-if="selectedFileName && page.props.auth.role === 'internal-agent'" class="text-green-500 mt-4">
             Selected File: {{ selectedFileName }}
         </div>
-        <div v-if="firstStepErrors.residentLicensePdf" class="text-red-500 mt-4" v-text="firstStepErrors.residentLicensePdf[0]"></div> 
+
     </div>
     <div class="px-5 pb-6">
         <div class="flex justify-between flex-wrap">
@@ -145,8 +150,9 @@ let ChangeTabBack = () => {
                 </button>
             </div>
             <div class="mt-4">
-                <button type="button" @click="ChangeTab" class="button-custom px-3 py-2 rounded-md">
-                    Next Step
+                <button type="button" :class="{ 'opacity-25': isLoading }" :disabled="isLoading" @click="ChangeTab"
+                    class="button-custom px-3 py-2 rounded-md">
+                    <global-spinner :spinner="isLoading" /> Next Step
                 </button>
 
             </div>

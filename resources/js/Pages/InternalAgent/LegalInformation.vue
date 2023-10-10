@@ -5,6 +5,7 @@ const props = defineProps({
     contractStep: String,
     firstStepErrors: Object,
     userData: Object,
+    isLoading: Boolean
 });
 let page = usePage();
 
@@ -147,7 +148,7 @@ let LegalInformation = ref([
 let form = ref({
 
 })
-if (page.props.auth.role === 'admin' && props.userData.internal_agent_contract) {
+if (props.userData.internal_agent_contract && props.userData.internal_agent_contract.legal_question) {
     props.userData.internal_agent_contract.legal_question.forEach((question) => {
         const matchingLegalInfo = LegalInformation.value.find((info) => info.name === question.name);
         if (matchingLegalInfo) {
@@ -155,6 +156,7 @@ if (page.props.auth.role === 'admin' && props.userData.internal_agent_contract) 
             form.value[matchingLegalInfo.name + '_text'] = question.description
         }
     });
+
 }
 
 
@@ -164,34 +166,43 @@ const emits = defineEmits();
 // });
 
 let ChangeTab = () => {
-    for (const key in props.firstStepErrors) {
-        if (props.firstStepErrors.hasOwnProperty(key)) {
-            props.firstStepErrors[key] = [];
+    if (page.props.auth.role === 'admin') {
+        emits("changeTab");
+    } else {
+        for (const key in props.firstStepErrors) {
+            if (props.firstStepErrors.hasOwnProperty(key)) {
+                props.firstStepErrors[key] = [];
+            }
         }
-    }
 
-    // Define an array of field names that are required
-    if (page.props.auth.role === 'internal-agent') {
-        for (const information of LegalInformation.value) {
-            let checboxValue = form.value[information.name]
-            if (!form.value[information.name]) {
-                props.firstStepErrors[information.name] = [`This field is required.`];
-            } else if (checboxValue === "YES") {
-                if (!form.value[information.name + '_text']) {
+        // Define an array of field names that are required
+        if (page.props.auth.role === 'internal-agent') {
+            for (const information of LegalInformation.value) {
+                let checboxValue = form.value[information.name]
+                if (!form.value[information.name]) {
                     props.firstStepErrors[information.name] = [`This field is required.`];
+                } else if (checboxValue === "YES") {
+                    if (!form.value[information.name + '_text']) {
+                        props.firstStepErrors[information.name] = [`This field is required.`];
+                    }
                 }
             }
         }
-    }
-    // Check if there are any errors
+        // Check if there are any errors
 
-    const hasErrors = Object.values(props.firstStepErrors).some(errors => errors.length > 0);
-    if (!hasErrors) {
-        emits("changeTab", form.value);
-    } else {
-        var element = document.getElementById("modal_main_id");
-        element.scrollIntoView();
+        const hasErrors = Object.values(props.firstStepErrors).some(errors => errors.length > 0);
+        if (!hasErrors) {
+            if (page.props.auth.role === 'internal-agent') {
+                emits("legalFormDataStep1", form.value);
+            } else {
+                emits("changeTab");
+            }
+        } else {
+            var element = document.getElementById("modal_main_id");
+            element.scrollIntoView();
+        }
     }
+
 }
 let ChangeTabBack = () => {
     emits("goback");
@@ -244,7 +255,7 @@ let ChangeTabBack = () => {
                     v-text="firstStepErrors[information.name][0]"></div>
             </div>
         </div>
-        
+
         <hr class="w-100 h-1 my-4 bg-gray-600 border-0 rounded dark:bg-gray-700">
     </div>
     <div class="px-5 pb-6">
@@ -260,8 +271,9 @@ let ChangeTabBack = () => {
                 </button>
             </div>
             <div class="mt-4">
-                <button type="button" @click="ChangeTab" class="button-custom px-3 py-2 rounded-md">
-                    Next
+                <button type="button" :class="{ 'opacity-25': isLoading }" :disabled="isLoading" @click="ChangeTab"
+                    class="button-custom px-3 py-2 rounded-md">
+                    <global-spinner :spinner="isLoading" /> Next
                 </button>
 
             </div>
