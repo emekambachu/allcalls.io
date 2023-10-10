@@ -203,24 +203,7 @@ let submit = () => {
           <input id="checked-checkbox" type="checkbox" v-model="form.consent"
             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
           <label for="checked-checkbox" class="ml-2 text-xs font-medium text-gray-900 dark:text-gray-400">
-            By clicking Continue, I agree to email marketing, the Terms and
-            Conditions (which include mandatory arbitration), Privacy Policy,
-            and site visit recordation by Trusted Form and Jornaya. I provide my
-            express written consent and electronic signature to receive
-            monitored or recorded phone sales calls and text messages from
-            AllCalls.io regarding products and services including Medicare
-            Supplement, Medicare Advantage, and Prescription Drug Plans on the
-            landline or mobile number I provided even if I am on a federal or
-            State do not call registry. I confirm that the phone number set
-            forth above is accurate and I am the regular user of the phone. I
-            understand these calls may be generated using an automated dialing
-            system and may contain pre-recorded and artificial voice messages
-            and that consenting is not required to receive a quote or speak with
-            an agent and that I can revoke my consent at any time by any
-            reasonable means. To receive a quote without providing consent,
-            please call (866) 523-1718. For SMS message campaigns: Text STOP to
-            stop and HELP for help. Msg and data rates may apply. Periodic
-            messages; max. 30/month.
+            By checking this box, I verify that this is my mobile number and that I would like to sign up to receive messages from “AllCalls.io” program by AllCalls LLC. I understand that I am not required to provide my consent as a condition of purchasing any products or services. Msg freq may vary. Msg data rates may apply. Reply HELP for help or STOP to optout. Read <a href="https://allcalls.io/terms.php">Terms and Conditions</a>. Read <a href="https://allcalls.io/privacy.php">Privacy Policy</a>.
           </label>
         </div>
         <div v-if="firstStepErrors.consent" class="text-red-500 ml-5" v-text="firstStepErrors.consent[0]"></div>

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PingAPIController;
 use App\Http\Controllers\CallStatusController;
 use App\Http\Controllers\ClientsAPIController;
 use Illuminate\Validation\ValidationException;
@@ -22,6 +23,7 @@ use App\Http\Controllers\TwilioIOSAccessTokenController;
 use App\Http\Controllers\ActiveUsersPusherWebhookController;
 use App\Http\Controllers\TwilioAndroidAccessTokenController;
 use App\Http\Controllers\TwilioIOSAccessTokenGuestController;
+use App\Http\Controllers\TwilioAndroidAccessTokenGuestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -128,5 +130,10 @@ Route::post('/active-users-pusher-webhook', [ActiveUsersPusherWebhookController:
 Route::get('/twilio-ios-access-token-guest', [TwilioIOSAccessTokenGuestController::class, 'show']);
 Route::middleware('auth:sanctum')->get('/twilio-ios-access-token', [TwilioIOSAccessTokenController::class, 'show']);
 Route::middleware('auth:sanctum')->get('/twilio-android-access-token', [TwilioAndroidAccessTokenController::class, 'show']);
+Route::middleware('auth:sanctum')->get('/twilio-android-access-token-guest', [TwilioAndroidAccessTokenGuestController::class, 'show']);
 
 Route::match(['get', 'post'], '/agent-status', [AgentStatusAPIController::class, 'show']);
+
+Route::middleware('auth:sanctum')->post('/app-events', [AppEventsController::class, 'store']);
+
+Route::match(['get', 'post'], '/ping', [PingAPIController::class, 'show']);

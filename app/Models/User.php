@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Bid;
 use App\Models\Card;
 use App\Models\State;
 use App\Models\Activity;
@@ -9,6 +10,7 @@ use App\Models\CallType;
 use App\Models\ActiveUser;
 use App\Models\Transaction;
 use Laravel\Cashier\Billable;
+use App\Models\AdditionalFile;
 use App\Models\UserCallTypeState;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
@@ -133,5 +135,15 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function internalAgentContract() {
         return $this->hasOne(InternalAgentRegInfo::class);
+    }
+
+    public function bids()
+    {
+        return $this->hasMany(Bid::class);
+    }
+
+    public function additionalFiles()
+    {
+        return $this->hasMany(AdditionalFile::class);
     }
 }
