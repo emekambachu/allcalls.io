@@ -1655,6 +1655,7 @@ class RegistrationStepController extends Controller
 
     public function pdf()
     {
+        dd('here');
         $config = new Configuration();
         $config->setHost('<https://demo.docusign.net/restapi>');
         $config->addDefaultHeader("Authorization", "Bearer " . env('DOCUSIGN_API_KEY'));
@@ -1686,7 +1687,6 @@ class RegistrationStepController extends Controller
 
         $envelopeSummary = $envelopeApi->createEnvelope(env('DOCUSIGN_ACCOUNT_ID'), $envelope);
 
-        dd($envelopeSummary);
 
         $viewRequest = new ViewRequest([
             'return_url' => '<http://allcalls.io.test/return-url>',
