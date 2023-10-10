@@ -1653,7 +1653,6 @@ class RegistrationStepController extends Controller
         dd($request);
     }
 
-
     public function pdf()
     {
         $config = new Configuration();
