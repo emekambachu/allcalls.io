@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use App\Models\Bid;
 use App\Models\State;
 use App\Models\CallType;
 use App\Models\OnlineUser;
@@ -56,40 +57,41 @@ class AgentStatusAPIController extends Controller
         }
         if (!$state) {
             return response()->json(['message' => 'Could not map the state for the given input.'], 400);
-        }    
-    
+        }
+
         Log::debug('Omega: ' . $state . ', vertical: ' . $vertical);
 
         // Agent lookup
         $agentAvailable = $this->isAgentAvailable($state, $vertical);
+        $price = $this->getPriceForVertical($vertical);
 
         if ($agentAvailable) {
-            return response()->json(['online' => true], 200);
+            return response()->json(['online' => true, 'price' => $price], 200);
         } else {
-            return response()->json(['online' => false], 200);
+            return response()->json(['online' => false, 'price' => $price], 200);
         }
     }
 
     private function zipToState(string $zip): ?string
     {
         $url = "https://zip-api.eu/api/v1/info/US-{$zip}";
-    
+
         try {
             $response = file_get_contents($url);
-    
+
             if ($response === false) {
                 return null;
             }
-    
+
             $data = json_decode($response, true);
-    
+
             return $data['state'] ?? null;
         } catch (Exception $e) {
             Log::error("Error fetching state from ZIP API: " . $e->getMessage());
             return null;
         }
     }
-    
+
     /**
      * Extract the first 3 characters (area code) from a phone number.
      *
@@ -108,17 +110,40 @@ class AgentStatusAPIController extends Controller
         } else {
             $stateModel = State::whereFullName($state)->firstOrFail();
         }
-    
+
         // Query for the call type
         $callTypeModel = CallType::whereType($vertical)->firstOrFail();
-    
+
         // Check for online users matching the criteria
         $onlineUsers = OnlineUser::byCallTypeAndState($callTypeModel, $stateModel)
             ->withSufficientBalance($callTypeModel)
             ->withCallStatusWaiting()
             ->get();
-    
+
         // Here you can put your actual logic to determine if an agent is available
         return $onlineUsers->count() > 0;
-    }    
+    }
+
+    private function getPriceForVertical(string $vertical): float
+    {
+        // Query for the call type
+        $callType = CallType::whereType($vertical)->firstOrFail();
+
+        // Get the total number of bids for this call type
+        $bidCount = Bid::where('call_type_id', $callType->id)->count();
+
+        // If there are no bids or only one bid, return $25
+        if ($bidCount <= 1) {
+            return 25;
+        }
+
+        // Get the second highest bid amount for the call type
+        $secondHighestBid = Bid::where('call_type_id', $callType->id)
+            ->orderBy('amount', 'desc')
+            ->skip(1) // This will skip the highest bid and get the second highest
+            ->first();
+
+        // If there is a second highest bid, return its amount + 1, otherwise return $25
+        return $secondHighestBid ? $secondHighestBid->amount + 1 : 25;
+    }
 }
