@@ -10,6 +10,7 @@ let props = defineProps({
 });
 let page = usePage();
 let omissionUrl = ref(null)
+const selectedFileName = ref(""); // To store the selected file name
 let form = ref({
     omissions_insurance: false,
 });
@@ -18,6 +19,7 @@ if (page.props.auth.role === 'admin') {
 }
 if (props.userData.internal_agent_contract && props.userData.internal_agent_contract.error_and_emission) {
     if (props.userData.internal_agent_contract.error_and_emission.omissions_insurance === 1) {
+        selectedFileName.value = props.userData.internal_agent_contract.error_and_emission.name
         form.value.omissions_insurance = true
         omissionUrl.value = props.userData.internal_agent_contract.error_and_emission.url
     }
@@ -45,7 +47,6 @@ let ChangeTab = () => {
 }
 
 const fileError = ref(false);
-const selectedFileName = ref(""); // To store the selected file name
 
 const handleFileChange = (event) => {
     const files = event.target.files;
@@ -154,7 +155,7 @@ let goBack = () => {
         </div>
         <p v-if="fileError" class="text-red-500 mt-4">{{ fileErrorMessage }}</p>
         <!-- Display the selected file name with styling -->
-        <div v-if="selectedFileName" class="text-green-500 mt-4">
+        <div v-if="selectedFileName && page.props.auth.role === 'internal-agent'" class="text-green-500 mt-4">
             Selected File: {{ selectedFileName }}
         </div>
     </div>

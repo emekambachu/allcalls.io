@@ -8,14 +8,14 @@ let props = defineProps({
     isLoading: Boolean,
 });
 let page = usePage();
+const selectedFileName = ref(""); // To store the selected file name
 let bankingInfotUrl = ref(null)
-// console.log('props.userData.internal_agent_contract.banking_info',props.userData.internal_agent_contract);
 if (props.userData.internal_agent_contract && props.userData.internal_agent_contract.banking_info) {
+    selectedFileName.value = props.userData.internal_agent_contract.banking_info.name
     bankingInfotUrl.value = props.userData.internal_agent_contract.banking_info.url
 }
 
 const fileError = ref(false);
-const selectedFileName = ref(""); // To store the selected file name
 const selectedFile = ref(null)
 const handleFileChange = (event) => {
     const files = event.target.files;
@@ -146,7 +146,7 @@ let ChangeTabBack = () => {
         </div>
         <p v-if="fileError" class="text-red-500 mt-4">{{ fileErrorMessage }}</p>
         <!-- Display the selected file name with styling -->
-        <div v-if="selectedFileName" class="text-green-500 mt-4">
+        <div v-if="selectedFileName && page.props.auth.role === 'internal-agent'" class="text-green-500 mt-4">
             Selected File: {{ selectedFileName }}
         </div>
         
@@ -155,9 +155,9 @@ let ChangeTabBack = () => {
         <div class=" flex bg-white justify-end rounded-lg  gap-4 mt-4 mb-4">
             <div style="padding: 10px; width: 30%; background: #ebe8e8;">
                 <img width="250" height="100" class="mb-5"
-                    :src="userData.internal_agent_contract.get_contract_sign.sign_url" alt="signature" />
+                    :src="userData.internal_agent_contract?.get_contract_sign?.sign_url" alt="signature" />
                 <div> <strong class="mx-2">Date: </strong> {{
-                    dateFormat(userData.internal_agent_contract.get_contract_sign.created_at)
+                    dateFormat(userData.internal_agent_contract?.get_contract_sign?.created_at)
                 }}</div>
             </div>
         </div>

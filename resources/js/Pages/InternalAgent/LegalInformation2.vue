@@ -257,9 +257,9 @@ export default {
                 if (matchingLegalInfo && question.name != 'contract_commission_checkbox_20') {
                     this.form[matchingLegalInfo.name] = question.value;
                     this.form[matchingLegalInfo.name + '_text'] = question.description
-                }else if(question.name === 'contract_commission_checkbox_20'){
+                } else if (question.name === 'contract_commission_checkbox_20') {
                     this.form[matchingLegalInfo.name] = question.value;
-                    if(question.value === "YES"){
+                    if (question.value === "YES") {
                         this.form[matchingLegalInfo.name + '_text'] = question.description.split(',');
                     }
                 }
@@ -278,47 +278,52 @@ export default {
         },
 
         ChangeTab() {
-            for (const key in this.firstStepErrors) {
-                if (this.firstStepErrors.hasOwnProperty(key)) {
-                    this.firstStepErrors[key] = [];
+            if (this.page.auth.role === 'admin') {
+                this.$emit("changeTab");
+            } else {
+                for (const key in this.firstStepErrors) {
+                    if (this.firstStepErrors.hasOwnProperty(key)) {
+                        this.firstStepErrors[key] = [];
+                    }
                 }
-            }
 
-            if (this.page.auth.role === 'internal-agent') {
-                for (const information of this.LegalInformation) {
-                    let checboxValue = this.form[information.name];
-                    if (!this.form[information.name]) {
-                        this.firstStepErrors[information.name] = [`This field is required.`];
-                    } else if (checboxValue === "YES") {
-                        if (!this.form[information.name + '_text']) {
+                if (this.page.auth.role === 'internal-agent') {
+                    for (const information of this.LegalInformation) {
+                        let checboxValue = this.form[information.name];
+                        if (!this.form[information.name]) {
                             this.firstStepErrors[information.name] = [`This field is required.`];
-                        }
-                        if (this.form[information.name + '_text'] === this.form.contract_commission_checkbox_20_text) {
-                            if (this.form.contract_commission_checkbox_20_text.length === 0) {
+                        } else if (checboxValue === "YES") {
+                            if (!this.form[information.name + '_text']) {
                                 this.firstStepErrors[information.name] = [`This field is required.`];
+                            }
+                            if (this.form[information.name + '_text'] === this.form.contract_commission_checkbox_20_text) {
+                                if (this.form.contract_commission_checkbox_20_text.length === 0) {
+                                    this.firstStepErrors[information.name] = [`This field is required.`];
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            const hasErrors = Object.values(this.firstStepErrors).some(errors => errors.length > 0);
+                const hasErrors = Object.values(this.firstStepErrors).some(errors => errors.length > 0);
 
-            if (!hasErrors) {
-                if (this.page.auth.role === 'internal-agent') {
-                    this.$emit("legalFormDataStep2", this.form);
-                    // emits("legalFormDataStep2", this.form);
-                    this.firstStepErrors = {}; // Clear the errors by assigning a new empty object
+                if (!hasErrors) {
+                    if (this.page.auth.role === 'internal-agent') {
+                        this.$emit("legalFormDataStep2", this.form);
+                        // emits("legalFormDataStep2", this.form);
+                        this.firstStepErrors = {}; // Clear the errors by assigning a new empty object
+
+                    } else {
+                        this.$emit("changeTab");
+                    }
+
 
                 } else {
-                    this.$emit("changeTab");
+                    var element = document.getElementById("modal_main_id");
+                    element.scrollIntoView();
                 }
-
-
-            } else {
-                var element = document.getElementById("modal_main_id");
-                element.scrollIntoView();
             }
+
         },
         ChangeTabBack() {
             this.$emit("goback");

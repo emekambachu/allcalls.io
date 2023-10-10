@@ -11,6 +11,7 @@ let props = defineProps({
 let page = usePage();
 
 const selectedFile = ref(null)
+const selectedFileName = ref(""); // To store the selected file name
 let amlUrl = ref(null)
 let form = ref({
     aml_course: false,
@@ -20,6 +21,7 @@ if (page.props.auth.role === 'admin') {
 }
 if (props.userData.internal_agent_contract && props.userData.internal_agent_contract.aml_course) {
     if (props.userData.internal_agent_contract.aml_course.aml_course === 1) {
+        selectedFileName.value = props.userData.internal_agent_contract.aml_course.name
         form.value.aml_course = true
         amlUrl.value = props.userData.internal_agent_contract.aml_course.url
     }
@@ -42,7 +44,7 @@ let ChangeTab = () => {
     }
 
     if (!selectedFile.value && page.props.auth.role === 'internal-agent' && !props.userData.internal_agent_contract.aml_course) {
-        props.firstStepErrors.aml_course = [`The AML course certificate is required.`];
+        props.firstStepErrors.uploadAmlPdf = [`The AML course certificate is required.`];
     } else {
         if (page.props.auth.role === 'internal-agent') {
             emits("uploadPdfAml", { selectedFile: selectedFile.value, aml_course: form.value.aml_course });
@@ -59,7 +61,7 @@ let goBack = () => {
 }
 
 const fileError = ref(false);
-const selectedFileName = ref(""); // To store the selected file name
+
 
 const handleFileChange = (event) => {
     const files = event.target.files;
@@ -169,7 +171,7 @@ const fileErrorMessage = ref("Please select a single PDF file.");
         <div v-if="firstStepErrors.uploadAmlPdf" class="text-red-500 mt-1" v-text="firstStepErrors.uploadAmlPdf[0]"></div>
         <p v-if="fileError" class="text-red-500 mt-4">{{ fileErrorMessage }}</p>
         <!-- Display the selected file name with styling -->
-        <div v-if="selectedFileName" class="text-green-500 mt-4">
+        <div v-if="selectedFileName && page.props.auth.role === 'internal-agent'" class="text-green-500 mt-4">
             Selected File: {{ selectedFileName }}
         </div>
     </div>

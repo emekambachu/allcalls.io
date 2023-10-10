@@ -65,48 +65,52 @@ if (props.userData.internal_agent_contract && props.userData.internal_agent_cont
 let hasValidationErrors = ref({});
 
 const ChangeTab = () => {
-    hasValidationErrors.value = {};
-    let isValid = true; // Initialize a flag to check if all elements are valid
-    if (page.props.auth.role === 'internal-agent') {
-        for (const history of addres_history.value) {
-            const formData = form.value[history.address];
-            console.log('formData', formData);
+    if (page.props.auth.role === 'admin') {
+        emits("changeTab");
+    } else {
+        hasValidationErrors.value = {};
+        let isValid = true; // Initialize a flag to check if all elements are valid
+        if (page.props.auth.role === 'internal-agent') {
+            for (const history of addres_history.value) {
+                const formData = form.value[history.address];
+                console.log('formData', formData);
 
-            // Check if any field is filled and if it's a string
-            if (
-                (typeof formData.address === 'string' && formData.address.trim() !== '') ||
-                (typeof formData.city === 'string' && formData.city.trim() !== '') ||
-                (typeof formData.zip_code === 'string' && formData.zip_code.trim() !== '') ||
-                formData.state !== 'Choose'
-            ) {
-                // If any field is filled, check if all fields are filled for the current address
+                // Check if any field is filled and if it's a string
                 if (
-                    (typeof formData.address !== 'string' || formData.address.trim() === '') ||
-                    (typeof formData.city !== 'string' || formData.city.trim() === '') ||
-                    (typeof formData.zip_code !== 'string' || formData.zip_code.trim() === '') ||
-                    formData.state === 'Choose'
+                    (typeof formData.address === 'string' && formData.address.trim() !== '') ||
+                    (typeof formData.city === 'string' && formData.city.trim() !== '') ||
+                    (typeof formData.zip_code === 'string' && formData.zip_code.trim() !== '') ||
+                    formData.state !== 'Choose'
                 ) {
-                    hasValidationErrors.value[history.address] = {
-                        address: !formData.address || typeof formData.address !== 'string',
-                        city: !formData.city || typeof formData.city !== 'string',
-                        state: formData.state === 'Choose',
-                        zip_code: !formData.zip_code || typeof formData.zip_code !== 'string',
-                    };
-                    isValid = false; // Set isValid to false if there's a validation error
+                    // If any field is filled, check if all fields are filled for the current address
+                    if (
+                        (typeof formData.address !== 'string' || formData.address.trim() === '') ||
+                        (typeof formData.city !== 'string' || formData.city.trim() === '') ||
+                        (typeof formData.zip_code !== 'string' || formData.zip_code.trim() === '') ||
+                        formData.state === 'Choose'
+                    ) {
+                        hasValidationErrors.value[history.address] = {
+                            address: !formData.address || typeof formData.address !== 'string',
+                            city: !formData.city || typeof formData.city !== 'string',
+                            state: formData.state === 'Choose',
+                            zip_code: !formData.zip_code || typeof formData.zip_code !== 'string',
+                        };
+                        isValid = false; // Set isValid to false if there's a validation error
+                    }
                 }
             }
         }
-    }
-    // If isValid is still true, it means there are no validation errors
-    if (isValid) {
-        if (page.props.auth.role === 'internal-agent') {
-            emits("addRessHistory", form.value);
+        // If isValid is still true, it means there are no validation errors
+        if (isValid) {
+            if (page.props.auth.role === 'internal-agent') {
+                emits("addRessHistory", form.value);
+            } else {
+                emits("changeTab");
+            }
         } else {
-            emits("changeTab");
+            var element = document.getElementById("modal_main_id");
+            element.scrollIntoView();
         }
-    } else {
-        var element = document.getElementById("modal_main_id");
-        element.scrollIntoView();
     }
 }
 
