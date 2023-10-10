@@ -1685,6 +1685,8 @@ class RegistrationStepController extends Controller
             'status' => 'sent'
         ]);
 
+        dd( $envelope);
+
         $envelopeSummary = $envelopeApi->createEnvelope('1797216e-2fcc-4b29-95e4-ff04a330b007', $envelope);
 
 
