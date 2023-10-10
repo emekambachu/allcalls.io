@@ -1,7 +1,11 @@
 <?php
 
 function getStateName($id) {
-    $state = \App\Models\State::find($id);
-    dd($state);
-    return $state->full_name;
+    try {
+        $state = \App\Models\State::find($id);
+        return $state->full_name;
+    }
+    catch (\Exception $e) {
+        dd($id);
+    }
 }

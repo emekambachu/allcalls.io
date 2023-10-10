@@ -301,7 +301,7 @@ class InternalAgentController extends Controller
     {
         set_time_limit(0);
 
-//        try {
+        try {
             $returnArr['contractData'] = User::where('id', $id)
                 ->with('internalAgentContract.getState')
                 ->with('internalAgentContract.getDriverLicenseState')
@@ -339,7 +339,6 @@ class InternalAgentController extends Controller
 
             $pdfMerger->addPDF(public_path() . '/internal-agents/contract/contract-first-sign.pdf', 'all');
 
-
             $pdfMerger->addPDF(public_path() . '/internal-agents/aml-course/' . $returnArr['contractData']->internalAgentContract->amlCourse->name, 'all');
             $pdfMerger->addPDF(public_path() . '/internal-agents/error-and-omission/' . $returnArr['contractData']->internalAgentContract->errorAndEmission->name, 'all');
             $pdfMerger->addPDF(public_path() . '/internal-agents/resident-license-pdf/' . $returnArr['contractData']->internalAgentContract->residentLicense->name, 'all');
@@ -371,13 +370,13 @@ class InternalAgentController extends Controller
 
             // Return the merged PDF as a downloadable response
             return Response::make($mergedPdfContent, 200, $headers);
-//        } catch (\Exception $e) {
-//            dd( $e->getMessage());
-//            return response()->json([
-//                'success' => false,
-//                'errors' => $e->getMessage(),
-//            ], 400);
-//        }
+        } catch (\Exception $e) {
+            dd( $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'errors' => $e->getMessage(),
+            ], 400);
+        }
 
     }
 
