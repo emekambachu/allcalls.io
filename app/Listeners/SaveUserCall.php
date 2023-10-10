@@ -41,7 +41,10 @@ class SaveUserCall
 
         // Query the external database
         $results = DB::connection('mysql2')->select("SELECT * FROM leads WHERE phone = ? LIMIT 1", [$event->from]);
-        if (!sizeof($results)) return;
+        if (!sizeof($results)) {
+            $this->saveEmptyClient($event->from, $event->user->id, $event->callTypeId, $call->id);
+            return;
+        }
         $potentialLead = $results[0];
 
         Log::debug('Results from external database.');
@@ -63,5 +66,28 @@ class SaveUserCall
 
         Log::debug('Client saved.');
         Log::debug($client->toArray());
+    }
+
+    protected function saveEmptyClient($from, $userId, $callTypeId, $callId)
+    {
+
+        $client = Client::create([
+            'first_name' => 'N/A',
+            'last_name' => 'N/A',
+            'phone' => $from,
+            'zipCode' => 'N/A',
+            'email' => 'N/A',
+            'address' => 'N/A',
+            'dob' => 'N/A',
+            'call_id' => $callId,
+            'user_id' => $userId,
+            'call_type_id' => $callTypeId,
+            'state' => 'N/A',
+        ]);
+
+        Log::debug('Client saved.');
+        Log::debug($client->toArray());
+
+        return $client;
     }
 }
