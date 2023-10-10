@@ -9,7 +9,7 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Modal from "@/Components/Modal.vue";
 import SearchFilter from "@/Components/SearchFilter.vue";
 import ContractSteps from '@/Pages/InternalAgent/ContractSteps.vue'
-import LegalQuestionsView from "@/Pages/Admin/Agent/LegalQuestionsView.vue";
+import ViewPdfindex from "@/Pages/Admin/Agent/ViewPdfindex.vue";
 let page = usePage();
 if (page.props.flash.message) {
   toaster("success", page.props.flash.message);
@@ -116,26 +116,12 @@ let capitalizeAndReplaceUnderscore = (str) => {
 
   return result;
 };
-let legalModal = ref(false)
-let legalQuestions = ref(null)
-let slidingLoader = ref(false)
-let legaQuestionPdf = (id) => {
-  slidingLoader.value = true
-  return axios
-    .post("/admin/agents/legal-questions", {
-      id: id
-    })
-    .then((response) => {
-      legalQuestions.value = response.data.pdfData.internal_agent_contract.legal_question
-      legalModal.value = true;
-      slidingLoader.value = false
-    })
-    .catch((error) => {
-      console.log('error', error);
-      slidingLoader.value = false
-
-    });
+let viewModalpdf = ref(false)
+let viewPdfData = (agent) => {
+  userData.value = agent
+  viewModalpdf.value = true
 }
+
 </script>
 
 <template>
@@ -270,10 +256,9 @@ let legaQuestionPdf = (id) => {
                         </g>
                       </svg>
                     </a>
-                    <a class="ml-2"
+                    <!-- <a class="ml-2"
                       v-show="agent.internal_agent_contract && agent.legacy_key === 1 && agent.contract_step === 10"
                       title="Signature Authorization" :href="route('admin.agent.signature.authorization.pdf', agent.id)">
-                      <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
                       <svg fill="#000000" class="w-4 h-4 " version="1.1" xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 237.783 237.783" xmlns:xlink="http://www.w3.org/1999/xlink"
                         enable-background="new 0 0 237.783 237.783">
@@ -292,7 +277,29 @@ let legaQuestionPdf = (id) => {
                             d="m237.783,98.361c0-1.591-0.632-3.117-1.757-4.243l-16.356-16.355c-1.125-1.125-2.651-1.757-4.243-1.757s-3.117,0.632-4.243,1.757l-28.756,28.756v-88.117c0-3.313-2.686-6-6-6h-170.428c-3.314,0-6,2.687-6,6v200.979c0,3.313 2.686,6 6,6h170.429c3.314,0 6-2.687 6-6v-63.18l53.597-53.597c1.125-1.125 1.757-2.651 1.757-4.243zm-225.783,115.02v-188.979h158.429v94.117l-35.291,35.291h-92.403c-3.313,0-6,2.687-6,6s2.687,6 6,6h80.403l-1.033,1.033c-0.777,0.777-1.326,1.753-1.586,2.821l-4.157,17.05h-25.148c-3.313,0-6,2.687-6,6s2.687,6 6,6c0,0 29.714,0 29.86,0 0.473,0 0.95-0.056 1.421-0.171l21.629-5.273c1.068-0.26 2.044-0.809 2.821-1.586l23.482-23.482v45.181h-158.427zm127.649-31.374l-10.408,2.538 2.538-10.408 83.648-83.648 7.871,7.871-83.649,83.647z" />
                         </g>
                       </svg>
-                    </a>
+                    </a> -->
+                    <button class="ml-2" @click="viewPdfData(agent)"
+                      v-show="agent.internal_agent_contract && agent.legacy_key === 1 && agent.contract_step === 10"
+                      title="Signature Authorization">
+                      <svg fill="#000000" class="w-4 h-4 " version="1.1" xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 237.783 237.783" xmlns:xlink="http://www.w3.org/1999/xlink"
+                        enable-background="new 0 0 237.783 237.783">
+                        <g>
+                          <path
+                            d="m42.735,50.071h96.959c3.313,0 6,2.687 6,6s-2.687,6-6,6h-96.959c-3.313,0-6-2.687-6-6s2.686-6 6-6zm0,25.934h96.959c3.313,0 6,2.687 6,6s-2.687,6-6,6h-96.959c-3.313,0-6-2.687-6-6s2.686-6 6-6zm0,25.935h96.959c3.313,0 6,2.687 6,6s-2.687,6-6,6h-96.959c-3.313,0-6-2.687-6-6s2.686-6 6-6zm0,25.935h96.959c3.313,0 6,2.687 6,6s-2.687,6-6,6h-96.959c-3.313,0-6-2.687-6-6s2.686-6 6-6z" />
+                          <path
+                            d="m42.735,62.071h96.959c3.313,0 6-2.687 6-6s-2.687-6-6-6h-96.959c-3.313,0-6,2.687-6,6s2.686,6 6,6z" />
+                          <path
+                            d="m42.735,88.005h96.959c3.313,0 6-2.687 6-6s-2.687-6-6-6h-96.959c-3.313,0-6,2.687-6,6s2.686,6 6,6z" />
+                          <path
+                            d="m42.735,113.94h96.959c3.313,0 6-2.687 6-6s-2.687-6-6-6h-96.959c-3.313,0-6,2.687-6,6s2.686,6 6,6z" />
+                          <path
+                            d="m42.735,139.875h96.959c3.313,0 6-2.687 6-6s-2.687-6-6-6h-96.959c-3.313,0-6,2.687-6,6s2.686,6 6,6z" />
+                          <path
+                            d="m237.783,98.361c0-1.591-0.632-3.117-1.757-4.243l-16.356-16.355c-1.125-1.125-2.651-1.757-4.243-1.757s-3.117,0.632-4.243,1.757l-28.756,28.756v-88.117c0-3.313-2.686-6-6-6h-170.428c-3.314,0-6,2.687-6,6v200.979c0,3.313 2.686,6 6,6h170.429c3.314,0 6-2.687 6-6v-63.18l53.597-53.597c1.125-1.125 1.757-2.651 1.757-4.243zm-225.783,115.02v-188.979h158.429v94.117l-35.291,35.291h-92.403c-3.313,0-6,2.687-6,6s2.687,6 6,6h80.403l-1.033,1.033c-0.777,0.777-1.326,1.753-1.586,2.821l-4.157,17.05h-25.148c-3.313,0-6,2.687-6,6s2.687,6 6,6c0,0 29.714,0 29.86,0 0.473,0 0.95-0.056 1.421-0.171l21.629-5.273c1.068-0.26 2.044-0.809 2.821-1.586l23.482-23.482v45.181h-158.427zm127.649-31.374l-10.408,2.538 2.538-10.408 83.648-83.648 7.871,7.871-83.649,83.647z" />
+                        </g>
+                      </svg>
+                    </button>
                   </td>
                 </tr>
               </tbody>
@@ -357,8 +364,8 @@ let legaQuestionPdf = (id) => {
     </section>
     <ContractSteps v-if="contractModal" @close="contractModal = false" :states="states" :userData="userData" />
 
-    <Modal :show="legalModal" @close="legalModal = false">
-      <LegalQuestionsView @close="legalModal = false" :slidingLoader="slidingLoader" :legalQuestions="legalQuestions" />
+    <Modal :show="viewModalpdf" @close="viewModalpdf = false">
+      <ViewPdfindex @close="viewModalpdf = false" :userData="userData.value"  />
     </Modal>
 
     <Modal :show="showModal" @close="showModal = false">
@@ -369,6 +376,7 @@ let legaQuestionPdf = (id) => {
       <Create :agentModal="agentModal" :currentPage="currentPage" :callTypes="callTypes" :states="states"
         @close="agentModal = false"></Create>
     </Modal>
+
   </AuthenticatedLayout>
 </template>
 
