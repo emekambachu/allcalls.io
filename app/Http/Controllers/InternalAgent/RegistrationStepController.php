@@ -1685,18 +1685,18 @@ class RegistrationStepController extends Controller
             'status' => 'sent'
         ]);
 
-        $envelopeSummary = $envelopeApi->createEnvelope('434e0a1e-65f9-4469-8439-2dcd3e5aa80a', $envelope);
+        $envelopeSummary = $envelopeApi->createEnvelope('1797216e-2fcc-4b29-95e4-ff04a330b007', $envelope);
 
 
         $viewRequest = new ViewRequest([
-            'return_url' => '<http://allcalls.io.test/return-url>',
+            'return_url' => '<https://staging.allcalls.io/return-url>',
             'authentication_method' => 'none',
             'email' => 'abdullah.laraveldev@gmail.com',
             'user_name' => 'John Doe',
             'client_user_id' => '12345'
         ]);
 
-        $signingUrl = $envelopeApi->createRecipientView("434e0a1e-65f9-4469-8439-2dcd3e5aa80ad", $envelopeSummary->getEnvelopeId(), $viewRequest);
+        $signingUrl = $envelopeApi->createRecipientView("1797216e-2fcc-4b29-95e4-ff04a330b007", $envelopeSummary->getEnvelopeId(), $viewRequest);
 
         return response()->json(['url' => $signingUrl->getUrl()]);
     }
