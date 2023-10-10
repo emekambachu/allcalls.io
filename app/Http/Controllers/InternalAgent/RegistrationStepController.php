@@ -1655,12 +1655,13 @@ class RegistrationStepController extends Controller
 
     public function pdf()
     {
-        dd('here');
+
         $config = new Configuration();
         $config->setHost('<https://demo.docusign.net/restapi>');
         $config->addDefaultHeader("Authorization", "Bearer " . env('DOCUSIGN_API_KEY'));
 
         $envelopeApi = new EnvelopesApi();
+        dd( $envelopeApi);
 
 
         // Define the document
