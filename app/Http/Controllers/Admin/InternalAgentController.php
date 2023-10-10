@@ -372,12 +372,13 @@ class InternalAgentController extends Controller
             // Return the merged PDF as a downloadable response
             return Response::make($mergedPdfContent, 200, $headers);
         } catch (\Exception $e) {
+            dd( $e->getMessage());
             return response()->json([
                 'success' => false,
                 'errors' => $e->getMessage(),
             ], 400);
         }
-        
+
     }
 
     public function getQuestionPdf($id, $userId, $serialNo)
