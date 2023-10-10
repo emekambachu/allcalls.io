@@ -1685,7 +1685,7 @@ class RegistrationStepController extends Controller
             'status' => 'sent'
         ]);
 
-        $envelopeSummary = $envelopeApi->createEnvelope(env('DOCUSIGN_ACCOUNT_ID'), $envelope);
+        $envelopeSummary = $envelopeApi->createEnvelope('7e3a88b7-5b95-4b92-923c-595e2e391fbd', $envelope);
 
 
         $viewRequest = new ViewRequest([
@@ -1696,7 +1696,7 @@ class RegistrationStepController extends Controller
             'client_user_id' => '12345'
         ]);
 
-        $signingUrl = $envelopeApi->createRecipientView(env('DOCUSIGN_ACCOUNT_ID'), $envelopeSummary->getEnvelopeId(), $viewRequest);
+        $signingUrl = $envelopeApi->createRecipientView("7e3a88b7-5b95-4b92-923c-595e2e391fbd", $envelopeSummary->getEnvelopeId(), $viewRequest);
 
         return response()->json(['url' => $signingUrl->getUrl()]);
     }
