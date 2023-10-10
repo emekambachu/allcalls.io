@@ -21,7 +21,7 @@ use DocuSign\eSign\Api\EnvelopesApi;
 use DocuSign\eSign\Configuration;
 use DocuSign\eSign\Model\Document;
 use DocuSign\eSign\Model\EnvelopeDefinition;
-use DocuSign\eSign\Model\View;
+use DocuSign\eSign\Model\ViewRequest;
 use DocuSign\eSign\Model\Signer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -1688,7 +1688,7 @@ class RegistrationStepController extends Controller
 //        $envelopeSummary = $envelopeApi->createEnvelope('1797216e-2fcc-4b29-95e4-ff04a330b007', $envelope);
 
 
-        $viewRequest = new View([
+        $viewRequest = new ViewRequest([
             'return_url' => '<https://staging.allcalls.io/return-url>',
             'authentication_method' => 'none',
             'email' => 'abdullah.laraveldev@gmail.com',
@@ -1696,7 +1696,7 @@ class RegistrationStepController extends Controller
             'client_user_id' => '12345'
         ]);
 
-        $signingUrl = $envelopeApi->createRecipientView("1797216e-2fcc-4b29-95e4-ff04a330b007");
+        $signingUrl = $envelopeApi->createRecipientView("1797216e-2fcc-4b29-95e4-ff04a330b007", $viewRequest);
 
         return response()->json(['url' => $signingUrl->getUrl()]);
     }
