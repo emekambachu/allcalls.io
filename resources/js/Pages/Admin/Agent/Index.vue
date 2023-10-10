@@ -211,7 +211,7 @@ let viewPdfData = (agent) => {
                
                     <button class="ml-2" @click="viewPdfData(agent)"
                       v-show="agent.internal_agent_contract && agent.legacy_key === 1 && agent.contract_step === 10"
-                      title="Signature Authorization">
+                      title="Contract PDF">
                       <svg fill="#000000" class="w-4 h-4 " version="1.1" xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 237.783 237.783" xmlns:xlink="http://www.w3.org/1999/xlink"
                         enable-background="new 0 0 237.783 237.783">
