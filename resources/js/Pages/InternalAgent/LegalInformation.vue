@@ -248,7 +248,7 @@ let ChangeTabBack = () => {
                             class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">NO</label>
                     </div>
                     
-                    <a :href="route('admin.agent.legal.question.pdf', [form[information.id],userData.id, information.question] )" claass="text-blue-600  cursor-pointer" v-if="form[information.name] === 'YES' && page.props.auth.role === 'admin'&& userData.internal_agent_contract.legal_question" class="ml-5"><svg
+                    <a target="_blank" :href="route('admin.agent.legal.question.pdf', [form[information.id],userData.id, information.question] )" claass="text-blue-600  cursor-pointer" v-if="form[information.name] === 'YES' && page.props.auth.role === 'admin'&& userData.internal_agent_contract.legal_question" class="ml-5"><svg
                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="w-5 h-5 text-blue-600">
                             <path stroke-linecap="round" stroke-linejoin="round"

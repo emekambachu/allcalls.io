@@ -93,7 +93,6 @@
         }
 
         .signature-authorization {
-            page-break-before: always;
             page-break-inside: avoid;
         }
     </style>

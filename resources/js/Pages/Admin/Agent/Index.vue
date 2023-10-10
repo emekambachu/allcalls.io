@@ -221,7 +221,7 @@ let legaQuestionPdf = (id) => {
 
 
                     </button>
-                    <a :href="route('admin.agent.contract.pdf', agent.id)" v-show="agent.internal_agent_contract"
+                    <a target="_blank" :href="route('admin.agent.contract.pdf', agent.id)" v-show="agent.internal_agent_contract"
                       title="Legal Question PDF">
                       <svg class="w-5 h-5 " version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
                         xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 303.188 303.188" xml:space="preserve">
