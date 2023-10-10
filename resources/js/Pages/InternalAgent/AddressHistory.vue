@@ -146,7 +146,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
                 <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 ">Home
                     Address</label>
                 <div>
-                    <input type="text" v-model="form[history.address].address" id="default-input"
+                    <input :disabled="page.props.auth.role === 'admin'" type="text" v-model="form[history.address].address" id="default-input"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                     <span style="font-size: 14px;">Include Apt/Unit #</span>
                 </div>
@@ -161,7 +161,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">City
                 </label>
-                <input type="text" v-model="form[history.address].city" id="default-input"
+                <input :disabled="page.props.auth.role === 'admin'" type="text" v-model="form[history.address].city" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                 <div v-if="hasValidationErrors[history.address]">
                     <span v-if="hasValidationErrors[history.address].city" class="text-red-600">City is
@@ -172,7 +172,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">
                     State</label>
-                <select v-model="form[history.address].state" id="countries"
+                <select :disabled="page.props.auth.role === 'admin'" v-model="form[history.address].state" id="countries"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                     <option>Choose </option>
                     <option v-for="state in states" :value="state.id">{{ state.full_name }} </option>
@@ -185,7 +185,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
 
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">Zip Code</label>
-                <input type="number" @input="enforceFiveDigitInput('zip_code')" v-model="form[history.address].zip_code"
+                <input :disabled="page.props.auth.role === 'admin'" type="number" @input="enforceFiveDigitInput('zip_code')" v-model="form[history.address].zip_code"
                     id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                 <div v-if="hasValidationErrors[history.address]">
@@ -197,14 +197,14 @@ let enforceFiveDigitInput = (fieldName, val) => {
             <div>
                 <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 ">Move-In
                     Date</label>
-                <VueDatePicker v-model="form[history.address].move_in_date" format="dd-MMM-yyyy" :maxDate="maxDate"
+                <VueDatePicker :disabled="page.props.auth.role === 'admin'" v-model="form[history.address].move_in_date" format="dd-MMM-yyyy" :maxDate="maxDate"
                     auto-apply>
                 </VueDatePicker>
             </div>
             <div>
                 <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 ">Move-Out
                     Date</label>
-                <VueDatePicker v-model="form[history.address].move_out_date" format="dd-MMM-yyyy" :maxDate="maxDate"
+                <VueDatePicker :disabled="page.props.auth.role === 'admin'" v-model="form[history.address].move_out_date" format="dd-MMM-yyyy" :maxDate="maxDate"
                     auto-apply>
                 </VueDatePicker>
             </div>

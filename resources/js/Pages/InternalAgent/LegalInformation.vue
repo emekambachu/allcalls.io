@@ -234,14 +234,14 @@ let ChangeTabBack = () => {
 
                 <div class="flex mt-4">
                     <div class="flex items-center mr-4">
-                        <input :id="'default-radio-' + information.id + '-yes'" v-model="form[information.name]" value="YES"
+                        <input :disabled="page.props.auth.role === 'admin'" :id="'default-radio-' + information.id + '-yes'" v-model="form[information.name]" value="YES"
                             type="radio" :name="'question-' + information.id" :checked="form[information.name] === 'YES'"
                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
                         <label :for="'default-radio-' + information.id + '-yes'"
                             class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">YES</label>
                     </div>
                     <div class="flex items-center">
-                        <input :id="'default-radio-' + information.id + '-no'" v-model="form[information.name]" value="NO"
+                        <input :disabled="page.props.auth.role === 'admin'" :id="'default-radio-' + information.id + '-no'" v-model="form[information.name]" value="NO"
                             type="radio" :name="'question-' + information.id" :checked="form[information.name] === 'NO'"
                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
                         <label :for="'default-radio-' + information.id + '-no'"
@@ -258,7 +258,7 @@ let ChangeTabBack = () => {
                 </div>
 
 
-                <input type="text" v-show="form[information.name] === 'YES'" v-model="form[information.name + '_text']"
+                <input :disabled="page.props.auth.role === 'admin'" type="text" v-show="form[information.name] === 'YES'" v-model="form[information.name + '_text']"
                     class="bg-gray-50 mt-5 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <div v-if="firstStepErrors[information.name]" class="text-red-500 mt-3"
                     v-text="firstStepErrors[information.name][0]"></div>
