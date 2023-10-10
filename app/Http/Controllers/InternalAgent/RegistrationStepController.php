@@ -1686,6 +1686,8 @@ class RegistrationStepController extends Controller
 
         $envelopeSummary = $envelopeApi->createEnvelope(env('DOCUSIGN_ACCOUNT_ID'), $envelope);
 
+        dd($envelopeSummary);
+
         $viewRequest = new ViewRequest([
             'return_url' => '<http://allcalls.io.test/return-url>',
             'authentication_method' => 'none',
