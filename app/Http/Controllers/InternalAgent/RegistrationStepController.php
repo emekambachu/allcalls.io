@@ -1684,10 +1684,7 @@ class RegistrationStepController extends Controller
             'recipients' => ['signers' => [$signer]],
             'status' => 'sent'
         ]);
-
-        dd( $envelope);
-
-        $envelopeSummary = $envelopeApi->createEnvelope('1797216e-2fcc-4b29-95e4-ff04a330b007', $envelope);
+//        $envelopeSummary = $envelopeApi->createEnvelope('1797216e-2fcc-4b29-95e4-ff04a330b007', $envelope);
 
 
         $viewRequest = new ViewRequest([
@@ -1698,7 +1695,7 @@ class RegistrationStepController extends Controller
             'client_user_id' => '12345'
         ]);
 
-        $signingUrl = $envelopeApi->createRecipientView("1797216e-2fcc-4b29-95e4-ff04a330b007", $envelopeSummary->getEnvelopeId(), $viewRequest);
+        $signingUrl = $envelopeApi->createRecipientView("1797216e-2fcc-4b29-95e4-ff04a330b007", $viewRequest);
 
         return response()->json(['url' => $signingUrl->getUrl()]);
     }
