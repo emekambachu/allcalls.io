@@ -68,8 +68,8 @@ let openEdit = () => {
             </div>
             <div class="p-6">
                 <div v-if="ClientDetail">
-                    <span class="spnClassLocked" v-if="ClientDetail.unlocked == 1">Client is locked</span>
-                    <div class="flex justify-between items-center" v-if = "ClientDetail.unlocked != 1">
+                    <span class="spnClassLocked" v-if="ClientDetail.unlocked === 0">Client is locked</span>
+                    <div class="flex justify-between items-center" v-if="ClientDetail.unlocked !== 0">
                         <h4 class="text-2xl font-small text-custom-sky mb-2">Personal Details</h4>
 
                         <PrimaryButton @click="openEdit"> Edit Client </PrimaryButton>
@@ -85,11 +85,11 @@ let openEdit = () => {
                             <strong class="text-lg">Last Name: </strong>
                             {{ ClientDetail.last_name }}
                         </div>
-                        <div v-if = "ClientDetail.unlocked != 1">
+                        <div v-if = "ClientDetail.unlocked !== 1">
                             <strong class="text-lg">Date of Birth: </strong>
                             {{ ClientDetail.dob || "N/A" }}
                         </div>
-                        <div v-if = "ClientDetail.unlocked != 1"> 
+                        <div v-if = "ClientDetail.unlocked !== 1"> 
                             <strong class="text-lg">Status: </strong>
                             <span v-if="ClientDetail.status == 'not_sold'"
                                 class="bg-red-600 text-white text-xs px-2 py-1 rounded-2xl">Not Sold</span>
@@ -104,15 +104,15 @@ let openEdit = () => {
 
                     <h4 class="text-2xl font-small text-custom-sky mb-2">Contact Information</h4>
                     <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-10">
-                        <div v-if = "ClientDetail.unlocked != 1">
+                        <div v-if = "ClientDetail.unlocked !== 1">
                             <strong class="text-lg">Phone: </strong>
                             {{ ClientDetail.phone }}
                         </div>
-                        <div v-if = "ClientDetail.unlocked != 1">
+                        <div v-if = "ClientDetail.unlocked !== 1">
                             <strong class="text-lg">Email: </strong>
                             {{ ClientDetail.email || "N/A" }}
                         </div>
-                        <div v-if = "ClientDetail.unlocked != 1">
+                        <div v-if = "ClientDetail.unlocked !== 1">
                             <strong class="text-lg">Address: </strong>
                             {{ ClientDetail.address || "N/A" }}
                         </div>
@@ -120,7 +120,7 @@ let openEdit = () => {
                             <strong class="text-lg">State: </strong>
                             {{ ClientDetail.state || "N/A" }}
                         </div>
-                        <div v-if = "ClientDetail.unlocked != 1">
+                        <div v-if = "ClientDetail.unlocked !== 1">
                             <strong class="text-lg">Zip Code: </strong>
                             {{ ClientDetail.zipCode || "N/A" }}
                         </div>
