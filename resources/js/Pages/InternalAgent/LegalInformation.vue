@@ -152,6 +152,8 @@ if (props.userData.internal_agent_contract && props.userData.internal_agent_cont
     props.userData.internal_agent_contract.legal_question.forEach((question) => {
         const matchingLegalInfo = LegalInformation.value.find((info) => info.name === question.name);
         if (matchingLegalInfo) {
+            // console.log('question',question);
+            form.value[matchingLegalInfo.id] = question.id
             form.value[matchingLegalInfo.name] = question.value;
             form.value[matchingLegalInfo.name + '_text'] = question.description
         }
@@ -245,7 +247,14 @@ let ChangeTabBack = () => {
                         <label :for="'default-radio-' + information.id + '-no'"
                             class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">NO</label>
                     </div>
-
+                    
+                    <a :href="route('admin.agent.legal.question.pdf', [form[information.id],userData.id, information.question] )" claass="text-blue-600  cursor-pointer" v-if="form[information.name] === 'YES' && page.props.auth.role === 'admin'&& userData.internal_agent_contract.legal_question" class="ml-5"><svg
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-5 h-5 text-blue-600">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                        </svg>
+                    </a>
                 </div>
 
 
@@ -278,5 +287,4 @@ let ChangeTabBack = () => {
 
             </div>
         </div>
-    </div>
-</template>
+</div></template>
