@@ -1,11 +1,11 @@
 <script setup>
 import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
 import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
+import Multiselect from "@vueform/multiselect";
 let page = usePage();
 let props = defineProps({
-    previewData: Object
+    userData: Object,
 });
-console.log('previewData', props.previewData);
 let LegalInformation = ref([
     {
         id: 43,
@@ -301,40 +301,68 @@ let LegalInformation = ref([
         heading: 'Do you have any unresolved matters pending with the Internal Revenue Service, or other taxing authority?',
         question: '19'
     },
-
+    {
+        id: 85,
+        name: 'contract_commission_checkbox_20',
+        description: 'contract_commission_checkbox_20_text',
+        heading: 'Have you SIGNED CONTRACTS or BEEN PAID COMMISSIONS with any insurance carriers in the last 6 months?',
+        question: '20'
+    },
 
 ]);
-
+let contract_commissions = ref([
+    'Aetna/Accendo',
+    'Aig',
+    'American Amicable',
+    'Americo',
+    'Ameritas',
+    'Assurant',
+    'Athene',
+    'Columbian Financial Group',
+    'Columbus Life',
+    'Ethos',
+    'Fidelity and Guaranty Life',
+    'Foresters',
+    'Gerber Life',
+    'Government Personnel Mutual',
+    'Great Western',
+    'John Hancock',
+    'Mutual Of Omaha',
+    'National Life Group',
+    'Occidental',
+    'Prosperity Life',
+    'Royal Neighbors',
+    'TransAmerica'
+]);
 let form = ref({
-
+    contract_commission_checkbox_20_text: [],
 })
 let date = new Date()
 let dateFormat = (data) => {
     if (data) {
-        const day = data.getDate().toString().padStart(2, "0"); // Add leading zero if needed
-        const month = (data.getMonth() + 1).toString().padStart(2, "0"); // Month is zero-based, so add 1
-        const year = data.getFullYear();
+        let date = new Date(data)
+        const day = date.getDate().toString().padStart(2, "0"); // Add leading zero if needed
+        const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Month is zero-based, so add 1
+        const year = date.getFullYear();
 
         // Create the formatted date string
         return `${day}/${month}/${year}`;
     }
 
 }
-if (props.previewData) {
-    const keys = Object.keys(props.previewData);
-    keys.forEach(key => {
-        const value = props.previewData[key];
-        const matchingLegalInfo = LegalInformation.value.find((info) => info.name === key);
-        if (matchingLegalInfo) {
-            form.value[matchingLegalInfo.name] = value;
+if (props.userData.internal_agent_contract && props.userData.internal_agent_contract.legal_question) {
+    props.userData.internal_agent_contract.legal_question.forEach((question) => {
+        const matchingLegalInfo = LegalInformation.value.find((info) => info.name === question.name);
+        if (matchingLegalInfo && question.name != 'contract_commission_checkbox_20') {
+            form.value[matchingLegalInfo.name] = question.value;
+            form.value[matchingLegalInfo.name + '_text'] = question.description;
+        } else if (question.name === 'contract_commission_checkbox_20') {
+            form.value[matchingLegalInfo.name] = question.value;
+            if (question.value === "YES") {
+                form.value[matchingLegalInfo.name + '_text'] = question.description.split(',');
+            }
         }
-        const matchingLegalInfo2 = LegalInformation.value.find((info) => info.description === key);
-        if (matchingLegalInfo2) {
-            form.value[matchingLegalInfo2.name + '_text'] = value
-        }
-        // console.log(key);
     });
-
 }
 
 </script>
@@ -345,93 +373,102 @@ if (props.previewData) {
         </h1>
         <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 bg-white rounded-lg shadow-md gap-4">
             <div class="bg-white  p-4">
-                <p class="text-gray-600"><strong>Last Name:</strong> {{ previewData?.last_name }}</p>
-                <p class="text-gray-600"><strong>First Name:</strong> {{ previewData?.first_name }}</p>
-                <p class="text-gray-600"><strong>Middle Name:</strong> {{ previewData?.middle_name }}
+                <p class="text-gray-600"><strong>Last Name:</strong> {{ userData.internal_agent_contract?.last_name }}</p>
+                <p class="text-gray-600"><strong>First Name:</strong> {{ userData.internal_agent_contract?.first_name }}</p>
+                <p class="text-gray-600"><strong>Middle Name:</strong> {{ userData.internal_agent_contract?.middle_name }}
                 </p>
                 <p class="text-gray-600"><strong>Social Security Number (SSN):</strong> {{
-                    previewData?.ssn }}</p>
-                <p class="text-gray-600"><strong>Gender:</strong> {{ previewData?.gender }}</p>
-                <p class="text-gray-600"><strong>Date of Birth:</strong> {{dateFormat(previewData?.dob)  }}</p>
-                <p class="text-gray-600"><strong>Cell Phone: </strong> {{ previewData?.cell_phone }}</p>
-                <p class="text-gray-600"><strong>Home Phone: </strong> {{ previewData?.home_phone }}</p>
+                    userData.internal_agent_contract?.ssn }}</p>
+                <p class="text-gray-600"><strong>Gender:</strong> {{ userData.internal_agent_contract?.gender }}</p>
+                <p class="text-gray-600"><strong>Date of Birth:</strong> {{
+                    dateFormat(userData.internal_agent_contract?.dob) }}</p>
+                <p class="text-gray-600"><strong>Cell Phone: </strong> {{ userData.internal_agent_contract?.cell_phone }}
+                </p>
+                <p class="text-gray-600"><strong>Home Phone: </strong> {{ userData.internal_agent_contract?.home_phone }}
+                </p>
                 <!-- Add more data fields as needed -->
             </div>
             <div class="bg-white  p-4">
 
-                <p class="text-gray-600"><strong>Fax: </strong> {{ previewData?.fax }}</p>
-                <p class="text-gray-600"><strong>Email: </strong> {{ previewData?.email }}</p>
+                <p class="text-gray-600"><strong>Fax: </strong> {{ userData.internal_agent_contract?.fax }}</p>
+                <p class="text-gray-600"><strong>Email: </strong> {{ userData.internal_agent_contract?.email }}</p>
                 <p class="text-gray-600"><strong>Married Status: </strong> {{
-                    previewData?.marital_status }}</p>
+                    userData.internal_agent_contract?.marital_status }}</p>
                 <p class="text-gray-600"><strong>Drivers License: </strong> {{
-                    previewData?.driver_license_no }}</p>
+                    userData.internal_agent_contract?.driver_license_no }}</p>
                 <p class="text-gray-600"><strong>Driver Licence State: </strong> {{
-                    previewData?.driver_license_state }}</p>
+                    userData.internal_agent_contract?.get_driver_license_state.full_name }}</p>
                 <p class="text-gray-600"><strong>Current Address (Residence): </strong> {{
-                    previewData?.address }}</p>
-                <p class="text-gray-600"><strong>City: </strong> {{ previewData?.city }}</p>
-                <p class="text-gray-600"><strong>State: </strong> {{ previewData?.state }}</p>
+                    userData.internal_agent_contract?.address }}</p>
+                <p class="text-gray-600"><strong>City: </strong> {{ userData.internal_agent_contract?.city }}</p>
+                <p class="text-gray-600"><strong>State: </strong> {{ userData.internal_agent_contract?.get_state?.full_name
+                }}</p>
             </div>
             <div class="bg-white  p-4">
-                <p class="text-gray-600"><strong>Zip Code: </strong> {{ previewData?.zip }}</p>
-                <p class="text-gray-600"><strong>Move-In Date: </strong> {{ dateFormat(previewData?.move_in_date)  }}
+                <p class="text-gray-600"><strong>Zip Code: </strong> {{ userData.internal_agent_contract?.zip }}</p>
+                <p class="text-gray-600"><strong>Move-In Date: </strong> {{
+                    dateFormat(userData.internal_agent_contract?.move_in_date) }}
                 </p>
                 <p class="text-gray-600"><strong>Mailing Address (If Diffrent From Residence): </strong> {{
-                    previewData?.move_in_address }}</p>
-                <p class="text-gray-600"><strong>City: </strong> {{ previewData?.move_in_city }}</p>
-                <p class="text-gray-600"><strong>State: </strong> {{ previewData?.move_in_state }}</p>
-                <p class="text-gray-600"><strong>Zip Code: </strong> {{ previewData?.move_in_zip }}</p>
+                    userData.internal_agent_contract?.move_in_address }}</p>
+                <p class="text-gray-600"><strong>City: </strong> {{ userData.internal_agent_contract?.move_in_city }}</p>
+                <p class="text-gray-600"><strong>State: </strong> {{
+                    userData.internal_agent_contract?.get_move_in_state?.full_name }}</p>
+                <p class="text-gray-600"><strong>Zip Code: </strong> {{ userData.internal_agent_contract?.move_in_zip }}</p>
             </div>
         </div>
         <hr>
         <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 bg-white rounded-lg shadow-md gap-4">
             <div class="bg-white  p-4">
                 <p class="text-gray-600"><strong>Resident Insurance License: </strong> {{
-                    previewData?.resident_insu_license_no }}</p>
+                    userData.internal_agent_contract?.resident_insu_license_no }}</p>
             </div>
             <div class="bg-white  p-4">
                 <p class="text-gray-600"><strong>Resident Insurance License State: </strong> {{
-                    previewData?.resident_insu_license_state }}</p>
+                    userData.internal_agent_contract?.get_resident_ins_license_state?.full_name }}</p>
             </div>
             <div class="bg-white  p-4">
                 <p class="text-gray-600"><strong>Doing Business As: </strong> {{
-                    previewData?.doing_business_as }}</p>
+                    userData.internal_agent_contract?.doing_business_as }}</p>
             </div>
         </div>
         <hr>
         <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 bg-white rounded-lg shadow-md gap-4">
             <!-- Repeat this card for each record -->
             <div class="bg-white  p-4">
-                <p class="text-gray-600"><strong>Business Name: </strong> {{ previewData?.business_name
+                <p class="text-gray-600"><strong>Business Name: </strong> {{ userData.internal_agent_contract?.business_name
                 }}</p>
-                <p class="text-gray-600"><strong>Tax ID: </strong> {{ previewData?.business_tax_id }}
+                <p class="text-gray-600"><strong>Tax ID: </strong> {{ userData.internal_agent_contract?.business_tax_id }}
                 </p>
                 <p class="text-gray-600"><strong>Principle Agent Name: </strong> {{
-                    previewData?.business_agent_name }}</p>
+                    userData.internal_agent_contract?.business_agent_name }}</p>
                 <p class="text-gray-600"><strong>Priciple Agent Title: </strong> {{
-                    previewData?.business_agent_title }}</p>
+                    userData.internal_agent_contract?.business_agent_title }}</p>
                 <p class="text-gray-600"><strong>Business Insurance Licence: </strong> {{
-                    previewData?.business_insu_license_no }}</p>
-                <p class="text-gray-600"><strong>Cell Fax: </strong> {{ previewData?.business_office_fax
+                    userData.internal_agent_contract?.business_insu_license_no }}</p>
+                <p class="text-gray-600"><strong>Cell Fax: </strong> {{
+                    userData.internal_agent_contract?.business_office_fax
                 }}</p>
             </div>
             <div class="bg-white  p-4">
                 <p class="text-gray-600"><strong>Office Phone: </strong> {{
-                    previewData?.business_office_phone }}</p>
-                <p class="text-gray-600"><strong>Email: </strong> {{ previewData?.business_email }}</p>
-                <p class="text-gray-600"><strong>Website: </strong> {{ previewData?.business_website }}
+                    userData.internal_agent_contract?.business_office_phone }}</p>
+                <p class="text-gray-600"><strong>Email: </strong> {{ userData.internal_agent_contract?.business_email }}</p>
+                <p class="text-gray-600"><strong>Website: </strong> {{ userData.internal_agent_contract?.business_website }}
                 </p>
                 <p class="text-gray-600"><strong>Business Address: </strong> {{
-                    previewData?.business_address }}</p>
-                <p class="text-gray-600"><strong>City: </strong> {{ previewData?.business_city }}</p>
-                <p class="text-gray-600"><strong>State: </strong> {{ previewData?.business_state }}</p>
+                    userData.internal_agent_contract?.business_address }}</p>
+                <p class="text-gray-600"><strong>City: </strong> {{ userData.internal_agent_contract?.business_city }}</p>
+                <p class="text-gray-600"><strong>State: </strong> {{
+                    userData.internal_agent_contract?.get_business_state?.full_name }}</p>
             </div>
             <div class="bg-white  p-4">
-                <p class="text-gray-600"><strong>Zip Code: </strong> {{ previewData?.business_zip }}</p>
+                <p class="text-gray-600"><strong>Zip Code: </strong> {{ userData.internal_agent_contract?.business_zip }}
+                </p>
                 <p class="text-gray-600"><strong>Move-In Date: </strong> {{
-                    dateFormat(previewData?.business_move_in_date ) }}</p>
+                    dateFormat(userData.internal_agent_contract?.business_move_in_date) }}</p>
                 <p class="text-gray-600"><strong>Company Type: </strong> {{
-                    previewData?.business_company_type }}</p>
+                    userData.internal_agent_contract?.business_company_type }}</p>
             </div>
         </div>
         <hr>
@@ -475,9 +512,18 @@ if (props.previewData) {
                         </div>
 
 
-                        <input type="text" disabled v-show="form[information.name] === 'YES'"
+                        <input type="text" disabled
+                            v-show="form[information.name] === 'YES' && information.name != 'contract_commission_checkbox_20'"
                             v-model="form[information.name + '_text']"
                             class="bg-gray-50 mt-5 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+
+                        <div class="mt-5">
+                            <Multiselect
+                                v-if="form[information.name] === 'YES' && information.name === 'contract_commission_checkbox_20'"
+                                :options="contract_commissions" disabled v-model="form[information.name + '_text']"
+                                track-by="value" label="label" mode="tags" :close-on-select="false" placeholder="Choose">
+                            </Multiselect>
+                        </div>
 
                     </div>
                 </div>
@@ -488,8 +534,9 @@ if (props.previewData) {
         </div>
         <div class=" flex bg-white rounded-lg  gap-4 mt-4 mb-4">
             <div style="padding: 10px; width: 30%; background: #ebe8e8;">
-                <img class="mb-5" :src="previewData.accompanying_sign" alt="signature" />
-                <div> <strong class="mx-2">Date: </strong> {{ dateFormat(date) }}</div>
+                <img class="mb-5" :src="userData.internal_agent_contract?.get_question_sign?.sign_url" alt="signature" />
+                <div> <strong class="mx-2">Date: </strong> {{
+                    dateFormat(userData.internal_agent_contract?.get_question_sign?.created_at) }}</div>
             </div>
         </div>
         <hr class="mb-5">
@@ -497,139 +544,53 @@ if (props.previewData) {
         <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
             Your Address History for the Past 7 Years
         </h1>
-        <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 bg-white rounded-lg shadow-md gap-4">
-
-
-            <div v-if="previewData?.history_address1" class="bg-white  p-4">
-                <p class="text-gray-600"><strong>Home Address:</strong> {{ previewData.history_address1.address }}</p>
-                <p class="text-gray-600"><strong>City:</strong> {{ previewData.history_address1.city }}</p>
-                <p class="text-gray-600"><strong>State:</strong> {{ previewData.history_address1.state }}
+        <div v-if="userData.internal_agent_contract.addresses.length > 0"
+            class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 bg-white rounded-lg shadow-md gap-4">
+            <div v-for="address in userData.internal_agent_contract?.addresses" class="bg-white  p-4">
+                <p class="text-gray-600"><strong>Home Address:</strong> {{ address.address }}</p>
+                <p class="text-gray-600"><strong>City:</strong> {{ address.city }}</p>
+                <p class="text-gray-600"><strong>State:</strong> {{ address.get_state?.full_name }}
                 </p>
                 <p class="text-gray-600"><strong>Zip Code:</strong> {{
-                    previewData.history_address1.zip_code }}</p>
+                    address.zip }}</p>
                 <p class="text-gray-600"><strong>Move-In Date:</strong> {{
-                    dateFormat(previewData.history_address1.move_in_date) }}</p>
+                    dateFormat(address.move_in_date) }}</p>
                 <p class="text-gray-600"><strong>Move-Out Date:</strong> {{
-                    dateFormat(previewData.history_address1.move_out_date) }}
-                </p>
-                <!-- Add more data fields as needed -->
-            </div>
-            <div v-if="previewData?.history_address2" class="bg-white  p-4">
-                <p class="text-gray-600"><strong>Home Address:</strong> {{ previewData.history_address2.address }}</p>
-                <p class="text-gray-600"><strong>City:</strong> {{ previewData.history_address2.city }}</p>
-                <p class="text-gray-600"><strong>State:</strong> {{ previewData.history_address2.state }}
-                </p>
-                <p class="text-gray-600"><strong>Zip Code:</strong> {{
-                    previewData.history_address2.zip_code }}</p>
-                <p class="text-gray-600"><strong>Move-In Date:</strong> {{
-                    dateFormat(previewData.history_address2.move_in_date) }}</p>
-                <p class="text-gray-600"><strong>Move-Out Date:</strong> {{
-                    dateFormat(previewData.history_address2.move_out_date) }}
-                </p>
-                <!-- Add more data fields as needed -->
-            </div>
-            <div v-if="previewData?.history_address3" class="bg-white  p-4">
-                <p class="text-gray-600"><strong>Home Address:</strong> {{ previewData.history_address3.address }}</p>
-                <p class="text-gray-600"><strong>City:</strong> {{ previewData.history_address3.city }}</p>
-                <p class="text-gray-600"><strong>State:</strong> {{ previewData.history_address3.state }}
-                </p>
-                <p class="text-gray-600"><strong>Zip Code:</strong> {{
-                    previewData.history_address3.zip_code }}</p>
-                <p class="text-gray-600"><strong>Move-In Date:</strong> {{
-                    dateFormat(previewData.history_address3.move_in_date) }}</p>
-                <p class="text-gray-600"><strong>Move-Out Date:</strong> {{
-                    dateFormat(previewData.history_address3.move_out_date) }}
-                </p>
-                <!-- Add more data fields as needed -->
-            </div>
-
-            <div v-if="previewData?.history_address4" class="bg-white  p-4">
-                <p class="text-gray-600"><strong>Home Address:</strong> {{ previewData.history_address4.address }}</p>
-                <p class="text-gray-600"><strong>City:</strong> {{ previewData.history_address4.city }}</p>
-                <p class="text-gray-600"><strong>State:</strong> {{ previewData.history_address4.state }}
-                </p>
-                <p class="text-gray-600"><strong>Zip Code:</strong> {{
-                    previewData.history_address4.zip_code }}</p>
-                <p class="text-gray-600"><strong>Move-In Date:</strong> {{
-                    dateFormat(previewData.history_address4.move_in_date) }}</p>
-                <p class="text-gray-600"><strong>Move-Out Date:</strong> {{
-                    dateFormat(previewData.history_address4.move_out_date) }}
-                </p>
-                <!-- Add more data fields as needed -->
-            </div>
-
-            <div v-if="previewData?.history_address5" class="bg-white  p-4">
-                <p class="text-gray-600"><strong>Home Address:</strong> {{ previewData.history_address5.address }}</p>
-                <p class="text-gray-600"><strong>City:</strong> {{ previewData.history_address5.city }}</p>
-                <p class="text-gray-600"><strong>State:</strong> {{ previewData.history_address5.state }}
-                </p>
-                <p class="text-gray-600"><strong>Zip Code:</strong> {{
-                    previewData.history_address5.zip_code }}</p>
-                <p class="text-gray-600"><strong>Move-In Date:</strong> {{
-                    dateFormat(previewData.history_address5.move_in_date) }}</p>
-                <p class="text-gray-600"><strong>Move-Out Date:</strong> {{
-                    dateFormat(previewData.history_address5.move_out_date) }}
-                </p>
-                <!-- Add more data fields as needed -->
-            </div>
-
-            <div v-if="previewData?.history_address6" class="bg-white  p-4">
-                <p class="text-gray-600"><strong>Home Address:</strong> {{ previewData.history_address6.address }}</p>
-                <p class="text-gray-600"><strong>City:</strong> {{ previewData.history_address6.city }}</p>
-                <p class="text-gray-600"><strong>State:</strong> {{ previewData.history_address6.state }}
-                </p>
-                <p class="text-gray-600"><strong>Zip Code:</strong> {{
-                    previewData.history_address6.zip }}</p>
-                <p class="text-gray-600"><strong>Move-In Date:</strong> {{
-                    dateFormat(previewData.history_address6.move_in_date) }}</p>
-                <p class="text-gray-600"><strong>Move-Out Date:</strong> {{
-                    dateFormat(previewData.history_address6.move_out_date) }}
-                </p>
-                <!-- Add more data fields as needed -->
-            </div>
-            <div v-if="previewData?.history_address7" class="bg-white  p-4">
-                <p class="text-gray-600"><strong>Home Address:</strong> {{ previewData.history_address7.address }}</p>
-                <p class="text-gray-600"><strong>City:</strong> {{ previewData.history_address7.city }}</p>
-                <p class="text-gray-600"><strong>State:</strong> {{ previewData.history_address7.state }}
-                </p>
-                <p class="text-gray-600"><strong>Zip Code:</strong> {{
-                    previewData.history_address7.zip_code }}</p>
-                <p class="text-gray-600"><strong>Move-In Date:</strong> {{
-                    dateFormat(previewData.history_address7.move_in_date) }}</p>
-                <p class="text-gray-600"><strong>Move-Out Date:</strong>
-                    {{ dateFormat(previewData.history_address7.move_out_date) }}
+                    dateFormat(address.move_out_date) }}
                 </p>
                 <!-- Add more data fields as needed -->
             </div>
         </div>
+        <div class="text-center" v-else>No record Found.</div>
         <h1 style="background-color: #134576;" class="mb-4 mt-4	text-center rounded-md py-2 text-white">
             Additional Information
         </h1>
         <div class="grid grid-cols-2 p-4 md:grid-cols-2 lg:grid-cols-3 bg-white rounded-lg shadow-md gap-4">
             <div class="bg-white  ">
                 <p class="text-gray-600"><strong>Resident Country:</strong> {{
-                    previewData?.resident_country
+                    userData.internal_agent_contract?.additional_info?.resident_country
                 }}</p>
             </div>
 
             <div class="bg-white  ">
                 <p class="text-gray-600"><strong>Do you own your home?:</strong> {{
-                    previewData?.resident_your_home }}</p>
+                    userData.internal_agent_contract?.additional_info?.resident_your_home }}</p>
             </div>
             <div class="bg-white  ">
                 <p class="text-gray-600"><strong>City of Birth:</strong> {{
-                    previewData?.resident_city }}
+                    userData.internal_agent_contract?.additional_info?.resident_city }}
                 </p>
             </div>
-        <div class="bg-white  ">
-            <p class="text-gray-600"><strong>State of Birth:</strong> {{
-                previewData?.resident_state }}</p>
-        </div>
-        <div class="bg-white  ">
-            <p class="text-gray-600"><strong>Maiden Name:</strong> {{
-                previewData?.resident_maiden_name }}</p>
+            <div class="bg-white  ">
+                <p class="text-gray-600"><strong>State of Birth:</strong> {{
+                    userData.internal_agent_contract?.additional_info?.get_state?.full_name }}</p>
+            </div>
+            <div class="bg-white  ">
+                <p class="text-gray-600"><strong>Maiden Name:</strong> {{
+                    userData.internal_agent_contract?.additional_info?.resident_maiden_name }}</p>
+            </div>
         </div>
     </div>
-</div></template>
+</template>
 <script>
 </script>

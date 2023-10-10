@@ -1,28 +1,4 @@
-<style scoped>
-#signature {
-    border: solid 1px lightgray;
-    padding: 10px;
-    border-radius: 10px;
 
-}
-
-#signature canvas {
-    padding: 5px;
-    height: 60px !important;
-}
-
-.container {
-    width: "100%";
-
-}
-
-.buttons {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    margin-top: 8px;
-}
-</style>
 <template>
     <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
         Legal Questions
@@ -61,8 +37,17 @@
                             class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">NO</label>
                     </div>
                 </div>
-                <input type="text" v-show="form[information.name] === 'YES'" v-model="form[information.name + '_text']"
+                <input type="text"
+                    v-show="form[information.name] === 'YES' && information.name != 'contract_commission_checkbox_20'"
+                    v-model="form[information.name + '_text']"
                     class="bg-gray-50 mt-5 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <div class="mt-5">
+                    <Multiselect
+                        v-show="form[information.name] === 'YES' && information.name === 'contract_commission_checkbox_20'"
+                        v-model="form[information.name + '_text']" :options="contract_commissions" track-by="value"
+                        label="label" mode="tags" :close-on-select="false" placeholder="Choose">
+                    </Multiselect>
+                </div>
                 <div v-if="firstStepErrors[information.name]" class="text-red-500 mt-3"
                     v-text="firstStepErrors[information.name][0]"></div>
             </div>
@@ -75,57 +60,8 @@
                 any information changes, I will notify my agency office within 5 days of such change. Further, I understand
                 that my agency may contact me when I need to answer carrier-specific questions.</strong></p>
     </div>
-    <div class="mx-auto mb-5" style="width: 70%;">
-        <hr class="w-100 h-1 my-4 bg-gray-600 border-0 rounded dark:bg-gray-700">
-        <p class="text-center">
-            By signing below, l hereby authorize the Company to initiate credit entries and, if
-            necessary, adjustments for credit entries in error to the checking and/or savings account
-            indicated on this form. This authority is to remain in full effect until the Company has
-            received written notice from me for its termination. I understand that this authorization
-            is subject to the terms of any agent or representative contract, commission agreement,
-            or loan agreement that I may have now, or in the future, with the Company.
-
-        </p>
-    </div>
-    <div v-if="page.auth.role === 'admin'">
-        <div class=" flex bg-white rounded-lg justify-end  gap-4 mt-4 mb-4">
-            <div style="padding: 10px; width: 30%; background: #ebe8e8;">
-                <img width="250" height="100" class="mb-5"
-                    :src="userData.internal_agent_contract.get_question_sign.sign_url" alt="signature" />
-                <div> <strong class="mx-2">Date: </strong> {{ dateFormat(userData.internal_agent_contract.get_question_sign.created_at) }}</div>
-            </div>
-        </div>
-    </div>
-    <div v-if="page.auth.role === 'internal-agent'" style="width: 70%;" class="container mx-auto p-5 flex justify-between">
 
 
-        <div class="" style="width: 60%;">
-            <!-- Signature Box -->
-            <div class=" mb-10 ">
-                <div>Signature: </div>
-                <!-- Signature Pad Component -->
-
-                <!-- Undo Button (if needed) -->
-
-
-                <VueSignaturePad id="signature" ref="signature2Pad" :options="options" />
-
-                <button @click="undo" class=" button-custom mt-2 px-2 py-2 rounded-md">
-                    Undo
-                </button>
-                <p v-if="sigError" class="text-red-500 mt-2">{{ sigError }}</p>
-            </div>
-        </div>
-
-
-        <!-- Right Side (Date) -->
-        <div class="w-30 " style="margin-top: 73px;">
-            <div class="mb-2"><strong>Date:</strong> <span class="mx-2">{{ dateFormat(date) }}</span></div>
-            <!-- Underscore -->
-            <div style="width: 200px;" class="border-b border-black "></div>
-        </div>
-
-    </div>
     <div class="px-5 pb-6">
         <div class="flex justify-between flex-wrap">
             <div class="mt-4">
@@ -139,8 +75,9 @@
                 </button>
             </div>
             <div class="mt-4">
-                <button type="button" @click="ChangeTab" class="button-custom px-3 py-2 rounded-md">
-                    Next
+                <button type="button" :class="{ 'opacity-25': isLoading }" :disabled="isLoading" @click="ChangeTab"
+                    class="button-custom px-3 py-2 rounded-md">
+                    <global-spinner :spinner="isLoading" /> Next
                 </button>
 
             </div>
@@ -148,15 +85,13 @@
     </div>
 </template>
 <script>
+import Multiselect from "@vueform/multiselect";
 export default {
+    components: { Multiselect },
     name: "App",
     data: () => ({
-        options: {
-            penColor: "black",
-        },
         date: new Date(),
         isLoading: false,
-        sigError: '',
         LegalInformation: [
             {
                 id: 23,
@@ -278,45 +213,60 @@ export default {
                 heading: 'Do you have any unresolved matters pending with the Internal Revenue Service, or other taxing authority?',
                 question: '19'
             },
+            {
+                id: 43,
+                name: 'contract_commission_checkbox_20',
+                heading: 'Have you SIGNED CONTRACTS or BEEN PAID COMMISSIONS with any insurance carriers in the last 6 months?',
+                question: '20'
+            },
         ],
-        form: {},
+        form: {
+            contract_commission_checkbox_20_text: [],
+        },
         accompanying_sign: null,
+        contract_commissions: [
+            'Aetna/Accendo',
+            'Aig',
+            'American Amicable',
+            'Americo',
+            'Ameritas',
+            'Assurant',
+            'Athene',
+            'Columbian Financial Group',
+            'Columbus Life',
+            'Ethos',
+            'Fidelity and Guaranty Life',
+            'Foresters',
+            'Gerber Life',
+            'Government Personnel Mutual',
+            'Great Western',
+            'John Hancock',
+            'Mutual Of Omaha',
+            'National Life Group',
+            'Occidental',
+            'Prosperity Life',
+            'Royal Neighbors',
+            'TransAmerica'
+        ]
 
     }),
     mounted() {
-        if (this.page.auth.role === 'internal-agent') {
-            const canvasElement = this.$refs.signature2Pad.$el.querySelector('canvas');
-            // console.log('canvasElement',canvasElement);
-            canvasElement.width = 400; // Set the width you desire
-            canvasElement.height = 100; // Set the height you desire
-        }
-
-
-        if (this.page.auth.role === 'admin' && this.userData.internal_agent_contract) {
+        if (this.userData.internal_agent_contract && this.userData.internal_agent_contract.legal_question) {
             this.userData.internal_agent_contract.legal_question.forEach((question) => {
                 const matchingLegalInfo = this.LegalInformation.find((info) => info.name === question.name);
-                if (matchingLegalInfo) {
+                if (matchingLegalInfo && question.name != 'contract_commission_checkbox_20') {
                     this.form[matchingLegalInfo.name] = question.value;
                     this.form[matchingLegalInfo.name + '_text'] = question.description
+                } else if (question.name === 'contract_commission_checkbox_20') {
+                    this.form[matchingLegalInfo.name] = question.value;
+                    if (question.value === "YES") {
+                        this.form[matchingLegalInfo.name + '_text'] = question.description.split(',');
+                    }
                 }
             });
         }
-
     },
     methods: {
-        undo() {
-            this.$refs.signature2Pad.undoSignature();
-        },
-
-        // dateFormat(date) {
-        //     console.log('date', date);
-        //     const day = date.getDate().toString().padStart(2, "0"); // Add leading zero if needed
-        //     const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Month is zero-based, so add 1
-        //     const year = date.getFullYear();
-
-        //     // Create the formatted date string
-        //     return `${day}/${month}/${year}`;
-        // },
         dateFormat(dateString) {
             const dateObj = new Date(dateString);
 
@@ -328,45 +278,52 @@ export default {
         },
 
         ChangeTab() {
-            for (const key in this.firstStepErrors) {
-                if (this.firstStepErrors.hasOwnProperty(key)) {
-                    this.firstStepErrors[key] = [];
+            if (this.page.auth.role === 'admin') {
+                this.$emit("changeTab");
+            } else {
+                for (const key in this.firstStepErrors) {
+                    if (this.firstStepErrors.hasOwnProperty(key)) {
+                        this.firstStepErrors[key] = [];
+                    }
                 }
-            }
 
-            if (this.page.auth.role === 'internal-agent') {
-                for (const information of this.LegalInformation) {
-                    let checboxValue = this.form[information.name];
-                    if (!this.form[information.name]) {
-                        this.firstStepErrors[information.name] = [`This field is required.`];
-                    } else if (checboxValue === "YES") {
-                        if (!this.form[information.name + '_text']) {
+                if (this.page.auth.role === 'internal-agent') {
+                    for (const information of this.LegalInformation) {
+                        let checboxValue = this.form[information.name];
+                        if (!this.form[information.name]) {
                             this.firstStepErrors[information.name] = [`This field is required.`];
+                        } else if (checboxValue === "YES") {
+                            if (!this.form[information.name + '_text']) {
+                                this.firstStepErrors[information.name] = [`This field is required.`];
+                            }
+                            if (this.form[information.name + '_text'] === this.form.contract_commission_checkbox_20_text) {
+                                if (this.form.contract_commission_checkbox_20_text.length === 0) {
+                                    this.firstStepErrors[information.name] = [`This field is required.`];
+                                }
+                            }
                         }
                     }
                 }
-            }
 
-            const hasErrors = Object.values(this.firstStepErrors).some(errors => errors.length > 0);
+                const hasErrors = Object.values(this.firstStepErrors).some(errors => errors.length > 0);
 
-            if (!hasErrors) {
-                if (this.page.auth.role === 'internal-agent') {
-                    const { isEmpty, data } = this.$refs.signature2Pad.saveSignature();
-                    if (!isEmpty) {
-                        this.$emit("changeTab", { form: this.form, accompanying_sign: data });
+                if (!hasErrors) {
+                    if (this.page.auth.role === 'internal-agent') {
+                        this.$emit("legalFormDataStep2", this.form);
+                        // emits("legalFormDataStep2", this.form);
                         this.firstStepErrors = {}; // Clear the errors by assigning a new empty object
+
                     } else {
-                        this.sigError = 'Please provide a signature.';
+                        this.$emit("changeTab");
                     }
+
+
                 } else {
-                    this.$emit("changeTab");
+                    var element = document.getElementById("modal_main_id");
+                    element.scrollIntoView();
                 }
-
-
-            } else {
-                var element = document.getElementById("modal_main_id");
-                element.scrollIntoView();
             }
+
         },
         ChangeTabBack() {
             this.$emit("goback");
@@ -377,11 +334,35 @@ export default {
         firstStepErrors: Object,
         userData: Object,
         page: Object,
-
+        isLoading: Boolean,
     },
 
 };
 </script>
+
+<style src="@vueform/multiselect/themes/default.css"></style>
+<style>
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.multiselect {
+    color: black !important;
+    border: none;
+    border-radius: 10px;
+}
+
+.multiselect-wrapper {
+    background-color: #d7d7d7;
+    border-radius: 5px;
+}
+</style>
 
 
 

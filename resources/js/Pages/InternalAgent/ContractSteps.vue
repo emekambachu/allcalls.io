@@ -18,6 +18,7 @@ import SingnaturePad from '@/Pages/InternalAgent/SingnaturePad.vue'
 
 import { toaster } from "@/helper.js";
 import { triggerRef } from "vue";
+import { faTurkishLira } from "@fortawesome/free-solid-svg-icons";
 
 
 let page = usePage();
@@ -32,7 +33,7 @@ let props = defineProps({
 // console.log('userData', props.userData.value);
 let StepsModal = ref(true)
 let contractModal = ref(false)
-
+const isLoading = ref(false);
 let form = ref({
     aml_course: false,
     omissions_insurance: false
@@ -40,6 +41,7 @@ let form = ref({
 
 let step = ref(1);
 let contractStep = ref(1);
+
 let emit = defineEmits(["close"]);
 let close = () => {
     emit("close");
@@ -64,175 +66,196 @@ let goBack = () => {
 let legalFormData1 = ref(null);
 let legalFormData2 = ref(null);
 let accompanying_sign = ref(null);
-let ChangeTab = (data) => {
-    if (data && contractStep.value === 2) {
-        legalFormData1.value = data
+let firstStepErrors = ref({});
+
+
+
+let ChangeTab = () => {
+    if(contractStep.value === 4 && page.props.auth.role === 'internal-agent'){
+        router.visit('contract-steps')
+    }else{
+        contractStep.value += 1
     }
-    if (data && contractStep.value === 3) {
-        accompanying_sign.value = data.accompanying_sign
-        legalFormData2.value = data.form
-    }
-    contractStep.value += 1
+    
     var element = document.getElementById("modal_main_id");
     element.scrollIntoView();
 }
 let ChangeTabBack = () => {
     contractStep.value -= 1
 }
-
-
-
-const isLoading = ref(false);
-let firstStepErrors = ref({});
-
 let contactDetailData = ref(null)
+let individual_business = ref(false)
 let updateFormData = (val) => {
-    contactDetailData.value = val
+    isLoading.value = true
+    contactDetailData.value = val.form
+    individual_business.value = val.individual_business
+    submit(1)
 }
 
-// Use an object to store the legal form data
+let legalFormDataStep1 = (data) => {
+    isLoading.value = true
+    legalFormData1.value = data
+    submit(2)
+}
 
-let uploadAmlPdf = ref(null)
-let uploadOmmisionPdf = ref(null)
-// Function to update the legal form data
-
-
+let legalFormDataStep2 = (data) => {
+    isLoading.value = true
+    legalFormData2.value = data
+    submit(3)
+}
 
 let AddressHistoryData = ref(null)
 let AddressHistoryfun = (val) => {
+    isLoading.value = true
     AddressHistoryData.value = val
+    submit(4)
 }
+
 let additionalInfoD = ref(null)
 let additionalInformation = (val) => {
-    additionalInfoD.value = val
-    // console.log('new values', additionalInfoD.value);
-}
-let uploadLicensePdf = ref(null)
-let uploadLicense = (val) => {
-    uploadLicensePdf.value = val
-}
-let uploadBankingInfoPdf = ref(null)
-let uploadBankingInfo = (val) => {
-    uploadBankingInfoPdf.value = val
+    isLoading.value = true
+    accompanying_sign.value = val.accompanying_sign
+    additionalInfoD.value = val.form
+    submit(5)
 }
 
+let uploadAmlPdf = ref(null)
 let uploadPdfAml = (val) => {
+    isLoading.value = true
     uploadAmlPdf.value = val.selectedFile
     form.value.aml_course = val.aml_course
+    submit(6)
 }
+
+let uploadOmmisionPdf = ref(null)
 let uploadPdfOmmision = (val) => {
+    isLoading.value = true
     uploadOmmisionPdf.value = val.selectedFile
     form.value.omissions_insurance = val.omissions_insurance
-}
-let errorHandle = (data) => {
-    const stepMapping = {
-        1: { contractStep: data.step, step: 1 },
-        2: { contractStep: data.step, step: 1 },
-        3: { contractStep: data.step, step: 1 },
-        4: { contractStep: 5, step: 1 },
-        5: { contractStep: 6, step: 2 },
-        6: { contractStep: 6, step: 3 },
-        7: { contractStep: 6, step: 4 },
-        8: { contractStep: 6, step: 5 },
-    };
-
-    if (stepMapping.hasOwnProperty(data.step)) {
-        const { contractStep: newContractStep, step: newStep } = stepMapping[data.step];
-        contractStep.value = newContractStep;
-        step.value = newStep;
-    }
-
+    submit(7)
 }
 
+let uploadLicensePdf = ref(null)
+let uploadLicense = (val) => {
+    isLoading.value = true
+    uploadLicensePdf.value = val
+    submit(8)
+}
 
-
-
-
-
-let previewData = ref(null)
-
-
-
+let uploadBankingInfoPdf = ref(null)
+let uploadBankingInfo = (val) => {
+    isLoading.value = true
+    uploadBankingInfoPdf.value = val
+    submit(9)
+}
 let previewContract = () => {
-    const requestData = {};
-
-    const filteredAddressHistory = {};
-    for (const key in AddressHistoryData.value) {
-        if (key !== 'id' && AddressHistoryData.value[key].state !== 'Choose' && AddressHistoryData.value[key].address.trim() !== '') {
-            filteredAddressHistory[key] = AddressHistoryData.value[key];
-        }
-    }
-
-    // console.log('AddressHistoryData.value', AddressHistoryData.value);
-    Object.assign(requestData, {
-        aml_course: form.value.aml_course ? 1 : null, // Send 1 if true, 0 if false
-        omissions_insurance: form.value.omissions_insurance ? 1 : null, // Send 1 if true, 0 if false
-    });
-    Object.assign(requestData, contactDetailData.value);
-    Object.assign(requestData, legalFormData1.value);
-    Object.assign(requestData, legalFormData2.value);
-    Object.assign(requestData, filteredAddressHistory);
-    Object.assign(requestData, additionalInfoD.value);
-    requestData.residentLicensePdf = uploadLicensePdf.value;
-    requestData.bankingInfoPdf = uploadBankingInfoPdf.value;
-    requestData.uploadAmlPdf = uploadAmlPdf.value
-    requestData.uploadOmmisionPdf = uploadOmmisionPdf.value
-    requestData.accompanying_sign = accompanying_sign.value
-
-
-    for (const key in requestData) {
-        if (requestData.hasOwnProperty(key) && requestData[key] === 'Choose') {
-            requestData[key] = null
-        }
-    }
-    previewData.value = requestData
     StepsModal.value = false
     contractModal.value = true
-
 }
+
+let errorHandle = (data) => {
+    // console.log('data', data);
+    if (data < 5) {
+        ChangeTab()
+    } else if (data < 9) {
+        if (data === 5) {
+            step.value = 2
+        } else if (data === 6) {
+            step.value = 3
+        } else if (data === 7) {
+            step.value = 4
+        } else if (data === 8) {
+            step.value = 5
+        }
+        contractStep.value = 0
+    } else if (data === 9) {
+        router.visit('contract-steps')
+    }
+}
+if (props.userData?.internal_agent_contract) {
+    if (props.userData.contract_step <= 5) {
+        step.value = 1
+        contractStep.value = props.userData.contract_step
+    } else if (props.userData.contract_step <= 9) {
+        contractStep.value = 0
+        if (props.userData.contract_step === 6) {
+            step.value = 2
+        } else if (props.userData.contract_step === 7) {
+            step.value = 3
+        } else if (props.userData.contract_step === 8) {
+            step.value = 4
+        } else if (props.userData.contract_step === 9) {
+            step.value = 5
+        }
+    } else if (props.userData.contract_step === 10) {
+        StepsModal.value = false
+        contractModal.value = true
+    }
+}
+
 let signature_authorization = ref(null)
 let signaturePreview = (val) => {
     isLoading.value = true
     signature_authorization.value = val
-    submit()
+    submit(10)
 }
-let submit = () => {
+let submit = (step) => {
 
     const requestData = {};
+    if (step === 1) {
+        Object.assign(requestData, contactDetailData.value);
+        requestData.step = step;
+        Object.assign(requestData, {
+            individual_business: individual_business.value ? 1 : null, // Send 1 if true, 0 if false
+        });
 
-    const filteredAddressHistory = {};
-    for (const key in AddressHistoryData.value) {
-        if (key !== 'id' && AddressHistoryData.value[key].state !== 'Choose' && AddressHistoryData.value[key].address.trim() !== '') {
-            filteredAddressHistory[key] = AddressHistoryData.value[key];
+    } else if (step === 2) {
+        Object.assign(requestData, legalFormData1.value);
+        requestData.step = step;
+    } else if (step === 3) {
+        Object.assign(requestData, legalFormData2.value);
+        requestData.step = step;
+    } else if (step === 4) {
+        const filteredAddressHistory = {};
+        for (const key in AddressHistoryData.value) {
+            if (key !== 'id' && AddressHistoryData.value[key].state !== 'Choose' && AddressHistoryData.value[key].address.trim() !== '') {
+                filteredAddressHistory[key] = AddressHistoryData.value[key];
+            }
         }
+        Object.assign(requestData, filteredAddressHistory);
+        requestData.step = step;
+    } else if (step === 5) {
+        requestData.accompanying_sign = accompanying_sign.value
+        Object.assign(requestData, additionalInfoD.value);
+        requestData.step = step;
+    } else if (step === 6) {
+        Object.assign(requestData, {
+            aml_course: form.value.aml_course ? 1 : null, // Send 1 if true, 0 if false
+        });
+        requestData.uploadAmlPdf = uploadAmlPdf.value
+        requestData.step = step;
+    } else if (step === 7) {
+        Object.assign(requestData, {
+            omissions_insurance: form.value.omissions_insurance ? 1 : null, // Send 1 if true, 0 if false
+        });
+        requestData.uploadOmmisionPdf = uploadOmmisionPdf.value
+        requestData.step = step;
+    } else if (step === 8) {
+        requestData.residentLicensePdf = uploadLicensePdf.value;
+        requestData.step = step;
+    } else if (step === 9) {
+        requestData.bankingInfoPdf = uploadBankingInfoPdf.value;
+        requestData.step = step;
+    } else if (step === 10) {
+        requestData.signature_authorization = signature_authorization.value
+        requestData.step = step;
     }
-
-    // console.log('AddressHistoryData.value', AddressHistoryData.value);
-    Object.assign(requestData, {
-        aml_course: form.value.aml_course ? 1 : null, // Send 1 if true, 0 if false
-        omissions_insurance: form.value.omissions_insurance ? 1 : null, // Send 1 if true, 0 if false
-    });
-    Object.assign(requestData, contactDetailData.value);
-    Object.assign(requestData, legalFormData1.value);
-    Object.assign(requestData, legalFormData2.value);
-    Object.assign(requestData, filteredAddressHistory);
-    Object.assign(requestData, additionalInfoD.value);
-    requestData.residentLicensePdf = uploadLicensePdf.value;
-    requestData.bankingInfoPdf = uploadBankingInfoPdf.value;
-    requestData.uploadAmlPdf = uploadAmlPdf.value
-    requestData.uploadOmmisionPdf = uploadOmmisionPdf.value
-    requestData.accompanying_sign = accompanying_sign.value
-    requestData.signature_authorization = signature_authorization.value
-
-
     for (const key in requestData) {
         if (requestData.hasOwnProperty(key) && requestData[key] === 'Choose') {
             requestData[key] = null
         }
     }
 
-
-    isLoading.value = true;
 
     return axios
         .post("/internal-agent/registration-steps", requestData, {
@@ -241,12 +264,14 @@ let submit = () => {
             }
         })
         .then((response) => {
-            // props.userData.value = {}
-            // // console.log('what is res', response.data.contractData);
-            // StepsModal.value = false
-            // contractModal.value = true
-            toaster("success", response.data.message);
-            router.visit("/dashboard");
+            if (step === 10) {
+                StepsModal.value = false
+                contractModal.value = false
+                toaster("success", response.data.message);
+                router.visit("/dashboard");
+            } else {
+                errorHandle(step)
+            }
             isLoading.value = false;
         })
         .catch((error) => {
@@ -256,7 +281,7 @@ let submit = () => {
                     // console.log(error.response.data.step);
                     firstStepErrors.value = error.response.data.errors;
                     isLoading.value = false;
-                    errorHandle(error.response.data)
+
                 } else {
                     console.log("Other errors", error.response.data);
                 }
@@ -369,7 +394,7 @@ input[type=number] {
                             <Link v-show="$page.props.auth.role != 'admin'" :href="route('logout')" method="post"
                                 as="button"
                                 class="underline text-sm text-gray-600 mr-5 mt-5  dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
-                            Log Out</Link>
+                            Logout </Link>
                             <button v-show="$page.props.auth.role === 'admin'" @click="close" type="button"
                                 class="text-gray-400 bg-transparent mr-2 mt-2 hover:bg-gray-200 hover:text-gray-700 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
                                 data-modal-hide="defaultModal">
@@ -388,46 +413,48 @@ input[type=number] {
 
                             <div v-show="contractStep === 1" class="">
 
-                                <ContactDetail @updateFormData="updateFormData" :firstStepErrors="firstStepErrors"
-                                    @changeTab="ChangeTab" :states="states"
+                                <ContactDetail @updateFormData="updateFormData" @changeTab="ChangeTab()" :firstStepErrors="firstStepErrors"
+                                    :states="states" :isLoading="isLoading"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="contractStep === 2">
-                                <LegalInformation  :firstStepErrors="firstStepErrors"
-                                    @changeTab="ChangeTab" @goback="ChangeTabBack()"
+                                <LegalInformation :firstStepErrors="firstStepErrors" @changeTab="ChangeTab()"
+                                    @legalFormDataStep1="legalFormDataStep1" @goback="ChangeTabBack()"
+                                    :isLoading="isLoading"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="contractStep === 3">
-                                <LegalInformation2  :firstStepErrors="firstStepErrors"
-                                    @changeTab="ChangeTab" :page="$page.props" @goback="ChangeTabBack()"
+                                <LegalInformation2 :firstStepErrors="firstStepErrors" @changeTab="ChangeTab()"
+                                    @legalFormDataStep2="legalFormDataStep2" :page="$page.props" @goback="ChangeTabBack()"
+                                    :isLoading="isLoading"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="contractStep === 4">
                                 <AddressHistory @addRessHistory="AddressHistoryfun" @changeTab="ChangeTab()"
-                                    @goback="ChangeTabBack()" :states="states"
+                                    @goback="ChangeTabBack()" :states="states" :isLoading="isLoading"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="contractStep === 5">
                                 <AdditionalInfo @additionalInfoData="additionalInformation"
-                                    :firstStepErrors="firstStepErrors" :states="states" @changeTab="NextStep()"
-                                    @goback="ChangeTabBack()"
+                                    :firstStepErrors="firstStepErrors" :page="$page.props" :states="states"
+                                    @changeTab="NextStep()" :isLoading="isLoading" @goback="ChangeTabBack()"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="step === 2" class="pt-6">
-                                <AmLCourse :firstStepErrors="firstStepErrors" @uploadPdfAml="uploadPdfAml"
-                                    @changeTab="NextStep()" @goback="goBack()"
+                                <AmLCourse :firstStepErrors="firstStepErrors" :isLoading="isLoading"
+                                    @uploadPdfAml="uploadPdfAml" @changeTab="NextStep()" @goback="goBack()"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
 
                             <div v-show="step === 3" class="pt-6">
-                                <ErrorsAndEmissions :firstStepErrors="firstStepErrors"
+                                <ErrorsAndEmissions :firstStepErrors="firstStepErrors" :isLoading="isLoading"
                                     @uploadPdfOmmision="uploadPdfOmmision" @changeTab="NextStep()" @goback="goBack()"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
 
                             <div v-show="step === 4">
-                                <UploadLicence @uploadLicense="uploadLicense" :firstStepErrors="firstStepErrors"
-                                    @changeTab="NextStep()" @goback="goBack()"
+                                <UploadLicence @uploadLicense="uploadLicense" :isLoading="isLoading"
+                                    :firstStepErrors="firstStepErrors" @changeTab="NextStep()" @goback="goBack()"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="step === 5">
@@ -462,8 +489,8 @@ input[type=number] {
                             <Link v-show="$page.props.auth.role != 'admin'" :href="route('logout')" method="post"
                                 as="button"
                                 class="underline text-sm text-gray-600 mr-5 mt-5  dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
-                            Log Out</Link>
-                            
+                            Logout</Link>
+
                             <button v-show="$page.props.auth.role === 'admin'" @click="close" type="button"
                                 class="text-gray-400 bg-transparent mr-2 mt-2 hover:bg-gray-200 hover:text-gray-700 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
                                 data-modal-hide="defaultModal">
@@ -477,8 +504,9 @@ input[type=number] {
                         </div>
 
                         <div class="px-12 py-2">
-                            <ContractDetailPage :previewData="previewData" />
-                            <SingnaturePad :userData="userData" @editContract="editContract"  :isLoading="isLoading" @signature="signaturePreview" />
+                            <ContractDetailPage  :userData="userData" />
+                            <SingnaturePad :page="$page.props" :userData="userData" @editContract="editContract"
+                                :firstStepErrors="firstStepErrors" :isLoading="isLoading" @signature="signaturePreview" />
                         </div>
                     </div>
                 </div>
