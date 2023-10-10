@@ -37,14 +37,14 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
-            "app/Http/helpers.php"
+            "app/Http/helpers.php",
+            "app/Http/Helper/helper.php"
         ]
     },
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
-        },
-        "files": ["app/Http/Helper/helper.php"]
+        }
     },
     "scripts": {
         "post-autoload-dump": [
