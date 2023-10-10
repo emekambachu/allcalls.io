@@ -1661,7 +1661,6 @@ class RegistrationStepController extends Controller
         $config->addDefaultHeader("Authorization", "Bearer " . env('DOCUSIGN_API_KEY'));
 
         $envelopeApi = new EnvelopesApi();
-        dd( $envelopeApi);
 
 
         // Define the document
