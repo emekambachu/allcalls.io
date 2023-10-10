@@ -59,6 +59,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::get('/agent/clients/{id}', [InternalAgentController::class, 'getAgentClients']);
 
     Route::get('/download/agent/contract/pdf/{id}', [InternalAgentController::class, 'downloadAgentContractPdf'])->name('admin.agent.contract.pdf');
+    Route::get('/download/legal-question/pdf/{id}/{userId}/{serialNo}', [InternalAgentController::class, 'getQuestionPdf'])->name('admin.agent.legal.question.pdf');
 
     // Available Number
     Route::get('/available-numbers',[AvailableNumberController::class,'index']);
