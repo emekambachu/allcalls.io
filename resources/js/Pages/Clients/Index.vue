@@ -117,8 +117,6 @@ let capitalizeAndReplaceUnderscore = (str) => {
                   <th scope="col" class="px-4 py-3">ID</th>
                   <th scope="col" class="px-4 py-3">First Name</th>
                   <th scope="col" class="px-4 py-3">Last Name</th>
-                  <th scope="col" class="px-4 py-3">Email</th>
-                  <th scope="col" class="px-4 py-3">Phone Number</th>
                   <th scope="col" class="px-4 py-3">Status</th>
                   <th scope="col" class="px-4 py-3 text-end">Actions</th>
                 </tr>
@@ -132,8 +130,6 @@ let capitalizeAndReplaceUnderscore = (str) => {
                   <td class="text-gray-600 px-4 py-3">{{ Client.id }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ Client.first_name }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ Client.last_name }}</td>
-                  <th class="text-gray-600 px-4 py-3">{{ Client.email }}</th>
-                  <th class="text-gray-600 px-4 py-3">{{ Client.phone }}</th>
                   <td class="text-gray-600 px-4 py-3">
                     <span
                       v-if="Client.status == 'not_sold'"
