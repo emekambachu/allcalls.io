@@ -22,6 +22,7 @@ use DocuSign\eSign\Configuration;
 use DocuSign\eSign\Model\Document;
 use DocuSign\eSign\Model\EnvelopeDefinition;
 use DocuSign\eSign\Model\Signer;
+use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -1271,7 +1272,7 @@ class RegistrationStepController extends Controller
                         'name' => $fileName . '.' . $imageType,
                         'sign_url' => $path,
                     ]);
-                } else if(!$accompanyingSign && isset($request->accompanying_sign))  {
+                } else if (!$accompanyingSign && isset($request->accompanying_sign)) {
                     $step5Validation = Validator::make($request->all(), [
                         'accompanying_sign' => 'required',
                     ]);
@@ -1346,11 +1347,11 @@ class RegistrationStepController extends Controller
                         $amlCoursePdf->delete();
                     }
                     $name = $request->file('uploadAmlPdf')->getClientOriginalName();
-                    $request->file('uploadAmlPdf')->move(public_path('internal-agents/aml-course'), $name);
-                    $path = asset('internal-agents/aml-course/' . $name);
+                    $request->file('uploadAmlPdf')->move(public_path('internal-agents/aml-course'), $user->id . $name);
+                    $path = asset('internal-agents/aml-course/' . $user->id . $name);
 
                     InternalAgentAmlCourse::updateOrCreate(['reg_info_id' => $basicInfo->id], [
-                        'name' => $name,
+                        'name' => $user->id . $name,
                         'aml_course' => $request->aml_course,
                         'url' => $path,
                     ]);
@@ -1398,11 +1399,11 @@ class RegistrationStepController extends Controller
                     }
 
                     $name = $request->file('uploadOmmisionPdf')->getClientOriginalName();
-                    $request->file('uploadOmmisionPdf')->move(public_path('internal-agents/error-and-omission'), $name);
-                    $path = asset('internal-agents/error-and-omission/' . $name);
+                    $request->file('uploadOmmisionPdf')->move(public_path('internal-agents/error-and-omission'), $user->id . $name);
+                    $path = asset('internal-agents/error-and-omission/' . $user->id . $name);
 
                     InternalAgentErrorAndEmission::updateOrCreate(['reg_info_id' => $basicInfo->id], [
-                        'name' => $name,
+                        'name' => $user->id . $name,
                         'omissions_insurance' => $request->omissions_insurance,
                         'url' => $path,
                     ]);
@@ -1446,10 +1447,10 @@ class RegistrationStepController extends Controller
                         $residentPDf->delete();
                     }
                     $name = $request->file('residentLicensePdf')->getClientOriginalName();
-                    $request->file('residentLicensePdf')->move(public_path('internal-agents/resident-license-pdf'), $name);
-                    $path = asset('internal-agents/resident-license-pdf/' . $name);
+                    $request->file('residentLicensePdf')->move(public_path('internal-agents/resident-license-pdf'), $user->id . $name);
+                    $path = asset('internal-agents/resident-license-pdf/' . $user->id . $name);
                     InternalAgentResidentLicense::updateOrCreate(['reg_info_id' => $basicInfo->id], [
-                        'name' => $name,
+                        'name' => $user->id . $name,
                         'url' => $path,
                     ]);
                 }
@@ -1492,11 +1493,11 @@ class RegistrationStepController extends Controller
                         $bankingInfoPdf->delete();
                     }
                     $name = $request->file('bankingInfoPdf')->getClientOriginalName();
-                    $request->file('bankingInfoPdf')->move(public_path('internal-agents/banking-info'), $name);
-                    $path = asset('internal-agents/banking-info/' . $name);
+                    $request->file('bankingInfoPdf')->move(public_path('internal-agents/banking-info'), $user->id . $name);
+                    $path = asset('internal-agents/banking-info/' . $user->id . $name);
 
                     InternalAgentBankingInfo::updateOrCreate(['reg_info_id' => $basicInfo->id], [
-                        'name' => $name,
+                        'name' => $user->id . $name,
                         'url' => $path,
                     ]);
                 }
@@ -1540,7 +1541,7 @@ class RegistrationStepController extends Controller
                         'name' => $fileName . '.' . $imageType,
                         'sign_url' => $path,
                     ]);
-                } else if(!$signatureAuthorization && isset($request->signature_authorization)) {
+                } else if (!$signatureAuthorization && isset($request->signature_authorization)) {
                     $step5Validation = Validator::make($request->all(), [
                         'signature_authorization' => 'required',
                     ]);
@@ -1594,54 +1595,107 @@ class RegistrationStepController extends Controller
     public function pdfs()
     {
         set_time_limit(0);
-
-        $returnArr['contractData'] = User::where('id', 3)
-            ->with('internalAgentContract.getState')
-            ->with('internalAgentContract.getDriverLicenseState')
-            ->with('internalAgentContract.getMoveInState')
-            ->with('internalAgentContract.getResidentInsLicenseState')
-            ->with('internalAgentContract.getBusinessState')
-            ->with('internalAgentContract.additionalInfo.getState')
-            ->with('internalAgentContract.addresses.getState')
-            ->with('internalAgentContract.amlCourse')
-            ->with('internalAgentContract.bankingInfo')
-            ->with('internalAgentContract.errorAndEmission')
-            ->with('internalAgentContract.legalQuestion')
-            ->with('internalAgentContract.residentLicense')
-            ->with('internalAgentContract.getQuestionSign')
-            ->with('internalAgentContract.getContractSign')->first();
-
-
-//        $pdf = PDF::loadView('pdf.internal-agent-contract.agent-contract', $returnArr);
+        //        $pdf = PDF::loadView('pdf.internal-agent-contract.agent-contract', $returnArr);
         //$content = file_get_contents($returnArr['contractData']->internalAgentContract->amlCourse->url);
-//        dd(file_put_contents("video/TEST.pdf",$pdf->output()));
+        //        dd(file_put_contents("video/TEST.pdf",$pdf->output()));
         //dd($returnArr['contractData']->internalAgentContract->amlCourse->url);
 
         try {
-//            dd($returnArr['contractData']->internalAgentContract->amlCourse->url);
+
+            $returnArr['contractData'] = User::where('id', 3)
+                ->with('internalAgentContract.getState')
+                ->with('internalAgentContract.getDriverLicenseState')
+                ->with('internalAgentContract.getMoveInState')
+                ->with('internalAgentContract.getResidentInsLicenseState')
+                ->with('internalAgentContract.getBusinessState')
+                ->with('internalAgentContract.additionalInfo.getState')
+                ->with('internalAgentContract.addresses.getState')
+                ->with('internalAgentContract.amlCourse')
+                ->with('internalAgentContract.bankingInfo')
+                ->with('internalAgentContract.errorAndEmission')
+                ->with('internalAgentContract.legalQuestion')
+                ->with('internalAgentContract.residentLicense')
+                ->with('internalAgentContract.getQuestionSign')
+                ->with('internalAgentContract.getContractSign')->first();
+            //First Signature
+            $pdf = PDF::loadView('pdf.internal-agent-contract.agent-contract', $returnArr);
+            $directory = public_path('internal-agents/contract/');
+            if (!file_exists($directory)) {
+                mkdir($directory, 0777, true);
+            }
+            $pdf->save($directory . 'contract-first-sign.pdf');
+            //First Signature End
+
+            //Contract Signature
+            $pdf = PDF::loadView('pdf.internal-agent-contract.signature-authorization', $returnArr);
+            $directory = public_path('internal-agents/contract/');
+            if (!file_exists($directory)) {
+                mkdir($directory, 0777, true);
+            }
+            $pdf->save($directory . 'signature-authorization.pdf');
+            //Contract Signature End
+
             $pdfMerger = new PDFMerger;
-//            dd(base_path());
-            //$pdfMerger->addPDF(base_path().'/public/internal-agents/aml-course/document.pdf', 'all');
-            dd($pdfMerger->addPDF('https://www.africau.edu/images/default/sample.pdf', 'all'));
-            $pdfMerger->addPDF("file:///C:/laragon/www/allcalls.io/public/video/TEST2.pdf", 'all');
-            $pdfMerger->merge('file', 'video/All8.pdf', 'P');
+
+            $pdfMerger->addPDF(public_path() . '/internal-agents/contract/contract-first-sign.pdf', 'all');
+
+      
+            $pdfMerger->addPDF(public_path() . '/internal-agents/aml-course/' . $returnArr['contractData']->internalAgentContract->amlCourse->name, 'all');
+            $pdfMerger->addPDF(public_path() . '/internal-agents/error-and-omission/' . $returnArr['contractData']->internalAgentContract->errorAndEmission->name, 'all');
+            $pdfMerger->addPDF(public_path() . '/internal-agents/resident-license-pdf/' . $returnArr['contractData']->internalAgentContract->residentLicense->name, 'all');
+            $pdfMerger->addPDF(public_path() . '/internal-agents/banking-info/' . $returnArr['contractData']->internalAgentContract->bankingInfo->name, 'all');
+
+            $pdfMerger->addPDF(public_path() . '/internal-agents/contract/signature-authorization.pdf', 'all');
+
+            $pdfMerger->merge('file', 'video/contract-signed-1.pdf', 'P');
+
+            if (file_exists(asset('internal-agents/contract/' . 'contract-first-sign.pdf'))) {
+                unlink(asset('internal-agents/contract/' . 'contract-first-sign.pdf'));
+            }
+
+            if (file_exists(asset('internal-agents/contract/' . 'signature-authorization.pdf'))) {
+                unlink(asset('internal-agents/contract/' . 'signature-authorization.pdf'));
+            }
+
+            // $pdfMerger->merge('file', 'video/contract-signed.pdf', 'P');
+            // dd('sd');
+
+
+            // Merge the PDFs
+            $pdfMerger->merge();
+
+            // Get the merged PDF content
+            $mergedPdfContent = $pdfMerger->output();
+
+            // Set the response headers for downloading the PDF
+            $headers = [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="contract.pdf"',
+            ];
+
+            // Return the merged PDF as a downloadable response
+            return Response::make($mergedPdfContent, 200, $headers);
+
+
+            // $pdfMerger->merge('file', 'video/contract-signed.pdf', 'P');
+            dd('sd');
         } catch (\Exception $e) {
             dd($e->getMessage());
         }
 
-//        =====
-//        $p1="http://allcalls.io.test/internal-agents/aml-course/document.pdf";
-//        $p2="http://allcalls.io.test/internal-agents/aml-course/document.pdf";
-//
-//        $pdfMerger = new \Clegginabox\PDFMerger\PDFMerger;
-//        $pdfMerger->addPDF($p1,"all");
-//        $pdfMerger->addPDF($p2,'all');
-//        $pdfMerger->merge('file', 'video/All5.pdf', 'P');
-//        dd('sd');
+        //        =====
+        //        $p1="http://allcalls.io.test/internal-agents/aml-course/document.pdf";
+        //        $p2="http://allcalls.io.test/internal-agents/aml-course/document.pdf";
+        //
+        //        $pdfMerger = new \Clegginabox\PDFMerger\PDFMerger;
+        //        $pdfMerger->addPDF($p1,"all");
+        //        $pdfMerger->addPDF($p2,'all');
+        //        $pdfMerger->merge('file', 'video/All5.pdf', 'P');
+        //        dd('sd');
 
 
 
-//        return view('pdf.internal-agent-contract.agent-contract', $returnArr);
+        //        return view('pdf.internal-agent-contract.agent-contract', $returnArr);
 
         $pdf = PDF::loadView('pdf.internal-agent-contract.agent-contract', $returnArr);
 
@@ -1684,7 +1738,11 @@ class RegistrationStepController extends Controller
             'recipients' => ['signers' => [$signer]],
             'status' => 'sent'
         ]);
+
+        //        $envelopeSummary = $envelopeApi->createEnvelope('1797216e-2fcc-4b29-95e4-ff04a330b007', $envelope);
+
         $envelopeSummary = $envelopeApi->createEnvelope('1797216e-2fcc-4b29-95e4-ff04a330b007', $envelope);
+
 
 
 //        $viewRequest = new ViewRequest([

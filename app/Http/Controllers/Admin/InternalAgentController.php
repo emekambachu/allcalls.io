@@ -13,6 +13,7 @@ use App\Models\Transaction;
 use App\Models\User;
 use App\Rules\CallTypeIdEixst;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Clegginabox\PDFMerger\PDFMerger;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -20,6 +21,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Http\Client\Response;
 use Inertia\Inertia;
 
 class InternalAgentController extends Controller
@@ -299,25 +301,83 @@ class InternalAgentController extends Controller
     {
         set_time_limit(0);
 
-        $returnArr['contractData'] = User::where('id', 3)
-            ->with('internalAgentContract.getState')
-            ->with('internalAgentContract.getDriverLicenseState')
-            ->with('internalAgentContract.getMoveInState')
-            ->with('internalAgentContract.getResidentInsLicenseState')
-            ->with('internalAgentContract.getBusinessState')
-            ->with('internalAgentContract.additionalInfo.getState')
-            ->with('internalAgentContract.addresses.getState')
-            ->with('internalAgentContract.amlCourse')
-            ->with('internalAgentContract.bankingInfo')
-            ->with('internalAgentContract.errorAndEmission')
-            ->with('internalAgentContract.legalQuestion')
-            ->with('internalAgentContract.residentLicense')
-            ->with('internalAgentContract.getQuestionSign')
-            ->with('internalAgentContract.getContractSign')->first();
+        try {
+            $returnArr['contractData'] = User::where('id', $id)
+                ->with('internalAgentContract.getState')
+                ->with('internalAgentContract.getDriverLicenseState')
+                ->with('internalAgentContract.getMoveInState')
+                ->with('internalAgentContract.getResidentInsLicenseState')
+                ->with('internalAgentContract.getBusinessState')
+                ->with('internalAgentContract.additionalInfo.getState')
+                ->with('internalAgentContract.addresses.getState')
+                ->with('internalAgentContract.amlCourse')
+                ->with('internalAgentContract.bankingInfo')
+                ->with('internalAgentContract.errorAndEmission')
+                ->with('internalAgentContract.legalQuestion')
+                ->with('internalAgentContract.residentLicense')
+                ->with('internalAgentContract.getQuestionSign')
+                ->with('internalAgentContract.getContractSign')->first();
+            //First Signature
+            $pdf = PDF::loadView('pdf.internal-agent-contract.agent-contract', $returnArr);
+            $directory = public_path('internal-agents/contract/');
+            if (!file_exists($directory)) {
+                mkdir($directory, 0777, true);
+            }
+            $pdf->save($directory . 'contract-first-sign.pdf');
+            //First Signature End
 
-        $pdf = PDF::loadView('pdf.internal-agent-contract.agent-contract', $returnArr);
-        $fileName = $returnArr['contractData']->internalAgentContract->first_name;
-        return $pdf->download($fileName . '-contract.pdf');
+            //Contract Signature
+            $pdf = PDF::loadView('pdf.internal-agent-contract.signature-authorization', $returnArr);
+            $directory = public_path('internal-agents/contract/');
+            if (!file_exists($directory)) {
+                mkdir($directory, 0777, true);
+            }
+            $pdf->save($directory . 'signature-authorization.pdf');
+            //Contract Signature End
+
+            $pdfMerger = new PDFMerger;
+
+            $pdfMerger->addPDF(public_path() . '/internal-agents/contract/contract-first-sign.pdf', 'all');
+
+
+            $pdfMerger->addPDF(public_path() . '/internal-agents/aml-course/' . $returnArr['contractData']->internalAgentContract->amlCourse->name, 'all');
+            $pdfMerger->addPDF(public_path() . '/internal-agents/error-and-omission/' . $returnArr['contractData']->internalAgentContract->errorAndEmission->name, 'all');
+            $pdfMerger->addPDF(public_path() . '/internal-agents/resident-license-pdf/' . $returnArr['contractData']->internalAgentContract->residentLicense->name, 'all');
+            $pdfMerger->addPDF(public_path() . '/internal-agents/banking-info/' . $returnArr['contractData']->internalAgentContract->bankingInfo->name, 'all');
+
+            $pdfMerger->addPDF(public_path() . '/internal-agents/contract/signature-authorization.pdf', 'all');
+
+            $pdfMerger->merge('file', 'video/contract-signed-1.pdf', 'P');
+
+            if (file_exists(asset('internal-agents/contract/' . 'contract-first-sign.pdf'))) {
+                unlink(asset('internal-agents/contract/' . 'contract-first-sign.pdf'));
+            }
+
+            if (file_exists(asset('internal-agents/contract/' . 'signature-authorization.pdf'))) {
+                unlink(asset('internal-agents/contract/' . 'signature-authorization.pdf'));
+            }
+
+            // Merge the PDFs
+            $pdfMerger->merge();
+
+            // Get the merged PDF content
+            $mergedPdfContent = $pdfMerger->output();
+
+            // Set the response headers for downloading the PDF
+            $headers = [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="contract.pdf"',
+            ];
+
+            // Return the merged PDF as a downloadable response
+            return Response::make($mergedPdfContent, 200, $headers);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'errors' => $e->getMessage(),
+            ], 400);
+        }
+        
     }
 
     public function getQuestionPdf($id, $userId, $serialNo)
@@ -333,5 +393,18 @@ class InternalAgentController extends Controller
 
 
         return $pdf->download($serialNo . '-explaination.pdf');
+    }
+
+    public function signatureAuthrorizationPdf($id)
+    {
+        set_time_limit(0);
+
+        $returnArr['contractData'] = User::where('id', $id)
+            ->with('internalAgentContract.getContractSign')
+            ->first();
+
+        $pdf = PDF::loadView('pdf.internal-agent-contract.signature-authorization', $returnArr);
+
+        return $pdf->download('signature-authorization.pdf');
     }
 }
