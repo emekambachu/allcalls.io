@@ -85,7 +85,7 @@ let openEdit = () => {
                             <strong class="text-lg">Last Name: </strong>
                             {{ ClientDetail.last_name }}
                         </div>
-                        <div v-if = "ClientDetail.unlocked !== 1">
+                        <div v-if = "ClientDetail.unlocked === 1">
                             <strong class="text-lg">Date of Birth: </strong>
                             {{ ClientDetail.dob || "N/A" }}
                         </div>
@@ -104,15 +104,15 @@ let openEdit = () => {
 
                     <h4 class="text-2xl font-small text-custom-sky mb-2">Contact Information</h4>
                     <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-10">
-                        <div v-if = "ClientDetail.unlocked !== 1">
+                        <div v-if = "ClientDetail.unlocked === 1">
                             <strong class="text-lg">Phone: </strong>
                             {{ ClientDetail.phone }}
                         </div>
-                        <div v-if = "ClientDetail.unlocked !== 1">
+                        <div v-if = "ClientDetail.unlocked === 1">
                             <strong class="text-lg">Email: </strong>
                             {{ ClientDetail.email || "N/A" }}
                         </div>
-                        <div v-if = "ClientDetail.unlocked !== 1">
+                        <div v-if = "ClientDetail.unlocked === 1">
                             <strong class="text-lg">Address: </strong>
                             {{ ClientDetail.address || "N/A" }}
                         </div>
@@ -120,7 +120,7 @@ let openEdit = () => {
                             <strong class="text-lg">State: </strong>
                             {{ ClientDetail.state || "N/A" }}
                         </div>
-                        <div v-if = "ClientDetail.unlocked !== 1">
+                        <div v-if = "ClientDetail.unlocked === 1">
                             <strong class="text-lg">Zip Code: </strong>
                             {{ ClientDetail.zipCode || "N/A" }}
                         </div>
