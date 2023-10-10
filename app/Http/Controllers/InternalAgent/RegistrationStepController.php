@@ -16,6 +16,12 @@ use App\Models\InternalAgentResidentLicense;
 use App\Models\State;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Clegginabox\PDFMerger\PDFMerger;
+use DocuSign\eSign\Api\EnvelopesApi;
+use DocuSign\eSign\Configuration;
+use DocuSign\eSign\Model\Document;
+use DocuSign\eSign\Model\EnvelopeDefinition;
+use DocuSign\eSign\Model\Signer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -1568,7 +1574,7 @@ class RegistrationStepController extends Controller
         }
     }
 
-    public function pdf()
+    public function pdfs()
     {
         set_time_limit(0);
 
@@ -1587,9 +1593,38 @@ class RegistrationStepController extends Controller
             ->with('internalAgentContract.residentLicense')
             ->with('internalAgentContract.getQuestionSign')
             ->with('internalAgentContract.getContractSign')->first();
-        dd($returnArr['contractData']->internalAgentContract->amlCourse);
 
-        return view('pdf.internal-agent-contract.agent-contract', $returnArr);
+
+//        $pdf = PDF::loadView('pdf.internal-agent-contract.agent-contract', $returnArr);
+        //$content = file_get_contents($returnArr['contractData']->internalAgentContract->amlCourse->url);
+//        dd(file_put_contents("video/TEST.pdf",$pdf->output()));
+        //dd($returnArr['contractData']->internalAgentContract->amlCourse->url);
+
+        try {
+//            dd($returnArr['contractData']->internalAgentContract->amlCourse->url);
+            $pdfMerger = new PDFMerger;
+//            dd(base_path());
+            //$pdfMerger->addPDF(base_path().'/public/internal-agents/aml-course/document.pdf', 'all');
+            dd($pdfMerger->addPDF('https://www.africau.edu/images/default/sample.pdf', 'all'));
+            $pdfMerger->addPDF("file:///C:/laragon/www/allcalls.io/public/video/TEST2.pdf", 'all');
+            $pdfMerger->merge('file', 'video/All8.pdf', 'P');
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+        }
+
+//        =====
+//        $p1="http://allcalls.io.test/internal-agents/aml-course/document.pdf";
+//        $p2="http://allcalls.io.test/internal-agents/aml-course/document.pdf";
+//
+//        $pdfMerger = new \Clegginabox\PDFMerger\PDFMerger;
+//        $pdfMerger->addPDF($p1,"all");
+//        $pdfMerger->addPDF($p2,'all');
+//        $pdfMerger->merge('file', 'video/All5.pdf', 'P');
+//        dd('sd');
+
+
+
+//        return view('pdf.internal-agent-contract.agent-contract', $returnArr);
 
         $pdf = PDF::loadView('pdf.internal-agent-contract.agent-contract', $returnArr);
 
@@ -1599,5 +1634,52 @@ class RegistrationStepController extends Controller
     function registrationSignature(Request $request)
     {
         dd($request);
+    }
+
+
+    public function pdf()
+    {
+        $config = new Configuration();
+        $config->setHost('<https://demo.docusign.net/restapi>');
+        $config->addDefaultHeader("Authorization", "Bearer " . env('DOCUSIGN_API_KEY'));
+
+        $envelopeApi = new EnvelopesApi();
+
+
+        // Define the document
+        $document = new Document([
+            'document_base64' => base64_encode(file_get_contents('https://www.africau.edu/images/default/sample.pdf')),
+            'name' => 'Sample Document',
+            'file_extension' => 'pdf',
+            'document_id' => '1'
+        ]);
+        // Define the signer
+        $signer = new Signer([
+            'email' => 'awaisamir23@gmail.com',
+            'name' => 'John Doe',
+            'recipient_id' => '1',
+            'client_user_id' => '12345'  // An arbitrary ID
+        ]);
+
+        $envelope = new EnvelopeDefinition([
+            'email_subject' => 'Please Sign',
+            'documents' => [$document],
+            'recipients' => ['signers' => [$signer]],
+            'status' => 'sent'
+        ]);
+
+        $envelopeSummary = $envelopeApi->createEnvelope(env('DOCUSIGN_ACCOUNT_ID'), $envelope);
+
+        $viewRequest = new ViewRequest([
+            'return_url' => '<http://allcalls.io.test/return-url>',
+            'authentication_method' => 'none',
+            'email' => 'abdullah.laraveldev@gmail.com',
+            'user_name' => 'John Doe',
+            'client_user_id' => '12345'
+        ]);
+
+        $signingUrl = $envelopeApi->createRecipientView(env('DOCUSIGN_ACCOUNT_ID'), $envelopeSummary->getEnvelopeId(), $viewRequest);
+
+        return response()->json(['url' => $signingUrl->getUrl()]);
     }
 }

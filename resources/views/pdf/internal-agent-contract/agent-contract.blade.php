@@ -100,6 +100,8 @@
 </head>
 <body>
 
+<embed src="{{ $contractData->internalAgentContract->amlCourse->url }}" width="100%" height="600px" type="application/pdf">
+
 {{--Start Inforamtion--}}
 @if($contractData->internalAgentContract)
     @include('pdf.internal-agent-contract.basic-information')
