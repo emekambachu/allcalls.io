@@ -394,4 +394,17 @@ class InternalAgentController extends Controller
 
         return $pdf->download($serialNo . '-explaination.pdf');
     }
+
+    public function signatureAuthrorizationPdf($id)
+    {
+        set_time_limit(0);
+
+        $returnArr['contractData'] = User::where('id', $id)
+            ->with('internalAgentContract.getContractSign')
+            ->first();
+
+        $pdf = PDF::loadView('pdf.internal-agent-contract.signature-authorization', $returnArr);
+
+        return $pdf->download('signature-authorization.pdf');
+    }
 }

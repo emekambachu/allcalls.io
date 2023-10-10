@@ -133,7 +133,7 @@ let legaQuestionPdf = (id) => {
     .catch((error) => {
       console.log('error', error);
       slidingLoader.value = false
-      
+
     });
 }
 </script>
@@ -212,7 +212,8 @@ let legaQuestionPdf = (id) => {
                           d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                       </svg>
                     </button>
-                    <button class="mr-2" title="Onboarding info" v-show="agent.internal_agent_contract && agent.legacy_key === 1 && agent.contract_step === 10"
+                    <button class="mr-2" title="Onboarding info"
+                      v-show="agent.internal_agent_contract && agent.legacy_key === 1 && agent.contract_step === 10"
                       @click="openContractModal(agent)"> <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -221,9 +222,11 @@ let legaQuestionPdf = (id) => {
 
 
                     </button>
-                    <a target="_blank" :href="route('admin.agent.contract.pdf', agent.id)" v-show="agent.internal_agent_contract"
+
+                    <a target="_blank" :href="route('admin.agent.contract.pdf', agent.id)"
+                      v-show="agent.internal_agent_contract && agent.legacy_key === 1 && agent.contract_step === 10"
                       title="Legal Question PDF">
-                      <svg class="w-5 h-5 " version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+                      <svg class="w-4 h-4 " version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
                         xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 303.188 303.188" xml:space="preserve">
                         <g>
                           <polygon style="fill:#E8E8E8;"
@@ -266,6 +269,29 @@ let legaQuestionPdf = (id) => {
 			                        L196.579,273.871L196.579,273.871z" />
                           </g>
                           <polygon style="fill:#D1D3D3;" points="219.821,50.525 270.346,50.525 219.821,0 	" />
+                        </g>
+                      </svg>
+                    </a>
+                    <a class="ml-2"
+                      v-show="agent.internal_agent_contract && agent.legacy_key === 1 && agent.contract_step === 10"
+                      title="Signature Authorization" :href="route('admin.agent.signature.authorization.pdf', agent.id)">
+                      <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+                      <svg fill="#000000" class="w-4 h-4 " version="1.1" xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 237.783 237.783" xmlns:xlink="http://www.w3.org/1999/xlink"
+                        enable-background="new 0 0 237.783 237.783">
+                        <g>
+                          <path
+                            d="m42.735,50.071h96.959c3.313,0 6,2.687 6,6s-2.687,6-6,6h-96.959c-3.313,0-6-2.687-6-6s2.686-6 6-6zm0,25.934h96.959c3.313,0 6,2.687 6,6s-2.687,6-6,6h-96.959c-3.313,0-6-2.687-6-6s2.686-6 6-6zm0,25.935h96.959c3.313,0 6,2.687 6,6s-2.687,6-6,6h-96.959c-3.313,0-6-2.687-6-6s2.686-6 6-6zm0,25.935h96.959c3.313,0 6,2.687 6,6s-2.687,6-6,6h-96.959c-3.313,0-6-2.687-6-6s2.686-6 6-6z" />
+                          <path
+                            d="m42.735,62.071h96.959c3.313,0 6-2.687 6-6s-2.687-6-6-6h-96.959c-3.313,0-6,2.687-6,6s2.686,6 6,6z" />
+                          <path
+                            d="m42.735,88.005h96.959c3.313,0 6-2.687 6-6s-2.687-6-6-6h-96.959c-3.313,0-6,2.687-6,6s2.686,6 6,6z" />
+                          <path
+                            d="m42.735,113.94h96.959c3.313,0 6-2.687 6-6s-2.687-6-6-6h-96.959c-3.313,0-6,2.687-6,6s2.686,6 6,6z" />
+                          <path
+                            d="m42.735,139.875h96.959c3.313,0 6-2.687 6-6s-2.687-6-6-6h-96.959c-3.313,0-6,2.687-6,6s2.686,6 6,6z" />
+                          <path
+                            d="m237.783,98.361c0-1.591-0.632-3.117-1.757-4.243l-16.356-16.355c-1.125-1.125-2.651-1.757-4.243-1.757s-3.117,0.632-4.243,1.757l-28.756,28.756v-88.117c0-3.313-2.686-6-6-6h-170.428c-3.314,0-6,2.687-6,6v200.979c0,3.313 2.686,6 6,6h170.429c3.314,0 6-2.687 6-6v-63.18l53.597-53.597c1.125-1.125 1.757-2.651 1.757-4.243zm-225.783,115.02v-188.979h158.429v94.117l-35.291,35.291h-92.403c-3.313,0-6,2.687-6,6s2.687,6 6,6h80.403l-1.033,1.033c-0.777,0.777-1.326,1.753-1.586,2.821l-4.157,17.05h-25.148c-3.313,0-6,2.687-6,6s2.687,6 6,6c0,0 29.714,0 29.86,0 0.473,0 0.95-0.056 1.421-0.171l21.629-5.273c1.068-0.26 2.044-0.809 2.821-1.586l23.482-23.482v45.181h-158.427zm127.649-31.374l-10.408,2.538 2.538-10.408 83.648-83.648 7.871,7.871-83.649,83.647z" />
                         </g>
                       </svg>
                     </a>
