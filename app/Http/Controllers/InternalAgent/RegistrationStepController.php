@@ -15,15 +15,12 @@ use App\Models\InternalAgentRegInfo;
 use App\Models\InternalAgentResidentLicense;
 use App\Models\State;
 use App\Models\User;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Clegginabox\PDFMerger\PDFMerger;
 use DocuSign\eSign\Api\EnvelopesApi;
 use DocuSign\eSign\Configuration;
 use DocuSign\eSign\Model\Document;
 use DocuSign\eSign\Model\EnvelopeDefinition;
 use DocuSign\eSign\Model\RecipientViewRequest;
 use DocuSign\eSign\Model\Signer;
-use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -1592,6 +1589,7 @@ class RegistrationStepController extends Controller
             }
         }
     }
+
     function registrationSignature(Request $request)
     {
         dd($request);
@@ -1599,7 +1597,7 @@ class RegistrationStepController extends Controller
 
     public function pdf()
     {
-
+        dd('sd');
         $config = new Configuration();
         $config->setHost('<https://demo.docusign.net/restapi>');
         $config->addDefaultHeader("Authorization", "Bearer " . '80897fed070946c797d500a9eb64d339');
