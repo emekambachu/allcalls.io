@@ -131,7 +131,7 @@ let formatData = (val) => {
                 </div>
                 <div class="bg-white  m-5 flex items-center">
                     <div class=" text-lg font-semibold mr-4">
-                        5. Upload Resident License PDF
+                        5.Resident License PDF
                     </div>
                     <div>
                         <a target="_blank" :href="userData.internal_agent_contract?.resident_license?.url"
@@ -147,7 +147,7 @@ let formatData = (val) => {
                 </div>
                 <div class="bg-white  m-5 flex items-center">
                     <div class=" text-lg font-semibold mr-4">
-                        6. Banking Information
+                        6.Banking Information
                     </div>
                     <div>
                         <a target="_blank" :href="userData.internal_agent_contract?.banking_info?.url"
