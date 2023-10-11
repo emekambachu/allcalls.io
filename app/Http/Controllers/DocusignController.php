@@ -43,7 +43,7 @@ class DocusignController extends Controller
             $params = [
                 'response_type' => 'code',
                 'scope' => 'signature',
-                'client_id' => env('DOCUSIGN_CLIENT_ID'),
+                'client_id' => "85ef5f77-af1c-4949-9775-2ac099dda888", //change
                 'state' => 'a39fh23hnf23',
                 'redirect_uri' => route('docusign.callback'),
             ];
@@ -68,8 +68,8 @@ class DocusignController extends Controller
     {
         $code = $request->code;
 
-        $client_id = env('DOCUSIGN_CLIENT_ID');
-        $client_secret = env('DOCUSIGN_CLIENT_SECRET');
+        $client_id = "85ef5f77-af1c-4949-9775-2ac099dda888"; //change
+        $client_secret = "03e08947-d1e2-4554-82dc-ae4bde41f6a6"; //change
 
         $integrator_and_secret_key = "Basic " . utf8_decode(base64_encode("{$client_id}:{$client_secret}"));
 
@@ -220,8 +220,8 @@ class DocusignController extends Controller
             'ds_return_url' => route('docusign')
         ];
         $args = [
-            'account_id' => env('DOCUSIGN_ACCOUNT_ID'),
-            'base_path' => env('DOCUSIGN_BASE_URL'),
+            'account_id' =>"1797216e-2fcc-4b29-95e4-ff04a330b007",
+            'base_path' => "https://demo.docusign.net/restapi",
             'ds_access_token' => Session::get('docusign_auth_code'),
             'envelope_args' => $envelope_args
         ];

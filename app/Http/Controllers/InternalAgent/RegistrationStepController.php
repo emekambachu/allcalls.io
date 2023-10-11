@@ -1597,7 +1597,6 @@ class RegistrationStepController extends Controller
 
     public function pdf()
     {
-        dd('sd');
         $config = new Configuration();
         $config->setHost('<https://demo.docusign.net/restapi>');
         $config->addDefaultHeader("Authorization", "Bearer " . '80897fed070946c797d500a9eb64d339');
