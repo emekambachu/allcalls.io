@@ -146,7 +146,7 @@ class DocusignController extends Controller
 
         $filename = 'World_Wide_Corp_lorem.pdf';
 
-        $demo_docs_path = asset('/internal-agents/aml-course/intake-19.pdf');
+        $demo_docs_path = asset('/first-step-sign.pdf');
 
         $arrContextOptions=array(
             "ssl"=>array(
