@@ -12,6 +12,7 @@ class ClientsAPIController extends Controller
         $user_id = $request->user()->id;
 
         $clients = Client::where('user_id', $user_id)
+            ->where('unlocked', 1)  // Added this line to filter unlocked clients
             ->whereHas('call')
             ->with('call.callType')
             ->orderBy('id', 'desc')  // Sort by 'id' in descending order
