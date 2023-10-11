@@ -43,7 +43,7 @@ class DocusignController extends Controller
             $params = [
                 'response_type' => 'code',
                 'scope' => 'signature',
-                'client_id' => "85ef5f77-af1c-4949-9775-2ac099dda888", //change
+                'client_id' => "75d97718-8a98-4d27-8def-17c2fceed79f", //change
                 'state' => 'a39fh23hnf23',
                 'redirect_uri' => route('docusign.callback'),
             ];
