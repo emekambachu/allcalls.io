@@ -131,7 +131,7 @@ let formatData = (val) => {
                 </div>
                 <div class="bg-white  m-5 flex items-center">
                     <div class=" text-lg font-semibold mr-4">
-                        5. Resident License PDF
+                        5. Resident License 
                     </div>
                     <div>
                         <a target="_blank" :href="userData.internal_agent_contract?.resident_license?.url"
