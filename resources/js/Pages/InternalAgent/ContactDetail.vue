@@ -430,14 +430,14 @@ let enforceFiveDigitInput = (fieldName, val) => {
             <p>Will you be contracting with us as an individual or as a business?</p>
             <div class="flex flex-wrap">
                 <div class="flex items-center my-4 mr-5 ">
-                    <input id="default-radio-1" v-model="individual_business" type="radio" :value="true"
+                    <input id="default-radio-1" :disabled="page.props.auth.role === 'admin'" v-model="individual_business" type="radio" :value="true"
                         name="default-radio"
                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                     <label for="default-radio-1"
                         class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Business</label>
                 </div>
                 <div class="flex items-center my-4 ">
-                    <input id="default-radio-2" v-model="individual_business" type="radio" :value="false"
+                    <input id="default-radio-2" :disabled="page.props.auth.role === 'admin'" v-model="individual_business" type="radio" :value="false"
                         name="default-radio"
                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                     <label for="default-radio-2"
