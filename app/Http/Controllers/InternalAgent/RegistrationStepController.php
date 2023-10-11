@@ -21,6 +21,7 @@ use DocuSign\eSign\Api\EnvelopesApi;
 use DocuSign\eSign\Configuration;
 use DocuSign\eSign\Model\Document;
 use DocuSign\eSign\Model\EnvelopeDefinition;
+use DocuSign\eSign\Model\RecipientViewRequest;
 use DocuSign\eSign\Model\Signer;
 use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request;
@@ -1591,117 +1592,6 @@ class RegistrationStepController extends Controller
             }
         }
     }
-
-    public function pdfs()
-    {
-        set_time_limit(0);
-        //        $pdf = PDF::loadView('pdf.internal-agent-contract.agent-contract', $returnArr);
-        //$content = file_get_contents($returnArr['contractData']->internalAgentContract->amlCourse->url);
-        //        dd(file_put_contents("video/TEST.pdf",$pdf->output()));
-        //dd($returnArr['contractData']->internalAgentContract->amlCourse->url);
-
-        try {
-
-            $returnArr['contractData'] = User::where('id', 3)
-                ->with('internalAgentContract.getState')
-                ->with('internalAgentContract.getDriverLicenseState')
-                ->with('internalAgentContract.getMoveInState')
-                ->with('internalAgentContract.getResidentInsLicenseState')
-                ->with('internalAgentContract.getBusinessState')
-                ->with('internalAgentContract.additionalInfo.getState')
-                ->with('internalAgentContract.addresses.getState')
-                ->with('internalAgentContract.amlCourse')
-                ->with('internalAgentContract.bankingInfo')
-                ->with('internalAgentContract.errorAndEmission')
-                ->with('internalAgentContract.legalQuestion')
-                ->with('internalAgentContract.residentLicense')
-                ->with('internalAgentContract.getQuestionSign')
-                ->with('internalAgentContract.getContractSign')->first();
-            //First Signature
-            $pdf = PDF::loadView('pdf.internal-agent-contract.agent-contract', $returnArr);
-            $directory = public_path('internal-agents/contract/');
-            if (!file_exists($directory)) {
-                mkdir($directory, 0777, true);
-            }
-            $pdf->save($directory . 'contract-first-sign.pdf');
-            //First Signature End
-
-            //Contract Signature
-            $pdf = PDF::loadView('pdf.internal-agent-contract.signature-authorization', $returnArr);
-            $directory = public_path('internal-agents/contract/');
-            if (!file_exists($directory)) {
-                mkdir($directory, 0777, true);
-            }
-            $pdf->save($directory . 'signature-authorization.pdf');
-            //Contract Signature End
-
-            $pdfMerger = new PDFMerger;
-
-            $pdfMerger->addPDF(public_path() . '/internal-agents/contract/contract-first-sign.pdf', 'all');
-
-      
-            $pdfMerger->addPDF(public_path() . '/internal-agents/aml-course/' . $returnArr['contractData']->internalAgentContract->amlCourse->name, 'all');
-            $pdfMerger->addPDF(public_path() . '/internal-agents/error-and-omission/' . $returnArr['contractData']->internalAgentContract->errorAndEmission->name, 'all');
-            $pdfMerger->addPDF(public_path() . '/internal-agents/resident-license-pdf/' . $returnArr['contractData']->internalAgentContract->residentLicense->name, 'all');
-            $pdfMerger->addPDF(public_path() . '/internal-agents/banking-info/' . $returnArr['contractData']->internalAgentContract->bankingInfo->name, 'all');
-
-            $pdfMerger->addPDF(public_path() . '/internal-agents/contract/signature-authorization.pdf', 'all');
-
-            $pdfMerger->merge('file', 'video/contract-signed-1.pdf', 'P');
-
-            if (file_exists(asset('internal-agents/contract/' . 'contract-first-sign.pdf'))) {
-                unlink(asset('internal-agents/contract/' . 'contract-first-sign.pdf'));
-            }
-
-            if (file_exists(asset('internal-agents/contract/' . 'signature-authorization.pdf'))) {
-                unlink(asset('internal-agents/contract/' . 'signature-authorization.pdf'));
-            }
-
-            // $pdfMerger->merge('file', 'video/contract-signed.pdf', 'P');
-            // dd('sd');
-
-
-            // Merge the PDFs
-            $pdfMerger->merge();
-
-            // Get the merged PDF content
-            $mergedPdfContent = $pdfMerger->output();
-
-            // Set the response headers for downloading the PDF
-            $headers = [
-                'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'attachment; filename="contract.pdf"',
-            ];
-
-            // Return the merged PDF as a downloadable response
-            return Response::make($mergedPdfContent, 200, $headers);
-
-
-            // $pdfMerger->merge('file', 'video/contract-signed.pdf', 'P');
-            dd('sd');
-        } catch (\Exception $e) {
-            dd($e->getMessage());
-        }
-
-        //        =====
-        //        $p1="http://allcalls.io.test/internal-agents/aml-course/document.pdf";
-        //        $p2="http://allcalls.io.test/internal-agents/aml-course/document.pdf";
-        //
-        //        $pdfMerger = new \Clegginabox\PDFMerger\PDFMerger;
-        //        $pdfMerger->addPDF($p1,"all");
-        //        $pdfMerger->addPDF($p2,'all');
-        //        $pdfMerger->merge('file', 'video/All5.pdf', 'P');
-        //        dd('sd');
-
-
-
-        //        return view('pdf.internal-agent-contract.agent-contract', $returnArr);
-
-        $pdf = PDF::loadView('pdf.internal-agent-contract.agent-contract', $returnArr);
-
-        return $pdf->stream();
-    }
-
     function registrationSignature(Request $request)
     {
         dd($request);
@@ -1745,15 +1635,15 @@ class RegistrationStepController extends Controller
 
 
 
-//        $viewRequest = new ViewRequest([
-//            'return_url' => '<https://staging.allcalls.io/return-url>',
-//            'authentication_method' => 'none',
-//            'email' => 'abdullah.laraveldev@gmail.com',
-//            'user_name' => 'John Doe',
-//            'client_user_id' => '12345'
-//        ]);
+        $viewRequest = new RecipientViewRequest([
+            'return_url' => '<https://staging.allcalls.io/return-url>',
+            'authentication_method' => 'none',
+            'email' => 'abdullah.laraveldev@gmail.com',
+            'user_name' => 'John Doe',
+            'client_user_id' => '12345'
+        ]);
 
-        $signingUrl = $envelopeApi->createRecipientView("1797216e-2fcc-4b29-95e4-ff04a330b007", $envelopeSummary->getEnvelopeId());
+        $signingUrl = $envelopeApi->createRecipientView("1797216e-2fcc-4b29-95e4-ff04a330b007" ,$envelopeSummary->getEnvelopeId() , $viewRequest);
 
         return response()->json(['url' => $signingUrl->getUrl()]);
     }
