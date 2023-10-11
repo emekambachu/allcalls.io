@@ -42,7 +42,6 @@ use App\Http\Controllers\TakeCallsOnlineUsersController;
 |
 */
 Route::get('/', function () {
-    dd('sd');
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
