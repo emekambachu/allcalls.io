@@ -68,8 +68,8 @@ class DocusignController extends Controller
     {
         $code = $request->code;
 
-        $client_id = "85ef5f77-af1c-4949-9775-2ac099dda888"; //change
-        $client_secret = "03e08947-d1e2-4554-82dc-ae4bde41f6a6"; //change
+        $client_id = "75d97718-8a98-4d27-8def-17c2fceed79f"; //change
+        $client_secret = "897ce745-c111-4229-aff4-6637a9a9a066"; //change
 
         $integrator_and_secret_key = "Basic " . utf8_decode(base64_encode("{$client_id}:{$client_secret}"));
 
@@ -120,7 +120,6 @@ class DocusignController extends Controller
             $envelope_api = new \DocuSign\eSign\Api\EnvelopesApi($api_client);
             $results = $envelope_api->createEnvelope($args['account_id'], $envelope_definition);
             $envelope_id = $results->getEnvelopeId();
-
             $authentication_method = 'None'; # How is this application authenticating
             # the signer? See the `authenticationMethod' definition
             # https://developers.docusign.com/esign-rest-api/reference/Envelopes/EnvelopeViews/createRecipient
@@ -129,12 +128,10 @@ class DocusignController extends Controller
                 'client_user_id' => $envelope_args['signer_client_id'],
                 'recipient_id' => '1',
                 'return_url' => $envelope_args['ds_return_url'],
-                'user_name' => 'shaiv', 'email' => 'abdullah.laraveldev@gmail.com'
+                'user_name' => 'shaiv', 'email' => 'awaisamir23@gmail.com'
             ]);
 
             $results = $envelope_api->createRecipientView($args['account_id'], $envelope_id,$recipient_view_request);
-
-            dd($results);
 
             return redirect()->to($results['url']);
         } catch (Exception $e) {
@@ -171,7 +168,7 @@ class DocusignController extends Controller
         ]);
         # Create the signer recipient model
         $signer = new \DocuSign\eSign\Model\Signer([# The signer
-            'email' => 'abdullah.laraveldev@gmail.com', 'name' => 'shaiv',
+            'email' => 'awaisamir23@gmail.com', 'name' => 'shaiv',
             'recipient_id' => "1", 'routing_order' => "1",
             # Setting the client_user_id marks the signer as embedded
             'client_user_id' => $args['signer_client_id'],
@@ -222,7 +219,7 @@ class DocusignController extends Controller
             'ds_return_url' => route('docusign')
         ];
         $args = [
-            'account_id' =>"1797216e-2fcc-4b29-95e4-ff04a330b007",
+            'account_id' =>"7716918e-104d-4915-b7ca-eff79222ac45",
             'base_path' => "https://demo.docusign.net/restapi",
             'ds_access_token' => Session::get('docusign_auth_code'),
             'envelope_args' => $envelope_args
