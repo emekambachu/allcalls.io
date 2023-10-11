@@ -27,7 +27,7 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Inertia\Inertia;
+use Inertia\Inertia;v
 
 class RegistrationStepController extends Controller
 {
