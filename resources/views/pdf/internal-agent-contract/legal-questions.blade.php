@@ -5,8 +5,8 @@
         question, you must provide documentation including a full, detailed explanation and specific dates. Please
         answer every question including sub questions for clarity.
     </p>
-    @foreach($contractData->internalAgentContract->legalQuestion as $question)
-        @if($question->name == 'convicted_checkbox_1')
+    @foreach ($contractData->internalAgentContract->legalQuestion as $question)
+        @if ($question->name == 'convicted_checkbox_1')
             <div class="section-border">
                 <p>
                     <strong>1. &nbsp;</strong>
@@ -15,21 +15,21 @@
                     federal/state insurance and/or securities or investments regulations or statutes?
                 </p>
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'convicted_checkbox_1a')
+        @if ($question->name == 'convicted_checkbox_1a')
             <div class="section-border">
                 <p>
                     <strong>1A. &nbsp;</strong>
@@ -37,21 +37,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'convicted_checkbox_1b')
+        @if ($question->name == 'convicted_checkbox_1b')
             <div class="section-border">
                 <p>
                     <strong>1B. &nbsp;</strong>
@@ -59,21 +59,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'convicted_checkbox_1c')
+        @if ($question->name == 'convicted_checkbox_1c')
             <div class="section-border">
                 <p>
                     <strong>1C. &nbsp;</strong>
@@ -84,21 +84,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'convicted_checkbox_1d')
+        @if ($question->name == 'convicted_checkbox_1d')
             <div class="section-border">
                 <p>
                     <strong>1D. &nbsp;</strong>
@@ -108,21 +108,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'convicted_checkbox_1e')
+        @if ($question->name == 'convicted_checkbox_1e')
             <div class="section-border">
                 <p>
                     <strong>1E. &nbsp;</strong>
@@ -133,21 +133,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'convicted_checkbox_1f')
+        @if ($question->name == 'convicted_checkbox_1f')
             <div class="section-border">
                 <p>
                     <strong>1F. &nbsp;</strong>
@@ -155,21 +155,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'convicted_checkbox_1g')
+        @if ($question->name == 'convicted_checkbox_1g')
             <div class="section-border">
                 <p>
                     <strong>1G. &nbsp;</strong>
@@ -177,21 +177,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'convicted_checkbox_1h')
+        @if ($question->name == 'convicted_checkbox_1h')
             <div class="section-border">
                 <p>
                     <strong>1H. &nbsp;</strong>
@@ -199,21 +199,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'lawsuit_checkbox_2')
+        @if ($question->name == 'lawsuit_checkbox_2')
             <div class="section-border">
                 <p>
                     <strong>2. &nbsp;</strong>
@@ -224,21 +224,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'lawsuit_checkbox_2a')
+        @if ($question->name == 'lawsuit_checkbox_2a')
             <div class="section-border">
                 <p>
                     <strong>2A. &nbsp;</strong>
@@ -246,21 +246,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'lawsuit_checkbox_2b')
+        @if ($question->name == 'lawsuit_checkbox_2b')
             <div class="section-border">
                 <p>
                     <strong>2B. &nbsp;</strong>
@@ -268,21 +268,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'lawsuit_checkbox_2c')
+        @if ($question->name == 'lawsuit_checkbox_2c')
             <div class="section-border">
                 <p>
                     <strong>2C. &nbsp;</strong>
@@ -292,21 +292,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'lawsuit_checkbox_2d')
+        @if ($question->name == 'lawsuit_checkbox_2d')
             <div class="section-border">
                 <p>
                     <strong>2D. &nbsp;</strong>
@@ -317,21 +317,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'alleged_engaged_checkbox_3')
+        @if ($question->name == 'alleged_engaged_checkbox_3')
             <div class="section-border">
                 <p>
                     <strong>3. &nbsp;</strong>
@@ -339,21 +339,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'found_engaged_checkbox_4')
+        @if ($question->name == 'found_engaged_checkbox_4')
             <div class="section-border">
                 <p>
                     <strong>4. &nbsp;</strong>
@@ -361,21 +361,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'terminate_contract_checkbox_5')
+        @if ($question->name == 'terminate_contract_checkbox_5')
             <div class="section-border">
                 <p>
                     <strong>5. &nbsp;</strong>
@@ -385,21 +385,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'terminate_contract_checkbox_5a')
+        @if ($question->name == 'terminate_contract_checkbox_5a')
             <div class="section-border">
                 <p>
                     <strong>5A. &nbsp;</strong>
@@ -409,21 +409,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'terminate_contract_checkbox_5b')
+        @if ($question->name == 'terminate_contract_checkbox_5b')
             <div class="section-border">
                 <p>
                     <strong>5B. &nbsp;</strong>
@@ -431,21 +431,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'terminate_contract_checkbox_5c')
+        @if ($question->name == 'terminate_contract_checkbox_5c')
             <div class="section-border">
                 <p>
                     <strong>5C. &nbsp;</strong>
@@ -455,21 +455,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'cancel_insu_cause_checkbox_6')
+        @if ($question->name == 'cancel_insu_cause_checkbox_6')
             <div class="section-border">
                 <p>
                     <strong>6. &nbsp;</strong>
@@ -480,21 +480,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'insurer_checkbox_7')
+        @if ($question->name == 'insurer_checkbox_7')
             <div class="section-border">
                 <p>
                     <strong>7. &nbsp;</strong>
@@ -506,21 +506,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'lawsuit_checkbox_8')
+        @if ($question->name == 'lawsuit_checkbox_8')
             <div class="section-border">
                 <p>
                     <strong>8. &nbsp;</strong>
@@ -530,21 +530,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'lawsuit_checkbox_8a')
+        @if ($question->name == 'lawsuit_checkbox_8a')
             <div class="section-border">
                 <p>
                     <strong>8A. &nbsp;</strong>
@@ -555,21 +555,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'lawsuit_checkbox_8b')
+        @if ($question->name == 'lawsuit_checkbox_8b')
             <div class="section-border">
                 <p>
                     <strong>8B. &nbsp;</strong>
@@ -577,21 +577,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'license_denied_checkbox_9')
+        @if ($question->name == 'license_denied_checkbox_9')
             <div class="section-border">
                 <p>
                     <strong>9. &nbsp;</strong>
@@ -599,21 +599,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'regulatory_checkbox_10')
+        @if ($question->name == 'regulatory_checkbox_10')
             <div class="section-border">
                 <p>
                     <strong>10. &nbsp;</strong>
@@ -623,21 +623,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'regulatory_revoked_checkbox_11')
+        @if ($question->name == 'regulatory_revoked_checkbox_11')
             <div class="section-border">
                 <p>
                     <strong>11. &nbsp;</strong>
@@ -647,21 +647,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'regulatory_found_checkbox_12')
+        @if ($question->name == 'regulatory_found_checkbox_12')
             <div class="section-border">
                 <p>
                     <strong>12. &nbsp;</strong>
@@ -671,21 +671,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'interr_licensing_checkbox_13')
+        @if ($question->name == 'interr_licensing_checkbox_13')
             <div class="section-border">
                 <p>
                     <strong>13. &nbsp;</strong>
@@ -693,21 +693,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'self_regularity_checkbox_14')
+        @if ($question->name == 'self_regularity_checkbox_14')
             <div class="section-border">
                 <p>
                     <strong>14. &nbsp;</strong>
@@ -718,21 +718,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'self_regularity_checkbox_14a')
+        @if ($question->name == 'self_regularity_checkbox_14a')
             <div class="section-border">
                 <p>
                     <strong>14A. &nbsp;</strong>
@@ -740,21 +740,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'self_regularity_checkbox_14b')
+        @if ($question->name == 'self_regularity_checkbox_14b')
             <div class="section-border">
                 <p>
                     <strong>14B. &nbsp;</strong>
@@ -763,21 +763,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'self_regularity_checkbox_14c')
+        @if ($question->name == 'self_regularity_checkbox_14c')
             <div class="section-border">
                 <p>
                     <strong>14C. &nbsp;</strong>
@@ -785,21 +785,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'bankruptcy_checkbox_15')
+        @if ($question->name == 'bankruptcy_checkbox_15')
             <div class="section-border">
                 <p>
                     <strong>15. &nbsp;</strong>
@@ -812,21 +812,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'bankruptcy_checkbox_15a')
+        @if ($question->name == 'bankruptcy_checkbox_15a')
             <div class="section-border">
                 <p>
                     <strong>15A. &nbsp;</strong>
@@ -839,21 +839,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'bankruptcy_checkbox_15b')
+        @if ($question->name == 'bankruptcy_checkbox_15b')
             <div class="section-border">
                 <p>
                     <strong>15B. &nbsp;</strong>
@@ -867,21 +867,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'bankruptcy_checkbox_15c')
+        @if ($question->name == 'bankruptcy_checkbox_15c')
             <div class="section-border">
                 <p>
                     <strong>15C. &nbsp;</strong>
@@ -889,21 +889,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'liens_against_checkbox_16')
+        @if ($question->name == 'liens_against_checkbox_16')
             <div class="section-border">
                 <p>
                     <strong>16. &nbsp;</strong>
@@ -911,21 +911,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'connected_checkbox_17')
+        @if ($question->name == 'connected_checkbox_17')
             <div class="section-border">
                 <p>
                     <strong>17. &nbsp;</strong>
@@ -934,21 +934,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'aliases_checkbox_18')
+        @if ($question->name == 'aliases_checkbox_18')
             <div class="section-border">
                 <p>
                     <strong>18. &nbsp;</strong>
@@ -956,21 +956,21 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
         @endif
 
-        @if($question->name == 'unresolved_matter_checkbox_19')
+        @if ($question->name == 'unresolved_matter_checkbox_19')
             <div class="section-border">
                 <p>
                     <strong>19. &nbsp;</strong>
@@ -979,47 +979,47 @@
                 </p>
 
                 <p>
-                    <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
                     <span class="radio-values">YES</span>
-                    <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
                     <span class="radio-values">NO</span>
                 </p>
 
-                @if($question->value == 'YES')
-                    <p>
-                        <strong>Explanation: &nbsp;</strong> <br> {{$question->description}}
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
             </div>
-            @endif
+        @endif
 
-            @if($question->name == 'contract_commission_checkbox_20')
-                <div class="section-border">
-                    <p>
-                        <strong>20. &nbsp;</strong>
-                        Have you SIGNED CONTRACTS or BEEN PAID COMMISSIONS with any insurance carriers in the last 6
-                        months?
+        @if ($question->name == 'contract_commission_checkbox_20')
+            <div class="section-border">
+                <p>
+                    <strong>20. &nbsp;</strong>
+                    Have you SIGNED CONTRACTS or BEEN PAID COMMISSIONS with any insurance carriers in the last 6
+                    months?
+                </p>
+
+                <p>
+                    <input type="radio" @if ($question->value == 'YES') checked @endif class="radio-option">
+                    <span class="radio-values">YES</span>
+                    <input type="radio" @if ($question->value == 'NO') checked @endif class="radio-option">
+                    <span class="radio-values">NO</span>
+                </p>
+
+                @if ($question->value == 'YES')
+                    <p style="overflow-wrap: break-word;">
+                        <strong>Explanation: &nbsp;</strong> <br>
+                        @foreach (explode(',', $question->description) as $key => $commission)
+                            {{ $key + 1 }}- {{ $commission }}
+                            @if (!$loop->last)
+                                &nbsp; &nbsp; &nbsp;
+                            @endif
+                        @endforeach
                     </p>
-
-                    <p>
-                        <input type="radio" @if($question->value == 'YES') checked @endif class="radio-option">
-                        <span class="radio-values">YES</span>
-                        <input type="radio" @if($question->value == 'NO') checked @endif class="radio-option">
-                        <span class="radio-values">NO</span>
-                    </p>
-
-                    @if($question->value == 'YES')
-                        <p>
-                            <strong>Explanation: &nbsp;</strong> <br>
-                            @foreach(explode(',',$question->description) as $key=>$commission)
-                                {{$key+1}}- {{$commission}}
-                                @if(!$loop->last)
-                                    &nbsp; &nbsp; &nbsp;
-                                @endif
-                            @endforeach
-                        </p>
-                    @endif
-                </div>
-            @endif
+                @endif
+            </div>
+        @endif
     @endforeach
 </div>

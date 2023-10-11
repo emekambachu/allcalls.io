@@ -76,6 +76,9 @@ onMounted(() => {
                                     <th scope="col" class="px-4 py-3">FULL NAME</th>
                                     <th scope="col" class="px-4 py-3">EMAIL</th>
                                     <th scope="col" class="px-4 py-3" style="min-width:240px">LAST ACTIVITY AT</th>
+                                    <th scope="col" class="px-4 py-3" style="min-width:240px">IP ADDRESS</th>
+                                    <th scope="col" class="px-4 py-3" style="min-width:240px">DEVICES DETAILS</th>
+                                    <th scope="col" class="px-4 py-3" style="min-width:240px">USER AGENT</th>
                                     <th scope="col" class="px-4 py-3" style="min-width:240px">SIGNED IN AT</th>
                                     <th scope="col" class="px-4 py-3" style="min-width:240px">LOGOUT AT</th>
                                 </tr>
@@ -90,6 +93,9 @@ onMounted(() => {
                                         
                                     </td>
                                     <td class="text-gray-700 px-4 py-3">{{ formatDate(moment(moment(activity.last_activity_at).utc().format("YYYY-MM-DD HH:mm:ss")).tz(timezone).format("YYYY-MM-DD HH:mm:ss")) }}</td>
+                                    <td class="text-gray-700 px-4 py-3">{{ (activity.ip_address) ? activity.ip_address : 'N/A' }}</td>
+                                    <td class="text-gray-700 px-4 py-3">{{ (activity.devices_details) ? activity.devices_details : 'N/A' }}</td>
+                                    <td class="text-gray-700 px-4 py-3">{{ (activity.user_agent) ? activity.user_agent : 'N/A' }}</td>
                                     <td class="text-gray-700 px-4 py-3">{{ formatDate(moment(moment(activity.created_at).utc().format("YYYY-MM-DD HH:mm:ss")).tz(timezone).format("YYYY-MM-DD HH:mm:ss")) }}</td>
                                     <td class="text-gray-700 px-4 py-3">{{ !(activity.logout_time)? '': formatDate(moment(moment(activity.logout_time).utc().format("YYYY-MM-DD HH:mm:ss")).tz(timezone).format("YYYY-MM-DD HH:mm:ss")) }} </td>
                                 </tr>

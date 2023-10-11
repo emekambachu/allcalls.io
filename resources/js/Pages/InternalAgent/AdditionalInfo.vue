@@ -77,30 +77,30 @@
 
         <div class="grid lg:grid-cols-2 mb-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
             <div>
-                <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Resident
+                <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 ">Resident
                     Country<span class="text-red-500 ">*</span></label>
-                <select v-model="form.resident_country" id="countries"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <select :disabled="page.auth.role === 'admin'" v-model="form.resident_country" id="countries"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                     <option v-for="country in countries" :value="country.code">{{ country.name }} </option>
                 </select>
                 <!-- <input type="text" v-model="form.resident_country" id="default-input"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"> -->
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white"> -->
                 <div v-if="firstStepErrors.resident_country" class="text-red-500"
                     v-text="firstStepErrors.resident_country[0]"></div>
             </div>
             <div class=" mt-4 lg:ml-4 sm:ml-0">
-                <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Do you own
+                <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 ">Do you own
                     your home?<span class="text-red-500 ">*</span></label>
                 <div class="flex">
                     <div class="flex items-center mr-4">
 
-                        <input id="default-radio-1-1" v-model="form.resident_your_home" type="radio" value="YES"
+                        <input :disabled="page.auth.role === 'admin'" id="default-radio-1-1" v-model="form.resident_your_home" type="radio" value="YES"
                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                         <label for="default-radio-1-1"
                             class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">YES</label>
                     </div>
                     <div class="flex items-center">
-                        <input id="default-radio-2-2" v-model="form.resident_your_home" type="radio" value="NO"
+                        <input :disabled="page.auth.role === 'admin'" id="default-radio-2-2" v-model="form.resident_your_home" type="radio" value="NO"
                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                         <label for="default-radio-2-2"
                             class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">NO</label>
@@ -115,18 +115,18 @@
         </div>
         <div class="grid lg:grid-cols-3 mb-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
             <div>
-                <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">City of
+                <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 ">City of
                     Birth<span class="text-red-500 ">*</span></label>
-                <input type="text" v-model="form.resident_city" id="default-input"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <input :disabled="page.auth.role === 'admin'" type="text" v-model="form.resident_city" id="default-input"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                 <div v-if="firstStepErrors.resident_city" class="text-red-500" v-text="firstStepErrors.resident_city[0]">
                 </div>
             </div>
             <div>
-                <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white"> State of
+                <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 "> State of
                     Birth<span class="text-red-500 ">*</span></label>
-                <select  v-model="form.resident_state" id="countries"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <select :disabled="page.auth.role === 'admin'"  v-model="form.resident_state" id="countries"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                     <option>Choose </option>
                     <option v-for="state in states" :value="state.id">{{ state.full_name }} </option>
                 </select>
@@ -135,10 +135,10 @@
             </div>
 
             <div>
-                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Maiden
+                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">Maiden
                     Name</label>
-                <input type="text" v-model="form.resident_maiden_name" id="default-input"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <input :disabled="page.auth.role === 'admin'" type="text" v-model="form.resident_maiden_name" id="default-input"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                 <div v-if="firstStepErrors.resident_maiden_name" class="text-red-500"
                     v-text="firstStepErrors.resident_maiden_name[0]"></div>
             </div>
@@ -214,7 +214,7 @@
         <div class="grid lg:grid-cols-2 mb-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
 
             <div class=" mt-4 lg:ml-4 sm:ml-0">
-                <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">AML
+                <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 ">AML
                     Provider<span class="text-red-500 ">*</span></label>
                 <div class="flex">
                     <div class="flex items-center mr-4">
@@ -237,7 +237,7 @@
                 </div>
             </div>
             <div>
-                <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 dark:text-white">Training
+                <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 ">Training
                     Completion Date<span class="text-red-500 ">*</span></label>
                 <VueDatePicker v-model="form.training_completion_date" format="dd-MMM-yyyy" :maxDate="maxDate">
                 </VueDatePicker>
@@ -245,10 +245,10 @@
                     v-text="firstStepErrors.training_completion_date[0]"></div>
             </div>
             <div>
-                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">If completed
+                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">If completed
                     through LIMRA, please provide your LIMRA password<span class="text-red-500 ">*</span></label>
                 <input type="text" v-model="form.limra_password" id="default-input"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                 <div v-if="firstStepErrors.limra_password" class="text-red-500" v-text="firstStepErrors.limra_password[0]">
                 </div>
             </div>

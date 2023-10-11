@@ -311,7 +311,7 @@
             <td style="width: 33.3%;">
                 <span class="basic-info-element">
                 <strong>State: &nbsp;</strong>
-                {{getStateName($contractData->internalAgentContract->business_state)}}
+                {{isset($contractData->internalAgentContract->business_state) ? getStateName($contractData->internalAgentContract->business_state) : ""}}
                 </span>
             </td>
         </tr>

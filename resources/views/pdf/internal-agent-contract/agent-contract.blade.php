@@ -134,9 +134,9 @@
 {{--End Signature--}}
 
 {{--Start Signature Authorization--}}
-@if(isset($contractData->internalAgentContract) && $contractData->internalAgentContract->getContractSign)
+{{-- @if(isset($contractData->internalAgentContract) && $contractData->internalAgentContract->getContractSign)
     @include('pdf.internal-agent-contract.signature')
-@endif
+@endif --}}
 {{--End Signature Authorization--}}
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
