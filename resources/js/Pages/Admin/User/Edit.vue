@@ -48,7 +48,7 @@ let form = useForm({
   balance: props.userDetail.balance,
   comment: "",
   call_types: props.callTypes,
-  roles: props.roles,
+  roles: props.userDetail.role_id,
   selected_states: props.callTypes.map((type) => {
     return {
       typeId: type.id,
@@ -104,7 +104,6 @@ let validateEmail = (email) => {
 const isLoading = ref(false);
 let saveChanges = () => {
   isLoading.value = true;
-  console.log(form.roles)
   if (typeof form.roles !== 'object') {
     form.roles = form.roles;
   }else{
@@ -324,7 +323,7 @@ let ChangeTab = (val) => {
               </select> -->
                <select v-model="form.roles" id='roles' name="roles"  class="select-custom" required>
                   <option selected="" disabled="" value="">Select Role</option>
-                  <option v-for="role in roles" if :value="role.id">{{role.name}}</option>
+                  <option v-for="role in roles" :value="role.id">{{role.name}}</option>
               </select>
             </div>
             <div v-if="firstStepErrors">
