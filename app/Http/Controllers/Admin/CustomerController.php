@@ -27,7 +27,8 @@ class CustomerController extends Controller
     {
         $excludeRoles = Role::whereIn('name', ['admin', 'internal-agent', 'user'])->pluck('id');
         $roles = Role::get();
-        $users = User::where(function ($query) use ($request) {
+        $users = User::select('users.*', 'role_user.role_id')->leftjoin('role_user', 'role_user.user_id', 'users.id')
+            ->where(function ($query) use ($request) {
                 if (isset($request->name) && $request->name != '') {
                     $query->where('first_name', 'LIKE', '%' . $request->name . '%')
                         ->orWhere('last_name', 'LIKE', '%' . $request->name . '%');
@@ -61,7 +62,7 @@ class CustomerController extends Controller
             ->with('states')
             ->with('roles')
             ->with('callTypes')
-            ->orderBy("created_at","DESC")
+            ->orderBy("users.created_at","DESC")
             ->paginate(10);
 
         $callTypes = CallType::get();
