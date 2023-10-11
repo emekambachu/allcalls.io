@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Session;
 use Illuminate\Http\Request;
 use DocuSign\eSign\Configuration;
 use DocuSign\eSign\Api\EnvelopesApi;
 use DocuSign\eSign\Client\ApiClient;
 use Exception;
-use Illuminate\Contracts\Session\Session;
 
 class DocusignController extends Controller
 {
