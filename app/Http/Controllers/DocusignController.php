@@ -165,7 +165,7 @@ class DocusignController extends Controller
             'document_base64' => $base64_file_content,
             'name' => 'Example document', # can be different from actual file name
             'file_extension' => 'pdf', # many different document types are accepted
-            'document_id' => 'awais-signed-document', # a label used to reference the doc
+            'document_id' => '1001', # a label used to reference the doc
         ]);
         # Create the signer recipient model
         $signer = new \DocuSign\eSign\Model\Signer([# The signer
