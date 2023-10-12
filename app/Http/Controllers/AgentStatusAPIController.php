@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use App\Models\Bid;
 use App\Models\State;
 use App\Models\CallType;
 use App\Models\OnlineUser;
@@ -13,6 +14,10 @@ use Illuminate\Validation\ValidationException;
 
 class AgentStatusAPIController extends Controller
 {
+    private $affiliates = [
+        '1' => [ 'api_key' => 'secret123', 'affiliate_percentage' => 10 ],
+    ];
+
     /**
      * Check if an agent is available for a given phone number's area code and vertical.
      *
@@ -42,6 +47,8 @@ class AgentStatusAPIController extends Controller
             'zip' => 'sometimes|required_without_all:phone,state',
             'state' => 'sometimes|required_without_all:phone,zip',
             'vertical' => 'required|in:' . $validVerticals,
+            'affiliate_id' => 'required',
+            'api_key' => 'required',
         ], $customMessages);
 
         $vertical = $verticalMapping[$request->input('vertical')];
@@ -56,40 +63,52 @@ class AgentStatusAPIController extends Controller
         }
         if (!$state) {
             return response()->json(['message' => 'Could not map the state for the given input.'], 400);
-        }    
-    
+        }
+
         Log::debug('Omega: ' . $state . ', vertical: ' . $vertical);
 
         // Agent lookup
         $agentAvailable = $this->isAgentAvailable($state, $vertical);
+        $price = $this->getPriceForVertical($vertical);
+
+        if ($request->has('affiliate_id') && $request->has('api_key')) {
+            $affiliate = $this->affiliates[$request->input('affiliate_id')] ?? null;
+        
+            if ($affiliate && $affiliate['api_key'] == $request->input('api_key')) {
+                $percentage = (100 - $affiliate['affiliate_percentage']) / 100;
+                $price *= $percentage;
+            } else {
+                return response()->json(['message' => 'Invalid affiliate credentials.'], 400);
+            }
+        }
 
         if ($agentAvailable) {
-            return response()->json(['online' => true], 200);
+            return response()->json(['online' => true, 'price' => $price], 200);
         } else {
-            return response()->json(['online' => false], 200);
+            return response()->json(['online' => false, 'price' => $price], 200);
         }
     }
 
     private function zipToState(string $zip): ?string
     {
         $url = "https://zip-api.eu/api/v1/info/US-{$zip}";
-    
+
         try {
             $response = file_get_contents($url);
-    
+
             if ($response === false) {
                 return null;
             }
-    
+
             $data = json_decode($response, true);
-    
+
             return $data['state'] ?? null;
         } catch (Exception $e) {
             Log::error("Error fetching state from ZIP API: " . $e->getMessage());
             return null;
         }
     }
-    
+
     /**
      * Extract the first 3 characters (area code) from a phone number.
      *
@@ -108,17 +127,53 @@ class AgentStatusAPIController extends Controller
         } else {
             $stateModel = State::whereFullName($state)->firstOrFail();
         }
-    
+
         // Query for the call type
         $callTypeModel = CallType::whereType($vertical)->firstOrFail();
-    
+
         // Check for online users matching the criteria
         $onlineUsers = OnlineUser::byCallTypeAndState($callTypeModel, $stateModel)
             ->withSufficientBalance($callTypeModel)
             ->withCallStatusWaiting()
             ->get();
-    
+
         // Here you can put your actual logic to determine if an agent is available
         return $onlineUsers->count() > 0;
-    }    
+    }
+
+    private function getPriceForVertical(string $vertical): float
+    {
+        // Query for the call type
+        $callType = CallType::whereType($vertical)->firstOrFail();
+    
+        // Get the total number of bids for this call type
+        $bidCount = Bid::where('call_type_id', $callType->id)->count();
+    
+        // If there are no bids or only one bid, return $25
+        if ($bidCount <= 1) {
+            return 25;
+        }
+    
+        // Get the highest and second highest bid amounts for the call type
+        $highestBids = Bid::where('call_type_id', $callType->id)
+            ->orderBy('amount', 'desc')
+            ->take(2)  // This will take the highest and second highest bids
+            ->get();
+    
+        // If there are not enough bids to compare, return $25
+        if ($highestBids->count() < 2) {
+            return 25;
+        }
+    
+        $highestBid = $highestBids[0];
+        $secondHighestBid = $highestBids[1];
+    
+        // Check if the second highest bid is the same as the highest bid, or only $1 less
+        if ($secondHighestBid->amount == $highestBid->amount || $highestBid->amount - $secondHighestBid->amount == 1) {
+            return $highestBid->amount;
+        }
+    
+        // Otherwise, return the second highest bid amount + 1
+        return $secondHighestBid->amount + 1;
+    }
 }
