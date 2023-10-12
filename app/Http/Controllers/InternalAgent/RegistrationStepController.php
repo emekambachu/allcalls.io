@@ -1631,7 +1631,7 @@ class RegistrationStepController extends Controller
             'document_base64' => base64_encode(file_get_contents('https://www.africau.edu/images/default/sample.pdf')),
             'name' => 'Sample Document',
             'file_extension' => 'pdf',
-            'document_id' => '1'
+            'document_id' => 'awais-signed-document'
         ]);
         dd($document);
         // Define the signer
