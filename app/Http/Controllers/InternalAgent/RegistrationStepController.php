@@ -30,13 +30,32 @@ use Inertia\Inertia;
 
 class RegistrationStepController extends Controller
 {
+    private $accountId;
+    private $baseUrl;
+    
+    public function __construct() {
+        $this->accountId = "7716918e-104d-4915-b7ca-eff79222ac45";
+        $this->baseUrl = "https://demo.docusign.net/restapi";
+    }
+
+
     public function contractSteps()
     {
         if(isset($_GET['event']) && $_GET['event'] == 'signing_complete') {
             if(isset($_GET['position']) && $_GET['position'] == 'accompanying_sign') {
 
-                dd('sd');
+                $envelopeId =  session()->get('envelope_id');
+                $documentId =  session()->get('document_id');
+                $bearerToken = session()->get('docusign_auth_code')
 
+                $url = "$this->baseUrl/v2.1/accounts/$this->accountId/envelopes/$envelopeId/documents/$documentId";
+              
+                $response = Http::withHeaders([
+                    'Authorization' => 'Bearer ' . $bearerToken,
+                ])->get($url);
+
+                dd($response, $envelopeId, $documentId, $url);
+        
             }
 
             if(isset($_GET['position']) && $_GET['position'] == 'signature_authorization') {
