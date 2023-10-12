@@ -177,12 +177,12 @@ class DocusignController extends Controller
         $base64_file_content = base64_encode($content_bytes);
         // dd($base64_file_content);
         # Create the document model
-        $documentId = time().auth()->user()->id;
+        $documentId = auth()->user()->id;
         $document = new \DocuSign\eSign\Model\Document([ # create the DocuSign document object
             'document_base64' => $base64_file_content,
             'name' => 'Example document', # can be different from actual file name
             'file_extension' => 'pdf', # many different document types are accepted
-            'document_id' => (string)$documentId, # a label used to reference the doc
+            'document_id' => $documentId, # a label used to reference the doc
         ]);
         session()->put('document_id', $documentId);
         
