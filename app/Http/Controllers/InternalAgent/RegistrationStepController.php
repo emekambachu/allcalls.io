@@ -57,8 +57,6 @@ class RegistrationStepController extends Controller
                     'Content-Type' => 'application/pdf',
                 ])->get($url);
 
-                dd($response, $envelopeId, $documentId, $url, $bearerToken);
-
                 $pdfFileName = auth()->user()->id . '_accompanying_sign' . '.pdf';
 
                 // Determine the full path to the public/contract directory
