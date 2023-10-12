@@ -25,9 +25,12 @@ Route::prefix('internal-agent')->middleware(['auth', 'verified', 'internal-agent
         ->name('registration.steps');
     Route::post('registration-signature', [RegistrationStepController::class, 'registrationSignature'])
         ->name('registration.signature');
+});
 
+Route::middleware(['auth', 'verified', 'internal-agent'])->group(function () {
     Route::get('docusign', [DocusignController::class, 'index'])->name('internal.agent.docusign');
     Route::get('connect-docusign', [DocusignController::class, 'connectDocusign'])->name('internal.agent.connect.docusign');
     Route::get('docusign/callback', [DocusignController::class, 'callback'])->name('internal.agent.docusign.callback');
     Route::get('sign-document', [DocusignController::class, 'signDocument'])->name('internal.agent.docusign.sign');
 });
+
