@@ -27,8 +27,7 @@ class DocusignExampleController extends Controller
         $apiClient->getOAuth()->setOAuthBasePath(env('DOCUSIGN_ACCOUNT_BASE_URI'));
         $response = $apiClient->requestJWTUserToken($integration_key, $impersonatedUserId, $rsaPrivateKey, $scopes);
         
-        // Corrected way to get the access token
-        $access_token = $response->getAccessToken();
+        $access_token = $response[0]['access_token'];
         
         $config->addDefaultHeader('Authorization', 'Bearer ' . $access_token);
 
