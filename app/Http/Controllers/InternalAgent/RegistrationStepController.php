@@ -53,7 +53,7 @@ class RegistrationStepController extends Controller
                 
                 $response = Http::withToken( 'Bearer ' . $bearerToken)->get($url);
 
-                dd($response, $envelopeId, $documentId, $url, $bearerToken);
+                dd($response->body(), $envelopeId, $documentId, $url, $bearerToken);
             }
 
             if (isset($_GET['position']) && $_GET['position'] == 'signature_authorization') {
