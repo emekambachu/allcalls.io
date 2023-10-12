@@ -46,7 +46,7 @@ class RegistrationStepController extends Controller
 
                 $envelopeId =  session()->get('envelope_id');
                 $documentId =  session()->get('document_id');
-                $bearerToken = session()->get('docusign_auth_code')
+                $bearerToken = session()->get('docusign_auth_code');
 
                 $url = "$this->baseUrl/v2.1/accounts/$this->accountId/envelopes/$envelopeId/documents/$documentId";
               
