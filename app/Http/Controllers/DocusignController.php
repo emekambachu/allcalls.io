@@ -67,12 +67,12 @@ class DocusignController extends Controller
     public function callback(Request $request)
     {
         $code = $request->code;
+        dd($code);
 
         $client_id = "75d97718-8a98-4d27-8def-17c2fceed79f"; //change
         $client_secret = "897ce745-c111-4229-aff4-6637a9a9a066"; //change
 
         $integrator_and_secret_key = "Basic " . utf8_decode(base64_encode("{$client_id}:{$client_secret}"));
-        dd($integrator_and_secret_key);
 
         $ch = curl_init();
 
