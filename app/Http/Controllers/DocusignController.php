@@ -53,6 +53,11 @@ class DocusignController extends Controller
 
             $botUrl = $url . $queryBuild;
 
+            // return response()->json([
+            //     'success' => true,
+            //     'route' => $botUrl,
+            // ], 200);
+
             return redirect()->to($botUrl);
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'Something Went wrong !');
@@ -206,7 +211,6 @@ class DocusignController extends Controller
         $this->config->setHost($this->args['base_path']);
         $this->config->addDefaultHeader('Authorization', 'Bearer ' . $this->args['ds_access_token']);
         $this->apiClient = new ApiClient($this->config);
-
         return new EnvelopesApi($this->apiClient);
     }
 
@@ -227,8 +231,6 @@ class DocusignController extends Controller
             'ds_access_token' => Session::get('docusign_auth_code'),
             'envelope_args' => $envelope_args
         ];
-
         return $args;
-
     }
 }
