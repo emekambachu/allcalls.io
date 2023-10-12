@@ -8,9 +8,10 @@ use DocuSign\eSign\Model\Signer;
 use DocuSign\eSign\Configuration;
 use DocuSign\eSign\Model\Document;
 use DocuSign\eSign\Model\SignHere;
+use Illuminate\Support\Facades\Log;
+use DocuSign\eSign\Api\EnvelopesApi;
 use DocuSign\eSign\Client\ApiClient;
 use DocuSign\eSign\Model\EnvelopeDefinition;
-use DocuSign\eSign\Api\EnvelopesApi;
 
 class DocusignExampleController extends Controller
 {
@@ -27,7 +28,11 @@ class DocusignExampleController extends Controller
         $apiClient->getOAuth()->setOAuthBasePath(env('DOCUSIGN_ACCOUNT_BASE_URI'));
         $response = $apiClient->requestJWTUserToken($integration_key, $impersonatedUserId, $rsaPrivateKey, $scopes);
         
+        Log::debug('Response: ' . json_encode($response));
+
         $access_token = $response[0]['access_token'];
+
+        Log::debug('Access Token: ' . $access_token);
         
         $config->addDefaultHeader('Authorization', 'Bearer ' . $access_token);
 
