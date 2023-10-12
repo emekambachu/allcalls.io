@@ -130,7 +130,7 @@ class DocusignController extends Controller
                 'client_user_id' => $envelope_args['signer_client_id'],
                 'recipient_id' => '1',
                 'return_url' => $envelope_args['ds_return_url'],
-                'user_name' => 'shaiv', 'email' => 'abdullah.laraveldev@gmail.com'
+                'user_name' => 'Noman', 'email' => 'ra9249421@gmail.com'
             ]);
 
             $results = $envelope_api->createRecipientView($args['account_id'], $envelope_id,$recipient_view_request);
@@ -170,7 +170,7 @@ class DocusignController extends Controller
         ]);
         # Create the signer recipient model
         $signer = new \DocuSign\eSign\Model\Signer([# The signer
-            'email' => 'abdullah.laraveldev@gmail.com', 'name' => 'shaiv',
+            'email' => 'ra9249421@gmail.com', 'name' => 'shaiv',
             'recipient_id' => "1", 'routing_order' => "1",
             # Setting the client_user_id marks the signer as embedded
             'client_user_id' => $args['signer_client_id'],
@@ -186,7 +186,7 @@ class DocusignController extends Controller
         # Next, create the top level envelope definition and populate it.
 
         $envelope_definition = new \DocuSign\eSign\Model\EnvelopeDefinition([
-            'email_subject' => "Please sign this document sent from the CodeHunger",
+            'email_subject' => "On Boarding Info",
             'documents' => [$document],
             # The Recipients object wants arrays for each recipient type
             'recipients' => new \DocuSign\eSign\Model\Recipients(['signers' => [$signer]]),

@@ -1619,6 +1619,7 @@ class RegistrationStepController extends Controller
             'Authorization' => 'Bearer ' . $barerToken,
         ])->post($url);
 
+
         dd($response, $response->successful(), $response->json(), $response->status());
 
 
