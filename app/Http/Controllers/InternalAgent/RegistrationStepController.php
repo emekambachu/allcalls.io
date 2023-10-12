@@ -1334,6 +1334,7 @@ class RegistrationStepController extends Controller
                     'success' => true,
                     'route' => route('connect.docusign'),
                 ], 200);
+                
             } catch (\Exception $e) {
                 DB::rollBack();
                 return response()->json([

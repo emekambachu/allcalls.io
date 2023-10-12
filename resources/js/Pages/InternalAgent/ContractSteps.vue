@@ -154,7 +154,7 @@ let previewContract = () => {
 }
 
 let errorHandle = (data, route) => {
-    // console.log('data', data);
+    console.log('data', data);
     if (data < 5) {
         ChangeTab()
     } else if (data < 9) {

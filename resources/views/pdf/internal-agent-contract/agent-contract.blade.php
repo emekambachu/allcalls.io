@@ -128,15 +128,15 @@
     {{-- End Additional Info --}}
 
     {{-- Start Signature --}}
-    @if (isset($contractData->internalAgentContract) && $contractData->internalAgentContract->getQuestionSign)
+    {{-- @if (isset($contractData->internalAgentContract) && $contractData->internalAgentContract->getQuestionSign)
         @include('pdf.internal-agent-contract.accompanying-sign')
-    @endif
+    @endif --}}
     {{-- End Signature --}}
 
     {{-- Start Signature Authorization --}}
-    @if (isset($contractData->internalAgentContract) && $contractData->internalAgentContract->getContractSign)
+    {{-- @if (isset($contractData->internalAgentContract) && $contractData->internalAgentContract->getContractSign)
         @include('pdf.internal-agent-contract.signature')
-    @endif
+    @endif --}}
     {{-- End Signature Authorization --}}
     
     {{-- @include('pdf.internal-agent-contract.agent_agency_authorization') --}}
