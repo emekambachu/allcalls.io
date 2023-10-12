@@ -1334,7 +1334,7 @@ class RegistrationStepController extends Controller
                 return response()->json([
                     'success' => true,
                     'message' => 'DocuSign API calling.',
-                    'route' => route('connect.docusign'),
+                    'route' => route('internal.agent.connect.docusign'),
                 ], 200);
                 
             } catch (\Exception $e) {
