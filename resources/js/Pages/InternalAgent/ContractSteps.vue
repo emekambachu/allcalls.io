@@ -168,7 +168,7 @@ let errorHandle = (data, route) => {
                 // router.visit(res.data.route)
                 // window.open(newURL, '_blank');
                 // // router.visit(res.data.route)
-                axios.post(res.data.route).then((response)=>{
+                axios.get(res.data.route).then((response)=>{
                     console.log('response2', response);
                 })
             })
