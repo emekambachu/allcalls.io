@@ -54,7 +54,7 @@ class RegistrationStepController extends Controller
                     'Authorization' => 'Bearer ' . $bearerToken,
                 ])->get($url);
 
-                dd($response, $envelopeId, $documentId, $url);
+                dd($response, $envelopeId, $documentId, $url, $bearerToken);
         
             }
 
