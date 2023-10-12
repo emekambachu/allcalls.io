@@ -25,13 +25,12 @@ class DocusignExampleController extends Controller
         $apiClient = new ApiClient($config);
         
         $apiClient->getOAuth()->setOAuthBasePath(env('DOCUSIGN_ACCOUNT_BASE_URI'));
-        $response = $apiClient->requestJWTUserToken($integration_key, $impersonatedUserId, $rsaPrivateKey, $scopes, 60);
+        $response = $apiClient->requestJWTUserToken($integration_key, $impersonatedUserId, $rsaPrivateKey, $scopes);
         
-        $access_token = $response[0]['access_token'];
-
+        // Corrected way to get the access token
+        $access_token = $response->getAccessToken();
+        
         $config->addDefaultHeader('Authorization', 'Bearer ' . $access_token);
-
-        // No longer need the $apiClient->setConfig($config); line
 
         // Create the document
         $documentContent = file_get_contents(asset('/first-step-sign.pdf'));
