@@ -1610,7 +1610,7 @@ class RegistrationStepController extends Controller
 
         $config = new Configuration();
         $config->setHost('<https://demo.docusign.net/restapi>');
-        $config->addDefaultHeader("Authorization", "Bearer " . '80897fed070946c797d500a9eb64d339');
+        $config->addDefaultHeader("Authorization", "Bearer " . '897ce745-c111-4229-aff4-6637a9a9a066');
 
         $envelopeApi = new EnvelopesApi();
 
