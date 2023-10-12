@@ -24,7 +24,7 @@
         </tr>
     </table>
 
-    <table class="w-100" style="margin-bottom: 30px">
+    {{-- <table class="w-100" style="margin-bottom: 30px">
         <tr>
             <td style="width: 20%;" class="text-end">
                 <strong>Signature: &nbsp;</strong>
@@ -49,5 +49,5 @@
             </td>
             <td style="width: 10%;" class="text-end"></td>
         </tr>
-    </table>
+    </table> --}}
 </div>

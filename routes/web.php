@@ -50,7 +50,8 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-Route::get('/pdf', [\App\Http\Controllers\InternalAgent\RegistrationStepController::class, 'pdf'])->name('dashboard');
+Route::get('/pdf', [\App\Http\Controllers\InternalAgent\RegistrationStepController::class, 'pdf']);
+Route::get('/pdf-export', [\App\Http\Controllers\InternalAgent\RegistrationStepController::class, 'pdfExport']);
 
 require __DIR__ . '/auth.php';
 require 'admin.php';

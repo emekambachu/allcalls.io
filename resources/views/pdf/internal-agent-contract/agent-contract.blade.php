@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Contracting</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
     <style>
         .title {
@@ -32,7 +33,7 @@
         }
 
         .w-25 {
-         width: 25% !important;
+            width: 25% !important;
         }
 
         .mt-2 {
@@ -73,7 +74,7 @@
             justify-content: space-between;
         }
 
-        .d-flex > div {
+        .d-flex>div {
             width: 25%;
         }
 
@@ -81,10 +82,9 @@
             text-align: end;
         }
 
-        .basic-info-element
-        {
+        .basic-info-element {
             border: 1px solid lightgray;
-            padding:0px 2px;
+            padding: 0px 2px;
             border-radius: 5px;
             display: flex;
             width: 95%;
@@ -98,49 +98,53 @@
         }
     </style>
 </head>
+
 <body>
 
-<embed src="{{ $contractData->internalAgentContract->amlCourse->url }}" width="100%" height="600px" type="application/pdf">
+    @include('pdf.internal-agent-contract.agent_agency_authorization')
 
-{{--Start Inforamtion--}}
-@if($contractData->internalAgentContract)
+    {{-- <embed src="{{ $contractData->internalAgentContract->amlCourse->url }}" width="100%" height="600px" type="application/pdf"> --}}
+
+    {{-- Start Inforamtion --}}
+    {{-- @if ($contractData->internalAgentContract)
     @include('pdf.internal-agent-contract.basic-information')
-@endif
-{{--End Inforamtion--}}
+@endif --}}
+    {{-- End Inforamtion --}}
 
 
-{{--Start Legal Question Section--}}
-@if(isset($contractData->internalAgentContract) && count($contractData->internalAgentContract->legalQuestion))
+    {{-- Start Legal Question Section --}}
+    {{-- @if (isset($contractData->internalAgentContract) && count($contractData->internalAgentContract->legalQuestion))
     @include('pdf.internal-agent-contract.legal-questions')
-@endif
-{{--End Legal Question Section--}}
+@endif --}}
+    {{-- End Legal Question Section --}}
 
-{{--Start Address History--}}
-@if(isset($contractData->internalAgentContract) && count($contractData->internalAgentContract->addresses))
+    {{-- Start Address History --}}
+    {{-- @if (isset($contractData->internalAgentContract) && count($contractData->internalAgentContract->addresses))
     @include('pdf.internal-agent-contract.address-history')
-@endif
-{{--End Address History--}}
+@endif --}}
+    {{-- End Address History --}}
 
-{{--Start Additional Info--}}
-@if(isset($contractData->internalAgentContract) && isset($contractData->internalAgentContract->additionalInfo))
+    {{-- Start Additional Info --}}
+    {{-- @if (isset($contractData->internalAgentContract) && isset($contractData->internalAgentContract->additionalInfo))
     @include('pdf.internal-agent-contract.additional-info')
-@endif
-{{--End Additional Info--}}
+@endif --}}
+    {{-- End Additional Info --}}
 
-{{--Start Signature--}}
-@if(isset($contractData->internalAgentContract) && $contractData->internalAgentContract->getQuestionSign)
+    {{-- Start Signature --}}
+    {{-- @if (isset($contractData->internalAgentContract) && $contractData->internalAgentContract->getQuestionSign)
     @include('pdf.internal-agent-contract.accompanying-sign')
-@endif
-{{--End Signature--}}
+@endif --}}
+    {{-- End Signature --}}
 
-{{--Start Signature Authorization--}}
-{{-- @if(isset($contractData->internalAgentContract) && $contractData->internalAgentContract->getContractSign)
+    {{-- Start Signature Authorization --}}
+    {{-- @if (isset($contractData->internalAgentContract) && $contractData->internalAgentContract->getContractSign)
     @include('pdf.internal-agent-contract.signature')
 @endif --}}
-{{--End Signature Authorization--}}
+    {{-- End Signature Authorization --}}
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script>
 </body>
+
 </html>

@@ -15,6 +15,7 @@ use App\Models\InternalAgentRegInfo;
 use App\Models\InternalAgentResidentLicense;
 use App\Models\State;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use DocuSign\eSign\Api\EnvelopesApi;
 use DocuSign\eSign\Configuration;
 use DocuSign\eSign\Model\Document;
@@ -1252,63 +1253,86 @@ class RegistrationStepController extends Controller
                     'resident_maiden_name' => isset($request->resident_maiden_name) ? $request->resident_maiden_name : null,
                 ]);
 
-                $accompanyingSign = InternalAgentQuestionSigned::where('reg_info_id', $basicInfo->id)->first();
-                if ($accompanyingSign && isset($request->accompanying_sign)) {
-                    if (file_exists(asset('internal-agents/legal-question-signed/' . $accompanyingSign->name))) {
-                        unlink(asset('internal-agents/legal-question-signed/' . $accompanyingSign->name));
-                    }
-                    $base64Content = $request->accompanying_sign;
-                    $folderPath = public_path() . '/internal-agents/legal-question-signed/';
-                    $base64Image = explode(";base64,", $base64Content);
-                    $explodeImage = explode("image/", $base64Image[0]);
-                    $imageType = trim($explodeImage[1]);
-                    $image_base64 = base64_decode($base64Image[1]);
-                    $fileName = $user->id . time();
-                    $file = $folderPath . $fileName . '.' . $imageType;
-                    file_put_contents($file, $image_base64);
-                    $path = asset('internal-agents/legal-question-signed/' . $fileName . '.' . $imageType);
-                    InternalAgentQuestionSigned::updateOrCreate(['reg_info_id' => $basicInfo->id], [
-                        'name' => $fileName . '.' . $imageType,
-                        'sign_url' => $path,
-                    ]);
-                } else if (!$accompanyingSign && isset($request->accompanying_sign)) {
-                    $step5Validation = Validator::make($request->all(), [
-                        'accompanying_sign' => 'required',
-                    ]);
-                    if ($step5Validation->fails()) {
-                        return response()->json([
-                            'success' => false,
-                            'step' => 4,
-                            'errors' => $step5Validation->errors(),
-                        ], 400);
-                    }
 
 
-                    $directory = public_path() . '/internal-agents/legal-question-signed/';
-                    if (!file_exists($directory)) {
-                        mkdir($directory, 0777, true);
-                    }
-                    $base64Content = $request->accompanying_sign;
-                    $folderPath = public_path() . '/internal-agents/legal-question-signed/';
-                    $base64Image = explode(";base64,", $base64Content);
-                    $explodeImage = explode("image/", $base64Image[0]);
-                    $imageType = trim($explodeImage[1]);
-                    $image_base64 = base64_decode($base64Image[1]);
-                    $fileName = $user->id . time();
-                    $file = $folderPath . $fileName . '.' . $imageType;
-                    file_put_contents($file, $image_base64);
-                    $path = asset('internal-agents/legal-question-signed/' . $fileName . '.' . $imageType);
+                // $accompanyingSign = InternalAgentQuestionSigned::where('reg_info_id', $basicInfo->id)->first();
+                // if ($accompanyingSign && isset($request->accompanying_sign)) {
+                //     if (file_exists(asset('internal-agents/legal-question-signed/' . $accompanyingSign->name))) {
+                //         unlink(asset('internal-agents/legal-question-signed/' . $accompanyingSign->name));
+                //     }
+                //     $base64Content = $request->accompanying_sign;
+                //     $folderPath = public_path() . '/internal-agents/legal-question-signed/';
+                //     $base64Image = explode(";base64,", $base64Content);
+                //     $explodeImage = explode("image/", $base64Image[0]);
+                //     $imageType = trim($explodeImage[1]);
+                //     $image_base64 = base64_decode($base64Image[1]);
+                //     $fileName = $user->id . time();
+                //     $file = $folderPath . $fileName . '.' . $imageType;
+                //     file_put_contents($file, $image_base64);
+                //     $path = asset('internal-agents/legal-question-signed/' . $fileName . '.' . $imageType);
+                //     InternalAgentQuestionSigned::updateOrCreate(['reg_info_id' => $basicInfo->id], [
+                //         'name' => $fileName . '.' . $imageType,
+                //         'sign_url' => $path,
+                //     ]);
+                // } else if (!$accompanyingSign && isset($request->accompanying_sign)) {
+                //     $step5Validation = Validator::make($request->all(), [
+                //         'accompanying_sign' => 'required',
+                //     ]);
+                //     if ($step5Validation->fails()) {
+                //         return response()->json([
+                //             'success' => false,
+                //             'step' => 4,
+                //             'errors' => $step5Validation->errors(),
+                //         ], 400);
+                //     }
 
-                    InternalAgentQuestionSigned::updateOrCreate(['reg_info_id' => $basicInfo->id], [
-                        'name' => $fileName . '.' . $imageType,
-                        'sign_url' => $path,
-                    ]);
+
+                //     $directory = public_path() . '/internal-agents/legal-question-signed/';
+                //     if (!file_exists($directory)) {
+                //         mkdir($directory, 0777, true);
+                //     }
+                //     $base64Content = $request->accompanying_sign;
+                //     $folderPath = public_path() . '/internal-agents/legal-question-signed/';
+                //     $base64Image = explode(";base64,", $base64Content);
+                //     $explodeImage = explode("image/", $base64Image[0]);
+                //     $imageType = trim($explodeImage[1]);
+                //     $image_base64 = base64_decode($base64Image[1]);
+                //     $fileName = $user->id . time();
+                //     $file = $folderPath . $fileName . '.' . $imageType;
+                //     file_put_contents($file, $image_base64);
+                //     $path = asset('internal-agents/legal-question-signed/' . $fileName . '.' . $imageType);
+
+                //     InternalAgentQuestionSigned::updateOrCreate(['reg_info_id' => $basicInfo->id], [
+                //         'name' => $fileName . '.' . $imageType,
+                //         'sign_url' => $path,
+                //     ]);
+                // }
+                // $user->contract_step = 6;
+                // $user->save();
+
+                //First Signature
+                $returnArr['contractData'] = User::where('id', $user->id)
+                ->with('internalAgentContract.getState')
+                ->with('internalAgentContract.getDriverLicenseState')
+                ->with('internalAgentContract.getMoveInState')
+                ->with('internalAgentContract.getResidentInsLicenseState')
+                ->with('internalAgentContract.getBusinessState')
+                ->with('internalAgentContract.additionalInfo.getState')
+                ->with('internalAgentContract.addresses.getState')
+                ->with('internalAgentContract.legalQuestion')->first();
+
+                $pdf = PDF::loadView('pdf.internal-agent-contract.agent-contract', $returnArr);
+                $directory = public_path('internal-agents/contract/');
+                if (!file_exists($directory)) {
+                    mkdir($directory, 0777, true);
                 }
-                $user->contract_step = 6;
-                $user->save();
+                $pdf->save($directory .'first-step-sign-'.$user->id.'.pdf');
+                //First Signature End
+
                 DB::commit();
                 return response()->json([
                     'success' => true,
+                    'route' => route('connect.docusign'),
                 ], 200);
             } catch (\Exception $e) {
                 DB::rollBack();
@@ -1669,8 +1693,21 @@ class RegistrationStepController extends Controller
             'client_user_id' => '12345'
         ]);
 
-        $signingUrl = $envelopeApi->createRecipientView("7716918e-104d-4915-b7ca-eff79222ac45" ,$envelopeSummary->getEnvelopeId() , $viewRequest);
+
+        $signingUrl = $envelopeApi->createRecipientView("1797216e-2fcc-4b29-95e4-ff04a330b007", $envelopeSummary->getEnvelopeId(), $viewRequest);
 
         return response()->json(['url' => $signingUrl->getUrl()]);
+    }
+
+    public function pdfExport() {
+        set_time_limit(0);
+
+        $returnArr['contractData'] = User::where('id', 3)
+            ->with('internalAgentContract')
+            ->first();
+
+        $pdf = PDF::loadView('pdf.internal-agent-contract.agent-contract', $returnArr);
+
+        return $pdf->stream('signature-authorization.pdf');
     }
 }
