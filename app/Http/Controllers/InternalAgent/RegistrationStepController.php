@@ -51,9 +51,13 @@ class RegistrationStepController extends Controller
 
                 $url = "$this->baseUrl/v2.1/accounts/$this->accountId/envelopes/$envelopeId/documents/$documentId";
                 
-                $response = Http::withToken( 'Bearer ' . $bearerToken)->get($url);
+                $response = Http::withHeaders([
+                    'Authorization' => 'Bearer ' . $bearerToken,
+                    'Content-Description' => 'File Transfer',
+                    'Content-Type' => 'application/pdf',
+                ])->get($url);
 
-                dd($response->body(), $envelopeId, $documentId, $url, $bearerToken);
+                dd($response,$response->body(), $envelopeId, $documentId, $url, $bearerToken);
             }
 
             if (isset($_GET['position']) && $_GET['position'] == 'signature_authorization') {
