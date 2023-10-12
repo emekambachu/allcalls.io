@@ -172,7 +172,7 @@ let errorHandle = (data, route) => {
                 //     console.log('response2', response);
                 // })
             })
-            // step.value = 2
+            step.value = 1
         } else if (data === 6) {
             step.value = 3
         } else if (data === 7) {
