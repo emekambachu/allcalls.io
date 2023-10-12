@@ -14,6 +14,10 @@ use Illuminate\Validation\ValidationException;
 
 class AgentStatusAPIController extends Controller
 {
+    private $affiliates = [
+        '1' => [ 'affiliate_secret' => 'secret123', 'affiliate_percentage' => 10 ],
+    ];
+
     /**
      * Check if an agent is available for a given phone number's area code and vertical.
      *
@@ -43,6 +47,8 @@ class AgentStatusAPIController extends Controller
             'zip' => 'sometimes|required_without_all:phone,state',
             'state' => 'sometimes|required_without_all:phone,zip',
             'vertical' => 'required|in:' . $validVerticals,
+            'affiliate_id' => 'required',
+            'affiliate_secret' => 'required',
         ], $customMessages);
 
         $vertical = $verticalMapping[$request->input('vertical')];
@@ -64,6 +70,17 @@ class AgentStatusAPIController extends Controller
         // Agent lookup
         $agentAvailable = $this->isAgentAvailable($state, $vertical);
         $price = $this->getPriceForVertical($vertical);
+
+        if ($request->has('affiliate_id') && $request->has('affiliate_secret')) {
+            $affiliate = $this->affiliates[$request->input('affiliate_id')] ?? null;
+        
+            if ($affiliate && $affiliate['affiliate_secret'] == $request->input('affiliate_secret')) {
+                $percentage = (100 - $affiliate['affiliate_percentage']) / 100;
+                $price *= $percentage;
+            } else {
+                return response()->json(['message' => 'Invalid affiliate credentials.'], 400);
+            }
+        }
 
         if ($agentAvailable) {
             return response()->json(['online' => true, 'price' => $price], 200);
