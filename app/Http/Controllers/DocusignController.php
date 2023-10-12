@@ -110,7 +110,10 @@ class DocusignController extends Controller
             'token' => $decodedData->access_token,
         ], 200);
 
-        // return redirect()->route('docusign')->with('success', 'Docusign Succesfully Connected');
+
+        // return redirect()->route('contract.steps');
+
+        return redirect()->route('docusign')->with('success', 'Docusign Succesfully Connected');
     }
 
     public function signDocument()
