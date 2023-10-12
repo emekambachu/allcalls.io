@@ -29,9 +29,10 @@ if (page.props.flash.message) {
 let props = defineProps({
     userData: Object,
     states: Array,
+    docuSignAuthCode:String,
 });
 
-// console.log('userData', props.userData.value);
+console.log('docuSignAuthCode docusign_auth_code', props.docuSignAuthCode);
 let StepsModal = ref(true)
 let contractModal = ref(false)
 const isLoading = ref(false);
@@ -165,7 +166,6 @@ let errorHandle = (data, route) => {
             .then((res)=>{
                 console.log('res1', res);
                 const newURL = res.data.route;
-                
                 window.open(newURL, '_blank');
                 // // router.visit(res.data.route)
                 // axios.get(res.data.route).then((response)=>{
