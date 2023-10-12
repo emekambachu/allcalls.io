@@ -228,7 +228,7 @@ class DocusignController extends Controller
     {
         $envelope_args = [
             'signer_client_id' => $this->signer_client_id,
-            'ds_return_url' => route('docusign')
+            'ds_return_url' => route('contract.steps')
         ];
         $args = [
             'account_id' =>"7716918e-104d-4915-b7ca-eff79222ac45",
