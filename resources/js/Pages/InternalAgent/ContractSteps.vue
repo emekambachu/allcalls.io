@@ -154,17 +154,17 @@ let previewContract = () => {
 }
 
 let errorHandle = (data, route) => {
-    console.log('data', data);
+    // console.log('data', data);
     if (data < 5) {
         ChangeTab()
     } else if (data < 9) {
         if (data === 5) {
-            console.log('route', route);
-            // router.visit(route)
-            axios.get(route)
-            .then((res)=>{
-                console.log('res', res);
-            })
+            // console.log('route', route);
+            router.visit(route)
+            // axios.get(route)
+            // .then((res)=>{
+            //     console.log('res', res);
+            // })
             // step.value = 2
         } else if (data === 6) {
             step.value = 3
