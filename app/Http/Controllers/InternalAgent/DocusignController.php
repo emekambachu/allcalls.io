@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\InternalAgent;
 
+use App\Http\Controllers\Controller;
 use Session;
 use Illuminate\Http\Request;
 use DocuSign\eSign\Configuration;
