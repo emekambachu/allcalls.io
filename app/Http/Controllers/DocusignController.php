@@ -131,6 +131,8 @@ class DocusignController extends Controller
                 'user_name' => 'shaiv', 'email' => 'abdullah.laraveldev@gmail.com'
             ]);
 
+            dd($envelope_id);
+
             $results = $envelope_api->createRecipientView($args['account_id'], $envelope_id,$recipient_view_request);
 
             return redirect()->to($results['url']);
