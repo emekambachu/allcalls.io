@@ -183,7 +183,7 @@
                     <p v-if="sigError" class="text-red-500 mt-2">{{ sigError }}</p>
                 </div>
             </div>
-            <a v-if="docuSignAuthCode" :href="route('docusign.sign')">Sign with DocuSign</a>
+            <a v-if="docuSignAuthCode" :href="route('internal.agent.docusign.sign')">Sign with DocuSign</a>
 
             <!-- Right Side (Date) -->
             <div class="child-singnature-date">
