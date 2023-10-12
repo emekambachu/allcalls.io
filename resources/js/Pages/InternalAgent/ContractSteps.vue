@@ -153,7 +153,6 @@ let previewContract = () => {
     StepsModal.value = false
     contractModal.value = true
 }
-let docusignUrl = ref(null)
 let errorHandle = (data, route) => {
     // console.log('data', data);
     if (data < 5) {
@@ -165,7 +164,7 @@ let errorHandle = (data, route) => {
             axios.get(route)
             .then((res)=>{
                 console.log('res1', res);
-                docusignUrl.value = res.data.route
+                router.visit(res.data.route)
                 // // router.visit(res.data.route)
                 // axios.get(res.data.route).then((response)=>{
                 //     console.log('response2', response);
@@ -420,7 +419,6 @@ input[type=number] {
                         </div>
 
                         <div class="px-12 py-2">
-                            <iframe  :src="docusignUrl" width="800" height="400" frameborder="0" scrolling="no"></iframe>
 
                             <Tabs :step="step" />
 
