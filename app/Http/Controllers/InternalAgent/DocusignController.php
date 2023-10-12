@@ -145,7 +145,7 @@ class DocusignController extends Controller
                 'client_user_id' => $envelope_args['signer_client_id'],
                 'recipient_id' => auth()->user()->id,
                 'return_url' => $envelope_args['ds_return_url'],
-                'user_name' => auth()->user()->name, 
+                'user_name' => auth()->user()->first_name.' '.auth()->user()->last_name, 
                 'email' => auth()->user()->email
             ]);
 
@@ -190,7 +190,7 @@ class DocusignController extends Controller
         # Create the signer recipient model
         $signer = new \DocuSign\eSign\Model\Signer([ # The signer
             'email' => auth()->user()->email, 
-            'name' => auth()->user()->name,
+            'name' => auth()->user()->first_name.' '.auth()->user()->last_name,
             'recipient_id' => auth()->user()->id, 
             'routing_order' => "1",
             # Setting the client_user_id marks the signer as embedded
