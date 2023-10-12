@@ -15,18 +15,18 @@ use Illuminate\Validation\ValidationException;
 class AgentStatusAPIController extends Controller
 {
     private $affiliates = [
-        '1' => [ 'api_key' => 'b6GHX82jfd83DNsk29JKm39Fna8z', 'affiliate_percentage' => 10 ],
-        '2' => [ 'api_key' => 'c9JDk28SkxJD28XsK02JdOksI83D', 'affiliate_percentage' => 10 ],
-        '3' => [ 'api_key' => 'iPQJ39dS82jNfn30Ns82kPqJ8x7L', 'affiliate_percentage' => 10 ],
-        '4' => [ 'api_key' => '8sKkX82jKS93Kds82kDn8sKd8sKd', 'affiliate_percentage' => 10 ],
-        '5' => [ 'api_key' => '3jNdo82JD8sK2Mx8s2kMnD8sMx9j', 'affiliate_percentage' => 10 ],
-        '6' => [ 'api_key' => '0Jdj2Ks98sKdj28xS82jsXo92Hs7', 'affiliate_percentage' => 10 ],
-        '7' => [ 'api_key' => 'x8Ksk29MnD8Ks92Jx82kMx7kOsJ7', 'affiliate_percentage' => 10 ],
-        '8' => [ 'api_key' => 'kPQJ7xSkD8s9Mdx7KsJd8Ks7Jd82', 'affiliate_percentage' => 10 ],
-        '9' => [ 'api_key' => '82JDks8KjMnDx7LsKd8S2LmXj82K', 'affiliate_percentage' => 10 ],
-        '10' => [ 'api_key' => '82jKdS7Mx8Ks92LkDs8xM7kDj82N', 'affiliate_percentage' => 10 ],
+        '1' => ['api_key' => 'b6GHX82jfd83DNsk29JKm39Fna8z', 'affiliate_percentage' => 10, 'fixed_price' => 20],
+        '2' => ['api_key' => 'c9JDk28SkxJD28XsK02JdOksI83D', 'affiliate_percentage' => 10, 'fixed_price' => 20],
+        '3' => ['api_key' => 'iPQJ39dS82jNfn30Ns82kPqJ8x7L', 'affiliate_percentage' => 10],
+        '4' => ['api_key' => '8sKkX82jKS93Kds82kDn8sKd8sKd', 'affiliate_percentage' => 10],
+        '5' => ['api_key' => '3jNdo82JD8sK2Mx8s2kMnD8sMx9j', 'affiliate_percentage' => 10],
+        '6' => ['api_key' => '0Jdj2Ks98sKdj28xS82jsXo92Hs7', 'affiliate_percentage' => 10],
+        '7' => ['api_key' => 'x8Ksk29MnD8Ks92Jx82kMx7kOsJ7', 'affiliate_percentage' => 10],
+        '8' => ['api_key' => 'kPQJ7xSkD8s9Mdx7KsJd8Ks7Jd82', 'affiliate_percentage' => 10],
+        '9' => ['api_key' => '82JDks8KjMnDx7LsKd8S2LmXj82K', 'affiliate_percentage' => 10],
+        '10' => ['api_key' => '82jKdS7Mx8Ks92LkDs8xM7kDj82N', 'affiliate_percentage' => 10],
     ];
-    
+
 
     /**
      * Check if an agent is available for a given phone number's area code and vertical.
@@ -83,10 +83,16 @@ class AgentStatusAPIController extends Controller
 
         if ($request->has('affiliate_id') && $request->has('api_key')) {
             $affiliate = $this->affiliates[$request->input('affiliate_id')] ?? null;
-        
+
             if ($affiliate && $affiliate['api_key'] == $request->input('api_key')) {
-                $percentage = (100 - $affiliate['affiliate_percentage']) / 100;
-                $price *= $percentage;
+                // Check if the affiliate has a fixed_price property
+                if (isset($affiliate['fixed_price'])) {
+                    $price = $affiliate['fixed_price'];
+                } else {
+                    $percentage = (100 - $affiliate['affiliate_percentage']) / 100;
+                    $price *= $percentage;
+                }
+
             } else {
                 return response()->json(['message' => 'Invalid affiliate credentials.'], 400);
             }
@@ -155,34 +161,34 @@ class AgentStatusAPIController extends Controller
     {
         // Query for the call type
         $callType = CallType::whereType($vertical)->firstOrFail();
-    
+
         // Get the total number of bids for this call type
         $bidCount = Bid::where('call_type_id', $callType->id)->count();
-    
+
         // If there are no bids or only one bid, return $25
         if ($bidCount <= 1) {
             return 25;
         }
-    
+
         // Get the highest and second highest bid amounts for the call type
         $highestBids = Bid::where('call_type_id', $callType->id)
             ->orderBy('amount', 'desc')
-            ->take(2)  // This will take the highest and second highest bids
+            ->take(2) // This will take the highest and second highest bids
             ->get();
-    
+
         // If there are not enough bids to compare, return $25
         if ($highestBids->count() < 2) {
             return 25;
         }
-    
+
         $highestBid = $highestBids[0];
         $secondHighestBid = $highestBids[1];
-    
+
         // Check if the second highest bid is the same as the highest bid, or only $1 less
         if ($secondHighestBid->amount == $highestBid->amount || $highestBid->amount - $secondHighestBid->amount == 1) {
             return $highestBid->amount;
         }
-    
+
         // Otherwise, return the second highest bid amount + 1
         return $secondHighestBid->amount + 1;
     }
