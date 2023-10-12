@@ -31,6 +31,6 @@ Route::middleware(['auth', 'verified', 'internal-agent'])->group(function () {
     Route::get('docusign', [DocusignController::class, 'index'])->name('internal.agent.docusign');
     Route::get('connect-docusign', [DocusignController::class, 'connectDocusign'])->name('internal.agent.connect.docusign');
     Route::get('docusign/callback', [DocusignController::class, 'callback'])->name('internal.agent.docusign.callback');
-    Route::get('sign-document', [DocusignController::class, 'signDocument'])->name('internal.agent.docusign.sign');
+    Route::get('sign-document/{key?}', [DocusignController::class, 'signDocument'])->name('internal.agent.docusign.sign');
 });
 

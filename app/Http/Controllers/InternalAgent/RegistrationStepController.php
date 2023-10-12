@@ -33,6 +33,17 @@ class RegistrationStepController extends Controller
     public function contractSteps()
     {
         if(isset($_GET['event']) && $_GET['event'] == 'signing_complete') {
+            if(isset($_GET['position']) && $_GET['position'] == 'accompanying_sign') {
+                
+            }
+
+            if(isset($_GET['position']) && $_GET['position'] == 'signature_authorization') {
+                dd('signature authorization');
+            }
+
+            if(isset($_GET['position']) && $_GET['position'] == 'agency_authorization') {
+                dd('agency authorization');
+            }
 
         }
 

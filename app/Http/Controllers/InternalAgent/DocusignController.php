@@ -27,6 +27,7 @@ class DocusignController extends Controller
     private $tokenUrl;
     private $accountId;
     private $baseUrl;
+    private $dsReturnUrl
 
     public function __construct() {
         $this->clientId = "75d97718-8a98-4d27-8def-17c2fceed79f";
@@ -119,9 +120,10 @@ class DocusignController extends Controller
         return redirect()->route('contract.steps');
     }
 
-    public function signDocument()
+    public function signDocument($position)
     {
         try {
+            $this->dsReturnUrl = route('contract.steps', ['position'=>$position]);
             $this->args = $this->getTemplateArgs();
             $args = $this->args;
             $envelope_args = $args["envelope_args"];
@@ -238,7 +240,7 @@ class DocusignController extends Controller
     {
         $envelope_args = [
             'signer_client_id' => auth()->user()->id,
-            'ds_return_url' => route('contract.steps', ['first_step'])
+            'ds_return_url' => $this->dsReturnUrl,
         ];
         $args = [
             'account_id' => $this->accountId,
