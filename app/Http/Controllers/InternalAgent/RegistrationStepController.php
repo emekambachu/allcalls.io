@@ -1677,7 +1677,7 @@ class RegistrationStepController extends Controller
             'document_base64' => base64_encode(file_get_contents('https://www.africau.edu/images/default/sample.pdf')),
             'name' => 'Sample Document',
             'file_extension' => 'pdf',
-            'document_id' => 'awais-signed-document'
+            'document_id' => '100011'
         ]);
         // Define the signer
         $signer = new Signer([
@@ -1709,7 +1709,7 @@ class RegistrationStepController extends Controller
         ]);
 
 
-        $signingUrl = $envelopeApi->createRecipientView("1797216e-2fcc-4b29-95e4-ff04a330b007", $envelopeSummary->getEnvelopeId(), $viewRequest);
+        $signingUrl = $envelopeApi->createRecipientView("7716918e-104d-4915-b7ca-eff79222ac45", $envelopeSummary->getEnvelopeId(), $viewRequest);
 
         return response()->json(['url' => $signingUrl->getUrl()]);
     }
