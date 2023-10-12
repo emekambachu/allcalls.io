@@ -25,8 +25,6 @@ class DocusignExampleController extends Controller
         $config = new Configuration();
         $apiClient = new ApiClient($config);
 
-        Log::debug('RSA private key: ' . $rsaPrivateKey);
-        
         $apiClient->getOAuth()->setOAuthBasePath(env('DOCUSIGN_ACCOUNT_BASE_URI'));
         $response = $apiClient->requestJWTUserToken($integration_key, $impersonatedUserId, $rsaPrivateKey, $scopes);
         
