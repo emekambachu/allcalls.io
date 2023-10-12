@@ -56,6 +56,7 @@ class RegistrationStepController extends Controller
         return Inertia::render('InternalAgent/ContractSteps', [
             'states' => $states,
             'userData' => $user,
+            'docuSignAuthCode' => session()->get('docusign_auth_code'),
         ]);
     }
 

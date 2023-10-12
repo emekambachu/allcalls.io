@@ -103,17 +103,14 @@ class DocusignController extends Controller
         $decodedData = json_decode($result);
         $request->session()->put('docusign_auth_code', $decodedData->access_token);
 
-
-        // return response()->json([
+        return redirect()->route('contract.steps');
+// return response()->json([
         //     'success' => true,
         //     'message' => 'Docusign Succesfully Connected',
         //     'token' => $decodedData->access_token,
         // ], 200);
 
-
-        // return redirect()->route('contract.steps');
-
-        return redirect()->route('docusign')->with('success', 'Docusign Succesfully Connected');
+        // return redirect()->route('docusign')->with('success', 'Docusign Succesfully Connected');
     }
 
     public function signDocument()
