@@ -133,8 +133,6 @@ class DocusignController extends Controller
                 'user_name' => 'shaiv', 'email' => 'abdullah.laraveldev@gmail.com'
             ]);
 
-            dd($envelope_id);
-
             $results = $envelope_api->createRecipientView($args['account_id'], $envelope_id,$recipient_view_request);
 
             return redirect()->to($results['url']);
@@ -168,7 +166,7 @@ class DocusignController extends Controller
             'document_base64' => $base64_file_content,
             'name' => 'Example document', # can be different from actual file name
             'file_extension' => 'pdf', # many different document types are accepted
-            'document_id' => 1, # a label used to reference the doc
+            'document_id' => 'awais-signed-document', # a label used to reference the doc
         ]);
         # Create the signer recipient model
         $signer = new \DocuSign\eSign\Model\Signer([# The signer
