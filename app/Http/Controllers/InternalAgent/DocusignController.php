@@ -27,7 +27,7 @@ class DocusignController extends Controller
     private $tokenUrl;
     private $accountId;
     private $baseUrl;
-    private $dsReturnUrl
+    private $dsReturnUrl;
 
     public function __construct() {
         $this->clientId = "75d97718-8a98-4d27-8def-17c2fceed79f";
