@@ -32,10 +32,12 @@ class RegistrationStepController extends Controller
 {
     private $accountId;
     private $baseUrl;
+    private $accept;
     
     public function __construct() {
         $this->accountId = "7716918e-104d-4915-b7ca-eff79222ac45";
         $this->baseUrl = "https://demo.docusign.net/restapi";
+        $this->accept = "application/pdf";
     }
 
 
@@ -52,6 +54,7 @@ class RegistrationStepController extends Controller
               
                 $response = Http::withHeaders([
                     'Authorization' => 'Bearer ' . $bearerToken,
+                    'Accept'=>$this->accept,
                 ])->get($url);
 
                 dd($response, $envelopeId, $documentId, $url, $bearerToken);
