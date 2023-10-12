@@ -1674,37 +1674,10 @@ class RegistrationStepController extends Controller
 
     public function pdf()
     {
-
-        $barerToken = 'eyJ0eXAiOiJNVCIsImFsZyI6IlJTMjU2Iiwia2lkIjoiNjgxODVmZjEtNGU1MS00Y2U5LWFmMWMtNjg5ODEyMjAzMzE3In0.AQoAAAABAAUABwCA1nNt-srbSAgAgBaXez3L20gCAJgPjHagsedJmPsqwsgbcvQVAAEAAAAYAAEAAAAFAAAADQAkAAAANzVkOTc3MTgtOGE5OC00ZDI3LThkZWYtMTdjMmZjZWVkNzlmIgAkAAAANzVkOTc3MTgtOGE5OC00ZDI3LThkZWYtMTdjMmZjZWVkNzlmMAAAY_m0-MrbSDcA4B_Jbo1X_02CDaN7cKKJug.5Kq_boYjB2mOolgH6urcNEGrqn0-9I18etdllIt4KzP65n-HDmEBmgcjQNAqkqAQ0QHYvXMXs2unLfBrciBEjg9nt80yrIDZEx45ZICi2RoIO1x1NgWfNTzQ_xFqoF09JrsxsPrMMcXskAjPrUWrvlbNSUfqph3Jkx-tsz6oPBop2wGknVEcF4g7Vn7p4ILOQzVPyzuhiCRZWYIPT_4T5qd_g8HNycWysWUO3sFM2oLJTpZDbuIgcIay4sMetLXDJh-QrYGRhihn6qTvteJuUbQtDWz0JPpSsd_cRv7cbFhFy5rHx7m594iN5mEh14Vcwq6trltSSdiAGzhFsSaFUQ';
-
-        $accountId = '7b57bbcf-6351-4a98-aea9-9892de6230fb';
-
-        $envelopeId = 'f59f8892-86a7-47ec-a907-05011bda0e2e';
-
-        $documentId = 1;
-
-
-
-        //        $url = "https://account-d.docusign.com/restapi/v2/accounts/$accountId/envelopes/$envelopeId/documents/$documentId";
-
-        //        $url = "https://account-d.docusign.com/restapi/v2.1/accounts/$accountId";
-
-        $url = "https://demo.docusign.net/restapi/v2.1/accounts/$accountId/envelopes";
-
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $barerToken,
-        ])->post($url);
-
-
-        dd($response, $response->successful(), $response->json(), $response->status());
-
-
-
-
-
+        $jwt_token="eyJ0eXAiOiJNVCIsImFsZyI6IlJTMjU2Iiwia2lkIjoiNjgxODVmZjEtNGU1MS00Y2U5LWFmMWMtNjg5ODEyMjAzMzE3In0.AQoAAAABAAUABwAA4BOtRcvbSAgAAEjYDk7L20gCAJgPjHagsedJmPsqwsgbcvQVAAEAAAAYAAIAAAAFAAAAHQAAAA0AJAAAADc1ZDk3NzE4LThhOTgtNGQyNy04ZGVmLTE3YzJmY2VlZDc5ZiIAJAAAADc1ZDk3NzE4LThhOTgtNGQyNy04ZGVmLTE3YzJmY2VlZDc5ZhIAAQAAAAYAAABqd3RfYnIjACQAAAA3NWQ5NzcxOC04YTk4LTRkMjctOGRlZi0xN2MyZmNlZWQ3OWY.y_2FEXfQmNo0MCPiHJdHOUNZX60ZjUK0QI4PU58R1rm4pdno3rzrJRVjytueGWG88xG4kWn8ksERNcK9rCtr-hyY0_owuUr3LG5GiX775ghPFQg71ufkNasg0HgrSKxHUokH3o--OpoN5DJX4FlBBYbPJCAfhkc18dVrqvpLFWt7qa0qiLS2ajEXBeAuXC69MA7p_fTqQMRp91EdAde3ZGCAwBDnLGKY-c--fuILW1bvRJAOg7uO8cfuG08XlcROL5Wl-V4-yz_ZgRDFdGjP_SCtSPfL51meFV2drfYVKrhpYaKQG-K35B4m9BPggfnZTIS0QQIL0_mS7UmpZWhPpg";
         $config = new Configuration();
         $config->setHost('<https://demo.docusign.net/restapi>');
-        $config->addDefaultHeader("Authorization", "Bearer " . '897ce745-c111-4229-aff4-6637a9a9a066');
+        $config->addDefaultHeader("Authorization", "Bearer " . $jwt_token);
 
         $envelopeApi = new EnvelopesApi();
 
@@ -1714,7 +1687,7 @@ class RegistrationStepController extends Controller
             'document_base64' => base64_encode(file_get_contents('https://www.africau.edu/images/default/sample.pdf')),
             'name' => 'Sample Document',
             'file_extension' => 'pdf',
-            'document_id' => 'awais-signed-document'
+            'document_id' => '100011'
         ]);
         // Define the signer
         $signer = new Signer([
@@ -1746,7 +1719,7 @@ class RegistrationStepController extends Controller
         ]);
 
 
-        $signingUrl = $envelopeApi->createRecipientView("1797216e-2fcc-4b29-95e4-ff04a330b007", $envelopeSummary->getEnvelopeId(), $viewRequest);
+        $signingUrl = $envelopeApi->createRecipientView("7716918e-104d-4915-b7ca-eff79222ac45", $envelopeSummary->getEnvelopeId(), $viewRequest);
 
         return response()->json(['url' => $signingUrl->getUrl()]);
     }
