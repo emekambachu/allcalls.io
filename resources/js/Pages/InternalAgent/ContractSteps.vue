@@ -448,7 +448,7 @@ input[type=number] {
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="contractStep === 5">
-                                <AdditionalInfo @additionalInfoData="additionalInformation"
+                                <AdditionalInfo :docuSignAuthCode="docuSignAuthCode" @additionalInfoData="additionalInformation"
                                     :firstStepErrors="firstStepErrors" :page="$page.props" :states="states"
                                     @changeTab="NextStep()" :isLoading="isLoading" @goback="ChangeTabBack()"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
