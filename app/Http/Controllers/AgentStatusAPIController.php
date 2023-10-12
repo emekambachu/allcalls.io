@@ -15,8 +15,18 @@ use Illuminate\Validation\ValidationException;
 class AgentStatusAPIController extends Controller
 {
     private $affiliates = [
-        '1' => [ 'api_key' => 'secret123', 'affiliate_percentage' => 10 ],
+        '1' => [ 'api_key' => 'b6GHX82jfd83DNsk29JKm39Fna8z', 'affiliate_percentage' => 10 ],
+        '2' => [ 'api_key' => 'c9JDk28SkxJD28XsK02JdOksI83D', 'affiliate_percentage' => 10 ],
+        '3' => [ 'api_key' => 'iPQJ39dS82jNfn30Ns82kPqJ8x7L', 'affiliate_percentage' => 10 ],
+        '4' => [ 'api_key' => '8sKkX82jKS93Kds82kDn8sKd8sKd', 'affiliate_percentage' => 10 ],
+        '5' => [ 'api_key' => '3jNdo82JD8sK2Mx8s2kMnD8sMx9j', 'affiliate_percentage' => 10 ],
+        '6' => [ 'api_key' => '0Jdj2Ks98sKdj28xS82jsXo92Hs7', 'affiliate_percentage' => 10 ],
+        '7' => [ 'api_key' => 'x8Ksk29MnD8Ks92Jx82kMx7kOsJ7', 'affiliate_percentage' => 10 ],
+        '8' => [ 'api_key' => 'kPQJ7xSkD8s9Mdx7KsJd8Ks7Jd82', 'affiliate_percentage' => 10 ],
+        '9' => [ 'api_key' => '82JDks8KjMnDx7LsKd8S2LmXj82K', 'affiliate_percentage' => 10 ],
+        '10' => [ 'api_key' => '82jKdS7Mx8Ks92LkDs8xM7kDj82N', 'affiliate_percentage' => 10 ],
     ];
+    
 
     /**
      * Check if an agent is available for a given phone number's area code and vertical.
