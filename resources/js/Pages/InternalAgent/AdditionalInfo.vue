@@ -388,7 +388,7 @@ export default {
                         if (!isEmpty || this.userData.internal_agent_contract.get_question_sign) {
                             this.sigError = null
                             this.$emit("additionalInfoData", { form: this.form, accompanying_sign: data });
-                            this.firstStepErrors = {}; // Clear the errors by assigning a new empty object
+                            // this.firstStepErrors = {}; // Clear the errors by assigning a new empty object
                         } else {
                             this.sigError = 'Please provide a signature.';
                         }
