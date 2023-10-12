@@ -52,6 +52,7 @@ class DocusignController extends Controller
             $url = "https://account-d.docusign.com/oauth/auth?";
 
             $botUrl = $url . $queryBuild;
+            dd($botUrl);
 
             return redirect()->to($botUrl);
         } catch (Exception $e) {
@@ -96,8 +97,6 @@ class DocusignController extends Controller
         curl_close($ch);
         $decodedData = json_decode($result);
         $request->session()->put('docusign_auth_code', $decodedData->access_token);
-
-        dd($decodedData->access_token);
 
         return redirect()->route('docusign')->with('success', 'Docusign Succesfully Connected');
     }
