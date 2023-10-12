@@ -152,7 +152,10 @@ class DocusignController extends Controller
 
             return redirect()->to($results['url']);
         } catch (Exception $e) {
-            dd($e);
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 404);
         }
     }
 
@@ -179,7 +182,7 @@ class DocusignController extends Controller
             'document_base64' => $base64_file_content,
             'name' => 'Example document', # can be different from actual file name
             'file_extension' => 'pdf', # many different document types are accepted
-            'document_id' => $documentId, # a label used to reference the doc
+            'document_id' => (string)$documentId, # a label used to reference the doc
         ]);
         session()->put('document_id', $documentId);
         
