@@ -1633,7 +1633,6 @@ class RegistrationStepController extends Controller
             'file_extension' => 'pdf',
             'document_id' => 'awais-signed-document'
         ]);
-        dd($document);
         // Define the signer
         $signer = new Signer([
             'email' => 'awaisamir23@gmail.com',
