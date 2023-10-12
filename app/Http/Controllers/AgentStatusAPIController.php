@@ -15,7 +15,7 @@ use Illuminate\Validation\ValidationException;
 class AgentStatusAPIController extends Controller
 {
     private $affiliates = [
-        '1' => [ 'affiliate_secret' => 'secret123', 'affiliate_percentage' => 10 ],
+        '1' => [ 'api_key' => 'secret123', 'affiliate_percentage' => 10 ],
     ];
 
     /**
@@ -48,7 +48,7 @@ class AgentStatusAPIController extends Controller
             'state' => 'sometimes|required_without_all:phone,zip',
             'vertical' => 'required|in:' . $validVerticals,
             'affiliate_id' => 'required',
-            'affiliate_secret' => 'required',
+            'api_key' => 'required',
         ], $customMessages);
 
         $vertical = $verticalMapping[$request->input('vertical')];
@@ -71,10 +71,10 @@ class AgentStatusAPIController extends Controller
         $agentAvailable = $this->isAgentAvailable($state, $vertical);
         $price = $this->getPriceForVertical($vertical);
 
-        if ($request->has('affiliate_id') && $request->has('affiliate_secret')) {
+        if ($request->has('affiliate_id') && $request->has('api_key')) {
             $affiliate = $this->affiliates[$request->input('affiliate_id')] ?? null;
         
-            if ($affiliate && $affiliate['affiliate_secret'] == $request->input('affiliate_secret')) {
+            if ($affiliate && $affiliate['api_key'] == $request->input('api_key')) {
                 $percentage = (100 - $affiliate['affiliate_percentage']) / 100;
                 $price *= $percentage;
             } else {
