@@ -1624,8 +1624,8 @@ class RegistrationStepController extends Controller
     public function pdf()
     {
 
-        $barerToken = 'eyJ0eXAiOiJNVCIsImFsZyI6IlJTMjU2Iiwia2lkIjoiNjgxODVmZjEtNGU1MS00Y2U5LWFmMWMtNjg5ODEyMjAzMzE3In0.AQoAAAABAAUABwAA1Sd2GcvbSAgAABVLhFzL20gCAJgPjHagsedJmPsqwsgbcvQVAAEAAAAYAAEAAAAFAAAADQAkAAAANzVkOTc3MTgtOGE5OC00ZDI3LThkZWYtMTdjMmZjZWVkNzlmIgAkAAAANzVkOTc3MTgtOGE5OC00ZDI3LThkZWYtMTdjMmZjZWVkNzlmMACA8NOiCcvbSDcA4B_Jbo1X_02CDaN7cKKJug.nCADjIwEhsy9fX-OlYmbIEDQxQVBh1V-HPFEbJNjM-Y1inZxJg4c7dakeSaCsXYnQ2DDYR_KOcJPTdyZJYzhif7rlhaskKwhW4w4K2qWvyRaPdfRgn72UPMyi3-cAhfppZgYZpfywXBw6wT3Q7Gs0CKBaiKovS90YRSGKLrqMNUPvS2F7PZiLFtoHP4IVJHEgL4Wvnpekbe5bWHNcKuMy7BT-iiOsZwwfVlK7_CgZM9_9sSSHJJ2r0zcJZdnSp2EfBfgUaroyvid1BoTGgmgiAXkY45qrnWjwxi2ICZN9rS35qdzwWO6SUAlXpwYBnWgYDPujbJ2_GoRE7tMViYROg';
-
+        // $barerToken = 'eyJ0eXAiOiJNVCIsImFsZyI6IlJTMjU2Iiwia2lkIjoiNjgxODVmZjEtNGU1MS00Y2U5LWFmMWMtNjg5ODEyMjAzMzE3In0.AQoAAAABAAUABwAA1Sd2GcvbSAgAABVLhFzL20gCAJgPjHagsedJmPsqwsgbcvQVAAEAAAAYAAEAAAAFAAAADQAkAAAANzVkOTc3MTgtOGE5OC00ZDI3LThkZWYtMTdjMmZjZWVkNzlmIgAkAAAANzVkOTc3MTgtOGE5OC00ZDI3LThkZWYtMTdjMmZjZWVkNzlmMACA8NOiCcvbSDcA4B_Jbo1X_02CDaN7cKKJug.nCADjIwEhsy9fX-OlYmbIEDQxQVBh1V-HPFEbJNjM-Y1inZxJg4c7dakeSaCsXYnQ2DDYR_KOcJPTdyZJYzhif7rlhaskKwhW4w4K2qWvyRaPdfRgn72UPMyi3-cAhfppZgYZpfywXBw6wT3Q7Gs0CKBaiKovS90YRSGKLrqMNUPvS2F7PZiLFtoHP4IVJHEgL4Wvnpekbe5bWHNcKuMy7BT-iiOsZwwfVlK7_CgZM9_9sSSHJJ2r0zcJZdnSp2EfBfgUaroyvid1BoTGgmgiAXkY45qrnWjwxi2ICZN9rS35qdzwWO6SUAlXpwYBnWgYDPujbJ2_GoRE7tMViYROg';
+        $barerToken = 'Bearer eyJ0eXAiOiJNVCIsImFsZyI6IlJTMjU2Iiwia2lkIjoiNjgxODVmZjEtNGU1MS00Y2U5LWFmMWMtNjg5ODEyMjAzMzE3In0.AQoAAAABAAUABwAA1Sd2GcvbSAgAABVLhFzL20gCAJgPjHagsedJmPsqwsgbcvQVAAEAAAAYAAEAAAAFAAAADQAkAAAANzVkOTc3MTgtOGE5OC00ZDI3LThkZWYtMTdjMmZjZWVkNzlmIgAkAAAANzVkOTc3MTgtOGE5OC00ZDI3LThkZWYtMTdjMmZjZWVkNzlmMACA8NOiCcvbSDcA4B_Jbo1X_02CDaN7cKKJug.nCADjIwEhsy9fX-OlYmbIEDQxQVBh1V-HPFEbJNjM-Y1inZxJg4c7dakeSaCsXYnQ2DDYR_KOcJPTdyZJYzhif7rlhaskKwhW4w4K2qWvyRaPdfRgn72UPMyi3-cAhfppZgYZpfywXBw6wT3Q7Gs0CKBaiKovS90YRSGKLrqMNUPvS2F7PZiLFtoHP4IVJHEgL4Wvnpekbe5bWHNcKuMy7BT-iiOsZwwfVlK7_CgZM9_9sSSHJJ2r0zcJZdnSp2EfBfgUaroyvid1BoTGgmgiAXkY45qrnWjwxi2ICZN9rS35qdzwWO6SUAlXpwYBnWgYDPujbJ2_GoRE7tMViYROg';
         $accountId = '7716918e-104d-4915-b7ca-eff79222ac45';
 
         $envelopeId = 'f84a4737-e067-411f-8028-a5143855cf59';
@@ -1641,15 +1641,10 @@ class RegistrationStepController extends Controller
 //        $url = "https://demo.docusign.net/restapi/v2.1/accounts/$accountId/envelopes";
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $barerToken,
+            'Authorization' => $barerToken,
         ])->post($url);
 
-
         dd($response, $response->successful(), $response->json(), $response->status());
-
-
-
-
 
         $config = new Configuration();
         $config->setHost('<https://demo.docusign.net/restapi>');
