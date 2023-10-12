@@ -238,7 +238,7 @@ class DocusignController extends Controller
     {
         $envelope_args = [
             'signer_client_id' => auth()->user()->id,
-            'ds_return_url' => route('contract.steps')
+            'ds_return_url' => route('contract.steps', ['first_step'])
         ];
         $args = [
             'account_id' => $this->accountId,

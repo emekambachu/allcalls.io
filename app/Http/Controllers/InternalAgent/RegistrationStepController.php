@@ -32,6 +32,13 @@ class RegistrationStepController extends Controller
 {
     public function contractSteps()
     {
+        if(isset($_GET['event']) && $_GET['event'] == 'signing_complete') {
+
+        }
+
+
+
+
         if (auth()->user()->legacy_key) {
             return redirect()->route('dashboard');
         }
