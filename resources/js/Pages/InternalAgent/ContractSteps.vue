@@ -19,6 +19,7 @@ import SingnaturePad from '@/Pages/InternalAgent/SingnaturePad.vue'
 import { toaster } from "@/helper.js";
 import { triggerRef } from "vue";
 import { faTurkishLira } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 
 let page = usePage();
@@ -163,8 +164,11 @@ let errorHandle = (data, route) => {
             // router.visit(route)
             axios.get(route)
             .then((res)=>{
-                // console.log('res', res);
-                router.visit(res.data.route)
+                console.log('res1', res);
+                // router.visit(res.data.route)
+                axios.get(res.data.route).then((response)=>{
+                    console.log('response2', response);
+                })
             })
             // step.value = 2
         } else if (data === 6) {
