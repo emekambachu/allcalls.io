@@ -1599,10 +1599,19 @@ class RegistrationStepController extends Controller
     public function pdf()
     {
 
+        $barerToken = 'eyJ0eXAiOiJNVCIsImFsZyI6IlJTMjU2Iiwia2lkIjoiNjgxODVmZjEtNGU1MS00Y2U5LWFmMWMtNjg5ODEyMjAzMzE3In0.AQoAAAABAAUABwCA1nNt-srbSAgAgBaXez3L20gCAJgPjHagsedJmPsqwsgbcvQVAAEAAAAYAAEAAAAFAAAADQAkAAAANzVkOTc3MTgtOGE5OC00ZDI3LThkZWYtMTdjMmZjZWVkNzlmIgAkAAAANzVkOTc3MTgtOGE5OC00ZDI3LThkZWYtMTdjMmZjZWVkNzlmMAAAY_m0-MrbSDcA4B_Jbo1X_02CDaN7cKKJug.5Kq_boYjB2mOolgH6urcNEGrqn0-9I18etdllIt4KzP65n-HDmEBmgcjQNAqkqAQ0QHYvXMXs2unLfBrciBEjg9nt80yrIDZEx45ZICi2RoIO1x1NgWfNTzQ_xFqoF09JrsxsPrMMcXskAjPrUWrvlbNSUfqph3Jkx-tsz6oPBop2wGknVEcF4g7Vn7p4ILOQzVPyzuhiCRZWYIPT_4T5qd_g8HNycWysWUO3sFM2oLJTpZDbuIgcIay4sMetLXDJh-QrYGRhihn6qTvteJuUbQtDWz0JPpSsd_cRv7cbFhFy5rHx7m594iN5mEh14Vcwq6trltSSdiAGzhFsSaFUQ';
 
-        Http::get('https://demo.docusign.net/restapi/v2/accounts/0cdb3ff3-xxxx-xxxx-xxxx-e43af011006d/envelopes/ea4cc25b-xxxx-xxxx-xxxx-a67a0a2a4f6c/documents/1/', [
-            ''
-        ]);
+        $accountId = '';
+
+        $envelopeId = '';
+
+        $documentId = 1;
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $barerToken,
+        ])->get("https://demo.docusign.net/restapi/v2/accounts/$accountId/envelopes/$envelopeId/documents/$documentId/");
+
+        dd($response);
 
 
 
