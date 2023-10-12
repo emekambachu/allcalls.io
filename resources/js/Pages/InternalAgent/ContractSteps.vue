@@ -153,7 +153,6 @@ let previewContract = () => {
     StepsModal.value = false
     contractModal.value = true
 }
-
 let errorHandle = (data, route) => {
     // console.log('data', data);
     if (data < 5) {
@@ -165,12 +164,15 @@ let errorHandle = (data, route) => {
             axios.get(route)
             .then((res)=>{
                 console.log('res1', res);
-                // router.visit(res.data.route)
-                axios.get(res.data.route).then((response)=>{
-                    console.log('response2', response);
-                })
+                // const newURL = res.data.route;
+                router.visit(res.data.route)
+                // window.open(newURL, '_blank');
+                // // router.visit(res.data.route)
+                // axios.get(res.data.route).then((response)=>{
+                //     console.log('response2', response);
+                // })
             })
-            // step.value = 2
+            // step.value = 1
         } else if (data === 6) {
             step.value = 3
         } else if (data === 7) {
