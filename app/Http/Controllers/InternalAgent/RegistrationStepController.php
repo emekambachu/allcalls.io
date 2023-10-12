@@ -65,7 +65,7 @@ class RegistrationStepController extends Controller
                     'Content-Type' => 'application/json',
                 ])->get($url);
 
-                // dd($response, $envelopeId, $documentId, $url, $bearerToken);
+                dd($response, $envelopeId, $documentId, $url, $bearerToken);
             }
 
             if (isset($_GET['position']) && $_GET['position'] == 'signature_authorization') {
