@@ -10,13 +10,13 @@ use DocuSign\eSign\Model\Document;
 use DocuSign\eSign\Model\SignHere;
 use DocuSign\eSign\Client\ApiClient;
 use DocuSign\eSign\Model\EnvelopeDefinition;
-use DocuSign\eSign\Api\EnvelopesApi\EnvelopesApi;
+use DocuSign\eSign\Api\EnvelopesApi;
 
 class DocusignExampleController extends Controller
 {
     public function index()
     {
-        $rsaPrivateKey = file_get_contents(env('DOCUSIGN_SECRET_KEY'));
+        $rsaPrivateKey = file_get_contents(base_path('docusign_private.key'));
         $integration_key = env('DOCUSIGN_INTEGRATION_KEY');
         $impersonatedUserId = env('DOCUSIGN_USER_ID');
         $scopes = "signature impersonation";
@@ -30,7 +30,8 @@ class DocusignExampleController extends Controller
         $access_token = $response[0]['access_token'];
 
         $config->addDefaultHeader('Authorization', 'Bearer ' . $access_token);
-        $apiClient->setConfig($config);
+
+        // No longer need the $apiClient->setConfig($config); line
 
         // Create the document
         $documentContent = file_get_contents(asset('/first-step-sign.pdf'));
@@ -46,7 +47,6 @@ class DocusignExampleController extends Controller
             'email' => 'example@allcalls.io',
             'name' => 'AllCalls User',
             'recipient_id' => '1',
-            'client_user_id' => '12345'
         ]);
 
         // Create the signature tab
