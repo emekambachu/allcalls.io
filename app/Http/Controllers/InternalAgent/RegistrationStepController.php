@@ -52,13 +52,6 @@ class RegistrationStepController extends Controller
                 $bearerToken = session()->get('docusign_auth_code');
 
                 $url = "$this->baseUrl/v2.1/accounts/$this->accountId/envelopes/$envelopeId/documents/$documentId";
-
-                // $ch = curl_init();
-                // curl_setopt($ch, CURLOPT_URL, $url);
-                // $headers[] = "authorization: $bearerToken";
-                // curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-                // $result = curl_exec($ch);
-                // dd($result);
                 
                 $response = Http::withHeaders([
                     'Authorization' => 'Bearer ' . $bearerToken,
