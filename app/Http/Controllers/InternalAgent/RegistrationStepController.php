@@ -50,14 +50,24 @@ class RegistrationStepController extends Controller
                 $bearerToken = session()->get('docusign_auth_code');
 
                 $url = "$this->baseUrl/v2.1/accounts/$this->accountId/envelopes/$envelopeId/documents/$documentId";
-                
+
                 $response = Http::withHeaders([
                     'Authorization' => 'Bearer ' . $bearerToken,
                     'Content-Description' => 'File Transfer',
                     'Content-Type' => 'application/pdf',
                 ])->get($url);
 
-                dd($response,$response->body(), $envelopeId, $documentId, $url, $bearerToken);
+                dd($response, $envelopeId, $documentId, $url, $bearerToken);
+
+                $pdfFileName = auth()->user()->id . '_accompanying_sign' . '.pdf';
+
+                // Determine the full path to the public/contract directory
+                $pdfPath = public_path('internal-agents/contract/' . $pdfFileName);
+
+                // Store the PDF directly in the public directory
+                file_put_contents($pdfPath, $response->body());
+
+                dd(public_path('internal-agents/contract/' . $pdfFileName));
             }
 
             if (isset($_GET['position']) && $_GET['position'] == 'signature_authorization') {
