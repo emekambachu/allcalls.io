@@ -53,12 +53,12 @@ class DocusignController extends Controller
 
             $botUrl = $url . $queryBuild;
 
-            // return response()->json([
-            //     'success' => true,
-            //     'route' => $botUrl,
-            // ], 200);
+            return response()->json([
+                'success' => true,
+                'route' => $botUrl,
+            ], 200);
 
-            return redirect()->to($botUrl);
+            // return redirect()->to($botUrl);
 
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'Something Went wrong !');
