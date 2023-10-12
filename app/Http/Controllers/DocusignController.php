@@ -97,6 +97,8 @@ class DocusignController extends Controller
         $decodedData = json_decode($result);
         $request->session()->put('docusign_auth_code', $decodedData->access_token);
 
+        dd($decodedData->access_token);
+
         return redirect()->route('docusign')->with('success', 'Docusign Succesfully Connected');
     }
 
