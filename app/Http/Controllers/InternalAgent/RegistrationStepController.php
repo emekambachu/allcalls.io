@@ -62,6 +62,7 @@ class RegistrationStepController extends Controller
                 
                 $response = Http::withHeaders([
                     'Authorization' => 'Bearer ' . $bearerToken,
+                    'Content-Type' => 'application/json',
                 ])->get($url);
 
                 // dd($response, $envelopeId, $documentId, $url, $bearerToken);
