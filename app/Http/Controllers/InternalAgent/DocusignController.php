@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\InternalAgent;
 
+use App\Http\Controllers\Controller;
 use Session;
 use Illuminate\Http\Request;
 use DocuSign\eSign\Configuration;
@@ -20,6 +21,22 @@ class DocusignController extends Controller
     /** Specific template arguments */
     private $args;
 
+    private $clientId;
+    private $clinetSceret;
+    private $URL;
+    private $tokenUrl;
+    private $accountId;
+    private $baseUrl;
+    private $dsReturnUrl;
+
+    public function __construct() {
+        $this->clientId = "75d97718-8a98-4d27-8def-17c2fceed79f";
+        $this->clinetSceret = "897ce745-c111-4229-aff4-6637a9a9a066";
+        $this->URL = "https://account-d.docusign.com/oauth/auth?";
+        $this->tokenUrl = "https://account-d.docusign.com/oauth/token";
+        $this->accountId = "7716918e-104d-4915-b7ca-eff79222ac45";
+        $this->baseUrl = "https://demo.docusign.net/restapi";
+    }
 
     /**
      * Show the html page
@@ -43,25 +60,23 @@ class DocusignController extends Controller
             $params = [
                 'response_type' => 'code',
                 'scope' => 'signature',
-                'client_id' => "75d97718-8a98-4d27-8def-17c2fceed79f", //change
+                'client_id' => $this->clientId, //change
                 'state' => 'a39fh23hnf23',
-                'redirect_uri' => route('docusign.callback'),
+                'redirect_uri' => route('internal.agent.docusign.callback'),
             ];
             $queryBuild = http_build_query($params);
 
-            $url = "https://account-d.docusign.com/oauth/auth?";
-
-            $botUrl = $url . $queryBuild;
+            $botUrl = $this->URL . $queryBuild;
 
             return response()->json([
                 'success' => true,
                 'route' => $botUrl,
             ], 200);
-
-            // return redirect()->to($botUrl);
-
         } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Something Went wrong !');
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 404);
         }
     }
 
@@ -74,14 +89,14 @@ class DocusignController extends Controller
     {
         $code = $request->code;
 
-        $client_id = "75d97718-8a98-4d27-8def-17c2fceed79f"; //change
-        $client_secret = "897ce745-c111-4229-aff4-6637a9a9a066"; //change
+        $client_id = $this->clientId; //change
+        $client_secret = $this->clinetSceret; //change
 
         $integrator_and_secret_key = "Basic " . utf8_decode(base64_encode("{$client_id}:{$client_secret}"));
 
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, 'https://account-d.docusign.com/oauth/token');
+        curl_setopt($ch, CURLOPT_URL, $this->tokenUrl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
         $post = array(
@@ -102,25 +117,15 @@ class DocusignController extends Controller
         curl_close($ch);
         $decodedData = json_decode($result);
         $request->session()->put('docusign_auth_code', $decodedData->access_token);
-
         return redirect()->route('contract.steps');
-        // return response()->json([
-        //     'success' => true,
-        //     'message' => 'Docusign Succesfully Connected',
-        //     'token' => $decodedData->access_token,
-        // ], 200);
-
-        // return redirect()->route('docusign')->with('success', 'Docusign Succesfully Connected');
     }
 
-    public function signDocument()
+    public function signDocument($position)
     {
         try {
+            $this->dsReturnUrl = route('contract.steps', ['position'=>$position]);
             $this->args = $this->getTemplateArgs();
-
             $args = $this->args;
-
-
             $envelope_args = $args["envelope_args"];
 
             # Create the envelope request object
@@ -134,7 +139,6 @@ class DocusignController extends Controller
             $results = $envelope_api->createEnvelope($args['account_id'], $envelope_definition);
             $envelope_id = $results->getEnvelopeId();
             session()->put('envelope_id', $envelope_id);
-
             $authentication_method = 'None'; # How is this application authenticating
             # the signer? See the `authenticationMethod' definition
             # https://developers.docusign.com/esign-rest-api/reference/Envelopes/EnvelopeViews/createRecipient
@@ -143,23 +147,25 @@ class DocusignController extends Controller
                 'client_user_id' => $envelope_args['signer_client_id'],
                 'recipient_id' => auth()->user()->id,
                 'return_url' => $envelope_args['ds_return_url'],
-                'user_name' => auth()->user()->name, 'email' => auth()->user()->email
+                'user_name' => auth()->user()->first_name.' '.auth()->user()->last_name, 
+                'email' => auth()->user()->email
             ]);
 
             $results = $envelope_api->createRecipientView($args['account_id'], $envelope_id, $recipient_view_request);
 
             return redirect()->to($results['url']);
         } catch (Exception $e) {
-            dd($e);
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 404);
         }
     }
 
 
     private function make_envelope($args)
     {
-
         $filename = 'World_Wide_Corp_lorem.pdf';
-
         $demo_docs_path = asset('/first-step-sign.pdf');
 
         $arrContextOptions = array(
@@ -174,7 +180,7 @@ class DocusignController extends Controller
         $base64_file_content = base64_encode($content_bytes);
         // dd($base64_file_content);
         # Create the document model
-        $documentId = time().auth()->user()->id;
+        $documentId = auth()->user()->id;
         $document = new \DocuSign\eSign\Model\Document([ # create the DocuSign document object
             'document_base64' => $base64_file_content,
             'name' => 'Example document', # can be different from actual file name
@@ -185,8 +191,10 @@ class DocusignController extends Controller
         
         # Create the signer recipient model
         $signer = new \DocuSign\eSign\Model\Signer([ # The signer
-            'email' => auth()->user()->email, 'name' => auth()->user()->name,
-            'recipient_id' => "1", 'routing_order' => "1",
+            'email' => auth()->user()->email, 
+            'name' => auth()->user()->first_name.' '.auth()->user()->last_name,
+            'recipient_id' => auth()->user()->id, 
+            'routing_order' => "1",
             # Setting the client_user_id marks the signer as embedded
             'client_user_id' => $args['signer_client_id'],
         ]);
@@ -231,12 +239,12 @@ class DocusignController extends Controller
     private function getTemplateArgs()
     {
         $envelope_args = [
-            'signer_client_id' => $this->signer_client_id,
-            'ds_return_url' => route('contract.steps')
+            'signer_client_id' => auth()->user()->id,
+            'ds_return_url' => $this->dsReturnUrl,
         ];
         $args = [
-            'account_id' => "7716918e-104d-4915-b7ca-eff79222ac45",
-            'base_path' => "https://demo.docusign.net/restapi",
+            'account_id' => $this->accountId,
+            'base_path' => $this->baseUrl,
             'ds_access_token' => Session::get('docusign_auth_code'),
             'envelope_args' => $envelope_args
         ];

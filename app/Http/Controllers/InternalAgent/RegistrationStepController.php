@@ -30,8 +30,48 @@ use Inertia\Inertia;
 
 class RegistrationStepController extends Controller
 {
+    private $accountId;
+    private $baseUrl;
+
+    public function __construct()
+    {
+        $this->accountId = "7716918e-104d-4915-b7ca-eff79222ac45";
+        $this->baseUrl = "https://demo.docusign.net/restapi";
+    }
+
+
     public function contractSteps()
     {
+        if (isset($_GET['event']) && $_GET['event'] == 'signing_complete') {
+            if (isset($_GET['position']) && $_GET['position'] == 'accompanying_sign') {
+
+                $envelopeId =  session()->get('envelope_id');
+                $documentId =  session()->get('document_id');
+                $bearerToken = session()->get('docusign_auth_code');
+
+                $url = "$this->baseUrl/v2.1/accounts/$this->accountId/envelopes/$envelopeId/documents/$documentId";
+
+                $response = Http::withHeaders([
+                    'Authorization' => 'Bearer ' . $bearerToken,
+                    'Content-Description' => 'File Transfer',
+                    'Content-Type' => 'application/pdf',
+                ])->get($url);
+
+                dd($response,$response->body(), $envelopeId, $documentId, $url, $bearerToken);
+            }
+
+            if (isset($_GET['position']) && $_GET['position'] == 'signature_authorization') {
+                dd('signature authorization');
+            }
+
+            if (isset($_GET['position']) && $_GET['position'] == 'agency_authorization') {
+                dd('agency authorization');
+            }
+        }
+
+
+
+
         if (auth()->user()->legacy_key) {
             return redirect()->route('dashboard');
         }
@@ -56,6 +96,7 @@ class RegistrationStepController extends Controller
         return Inertia::render('InternalAgent/ContractSteps', [
             'states' => $states,
             'userData' => $user,
+            'docuSignAuthCode' => session()->get('docusign_auth_code'),
         ]);
     }
 
@@ -1312,27 +1353,28 @@ class RegistrationStepController extends Controller
 
                 //First Signature
                 $returnArr['contractData'] = User::where('id', $user->id)
-                ->with('internalAgentContract.getState')
-                ->with('internalAgentContract.getDriverLicenseState')
-                ->with('internalAgentContract.getMoveInState')
-                ->with('internalAgentContract.getResidentInsLicenseState')
-                ->with('internalAgentContract.getBusinessState')
-                ->with('internalAgentContract.additionalInfo.getState')
-                ->with('internalAgentContract.addresses.getState')
-                ->with('internalAgentContract.legalQuestion')->first();
+                    ->with('internalAgentContract.getState')
+                    ->with('internalAgentContract.getDriverLicenseState')
+                    ->with('internalAgentContract.getMoveInState')
+                    ->with('internalAgentContract.getResidentInsLicenseState')
+                    ->with('internalAgentContract.getBusinessState')
+                    ->with('internalAgentContract.additionalInfo.getState')
+                    ->with('internalAgentContract.addresses.getState')
+                    ->with('internalAgentContract.legalQuestion')->first();
 
                 $pdf = PDF::loadView('pdf.internal-agent-contract.agent-contract', $returnArr);
                 $directory = public_path('internal-agents/contract/');
                 if (!file_exists($directory)) {
                     mkdir($directory, 0777, true);
                 }
-                $pdf->save($directory .'first-step-sign-'.$user->id.'.pdf');
+                $pdf->save($directory . 'first-step-sign-' . $user->id . '.pdf');
                 //First Signature End
 
                 DB::commit();
                 return response()->json([
                     'success' => true,
-                    'route' => route('connect.docusign'),
+                    'message' => 'DocuSign API calling.',
+                    'route' => route('internal.agent.connect.docusign'),
                 ], 200);
             } catch (\Exception $e) {
                 DB::rollBack();
@@ -1672,7 +1714,8 @@ class RegistrationStepController extends Controller
         return response()->json(['url' => $signingUrl->getUrl()]);
     }
 
-    public function pdfExport() {
+    public function pdfExport()
+    {
         set_time_limit(0);
 
         $returnArr['contractData'] = User::where('id', 3)

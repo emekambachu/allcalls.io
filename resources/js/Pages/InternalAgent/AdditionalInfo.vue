@@ -183,7 +183,7 @@
                     <p v-if="sigError" class="text-red-500 mt-2">{{ sigError }}</p>
                 </div>
             </div>
-
+            <a v-if="docuSignAuthCode" :href="route('internal.agent.docusign.sign','accompanying_sign' )">Sign with DocuSign</a>
 
             <!-- Right Side (Date) -->
             <div class="child-singnature-date">
@@ -316,6 +316,7 @@ export default {
         userData: Object,
         page: Object,
         isLoading: Boolean,
+        docuSignAuthCode:String
     },
     data() {
         return {
@@ -388,7 +389,7 @@ export default {
                         if (!isEmpty || this.userData.internal_agent_contract.get_question_sign) {
                             this.sigError = null
                             this.$emit("additionalInfoData", { form: this.form, accompanying_sign: data });
-                            this.firstStepErrors = {}; // Clear the errors by assigning a new empty object
+                            // this.firstStepErrors = {}; // Clear the errors by assigning a new empty object
                         } else {
                             this.sigError = 'Please provide a signature.';
                         }

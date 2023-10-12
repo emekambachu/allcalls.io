@@ -19,6 +19,7 @@ import SingnaturePad from '@/Pages/InternalAgent/SingnaturePad.vue'
 import { toaster } from "@/helper.js";
 import { triggerRef } from "vue";
 import { faTurkishLira } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 
 let page = usePage();
@@ -28,9 +29,10 @@ if (page.props.flash.message) {
 let props = defineProps({
     userData: Object,
     states: Array,
+    docuSignAuthCode:String,
 });
 
-// console.log('userData', props.userData.value);
+console.log('docuSignAuthCode docusign_auth_code', props.docuSignAuthCode);
 let StepsModal = ref(true)
 let contractModal = ref(false)
 const isLoading = ref(false);
@@ -152,20 +154,26 @@ let previewContract = () => {
     StepsModal.value = false
     contractModal.value = true
 }
-
 let errorHandle = (data, route) => {
     // console.log('data', data);
     if (data < 5) {
         ChangeTab()
     } else if (data < 9) {
         if (data === 5) {
-            console.log('route', route);
+            // console.log('route', route);
             // router.visit(route)
             axios.get(route)
             .then((res)=>{
-                console.log('res', res);
+                console.log('res1', res);
+                const newURL = res.data.route;
+                window.location.href = newURL;
+
+                // // router.visit(res.data.route)
+                // axios.get(res.data.route).then((response)=>{
+                //     console.log('response2', response);
+                // })
             })
-            // step.value = 2
+            step.value = 1
         } else if (data === 6) {
             step.value = 3
         } else if (data === 7) {
@@ -441,7 +449,7 @@ input[type=number] {
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="contractStep === 5">
-                                <AdditionalInfo @additionalInfoData="additionalInformation"
+                                <AdditionalInfo :docuSignAuthCode="docuSignAuthCode" @additionalInfoData="additionalInformation"
                                     :firstStepErrors="firstStepErrors" :page="$page.props" :states="states"
                                     @changeTab="NextStep()" :isLoading="isLoading" @goback="ChangeTabBack()"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
