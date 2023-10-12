@@ -30,7 +30,6 @@ use Inertia\Inertia;
 
 class RegistrationStepController extends Controller
 {
-    dd('ds');
     public function contractSteps()
     {
         if (auth()->user()->legacy_key) {
