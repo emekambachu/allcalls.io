@@ -53,7 +53,13 @@ class DocusignController extends Controller
 
             $botUrl = $url . $queryBuild;
 
+            // return response()->json([
+            //     'success' => true,
+            //     'route' => $botUrl,
+            // ], 200);
+
             return redirect()->to($botUrl);
+
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'Something Went wrong !');
         }
@@ -128,7 +134,7 @@ class DocusignController extends Controller
                 'client_user_id' => $envelope_args['signer_client_id'],
                 'recipient_id' => '1',
                 'return_url' => $envelope_args['ds_return_url'],
-                'user_name' => 'shaiv', 'email' => 'awaisamir23@gmail.com'
+                'user_name' => 'noman', 'email' => 'ra9249421@gmail.com'
             ]);
 
             $results = $envelope_api->createRecipientView($args['account_id'], $envelope_id,$recipient_view_request);
@@ -164,11 +170,11 @@ class DocusignController extends Controller
             'document_base64' => $base64_file_content,
             'name' => 'Example document', # can be different from actual file name
             'file_extension' => 'pdf', # many different document types are accepted
-            'document_id' => 1, # a label used to reference the doc
+            'document_id' => '1001', # a label used to reference the doc
         ]);
         # Create the signer recipient model
         $signer = new \DocuSign\eSign\Model\Signer([# The signer
-            'email' => 'awaisamir23@gmail.com', 'name' => 'shaiv',
+            'email' => 'ra9249421@gmail.com', 'name' => 'noman',
             'recipient_id' => "1", 'routing_order' => "1",
             # Setting the client_user_id marks the signer as embedded
             'client_user_id' => $args['signer_client_id'],
@@ -184,7 +190,7 @@ class DocusignController extends Controller
         # Next, create the top level envelope definition and populate it.
 
         $envelope_definition = new \DocuSign\eSign\Model\EnvelopeDefinition([
-            'email_subject' => "Please sign this document sent from the CodeHunger",
+            'email_subject' => "On Boarding Info",
             'documents' => [$document],
             # The Recipients object wants arrays for each recipient type
             'recipients' => new \DocuSign\eSign\Model\Recipients(['signers' => [$signer]]),
@@ -203,7 +209,6 @@ class DocusignController extends Controller
         $this->config->setHost($this->args['base_path']);
         $this->config->addDefaultHeader('Authorization', 'Bearer ' . $this->args['ds_access_token']);
         $this->apiClient = new ApiClient($this->config);
-
         return new EnvelopesApi($this->apiClient);
     }
 
@@ -224,8 +229,6 @@ class DocusignController extends Controller
             'ds_access_token' => Session::get('docusign_auth_code'),
             'envelope_args' => $envelope_args
         ];
-
         return $args;
-
     }
 }

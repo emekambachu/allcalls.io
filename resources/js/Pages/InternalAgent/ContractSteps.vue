@@ -153,13 +153,19 @@ let previewContract = () => {
     contractModal.value = true
 }
 
-let errorHandle = (data) => {
+let errorHandle = (data, route) => {
     // console.log('data', data);
     if (data < 5) {
         ChangeTab()
     } else if (data < 9) {
         if (data === 5) {
-            step.value = 2
+            console.log('route', route);
+            // router.visit(route)
+            axios.get(route)
+            .then((res)=>{
+                console.log('res', res);
+            })
+            // step.value = 2
         } else if (data === 6) {
             step.value = 3
         } else if (data === 7) {
@@ -270,7 +276,7 @@ let submit = (step) => {
                 toaster("success", response.data.message);
                 router.visit("/dashboard");
             } else {
-                errorHandle(step)
+                errorHandle(step, response.data.route)
             }
             isLoading.value = false;
         })
