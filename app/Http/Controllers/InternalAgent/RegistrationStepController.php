@@ -53,19 +53,18 @@ class RegistrationStepController extends Controller
 
                 $url = "$this->baseUrl/v2.1/accounts/$this->accountId/envelopes/$envelopeId/documents/$documentId";
 
-
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, $url);
-                $headers[] = "authorization: $bearerToken";
-                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-                $result = curl_exec($ch);
-                dd($result);
+                // $ch = curl_init();
+                // curl_setopt($ch, CURLOPT_URL, $url);
+                // $headers[] = "authorization: $bearerToken";
+                // curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                // $result = curl_exec($ch);
+                // dd($result);
+                
                 $response = Http::withHeaders([
                     'Authorization' => 'Bearer ' . $bearerToken,
                 ])->get($url);
 
-                dd($response, $envelopeId, $documentId, $url, $bearerToken);
+                // dd($response, $envelopeId, $documentId, $url, $bearerToken);
             }
 
             if (isset($_GET['position']) && $_GET['position'] == 'signature_authorization') {
