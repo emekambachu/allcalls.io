@@ -1599,7 +1599,7 @@ class RegistrationStepController extends Controller
     public function pdf()
     {
 
-        $barerToken = 'eyJ0eXAiOiJNVCIsImFsZyI6IlJTMjU2Iiwia2lkIjoiNjgxODVmZjEtNGU1MS00Y2U5LWFmMWMtNjg5ODEyMjAzMzE3In0.AQoAAAABAAUABwCA1nNt-srbSAgAgBaXez3L20gCAJgPjHagsedJmPsqwsgbcvQVAAEAAAAYAAEAAAAFAAAADQAkAAAANzVkOTc3MTgtOGE5OC00ZDI3LThkZWYtMTdjMmZjZWVkNzlmIgAkAAAANzVkOTc3MTgtOGE5OC00ZDI3LThkZWYtMTdjMmZjZWVkNzlmMAAAY_m0-MrbSDcA4B_Jbo1X_02CDaN7cKKJug.5Kq_boYjB2mOolgH6urcNEGrqn0-9I18etdllIt4KzP65n-HDmEBmgcjQNAqkqAQ0QHYvXMXs2unLfBrciBEjg9nt80yrIDZEx45ZICi2RoIO1x1NgWfNTzQ_xFqoF09JrsxsPrMMcXskAjPrUWrvlbNSUfqph3Jkx-tsz6oPBop2wGknVEcF4g7Vn7p4ILOQzVPyzuhiCRZWYIPT_4T5qd_g8HNycWysWUO3sFM2oLJTpZDbuIgcIay4sMetLXDJh-QrYGRhihn6qTvteJuUbQtDWz0JPpSsd_cRv7cbFhFy5rHx7m594iN5mEh14Vcwq6trltSSdiAGzhFsSaFUQ';
+        $barerToken = '75d97718-8a98-4d27-8def-17c2fceed79f';
 
         $accountId = '7b57bbcf-6351-4a98-aea9-9892de6230fb';
 
