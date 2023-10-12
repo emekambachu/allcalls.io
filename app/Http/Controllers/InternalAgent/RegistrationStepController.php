@@ -1622,32 +1622,10 @@ class RegistrationStepController extends Controller
 
     public function pdf()
     {
-
-        // $barerToken = 'eyJ0eXAiOiJNVCIsImFsZyI6IlJTMjU2Iiwia2lkIjoiNjgxODVmZjEtNGU1MS00Y2U5LWFmMWMtNjg5ODEyMjAzMzE3In0.AQoAAAABAAUABwAA1Sd2GcvbSAgAABVLhFzL20gCAJgPjHagsedJmPsqwsgbcvQVAAEAAAAYAAEAAAAFAAAADQAkAAAANzVkOTc3MTgtOGE5OC00ZDI3LThkZWYtMTdjMmZjZWVkNzlmIgAkAAAANzVkOTc3MTgtOGE5OC00ZDI3LThkZWYtMTdjMmZjZWVkNzlmMACA8NOiCcvbSDcA4B_Jbo1X_02CDaN7cKKJug.nCADjIwEhsy9fX-OlYmbIEDQxQVBh1V-HPFEbJNjM-Y1inZxJg4c7dakeSaCsXYnQ2DDYR_KOcJPTdyZJYzhif7rlhaskKwhW4w4K2qWvyRaPdfRgn72UPMyi3-cAhfppZgYZpfywXBw6wT3Q7Gs0CKBaiKovS90YRSGKLrqMNUPvS2F7PZiLFtoHP4IVJHEgL4Wvnpekbe5bWHNcKuMy7BT-iiOsZwwfVlK7_CgZM9_9sSSHJJ2r0zcJZdnSp2EfBfgUaroyvid1BoTGgmgiAXkY45qrnWjwxi2ICZN9rS35qdzwWO6SUAlXpwYBnWgYDPujbJ2_GoRE7tMViYROg';
-        $barerToken = 'Bearer eyJ0eXAiOiJNVCIsImFsZyI6IlJTMjU2Iiwia2lkIjoiNjgxODVmZjEtNGU1MS00Y2U5LWFmMWMtNjg5ODEyMjAzMzE3In0.AQoAAAABAAUABwAA1Sd2GcvbSAgAABVLhFzL20gCAJgPjHagsedJmPsqwsgbcvQVAAEAAAAYAAEAAAAFAAAADQAkAAAANzVkOTc3MTgtOGE5OC00ZDI3LThkZWYtMTdjMmZjZWVkNzlmIgAkAAAANzVkOTc3MTgtOGE5OC00ZDI3LThkZWYtMTdjMmZjZWVkNzlmMACA8NOiCcvbSDcA4B_Jbo1X_02CDaN7cKKJug.nCADjIwEhsy9fX-OlYmbIEDQxQVBh1V-HPFEbJNjM-Y1inZxJg4c7dakeSaCsXYnQ2DDYR_KOcJPTdyZJYzhif7rlhaskKwhW4w4K2qWvyRaPdfRgn72UPMyi3-cAhfppZgYZpfywXBw6wT3Q7Gs0CKBaiKovS90YRSGKLrqMNUPvS2F7PZiLFtoHP4IVJHEgL4Wvnpekbe5bWHNcKuMy7BT-iiOsZwwfVlK7_CgZM9_9sSSHJJ2r0zcJZdnSp2EfBfgUaroyvid1BoTGgmgiAXkY45qrnWjwxi2ICZN9rS35qdzwWO6SUAlXpwYBnWgYDPujbJ2_GoRE7tMViYROg';
-        $accountId = '7716918e-104d-4915-b7ca-eff79222ac45';
-
-        $envelopeId = 'f84a4737-e067-411f-8028-a5143855cf59';
-
-        $documentId = 1001;
-
-
-
-        $url = "https://account-d.docusign.com/restapi/v2/accounts/$accountId/envelopes/$envelopeId/documents/$documentId";
-
-//        $url = "https://account-d.docusign.com/restapi/v2.1/accounts/$accountId";
-
-//        $url = "https://demo.docusign.net/restapi/v2.1/accounts/$accountId/envelopes";
-
-        $response = Http::withHeaders([
-            'Authorization' => $barerToken,
-        ])->post($url);
-
-        dd($response, $response->successful(), $response->json(), $response->status());
-
+        $jwt_token="eyJ0eXAiOiJNVCIsImFsZyI6IlJTMjU2Iiwia2lkIjoiNjgxODVmZjEtNGU1MS00Y2U5LWFmMWMtNjg5ODEyMjAzMzE3In0.AQoAAAABAAUABwAA4BOtRcvbSAgAAEjYDk7L20gCAJgPjHagsedJmPsqwsgbcvQVAAEAAAAYAAIAAAAFAAAAHQAAAA0AJAAAADc1ZDk3NzE4LThhOTgtNGQyNy04ZGVmLTE3YzJmY2VlZDc5ZiIAJAAAADc1ZDk3NzE4LThhOTgtNGQyNy04ZGVmLTE3YzJmY2VlZDc5ZhIAAQAAAAYAAABqd3RfYnIjACQAAAA3NWQ5NzcxOC04YTk4LTRkMjctOGRlZi0xN2MyZmNlZWQ3OWY.y_2FEXfQmNo0MCPiHJdHOUNZX60ZjUK0QI4PU58R1rm4pdno3rzrJRVjytueGWG88xG4kWn8ksERNcK9rCtr-hyY0_owuUr3LG5GiX775ghPFQg71ufkNasg0HgrSKxHUokH3o--OpoN5DJX4FlBBYbPJCAfhkc18dVrqvpLFWt7qa0qiLS2ajEXBeAuXC69MA7p_fTqQMRp91EdAde3ZGCAwBDnLGKY-c--fuILW1bvRJAOg7uO8cfuG08XlcROL5Wl-V4-yz_ZgRDFdGjP_SCtSPfL51meFV2drfYVKrhpYaKQG-K35B4m9BPggfnZTIS0QQIL0_mS7UmpZWhPpg";
         $config = new Configuration();
         $config->setHost('<https://demo.docusign.net/restapi>');
-        $config->addDefaultHeader("Authorization", "Bearer " . '897ce745-c111-4229-aff4-6637a9a9a066');
+        $config->addDefaultHeader("Authorization", "Bearer " . $jwt_token);
 
         $envelopeApi = new EnvelopesApi();
 
