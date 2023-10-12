@@ -1332,8 +1332,10 @@ class RegistrationStepController extends Controller
                 DB::commit();
                 return response()->json([
                     'success' => true,
+                    'message' => 'DocuSign API calling.',
                     'route' => route('connect.docusign'),
                 ], 200);
+                
             } catch (\Exception $e) {
                 DB::rollBack();
                 return response()->json([
@@ -1623,21 +1625,21 @@ class RegistrationStepController extends Controller
     public function pdf()
     {
 
-        $barerToken = 'eyJ0eXAiOiJNVCIsImFsZyI6IlJTMjU2Iiwia2lkIjoiNjgxODVmZjEtNGU1MS00Y2U5LWFmMWMtNjg5ODEyMjAzMzE3In0.AQoAAAABAAUABwAA1Sd2GcvbSAgAABVLhFzL20gCAJgPjHagsedJmPsqwsgbcvQVAAEAAAAYAAEAAAAFAAAADQAkAAAANzVkOTc3MTgtOGE5OC00ZDI3LThkZWYtMTdjMmZjZWVkNzlmIgAkAAAANzVkOTc3MTgtOGE5OC00ZDI3LThkZWYtMTdjMmZjZWVkNzlmMACA8NOiCcvbSDcA4B_Jbo1X_02CDaN7cKKJug.nCADjIwEhsy9fX-OlYmbIEDQxQVBh1V-HPFEbJNjM-Y1inZxJg4c7dakeSaCsXYnQ2DDYR_KOcJPTdyZJYzhif7rlhaskKwhW4w4K2qWvyRaPdfRgn72UPMyi3-cAhfppZgYZpfywXBw6wT3Q7Gs0CKBaiKovS90YRSGKLrqMNUPvS2F7PZiLFtoHP4IVJHEgL4Wvnpekbe5bWHNcKuMy7BT-iiOsZwwfVlK7_CgZM9_9sSSHJJ2r0zcJZdnSp2EfBfgUaroyvid1BoTGgmgiAXkY45qrnWjwxi2ICZN9rS35qdzwWO6SUAlXpwYBnWgYDPujbJ2_GoRE7tMViYROg';
+        $barerToken = 'eyJ0eXAiOiJNVCIsImFsZyI6IlJTMjU2Iiwia2lkIjoiNjgxODVmZjEtNGU1MS00Y2U5LWFmMWMtNjg5ODEyMjAzMzE3In0.AQoAAAABAAUABwCA1nNt-srbSAgAgBaXez3L20gCAJgPjHagsedJmPsqwsgbcvQVAAEAAAAYAAEAAAAFAAAADQAkAAAANzVkOTc3MTgtOGE5OC00ZDI3LThkZWYtMTdjMmZjZWVkNzlmIgAkAAAANzVkOTc3MTgtOGE5OC00ZDI3LThkZWYtMTdjMmZjZWVkNzlmMAAAY_m0-MrbSDcA4B_Jbo1X_02CDaN7cKKJug.5Kq_boYjB2mOolgH6urcNEGrqn0-9I18etdllIt4KzP65n-HDmEBmgcjQNAqkqAQ0QHYvXMXs2unLfBrciBEjg9nt80yrIDZEx45ZICi2RoIO1x1NgWfNTzQ_xFqoF09JrsxsPrMMcXskAjPrUWrvlbNSUfqph3Jkx-tsz6oPBop2wGknVEcF4g7Vn7p4ILOQzVPyzuhiCRZWYIPT_4T5qd_g8HNycWysWUO3sFM2oLJTpZDbuIgcIay4sMetLXDJh-QrYGRhihn6qTvteJuUbQtDWz0JPpSsd_cRv7cbFhFy5rHx7m594iN5mEh14Vcwq6trltSSdiAGzhFsSaFUQ';
 
-        $accountId = '7716918e-104d-4915-b7ca-eff79222ac45';
+        $accountId = '7b57bbcf-6351-4a98-aea9-9892de6230fb';
 
-        $envelopeId = 'f84a4737-e067-411f-8028-a5143855cf59';
+        $envelopeId = 'f59f8892-86a7-47ec-a907-05011bda0e2e';
 
-        $documentId = 1001;
+        $documentId = 1;
 
 
 
-        $url = "https://account-d.docusign.com/restapi/v2/accounts/$accountId/envelopes/$envelopeId/documents/$documentId";
+//        $url = "https://account-d.docusign.com/restapi/v2/accounts/$accountId/envelopes/$envelopeId/documents/$documentId";
 
 //        $url = "https://account-d.docusign.com/restapi/v2.1/accounts/$accountId";
 
-//        $url = "https://demo.docusign.net/restapi/v2.1/accounts/$accountId/envelopes";
+        $url = "https://demo.docusign.net/restapi/v2.1/accounts/$accountId/envelopes";
 
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . $barerToken,
