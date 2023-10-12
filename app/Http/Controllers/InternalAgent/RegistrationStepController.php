@@ -1639,7 +1639,7 @@ class RegistrationStepController extends Controller
 
         //        $envelopeSummary = $envelopeApi->createEnvelope('1797216e-2fcc-4b29-95e4-ff04a330b007', $envelope);
 
-        $envelopeSummary = $envelopeApi->createEnvelope('1797216e-2fcc-4b29-95e4-ff04a330b007', $envelope);
+        $envelopeSummary = $envelopeApi->createEnvelope('7716918e-104d-4915-b7ca-eff79222ac45', $envelope);
 
 
 
@@ -1651,7 +1651,7 @@ class RegistrationStepController extends Controller
             'client_user_id' => '12345'
         ]);
 
-        $signingUrl = $envelopeApi->createRecipientView("1797216e-2fcc-4b29-95e4-ff04a330b007" ,$envelopeSummary->getEnvelopeId() , $viewRequest);
+        $signingUrl = $envelopeApi->createRecipientView("7716918e-104d-4915-b7ca-eff79222ac45" ,$envelopeSummary->getEnvelopeId() , $viewRequest);
 
         return response()->json(['url' => $signingUrl->getUrl()]);
     }
