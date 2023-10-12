@@ -54,6 +54,7 @@ class DocusignController extends Controller
             $botUrl = $url . $queryBuild;
 
             return redirect()->to($botUrl);
+
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'Something Went wrong !');
         }
@@ -67,7 +68,6 @@ class DocusignController extends Controller
     public function callback(Request $request)
     {
         $code = $request->code;
-        dd($code);
 
         $client_id = "75d97718-8a98-4d27-8def-17c2fceed79f"; //change
         $client_secret = "897ce745-c111-4229-aff4-6637a9a9a066"; //change
@@ -97,7 +97,6 @@ class DocusignController extends Controller
         curl_close($ch);
         $decodedData = json_decode($result);
         $request->session()->put('docusign_auth_code', $decodedData->access_token);
-
 
         return redirect()->route('docusign')->with('success', 'Docusign Succesfully Connected');
     }
