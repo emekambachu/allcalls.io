@@ -34,7 +34,9 @@ class RegistrationStepController extends Controller
     {
         if(isset($_GET['event']) && $_GET['event'] == 'signing_complete') {
             if(isset($_GET['position']) && $_GET['position'] == 'accompanying_sign') {
-                
+
+                dd('sd');
+
             }
 
             if(isset($_GET['position']) && $_GET['position'] == 'signature_authorization') {
