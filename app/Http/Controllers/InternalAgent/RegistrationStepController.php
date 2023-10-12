@@ -1607,9 +1607,13 @@ class RegistrationStepController extends Controller
 
         $documentId = 1;
 
+        $url = "https://demo.docusign.net/restapi/v2/accounts/$accountId/envelopes/$envelopeId/documents/$documentId";
+
+        dd($url);
+
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . $barerToken,
-        ])->get("https://demo.docusign.net/restapi/v2/accounts/$accountId/envelopes/$envelopeId/documents/$documentId");
+        ])->get($url);
 
         dd($response, $response->successful(), $response->json(), $response->status());
 
