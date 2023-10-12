@@ -160,11 +160,12 @@ let errorHandle = (data, route) => {
     } else if (data < 9) {
         if (data === 5) {
             // console.log('route', route);
-            router.visit(route)
-            // axios.get(route)
-            // .then((res)=>{
-            //     console.log('res', res);
-            // })
+            // router.visit(route)
+            axios.get(route)
+            .then((res)=>{
+                // console.log('res', res);
+                router.visit(res.data.route)
+            })
             // step.value = 2
         } else if (data === 6) {
             step.value = 3
