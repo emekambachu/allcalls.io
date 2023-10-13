@@ -64,7 +64,7 @@ class RegistrationStepController extends Controller
                     'Content-Description' => 'File Transfer',
                     'Content-Type' => 'application/pdf',
                 ])->get($url);
-                $response->body();
+                dd($response->body());
                 //deleted PDF without sign for Accompanying Sign
                 $accompanyingSign = 'accompanying-sign-' . $user->id . '.pdf';
                 if (file_exists(asset('internal-agents/contract/' . $accompanyingSign))) {
