@@ -24,26 +24,26 @@
         </tr>
     </table>
 
-    <table class="w-100" style="margin-bottom: 30px">
+    <table class="w-100" style="margin-bottom: 30px; margin-top:50px">
         <tr>
             <td style="width: 20%;" class="text-end">
                 <strong>Signature: &nbsp;</strong>
+                {{-- <div style="border-bottom:2px solid black"></div> --}}
             </td>
 
             <td style="width: 40%;" class="text-15">
-                <p style="text-align: start;display: flex;align-items: center;">
-                    <span style="border-bottom: 2px solid black; width 100%">
-                        {{-- <img src="{{asset(asset($contractData->internalAgentContract->getQuestionSign->sign_url))}}" alt="" width="250"> --}}
-                    </span>
-                </p>
+            <div style="border-bottom:2px solid black; margin-top:5px !important"></div>
             </td>
+            
             <td style="width: 30%;" class="text-end">
                 <p style="text-align: center">
                     <span>
                         <strong>
                             Date: &nbsp;
                         </strong>
-                        {{\Carbon\Carbon::parse($contractData->internalAgentContract->getQuestionSign->created_at)->format('m/d/Y')}}
+                        <span style="border-bottom:2px solid black;">
+                            {{\Carbon\Carbon::parse($contractData->internalAgentContract->getQuestionSign->created_at)->format('m/d/Y')}}
+                        </span>
                     </span>
                 </p>
             </td>

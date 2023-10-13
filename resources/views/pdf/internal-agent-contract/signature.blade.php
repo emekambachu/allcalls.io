@@ -31,11 +31,11 @@
 
 
     <div style="width:35%; border-bottom:solid; height:120px; float: right;margin-top:30px;">
-        <img  src="{{ asset($contractData->internalAgentContract->getContractSign->sign_url)}}" style="width:75%;margin-top:40px;margin-left:-8px;">
+        {{-- <img  src="{{ asset($contractData->internalAgentContract->getContractSign->sign_url)}}" style="width:75%;margin-top:40px;margin-left:-8px;"> --}}
     </div>
     <br>
     <div style="width:35%; height:100px; margin-right:-230px;  float: right; margin-top:130px;">
         <div><strong>Name</strong>:&nbsp; {{$contractData->internalAgentContract->first_name.' '.$contractData->internalAgentContract->last_name}}</div>
-        <div><strong>Date</strong>:&nbsp; {{\Carbon\Carbon::parse($contractData->internalAgentContract->getContractSign->created_at)->format('m/d/Y')}}  </div>
+        <div><strong>Date</strong>:&nbsp; {{\Carbon\Carbon::now()->format('m/d/Y')}}  </div>
     </div>
 </div>
