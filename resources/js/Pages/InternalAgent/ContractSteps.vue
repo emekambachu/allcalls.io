@@ -200,7 +200,7 @@ let errorHandle = (data, response) => {
                     accompanyingSignMessage.value = null
                 }, 2000);
             }
-        // router.visit('contract-steps')
+        router.visit('contract-steps')
     }
 }
 if (props.userData?.internal_agent_contract) {
@@ -221,6 +221,7 @@ if (props.userData?.internal_agent_contract) {
     } else if (props.userData.contract_step === 10) {
         StepsModal.value = false
         contractModal.value = true
+        router.visit('contract-steps')
     }
 }
 
