@@ -187,7 +187,7 @@ class DocusignController extends Controller
     private function make_envelope($args)
     {
         $filename = auth()->user()->id.'-contract.pdf';
-        $demo_docs_path = asset('internal-agents/contract/'.auth()->user()->id.'contract.pdf');
+        $demo_docs_path = asset('internal-agents/contract/'.auth()->user()->id.'-contract.pdf');
 
         $arrContextOptions = array(
             "ssl" => array(
