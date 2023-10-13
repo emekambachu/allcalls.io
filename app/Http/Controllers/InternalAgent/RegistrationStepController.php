@@ -49,6 +49,8 @@ class RegistrationStepController extends Controller
         }
 
         if (isset($_GET['event']) && $_GET['event'] == 'signing_complete') {
+            set_time_limit(0);
+
             $user = auth()->user();
             if (isset($_GET['position']) && $_GET['position'] == 'accompanying_sign') {
                 $envelopeId =  session()->get('envelope_id');
