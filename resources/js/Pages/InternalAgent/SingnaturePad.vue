@@ -13,7 +13,7 @@
     Parties against any and all claims, demands, losses, damages, and causes of action, including expenses, costs
     and reasonable attorneys' fees which they may sustain or incur as a result of carrying out the authority
     granted hereunder.
-    <div class="my-2">
+    <div class="my-2 mb-5">
         By my signature below, I certify that the information I have submitted to the Authorized Parties is correct to
         the best of my knowledge and acknowledge that I have read and reviewed the forms and agreements which
         the Authorized Parties have been authorized to affix my signature. I agree to indemnify and hold any third
@@ -22,22 +22,18 @@
         reliance on any form or agreement bearing my signature pursuant to this authorization.
     </div>
     </p>
-    <hr>
-    <div class="container mx-auto p-5 flex justify-between flex-wrap">
-
-        <!-- Left Side (Signature) -->
+  
+    <!-- <div class="container mx-auto p-5 flex justify-between flex-wrap">
         <div class="" style="width: 70%;">
-            <!-- Signature Box -->
             <div class=" mb-10 ">
                 <div>Signature:</div>
-                <!-- Signature Pad Component -->
 
-                <!-- Undo Button (if needed) -->
                 <VueSignaturePad id="signature" ref="signaturePad" :options="options" />
                 <button @click="undo" class=" button-custom mt-2 px-2 py-2 rounded-md">
                     Undo
                 </button>
-                <a v-if="docuSignAuthCode" :href="route('internal.agent.docusign.sign','signature_authorization' )">Sign with DocuSign</a>
+                <a v-if="docuSignAuthCode" :href="route('internal.agent.docusign.sign', 'signature_authorization')">Sign
+                    with DocuSign</a>
                 <div v-if="firstStepErrors.signature_authorization" class="text-red-500 mt-4"
                     v-text="firstStepErrors.signature_authorization[0]">
                 </div>
@@ -46,22 +42,20 @@
         </div>
 
 
-        <!-- Right Side (Date) -->
         <div class="w-30 " style="margin-top: 132px;">
             <div class="mb-2"><strong>Date:</strong> <span class="mx-2">{{ dateFormat(date) }}</span></div>
-            <!-- Underscore -->
             <div style="width: 200px;" class="border-b border-black "></div>
         </div>
+    </div> -->
 
-    </div>
     <div class="flex mb-5 justify-between">
         <button @click="editContract()" class="button-custom-back px-3 py-2 rounded-md">
             Edit
         </button>
-        <button type="button" :class="{ 'opacity-25': isLoading }" :disabled="isLoading" @click="save"
+        <a :href="route('internal.agent.docusign.sign', 'signature_authorization')" type="button" :class="{ 'opacity-25': !docuSignAuthCode }" :disabled="!docuSignAuthCode" @click="save"
             class="button-custom  px-3 py-2 rounded-md">
-            <global-spinner :spinner="isLoading" /> Submit
-        </button>
+            <global-spinner :spinner="isLoading" /> Prepare Document
+        </a>
 
     </div>
 </template>
@@ -82,20 +76,20 @@ export default {
         userData: Object,
         page: Object,
         firstStepErrors: Object,
-        docuSignAuthCode:String
+        docuSignAuthCode: String
     },
     mounted() {
-        if (this.page.auth.role === 'internal-agent') {
-            // console.log('i am running ');
-            const canvasElement = this.$refs.signaturePad.$el.querySelector('canvas');
-            canvasElement.width = 670; // Set the width you desire
-            canvasElement.height = 100; // Set the height you desire
-        }
+        // if (this.page.auth.role === 'internal-agent') {
+        //     // console.log('i am running ');
+        //     const canvasElement = this.$refs.signaturePad.$el.querySelector('canvas');
+        //     canvasElement.width = 670; // Set the width you desire
+        //     canvasElement.height = 100; // Set the height you desire
+        // }
     },
     methods: {
-        undo() {
-            this.$refs.signaturePad.undoSignature();
-        },
+        // undo() {
+        //     this.$refs.signaturePad.undoSignature();
+        // },
         dateFormat(date) {
             const day = date.getDate().toString().padStart(2, "0"); // Add leading zero if needed
             const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Month is zero-based, so add 1
@@ -107,13 +101,14 @@ export default {
             this.$emit("editContract");
         },
         async save() {
-            const { isEmpty, data } = this.$refs.signaturePad.saveSignature();
-            this.sigError = ''
-            if (!isEmpty) {
-                this.$emit("signature", data);
-            } else {
-                this.sigError = 'Please provide a signature.';
-            }
+            this.$emit("signature");
+            // const { isEmpty, data } = this.$refs.signaturePad.saveSignature();
+            // this.sigError = ''
+            // if (!isEmpty) {
+            //     this.$emit("signature", data);
+            // } else {
+            //     this.sigError = 'Please provide a signature.';
+            // }
         },
 
     },

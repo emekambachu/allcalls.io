@@ -218,7 +218,7 @@ if (props.userData?.internal_agent_contract) {
 let signature_authorization = ref(null)
 let signaturePreview = (val) => {
     isLoading.value = true
-    signature_authorization.value = val
+    // signature_authorization.value = val
     submit(10)
 }
 let submit = (step) => {
