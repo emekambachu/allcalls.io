@@ -12,6 +12,7 @@ use App\Http\Controllers\AutoPayController;
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupportController;
+use App\Http\Controllers\PingDocsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TakeCallsController;
 use App\Http\Controllers\StripeTestController;
@@ -23,6 +24,7 @@ use App\Http\Controllers\FundsWithCardController;
 use App\Http\Controllers\UsageActivityController;
 use App\Http\Controllers\WebAPIClientsController;
 use App\Http\Controllers\CallClientInfoController;
+use App\Http\Controllers\AgentStatusDocsController;
 use App\Http\Controllers\ActiveUserChannelController;
 use App\Http\Controllers\TwilioDeviceTokenController;
 use App\Http\Controllers\Admin\OnlineAgentsController;
@@ -135,3 +137,10 @@ Route::get('/vince', function () {
 Route::get('/ryan', function () {
     return redirect('/');
 });
+
+Route::get('/docs', function() {
+    return redirect('/docs/ping');
+});
+
+Route::get('/docs/ping', [PingDocsController::class, 'show'])->name('docs.ping.show');
+Route::get('/docs/agent-status', [AgentStatusDocsController::class, 'show'])->name('docs.agent-status.show');
