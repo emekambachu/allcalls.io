@@ -292,7 +292,7 @@
                     </button>
                 </div>
                 <div class="mt-4">
-                    <button v-if="!docuSignAuthCode && !additional_info_saved" type="button" :class="{ 'opacity-25': isLoading }" :disabled="isLoading"
+                    <button v-if="!additional_info_saved" type="button" :class="{ 'opacity-25': isLoading }" :disabled="isLoading"
                         @click="ChangeTab" class="button-custom px-3 py-2 rounded-md">
                         <global-spinner :spinner="isLoading" /> Next Step
                     </button>
