@@ -423,7 +423,6 @@ input[type=number] {
                         <div v-show="slidingLoader" class="px-12 py-2">
                             <animation-slider :slidingLoader="slidingLoader" />
                         </div>
-
                         <div v-show="!slidingLoader" class="px-12 py-2">
 
                             <Tabs :step="step" />
