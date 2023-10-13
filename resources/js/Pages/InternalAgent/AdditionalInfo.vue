@@ -293,16 +293,16 @@
                     </button>
                 </div>
                 <div class="mt-4">
-                    <button v-if="!additional_info_saved" type="button" :class="{ 'opacity-25': isLoading }"
+                    <button  type="button" :class="{ 'opacity-25': isLoading }"
                         :disabled="isLoading" @click="ChangeTab" class="button-custom px-3 py-2 rounded-md">
-                        <global-spinner :spinner="isLoading" /> Prepare Document
+                        <global-spinner :spinner="isLoading" /> Next Step
                     </button>
-                    <a  v-if="docuSignAuthCode && additional_info_saved"
+                    <!-- <a  v-if="docuSignAuthCode && additional_info_saved"
                         :href="route('internal.agent.docusign.sign', 'accompanying_sign')" type="button"
                         :class="{ 'opacity-25': isLoading || !docuSignAuthCode }" :disabled="isLoading || !docuSignAuthCode"
                         class="button-custom px-3 py-2 rounded-md">
                         <global-spinner :spinner="isLoading" /> Sign Document
-                    </a>
+                    </a> -->
                     
                     <div v-if="accompanyingSignMessage" class="text-green-500 mt-3 text-center">
                         {{ accompanyingSignMessage }}

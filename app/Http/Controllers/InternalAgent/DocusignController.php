@@ -117,6 +117,15 @@ class DocusignController extends Controller
         curl_close($ch);
         $decodedData = json_decode($result);
         $request->session()->put('docusign_auth_code', $decodedData->access_token);
+
+
+
+        // return response()->json([
+        //     'success' => true,
+        //     'docuSignAuthCode' => $decodedData->access_token
+        // ], 200);
+
+
         return redirect()->route('contract.steps');
     }
 
@@ -128,20 +137,20 @@ class DocusignController extends Controller
             $args = $this->args;
             $envelope_args = $args["envelope_args"];
 
-            if($position == 'accompanying_sign') {
-                $pdfFileName = 'accompanying-sign-'.auth()->user()->id.'.pdf'; 
-            }
+            // if($position == 'accompanying_sign') {
+            //     $pdfFileName = 'accompanying-sign-'.auth()->user()->id.'.pdf'; 
+            // }
 
-            if($position == 'signature_authorization') {
-                $pdfFileName = auth()->user()->id.'-signature-authorization.pdf';
-            }
+            // if($position == 'signature_authorization') {
+            //     $pdfFileName = auth()->user()->id.'-signature-authorization.pdf';
+            // }
 
-            if($position == 'agency_authorization') {
-                dd('last sign');
-            }
+            // if($position == 'agency_authorization') {
+            //     dd('last sign');
+            // }
 
             # Create the envelope request object
-            $envelope_definition = $this->make_envelope($args["envelope_args"], $pdfFileName);
+            $envelope_definition = $this->make_envelope($args["envelope_args"]);
             $envelope_api = $this->getEnvelopeApi();
             # Call Envelopes::create API method
             # Exceptions will be caught by the calling function
@@ -175,10 +184,10 @@ class DocusignController extends Controller
     }
 
 
-    private function make_envelope($args, $fileName)
+    private function make_envelope($args)
     {
-        $filename = 'World_Wide_Corp_lorem.pdf';
-        $demo_docs_path = asset('internal-agents/contract/'.$fileName);
+        $filename = auth()->user()->id.'-contract.pdf';
+        $demo_docs_path = asset('internal-agents/contract/'.auth()->user()->id.'contract.pdf');
 
         $arrContextOptions = array(
             "ssl" => array(
@@ -209,6 +218,39 @@ class DocusignController extends Controller
             'routing_order' => "1",
             # Setting the client_user_id marks the signer as embedded
             'client_user_id' => $args['signer_client_id'],
+            "tabs" => [
+                "accompanying_signature" => [
+                    [
+                        "xPosition" => "50",
+                        "yPosition" => "50",
+                        "documentId" => $documentId,
+                        "pageNumber" => "1",
+                        "required" => "true" // Set as required
+                    ],
+                    // Add more signHereTabs as needed
+                ],
+                "signature_authorization" => [
+                    [
+                        "xPosition" => "100",
+                        "yPosition" => "100",
+                        "documentId" => $documentId,
+                        "pageNumber" => "1",
+                        "required" => "true" // Set as required
+                    ],
+                    // Add more signHereTabs as needed
+                ],
+                "agency_authorization" => [
+                    [
+                        "xPosition" => "150",
+                        "yPosition" => "150",
+                        "documentId" => $documentId,
+                        "pageNumber" => "1",
+                        "required" => "true" // Set as required
+                    ],
+                    // Add more signHereTabs as needed
+                ]
+
+            ]
         ]);
         # Create a sign_here tab (field on the document)
         $sign_here = new \DocuSign\eSign\Model\SignHere([ # DocuSign SignHere field/tab

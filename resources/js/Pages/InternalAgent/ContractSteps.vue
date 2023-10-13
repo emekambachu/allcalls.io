@@ -76,18 +76,19 @@ let firstStepErrors = ref({});
 
 let ChangeTab = (route) => {
     if (contractStep.value === 4 && page.props.auth.role === 'internal-agent') {
-        if (!props.docuSignAuthCode) {
-            isLoading.value = true
-            // slidingLoader.value = true
-            axios.get(route)
-                .then((res) => {
-                    // console.log('res1', res);
-                    const newURL = res.data.route;
-                    window.location.href = newURL;
-                })
-        } else {
-            router.visit('contract-steps')
-        }
+        router.visit('contract-steps')
+        // if (!props.docuSignAuthCode) {
+        //     isLoading.value = true
+        //     // slidingLoader.value = true
+        //     axios.get(route)
+        //         .then((res) => {
+        //             // console.log('res1', res);
+        //             const newURL = res.data.route;
+        //             window.location.href = newURL;
+        //         })
+        // } else {
+        //     router.visit('contract-steps')
+        // }
     } else {
         contractStep.value += 1
     }
@@ -173,35 +174,38 @@ let accompanyingSignMessage = ref(null)
 let signatureAuthorizationSaved = ref(false)
 let signatureAuthorizationMessage = ref(null)
 let errorHandle = (data, response) => {
-    // console.log('data', data);
+    console.log('data', data);
     if (data < 5) {
         ChangeTab(response.route)
     } else if (data < 9) {
         if (data === 5) {
-            if (response.key === 'accompanying_sign') {
-                additional_info_saved.value = true
-                accompanyingSignMessage.value = response.message
-                setTimeout(() => {
-                    accompanyingSignMessage.value = null
-                }, 2000);
-            }
+            step.value = 2
+            contractStep.value = 0
         } else if (data === 6) {
             step.value = 3
+            contractStep.value = 0
         } else if (data === 7) {
             step.value = 4
+            contractStep.value = 0
         } else if (data === 8) {
             step.value = 5
+            contractStep.value = 0
         }
         // contractStep.value = 0
     } else if (data === 9) {
-        if (response.key === 'signature_authorization') {
-                signatureAuthorizationSaved.value = true
-                signatureAuthorizationMessage.value = response.message
-                setTimeout(() => {
-                    accompanyingSignMessage.value = null
-                }, 2000);
-            }
-        router.visit('contract-steps')
+        // if (response.key === 'signature_authorization') {
+        //     signatureAuthorizationSaved.value = true
+        //     signatureAuthorizationMessage.value = response.message
+        //     setTimeout(() => {
+        //         accompanyingSignMessage.value = null
+        //     }, 2000);
+        // }
+        // router.visit('contract-steps')
+        axios.get(response.route)
+            .then((res) => {
+                const newURL = res.data.route;
+                window.location.href = newURL;
+            })
     }
 }
 if (props.userData?.internal_agent_contract) {
@@ -222,7 +226,6 @@ if (props.userData?.internal_agent_contract) {
     } else if (props.userData.contract_step === 10) {
         StepsModal.value = false
         contractModal.value = true
-        // router.visit('contract-steps')
     }
 }
 
@@ -298,10 +301,16 @@ let submit = (step) => {
         })
         .then((response) => {
             if (step === 10) {
-                StepsModal.value = false
-                contractModal.value = false
-                toaster("success", response.data.message);
-                router.visit("/dashboard");
+                // console.log('date save');
+                signatureAuthorizationSaved.value = true
+                signatureAuthorizationMessage.value = response.message
+                setTimeout(() => {
+                    signatureAuthorizationMessage.value = null
+                }, 2000);
+                // StepsModal.value = false
+                // contractModal.value = false
+                // toaster("success", response.data.message);
+                // router.visit("/dashboard");
             } else {
                 errorHandle(step, response.data)
             }
@@ -470,7 +479,8 @@ input[type=number] {
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="contractStep === 5">
-                                <AdditionalInfo :docuSignAuthCode="docuSignAuthCode" :accompanyingSignMessage="accompanyingSignMessage"
+                                <AdditionalInfo :docuSignAuthCode="docuSignAuthCode"
+                                    :accompanyingSignMessage="accompanyingSignMessage"
                                     @additionalInfoData="additionalInformation"
                                     :additional_info_saved="additional_info_saved" :firstStepErrors="firstStepErrors"
                                     :page="$page.props" :states="states" @changeTab="NextStep()" :isLoading="isLoading"
@@ -543,8 +553,9 @@ input[type=number] {
                         <div class="px-12 py-2">
                             <ContractDetailPage :userData="userData" />
                             <SingnaturePad :page="$page.props" :userData="userData" :docuSignAuthCode="docuSignAuthCode"
-                                @editContract="editContract" :signatureAuthorizationMessage="signatureAuthorizationMessage" :signatureAuthorizationSaved="signatureAuthorizationSaved" :firstStepErrors="firstStepErrors" :isLoading="isLoading"
-                                @signature="signaturePreview" />
+                                @editContract="editContract" :signatureAuthorizationMessage="signatureAuthorizationMessage"
+                                :signatureAuthorizationSaved="signatureAuthorizationSaved"
+                                :firstStepErrors="firstStepErrors" :isLoading="isLoading" @signature="signaturePreview" />
                         </div>
                     </div>
                 </div>

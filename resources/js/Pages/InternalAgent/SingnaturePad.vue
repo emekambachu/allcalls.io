@@ -1,8 +1,40 @@
 <template>
-    <p class="p-4 ">
-    <div class="mb-2"> PLEASE READ THIS AUTHORIZATION, SIGN IN THE BOX BELOW AND SUBMIT THIS
-        FORM BY FOLLOWING THE INSTRUCTIONS PROVIDED ON THE COVER PAGE.</div>
+    <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
+        Accompanying Documents
+    </h1>
+    <p class="px-4 py-2">
+        <strong>I attest that the information I have provided is true to the best of my knowledge. I acknowledge that if
+            any information changes, I will notify my agency office within 5 days of such change. Further, I
+            understand that my agency may contact me when I need to answer carrier-specific questions.</strong>
+    </p>
+    <hr class="w-100 h-1 my-4 bg-gray-600 border-0 rounded dark:bg-gray-700">
+    <p>By signing below, l hereby authorize the Company to initiate credit entries and, if
+        necessary, adjustments for credit entries in error to the checking and/or savings account
+        indicated on this form. This authority is to remain in full effect until the Company has
+        received written notice from me for its termination. I understand that this authorization
+        is subject to the terms of any agent or representative contract, commission agreement,
+        or loan agreement that I may have now, or in the future, with the Company.</p>
+    <br>
 
+    <div class="w-full  flex justify-between p-4">
+        <div class="w-3/5 pr-4 flex">
+            <div>Signature:</div>
+            <div class="border-b border-gray-400 w-full"></div>
+        </div>
+        <div class="w-2/5 pl-4 flex">
+            <div>Date:</div>
+            <div class="border-b border-gray-400 w-full"><span class="ml-5">{{ dateFormat(date) }}</span></div>
+        </div>
+    </div>
+    <br>
+    <!-- <hr class="w-100 h-1 my-4 bg-gray-600 border-0 rounded dark:bg-gray-700"> -->
+    <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
+        Signature Authorization
+    </h1>
+    <p class="p-4 ">
+    <div class="mb-2"> <strong>PLEASE READ THIS AUTHORIZATION, SIGN IN THE BOX BELOW AND SUBMIT THIS
+        FORM BY FOLLOWING THE INSTRUCTIONS PROVIDED ON THE COVER PAGE.</strong> </div>
+    <hr class="w-100 h-1 my-4 bg-gray-600 border-0 rounded dark:bg-gray-700">
     I <span class="mx-2" style="border-bottom: 2px solid black;"><strong> {{ userData.first_name }} {{ userData.last_name }}
         </strong>, </span> hereby authorize AllCalls.io, LLC and its general agency customers (the "Authorized Parties")
     to affix or append a copy of my signature, as set forth below, to any and all required signature fields on forms
@@ -47,20 +79,58 @@
             <div style="width: 200px;" class="border-b border-black "></div>
         </div>
     </div> -->
+    <div class="w-full  flex justify-between p-4">
+        <div class="w-3/5 pr-4 flex">
+            <div>Signature:</div>
+            <div class="border-b border-gray-400 w-full"></div>
+        </div>
+        <div class="w-2/5 pl-4 flex">
+            <div>Date:</div>
+            <div class="border-b border-gray-400 w-full"><span class="ml-5">{{ dateFormat(date) }}</span></div>
+        </div>
+    </div>
+    <br>
+    <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
+        Contracting - Debit-Check Agent/Agency Authorization Form
+    </h1>
+    <p>
+        <strong>I attest that the information I have provided is true to the best of my knowledge. I acknowledge that if any
+            information changes, I will notify my agency office within 5 days of such change. Further, I understand that my
+            agency may contact me when I need to answer carrier-specific questions.</strong>
+    </p>
+    <hr class="w-100 h-1 my-4 bg-gray-600 border-0 rounded dark:bg-gray-700">
 
+    <p>
+        By signing below, l hereby authorize the Company to initiate credit entries and, if necessary,
+        adjustments for credit entries in error to the checking and/or savings account indicated on this
+        form. This authority is to remain in full effect until the Company has received written notice from
+        me for its termination. I understand that this authorization is subject to the terms of any agent or
+        representative contract, commission agreement, or loan agreement that I may have now, or in the
+        future, with the Company.</p>
+    <div class="w-full  flex justify-between p-4">
+        <div class="w-3/5 pr-4 flex">
+            <div>Signature:</div>
+            <div class="border-b border-gray-400 w-full"></div>
+        </div>
+        <div class="w-2/5 pl-4 flex">
+            <div>Date:</div>
+            <div class="border-b border-gray-400 w-full"><span class="ml-5">{{ dateFormat(date) }}</span></div>
+        </div>
+    </div>
+    <br>
     <div class="flex mb-5 justify-between">
         <button @click="editContract()" class="button-custom-back px-3 py-2 rounded-md">
             Edit
         </button>
-        <button v-if="!signatureAuthorizationSaved" type="button" :class="{ 'opacity-25': isLoading }"
-            :disabled="isLoading" @click="save" class="button-custom  px-3 py-2 rounded-md">
+        <button v-if="!signatureAuthorizationSaved" type="button" :class="{ 'opacity-25': isLoading }" :disabled="isLoading"
+            @click="save" class="button-custom  px-3 py-2 rounded-md">
             <global-spinner :spinner="isLoading" /> Prepare Document
         </button>
         <a @click="isLoading = true" v-if="docuSignAuthCode && signatureAuthorizationSaved"
-            :href="route('internal.agent.docusign.sign', 'signature_authorization')" type="button"
+            :href="route('internal.agent.docusign.sign', 'contract')" type="button"
             :class="{ 'opacity-25': !docuSignAuthCode }" :disabled="!docuSignAuthCode"
             class="button-custom  px-3 py-2 rounded-md">
-            <global-spinner :spinner="isLoading" /> Prepared Document
+            <global-spinner :spinner="isLoading" /> Sign Document
         </a>
         <div v-if="signatureAuthorizationMessage" class="text-green-500 mt-3 text-center">
             {{ signatureAuthorizationMessage }}
@@ -85,8 +155,8 @@ export default {
         page: Object,
         firstStepErrors: Object,
         docuSignAuthCode: String,
-        signatureAuthorizationMessage:String,
-        signatureAuthorizationSaved:Boolean,
+        signatureAuthorizationMessage: String,
+        signatureAuthorizationSaved: Boolean,
     },
     mounted() {
         // if (this.page.auth.role === 'internal-agent') {
