@@ -76,17 +76,18 @@ let firstStepErrors = ref({});
 
 let ChangeTab = (route) => {
     if (contractStep.value === 4 && page.props.auth.role === 'internal-agent') {
-        if (!props.docuSignAuthCode) {
-            slidingLoader.value = true
-            axios.get(route)
-                .then((res) => {
-                    // console.log('res1', res);
-                    const newURL = res.data.route;
-                    window.location.href = newURL;
-                })
-        } else {
-            router.visit('contract-steps')
-        }
+        // if (!props.docuSignAuthCode) {
+        //     slidingLoader.value = true
+        //     axios.get(route)
+        //         .then((res) => {
+        //             // console.log('res1', res);
+        //             const newURL = res.data.route;
+        //             window.location.href = newURL;
+        //         })
+        // } else {
+        //     router.visit('contract-steps')
+        // }
+        router.visit('contract-steps')
     } else {
         contractStep.value += 1
     }
@@ -128,8 +129,8 @@ let AddressHistoryfun = (val) => {
 let additionalInfoD = ref(null)
 let additionalInformation = (val) => {
     isLoading.value = true
-    accompanying_sign.value = val.accompanying_sign
-    additionalInfoD.value = val.form
+    // accompanying_sign.value = val.accompanying_sign
+    additionalInfoD.value = val
     submit(5)
 }
 
@@ -167,13 +168,16 @@ let previewContract = () => {
     contractModal.value = true
 }
 let slidingLoader = ref(false)
-let errorHandle = (data, route) => {
+let additional_info_saved = ref(false)
+let errorHandle = (data, route, message) => {
     // console.log('data', data);
     if (data < 5) {
         ChangeTab(route)
     } else if (data < 9) {
         if (data === 5) {
-            step.value = 2
+            if(message === 'additional_info_saved'){
+                additional_info_saved.value = true
+            }   
         } else if (data === 6) {
             step.value = 3
         } else if (data === 7) {
@@ -181,7 +185,7 @@ let errorHandle = (data, route) => {
         } else if (data === 8) {
             step.value = 5
         }
-        contractStep.value = 0
+        // contractStep.value = 0
     } else if (data === 9) {
         router.visit('contract-steps')
     }
@@ -239,7 +243,7 @@ let submit = (step) => {
         Object.assign(requestData, filteredAddressHistory);
         requestData.step = step;
     } else if (step === 5) {
-        requestData.accompanying_sign = accompanying_sign.value
+        // requestData.accompanying_sign = accompanying_sign.value
         Object.assign(requestData, additionalInfoD.value);
         requestData.step = step;
     } else if (step === 6) {
@@ -284,7 +288,7 @@ let submit = (step) => {
                 toaster("success", response.data.message);
                 router.visit("/dashboard");
             } else {
-                errorHandle(step, response.data.route)
+                errorHandle(step, response.data.route, response.data.message)
             }
             isLoading.value = false;
         })
@@ -452,7 +456,7 @@ input[type=number] {
                             </div>
                             <div v-show="contractStep === 5">
                                 <AdditionalInfo :docuSignAuthCode="docuSignAuthCode"
-                                    @additionalInfoData="additionalInformation" :firstStepErrors="firstStepErrors"
+                                    @additionalInfoData="additionalInformation" :additional_info_saved="additional_info_saved" :firstStepErrors="firstStepErrors"
                                     :page="$page.props" :states="states" @changeTab="NextStep()" :isLoading="isLoading"
                                     @goback="ChangeTabBack()"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />

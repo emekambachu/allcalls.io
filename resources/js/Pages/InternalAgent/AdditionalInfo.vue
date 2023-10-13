@@ -196,6 +196,7 @@
                 </div>
             </div>
         </div>
+        
         <!-- <h1 style="background-color: #134576;" class="mb-4 mt-4	text-center rounded-md py-2 text-white">
             Anti-Money Loundering
         </h1>
@@ -291,11 +292,11 @@
                     </button>
                 </div>
                 <div class="mt-4">
-                    <button v-if="!isFormValid" type="button" :class="{ 'opacity-25': isLoading }" :disabled="isLoading"
+                    <button v-if="!docuSignAuthCode && !additional_info_saved" type="button" :class="{ 'opacity-25': isLoading }" :disabled="isLoading"
                         @click="ChangeTab" class="button-custom px-3 py-2 rounded-md">
-                        <global-spinner :spinner="isLoading" /> Sign Document
+                        <global-spinner :spinner="isLoading" /> Next Step
                     </button>
-                    <a v-if="isFormValid" :href="route('internal.agent.docusign.sign', 'accompanying_sign')" type="button"
+                    <a v-if="docuSignAuthCode && additional_info_saved" :href="route('internal.agent.docusign.sign', 'accompanying_sign')" type="button"
                         :class="{ 'opacity-25': isLoading || !docuSignAuthCode }" :disabled="isLoading || !docuSignAuthCode"
                         class="button-custom px-3 py-2 rounded-md">
                         <global-spinner :spinner="isLoading" /> Sign Document
@@ -318,7 +319,8 @@ export default {
         docuSignAuthCode: {
             type: String,
             default: null
-        }
+        },
+        additional_info_saved:Boolean,
     },
     data() {
         return {
@@ -406,6 +408,7 @@ export default {
                 const hasErrors = Object.values(this.firstStepErrors).some(errors => errors.length > 0);
                 if (this.page.auth.role === 'internal-agent') {
                     if (!hasErrors) {
+                        this.$emit("additionalInfoData", this.form);
                         // :href="route('internal.agent.docusign.sign','accompanying_sign' )"
                         // const { isEmpty, data } = this.$refs.signature2Pad.saveSignature();
                         // if (!isEmpty || this.userData.internal_agent_contract.get_question_sign) {

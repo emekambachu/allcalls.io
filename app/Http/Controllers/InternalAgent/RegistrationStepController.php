@@ -1382,8 +1382,8 @@ class RegistrationStepController extends Controller
                 DB::commit();
                 return response()->json([
                     'success' => true,
-                    'message' => 'DocuSign API calling.',
-                    'route' => route('internal.agent.connect.docusign'),
+                    'message' => 'additional_info_saved',
+                    'step' => 5
                 ], 200);
             } catch (\Exception $e) {
                 DB::rollBack();
