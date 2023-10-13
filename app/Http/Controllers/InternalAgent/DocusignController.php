@@ -128,6 +128,18 @@ class DocusignController extends Controller
             $args = $this->args;
             $envelope_args = $args["envelope_args"];
 
+            if($position == 'accompanying_sign') {
+                $pdfFileName = 'accompanying-sign-'.auth()->user()->id.'.pdf'; 
+            }
+
+            if($position == 'signature_authorization') {
+                $pdfFileName = auth()->user()->id.'-signature-authorization.pdf';
+            }
+
+            if($position == 'agency_authorization') {
+                dd('last sign');
+            }
+
             # Create the envelope request object
             $envelope_definition = $this->make_envelope($args["envelope_args"]);
             $envelope_api = $this->getEnvelopeApi();
@@ -163,10 +175,10 @@ class DocusignController extends Controller
     }
 
 
-    private function make_envelope($args)
+    private function make_envelope($args, $fileName)
     {
         $filename = 'World_Wide_Corp_lorem.pdf';
-        $demo_docs_path = asset('/first-step-sign.pdf');
+        $demo_docs_path = asset('internal-agents/contract/'.$fileName);
 
         $arrContextOptions = array(
             "ssl" => array(
