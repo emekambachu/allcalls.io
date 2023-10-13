@@ -301,16 +301,12 @@ let submit = (step) => {
         })
         .then((response) => {
             if (step === 10) {
-                // console.log('date save');
+                console.log('date save', );
                 signatureAuthorizationSaved.value = true
-                signatureAuthorizationMessage.value = response.message
+                signatureAuthorizationMessage.value = response.data.message
                 setTimeout(() => {
                     signatureAuthorizationMessage.value = null
                 }, 2000);
-                // StepsModal.value = false
-                // contractModal.value = false
-                // toaster("success", response.data.message);
-                // router.visit("/dashboard");
             } else {
                 errorHandle(step, response.data)
             }
