@@ -1622,6 +1622,7 @@ class RegistrationStepController extends Controller
                 $pdfMerger = new PDFMerger;
                 //signed Accompanying PDF
                 $accompnayingPDF = $user->id . '_accompanying_sign' . '.pdf';
+                dd(public_path() . '/internal-agents/contract/' . $accompnayingPDF);
                 $pdfMerger->addPDF(public_path() . '/internal-agents/contract/' . $accompnayingPDF, 'all');
                 //end signed Accompanying PDF
                 $pdfMerger->addPDF(public_path() . '/internal-agents/aml-course/' . $returnArr['contractData']->internalAgentContract->amlCourse->name, 'all');
