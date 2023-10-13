@@ -297,16 +297,18 @@
                         :disabled="isLoading" @click="ChangeTab" class="button-custom px-3 py-2 rounded-md">
                         <global-spinner :spinner="isLoading" /> Prepare Document
                     </button>
-                    <a @click="isLoading = true" v-if="docuSignAuthCode && additional_info_saved"
+                    <a  v-if="docuSignAuthCode && additional_info_saved"
                         :href="route('internal.agent.docusign.sign', 'accompanying_sign')" type="button"
                         :class="{ 'opacity-25': isLoading || !docuSignAuthCode }" :disabled="isLoading || !docuSignAuthCode"
                         class="button-custom px-3 py-2 rounded-md">
                         <global-spinner :spinner="isLoading" /> Sign Document
                     </a>
+                    
                     <div v-if="accompanyingSignMessage" class="text-green-500 mt-3 text-center">
                         {{ accompanyingSignMessage }}
                     </div>
                 </div>
+                
             </div>
         </div>
     </div>
@@ -380,6 +382,7 @@ export default {
                 this.form.resident_state !== 'Choose'
             );
         },
+      
         dateFormat(dateString) {
             const dateObj = new Date(dateString);
 

@@ -1398,7 +1398,7 @@ class RegistrationStepController extends Controller
                 return response()->json([
                     'success' => true,
                     'key' => 'accompanying_sign',
-                    'message' => 'Document is prepared and ready for sign.',
+                    'message' => 'Document is prepared and ready to sign.',
                     'step' => 5,
                 ], 200);
             } catch (\Exception $e) {
@@ -1652,7 +1652,7 @@ class RegistrationStepController extends Controller
                 return response()->json([
                     'success' => true,
                     'key' => 'signature_authorization',
-                    'messages' => 'Document is prepared and ready for sign.',
+                    'messages' => 'Document is prepared and ready to sign.',
                     'step' => 10,
                 ], 200);
             } catch (\Exception $e) {
