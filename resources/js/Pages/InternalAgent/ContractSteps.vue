@@ -154,26 +154,22 @@ let previewContract = () => {
     StepsModal.value = false
     contractModal.value = true
 }
+let slidingLoader = ref(false)
 let errorHandle = (data, route) => {
     // console.log('data', data);
     if (data < 5) {
         ChangeTab()
     } else if (data < 9) {
         if (data === 5) {
-            // console.log('route', route);
+            slidingLoader.value = true
+            //  console.log('route', route);
             // router.visit(route)
             axios.get(route)
             .then((res)=>{
-                console.log('res1', res);
+                // console.log('res1', res);
                 const newURL = res.data.route;
                 window.location.href = newURL;
-
-                // // router.visit(res.data.route)
-                // axios.get(res.data.route).then((response)=>{
-                //     console.log('response2', response);
-                // })
             })
-            step.value = 1
         } else if (data === 6) {
             step.value = 3
         } else if (data === 7) {
@@ -420,8 +416,11 @@ input[type=number] {
                                 <span class="sr-only">Close modal</span>
                             </button>
                         </div>
-
-                        <div class="px-12 py-2">
+                        <div v-show="slidingLoader" class="px-12 py-2">
+                            <animation-slider :slidingLoader="slidingLoader" />
+                        </div>
+                        
+                        <div v-show="!slidingLoader" class="px-12 py-2">
 
                             <Tabs :step="step" />
 
@@ -519,7 +518,7 @@ input[type=number] {
 
                         <div class="px-12 py-2">
                             <ContractDetailPage  :userData="userData" />
-                            <SingnaturePad :page="$page.props" :userData="userData" @editContract="editContract"
+                            <SingnaturePad :page="$page.props" :userData="userData" :docuSignAuthCode="docuSignAuthCode" @editContract="editContract"
                                 :firstStepErrors="firstStepErrors" :isLoading="isLoading" @signature="signaturePreview" />
                         </div>
                     </div>
