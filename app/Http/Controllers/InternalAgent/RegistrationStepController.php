@@ -29,6 +29,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
+use TCPDF;
 
 class RegistrationStepController extends Controller
 {
@@ -71,9 +72,22 @@ class RegistrationStepController extends Controller
                 //store PDF signed for Accompanying Sign
                 $pdfFileName = $user->id . '_accompanying_sign' . '.pdf';
                 $pdfPath = public_path('internal-agents/contract/' . $pdfFileName);
-                dd($response->body()->getContent());
-                $modifiedString = str_replace("PDF-1.7", "PDF-1.4", $response->body());
-                file_put_contents($pdfPath, $modifiedString);
+
+
+                // Create a new TCPDF instance
+                $pdf = new TCPDF();
+
+                // Add a page
+                $pdf->AddPage();
+
+                // Write the updated PDF content to the PDF
+                $pdf->writeHTML($response->body(), true, false, true, false, '');
+
+                // Output or save the PDF as needed
+                $pdf->Output($pdfPath, 'D');
+dd('sd');
+                // $modifiedString = str_replace("PDF-1.7", "PDF-1.4", $response->body());
+                file_put_contents($pdfPath, $response->body());
                 //End store signed PDF for Accompanying Sign
 
                 //Track Signer
@@ -1621,7 +1635,7 @@ class RegistrationStepController extends Controller
                 $signatureAuthorization = $user->id . '-signature-authorization.pdf';
                 $pdf->save($directory . $signatureAuthorization);
                 //Contract Signature End
-                
+
                 $pdfMerger = new PDFMerger;
                 //signed Accompanying PDF
                 $accompnayingPDF = $user->id . '_accompanying_sign' . '.pdf';
@@ -1633,12 +1647,12 @@ class RegistrationStepController extends Controller
                 $pdfMerger->addPDF(public_path() . '/internal-agents/resident-license-pdf/' . $returnArr['contractData']->internalAgentContract->residentLicense->name, 'all');
                 $pdfMerger->addPDF(public_path() . '/internal-agents/banking-info/' . $returnArr['contractData']->internalAgentContract->bankingInfo->name, 'all');
                 $pdfMerger->addPDF(public_path() . '/internal-agents/contract/' . $signatureAuthorization, 'all');
-                $storeAsPath = 'internal-agents/contract/'.$signatureAuthorization;
+                $storeAsPath = 'internal-agents/contract/' . $signatureAuthorization;
                 $pdfMerger->merge('file', $storeAsPath, 'P');
                 dd('sd');
-                 
+
                 //deleted PDF without sign for Signature Authorization
-                 if (file_exists(asset('internal-agents/contract/' . $signatureAuthorization))) {
+                if (file_exists(asset('internal-agents/contract/' . $signatureAuthorization))) {
                     unlink(asset('internal-agents/contract/' . $signatureAuthorization));
                 }
                 //End deleted PDF without sign for Signature Authorization
