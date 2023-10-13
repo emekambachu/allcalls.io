@@ -545,7 +545,7 @@
               <div class="secFive__one-hold">
                 <div class="secFive__subtitle">Start Receiving Calls Fast</div>
                 <div class="secFive__title">
-                  Our technology allows you start taking calls in seconds
+                  Our technology allows you to start taking calls in seconds
                 </div>
                 <div  @click="appDownloadModal = true">
                   <PrimaryButton class="my-4">

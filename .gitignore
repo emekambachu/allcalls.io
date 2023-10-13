@@ -19,3 +19,4 @@ yarn-error.log
 /.vscode
 .DS_Store
 /public/internal-agents/*
+docusign_private.key
