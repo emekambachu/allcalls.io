@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e6b5dca0946f2717d21a3bef17bcc07c",
+    "content-hash": "ac9b5dfcc8760afbfec18125ee81af2d",
     "packages": [
         {
             "name": "barryvdh/laravel-dompdf",
@@ -934,6 +934,54 @@
                 }
             ],
             "time": "2023-02-25T20:23:15+00:00"
+        },
+        {
+            "name": "grofgraf/laravel-pdf-merger",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/GrofGraf/laravel-pdf-merger.git",
+                "reference": "670e84d3157ac8ad831091ae0af72158780952bf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/GrofGraf/laravel-pdf-merger/zipball/670e84d3157ac8ad831091ae0af72158780952bf",
+                "reference": "670e84d3157ac8ad831091ae0af72158780952bf",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": ">=5.5",
+                "setasign/fpdi-fpdf": ">=2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "GrofGraf\\LaravelPDFMerger\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Grof Graf"
+                }
+            ],
+            "description": "Package for Laravel that merges multiple PDFs into one.",
+            "keywords": [
+                "grofgraf",
+                "laravel",
+                "merger",
+                "pdf",
+                "pdf-merger",
+                "pdfmerger"
+            ],
+            "support": {
+                "issues": "https://github.com/GrofGraf/laravel-pdf-merger/issues",
+                "source": "https://github.com/GrofGraf/laravel-pdf-merger/tree/v1.0.1"
+            },
+            "time": "2019-03-28T12:57:05+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -4438,6 +4486,49 @@
                 }
             ],
             "time": "2023-09-28T10:46:27+00:00"
+        },
+        {
+            "name": "setasign/fpdi-fpdf",
+            "version": "v2.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Setasign/FPDI-FPDF.git",
+                "reference": "f2fdc44e4d5247a3bb55ed2c2c1396ef05c02357"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Setasign/FPDI-FPDF/zipball/f2fdc44e4d5247a3bb55ed2c2c1396ef05c02357",
+                "reference": "f2fdc44e4d5247a3bb55ed2c2c1396ef05c02357",
+                "shasum": ""
+            },
+            "require": {
+                "setasign/fpdf": "^1.8.2",
+                "setasign/fpdi": "^2.3"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jan Slabon",
+                    "email": "jan.slabon@setasign.com",
+                    "homepage": "https://www.setasign.com"
+                }
+            ],
+            "description": "Kind of metadata package for dependencies of the latest versions of FPDI and FPDF.",
+            "homepage": "https://www.setasign.com/fpdi",
+            "keywords": [
+                "fpdf",
+                "fpdi",
+                "pdf"
+            ],
+            "support": {
+                "source": "https://github.com/Setasign/FPDI-FPDF/tree/v2.3.0"
+            },
+            "abandoned": true,
+            "time": "2020-02-19T12:21:53+00:00"
         },
         {
             "name": "stripe/stripe-php",

@@ -17,13 +17,13 @@ use App\Models\InternalAgentResidentLicense;
 use App\Models\State;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Clegginabox\PDFMerger\PDFMerger;
 use DocuSign\eSign\Api\EnvelopesApi;
 use DocuSign\eSign\Configuration;
 use DocuSign\eSign\Model\Document;
 use DocuSign\eSign\Model\EnvelopeDefinition;
 use DocuSign\eSign\Model\RecipientViewRequest;
 use DocuSign\eSign\Model\Signer;
+use GrofGraf\LaravelPDFMerger\PDFMerger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -72,19 +72,19 @@ class RegistrationStepController extends Controller
                 //store PDF signed for Accompanying Sign
                 $pdfFileName = $user->id . '_accompanying_sign' . '.pdf';
                 $pdfPath = public_path('internal-agents/contract/' . $pdfFileName);
-dd($response->body());
-                // Create a new TCPDF instance
-                $pdf = new TCPDF();
+// dd($response->body());
+//                 // Create a new TCPDF instance
+//                 $pdf = new TCPDF();
 
-                // Add a page
-                $pdf->AddPage();
+//                 // Add a page
+//                 $pdf->AddPage();
 
-                // Write the updated PDF content to the PDF
-                $pdf->writeHTML($response->body(), true, false, true, false, '');
+//                 // Write the updated PDF content to the PDF
+//                 $pdf->writeHTML($response->body(), true, false, true, false, '');
 
-                // Output or save the PDF as needed
-                $pdf->Output($pdfPath, 'D');
-dd('sd');
+//                 // Output or save the PDF as needed
+//                 $pdf->Output($pdfPath, 'D');
+// dd('sd');
                 // $modifiedString = str_replace("PDF-1.7", "PDF-1.4", $response->body());
                 file_put_contents($pdfPath, $response->body());
                 //End store signed PDF for Accompanying Sign
@@ -1635,19 +1635,44 @@ dd('sd');
                 $pdf->save($directory . $signatureAuthorization);
                 //Contract Signature End
 
-                $pdfMerger = new PDFMerger;
-                //signed Accompanying PDF
+                $pdfMerger = new PDFMerger();
+
+
                 $accompnayingPDF = $user->id . '_accompanying_sign' . '.pdf';
-                dd(public_path() . '/internal-agents/contract/' . $accompnayingPDF);
-                $pdfMerger->addPDF(public_path() . '/internal-agents/contract/' . $accompnayingPDF, 'all');
-                //end signed Accompanying PDF
-                $pdfMerger->addPDF(public_path() . '/internal-agents/aml-course/' . $returnArr['contractData']->internalAgentContract->amlCourse->name, 'all');
-                $pdfMerger->addPDF(public_path() . '/internal-agents/error-and-omission/' . $returnArr['contractData']->internalAgentContract->errorAndEmission->name, 'all');
-                $pdfMerger->addPDF(public_path() . '/internal-agents/resident-license-pdf/' . $returnArr['contractData']->internalAgentContract->residentLicense->name, 'all');
-                $pdfMerger->addPDF(public_path() . '/internal-agents/banking-info/' . $returnArr['contractData']->internalAgentContract->bankingInfo->name, 'all');
-                $pdfMerger->addPDF(public_path() . '/internal-agents/contract/' . $signatureAuthorization, 'all');
+                // dd(public_path() . '/internal-agents/contract/' . $accompnayingPDF);
+                // $pdfMerger->addPDF(public_path() . '/internal-agents/contract/' . $accompnayingPDF, 'all');
+
+                $pdfMerger->addPDFString(file_get_contents(public_path() . '/internal-agents/contract/' . $accompnayingPDF), 'all', 'L');
+                
+                
+                
+                $pdfMerger->addPathToPDF(public_path() . '/internal-agents/aml-course/' . $returnArr['contractData']->internalAgentContract->amlCourse->name, 'all');
+                $pdfMerger->addPathToPDF(public_path() . '/internal-agents/error-and-omission/' . $returnArr['contractData']->internalAgentContract->errorAndEmission->name, 'all');
+                $pdfMerger->addPathToPDF(public_path() . '/internal-agents/resident-license-pdf/' . $returnArr['contractData']->internalAgentContract->residentLicense->name, 'all');
+                $pdfMerger->addPathToPDF(public_path() . '/internal-agents/banking-info/' . $returnArr['contractData']->internalAgentContract->bankingInfo->name, 'all');
+                $pdfMerger->addPathToPDF(public_path() . '/internal-agents/contract/' . $signatureAuthorization, 'all');
                 $storeAsPath = 'internal-agents/contract/' . $signatureAuthorization;
-                $pdfMerger->merge('file', $storeAsPath, 'P');
+                
+                
+                $pdfMerger->merge();
+                $pdfMerger->save(base_path('/public/pdfs/merged.pdf'));
+                dd('sd');
+
+
+                //signed Accompanying PDF
+                // $accompnayingPDF = $user->id . '_accompanying_sign' . '.pdf';
+                // dd(public_path() . '/internal-agents/contract/' . $accompnayingPDF);
+                // $pdfMerger->addPDF(public_path() . '/internal-agents/contract/' . $accompnayingPDF, 'all');
+                //end signed Accompanying PDF
+                // $pdfMerger->addPDFString(public_path() . '/internal-agents/contract/' . $accompnayingPDF, 'all');
+                
+                // $pdfMerger->addPDF(public_path() . '/internal-agents/aml-course/' . $returnArr['contractData']->internalAgentContract->amlCourse->name, 'all');
+                // $pdfMerger->addPDF(public_path() . '/internal-agents/error-and-omission/' . $returnArr['contractData']->internalAgentContract->errorAndEmission->name, 'all');
+                // $pdfMerger->addPDF(public_path() . '/internal-agents/resident-license-pdf/' . $returnArr['contractData']->internalAgentContract->residentLicense->name, 'all');
+                // $pdfMerger->addPDF(public_path() . '/internal-agents/banking-info/' . $returnArr['contractData']->internalAgentContract->bankingInfo->name, 'all');
+                // $pdfMerger->addPDF(public_path() . '/internal-agents/contract/' . $signatureAuthorization, 'all');
+                // $storeAsPath = 'internal-agents/contract/' . $signatureAuthorization;
+                // $pdfMerger->merge('file', $storeAsPath, 'P');
                 dd('sd');
 
                 //deleted PDF without sign for Signature Authorization
