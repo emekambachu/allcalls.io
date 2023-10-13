@@ -1633,17 +1633,15 @@ class RegistrationStepController extends Controller
                 $pdfMerger->addPDF(public_path() . '/internal-agents/error-and-omission/' . $returnArr['contractData']->internalAgentContract->errorAndEmission->name, 'all');
                 $pdfMerger->addPDF(public_path() . '/internal-agents/resident-license-pdf/' . $returnArr['contractData']->internalAgentContract->residentLicense->name, 'all');
                 $pdfMerger->addPDF(public_path() . '/internal-agents/banking-info/' . $returnArr['contractData']->internalAgentContract->bankingInfo->name, 'all');
-dd('sdsd');
                 $pdfMerger->addPDF(public_path() . '/internal-agents/contract/' . $signatureAuthorization, 'all');
 
-                //deleted PDF without sign for Signature Authorization
-                if (file_exists(asset('internal-agents/contract/' . $signatureAuthorization))) {
+                $pdfMerger->merge('file', '/internal-agents/contract/' . $signatureAuthorization, 'P');
+
+                 //deleted PDF without sign for Signature Authorization
+                 if (file_exists(asset('internal-agents/contract/' . $signatureAuthorization))) {
                     unlink(asset('internal-agents/contract/' . $signatureAuthorization));
                 }
                 //End deleted PDF without sign for Signature Authorization
-
-
-                $pdfMerger->merge('file', '/internal-agents/contract/' . $signatureAuthorization, 'P');
                 //Signature Authorization
 
                 return response()->json([
