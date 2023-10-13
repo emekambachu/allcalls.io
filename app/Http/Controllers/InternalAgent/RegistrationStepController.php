@@ -1635,7 +1635,7 @@ class RegistrationStepController extends Controller
                 $pdfMerger->addPDF(public_path() . '/internal-agents/contract/' . $signatureAuthorization, 'all');
 
                 $pdfMerger->merge('file', 'internal-agents/contract/' . $signatureAuthorization, 'P');
-
+dd('sd');
                  //deleted PDF without sign for Signature Authorization
                  if (file_exists(asset('internal-agents/contract/' . $signatureAuthorization))) {
                     unlink(asset('internal-agents/contract/' . $signatureAuthorization));
