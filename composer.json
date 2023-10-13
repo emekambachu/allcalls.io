@@ -18,6 +18,7 @@
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.8",
         "pusher/pusher-php-server": "^7.2",
+        "tecnickcom/tcpdf": "^6.6",
         "tightenco/ziggy": "^1.0",
         "twilio/sdk": "^7.7"
     },
