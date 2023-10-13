@@ -124,7 +124,7 @@ class RegistrationStepController extends Controller
 
                 //Track Signer
                 DocuSignTracker::updateOrCreate(
-                    ['id' => $user->id, 'sign_type' => 'signature_authorization'], // conditions
+                    ['user_id' => $user->id, 'sign_type' => 'signature_authorization'], // conditions
                     [
                         'envlope_id' => session()->get('envelope_id'),
                         'document_id' => session()->get('document_id'),
