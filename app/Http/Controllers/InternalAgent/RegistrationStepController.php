@@ -101,7 +101,7 @@ class RegistrationStepController extends Controller
                 $url = "$this->baseUrl/v2.1/accounts/$this->accountId/envelopes/$envelopeId/documents/$documentId";
 
                 $response = Http::withHeaders([
-                    'Authorization' => 'Bearer ' . $this->docSignAuthToken,
+                    'Authorization' => 'Bearer ' . session()->get('docusign_auth_code'),
                     'Content-Description' => 'File Transfer',
                     'Content-Type' => 'application/pdf',
                 ])->get($url);
