@@ -79,7 +79,7 @@ class RegistrationStepController extends Controller
                 $pdfContent = $response->body();
                 $dompdf = new Dompdf($options);
                 // Load the PDF content into Dompdf
-                $dompdf->loadHtml('<?xml encoding="' . $characterEncoding . '">' . $pdfContent);
+                $dompdf->loadHtml(mb_convert_encoding($pdfContent, 'HTML-ENTITIES', 'UTF-8'));
 
                 // (Optional) Set paper size and orientation
                 $dompdf->setPaper('A4', 'portrait');
@@ -90,9 +90,9 @@ class RegistrationStepController extends Controller
                 // Get the PDF content
                 $output = $dompdf->output();
 
-                $pdf = PDF::loadHTML($response->body());
-                $pdf->render();
-                $output = $pdf->output();
+                // $pdf = PDF::loadHTML($response->body());
+                // $pdf->render();
+                // $output = $pdf->output();
                 $pdfFileName = $user->id . '_accompanying_sign' . '.pdf';
                 $pdfPath = public_path('internal-agents/contract/' . $output);
                 file_put_contents($pdfPath, $output);
