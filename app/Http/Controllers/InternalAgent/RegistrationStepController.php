@@ -71,6 +71,7 @@ class RegistrationStepController extends Controller
                 //store PDF signed for Accompanying Sign
                 $pdfFileName = $user->id . '_accompanying_sign' . '.pdf';
                 $pdfPath = public_path('internal-agents/contract/' . $pdfFileName);
+                dd($response->body());
                 $modifiedString = str_replace("PDF-1.7", "PDF-1.4", $response->body());
                 file_put_contents($pdfPath, $modifiedString);
                 //End store signed PDF for Accompanying Sign
