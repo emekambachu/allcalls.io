@@ -24,7 +24,7 @@
         </tr>
     </table>
 
-    {{-- <table class="w-100" style="margin-bottom: 30px">
+    <table class="w-100" style="margin-bottom: 30px">
         <tr>
             <td style="width: 20%;" class="text-end">
                 <strong>Signature: &nbsp;</strong>
@@ -32,9 +32,9 @@
 
             <td style="width: 40%;" class="text-15">
                 <p style="text-align: start;display: flex;align-items: center;">
-                    <span>
-                        <img src="{{asset(asset($contractData->internalAgentContract->getQuestionSign->sign_url))}}" alt="" width="250">
-                </span>
+                    <span style="border-bottom: 2px solid black; width 100%">
+                        {{-- <img src="{{asset(asset($contractData->internalAgentContract->getQuestionSign->sign_url))}}" alt="" width="250"> --}}
+                    </span>
                 </p>
             </td>
             <td style="width: 30%;" class="text-end">
@@ -49,5 +49,5 @@
             </td>
             <td style="width: 10%;" class="text-end"></td>
         </tr>
-    </table> --}}
+    </table>
 </div>

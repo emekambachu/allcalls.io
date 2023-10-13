@@ -128,8 +128,9 @@
     {{-- End Additional Info --}}
 
     {{-- Start Signature --}}
+    @include('pdf.internal-agent-contract.accompanying-sign')
+
     {{-- @if (isset($contractData->internalAgentContract) && $contractData->internalAgentContract->getQuestionSign)
-        @include('pdf.internal-agent-contract.accompanying-sign')
     @endif --}}
     {{-- End Signature --}}
 
