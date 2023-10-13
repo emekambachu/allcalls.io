@@ -77,7 +77,8 @@ let firstStepErrors = ref({});
 let ChangeTab = (route) => {
     if (contractStep.value === 4 && page.props.auth.role === 'internal-agent') {
         if (!props.docuSignAuthCode) {
-            slidingLoader.value = true
+            isLoading.value = true
+            // slidingLoader.value = true
             axios.get(route)
                 .then((res) => {
                     // console.log('res1', res);
@@ -91,8 +92,8 @@ let ChangeTab = (route) => {
         contractStep.value += 1
     }
 
-    var element = document.getElementById("modal_main_id");
-    element.scrollIntoView();
+    // var element = document.getElementById("modal_main_id");
+    // element.scrollIntoView();
 }
 let ChangeTabBack = () => {
     contractStep.value -= 1
@@ -221,7 +222,7 @@ if (props.userData?.internal_agent_contract) {
     } else if (props.userData.contract_step === 10) {
         StepsModal.value = false
         contractModal.value = true
-        router.visit('contract-steps')
+        // router.visit('contract-steps')
     }
 }
 
