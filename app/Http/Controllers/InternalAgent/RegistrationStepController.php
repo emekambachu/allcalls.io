@@ -98,7 +98,6 @@ class RegistrationStepController extends Controller
             }
 
             if (isset($_GET['position']) && $_GET['position'] == 'signature_authorization') {
-                dd('signature authorization');
                 $envelopeId =  session()->get('envelope_id');
                 $documentId =  session()->get('document_id');
 
