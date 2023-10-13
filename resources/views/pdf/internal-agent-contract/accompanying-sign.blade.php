@@ -42,7 +42,7 @@
                             Date: &nbsp;
                         </strong>
                         <span style="border-bottom:2px solid black;">
-                            {{\Carbon\Carbon::parse($contractData->internalAgentContract->getQuestionSign->created_at)->format('m/d/Y')}}
+                            {{\Carbon\Carbon::now()->format('m/d/Y')}}
                         </span>
                     </span>
                 </p>
