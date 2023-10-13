@@ -60,7 +60,7 @@ class RegistrationStepController extends Controller
                     'Content-Description' => 'File Transfer',
                     'Content-Type' => 'application/pdf',
                 ])->get($url);
-
+dd($response->body());
                 //deleted PDF without sign for Accompanying Sign
                 $accompanyingSign = 'accompanying-sign-' . $user->id . '.pdf';
                 if (file_exists(asset('internal-agents/contract/' . $accompanyingSign))) {
@@ -1619,6 +1619,7 @@ class RegistrationStepController extends Controller
                 $signatureAuthorization = $user->id . '-signature-authorization.pdf';
                 $pdf->save($directory . $signatureAuthorization);
                 //Contract Signature End
+                
                 $pdfMerger = new PDFMerger;
                 //signed Accompanying PDF
                 $accompnayingPDF = $user->id . '_accompanying_sign' . '.pdf';
