@@ -180,7 +180,7 @@ class DocusignController extends Controller
         $base64_file_content = base64_encode($content_bytes);
         // dd($base64_file_content);
         # Create the document model
-        $documentId = rand(1).auth()->user()->id.rand(1);
+        $documentId = rand(1,10).auth()->user()->id.rand(1,10);
         $document = new \DocuSign\eSign\Model\Document([ # create the DocuSign document object
             'document_base64' => $base64_file_content,
             'name' => 'Example document', # can be different from actual file name
