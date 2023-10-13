@@ -170,7 +170,6 @@ return [
         App\Providers\RouteServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         Jenssegers\Agent\AgentServiceProvider::class,
-        GrofGraf\LaravelPDFMerger\Providers\PDFMergerServiceProvider::class
     ])->toArray(),
 
     /*
@@ -187,7 +186,6 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         'PDF' => \Barryvdh\DomPDF\Facade\Pdf::class,
         'Agent' => Jenssegers\Agent\Facades\Agent::class,
-        'PDFMerger' => GrofGraf\LaravelPDFMerger\Facades\PDFMergerFacade::class
     ])->toArray(),
 
 ];

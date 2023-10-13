@@ -10,7 +10,6 @@
         "clegginabox/pdf-merger": "dev-master",
         "docusign/esign-client": "^6.17",
         "fakerphp/faker": "^1.23",
-        "grofgraf/laravel-pdf-merger": "^1.0",
         "guzzlehttp/guzzle": "^7.2",
         "inertiajs/inertia-laravel": "^0.6.8",
         "jenssegers/agent": "^2.6",
