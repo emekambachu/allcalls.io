@@ -141,7 +141,7 @@ class DocusignController extends Controller
             }
 
             # Create the envelope request object
-            $envelope_definition = $this->make_envelope($args["envelope_args"]);
+            $envelope_definition = $this->make_envelope($args["envelope_args"], $pdfFileName);
             $envelope_api = $this->getEnvelopeApi();
             # Call Envelopes::create API method
             # Exceptions will be caught by the calling function
