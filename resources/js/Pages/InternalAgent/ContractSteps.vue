@@ -169,6 +169,8 @@ let previewContract = () => {
 let slidingLoader = ref(false)
 let additional_info_saved = ref(false)
 let accompanyingSignMessage = ref(null)
+let signatureAuthorizationSaved = ref(false)
+let signatureAuthorizationMessage = ref(null)
 let errorHandle = (data, response) => {
     // console.log('data', data);
     if (data < 5) {
@@ -191,7 +193,14 @@ let errorHandle = (data, response) => {
         }
         // contractStep.value = 0
     } else if (data === 9) {
-        router.visit('contract-steps')
+        if (response.key === 'signature_authorization') {
+                signatureAuthorizationSaved.value = true
+                signatureAuthorizationMessage.value = response.message
+                setTimeout(() => {
+                    accompanyingSignMessage.value = null
+                }, 2000);
+            }
+        // router.visit('contract-steps')
     }
 }
 if (props.userData?.internal_agent_contract) {
@@ -532,7 +541,7 @@ input[type=number] {
                         <div class="px-12 py-2">
                             <ContractDetailPage :userData="userData" />
                             <SingnaturePad :page="$page.props" :userData="userData" :docuSignAuthCode="docuSignAuthCode"
-                                @editContract="editContract" :firstStepErrors="firstStepErrors" :isLoading="isLoading"
+                                @editContract="editContract" :signatureAuthorizationMessage="signatureAuthorizationMessage" :signatureAuthorizationSaved="signatureAuthorizationSaved" :firstStepErrors="firstStepErrors" :isLoading="isLoading"
                                 @signature="signaturePreview" />
                         </div>
                     </div>

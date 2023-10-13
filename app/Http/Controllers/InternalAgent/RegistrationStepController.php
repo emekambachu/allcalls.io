@@ -1606,7 +1606,6 @@ class RegistrationStepController extends Controller
         }
 
         if ($request->step == 10) {
-            DB::beginTransaction();
             try {
                 //Signature Authorization
                 $returnArr['contractData'] = User::where('id', $user->id)

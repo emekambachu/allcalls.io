@@ -22,7 +22,7 @@
         reliance on any form or agreement bearing my signature pursuant to this authorization.
     </div>
     </p>
-  
+
     <!-- <div class="container mx-auto p-5 flex justify-between flex-wrap">
         <div class="" style="width: 70%;">
             <div class=" mb-10 ">
@@ -52,11 +52,19 @@
         <button @click="editContract()" class="button-custom-back px-3 py-2 rounded-md">
             Edit
         </button>
-        <a :href="route('internal.agent.docusign.sign', 'signature_authorization')" type="button" :class="{ 'opacity-25': !docuSignAuthCode }" :disabled="!docuSignAuthCode" @click="save"
-            class="button-custom  px-3 py-2 rounded-md">
+        <button v-if="!signatureAuthorizationSaved" type="button" :class="{ 'opacity-25': isLoading }"
+            :disabled="isLoading" @click="save" class="button-custom  px-3 py-2 rounded-md">
             <global-spinner :spinner="isLoading" /> Prepare Document
+        </button>
+        <a @click="isLoading = true" v-if="docuSignAuthCode && signatureAuthorizationSaved"
+            :href="route('internal.agent.docusign.sign', 'signature_authorization')" type="button"
+            :class="{ 'opacity-25': !docuSignAuthCode }" :disabled="!docuSignAuthCode"
+            class="button-custom  px-3 py-2 rounded-md">
+            <global-spinner :spinner="isLoading" /> Prepared Document
         </a>
-
+        <div v-if="signatureAuthorizationMessage" class="text-green-500 mt-3 text-center">
+            {{ signatureAuthorizationMessage }}
+        </div>
     </div>
 </template>
   
@@ -76,7 +84,9 @@ export default {
         userData: Object,
         page: Object,
         firstStepErrors: Object,
-        docuSignAuthCode: String
+        docuSignAuthCode: String,
+        signatureAuthorizationMessage:String,
+        signatureAuthorizationSaved:Boolean,
     },
     mounted() {
         // if (this.page.auth.role === 'internal-agent') {
