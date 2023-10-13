@@ -158,6 +158,7 @@
 
             </p>
         </div>
+
         <!-- <div v-if="page.auth.role === 'internal-agent'" class="container mx-auto p-5 flex justify-between flex-wrap">
             <div v-if="signAture?.sign_url" class=" flex bg-white rounded-lg  gap-4 mt-4 mb-4">
                 <div style="padding: 10px; width: 30%; background: #ebe8e8;">
@@ -196,7 +197,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- <h1 style="background-color: #134576;" class="mb-4 mt-4	text-center rounded-md py-2 text-white">
             Anti-Money Loundering
         </h1>
@@ -292,16 +293,19 @@
                     </button>
                 </div>
                 <div class="mt-4">
-                    <button v-if="!additional_info_saved" type="button" :class="{ 'opacity-25': isLoading }" :disabled="isLoading"
-                        @click="ChangeTab" class="button-custom px-3 py-2 rounded-md">
-                        <global-spinner :spinner="isLoading" /> Next Step
+                    <button v-if="!additional_info_saved" type="button" :class="{ 'opacity-25': isLoading }"
+                        :disabled="isLoading" @click="ChangeTab" class="button-custom px-3 py-2 rounded-md">
+                        <global-spinner :spinner="isLoading" /> Prepare Document
                     </button>
-                    <a v-if="docuSignAuthCode && additional_info_saved" :href="route('internal.agent.docusign.sign', 'accompanying_sign')" type="button"
+                    <a v-if="docuSignAuthCode && additional_info_saved"
+                        :href="route('internal.agent.docusign.sign', 'accompanying_sign')" type="button"
                         :class="{ 'opacity-25': isLoading || !docuSignAuthCode }" :disabled="isLoading || !docuSignAuthCode"
                         class="button-custom px-3 py-2 rounded-md">
                         <global-spinner :spinner="isLoading" /> Sign Document
                     </a>
-
+                    <div v-if="accompanyingSignMessage" class="text-green-500 mt-3 text-center">
+                        {{ accompanyingSignMessage }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -320,7 +324,8 @@ export default {
             type: String,
             default: null
         },
-        additional_info_saved:Boolean,
+        additional_info_saved: Boolean,
+        accompanyingSignMessage: String,
     },
     data() {
         return {
