@@ -1624,6 +1624,8 @@ class RegistrationStepController extends Controller
                 $pdf->save($directory . $signatureAuthorization);
                 //Contract Signature End
 
+                dd('sd');
+
                 $pdfMerger = new PDFMerger;
                 //signed Accompanying PDF
                 $accompnayingPDF = $user->id . '_accompanying_sign' . '.pdf';
