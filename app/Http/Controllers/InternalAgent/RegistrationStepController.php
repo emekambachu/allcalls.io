@@ -35,13 +35,10 @@ class RegistrationStepController extends Controller
     private $accountId;
     private $baseUrl;
 
-    private $docSignAuthToken;
-
     public function __construct()
     {
         $this->accountId = "7716918e-104d-4915-b7ca-eff79222ac45";
         $this->baseUrl = "https://demo.docusign.net/restapi";
-        $this->docSignAuthToken =  session()->get('docusign_auth_code');
     }
 
 
@@ -65,7 +62,7 @@ class RegistrationStepController extends Controller
                     'Content-Type' => 'application/pdf',
                 ])->get($url);
 
-                dd($this->docSignAuthToken, $response->body());
+                dd($response->body());
                 //deleted PDF without sign for Accompanying Sign
                 $accompanyingSign = 'accompanying-sign-' . $user->id . '.pdf';
                 if (file_exists(asset('internal-agents/contract/' . $accompanyingSign))) {
@@ -74,9 +71,12 @@ class RegistrationStepController extends Controller
                 //End deleted PDF without sign for Accompanying Sign
 
                 //store PDF signed for Accompanying Sign
+                $pdf = PDF::loadHTML($response->body());
+                $pdf->render();
+                $output = $pdf->output();
                 $pdfFileName = $user->id . '_accompanying_sign' . '.pdf';
-                $pdfPath = public_path('internal-agents/contract/' . $pdfFileName);
-                file_put_contents($pdfPath, $response->body());
+                $pdfPath = public_path('internal-agents/contract/' . $output);
+                file_put_contents($pdfPath, $output);
                 //End store signed PDF for Accompanying Sign
 
                 //Track Signer
@@ -117,10 +117,19 @@ class RegistrationStepController extends Controller
                 }
                 //End deleted PDF without sign for Signature Authorization
 
+            
                 //store PDF signed  Signature Authorization
+                $pdf = PDF::loadHTML($response->body());
+                $pdf->render();
+                $output = $pdf->output();
                 $pdfFileName = $user->id . '_signature_authorization' . '.pdf';
-                $pdfPath = public_path('internal-agents/contract/' . $pdfFileName);
-                file_put_contents($pdfPath, $response->body());
+                $pdfPath = public_path('internal-agents/contract/' . $output);
+                file_put_contents($pdfPath, $output);
+
+                // $pdfFileName = $user->id . '_signature_authorization' . '.pdf';
+                // $pdfPath = public_path('internal-agents/contract/' . $pdfFileName);
+                // file_put_contents($pdfPath, $response->body());
+
                 //End store signed PDF for Signature Authorization
 
                 //Track Signer
@@ -1634,12 +1643,12 @@ class RegistrationStepController extends Controller
                 $pdfMerger->addPDF(public_path() . '/internal-agents/resident-license-pdf/' . $returnArr['contractData']->internalAgentContract->residentLicense->name, 'all');
                 $pdfMerger->addPDF(public_path() . '/internal-agents/banking-info/' . $returnArr['contractData']->internalAgentContract->bankingInfo->name, 'all');
                 $pdfMerger->addPDF(public_path() . '/internal-agents/contract/' . $signatureAuthorization, 'all');
-                $storeAsPath = 'internal-agents/contract/'.$signatureAuthorization;
+                $storeAsPath = 'internal-agents/contract/' . $signatureAuthorization;
                 $pdfMerger->merge('file', $storeAsPath, 'P');
                 dd('sd');
-                 
+
                 //deleted PDF without sign for Signature Authorization
-                 if (file_exists(asset('internal-agents/contract/' . $signatureAuthorization))) {
+                if (file_exists(asset('internal-agents/contract/' . $signatureAuthorization))) {
                     unlink(asset('internal-agents/contract/' . $signatureAuthorization));
                 }
                 //End deleted PDF without sign for Signature Authorization
