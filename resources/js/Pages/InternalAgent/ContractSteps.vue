@@ -296,10 +296,10 @@ let submit = (step) => {
         })
         .then((response) => {
             if (step === 10) {
-                // StepsModal.value = false
-                // contractModal.value = false
-                // toaster("success", response.data.message);
-                // router.visit("/dashboard");
+                StepsModal.value = false
+                contractModal.value = false
+                toaster("success", response.data.message);
+                router.visit("/dashboard");
             } else {
                 errorHandle(step, response.data)
             }
