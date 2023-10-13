@@ -1629,12 +1629,11 @@ class RegistrationStepController extends Controller
                 $accompnayingPDF = $user->id . '_accompanying_sign' . '.pdf';
                 $pdfMerger->addPDF(public_path() . '/internal-agents/contract/' . $accompnayingPDF, 'all');
                 //end signed Accompanying PDF
-dd('sd');
                 $pdfMerger->addPDF(public_path() . '/internal-agents/aml-course/' . $returnArr['contractData']->internalAgentContract->amlCourse->name, 'all');
                 $pdfMerger->addPDF(public_path() . '/internal-agents/error-and-omission/' . $returnArr['contractData']->internalAgentContract->errorAndEmission->name, 'all');
                 $pdfMerger->addPDF(public_path() . '/internal-agents/resident-license-pdf/' . $returnArr['contractData']->internalAgentContract->residentLicense->name, 'all');
                 $pdfMerger->addPDF(public_path() . '/internal-agents/banking-info/' . $returnArr['contractData']->internalAgentContract->bankingInfo->name, 'all');
-
+dd('sdsd');
                 $pdfMerger->addPDF(public_path() . '/internal-agents/contract/' . $signatureAuthorization, 'all');
 
                 //deleted PDF without sign for Signature Authorization
