@@ -72,8 +72,7 @@ class RegistrationStepController extends Controller
                 //store PDF signed for Accompanying Sign
                 $pdfFileName = $user->id . '_accompanying_sign' . '.pdf';
                 $pdfPath = public_path('internal-agents/contract/' . $pdfFileName);
-
-
+dd($response->body());
                 // Create a new TCPDF instance
                 $pdf = new TCPDF();
 
