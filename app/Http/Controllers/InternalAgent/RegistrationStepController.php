@@ -60,11 +60,12 @@ class RegistrationStepController extends Controller
                 $url = "$this->baseUrl/v2.1/accounts/$this->accountId/envelopes/$envelopeId/documents/$documentId";
 
                 $response = Http::withHeaders([
-                    'Authorization' => 'Bearer ' . $this->docSignAuthToken,
+                    'Authorization' => 'Bearer ' . session()->get('docusign_auth_code'),
                     'Content-Description' => 'File Transfer',
                     'Content-Type' => 'application/pdf',
                 ])->get($url);
-                dd($response->body());
+
+                dd($this->docSignAuthToken, $response->body());
                 //deleted PDF without sign for Accompanying Sign
                 $accompanyingSign = 'accompanying-sign-' . $user->id . '.pdf';
                 if (file_exists(asset('internal-agents/contract/' . $accompanyingSign))) {
