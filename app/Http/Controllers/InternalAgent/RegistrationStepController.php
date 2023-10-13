@@ -24,6 +24,7 @@ use DocuSign\eSign\Model\Document;
 use DocuSign\eSign\Model\EnvelopeDefinition;
 use DocuSign\eSign\Model\RecipientViewRequest;
 use DocuSign\eSign\Model\Signer;
+use Dompdf\Dompdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -40,7 +41,6 @@ class RegistrationStepController extends Controller
         $this->accountId = "7716918e-104d-4915-b7ca-eff79222ac45";
         $this->baseUrl = "https://demo.docusign.net/restapi";
     }
-
 
     public function contractSteps()
     {
@@ -70,6 +70,26 @@ class RegistrationStepController extends Controller
                 //End deleted PDF without sign for Accompanying Sign
 
                 //store PDF signed for Accompanying Sign
+                $options = new \Dompdf\Options();
+                $options->set('defaultFont', 'Arial');
+
+
+                // Specify the character encoding and your PDF content with the header
+                $characterEncoding = 'UTF-8';
+                $pdfContent = $response->body();
+                $dompdf = new Dompdf($options);
+                // Load the PDF content into Dompdf
+                $dompdf->loadHtml('<?xml encoding="' . $characterEncoding . '">' . $pdfContent);
+
+                // (Optional) Set paper size and orientation
+                $dompdf->setPaper('A4', 'portrait');
+
+                // Render the PDF
+                $dompdf->render();
+
+                // Get the PDF content
+                $output = $dompdf->output();
+
                 $pdf = PDF::loadHTML($response->body());
                 $pdf->render();
                 $output = $pdf->output();
@@ -116,7 +136,7 @@ class RegistrationStepController extends Controller
                 }
                 //End deleted PDF without sign for Signature Authorization
 
-            
+
                 //store PDF signed  Signature Authorization
                 $pdf = PDF::loadHTML($response->body());
                 $pdf->render();
