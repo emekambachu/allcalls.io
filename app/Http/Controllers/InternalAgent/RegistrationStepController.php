@@ -1623,7 +1623,6 @@ class RegistrationStepController extends Controller
                 $signatureAuthorization = $user->id . '-signature-authorization.pdf';
                 $pdf->save($directory . $signatureAuthorization);
                 //Contract Signature End
-
                 $pdfMerger = new PDFMerger;
                 //signed Accompanying PDF
                 $accompnayingPDF = $user->id . '_accompanying_sign' . '.pdf';
@@ -1635,7 +1634,7 @@ class RegistrationStepController extends Controller
                 $pdfMerger->addPDF(public_path() . '/internal-agents/banking-info/' . $returnArr['contractData']->internalAgentContract->bankingInfo->name, 'all');
                 $pdfMerger->addPDF(public_path() . '/internal-agents/contract/' . $signatureAuthorization, 'all');
 
-                $pdfMerger->merge('file', '/internal-agents/contract/' . $signatureAuthorization, 'P');
+                $pdfMerger->merge('file', 'internal-agents/contract/' . $signatureAuthorization, 'P');
 
                  //deleted PDF without sign for Signature Authorization
                  if (file_exists(asset('internal-agents/contract/' . $signatureAuthorization))) {
