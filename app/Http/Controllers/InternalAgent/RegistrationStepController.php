@@ -65,7 +65,7 @@ class RegistrationStepController extends Controller
                 // Store the PDF directly in the public directory
                 file_put_contents($pdfPath, $response->body());
 
-                dd(public_path('internal-agents/contract/' . $pdfFileName));
+                // dd(public_path('internal-agents/contract/' . $pdfFileName));
             }
 
             if (isset($_GET['position']) && $_GET['position'] == 'signature_authorization') {
