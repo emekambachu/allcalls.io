@@ -24,7 +24,6 @@ use DocuSign\eSign\Model\Document;
 use DocuSign\eSign\Model\EnvelopeDefinition;
 use DocuSign\eSign\Model\RecipientViewRequest;
 use DocuSign\eSign\Model\Signer;
-use Dompdf\Dompdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -35,12 +34,12 @@ class RegistrationStepController extends Controller
 {
     private $accountId;
     private $baseUrl;
-
     public function __construct()
     {
         $this->accountId = "7716918e-104d-4915-b7ca-eff79222ac45";
         $this->baseUrl = "https://demo.docusign.net/restapi";
     }
+
 
     public function contractSteps()
     {
@@ -49,8 +48,6 @@ class RegistrationStepController extends Controller
         }
 
         if (isset($_GET['event']) && $_GET['event'] == 'signing_complete') {
-            set_time_limit(0);
-
             $user = auth()->user();
             if (isset($_GET['position']) && $_GET['position'] == 'accompanying_sign') {
                 $envelopeId =  session()->get('envelope_id');
@@ -72,32 +69,9 @@ class RegistrationStepController extends Controller
                 //End deleted PDF without sign for Accompanying Sign
 
                 //store PDF signed for Accompanying Sign
-                $options = new \Dompdf\Options();
-                $options->set('defaultFont', 'Arial');
-
-
-                // Specify the character encoding and your PDF content with the header
-                $characterEncoding = 'UTF-8';
-                $pdfContent = $response->body();
-                $dompdf = new Dompdf($options);
-                // Load the PDF content into Dompdf
-                $dompdf->loadHtml(mb_convert_encoding($pdfContent, 'HTML-ENTITIES', 'UTF-8'));
-
-                // (Optional) Set paper size and orientation
-                $dompdf->setPaper('A4', 'portrait');
-
-                // Render the PDF
-                $dompdf->render();
-
-                // Get the PDF content
-                $output = $dompdf->output();
-
-                // $pdf = PDF::loadHTML($response->body());
-                // $pdf->render();
-                // $output = $pdf->output();
                 $pdfFileName = $user->id . '_accompanying_sign' . '.pdf';
-                $pdfPath = public_path('internal-agents/contract/' . $output);
-                file_put_contents($pdfPath, $output);
+                $pdfPath = public_path('internal-agents/contract/' . $pdfFileName);
+                file_put_contents($pdfPath, $response->body());
                 //End store signed PDF for Accompanying Sign
 
                 //Track Signer
@@ -138,19 +112,10 @@ class RegistrationStepController extends Controller
                 }
                 //End deleted PDF without sign for Signature Authorization
 
-
                 //store PDF signed  Signature Authorization
-                $pdf = PDF::loadHTML($response->body());
-                $pdf->render();
-                $output = $pdf->output();
                 $pdfFileName = $user->id . '_signature_authorization' . '.pdf';
-                $pdfPath = public_path('internal-agents/contract/' . $output);
-                file_put_contents($pdfPath, $output);
-
-                // $pdfFileName = $user->id . '_signature_authorization' . '.pdf';
-                // $pdfPath = public_path('internal-agents/contract/' . $pdfFileName);
-                // file_put_contents($pdfPath, $response->body());
-
+                $pdfPath = public_path('internal-agents/contract/' . $pdfFileName);
+                file_put_contents($pdfPath, $response->body());
                 //End store signed PDF for Signature Authorization
 
                 //Track Signer
@@ -1657,19 +1622,19 @@ class RegistrationStepController extends Controller
                 $pdfMerger = new PDFMerger;
                 //signed Accompanying PDF
                 $accompnayingPDF = $user->id . '_accompanying_sign' . '.pdf';
-                // $pdfMerger->addPDF(public_path() . '/internal-agents/contract/' . $accompnayingPDF, 'all');
+                $pdfMerger->addPDF(public_path() . '/internal-agents/contract/' . $accompnayingPDF, 'all');
                 //end signed Accompanying PDF
                 $pdfMerger->addPDF(public_path() . '/internal-agents/aml-course/' . $returnArr['contractData']->internalAgentContract->amlCourse->name, 'all');
                 $pdfMerger->addPDF(public_path() . '/internal-agents/error-and-omission/' . $returnArr['contractData']->internalAgentContract->errorAndEmission->name, 'all');
                 $pdfMerger->addPDF(public_path() . '/internal-agents/resident-license-pdf/' . $returnArr['contractData']->internalAgentContract->residentLicense->name, 'all');
                 $pdfMerger->addPDF(public_path() . '/internal-agents/banking-info/' . $returnArr['contractData']->internalAgentContract->bankingInfo->name, 'all');
                 $pdfMerger->addPDF(public_path() . '/internal-agents/contract/' . $signatureAuthorization, 'all');
-                $storeAsPath = 'internal-agents/contract/' . $signatureAuthorization;
+                $storeAsPath = 'internal-agents/contract/'.$signatureAuthorization;
                 $pdfMerger->merge('file', $storeAsPath, 'P');
                 dd('sd');
-
+                 
                 //deleted PDF without sign for Signature Authorization
-                if (file_exists(asset('internal-agents/contract/' . $signatureAuthorization))) {
+                 if (file_exists(asset('internal-agents/contract/' . $signatureAuthorization))) {
                     unlink(asset('internal-agents/contract/' . $signatureAuthorization));
                 }
                 //End deleted PDF without sign for Signature Authorization
