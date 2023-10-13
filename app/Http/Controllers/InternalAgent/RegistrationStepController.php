@@ -1263,6 +1263,7 @@ class RegistrationStepController extends Controller
                 DB::commit();
                 return response()->json([
                     'success' => true,
+                    'route' => route('internal.agent.connect.docusign'),
                 ], 200);
             } catch (\Exception $e) {
                 DB::rollBack();

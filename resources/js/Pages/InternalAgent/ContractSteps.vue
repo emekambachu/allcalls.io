@@ -29,10 +29,12 @@ if (page.props.flash.message) {
 let props = defineProps({
     userData: Object,
     states: Array,
-    docuSignAuthCode:String,
+    docuSignAuthCode: {
+        type: String,
+        default: null
+    }
 });
-
-console.log('docuSignAuthCode docusign_auth_code', props.docuSignAuthCode);
+// console.log('docuSignAuthCode docusign_auth_code', props.docuSignAuthCode);
 let StepsModal = ref(true)
 let contractModal = ref(false)
 const isLoading = ref(false);
@@ -72,13 +74,23 @@ let firstStepErrors = ref({});
 
 
 
-let ChangeTab = () => {
-    if(contractStep.value === 4 && page.props.auth.role === 'internal-agent'){
-        router.visit('contract-steps')
-    }else{
+let ChangeTab = (route) => {
+    if (contractStep.value === 4 && page.props.auth.role === 'internal-agent') {
+        if (!props.docuSignAuthCode) {
+            slidingLoader.value = true
+            axios.get(route)
+                .then((res) => {
+                    // console.log('res1', res);
+                    const newURL = res.data.route;
+                    window.location.href = newURL;
+                })
+        } else {
+            router.visit('contract-steps')
+        }
+    } else {
         contractStep.value += 1
     }
-    
+
     var element = document.getElementById("modal_main_id");
     element.scrollIntoView();
 }
@@ -154,26 +166,14 @@ let previewContract = () => {
     StepsModal.value = false
     contractModal.value = true
 }
+let slidingLoader = ref(false)
 let errorHandle = (data, route) => {
     // console.log('data', data);
     if (data < 5) {
-        ChangeTab()
+        ChangeTab(route)
     } else if (data < 9) {
         if (data === 5) {
-            // console.log('route', route);
-            // router.visit(route)
-            axios.get(route)
-            .then((res)=>{
-                console.log('res1', res);
-                const newURL = res.data.route;
-                window.location.href = newURL;
-
-                // // router.visit(res.data.route)
-                // axios.get(res.data.route).then((response)=>{
-                //     console.log('response2', response);
-                // })
-            })
-            step.value = 1
+            step.value = 2
         } else if (data === 6) {
             step.value = 3
         } else if (data === 7) {
@@ -420,15 +420,18 @@ input[type=number] {
                                 <span class="sr-only">Close modal</span>
                             </button>
                         </div>
+                        <div v-show="slidingLoader" class="px-12 py-2">
+                            <animation-slider :slidingLoader="slidingLoader" />
+                        </div>
 
-                        <div class="px-12 py-2">
+                        <div v-show="!slidingLoader" class="px-12 py-2">
 
                             <Tabs :step="step" />
 
                             <div v-show="contractStep === 1" class="">
 
-                                <ContactDetail @updateFormData="updateFormData" @changeTab="ChangeTab()" :firstStepErrors="firstStepErrors"
-                                    :states="states" :isLoading="isLoading"
+                                <ContactDetail @updateFormData="updateFormData" @changeTab="ChangeTab()"
+                                    :firstStepErrors="firstStepErrors" :states="states" :isLoading="isLoading"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="contractStep === 2">
@@ -449,9 +452,10 @@ input[type=number] {
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="contractStep === 5">
-                                <AdditionalInfo :docuSignAuthCode="docuSignAuthCode" @additionalInfoData="additionalInformation"
-                                    :firstStepErrors="firstStepErrors" :page="$page.props" :states="states"
-                                    @changeTab="NextStep()" :isLoading="isLoading" @goback="ChangeTabBack()"
+                                <AdditionalInfo :docuSignAuthCode="docuSignAuthCode"
+                                    @additionalInfoData="additionalInformation" :firstStepErrors="firstStepErrors"
+                                    :page="$page.props" :states="states" @changeTab="NextStep()" :isLoading="isLoading"
+                                    @goback="ChangeTabBack()"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="step === 2" class="pt-6">
@@ -518,9 +522,10 @@ input[type=number] {
                         </div>
 
                         <div class="px-12 py-2">
-                            <ContractDetailPage  :userData="userData" />
-                            <SingnaturePad :page="$page.props" :userData="userData" @editContract="editContract"
-                                :firstStepErrors="firstStepErrors" :isLoading="isLoading" @signature="signaturePreview" />
+                            <ContractDetailPage :userData="userData" />
+                            <SingnaturePad :page="$page.props" :userData="userData" :docuSignAuthCode="docuSignAuthCode"
+                                @editContract="editContract" :firstStepErrors="firstStepErrors" :isLoading="isLoading"
+                                @signature="signaturePreview" />
                         </div>
                     </div>
                 </div>
