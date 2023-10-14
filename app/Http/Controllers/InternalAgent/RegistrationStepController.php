@@ -1717,6 +1717,7 @@ class RegistrationStepController extends Controller
                 if (!file_exists($directory)) {
                     mkdir($directory, 0777, true);
                 }
+
                 $fileName = auth()->user()->id . '-contract.pdf';
 
                 //deleted PDF without sign for Accompanying Sign
@@ -1728,7 +1729,6 @@ class RegistrationStepController extends Controller
 
                 $pdf->save($directory . $fileName);
                 //End Contract PDF
-                dd(asset('internal-agents/contract/' . $fileName));
                 return response()->json([
                     'success' => true,
                     'message' => 'Document ready to sign.',
