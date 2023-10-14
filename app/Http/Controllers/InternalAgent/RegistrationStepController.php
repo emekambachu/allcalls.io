@@ -43,9 +43,6 @@ class RegistrationStepController extends Controller
 
     public function contractSteps()
     {
-        if (auth()->user()->legacy_key) {
-            return redirect()->route('dashboard');
-        }
 
         if (isset($_GET['event']) && $_GET['event'] == 'signing_complete') {
             $user = auth()->user();
@@ -190,6 +187,9 @@ class RegistrationStepController extends Controller
             // }
         }
 
+        if (auth()->user()->legacy_key) {
+            return redirect()->route('dashboard');
+        }
 
         $user = User::where('id', auth()->user()->id)
             ->with('internalAgentContract.getState')
