@@ -1724,7 +1724,7 @@ class RegistrationStepController extends Controller
                      unlink(asset('internal-agents/contract/' . $fileName));
                      dd('deleted');
                  }
-                 dd('not exist');
+                 dd(asset('internal-agents/contract/' . $fileName), file_exists(asset('internal-agents/contract/' . $fileName));
                  //End deleted PDF without sign for Accompanying Sign
                  
 
