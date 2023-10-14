@@ -59,7 +59,6 @@ class RegistrationStepController extends Controller
 
                 //deleted PDF without sign for Accompanying Sign
                 $pdfFileName = $user->id . '-contract.pdf';
-                dd(asset('internal-agents/contract/' . $pdfFileName));
                 if (file_exists(asset('internal-agents/contract/' . $pdfFileName))) {
                     unlink(asset('internal-agents/contract/' . $pdfFileName));
                 }
