@@ -219,16 +219,39 @@ class DocusignController extends Controller
             # Setting the client_user_id marks the signer as embedded
             'client_user_id' => $args['signer_client_id'],
             "tabs" => [
-                "signHereTabs" => [
+                "accompanying_signature" => [
                     [
-                        "xPosition" => "50",
-                        "yPosition" => "50",
+                        "anchorString" => "YOUR_ANCHOR_STRING",
+                        "anchorXOffset" => "0",
+                        "anchorYOffset" => "0",
+                        "anchorUnits" => "pixels",
+                        "documentId" => $documentId,
+                        "pageNumber" => "1",
+                        "required" => "true"
+                    ],
+                    // Add more signHereTabs as needed
+                ],
+                "signature_authorization" => [
+                    [
+                        "xPosition" => "100",
+                        "yPosition" => "100",
                         "documentId" => $documentId,
                         "pageNumber" => "1",
                         "required" => "true" // Set as required
                     ],
                     // Add more signHereTabs as needed
                 ],
+                "agency_authorization" => [
+                    [
+                        "xPosition" => "150",
+                        "yPosition" => "150",
+                        "documentId" => $documentId,
+                        "pageNumber" => "1",
+                        "required" => "true" // Set as required
+                    ],
+                    // Add more signHereTabs as needed
+                ]
+
             ]
         ]);
         # Create a sign_here tab (field on the document)
