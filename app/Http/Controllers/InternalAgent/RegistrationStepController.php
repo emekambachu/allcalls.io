@@ -1722,7 +1722,9 @@ class RegistrationStepController extends Controller
                 //deleted PDF without sign for Accompanying Sign
                 if (file_exists(public_path() . '/internal-agents/contract/' . $fileName)) {
                     unlink(public_path() . '/internal-agents/contract/' . $fileName);
+                    dd('sddde');
                 }
+                dd(file_exists(public_path() . '/internal-agents/contract/' . $fileName));
                 //End deleted PDF without sign for Accompanying Sign
 
 
