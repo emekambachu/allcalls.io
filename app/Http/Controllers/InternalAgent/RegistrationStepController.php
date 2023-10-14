@@ -70,6 +70,8 @@ class RegistrationStepController extends Controller
                 file_put_contents($pdfPath, $response->body());
                 //End store signed PDF for Accompanying Sign
 
+                dd($pdfPath);
+
                 //Track Signer
                 DocuSignTracker::updateOrCreate(
                     ['user_id' => $user->id, 'sign_type' => 'contract'], // conditions
