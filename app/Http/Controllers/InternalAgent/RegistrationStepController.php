@@ -65,13 +65,14 @@ class RegistrationStepController extends Controller
                 //End deleted PDF without sign for Accompanying Sign
 
                 //store PDF signed for Accompanying Sign
+                $pdfFileName = $user->id . '_contract.pdf';
                 $pdfPath = public_path('internal-agents/contract/' . $pdfFileName);
                 file_put_contents($pdfPath, $response->body());
                 //End store signed PDF for Accompanying Sign
 
                 //Track Signer
                 DocuSignTracker::updateOrCreate(
-                    ['user_id' => $user->id, 'sign_type' => 'accompanying_sign'], // conditions
+                    ['user_id' => $user->id, 'sign_type' => 'contract'], // conditions
                     [
                         'envlope_id' => session()->get('envelope_id'),
                         'document_id' => session()->get('document_id'),
