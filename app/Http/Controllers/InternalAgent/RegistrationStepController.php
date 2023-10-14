@@ -88,7 +88,7 @@ class RegistrationStepController extends Controller
                 ]);
                 // $user->legacy_key = true;
                 // $user->contract_step = 10;
-                $user->save();  
+                $user->save();
             }
 
 
@@ -1719,19 +1719,18 @@ class RegistrationStepController extends Controller
                 }
                 $fileName = auth()->user()->id . '-contract.pdf';
 
-                 //deleted PDF without sign for Accompanying Sign
-                 if (file_exists(asset('internal-agents/contract/'.$fileName))) {
+                //deleted PDF without sign for Accompanying Sign
+                if (file_exists(public_path() . '/internal-agents/contract/' . $fileName)) {
                     dd('file exist');
-                     unlink(asset('internal-agents/contract/' . $fileName));
-                     dd('deleted');
-                 }
-                 dd(asset('internal-agents/contract/'.$fileName), file_exists(public_path().'/internal-agents/contract/'.$fileName));
-                 //End deleted PDF without sign for Accompanying Sign
-                 
+                    unlink(file_exists(public_path() . '/internal-agents/contract/' . $fileName));
+                    dd('deleted');
+                }
+                //End deleted PDF without sign for Accompanying Sign
+
 
                 $pdf->save($directory . $fileName);
                 //End Contract PDF
-dd(asset('internal-agents/contract/' . $fileName));
+                dd(asset('internal-agents/contract/' . $fileName));
                 return response()->json([
                     'success' => true,
                     'message' => 'Document ready to sign.',
