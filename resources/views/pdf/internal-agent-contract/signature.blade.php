@@ -37,7 +37,9 @@
             </td>
 
             <td style="width: 40%;" class="text-15">
-            <div style="border-bottom:2px solid black; margin-top:5px !important"></div>
+            <div style="border-bottom:2px solid black; margin-top:5px !important">
+                SIGNATURE_AUTHORIZATION
+            </div>
             </td>
             
             <td style="width: 30%;" class="text-end">

@@ -221,9 +221,9 @@ class DocusignController extends Controller
             "tabs" => [
                 "accompanying_signature" => [
                     [
-                        "anchorString" => "YOUR_ANCHOR_STRING",
-                        "anchorXOffset" => "0",
-                        "anchorYOffset" => "0",
+                        "anchorString" => "ACCOMPANYING_SIGNATURE",
+                        "anchorXOffset" => "10",
+                        "anchorYOffset" => "10",
                         "anchorUnits" => "pixels",
                         "documentId" => $documentId,
                         "pageNumber" => "1",
@@ -233,21 +233,25 @@ class DocusignController extends Controller
                 ],
                 "signature_authorization" => [
                     [
-                        "xPosition" => "100",
-                        "yPosition" => "100",
+                        "anchorString" => "SIGNATURE_AUTHORIZATION",
+                        "anchorXOffset" => "20",
+                        "anchorYOffset" => "20",
+                        "anchorUnits" => "pixels",
                         "documentId" => $documentId,
                         "pageNumber" => "1",
-                        "required" => "true" // Set as required
+                        "required" => "true"
                     ],
                     // Add more signHereTabs as needed
                 ],
                 "agency_authorization" => [
                     [
-                        "xPosition" => "150",
-                        "yPosition" => "150",
+                        "anchorString" => "AGENCY_AUTHORIZATION",
+                        "anchorXOffset" => "30",
+                        "anchorYOffset" => "30",
+                        "anchorUnits" => "pixels",
                         "documentId" => $documentId,
                         "pageNumber" => "1",
-                        "required" => "true" // Set as required
+                        "required" => "true"
                     ],
                     // Add more signHereTabs as needed
                 ]
