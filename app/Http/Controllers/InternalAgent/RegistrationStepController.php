@@ -49,7 +49,6 @@ class RegistrationStepController extends Controller
             if (isset($_GET['position']) && $_GET['position'] == 'contract') {
                 $envelopeId =  session()->get('envelope_id');
                 $documentId =  session()->get('document_id');
-
                 $url = "$this->baseUrl/v2.1/accounts/$this->accountId/envelopes/$envelopeId/documents/$documentId";
 
                 $response = Http::withHeaders([
@@ -60,6 +59,7 @@ class RegistrationStepController extends Controller
 
                 //deleted PDF without sign for Accompanying Sign
                 $pdfFileName = $user->id . '-contract.pdf';
+                dd(asset('internal-agents/contract/' . $pdfFileName));
                 if (file_exists(asset('internal-agents/contract/' . $pdfFileName))) {
                     unlink(asset('internal-agents/contract/' . $pdfFileName));
                 }
