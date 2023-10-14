@@ -226,7 +226,7 @@ class DocusignController extends Controller
                         "anchorYOffset" => "10",
                         "anchorUnits" => "pixels",
                         "documentId" => $documentId,
-                        "pageNumber" => "1",
+                        "pageNumber" => "9",
                         "required" => "true"
                     ],
                     // Add more signHereTabs as needed
@@ -238,7 +238,7 @@ class DocusignController extends Controller
                         "anchorYOffset" => "20",
                         "anchorUnits" => "pixels",
                         "documentId" => $documentId,
-                        "pageNumber" => "1",
+                        "pageNumber" => "10",
                         "required" => "true"
                     ],
                     // Add more signHereTabs as needed
@@ -250,7 +250,7 @@ class DocusignController extends Controller
                         "anchorYOffset" => "30",
                         "anchorUnits" => "pixels",
                         "documentId" => $documentId,
-                        "pageNumber" => "1",
+                        "pageNumber" => "11",
                         "required" => "true"
                     ],
                     // Add more signHereTabs as needed
