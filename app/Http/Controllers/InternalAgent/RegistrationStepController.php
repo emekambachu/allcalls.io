@@ -83,9 +83,9 @@ class RegistrationStepController extends Controller
                     'name' => $pdfFileName,
                     'sign_url' => asset('internal-agents/contract/' . $pdfFileName),
                 ]);
-                $user->legacy_key = true;
-                $user->contract_step = 10;
-                $user->save();
+                // $user->legacy_key = true;
+                // $user->contract_step = 10;
+                $user->save();  
             }
 
 

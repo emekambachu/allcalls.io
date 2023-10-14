@@ -33,7 +33,7 @@
     </h1>
     <p class="p-4 ">
     <div class="mb-2"> <strong>PLEASE READ THIS AUTHORIZATION, SIGN IN THE BOX BELOW AND SUBMIT THIS
-        FORM BY FOLLOWING THE INSTRUCTIONS PROVIDED ON THE COVER PAGE.</strong> </div>
+            FORM BY FOLLOWING THE INSTRUCTIONS PROVIDED ON THE COVER PAGE.</strong> </div>
     <hr class="w-100 h-1 my-4 bg-gray-600 border-0 rounded dark:bg-gray-700">
     I <span class="mx-2" style="border-bottom: 2px solid black;"><strong> {{ userData.first_name }} {{ userData.last_name }}
         </strong>, </span> hereby authorize AllCalls.io, LLC and its general agency customers (the "Authorized Parties")
@@ -132,9 +132,9 @@
             class="button-custom  px-3 py-2 rounded-md">
             <global-spinner :spinner="isLoading" /> Sign Document
         </a>
-        <div v-if="signatureAuthorizationMessage" class="text-green-500 mt-3 text-center">
-            {{ signatureAuthorizationMessage }}
-        </div>
+    </div>
+    <div v-if="signatureAuthorizationMessage" class="text-green-500 mt-3 text-end">
+        {{ signatureAuthorizationMessage }}
     </div>
 </template>
   
