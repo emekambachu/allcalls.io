@@ -1695,7 +1695,6 @@ class RegistrationStepController extends Controller
                 //Signature Authorization
 
 
-                 
                 //Start Contract PDF
                 $returnArr['contractData'] = User::where('id', $user->id)
                     ->with('internalAgentContract.getState')
@@ -1723,7 +1722,9 @@ class RegistrationStepController extends Controller
                  //deleted PDF without sign for Accompanying Sign
                  if (file_exists(asset('internal-agents/contract/' . $fileName))) {
                      unlink(asset('internal-agents/contract/' . $fileName));
+                     dd('deleted');
                  }
+                 dd('not exist');
                  //End deleted PDF without sign for Accompanying Sign
                  
 
