@@ -1729,7 +1729,7 @@ class RegistrationStepController extends Controller
 
                 $pdf->save($directory . $fileName);
                 //End Contract PDF
-
+dd(asset('internal-agents/contract/' . $fileName));
                 return response()->json([
                     'success' => true,
                     'message' => 'Document ready to sign.',

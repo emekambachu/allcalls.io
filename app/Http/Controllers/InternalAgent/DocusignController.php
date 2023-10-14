@@ -222,8 +222,8 @@ class DocusignController extends Controller
                 "signHereTabs" => [
                     [
                         "anchorString" => "ACCOMPANYING_SIGNATURE",
-                        "anchorXOffset" => "10",
-                        "anchorYOffset" => "10",
+                        "anchorXOffset" => "5",
+                        "anchorYOffset" => "5",
                         "anchorUnits" => "pixels",
                         "documentId" => $documentId,
                         "pageNumber" => "9",
@@ -232,8 +232,8 @@ class DocusignController extends Controller
 
                     [
                         "anchorString" => "SIGNATURE_AUTHORIZATION",
-                        "anchorXOffset" => "20",
-                        "anchorYOffset" => "20",
+                        "anchorXOffset" => "5",
+                        "anchorYOffset" => "5",
                         "anchorUnits" => "pixels",
                         "documentId" => $documentId,
                         "pageNumber" => "10",
@@ -242,8 +242,8 @@ class DocusignController extends Controller
 
                     [
                         "anchorString" => "AGENCY_AUTHORIZATION",
-                        "anchorXOffset" => "30",
-                        "anchorYOffset" => "30",
+                        "anchorXOffset" => "5",
+                        "anchorYOffset" => "5",
                         "anchorUnits" => "pixels",
                         "documentId" => $documentId,
                         "pageNumber" => "11",
