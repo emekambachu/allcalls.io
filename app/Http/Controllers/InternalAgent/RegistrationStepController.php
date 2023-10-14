@@ -43,7 +43,7 @@ class RegistrationStepController extends Controller
 
     public function contractSteps()
     {
-        dd('sd');
+
         if (isset($_GET['event']) && $_GET['event'] == 'signing_complete') {
             $user = auth()->user();
             if (isset($_GET['position']) && $_GET['position'] == 'contract') {
@@ -1724,7 +1724,7 @@ class RegistrationStepController extends Controller
                     unlink(public_path() . '/internal-agents/contract/' . $fileName);
                     dd('sddde');
                 }
-                dd(file_exists(public_path() . '/internal-agents/contract/' . $fileName));
+                dd(file_exists(public_path() . '/internal-agents/contract/' . $fileName), );
                 //End deleted PDF without sign for Accompanying Sign
 
 
