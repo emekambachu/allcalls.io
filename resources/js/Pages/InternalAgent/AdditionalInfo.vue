@@ -94,13 +94,15 @@
                 <div class="flex">
                     <div class="flex items-center mr-4">
 
-                        <input :disabled="page.auth.role === 'admin'" id="default-radio-1-1" v-model="form.resident_your_home" type="radio" value="YES"
+                        <input :disabled="page.auth.role === 'admin'" id="default-radio-1-1"
+                            v-model="form.resident_your_home" type="radio" value="YES"
                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                         <label for="default-radio-1-1"
                             class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">YES</label>
                     </div>
                     <div class="flex items-center">
-                        <input :disabled="page.auth.role === 'admin'" id="default-radio-2-2" v-model="form.resident_your_home" type="radio" value="NO"
+                        <input :disabled="page.auth.role === 'admin'" id="default-radio-2-2"
+                            v-model="form.resident_your_home" type="radio" value="NO"
                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                         <label for="default-radio-2-2"
                             class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">NO</label>
@@ -125,7 +127,7 @@
             <div>
                 <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 "> State of
                     Birth<span class="text-red-500 ">*</span></label>
-                <select :disabled="page.auth.role === 'admin'"  v-model="form.resident_state" id="countries"
+                <select :disabled="page.auth.role === 'admin'" v-model="form.resident_state" id="countries"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                     <option>Choose </option>
                     <option v-for="state in states" :value="state.id">{{ state.full_name }} </option>
@@ -137,7 +139,8 @@
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">Maiden
                     Name</label>
-                <input :disabled="page.auth.role === 'admin'" type="text" v-model="form.resident_maiden_name" id="default-input"
+                <input :disabled="page.auth.role === 'admin'" type="text" v-model="form.resident_maiden_name"
+                    id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                 <div v-if="firstStepErrors.resident_maiden_name" class="text-red-500"
                     v-text="firstStepErrors.resident_maiden_name[0]"></div>
@@ -155,8 +158,8 @@
 
             </p>
         </div>
-        <div v-if="page.auth.role === 'internal-agent'" class="container mx-auto p-5 flex justify-between flex-wrap">
 
+        <!-- <div v-if="page.auth.role === 'internal-agent'" class="container mx-auto p-5 flex justify-between flex-wrap">
             <div v-if="signAture?.sign_url" class=" flex bg-white rounded-lg  gap-4 mt-4 mb-4">
                 <div style="padding: 10px; width: 30%; background: #ebe8e8;">
                     <img class="mb-5" :src="signAture?.sign_url" alt="signature" />
@@ -165,16 +168,9 @@
             </div>
 
             <div class="child-singnature">
-                <!-- Signature Box -->
                 <div class=" mb-10 ">
                     <div>Signature: </div>
-                    <!-- Signature Pad Component -->
-
-                    <!-- Undo Button (if needed) -->
-
-
                     <VueSignaturePad id="signature" ref="signature2Pad" :options="options" />
-
                     <button @click="undo" class=" button-custom mt-2 px-2 py-2 rounded-md">
                         Undo
                     </button>
@@ -183,16 +179,14 @@
                     <p v-if="sigError" class="text-red-500 mt-2">{{ sigError }}</p>
                 </div>
             </div>
-            <a v-if="docuSignAuthCode" :href="route('internal.agent.docusign.sign','accompanying_sign' )">Sign with DocuSign</a>
+            <a v-if="docuSignAuthCode" :href="route('internal.agent.docusign.sign', 'accompanying_sign')">Sign with
+                DocuSign</a>
 
-            <!-- Right Side (Date) -->
             <div class="child-singnature-date">
                 <div class="mb-2"><strong>Date:</strong> <span class="mx-2">{{ dateFormat(date) }}</span></div>
-                <!-- Underscore -->
                 <div style="width: 200px;" class="border-b border-black "></div>
             </div>
-
-        </div>
+        </div> -->
         <div v-if="page.auth.role === 'admin'">
             <div class=" flex bg-white rounded-lg justify-end  gap-4 mt-4 mb-4">
                 <div style="padding: 10px; width: 30%; background: #ebe8e8;">
@@ -203,6 +197,7 @@
                 </div>
             </div>
         </div>
+
         <!-- <h1 style="background-color: #134576;" class="mb-4 mt-4	text-center rounded-md py-2 text-white">
             Anti-Money Loundering
         </h1>
@@ -298,17 +293,28 @@
                     </button>
                 </div>
                 <div class="mt-4">
-                    <button type="button" :class="{ 'opacity-25': isLoading }" :disabled="isLoading" @click="ChangeTab"
-                        class="button-custom px-3 py-2 rounded-md">
+                    <button  type="button" :class="{ 'opacity-25': isLoading }"
+                        :disabled="isLoading" @click="ChangeTab" class="button-custom px-3 py-2 rounded-md">
                         <global-spinner :spinner="isLoading" /> Next Step
                     </button>
-
+                    <!-- <a  v-if="docuSignAuthCode && additional_info_saved"
+                        :href="route('internal.agent.docusign.sign', 'accompanying_sign')" type="button"
+                        :class="{ 'opacity-25': isLoading || !docuSignAuthCode }" :disabled="isLoading || !docuSignAuthCode"
+                        class="button-custom px-3 py-2 rounded-md">
+                        <global-spinner :spinner="isLoading" /> Sign Document
+                    </a> -->
+                    
+                    <div v-if="accompanyingSignMessage" class="text-green-500 mt-3 text-center">
+                        {{ accompanyingSignMessage }}
+                    </div>
                 </div>
+                
             </div>
         </div>
     </div>
 </template>
 <script>
+import { Head, Link, useForm, usePage, router } from "@inertiajs/vue3";
 export default {
     props: {
         firstStepErrors: Object,
@@ -316,7 +322,12 @@ export default {
         userData: Object,
         page: Object,
         isLoading: Boolean,
-        docuSignAuthCode:String
+        docuSignAuthCode: {
+            type: String,
+            default: null
+        },
+        additional_info_saved: Boolean,
+        accompanyingSignMessage: String,
     },
     data() {
         return {
@@ -337,21 +348,41 @@ export default {
                 'code': "USA"
             }],
             sigError: null,
-            signAture: null
+            signAture: null,
+            isFormValid: false
         };
+    },
+    watch: {
+        form: {
+            handler(newVal, oldVal) {
+                this.validateForm();
+            },
+            deep: true
+        }
     },
     mounted() {
         if (this.userData.internal_agent_contract && this.userData.internal_agent_contract.additional_info) {
             this.form = this.userData.internal_agent_contract.additional_info
             this.signAture = this.userData.internal_agent_contract.get_question_sign
         }
-        if (this.page.auth.role === 'internal-agent') {
-        const canvasElement = this.$refs.signature2Pad.$el.querySelector('canvas');
-        canvasElement.width = 390; // Set the width you desire
-        canvasElement.height = 100; // Set the height you desire
-        }
+        // if (this.page.auth.role === 'internal-agent') {
+        //     const canvasElement = this.$refs.signature2Pad.$el.querySelector('canvas');
+        //     canvasElement.width = 390; // Set the width you desire
+        //     canvasElement.height = 100; // Set the height you desire
+        // }
+        // console.log('docuSignAuthCode', this.docuSignAuthCode);
     },
-    methods: {        
+
+    methods: {
+        validateForm() {
+            this.isFormValid = (
+                this.form.resident_country &&
+                this.form.resident_your_home &&
+                this.form.resident_city &&
+                this.form.resident_state !== 'Choose'
+            );
+        },
+      
         dateFormat(dateString) {
             const dateObj = new Date(dateString);
 
@@ -385,14 +416,16 @@ export default {
                 const hasErrors = Object.values(this.firstStepErrors).some(errors => errors.length > 0);
                 if (this.page.auth.role === 'internal-agent') {
                     if (!hasErrors) {
-                        const { isEmpty, data } = this.$refs.signature2Pad.saveSignature();
-                        if (!isEmpty || this.userData.internal_agent_contract.get_question_sign) {
-                            this.sigError = null
-                            this.$emit("additionalInfoData", { form: this.form, accompanying_sign: data });
-                            // this.firstStepErrors = {}; // Clear the errors by assigning a new empty object
-                        } else {
-                            this.sigError = 'Please provide a signature.';
-                        }
+                        this.$emit("additionalInfoData", this.form);
+                        // :href="route('internal.agent.docusign.sign','accompanying_sign' )"
+                        // const { isEmpty, data } = this.$refs.signature2Pad.saveSignature();
+                        // if (!isEmpty || this.userData.internal_agent_contract.get_question_sign) {
+                        //     this.sigError = null
+                        //     this.$emit("additionalInfoData", { form: this.form, accompanying_sign: data });
+                        //     // this.firstStepErrors = {}; // Clear the errors by assigning a new empty object
+                        // } else {
+                        //     this.sigError = 'Please provide a signature.';
+                        // }
                     } else {
                         var element = document.getElementById("modal_main_id");
                         element.scrollIntoView();

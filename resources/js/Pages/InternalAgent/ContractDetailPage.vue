@@ -532,13 +532,13 @@ if (props.userData.internal_agent_contract && props.userData.internal_agent_cont
             </div>
 
         </div>
-        <div class=" flex bg-white rounded-lg  gap-4 mt-4 mb-4">
+        <!-- <div class=" flex bg-white rounded-lg  gap-4 mt-4 mb-4">
             <div style="padding: 10px; width: 30%; background: #ebe8e8;">
                 <img class="mb-5" :src="userData.internal_agent_contract?.get_question_sign?.sign_url" alt="signature" />
                 <div> <strong class="mx-2">Date: </strong> {{
                     dateFormat(userData.internal_agent_contract?.get_question_sign?.created_at) }}</div>
             </div>
-        </div>
+        </div> -->
         <hr class="mb-5">
 
         <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">

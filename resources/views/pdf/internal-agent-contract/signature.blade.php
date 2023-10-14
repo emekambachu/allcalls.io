@@ -29,13 +29,40 @@
         authorization.
     </p>
 
+    <table class="w-100" style="margin-bottom: 30px; margin-top:50px">
+        <tr>
+            <td style="width: 20%;" class="text-end">
+                <strong>Signature: &nbsp;</strong>
+                {{-- <div style="border-bottom:2px solid black"></div> --}}
+            </td>
 
-    <div style="width:35%; border-bottom:solid; height:120px; float: right;margin-top:30px;">
-        <img  src="{{ asset($contractData->internalAgentContract->getContractSign->sign_url)}}" style="width:75%;margin-top:40px;margin-left:-8px;">
-    </div>
-    <br>
+            <td style="width: 40%;" class="text-15">
+            <div style="border-bottom:2px solid black; margin-top:5px !important">
+                SIGNATURE_AUTHORIZATION
+            </div>
+            </td>
+            
+            <td style="width: 30%;" class="text-end">
+                <p style="text-align: center">
+                    <span>
+                        <strong>
+                            Date: &nbsp;
+                        </strong>
+                        <span style="border-bottom:2px solid black;">
+                            {{\Carbon\Carbon::now()->format('m/d/Y')}}
+                        </span>
+                    </span>
+                </p>
+            </td>
+            <td style="width: 10%;" class="text-end"></td>
+        </tr>
+    </table>
+    {{-- <div style="width:35%; border-bottom:solid; height:120px; float: right;margin-top:30px;"> --}}
+        {{-- <img  src="{{ asset($contractData->internalAgentContract->getContractSign->sign_url)}}" style="width:75%;margin-top:40px;margin-left:-8px;"> --}}
+    {{-- </div> --}}
+    {{-- <br>
     <div style="width:35%; height:100px; margin-right:-230px;  float: right; margin-top:130px;">
         <div><strong>Name</strong>:&nbsp; {{$contractData->internalAgentContract->first_name.' '.$contractData->internalAgentContract->last_name}}</div>
-        <div><strong>Date</strong>:&nbsp; {{\Carbon\Carbon::parse($contractData->internalAgentContract->getContractSign->created_at)->format('m/d/Y')}}  </div>
-    </div>
+        <div><strong>Date</strong>:&nbsp; {{\Carbon\Carbon::now()->format('m/d/Y')}}  </div>
+    </div> --}}
 </div>

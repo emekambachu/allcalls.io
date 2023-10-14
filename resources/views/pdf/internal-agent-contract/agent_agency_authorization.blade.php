@@ -1,4 +1,4 @@
-<div class="mt-3">
+<div class="mt-3 signature-authorization">
     <h3 class="title">Contracting - Debit-Check Agent/Agency Authorization Form</h3>
     {{-- <p style="font-weight: bold">
         PLEASE READ THIS AUTHORIZATION, SIGN IN THE BOX BELOW AND SUBMIT THIS FORM BY FOLLOWING THE INSTRUCTIONS
@@ -118,6 +118,7 @@
         <div style="margin-top: 10px;">
             <div style="display: inline-block;">
                 <span><strong>Signature:</strong></span>
+                AGENCY_AUTHORIZATION
             </div>
             <div style="border-bottom: 0.5px solid black; width: 45%; display: inline-block;"></div>
             <div style="display: inline-block; margin-left:40px;">

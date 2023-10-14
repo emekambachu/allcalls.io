@@ -29,10 +29,12 @@ if (page.props.flash.message) {
 let props = defineProps({
     userData: Object,
     states: Array,
-    docuSignAuthCode:String,
+    docuSignAuthCode: {
+        type: String,
+        default: null
+    }
 });
-
-console.log('docuSignAuthCode docusign_auth_code', props.docuSignAuthCode);
+// console.log('docuSignAuthCode docusign_auth_code', props.docuSignAuthCode);
 let StepsModal = ref(true)
 let contractModal = ref(false)
 const isLoading = ref(false);
@@ -72,15 +74,27 @@ let firstStepErrors = ref({});
 
 
 
-let ChangeTab = () => {
-    if(contractStep.value === 4 && page.props.auth.role === 'internal-agent'){
+let ChangeTab = (route) => {
+    if (contractStep.value === 4 && page.props.auth.role === 'internal-agent') {
         router.visit('contract-steps')
-    }else{
+        // if (!props.docuSignAuthCode) {
+        //     isLoading.value = true
+        //     // slidingLoader.value = true
+        //     axios.get(route)
+        //         .then((res) => {
+        //             // console.log('res1', res);
+        //             const newURL = res.data.route;
+        //             window.location.href = newURL;
+        //         })
+        // } else {
+        //     router.visit('contract-steps')
+        // }
+    } else {
         contractStep.value += 1
     }
-    
-    var element = document.getElementById("modal_main_id");
-    element.scrollIntoView();
+
+    // var element = document.getElementById("modal_main_id");
+    // element.scrollIntoView();
 }
 let ChangeTabBack = () => {
     contractStep.value -= 1
@@ -116,8 +130,8 @@ let AddressHistoryfun = (val) => {
 let additionalInfoD = ref(null)
 let additionalInformation = (val) => {
     isLoading.value = true
-    accompanying_sign.value = val.accompanying_sign
-    additionalInfoD.value = val.form
+    // accompanying_sign.value = val.accompanying_sign
+    additionalInfoD.value = val
     submit(5)
 }
 
@@ -154,36 +168,41 @@ let previewContract = () => {
     StepsModal.value = false
     contractModal.value = true
 }
-let errorHandle = (data, route) => {
-    // console.log('data', data);
+let slidingLoader = ref(false)
+let additional_info_saved = ref(false)
+let accompanyingSignMessage = ref(null)
+let signatureAuthorizationSaved = ref(false)
+let signatureAuthorizationMessage = ref(null)
+let errorHandle = (data, response) => {
+    console.log('data', data);
     if (data < 5) {
-        ChangeTab()
+        ChangeTab(response.route)
     } else if (data < 9) {
         if (data === 5) {
-            // console.log('route', route);
-            // router.visit(route)
-            axios.get(route)
-            .then((res)=>{
-                console.log('res1', res);
-                const newURL = res.data.route;
-                window.location.href = newURL;
-
-                // // router.visit(res.data.route)
-                // axios.get(res.data.route).then((response)=>{
-                //     console.log('response2', response);
-                // })
-            })
-            step.value = 1
+            step.value = 2
+            contractStep.value = 0
         } else if (data === 6) {
             step.value = 3
+            contractStep.value = 0
         } else if (data === 7) {
             step.value = 4
+            contractStep.value = 0
         } else if (data === 8) {
             step.value = 5
+            contractStep.value = 0
         }
-        contractStep.value = 0
+        // contractStep.value = 0
     } else if (data === 9) {
-        router.visit('contract-steps')
+        if (!props.docuSignAuthCode) {
+            axios.get(response.route)
+            .then((res) => {
+                const newURL = res.data.route;
+                window.location.href = newURL;
+            })
+        }else{
+            router.visit('contract-steps')
+        }
+        
     }
 }
 if (props.userData?.internal_agent_contract) {
@@ -210,7 +229,7 @@ if (props.userData?.internal_agent_contract) {
 let signature_authorization = ref(null)
 let signaturePreview = (val) => {
     isLoading.value = true
-    signature_authorization.value = val
+    // signature_authorization.value = val
     submit(10)
 }
 let submit = (step) => {
@@ -239,7 +258,7 @@ let submit = (step) => {
         Object.assign(requestData, filteredAddressHistory);
         requestData.step = step;
     } else if (step === 5) {
-        requestData.accompanying_sign = accompanying_sign.value
+        // requestData.accompanying_sign = accompanying_sign.value
         Object.assign(requestData, additionalInfoD.value);
         requestData.step = step;
     } else if (step === 6) {
@@ -279,12 +298,14 @@ let submit = (step) => {
         })
         .then((response) => {
             if (step === 10) {
-                StepsModal.value = false
-                contractModal.value = false
-                toaster("success", response.data.message);
-                router.visit("/dashboard");
+                console.log('date save', );
+                signatureAuthorizationSaved.value = true
+                signatureAuthorizationMessage.value = response.data.message
+                setTimeout(() => {
+                    signatureAuthorizationMessage.value = null
+                }, 2000);
             } else {
-                errorHandle(step, response.data.route)
+                errorHandle(step, response.data)
             }
             isLoading.value = false;
         })
@@ -420,15 +441,17 @@ input[type=number] {
                                 <span class="sr-only">Close modal</span>
                             </button>
                         </div>
-
-                        <div class="px-12 py-2">
+                        <div v-show="slidingLoader" class="px-12 py-2">
+                            <animation-slider :slidingLoader="slidingLoader" />
+                        </div>
+                        <div v-show="!slidingLoader" class="px-12 py-2">
 
                             <Tabs :step="step" />
 
                             <div v-show="contractStep === 1" class="">
 
-                                <ContactDetail @updateFormData="updateFormData" @changeTab="ChangeTab()" :firstStepErrors="firstStepErrors"
-                                    :states="states" :isLoading="isLoading"
+                                <ContactDetail @updateFormData="updateFormData" @changeTab="ChangeTab()"
+                                    :firstStepErrors="firstStepErrors" :states="states" :isLoading="isLoading"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="contractStep === 2">
@@ -449,9 +472,12 @@ input[type=number] {
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="contractStep === 5">
-                                <AdditionalInfo :docuSignAuthCode="docuSignAuthCode" @additionalInfoData="additionalInformation"
-                                    :firstStepErrors="firstStepErrors" :page="$page.props" :states="states"
-                                    @changeTab="NextStep()" :isLoading="isLoading" @goback="ChangeTabBack()"
+                                <AdditionalInfo :docuSignAuthCode="docuSignAuthCode"
+                                    :accompanyingSignMessage="accompanyingSignMessage"
+                                    @additionalInfoData="additionalInformation"
+                                    :additional_info_saved="additional_info_saved" :firstStepErrors="firstStepErrors"
+                                    :page="$page.props" :states="states" @changeTab="NextStep()" :isLoading="isLoading"
+                                    @goback="ChangeTabBack()"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="step === 2" class="pt-6">
@@ -518,8 +544,10 @@ input[type=number] {
                         </div>
 
                         <div class="px-12 py-2">
-                            <ContractDetailPage  :userData="userData" />
-                            <SingnaturePad :page="$page.props" :userData="userData" @editContract="editContract"
+                            <ContractDetailPage :userData="userData" />
+                            <SingnaturePad :page="$page.props" :userData="userData" :docuSignAuthCode="docuSignAuthCode"
+                                @editContract="editContract" :signatureAuthorizationMessage="signatureAuthorizationMessage"
+                                :signatureAuthorizationSaved="signatureAuthorizationSaved"
                                 :firstStepErrors="firstStepErrors" :isLoading="isLoading" @signature="signaturePreview" />
                         </div>
                     </div>
