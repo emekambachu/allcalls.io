@@ -1,5 +1,6 @@
 <?php
 
+use Pusher\Pusher;
 use App\Models\User;
 use App\Models\ActiveUser;
 use Illuminate\Http\Request;
@@ -137,3 +138,17 @@ Route::match(['get', 'post'], '/agent-status', [AgentStatusAPIController::class,
 Route::middleware('auth:sanctum')->post('/app-events', [AppEventsController::class, 'store']);
 
 Route::match(['get', 'post'], '/ping', [PingAPIController::class, 'show']);
+
+
+Route::post('/custom-pusher-auth', function (Request $request) {
+    $pusher = new Pusher(
+        env('PUSHER_APP_KEY'),
+        env('PUSHER_APP_SECRET'),
+        env('PUSHER_APP_ID')
+    );
+
+    $channelName = $request->request->get('channel_name');
+    $socketId = $request->request->get('socket_id');
+
+    return $pusher->socket_auth($channelName, $socketId);
+});
