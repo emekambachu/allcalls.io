@@ -156,7 +156,7 @@ Route::post('/custom-pusher-auth', function (Request $request) {
 });
 
 Route::get('/pusher-private-test', function(){
-    ExampleTest::dispatch(User::find(2));
+    ExampleTest::dispatch(User::whereEmail('john@example.com')->first());
 });
 
 Route::get('/custom-broadcasting-auth', [CustomBroadcastingAuthController::class, 'store']);
