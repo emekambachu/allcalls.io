@@ -100,6 +100,8 @@ class FundsController extends Controller
 
 
         if (!in_array($response, ['SUCCESS', 'Approved'])) {
+            Log::debug('The status is not SUCCESS or Approved payment failed');
+            Log::debug('RESPONSE TEXT: ' . $response);
             return redirect()->back()->with(['message' => 'Payment failed.']);
         }
 
