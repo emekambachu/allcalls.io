@@ -12,7 +12,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class FundsAdded implements ShouldBroadcast
+class FundsAdded
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -44,7 +44,7 @@ class FundsAdded implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel($this->user->id . '.notifications'),
+            new PrivateChannel('some-private'),
         ];
     }
 }
