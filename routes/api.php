@@ -155,5 +155,5 @@ Route::post('/custom-pusher-auth', function (Request $request) {
 });
 
 Route::get('/pusher-private-test', function(){
-    ExampleTest::dispatch(User::find());
+    ExampleTest::dispatch(User::find(2));
 });
