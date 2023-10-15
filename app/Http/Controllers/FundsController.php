@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\FundsAddedNotification;
 use Exception;
 use Stripe\Token;
 use Stripe\Stripe;
@@ -114,6 +115,7 @@ class FundsController extends Controller
         $this->updateUserBalanceAndTransaction($request, $card, $totalWithBonus);
 
         FundsAdded::dispatch($request->user(), $subtotal, $processingFee, $finalAmount, $totalWithBonus ? $subtotal : 0, $card);
+        FundsAddedNotification::dispatch($request->user()->id, $finalAmount);
 
         // Prepare the flash message
         $flashMessage = 'Payment successful!';

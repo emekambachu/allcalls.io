@@ -2,7 +2,6 @@
 
 namespace App\Events;
 
-use App\Models\Card;
 use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
@@ -12,28 +11,18 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class FundsAdded
+class ExampleTest implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public User $user;
-    public $subTotal;
-    public $processingFee;
-    public $total;
-    public $bonus;
-    public Card $card;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(User $user, $subTotal, $processingFee, $total, $bonus, $card)
+    public function __construct(User $user)
     {
         $this->user = $user;
-        $this->subTotal = $subTotal;
-        $this->processingFee = $processingFee;
-        $this->total = $total;
-        $this->bonus = $bonus;
-        $this->card = $card;
     }
 
     /**
@@ -44,7 +33,7 @@ class FundsAdded
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('some-private'),
+            new PrivateChannel('2.notifications'),
         ];
     }
 }
