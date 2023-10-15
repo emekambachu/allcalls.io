@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\ExampleTest;
 use Pusher\Pusher;
 use App\Models\User;
 use App\Models\ActiveUser;
@@ -151,4 +152,8 @@ Route::post('/custom-pusher-auth', function (Request $request) {
     $socketId = $request->request->get('socket_id');
 
     return $pusher->socket_auth($channelName, $socketId);
+});
+
+Route::get('/pusher-private-test', function(){
+    ExampleTest::dispatch(User::find());
 });
