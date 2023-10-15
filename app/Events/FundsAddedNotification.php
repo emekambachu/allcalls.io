@@ -15,15 +15,15 @@ class FundsAddedNotification implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public User $user;
+    public $userId;
     public $amount;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(User $user, $amount)
+    public function __construct($userId, $amount)
     {
-        $this->user = $user;
+        $this->userId = $userId;
         $this->amount = $amount;
     }
 
@@ -35,7 +35,7 @@ class FundsAddedNotification implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel($this->user->id . '.notifications'),
+            new PrivateChannel($this->userId . '.notifications'),
         ];
     }
 }
