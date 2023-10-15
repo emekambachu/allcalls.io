@@ -95,7 +95,11 @@ class CallStatusController extends Controller
 
                         // End the parent call if it's still going
                         if ($parentCallSid) {
+                            $call = $client->calls($parentCallSid)->fetch();
                             $client->calls($parentCallSid)->update(['status' => 'completed']);
+
+                            Log::debug('Call Info:');
+                            Log::debug($call);
                         }
 
                         // End the child call if it's still going
