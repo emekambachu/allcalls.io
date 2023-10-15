@@ -1,9 +1,9 @@
 <?php
 
-use App\Events\ExampleTest;
 use Pusher\Pusher;
 use App\Models\User;
 use App\Models\ActiveUser;
+use App\Events\ExampleTest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
@@ -22,6 +22,7 @@ use App\Http\Controllers\AgentStatusAPIController;
 use App\Http\Controllers\LiveCallClientController;
 use App\Http\Controllers\CallTypesSelectedAPIController;
 use App\Http\Controllers\TwilioIOSAccessTokenController;
+use App\Http\Controllers\CustomBroadcastingAuthController;
 use App\Http\Controllers\ActiveUsersPusherWebhookController;
 use App\Http\Controllers\TwilioAndroidAccessTokenController;
 use App\Http\Controllers\TwilioIOSAccessTokenGuestController;
@@ -157,3 +158,6 @@ Route::post('/custom-pusher-auth', function (Request $request) {
 Route::get('/pusher-private-test', function(){
     ExampleTest::dispatch(User::find(2));
 });
+
+Route::get('/custom-broadcasting-auth', [CustomBroadcastingAuthController::class, 'store']);
+Route::post('/custom-broadcasting-auth', [CustomBroadcastingAuthController::class, 'store']);
