@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\PersonalAccessToken;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Broadcasting\BroadcastManager;
 
 class CustomBroadcastingAuthController extends Controller
@@ -13,6 +15,9 @@ class CustomBroadcastingAuthController extends Controller
         // Get the Sanctum token from the query string
         $token = $request->query('sanctum_token');
 
+        Log::debug('Gamma: Token:');
+        Log::debug($token);
+
         // Use the token to authenticate the user
         $user = $this->getUserBySanctumToken($token);
 
@@ -21,11 +26,14 @@ class CustomBroadcastingAuthController extends Controller
             return $user;
         });
 
-        // Now, we can proceed with the broadcasting authentication using Laravel's default functionality
-        $broadcaster = app(BroadcastManager::class)->connection();
-        $response = $broadcaster->auth($request);
+        Log::debug('Gamma: user is set:');
+        Log::debug($request->user());
 
-        return $response;
+        if ($request->hasSession()) {
+            $request->session()->reflash();
+        }
+
+        return Broadcast::auth($request);
     }
 
     private function getUserBySanctumToken($token)
