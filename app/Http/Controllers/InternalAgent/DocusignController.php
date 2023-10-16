@@ -267,7 +267,7 @@ class DocusignController extends Controller
             'anchor_string' => 'AGENCY AUTHORIZATION', // Customize this anchor string
             'anchor_units' => 'pixels',
             'anchor_y_offset' => '0', // Customize the Y offset
-            'anchor_x_offset' => '250', // Customize the X offset
+            'anchor_x_offset' => '150', // Customize the X offset
             'optional' => false,
         ]);
 
