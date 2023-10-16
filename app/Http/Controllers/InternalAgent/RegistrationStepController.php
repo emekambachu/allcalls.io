@@ -40,6 +40,8 @@ class RegistrationStepController extends Controller
 {
     private $accountId;
     private $baseUrl;
+
+
     public function __construct()
     {
         $this->accountId = "7716918e-104d-4915-b7ca-eff79222ac45";
@@ -1643,12 +1645,20 @@ class RegistrationStepController extends Controller
                         'url' => $path,
                     ]);
                 }
+
+                //Generate DocuSign Code
+                $apiClient = new ApiClient();
+                $apiClient->getOAuth()->setOAuthBasePath("account-d.docusign.com");
+                $docuSignAuthCode = $this->getToken($apiClient);
+                $request->session()->put('docusign_auth_code', $docuSignAuthCode);
+                //End Generate DocuSign Code
+
                 $user->contract_step = 10;
                 $user->save();
                 DB::commit();
                 return response()->json([
                     'success' => true,
-                    'route' => route('internal.agent.connect.docusign'),
+                    'docuSignAuthCode' => session()->get('docusign_auth_code'),
                 ], 200);
             } catch (\Exception $e) {
                 DB::rollBack();
@@ -1737,7 +1747,7 @@ class RegistrationStepController extends Controller
                 return response()->json([
                     'success' => true,
                     'message' => 'Document ready to sign.',
-                    'route' => route('internal.agent.connect.docusign'),
+                    'route' => route('internal.agent.docusign.sign'),
                 ], 200);
             } catch (\Exception $e) {
                 DB::rollBack();
