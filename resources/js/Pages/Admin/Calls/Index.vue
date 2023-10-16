@@ -108,6 +108,7 @@ let openClientModal = (call) => {
                       </svg>Open Recording
                     </a>
                     <span v-else>_</span>
+
                 </td>
                 <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
                     <button v-if="call.get_client" @click="openClientModal(call)"
