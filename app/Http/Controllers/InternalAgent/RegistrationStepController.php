@@ -17,6 +17,7 @@ use App\Models\State;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use DocuSign\eSign\Api\EnvelopesApi;
+use DocuSign\eSign\Client\ApiClient;
 use DocuSign\eSign\Configuration;
 use DocuSign\eSign\Model\Document;
 use DocuSign\eSign\Model\EnvelopeDefinition;
@@ -1664,54 +1665,64 @@ class RegistrationStepController extends Controller
 
     public function pdf()
     {
-        $jwt_token="eyJ0eXAiOiJNVCIsImFsZyI6IlJTMjU2Iiwia2lkIjoiNjgxODVmZjEtNGU1MS00Y2U5LWFmMWMtNjg5ODEyMjAzMzE3In0.AQoAAAABAAUABwAA4BOtRcvbSAgAAEjYDk7L20gCAJgPjHagsedJmPsqwsgbcvQVAAEAAAAYAAIAAAAFAAAAHQAAAA0AJAAAADc1ZDk3NzE4LThhOTgtNGQyNy04ZGVmLTE3YzJmY2VlZDc5ZiIAJAAAADc1ZDk3NzE4LThhOTgtNGQyNy04ZGVmLTE3YzJmY2VlZDc5ZhIAAQAAAAYAAABqd3RfYnIjACQAAAA3NWQ5NzcxOC04YTk4LTRkMjctOGRlZi0xN2MyZmNlZWQ3OWY.y_2FEXfQmNo0MCPiHJdHOUNZX60ZjUK0QI4PU58R1rm4pdno3rzrJRVjytueGWG88xG4kWn8ksERNcK9rCtr-hyY0_owuUr3LG5GiX775ghPFQg71ufkNasg0HgrSKxHUokH3o--OpoN5DJX4FlBBYbPJCAfhkc18dVrqvpLFWt7qa0qiLS2ajEXBeAuXC69MA7p_fTqQMRp91EdAde3ZGCAwBDnLGKY-c--fuILW1bvRJAOg7uO8cfuG08XlcROL5Wl-V4-yz_ZgRDFdGjP_SCtSPfL51meFV2drfYVKrhpYaKQG-K35B4m9BPggfnZTIS0QQIL0_mS7UmpZWhPpg";
-        $config = new Configuration();
-        $config->setHost('<https://demo.docusign.net/restapi>');
-        $config->addDefaultHeader("Authorization", "Bearer " . $jwt_token);
-
-        $envelopeApi = new EnvelopesApi();
+//        $jwt_token="eyJ0eXAiOiJNVCIsImFsZyI6IlJTMjU2Iiwia2lkIjoiNjgxODVmZjEtNGU1MS00Y2U5LWFmMWMtNjg5ODEyMjAzMzE3In0.AQoAAAABAAUABwAA5OLp5MvbSAgAAEynS-3L20gCAJgPjHagsedJmPsqwsgbcvQVAAEAAAAYAAIAAAAFAAAAHQAAAA0AJAAAADc1ZDk3NzE4LThhOTgtNGQyNy04ZGVmLTE3YzJmY2VlZDc5ZiIAJAAAADc1ZDk3NzE4LThhOTgtNGQyNy04ZGVmLTE3YzJmY2VlZDc5ZhIAAQAAAAYAAABqd3RfYnIjACQAAAA3NWQ5NzcxOC04YTk4LTRkMjctOGRlZi0xN2MyZmNlZWQ3OWY.xY21b5yOhNtUbh8eachI2_B6gMqibO-H89FlLdjkBdlF61149VcH-aIw9icDra_uK4rfL-M6DeqBN1XMiqsCuZnCa1yBYIgxZg6mhBER3E-9uVtcL0yYwKWsQyYNZAtz3l5rQJF_lgxLlEvsMIohR6EcGVGC03Oqn1GgvfpX-XbIweTtHBezS-wrjh0Iaep09eA3fCRmEKdGIul7bSuuCRAvKb6PlLEZQ434j2paUlkg4s5kFhI_hukHAKICtCGDxWZQMYshZrn9XAg1SZfsh7ykriybZ_83kXVNTQPZQ8rMS0tqToSqmJvSx1TV_3LWKet1p9zXpr0FqNTLQHP3Nw";
+//        $config = new Configuration();
+//        $config->setHost('<https://demo.docusign.net/restapi>');
+//        $config->addDefaultHeader("Authorization", "Bearer ".$jwt_token);
 
 
-        // Define the document
-        $document = new Document([
-            'document_base64' => base64_encode(file_get_contents('https://www.africau.edu/images/default/sample.pdf')),
-            'name' => 'Sample Document',
-            'file_extension' => 'pdf',
-            'document_id' => '100011'
-        ]);
-        // Define the signer
-        $signer = new Signer([
-            'email' => 'awaisamir23@gmail.com',
-            'name' => 'John Doe',
-            'recipient_id' => '1',
-            'client_user_id' => '12345'  // An arbitrary ID
-        ]);
+        $apiClient = new ApiClient();
+        $apiClient->getOAuth()->setOAuthBasePath("account-d.docusign.com");
+        $accessToken = $this->getToken($apiClient);
 
-        $envelope = new EnvelopeDefinition([
-            'email_subject' => 'Please Sign',
-            'documents' => [$document],
-            'recipients' => ['signers' => [$signer]],
-            'status' => 'sent'
-        ]);
-
-        //        $envelopeSummary = $envelopeApi->createEnvelope('1797216e-2fcc-4b29-95e4-ff04a330b007', $envelope);
-
-        $envelopeSummary = $envelopeApi->createEnvelope('7716918e-104d-4915-b7ca-eff79222ac45', $envelope);
+        dd($accessToken);
 
 
 
-        $viewRequest = new RecipientViewRequest([
-            'return_url' => '<https://staging.allcalls.io/return-url>',
-            'authentication_method' => 'none',
-            'email' => 'abdullah.laraveldev@gmail.com',
-            'user_name' => 'John Doe',
-            'client_user_id' => '12345'
-        ]);
 
+//        $envelopeApi = new EnvelopesApi();
+//
+//
+//        // Define the document
+//        $document = new Document([
+//            'document_base64' => base64_encode(file_get_contents('https://www.africau.edu/images/default/sample.pdf')),
+//            'name' => 'Sample Document',
+//            'file_extension' => 'pdf',
+//            'document_id' => '100011'
+//        ]);
+//        // Define the signer
+//        $signer = new Signer([
+//            'email' => 'awaisamir23@gmail.com',
+//            'name' => 'John Doe',
+//            'recipient_id' => '1',
+//            'client_user_id' => '12345'  // An arbitrary ID
+//        ]);
+//
+//        $envelope = new EnvelopeDefinition([
+//            'email_subject' => 'Please Sign',
+//            'documents' => [$document],
+//            'recipients' => ['signers' => [$signer]],
+//            'status' => 'sent'
+//        ]);
+//
+//        //        $envelopeSummary = $envelopeApi->createEnvelope('1797216e-2fcc-4b29-95e4-ff04a330b007', $envelope);
+//
+//        $envelopeSummary = $envelopeApi->createEnvelope('7716918e-104d-4915-b7ca-eff79222ac45', $envelope);
+//
+//
+//
+//        $viewRequest = new RecipientViewRequest([
+//            'return_url' => '<https://staging.allcalls.io/return-url>',
+//            'authentication_method' => 'none',
+//            'email' => 'abdullah.laraveldev@gmail.com',
+//            'user_name' => 'John Doe',
+//            'client_user_id' => '12345'
+//        ]);
+//
+//
+//        $signingUrl = $envelopeApi->createRecipientView("7716918e-104d-4915-b7ca-eff79222ac45", $envelopeSummary->getEnvelopeId(), $viewRequest);
 
-        $signingUrl = $envelopeApi->createRecipientView("7716918e-104d-4915-b7ca-eff79222ac45", $envelopeSummary->getEnvelopeId(), $viewRequest);
-
-        return response()->json(['url' => $signingUrl->getUrl()]);
+//        return response()->json(['url' => $signingUrl->getUrl()]);
     }
 
     public function pdfExport()
@@ -1725,5 +1736,22 @@ class RegistrationStepController extends Controller
         $pdf = PDF::loadView('pdf.internal-agent-contract.agent-contract', $returnArr);
 
         return $pdf->stream('signature-authorization.pdf');
+    }
+
+    private function getToken(ApiClient $apiClient) : string{
+        try {
+            $privateKey = file_get_contents(asset('private.key'),true);
+            $response = $apiClient->requestJWTUserToken(
+                $ikey = "75d97718-8a98-4d27-8def-17c2fceed79f",
+                $userId = "768c0f98-b1a0-49e7-98fb-2ac2c81b72f4",
+                $key = $privateKey,
+                $scope = "signature impersonation"
+            );
+            $token = $response[0];
+            $accessToken = $token->getAccessToken();
+        } catch (\Exception $th) {
+            throw $th;
+        }
+        return $accessToken;
     }
 }

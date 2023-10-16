@@ -182,13 +182,46 @@ class DocusignController extends Controller
             'document_id' => $documentId, # a label used to reference the doc
         ]);
         session()->put('document_id', $documentId);
-        
+
         # Create the signer recipient model
         $signer = new \DocuSign\eSign\Model\Signer([ # The signer
             'email' => auth()->user()->email, 'name' => auth()->user()->name,
             'recipient_id' => "1", 'routing_order' => "1",
             # Setting the client_user_id marks the signer as embedded
             'client_user_id' => $args['signer_client_id'],
+            "tabs" => [
+                "accompanying_signature" => [
+                    [
+                        "xPosition" => "100",
+                        "yPosition" => "100",
+                        "documentId" => "1",
+                        "pageNumber" => "1",
+                        "required" => "true" // Set as required
+                    ],
+                    // Add more signHereTabs as needed
+                ],
+                "signature_authorization" => [
+                    [
+                        "xPosition" => "100",
+                        "yPosition" => "100",
+                        "documentId" => "1",
+                        "pageNumber" => "1",
+                        "required" => "true" // Set as required
+                    ],
+                    // Add more signHereTabs as needed
+                ],
+                "agency_authorization" => [
+                    [
+                        "xPosition" => "100",
+                        "yPosition" => "100",
+                        "documentId" => "1",
+                        "pageNumber" => "1",
+                        "required" => "true" // Set as required
+                    ],
+                    // Add more signHereTabs as needed
+                ]
+
+            ]
         ]);
         # Create a sign_here tab (field on the document)
         $sign_here = new \DocuSign\eSign\Model\SignHere([ # DocuSign SignHere field/tab
@@ -242,4 +275,5 @@ class DocusignController extends Controller
         ];
         return $args;
     }
+
 }
