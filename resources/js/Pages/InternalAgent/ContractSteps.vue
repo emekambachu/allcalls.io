@@ -39,8 +39,8 @@ if(props.docuSignAuthCode){
     docuSignAuthCodeToken.value = props.docuSignAuthCode
 }
 console.log('docuSignAuthCode docusign_auth_code', props.docuSignAuthCode);
-let StepsModal = ref(true)
-let contractModal = ref(false)
+let StepsModal = ref(false)
+let contractModal = ref(true)
 const isLoading = ref(false);
 let form = ref({
     aml_course: false,
