@@ -34,7 +34,7 @@ let props = defineProps({
         default: null
     }
 });
-// console.log('docuSignAuthCode docusign_auth_code', props.docuSignAuthCode);
+console.log('docuSignAuthCode docusign_auth_code', props.docuSignAuthCode);
 let StepsModal = ref(true)
 let contractModal = ref(false)
 const isLoading = ref(false);
@@ -190,18 +190,19 @@ let errorHandle = (data, response) => {
         } else if (data === 8) {
             step.value = 5
             contractStep.value = 0
-        }we
+        }
         // contractStep.value = 0
     } else if (data === 9) {
-        if (!props.docuSignAuthCode) {
-            axios.get(response.route)
-            .then((res) => {
-                const newURL = res.data.route;
-                window.location.href = newURL;
-            })
-        }else{
-            router.visit('contract-steps')
-        }
+        router.visit('contract-steps')
+        // if (!props.docuSignAuthCode) {
+        //     axios.get(response.route)
+        //     .then((res) => {
+        //         const newURL = res.data.route;
+        //         window.location.href = newURL;
+        //     })
+        // }else{
+        //     router.visit('contract-steps')
+        // }
 
     }
 }
@@ -307,6 +308,7 @@ let submit = (step) => {
             } else {
                 errorHandle(step, response.data)
             }
+            console.log('response', response);
             isLoading.value = false;
         })
         .catch((error) => {
