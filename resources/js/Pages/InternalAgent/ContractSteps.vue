@@ -18,7 +18,7 @@ import SingnaturePad from '@/Pages/InternalAgent/SingnaturePad.vue'
 
 import { toaster } from "@/helper.js";
 import { triggerRef } from "vue";
-import { faTurkishLira } from "@fortawesome/free-solid-svg-icons";
+import { faL, faTurkishLira } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 
 
@@ -39,8 +39,8 @@ if(props.docuSignAuthCode){
     docuSignAuthCodeToken.value = props.docuSignAuthCode
 }
 console.log('docuSignAuthCode docusign_auth_code', props.docuSignAuthCode);
-let StepsModal = ref(false)
-let contractModal = ref(true)
+let StepsModal = ref(true)
+let contractModal = ref(false)
 const isLoading = ref(false);
 let form = ref({
     aml_course: false,
