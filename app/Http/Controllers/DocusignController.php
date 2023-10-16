@@ -123,14 +123,26 @@ class DocusignController extends Controller
 
             $envelope_args = $args["envelope_args"];
 
+//            ====================
+
+            $apiClient = new ApiClient();
+            $apiClient->getOAuth()->setOAuthBasePath("account-d.docusign.com");
+            $accessToken = $this->getToken($apiClient);
+
+
+            $userInfo = $apiClient->getUserInfo($accessToken);
+            $accountInfo = $userInfo[0]->getAccounts();
+            $apiClient->getConfig()->setHost($accountInfo[0]->getBaseUri() . '/restapi');
+
+//            ====================
             # Create the envelope request object
             $envelope_definition = $this->make_envelope($args["envelope_args"]);
-            $envelope_api = $this->getEnvelopeApi();
+//            $envelope_api = $this->getEnvelopeApi();
             # Call Envelopes::create API method
             # Exceptions will be caught by the calling function
 
-            $api_client = new \DocuSign\eSign\client\ApiClient($this->config);
-            $envelope_api = new \DocuSign\eSign\Api\EnvelopesApi($api_client);
+//            $api_client = new \DocuSign\eSign\client\ApiClient($this->config);
+            $envelope_api = new \DocuSign\eSign\Api\EnvelopesApi($apiClient);
             $results = $envelope_api->createEnvelope($args['account_id'], $envelope_definition);
             $envelope_id = $results->getEnvelopeId();
             session()->put('envelope_id', $envelope_id);
@@ -274,6 +286,23 @@ class DocusignController extends Controller
             'envelope_args' => $envelope_args
         ];
         return $args;
+    }
+
+    private function getToken(ApiClient $apiClient) : string{
+        try {
+            $privateKey = file_get_contents(public_path('private.key'),true);
+            $response = $apiClient->requestJWTUserToken(
+                $ikey = "75d97718-8a98-4d27-8def-17c2fceed79f",
+                $userId = "768c0f98-b1a0-49e7-98fb-2ac2c81b72f4",
+                $key = $privateKey,
+                $scope = "signature impersonation"
+            );
+            $token = $response[0];
+            $accessToken = $token->getAccessToken();
+        } catch (\Exception $th) {
+            throw $th;
+        }
+        return $accessToken;
     }
 
 }
