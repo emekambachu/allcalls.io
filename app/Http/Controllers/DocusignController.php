@@ -186,8 +186,8 @@ class DocusignController extends Controller
 
     private function make_envelope($args)
     {
-        $filename = auth()->user()->id . '-contract.pdf';
-        $demo_docs_path = asset('internal-agents/contract/' . auth()->user()->id . '-contract.pdf');
+        $filename = auth()->user()->id.'_contract.pdf';
+        $demo_docs_path = asset('internal-agents/contract/'.$filename);
 
         $arrContextOptions = array(
             "ssl" => array(
@@ -223,7 +223,7 @@ class DocusignController extends Controller
 
 
         $signHere1 = new \DocuSign\eSign\Model\SignHere([
-            'anchor_string' => 'ACCOMPANYING_SIGNATURE',
+            'anchor_string' => '[ACCOMPANYING_SIGNATURE]',
             'anchor_units' => 'pixels',
             'anchor_y_offset' => '10',
             'anchor_x_offset' => '20',
@@ -231,7 +231,7 @@ class DocusignController extends Controller
         ]);
 
         $signHere2 = new \DocuSign\eSign\Model\SignHere([
-            'anchor_string' => 'SIGNATURE_AUTHORIZATION', // Customize this anchor string
+            'anchor_string' => '[SIGNATURE_AUTHORIZATION]', // Customize this anchor string
             'anchor_units' => 'pixels',
             'anchor_y_offset' => '50', // Customize the Y offset
             'anchor_x_offset' => '30', // Customize the X offset
@@ -240,7 +240,7 @@ class DocusignController extends Controller
 
 
         $signHere3 = new \DocuSign\eSign\Model\SignHere([
-            'anchor_string' => 'AGENCY_AUTHORIZATION', // Customize this anchor string
+            'anchor_string' => '[AGENCY_AUTHORIZATION]', // Customize this anchor string
             'anchor_units' => 'pixels',
             'anchor_y_offset' => '90', // Customize the Y offset
             'anchor_x_offset' => '40', // Customize the X offset

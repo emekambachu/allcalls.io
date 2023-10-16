@@ -51,7 +51,6 @@ class RegistrationStepController extends Controller
 
     public function contractSteps()
     {
-
         if (isset($_GET['event']) && $_GET['event'] == 'signing_complete') {
             $user = auth()->user();
             if (isset($_GET['position']) && $_GET['position'] == 'contract') {
@@ -66,7 +65,7 @@ class RegistrationStepController extends Controller
                 ])->get($url);
 
                 //deleted PDF without sign for Accompanying Sign
-                $pdfFileName = $user->id . '-contract.pdf';
+                $pdfFileName = $user->id . '_contract.pdf';
                 //deleted PDF without sign for Accompanying Sign
                 if (file_exists(public_path() . '/internal-agents/contract/' . $pdfFileName)) {
                     unlink(public_path() . '/internal-agents/contract/' . $pdfFileName);
@@ -74,11 +73,12 @@ class RegistrationStepController extends Controller
                 //End deleted PDF without sign for Accompanying Sign
 
                 //store PDF signed for Accompanying Sign
-                $pdfPath = public_path('internal-agents/contract/' . $pdfFileName);
+                $contractedPdf = $user->id . '-contract.pdf';
+                $pdfPath = public_path('internal-agents/contract/' . $contractedPdf);
                 file_put_contents($pdfPath, $response->body());
                 //End store signed PDF for Accompanying Sign
 
-
+dd($pdfPath);
                 //Track Signer
                 DocuSignTracker::updateOrCreate(
                     ['user_id' => $user->id, 'sign_type' => 'contract'], // conditions
@@ -1721,19 +1721,13 @@ class RegistrationStepController extends Controller
                     ->with('internalAgentContract.addresses.getState')
                     ->with('internalAgentContract.legalQuestion')->first();
 
-                // ->with('internalAgentContract.amlCourse')
-                // ->with('internalAgentContract.bankingInfo')
-                // ->with('internalAgentContract.errorAndEmission')
-                // ->with('internalAgentContract.residentLicense')
-                // ->with('internalAgentContract.getQuestionSign')
-                // ->with('internalAgentContract.getContractSign')
                 $pdf = PDF::loadView('pdf.internal-agent-contract.agent-contract', $returnArr);
                 $directory = public_path('internal-agents/contract/');
                 if (!file_exists($directory)) {
                     mkdir($directory, 0777, true);
                 }
 
-                $fileName = auth()->user()->id . '-contract.pdf';
+                $fileName = auth()->user()->id.'_contract.pdf';
 
                 //deleted PDF without sign for Accompanying Sign
                 if (file_exists(public_path() . '/internal-agents/contract/' . $fileName)) {
