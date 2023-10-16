@@ -187,16 +187,7 @@
                 <div style="width: 200px;" class="border-b border-black "></div>
             </div>
         </div> -->
-        <div v-if="page.auth.role === 'admin'">
-            <div class=" flex bg-white rounded-lg justify-end  gap-4 mt-4 mb-4">
-                <div style="padding: 10px; width: 30%; background: #ebe8e8;">
-                    <img width="250" height="100" class="mb-5"
-                        :src="userData.internal_agent_contract?.get_question_sign?.sign_url" alt="signature" />
-                    <div> <strong class="mx-2">Date: </strong> {{
-                        dateFormat(userData.internal_agent_contract?.get_question_sign?.created_at) }}</div>
-                </div>
-            </div>
-        </div>
+     
 
         <!-- <h1 style="background-color: #134576;" class="mb-4 mt-4	text-center rounded-md py-2 text-white">
             Anti-Money Loundering
