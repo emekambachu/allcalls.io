@@ -1788,13 +1788,11 @@ class RegistrationStepController extends Controller
 
             $viewRequest = new RecipientViewRequest([
                 'return_url' => '<https://staging.allcalls.io/return-url>',
-                'authentication_method' => 'none',
+                'authentication_method' => 'jwt',
                 'email' => 'ra9249421@gmail.com',
                 'user_name' => 'Faiz rana',
                 'client_user_id' => '12345'
             ]);
-
-
             $signingUrl = $envelopeApi->createRecipientView("7716918e-104d-4915-b7ca-eff79222ac45", $envelopeSummary->getEnvelopeId(), $viewRequest);
 
             dd($signingUrl);
