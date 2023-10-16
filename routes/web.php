@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CallUserResponseAPIController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
@@ -125,6 +126,8 @@ Route::get('/device/incoming', function () {
 Route::get('/clients', [ClientsController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.index');
 Route::patch('/clients/{client}', [ClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.update');
 Route::patch('/web-api/clients/{client}', [WebAPIClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.web-api.update');
+
+Route::patch('/web-api/call/{uniqueCallId}/user-response', [CallUserResponseAPIController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check']);
 
 Route::get('/support', [SupportController::class, 'index'])->name('support.index');
 
