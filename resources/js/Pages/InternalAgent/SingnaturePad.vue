@@ -64,7 +64,7 @@
                 <button @click="undo" class=" button-custom mt-2 px-2 py-2 rounded-md">
                     Undo
                 </button>
-                <a v-if="docuSignAuthCode" :href="route('internal.agent.docusign.sign', 'signature_authorization')">Sign
+                <a v-if="docuSignAuthCodeToken" :href="route('internal.agent.docusign.sign', 'signature_authorization')">Sign
                     with DocuSign</a>
                 <div v-if="firstStepErrors.signature_authorization" class="text-red-500 mt-4"
                     v-text="firstStepErrors.signature_authorization[0]">
@@ -126,9 +126,10 @@
             @click="save" class="button-custom  px-3 py-2 rounded-md">
             <global-spinner :spinner="isLoading" /> Prepare Document
         </button>
-        <a @click="isLoading = true" v-if="docuSignAuthCode && signatureAuthorizationSaved"
+        
+        <a @click="isLoading = true" v-if="docuSignAuthCodeToken && signatureAuthorizationSaved"
             :href="route('internal.agent.docusign.sign', 'contract')" type="button"
-            :class="{ 'opacity-25': !docuSignAuthCode }" :disabled="!docuSignAuthCode"
+            :class="{ 'opacity-25': !docuSignAuthCodeToken }" :disabled="!docuSignAuthCodeToken"
             class="button-custom  px-3 py-2 rounded-md">
             <global-spinner :spinner="isLoading" /> Sign Document
         </a>
@@ -154,7 +155,7 @@ export default {
         userData: Object,
         page: Object,
         firstStepErrors: Object,
-        docuSignAuthCode: String,
+        docuSignAuthCodeToken: String,
         signatureAuthorizationMessage: String,
         signatureAuthorizationSaved: Boolean,
     },

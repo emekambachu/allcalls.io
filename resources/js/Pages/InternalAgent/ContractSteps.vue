@@ -34,6 +34,10 @@ let props = defineProps({
         default: null
     }
 });
+let docuSignAuthCodeToken = ref(null)
+if(props.docuSignAuthCode){
+    docuSignAuthCodeToken.value = props.docuSignAuthCode
+}
 console.log('docuSignAuthCode docusign_auth_code', props.docuSignAuthCode);
 let StepsModal = ref(true)
 let contractModal = ref(false)
@@ -299,17 +303,21 @@ let submit = (step) => {
         })
         .then((response) => {
             if (step === 10) {
-                console.log('date save', );
+                // console.log('date save', );
                 signatureAuthorizationSaved.value = true
                 signatureAuthorizationMessage.value = response.data.message
                 setTimeout(() => {
                     signatureAuthorizationMessage.value = null
                 }, 2000);
+                docuSignAuthCodeToken.value = response.data.docuSignAuthCode
+                isLoading.value = false;
             } else {
                 errorHandle(step, response.data)
+                isLoading.value = false;
+                
             }
             console.log('response', response);
-            isLoading.value = false;
+            
         })
         .catch((error) => {
             isLoading.value = false;
@@ -547,7 +555,7 @@ input[type=number] {
 
                         <div class="px-12 py-2">
                             <ContractDetailPage :userData="userData" />
-                            <SingnaturePad :page="$page.props" :userData="userData" :docuSignAuthCode="docuSignAuthCode"
+                            <SingnaturePad :page="$page.props" :userData="userData" :docuSignAuthCodeToken="docuSignAuthCodeToken"
                                 @editContract="editContract" :signatureAuthorizationMessage="signatureAuthorizationMessage"
                                 :signatureAuthorizationSaved="signatureAuthorizationSaved"
                                 :firstStepErrors="firstStepErrors" :isLoading="isLoading" @signature="signaturePreview" />

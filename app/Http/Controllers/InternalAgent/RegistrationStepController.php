@@ -1647,10 +1647,10 @@ class RegistrationStepController extends Controller
                 }
 
                 //Generate DocuSign Code
-                $apiClient = new ApiClient();
-                $apiClient->getOAuth()->setOAuthBasePath("account-d.docusign.com");
-                $docuSignAuthCode = $this->getToken($apiClient);
-                $request->session()->put('docusign_auth_code', $docuSignAuthCode);
+                // $apiClient = new ApiClient();
+                // $apiClient->getOAuth()->setOAuthBasePath("account-d.docusign.com");
+                // $docuSignAuthCode = $this->getToken($apiClient);
+                // $request->session()->put('docusign_auth_code', $docuSignAuthCode);
                 //End Generate DocuSign Code
 
                 $user->contract_step = 10;
@@ -1658,7 +1658,7 @@ class RegistrationStepController extends Controller
                 DB::commit();
                 return response()->json([
                     'success' => true,
-                    'docuSignAuthCode' => session()->get('docusign_auth_code'),
+                    // 'docuSignAuthCode' => session()->get('docusign_auth_code'),
                 ], 200);
             } catch (\Exception $e) {
                 DB::rollBack();
@@ -1740,7 +1740,10 @@ class RegistrationStepController extends Controller
                     unlink(public_path() . '/internal-agents/contract/' . $fileName);
                 }
                 //End deleted PDF without sign for Accompanying Sign
-
+                $apiClient = new ApiClient();
+                $apiClient->getOAuth()->setOAuthBasePath("account-d.docusign.com");
+                $docuSignAuthCode = $this->getToken($apiClient);
+                $request->session()->put('docusign_auth_code', $docuSignAuthCode);
 
                 $pdf->save($directory . $fileName);
                 //End Contract PDF
@@ -1748,6 +1751,7 @@ class RegistrationStepController extends Controller
                     'success' => true,
                     'message' => 'Document ready to sign.',
                     'route' => route('internal.agent.docusign.sign'),
+                    'docuSignAuthCode' => session()->get('docusign_auth_code'),
                 ], 200);
             } catch (\Exception $e) {
                 DB::rollBack();
