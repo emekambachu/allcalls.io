@@ -248,7 +248,7 @@ class DocusignController extends Controller
             'anchor_string' => 'ACCOMPANYING_SIGNATURE',
             'anchor_units' => 'pixels',
             'anchor_y_offset' => '0',
-            'anchor_x_offset' => '50',
+            'anchor_x_offset' => '350',
             'optional' => false,
             'tab_label' => 'Key Text',
             'value' => 'Your Key Text Here',
@@ -258,7 +258,7 @@ class DocusignController extends Controller
             'anchor_string' => 'SIGNATURE_AUTHORIZATION', // Customize this anchor string
             'anchor_units' => 'pixels',
             'anchor_y_offset' => '0', // Customize the Y offset
-            'anchor_x_offset' => '50', // Customize the X offset
+            'anchor_x_offset' => '300', // Customize the X offset
             'optional' => false,
         ]);
 
@@ -267,7 +267,7 @@ class DocusignController extends Controller
             'anchor_string' => 'AGENCY_AUTHORIZATION', // Customize this anchor string
             'anchor_units' => 'pixels',
             'anchor_y_offset' => '0', // Customize the Y offset
-            'anchor_x_offset' => '50', // Customize the X offset
+            'anchor_x_offset' => '250', // Customize the X offset
             'optional' => false,
         ]);
 
