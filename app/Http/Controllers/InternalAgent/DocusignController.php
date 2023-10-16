@@ -206,40 +206,6 @@ class DocusignController extends Controller
             'routing_order' => "1",
             # Setting the client_user_id marks the signer as embedded
             'client_user_id' => $args['signer_client_id'],
-//            "tabs" => [
-//                "signHereTabs" => [
-//                    [
-//                        "anchorString" => "[ACCOMPANYING_SIGNATURE]",
-//                        "anchorXOffset" => "0",
-//                        "anchorYOffset" => "0",
-//                        "anchorUnits" => "pixels",
-//                        "documentId" => $documentId,
-//                        "pageNumber" => "9",
-//                        "required" => "true",
-//                        "optional" => "true"
-//                    ],
-//
-//                    [
-//                        "anchorString" => "[SIGNATURE_AUTHORIZATION]",
-//                        "anchorXOffset" => "5",
-//                        "anchorYOffset" => "5",
-//                        "anchorUnits" => "pixels",
-//                        "documentId" => $documentId,
-//                        "pageNumber" => "10",
-//                        "required" => "true",
-//                    ],
-//
-//                    [
-//                        "anchorString" => "[AGENCY_AUTHORIZATION]",
-//                        "anchorXOffset" => "5",
-//                        "anchorYOffset" => "5",
-//                        "anchorUnits" => "pixels",
-//                        "documentId" => $documentId,
-//                        "pageNumber" => "11",
-//                        "required" => "true"
-//                    ],
-//                ]
-//            ]
         ]);
         # Create a sign_here tab (field on the document)
 
@@ -250,8 +216,6 @@ class DocusignController extends Controller
             'anchor_y_offset' => '-10',
             'anchor_x_offset' => '270',
             'optional' => false,
-            'tab_label' => 'Key Text',
-            'value' => 'Your Key Text Here',
         ]);
 
         $signHere2 = new \DocuSign\eSign\Model\SignHere([
@@ -267,7 +231,7 @@ class DocusignController extends Controller
             'anchor_string' => 'AGENCY_AUTHORIZATION', // Customize this anchor string
             'anchor_units' => 'pixels',
             'anchor_y_offset' => '-10', // Customize the Y offset
-            'anchor_x_offset' => '250', // Customize the X offset
+            'anchor_x_offset' => '180', // Customize the X offset
             'optional' => false,
         ]);
 
