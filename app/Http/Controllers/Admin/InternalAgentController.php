@@ -307,7 +307,8 @@ class InternalAgentController extends Controller
 
             $contractPDF = InternalAgentContractSigned::where('reg_info_id', $user->internalAgentContract->id)->first();
 
-            return response()->stream($contractPDF->sign_url);
+            dd($contractPDF->sign_url);
+            return response()->download($contractPDF->sign_url);
 
 
             $returnArr['contractData'] = User::where('id', $id)
