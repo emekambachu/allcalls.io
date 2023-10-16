@@ -92,9 +92,9 @@ class CallStatusController extends Controller
 
                 if ($childCallSid) {
                     Log::debug('childCallSid exists.');
-                    $call = $client->calls($childCallSid)->fetch();
+                    $twilioCall = $client->calls($childCallSid)->fetch();
                     Log::debug('Call Info:');
-                    Log::debug($call->toArray());
+                    Log::debug($twilioCall->toArray());
                 }
 
 
