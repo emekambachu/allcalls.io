@@ -213,13 +213,32 @@ let openClientModal = (call) => {
                   <td
                     class="text-gray-700 px-4 py-3 flex items-center justify-end"
                   >
-                    <button
+                    <!-- <button
                       v-if="call.get_client"
                       @click="openClientModal(call)"
                       class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
                       type="button"
                     >
                       View Client
+                    </button> -->
+                    <button
+                      class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
+                      type="button"
+                    >
+                      <svg
+                        class="w-6 h-6 text-gray-800"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 17 4"
+                      >
+                        <path
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-width="2"
+                          d="M2.49 2h.01m6 0h.01m5.99 0h.01"
+                        />
+                      </svg>
                     </button>
                     <button v-else class="text-center" type="button">-</button>
                   </td>
