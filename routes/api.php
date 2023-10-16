@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CallUserResponseAPIController;
 use Pusher\Pusher;
 use App\Models\User;
 use App\Models\ActiveUser;
@@ -134,6 +135,8 @@ Route::get('/twilio-ios-access-token-guest', [TwilioIOSAccessTokenGuestControlle
 Route::middleware('auth:sanctum')->get('/twilio-ios-access-token', [TwilioIOSAccessTokenController::class, 'show']);
 Route::middleware('auth:sanctum')->get('/twilio-android-access-token', [TwilioAndroidAccessTokenController::class, 'show']);
 Route::middleware('auth:sanctum')->get('/twilio-android-access-token-guest', [TwilioAndroidAccessTokenGuestController::class, 'show']);
+
+Route::middleware('auth:sanctum')->patch('/call/{uniqueCallId}/user-response', [CallUserResponseAPIController::class, 'update']);
 
 Route::match(['get', 'post'], '/agent-status', [AgentStatusAPIController::class, 'show']);
 
