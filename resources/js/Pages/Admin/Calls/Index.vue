@@ -157,7 +157,6 @@ let openClientModal = (call) => {
                       class="bg-purple-100 text-purple-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded"
                       >Regular User</span
                     >
-                    {{ call.role }}
                   </td>
 
                   <td class="text-gray-600 px-4 py-3">
