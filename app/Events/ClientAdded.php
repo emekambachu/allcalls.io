@@ -2,8 +2,8 @@
 
 namespace App\Events;
 
-use App\Models\Card;
 use App\Models\User;
+use App\Models\Client;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -12,28 +12,20 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class FundsAdded
+class ClientAdded
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public User $user;
-    public $subTotal;
-    public $processingFee;
-    public $total;
-    public $bonus;
-    public Card $card;
+    public Client $client;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(User $user, $subTotal, $processingFee, $total, $bonus, $card)
+    public function __construct(User $user, Client $client)
     {
         $this->user = $user;
-        $this->subTotal = $subTotal;
-        $this->processingFee = $processingFee;
-        $this->total = $total;
-        $this->bonus = $bonus;
-        $this->card = $card;
+        $this->client = $client;
     }
 
     /**
@@ -44,7 +36,7 @@ class FundsAdded
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('some-private'),
+            new PrivateChannel($this->user->id . '.notifications'),
         ];
     }
 }

@@ -15,10 +15,13 @@ if (page.props.flash.message) {
 let props = defineProps({
   calls: {
     type: Object,
-  }
-
+  },
 });
-let slidingLoader = ref(false)
+
+console.log("calls:");
+console.log(props.calls);
+
+let slidingLoader = ref(false);
 
 let fetchCalls = (page) => {
   // Create URL object from page
@@ -48,7 +51,9 @@ let openClientModal = (call) => {
   <Head title="Client Information" />
   <AuthenticatedLayout>
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+      <h2
+        class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
+      >
         Calls
       </h2>
     </template>
@@ -61,65 +66,158 @@ let openClientModal = (call) => {
         </div>
       </div>
     </div>
-    <section  class="p-3">
+    <section class="p-3">
       <div class="mx-auto max-w-screen-xl sm:px-12">
         <div class="relative sm:rounded-lg overflow-hidden">
           <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left text-gray-400 table-responsive">
+            <table
+              class="w-full text-sm text-left text-gray-400 table-responsive"
+            >
               <thead class="text-xs text-gray-300 uppercase bg-sky-900">
                 <tr>
-                  <th scope="col" class="px-4 py-3">ID</th>
-                  <th scope="col" class="px-4 py-3" style="min-width:150px">Name</th> 
-                  <th scope="col" class="px-4 py-3">HANG UP BY</th>
-                  <th scope="col" class="px-4 py-3">CALL DURATION</th>
-                  <th scope="col" class="px-4 py-3" style="min-width:175px">CALL TAKEN</th>
-                  <th scope="col" class="px-4 py-3">AMOUNT SPENT</th>
-                  <th scope="col" class="px-4 py-3" style="min-width:130px">CALL TYPE</th>
-                  <th scope="col" class="px-4 py-3" style="min-width:100px">CALLER ID</th>
-                  <th scope="col" class="px-4 py-3" style="min-width:160px">URL</th>
-                  <th scope="col" class="px-4 py-3 text-end" style="min-width:110px">Actions</th>
+                  <th scope="col" class="px-4 py-3 whitespace-no-wrap">ID</th>
+                  <th
+                    scope="col"
+                    class="px-4 py-3 whitespace-no-wrap"
+                    style="min-width: 150px"
+                  >
+                    Name
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-4 py-3 whitespace-no-wrap"
+                    style="min-width: 150px"
+                  >
+                    Role
+                  </th>
+                  <th scope="col" class="px-4 py-3 whitespace-no-wrap">
+                    RING DURATION
+                  </th>
+                  <th scope="col" class="px-4 py-3 whitespace-no-wrap">
+                    CONNECTED DURATION
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-4 py-3 whitespace-no-wrap"
+                    style="min-width: 175px"
+                  >
+                    CALL TAKEN
+                  </th>
+                  <th scope="col" class="px-4 py-3 whitespace-no-wrap">
+                    AMOUNT SPENT
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-4 py-3 whitespace-no-wrap"
+                    style="min-width: 130px"
+                  >
+                    VERTICAL
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-4 py-3 whitespace-no-wrap"
+                    style="min-width: 100px"
+                  >
+                    CALLER ID
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-4 py-3 whitespace-no-wrap"
+                    style="min-width: 160px"
+                  >
+                    URL
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-4 py-3 whitespace-no-wrap text-end"
+                    style="min-width: 110px"
+                  >
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="call in calls.data" :key="call.id" class="border-b border-gray-500">
-                <td class="text-gray-600 px-4 py-3">{{ call.id }}</td>
-                <td class="text-gray-600 px-4 py-3">{{ call.user.first_name }} {{ call.user.last_name }}</td>
-                <td class="text-gray-600 px-4 py-3">{{ call.hung_up_by }}</td>
-                <td class="text-gray-600 px-4 py-3">
-                  {{
-                    String(
-                      Math.floor(call.call_duration_in_seconds / 60)
-                    ).padStart(2, "0") +
-                    ":" +
-                    String(
-                      call.call_duration_in_seconds % 60
-                    ).padStart(2, "0")
-                  }}
-                </td>
-                <th class="text-gray-600 px-4 py-3">{{ call.call_taken }}</th>
-                <td class="text-gray-600 px-4 py-3">${{ call.amount_spent }}</td>
-               <td class="text-gray-600 px-4 py-3">{{ call.call_type.type }}</td>
-                <td class="text-gray-600 px-4 py-3">{{ call.from }}</td>
+                <tr
+                  v-for="call in calls.data"
+                  :key="call.id"
+                  class="border-b border-gray-500"
+                >
+                  <td class="text-gray-600 px-4 py-3">{{ call.id }}</td>
+                  <td class="text-gray-600 px-4 py-3">
+                    {{ call.user.first_name }} {{ call.user.last_name }}
+                  </td>
+                  <td class="text-gray-600 px-4 py-3">
+                    <span
+                      v-if="call.role === 'Internal Agent'"
+                      class="bg-indigo-100 text-indigo-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded"
+                      >Internal Agent</span
+                    >
+                    <span
+                      v-else
+                      class="bg-purple-100 text-purple-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded"
+                      >Regular User</span
+                    >
+                  </td>
 
-                <td class="text-gray-600 px-4 py-3">
-                  <a v-if="call.recording_url" target="_blank" :href="call.recording_url" class="flex"><svg
-                        xmlns="http://www.w3.org/2000/svg" height="1.5em" class="pr-1" viewBox="0 0 512 512">
-                        <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                  <td class="text-gray-600 px-4 py-3">
+                    {{
+                      String(Math.floor(call.ringing_duration / 60)).padStart(
+                        2,
+                        "0"
+                      ) +
+                      ":" +
+                      String(call.ringing_duration % 60).padStart(2, "0")
+                    }}
+                  </td>
+                  <td class="text-gray-600 px-4 py-3">
+                    {{
+                      String(
+                        Math.floor(call.call_duration_in_seconds / 60)
+                      ).padStart(2, "0") +
+                      ":" +
+                      String(call.call_duration_in_seconds % 60).padStart(
+                        2,
+                        "0"
+                      )
+                    }}
+                  </td>
+
+                  <th class="text-gray-600 px-4 py-3">{{ call.call_taken }}</th>
+                  <td class="text-gray-600 px-4 py-3">
+                    ${{ call.amount_spent }}
+                  </td>
+                  <td class="text-gray-600 px-4 py-3">
+                    {{ call.call_type.type }}
+                  </td>
+                  <td class="text-gray-600 px-4 py-3">{{ call.from }}</td>
+
+                  <td class="text-gray-600 px-4 py-3">
+                    <a
+                      v-if="call.recording_url"
+                      target="_blank"
+                      :href="call.recording_url"
+                      class="flex"
+                      ><svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="1.5em"
+                        class="pr-1"
+                        viewBox="0 0 512 512"
+                      >
                         <path
-                          d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm256-96a96 96 0 1 1 0 192 96 96 0 1 1 0-192zm0 224a128 128 0 1 0 0-256 128 128 0 1 0 0 256zm0-96a32 32 0 1 0 0-64 32 32 0 1 0 0 64z" />
-                      </svg>Open Recording
+                          d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm256-96a96 96 0 1 1 0 192 96 96 0 1 1 0-192zm0 224a128 128 0 1 0 0-256 128 128 0 1 0 0 256zm0-96a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"
+                        /></svg
+                      >Open Recording
                     </a>
                     <span v-else>_</span>
-                </td>
-                <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
-                    <button v-if="call.get_client" @click="openClientModal(call)"
-                      class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
-                      type="button">
-                      View Client
-                    </button>
-                    <button v-else class="text-center" type="button">-</button>
                   </td>
-              </tr>
+                  <td
+                    class="text-gray-700 px-4 py-3"
+                  >
+                    <div v-if="call.get_client" @click="openClientModal(call)">
+                      View Client
+                    </div>
+                  </td>
+                </tr>
               </tbody>
             </table>
             <div class="p-4">
@@ -127,7 +225,9 @@ let openClientModal = (call) => {
                 class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
                 aria-label="Table navigation"
               >
-                <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
+                <span
+                  class="text-sm font-normal text-gray-500 dark:text-gray-400"
+                >
                   Showing
                   <span class="font-semibold text-custom-blue">{{
                     calls.current_page
@@ -137,7 +237,9 @@ let openClientModal = (call) => {
                     calls.last_page
                   }}</span>
                 </span>
-                <ul class="inline-flex items-stretch -space-x-px cursor-pointer">
+                <ul
+                  class="inline-flex items-stretch -space-x-px cursor-pointer"
+                >
                   <li>
                     <a
                       v-if="calls.prev_page_url"
@@ -198,9 +300,13 @@ let openClientModal = (call) => {
       </div>
     </section>
 
-    
     <Modal :show="showModal" @close="showModal = false">
-      <ClientDetailsModal :showModal="showModal" :callDetail="callDetail" :states="states" @close="showModal = false"></ClientDetailsModal>
+      <ClientDetailsModal
+        :showModal="showModal"
+        :callDetail="callDetail"
+        :states="states"
+        @close="showModal = false"
+      ></ClientDetailsModal>
     </Modal>
   </AuthenticatedLayout>
 </template>

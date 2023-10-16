@@ -66,6 +66,26 @@ let showIncomingCall = (conn) => {
   showRinging.value = true;
 };
 
+let saveUserResponseTime = () => {
+  axios
+    .patch("/web-api/calls/" + connectedUniqueCallId.value + "/user-response", {
+      user_response_time: new Date(),
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      }
+    })
+    .then((response) => {
+      console.log(response.data);
+      console.log("user response time saved successfully");
+    })
+    .catch((error) => {
+      // Handle any error that occurred during the request
+      console.error("Error saving the user response time:", error);
+    });
+};
+
 let acceptCall = () => {
   console.log("accept call now");
 
@@ -79,6 +99,7 @@ let acceptCall = () => {
     showOngoing.value = true;
 
     callConnectionTime = new Date();
+    saveUserResponseTime();
 
     setInterval(() => {
       callDuration.value = getFormattedTime(callConnectionTime);
@@ -146,6 +167,8 @@ let rejectCall = () => {
   if (call) {
     call.reject();
     showRinging.value = false;
+    saveUserResponseTime();
+    console.log('Should update now');
   } else {
     console.log("call not found while rejecting");
   }

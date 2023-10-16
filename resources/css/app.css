@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -793,4 +795,9 @@ html, body {
 
 .c-toast--success {
     font-family: Figtree, Inter, sans-serif !important;
+}
+
+pre, code {
+    font-family: "Fira Code", "Menlo", monospace;
+    font-size: 14px;
 }

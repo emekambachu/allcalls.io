@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\FundsAddedNotification;
 use Exception;
 use Stripe\Token;
 use Stripe\Stripe;
@@ -99,6 +100,8 @@ class FundsController extends Controller
 
 
         if (!in_array($response, ['SUCCESS', 'Approved'])) {
+            Log::debug('The status is not SUCCESS or Approved payment failed');
+            Log::debug('RESPONSE TEXT: ' . $response);
             return redirect()->back()->with(['message' => 'Payment failed.']);
         }
 
@@ -114,6 +117,8 @@ class FundsController extends Controller
         $this->updateUserBalanceAndTransaction($request, $card, $totalWithBonus);
 
         FundsAdded::dispatch($request->user(), $subtotal, $processingFee, $finalAmount, $totalWithBonus ? $subtotal : 0, $card);
+        FundsAddedNotification::dispatch($request->user()->id, $finalAmount);
+        Log::debug('FundsAddedNotification dispatched');
 
         // Prepare the flash message
         $flashMessage = 'Payment successful!';

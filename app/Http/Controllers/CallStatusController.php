@@ -73,8 +73,14 @@ class CallStatusController extends Controller
                 Log::debug('completed event for user ' . $request->user_id);
                 $callDuration = (int) $request->input('CallDuration');
 
-                Log::debug('Call duration: ' . $callDuration);
 
+                $call = Call::where('unique_call_id', $request->unique_call_id)->first();
+                $call->completed_at = now();
+                $call->save();
+                Log::debug('Call completed_at updated.');
+
+
+                Log::debug('Call duration: ' . $callDuration);
 
 
 
@@ -83,16 +89,24 @@ class CallStatusController extends Controller
                 // Purpose: To terminate the entire call chain if the call duration exceeds 10 seconds.
                 // ========================================
 
+                // Initialize Twilio client
+                $client = new Client(env('TWILIO_SID'), env('TWILIO_AUTH_TOKEN'));
+
+                // Extract ParentCallSid and CallSid from the request
+                $parentCallSid = $request->ParentCallSid;
+                $childCallSid = $request->CallSid;
+
+                if ($childCallSid) {
+                    Log::debug('childCallSid exists.');
+                    $twilioCall = $client->calls($childCallSid)->fetch();
+                    Log::debug('Call Info:');
+                    Log::debug($twilioCall->toArray());
+                }
+
+
                 // If the call duration is more than 10 seconds
                 if ($callDuration > 10) {
                     try {
-                        // Initialize Twilio client
-                        $client = new Client(env('TWILIO_SID'), env('TWILIO_AUTH_TOKEN'));
-
-                        // Extract ParentCallSid and CallSid from the request
-                        $parentCallSid = $request->ParentCallSid;
-                        $childCallSid = $request->CallSid;
-
                         // End the parent call if it's still going
                         if ($parentCallSid) {
                             $client->calls($parentCallSid)->update(['status' => 'completed']);
@@ -121,7 +135,6 @@ class CallStatusController extends Controller
                 // START: Save Call Duration
                 // ========================================
                 Log::debug('SaveCallDuration: start.');
-                $call = Call::where('unique_call_id', $request->unique_call_id)->first();
                 if ($call && $callDuration) {
                     Log::debug('SaveCallDuration: call && callDuration found.');
                     $call->call_duration_in_seconds = $callDuration;

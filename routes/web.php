@@ -1,8 +1,7 @@
 <?php
 
-use App\Http\Controllers\DocusignController;
+use App\Http\Controllers\CallUserResponseAPIController;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\BidsController;
@@ -13,21 +12,19 @@ use App\Http\Controllers\AutoPayController;
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupportController;
+use App\Http\Controllers\PingDocsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TakeCallsController;
 use App\Http\Controllers\StripeTestController;
 use App\Http\Controllers\DefaultCardController;
-use App\Http\Controllers\StripeFundsController;
 use App\Http\Controllers\TwilioTokenController;
 use App\Http\Controllers\TransactionsController;
-use App\Http\Controllers\FundsWithCardController;
 use App\Http\Controllers\UsageActivityController;
 use App\Http\Controllers\WebAPIClientsController;
 use App\Http\Controllers\CallClientInfoController;
 use App\Http\Controllers\AdditionalFilesController;
-use App\Http\Controllers\ActiveUserChannelController;
+use App\Http\Controllers\AgentStatusDocsController;
 use App\Http\Controllers\TwilioDeviceTokenController;
-use App\Http\Controllers\Admin\OnlineAgentsController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\TakeCallsOnlineUsersController;
 
@@ -130,6 +127,8 @@ Route::get('/clients', [ClientsController::class, 'index'])->middleware(['auth',
 Route::patch('/clients/{client}', [ClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.update');
 Route::patch('/web-api/clients/{client}', [WebAPIClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.web-api.update');
 
+Route::patch('/web-api/calls/{uniqueCallId}/user-response', [CallUserResponseAPIController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check']);
+
 Route::get('/support', [SupportController::class, 'index'])->name('support.index');
 
 Route::get('/stripe-test', [StripeTestController::class, 'show']);
@@ -143,8 +142,9 @@ Route::get('/ryan', function () {
     return redirect('/');
 });
 
+Route::get('/docs', function() {
+    return redirect('/docs/ping');
+});
 
-// Route::get('docusign',[DocusignController::class, 'index'])->name('docusign');
-// Route::get('connect-docusign',[DocusignController::class, 'connectDocusign'])->name('connect.docusign');
-// Route::get('docusign/callback',[DocusignController::class,'callback'])->name('docusign.callback');
-// Route::get('sign-document',[DocusignController::class,'signDocument'])->name('docusign.sign');
+Route::get('/docs/ping', [PingDocsController::class, 'show'])->name('docs.ping.show');
+Route::get('/docs/agent-status', [AgentStatusDocsController::class, 'show'])->name('docs.agent-status.show');

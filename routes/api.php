@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\CallUserResponseAPIController;
+use Pusher\Pusher;
 use App\Models\User;
 use App\Models\ActiveUser;
+use App\Events\ExampleTest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
@@ -20,6 +23,7 @@ use App\Http\Controllers\AgentStatusAPIController;
 use App\Http\Controllers\LiveCallClientController;
 use App\Http\Controllers\CallTypesSelectedAPIController;
 use App\Http\Controllers\TwilioIOSAccessTokenController;
+use App\Http\Controllers\CustomBroadcastingAuthController;
 use App\Http\Controllers\ActiveUsersPusherWebhookController;
 use App\Http\Controllers\TwilioAndroidAccessTokenController;
 use App\Http\Controllers\TwilioIOSAccessTokenGuestController;
@@ -132,8 +136,31 @@ Route::middleware('auth:sanctum')->get('/twilio-ios-access-token', [TwilioIOSAcc
 Route::middleware('auth:sanctum')->get('/twilio-android-access-token', [TwilioAndroidAccessTokenController::class, 'show']);
 Route::middleware('auth:sanctum')->get('/twilio-android-access-token-guest', [TwilioAndroidAccessTokenGuestController::class, 'show']);
 
+Route::middleware('auth:sanctum')->patch('/call/{uniqueCallId}/user-response', [CallUserResponseAPIController::class, 'update']);
+
 Route::match(['get', 'post'], '/agent-status', [AgentStatusAPIController::class, 'show']);
 
 Route::middleware('auth:sanctum')->post('/app-events', [AppEventsController::class, 'store']);
 
 Route::match(['get', 'post'], '/ping', [PingAPIController::class, 'show']);
+
+
+Route::post('/custom-pusher-auth', function (Request $request) {
+    $pusher = new Pusher(
+        env('PUSHER_APP_KEY'),
+        env('PUSHER_APP_SECRET'),
+        env('PUSHER_APP_ID')
+    );
+
+    $channelName = $request->request->get('channel_name');
+    $socketId = $request->request->get('socket_id');
+
+    return $pusher->socket_auth($channelName, $socketId);
+});
+
+Route::get('/pusher-private-test', function(){
+    ExampleTest::dispatch(User::whereEmail('john@example.com')->first());
+});
+
+Route::get('/custom-broadcasting-auth', [CustomBroadcastingAuthController::class, 'store']);
+Route::post('/custom-broadcasting-auth', [CustomBroadcastingAuthController::class, 'store']);

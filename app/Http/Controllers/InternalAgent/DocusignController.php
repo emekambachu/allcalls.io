@@ -117,6 +117,15 @@ class DocusignController extends Controller
         curl_close($ch);
         $decodedData = json_decode($result);
         $request->session()->put('docusign_auth_code', $decodedData->access_token);
+
+
+
+        // return response()->json([
+        //     'success' => true,
+        //     'docuSignAuthCode' => $decodedData->access_token
+        // ], 200);
+
+
         return redirect()->route('contract.steps');
     }
 
@@ -127,6 +136,18 @@ class DocusignController extends Controller
             $this->args = $this->getTemplateArgs();
             $args = $this->args;
             $envelope_args = $args["envelope_args"];
+
+            // if($position == 'accompanying_sign') {
+            //     $pdfFileName = 'accompanying-sign-'.auth()->user()->id.'.pdf'; 
+            // }
+
+            // if($position == 'signature_authorization') {
+            //     $pdfFileName = auth()->user()->id.'-signature-authorization.pdf';
+            // }
+
+            // if($position == 'agency_authorization') {
+            //     dd('last sign');
+            // }
 
             # Create the envelope request object
             $envelope_definition = $this->make_envelope($args["envelope_args"]);
@@ -165,8 +186,8 @@ class DocusignController extends Controller
 
     private function make_envelope($args)
     {
-        $filename = 'World_Wide_Corp_lorem.pdf';
-        $demo_docs_path = asset('/first-step-sign.pdf');
+        $filename = auth()->user()->id.'-contract.pdf';
+        $demo_docs_path = asset('internal-agents/contract/'.auth()->user()->id.'-contract.pdf');
 
         $arrContextOptions = array(
             "ssl" => array(
@@ -180,7 +201,7 @@ class DocusignController extends Controller
         $base64_file_content = base64_encode($content_bytes);
         // dd($base64_file_content);
         # Create the document model
-        $documentId = auth()->user()->id;
+        $documentId = rand(1,10).auth()->user()->id.rand(1,10);
         $document = new \DocuSign\eSign\Model\Document([ # create the DocuSign document object
             'document_base64' => $base64_file_content,
             'name' => 'Example document', # can be different from actual file name
@@ -197,6 +218,39 @@ class DocusignController extends Controller
             'routing_order' => "1",
             # Setting the client_user_id marks the signer as embedded
             'client_user_id' => $args['signer_client_id'],
+            "tabs" => [
+                "signHereTabs" => [
+                    [
+                        "anchorString" => "ACCOMPANYING_SIGNATURE",
+                        "anchorXOffset" => "5",
+                        "anchorYOffset" => "5",
+                        "anchorUnits" => "pixels",
+                        "documentId" => $documentId,
+                        "pageNumber" => "9",
+                        "required" => "true"
+                    ],
+
+                    [
+                        "anchorString" => "SIGNATURE_AUTHORIZATION",
+                        "anchorXOffset" => "5",
+                        "anchorYOffset" => "5",
+                        "anchorUnits" => "pixels",
+                        "documentId" => $documentId,
+                        "pageNumber" => "10",
+                        "required" => "true"
+                    ],
+
+                    [
+                        "anchorString" => "AGENCY_AUTHORIZATION",
+                        "anchorXOffset" => "5",
+                        "anchorYOffset" => "5",
+                        "anchorUnits" => "pixels",
+                        "documentId" => $documentId,
+                        "pageNumber" => "11",
+                        "required" => "true"
+                    ],
+                ]
+            ]
         ]);
         # Create a sign_here tab (field on the document)
         $sign_here = new \DocuSign\eSign\Model\SignHere([ # DocuSign SignHere field/tab

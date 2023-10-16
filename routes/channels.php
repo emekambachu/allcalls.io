@@ -15,6 +15,10 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
+Broadcast::channel('{userId}.notifications', function ($user, $userId) {
+    return (int) $user->id === (int) $userId;
+});
+
 Broadcast::channel('calls.{userId}', function ($user, $userId) {
     return (int) $user->id === (int) $userId;
 });
