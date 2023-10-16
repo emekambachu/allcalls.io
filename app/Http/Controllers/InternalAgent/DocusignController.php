@@ -31,11 +31,11 @@ class DocusignController extends Controller
 
     public function __construct()
     {
-        $this->clientId = "75d97718-8a98-4d27-8def-17c2fceed79f";
-        $this->clinetSceret = "897ce745-c111-4229-aff4-6637a9a9a066";
+        $this->clientId = env('DOCUSIGN_INTEGRATION_KEY');
+        $this->clinetSceret = env('DOCUSIGN_SECRET_KEY');
         $this->URL = "https://account-d.docusign.com/oauth/auth?";
         $this->tokenUrl = "https://account-d.docusign.com/oauth/token";
-        $this->accountId = "7716918e-104d-4915-b7ca-eff79222ac45";
+        $this->accountId = env('DOCUSIGN_API_ACCOUNT_ID');
         $this->baseUrl = "https://demo.docusign.net/restapi";
     }
 
