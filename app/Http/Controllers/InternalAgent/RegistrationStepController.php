@@ -1732,10 +1732,8 @@ dd($pdfPath);
 
                 //deleted PDF without sign for Accompanying Sign
                 if (file_exists(public_path() . '/internal-agents/contract/' . $fileName)) {
-                    dd(unlink(public_path() . '/internal-agents/contract/' . $fileName));
-                    dd(public_path() . '/internal-agents/contract/' . $fileName, 'deleted');
+                    unlink(public_path() . '/internal-agents/contract/' . $fileName);
                 }
-                dd('not exist');
                 $pdf->save($directory . $fileName);
 
                 //End deleted PDF without sign for Accompanying Sign
