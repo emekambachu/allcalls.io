@@ -18,7 +18,7 @@ import SingnaturePad from '@/Pages/InternalAgent/SingnaturePad.vue'
 
 import { toaster } from "@/helper.js";
 import { triggerRef } from "vue";
-import { faTurkishLira } from "@fortawesome/free-solid-svg-icons";
+import { faL, faTurkishLira } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 
 
@@ -34,7 +34,11 @@ let props = defineProps({
         default: null
     }
 });
-// console.log('docuSignAuthCode docusign_auth_code', props.docuSignAuthCode);
+let docuSignAuthCodeToken = ref(null)
+if(props.docuSignAuthCode){
+    docuSignAuthCodeToken.value = props.docuSignAuthCode
+}
+console.log('docuSignAuthCode docusign_auth_code', props.docuSignAuthCode);
 let StepsModal = ref(true)
 let contractModal = ref(false)
 const isLoading = ref(false);
@@ -193,16 +197,17 @@ let errorHandle = (data, response) => {
         }
         // contractStep.value = 0
     } else if (data === 9) {
-        if (!props.docuSignAuthCode) {
-            axios.get(response.route)
-            .then((res) => {
-                const newURL = res.data.route;
-                window.location.href = newURL;
-            })
-        }else{
-            router.visit('contract-steps')
-        }
-        
+        router.visit('contract-steps')
+        // if (!props.docuSignAuthCode) {
+        //     axios.get(response.route)
+        //     .then((res) => {
+        //         const newURL = res.data.route;
+        //         window.location.href = newURL;
+        //     })
+        // }else{
+        //     router.visit('contract-steps')
+        // }
+
     }
 }
 if (props.userData?.internal_agent_contract) {
@@ -298,16 +303,21 @@ let submit = (step) => {
         })
         .then((response) => {
             if (step === 10) {
-                console.log('date save', );
+                // console.log('date save', );
                 signatureAuthorizationSaved.value = true
                 signatureAuthorizationMessage.value = response.data.message
                 setTimeout(() => {
                     signatureAuthorizationMessage.value = null
                 }, 2000);
+                docuSignAuthCodeToken.value = response.data.docuSignAuthCode
+                isLoading.value = false;
             } else {
                 errorHandle(step, response.data)
+                isLoading.value = false;
+                
             }
-            isLoading.value = false;
+            console.log('response', response);
+            
         })
         .catch((error) => {
             isLoading.value = false;
@@ -545,7 +555,7 @@ input[type=number] {
 
                         <div class="px-12 py-2">
                             <ContractDetailPage :userData="userData" />
-                            <SingnaturePad :page="$page.props" :userData="userData" :docuSignAuthCode="docuSignAuthCode"
+                            <SingnaturePad :page="$page.props" :userData="userData" :docuSignAuthCodeToken="docuSignAuthCodeToken"
                                 @editContract="editContract" :signatureAuthorizationMessage="signatureAuthorizationMessage"
                                 :signatureAuthorizationSaved="signatureAuthorizationSaved"
                                 :firstStepErrors="firstStepErrors" :isLoading="isLoading" @signature="signaturePreview" />

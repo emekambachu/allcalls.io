@@ -19,11 +19,17 @@ use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Clegginabox\PDFMerger\PDFMerger;
 use DocuSign\eSign\Api\EnvelopesApi;
+use DocuSign\eSign\Client\ApiClient;
 use DocuSign\eSign\Configuration;
+use DocuSign\eSign\Model\CompositeTemplate;
 use DocuSign\eSign\Model\Document;
 use DocuSign\eSign\Model\EnvelopeDefinition;
+use DocuSign\eSign\Model\InlineTemplate;
+use DocuSign\eSign\Model\Recipients;
 use DocuSign\eSign\Model\RecipientViewRequest;
 use DocuSign\eSign\Model\Signer;
+use DocuSign\eSign\Model\SignHere;
+use DocuSign\eSign\Model\Tabs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -34,6 +40,8 @@ class RegistrationStepController extends Controller
 {
     private $accountId;
     private $baseUrl;
+
+
     public function __construct()
     {
         $this->accountId = "7716918e-104d-4915-b7ca-eff79222ac45";
@@ -43,7 +51,6 @@ class RegistrationStepController extends Controller
 
     public function contractSteps()
     {
-
         if (isset($_GET['event']) && $_GET['event'] == 'signing_complete') {
             $user = auth()->user();
             if (isset($_GET['position']) && $_GET['position'] == 'contract') {
@@ -58,7 +65,7 @@ class RegistrationStepController extends Controller
                 ])->get($url);
 
                 //deleted PDF without sign for Accompanying Sign
-                $pdfFileName = $user->id . '-contract.pdf';
+                $pdfFileName = $user->id . '_contract.pdf';
                 //deleted PDF without sign for Accompanying Sign
                 if (file_exists(public_path() . '/internal-agents/contract/' . $pdfFileName)) {
                     unlink(public_path() . '/internal-agents/contract/' . $pdfFileName);
@@ -66,11 +73,12 @@ class RegistrationStepController extends Controller
                 //End deleted PDF without sign for Accompanying Sign
 
                 //store PDF signed for Accompanying Sign
-                $pdfPath = public_path('internal-agents/contract/' . $pdfFileName);
+                $contractedPdf = $user->id . '-contract.pdf';
+                $pdfPath = public_path('internal-agents/contract/' . $contractedPdf);
                 file_put_contents($pdfPath, $response->body());
                 //End store signed PDF for Accompanying Sign
 
-
+dd($pdfPath);
                 //Track Signer
                 DocuSignTracker::updateOrCreate(
                     ['user_id' => $user->id, 'sign_type' => 'contract'], // conditions
@@ -1637,12 +1645,20 @@ class RegistrationStepController extends Controller
                         'url' => $path,
                     ]);
                 }
+
+                //Generate DocuSign Code
+                // $apiClient = new ApiClient();
+                // $apiClient->getOAuth()->setOAuthBasePath("account-d.docusign.com");
+                // $docuSignAuthCode = $this->getToken($apiClient);
+                // $request->session()->put('docusign_auth_code', $docuSignAuthCode);
+                //End Generate DocuSign Code
+
                 $user->contract_step = 10;
                 $user->save();
                 DB::commit();
                 return response()->json([
                     'success' => true,
-                    'route' => route('internal.agent.connect.docusign'),
+                    // 'docuSignAuthCode' => session()->get('docusign_auth_code'),
                 ], 200);
             } catch (\Exception $e) {
                 DB::rollBack();
@@ -1705,33 +1721,31 @@ class RegistrationStepController extends Controller
                     ->with('internalAgentContract.addresses.getState')
                     ->with('internalAgentContract.legalQuestion')->first();
 
-                // ->with('internalAgentContract.amlCourse')
-                // ->with('internalAgentContract.bankingInfo')
-                // ->with('internalAgentContract.errorAndEmission')
-                // ->with('internalAgentContract.residentLicense')
-                // ->with('internalAgentContract.getQuestionSign')
-                // ->with('internalAgentContract.getContractSign')
                 $pdf = PDF::loadView('pdf.internal-agent-contract.agent-contract', $returnArr);
                 $directory = public_path('internal-agents/contract/');
                 if (!file_exists($directory)) {
                     mkdir($directory, 0777, true);
                 }
 
-                $fileName = auth()->user()->id . '-contract.pdf';
+                $fileName = auth()->user()->id.'_contract.pdf';
 
                 //deleted PDF without sign for Accompanying Sign
                 if (file_exists(public_path() . '/internal-agents/contract/' . $fileName)) {
                     unlink(public_path() . '/internal-agents/contract/' . $fileName);
                 }
                 //End deleted PDF without sign for Accompanying Sign
-
+                $apiClient = new ApiClient();
+                $apiClient->getOAuth()->setOAuthBasePath("account-d.docusign.com");
+                $docuSignAuthCode = $this->getToken($apiClient);
+                $request->session()->put('docusign_auth_code', $docuSignAuthCode);
 
                 $pdf->save($directory . $fileName);
                 //End Contract PDF
                 return response()->json([
                     'success' => true,
                     'message' => 'Document ready to sign.',
-                    'route' => route('internal.agent.connect.docusign'),
+                    'route' => route('internal.agent.docusign.sign'),
+                    'docuSignAuthCode' => session()->get('docusign_auth_code'),
                 ], 200);
             } catch (\Exception $e) {
                 DB::rollBack();
@@ -1750,54 +1764,55 @@ class RegistrationStepController extends Controller
 
     public function pdf()
     {
-        $jwt_token = "eyJ0eXAiOiJNVCIsImFsZyI6IlJTMjU2Iiwia2lkIjoiNjgxODVmZjEtNGU1MS00Y2U5LWFmMWMtNjg5ODEyMjAzMzE3In0.AQoAAAABAAUABwAA4BOtRcvbSAgAAEjYDk7L20gCAJgPjHagsedJmPsqwsgbcvQVAAEAAAAYAAIAAAAFAAAAHQAAAA0AJAAAADc1ZDk3NzE4LThhOTgtNGQyNy04ZGVmLTE3YzJmY2VlZDc5ZiIAJAAAADc1ZDk3NzE4LThhOTgtNGQyNy04ZGVmLTE3YzJmY2VlZDc5ZhIAAQAAAAYAAABqd3RfYnIjACQAAAA3NWQ5NzcxOC04YTk4LTRkMjctOGRlZi0xN2MyZmNlZWQ3OWY.y_2FEXfQmNo0MCPiHJdHOUNZX60ZjUK0QI4PU58R1rm4pdno3rzrJRVjytueGWG88xG4kWn8ksERNcK9rCtr-hyY0_owuUr3LG5GiX775ghPFQg71ufkNasg0HgrSKxHUokH3o--OpoN5DJX4FlBBYbPJCAfhkc18dVrqvpLFWt7qa0qiLS2ajEXBeAuXC69MA7p_fTqQMRp91EdAde3ZGCAwBDnLGKY-c--fuILW1bvRJAOg7uO8cfuG08XlcROL5Wl-V4-yz_ZgRDFdGjP_SCtSPfL51meFV2drfYVKrhpYaKQG-K35B4m9BPggfnZTIS0QQIL0_mS7UmpZWhPpg";
-        $config = new Configuration();
-        $config->setHost('<https://demo.docusign.net/restapi>');
-        $config->addDefaultHeader("Authorization", "Bearer " . $jwt_token);
-
-        $envelopeApi = new EnvelopesApi();
+//        $jwt_token="eyJ0eXAiOiJNVCIsImFsZyI6IlJTMjU2Iiwia2lkIjoiNjgxODVmZjEtNGU1MS00Y2U5LWFmMWMtNjg5ODEyMjAzMzE3In0.AQoAAAABAAUABwAA5OLp5MvbSAgAAEynS-3L20gCAJgPjHagsedJmPsqwsgbcvQVAAEAAAAYAAIAAAAFAAAAHQAAAA0AJAAAADc1ZDk3NzE4LThhOTgtNGQyNy04ZGVmLTE3YzJmY2VlZDc5ZiIAJAAAADc1ZDk3NzE4LThhOTgtNGQyNy04ZGVmLTE3YzJmY2VlZDc5ZhIAAQAAAAYAAABqd3RfYnIjACQAAAA3NWQ5NzcxOC04YTk4LTRkMjctOGRlZi0xN2MyZmNlZWQ3OWY.xY21b5yOhNtUbh8eachI2_B6gMqibO-H89FlLdjkBdlF61149VcH-aIw9icDra_uK4rfL-M6DeqBN1XMiqsCuZnCa1yBYIgxZg6mhBER3E-9uVtcL0yYwKWsQyYNZAtz3l5rQJF_lgxLlEvsMIohR6EcGVGC03Oqn1GgvfpX-XbIweTtHBezS-wrjh0Iaep09eA3fCRmEKdGIul7bSuuCRAvKb6PlLEZQ434j2paUlkg4s5kFhI_hukHAKICtCGDxWZQMYshZrn9XAg1SZfsh7ykriybZ_83kXVNTQPZQ8rMS0tqToSqmJvSx1TV_3LWKet1p9zXpr0FqNTLQHP3Nw";
+//        $config = new Configuration();
+//        $config->setHost('<https://demo.docusign.net/restapi>');
+//        $config->addDefaultHeader("Authorization", "Bearer ".$jwt_token);
 
 
-        // Define the document
-        $document = new Document([
-            'document_base64' => base64_encode(file_get_contents('https://www.africau.edu/images/default/sample.pdf')),
-            'name' => 'Sample Document',
-            'file_extension' => 'pdf',
-            'document_id' => '100011'
-        ]);
-        // Define the signer
-        $signer = new Signer([
-            'email' => 'awaisamir23@gmail.com',
-            'name' => 'John Doe',
-            'recipient_id' => '1',
-            'client_user_id' => '12345'  // An arbitrary ID
-        ]);
+        $apiClient = new ApiClient();
+        $apiClient->getOAuth()->setOAuthBasePath("account-d.docusign.com");
+        $accessToken = $this->getToken($apiClient);
 
-        $envelope = new EnvelopeDefinition([
-            'email_subject' => 'Please Sign',
-            'documents' => [$document],
-            'recipients' => ['signers' => [$signer]],
-            'status' => 'sent'
-        ]);
 
-        //        $envelopeSummary = $envelopeApi->createEnvelope('1797216e-2fcc-4b29-95e4-ff04a330b007', $envelope);
-
-        $envelopeSummary = $envelopeApi->createEnvelope('7716918e-104d-4915-b7ca-eff79222ac45', $envelope);
+        $userInfo = $apiClient->getUserInfo($accessToken);
+        $accountInfo = $userInfo[0]->getAccounts();
+        $apiClient->getConfig()->setHost($accountInfo[0]->getBaseUri() . '/restapi');
+        /**
+         *
+         * Step 4
+         * Build the envelope object
+         *
+         * Make an API call to create the envelope and display the response in the view
+         *
+         */
+        $envelopeDefenition = $this->buildEnvelope();
+        try {
+            $envelopeApi = new EnvelopesApi($apiClient);
+            $envelopeSummary = $envelopeApi->createEnvelope($accountInfo[0]->getAccountId(), $envelopeDefenition);
 
 
 
-        $viewRequest = new RecipientViewRequest([
-            'return_url' => '<https://staging.allcalls.io/return-url>',
-            'authentication_method' => 'none',
-            'email' => 'abdullah.laraveldev@gmail.com',
-            'user_name' => 'John Doe',
-            'client_user_id' => '12345'
-        ]);
+
+            $viewRequest = new RecipientViewRequest([
+                'return_url' => '<https://staging.allcalls.io/return-url>',
+                'authentication_method' => 'jwt',
+                'email' => 'awaisamir23@gmail.com',
+                'user_name' => 'Faiz rana',
+                'client_user_id' => '1'
+            ]);
+//            dd($envelopeApi->createRecipientView("7716918e-104d-4915-b7ca-eff79222ac45", $envelopeSummary->getEnvelopeId(), $viewRequest));
+            $signingUrl = $envelopeApi->createRecipientView("7716918e-104d-4915-b7ca-eff79222ac45", $envelopeSummary->getEnvelopeId(), $viewRequest);
+
+            redirect()->to($signingUrl['url']);
 
 
-        $signingUrl = $envelopeApi->createRecipientView("7716918e-104d-4915-b7ca-eff79222ac45", $envelopeSummary->getEnvelopeId(), $viewRequest);
+        } catch (\Exception $th) {
+            return back()->withError($th->getMessage())->withInput();
+        }
+//        dd($result);
+//        return view('contract.response')->with('result', $result);
 
-        return response()->json(['url' => $signingUrl->getUrl()]);
     }
 
     public function pdfExport()
@@ -1811,5 +1826,77 @@ class RegistrationStepController extends Controller
         $pdf = PDF::loadView('pdf.internal-agent-contract.agent-contract', $returnArr);
 
         return $pdf->stream('signature-authorization.pdf');
+    }
+
+    private function getToken(ApiClient $apiClient) : string{
+        try {
+            $privateKey = file_get_contents(public_path('private.key'),true);
+            $response = $apiClient->requestJWTUserToken(
+                $ikey = "75d97718-8a98-4d27-8def-17c2fceed79f",
+                $userId = "768c0f98-b1a0-49e7-98fb-2ac2c81b72f4",
+                $key = $privateKey,
+                $scope = "signature impersonation"
+            );
+            $token = $response[0];
+            $accessToken = $token->getAccessToken();
+        } catch (\Exception $th) {
+            throw $th;
+        }
+        return $accessToken;
+    }
+
+    private function buildEnvelope(): EnvelopeDefinition{
+
+        $fileContent = file_get_contents(asset('/first-step-sign.pdf'));
+        $fileName = "Sample Document";
+        $fileExtension = 'pdf';
+        $recipientEmail ="awaisamir23@gmail.com";
+        $recipientName = "Faiz rana";
+
+        $document = new Document([
+            'document_id' => "16",
+            'document_base64' => base64_encode($fileContent),
+            'file_extension' => $fileExtension,
+            'name' => $fileName
+        ]);
+        $sign_here_tab = new SignHere([
+            'anchor_string' => "**signature**",
+            'anchor_units' => "pixels",
+            'anchor_x_offset' => "100",
+            'anchor_y_offset' => "0"
+        ]);
+        $sign_here_tabs = [$sign_here_tab];
+        $tabs1 = new Tabs([
+            'sign_here_tabs' => $sign_here_tabs
+        ]);
+        $signer = new Signer([
+            'email' => $recipientEmail,
+            'name' =>  $recipientName,
+            'recipient_id' => "1",
+            'tabs' => $tabs1
+        ]);
+        $signers = [$signer];
+        $recipients = new Recipients([
+            'signers' => $signers
+        ]);
+        $inline_template = new InlineTemplate([
+            'recipients' => $recipients,
+            'sequence' => "1"
+        ]);
+        $inline_templates = [$inline_template];
+        $composite_template = new CompositeTemplate([
+            'composite_template_id' => "1",
+            'document' => $document,
+            'inline_templates' => $inline_templates
+        ]);
+        $composite_templates = [$composite_template];
+        $envelope_definition = new EnvelopeDefinition([
+            'composite_templates' => $composite_templates,
+            'email_subject' => "Sample Please sign",
+            'status' => "sent"
+        ]);
+
+        return $envelope_definition;
+
     }
 }
