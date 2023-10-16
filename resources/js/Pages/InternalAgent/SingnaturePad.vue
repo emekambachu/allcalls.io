@@ -124,14 +124,14 @@
         </button>
         <button v-if="!signatureAuthorizationSaved" type="button" :class="{ 'opacity-25': isLoading }" :disabled="isLoading"
             @click="save" class="button-custom  px-3 py-2 rounded-md">
-            <global-spinner :spinner="isLoading" /> Prepare Document
+            <global-spinner :spinner="isLoading" /> Prepare Document - {{ userData.id }}
         </button>
         
         <a @click="isLoading = true" v-if="docuSignAuthCodeToken && signatureAuthorizationSaved"
             :href="route('internal.agent.docusign.sign', 'contract')" type="button"
             :class="{ 'opacity-25': !docuSignAuthCodeToken }" :disabled="!docuSignAuthCodeToken"
             class="button-custom  px-3 py-2 rounded-md">
-            <global-spinner :spinner="isLoading" /> Sign Document
+            <global-spinner :spinner="isLoading" /> Sign Document - {{ userData.id }}
         </a>
     </div>
     <div v-if="signatureAuthorizationMessage" class="text-green-500 mt-3 text-end">
