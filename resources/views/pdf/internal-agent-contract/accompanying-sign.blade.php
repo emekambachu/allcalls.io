@@ -33,10 +33,10 @@
 
             <td style="width: 40%;" class="text-15">
             <div style="border-bottom:2px solid black; margin-top:5px !important">
-                ACCOMPANYING_SIGNATURE
+                <a href="[ACCOMPANYING_SIGNATURE]">[ACCOMPANYING_SIGNATURE]</a>
             </div>
             </td>
-            
+
             <td style="width: 30%;" class="text-end">
                 <p style="text-align: center">
                     <span>

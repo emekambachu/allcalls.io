@@ -118,7 +118,7 @@
         <div style="margin-top: 10px;">
             <div style="display: inline-block;">
                 <span><strong>Signature:</strong></span>
-                AGENCY_AUTHORIZATION
+                <a href="">[AGENCY_AUTHORIZATION]</a>
             </div>
             <div style="border-bottom: 0.5px solid black; width: 45%; display: inline-block;"></div>
             <div style="display: inline-block; margin-left:40px;">

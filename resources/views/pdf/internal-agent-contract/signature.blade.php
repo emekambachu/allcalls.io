@@ -38,10 +38,10 @@
 
             <td style="width: 40%;" class="text-15">
             <div style="border-bottom:2px solid black; margin-top:5px !important">
-                SIGNATURE_AUTHORIZATION
+                <a href="">[SIGNATURE_AUTHORIZATION]</a>
             </div>
             </td>
-            
+
             <td style="width: 30%;" class="text-end">
                 <p style="text-align: center">
                     <span>
