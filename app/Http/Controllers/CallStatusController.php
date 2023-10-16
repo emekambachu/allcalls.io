@@ -83,23 +83,27 @@ class CallStatusController extends Controller
                 // Purpose: To terminate the entire call chain if the call duration exceeds 10 seconds.
                 // ========================================
 
+                // Initialize Twilio client
+                $client = new Client(env('TWILIO_SID'), env('TWILIO_AUTH_TOKEN'));
+
+                // Extract ParentCallSid and CallSid from the request
+                $parentCallSid = $request->ParentCallSid;
+                $childCallSid = $request->CallSid;
+
+                if ($parentCallSid) {
+                    Log::debug('Parent call sid exists.');
+                    $call = $client->calls($parentCallSid)->fetch();
+                    Log::debug('Call Info:');
+                    Log::debug($call);
+                }
+
+
                 // If the call duration is more than 10 seconds
                 if ($callDuration > 10) {
                     try {
-                        // Initialize Twilio client
-                        $client = new Client(env('TWILIO_SID'), env('TWILIO_AUTH_TOKEN'));
-
-                        // Extract ParentCallSid and CallSid from the request
-                        $parentCallSid = $request->ParentCallSid;
-                        $childCallSid = $request->CallSid;
-
                         // End the parent call if it's still going
                         if ($parentCallSid) {
-                            $call = $client->calls($parentCallSid)->fetch();
                             $client->calls($parentCallSid)->update(['status' => 'completed']);
-
-                            Log::debug('Call Info:');
-                            Log::debug($call);
                         }
 
                         // End the child call if it's still going
