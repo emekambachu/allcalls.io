@@ -1420,10 +1420,11 @@ dd($pdfPath);
                 ]);
                 $user->contract_step = 6;
                 $user->save();
+                DB::commit();
+
                 return response()->json([
                     'success' => true,
                 ], 200);
-                DB::commit();
 
                 //Accompanying Signature
                 // $returnArr['contractData'] = User::where('id', $user->id)
