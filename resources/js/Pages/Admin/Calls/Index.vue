@@ -12,6 +12,7 @@ if (page.props.flash.message) {
   toaster("success", page.props.flash.message);
 }
 
+
 let props = defineProps({
   calls: {
     type: Object,
