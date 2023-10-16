@@ -27,7 +27,7 @@
     <table class="w-100" style="margin-bottom: 30px; margin-top:50px">
         <tr>
             <td style="width: 20%;" class="text-end">
-                <strong>ACCOMPANYING SIGNATURE: &nbsp;</strong>
+                <strong>ACCOMPANYING_SIGNATURE: &nbsp;</strong>
                 {{-- <div style="border-bottom:2px solid black"></div> --}}
             </td>
 
