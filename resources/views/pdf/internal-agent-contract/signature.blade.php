@@ -38,7 +38,7 @@
 
             <td style="width: 40%;" class="text-15">
             <div style="border-bottom:2px solid black; margin-top:5px !important">
-                <a href="">[SIGNATURE_AUTHORIZATION]</a>
+                [SIGNATURE_AUTHORIZATION]
             </div>
             </td>
 

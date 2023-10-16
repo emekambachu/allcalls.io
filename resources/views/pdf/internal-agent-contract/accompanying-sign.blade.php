@@ -33,7 +33,7 @@
 
             <td style="width: 40%;" class="text-15">
             <div style="border-bottom:2px solid black; margin-top:5px !important">
-                <a href="[ACCOMPANYING_SIGNATURE]">[ACCOMPANYING_SIGNATURE]</a>
+                [ACCOMPANYING_SIGNATURE]
             </div>
             </td>
 
