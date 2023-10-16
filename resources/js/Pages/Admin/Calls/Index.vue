@@ -70,7 +70,6 @@ let openClientModal = (call) => {
                 <tr>
                   <th scope="col" class="px-4 py-3">ID</th>
                   <th scope="col" class="px-4 py-3" style="min-width:150px">Name</th> 
-                  <th scope="col" class="px-4 py-3">HANG UP BY</th>
                   <th scope="col" class="px-4 py-3">CALL DURATION</th>
                   <th scope="col" class="px-4 py-3" style="min-width:175px">CALL TAKEN</th>
                   <th scope="col" class="px-4 py-3">AMOUNT SPENT</th>
@@ -84,7 +83,6 @@ let openClientModal = (call) => {
                 <tr v-for="call in calls.data" :key="call.id" class="border-b border-gray-500">
                 <td class="text-gray-600 px-4 py-3">{{ call.id }}</td>
                 <td class="text-gray-600 px-4 py-3">{{ call.user.first_name }} {{ call.user.last_name }}</td>
-                <td class="text-gray-600 px-4 py-3">{{ call.hung_up_by }}</td>
                 <td class="text-gray-600 px-4 py-3">
                   {{
                     String(
