@@ -92,6 +92,17 @@ let openClientModal = (call) => {
                 <td class="text-gray-600 px-4 py-3">
                   {{
                     String(
+                      Math.floor(call.ringing_duration / 60)
+                    ).padStart(2, "0") +
+                    ":" +
+                    String(
+                      call.ringing_duration % 60
+                    ).padStart(2, "0")
+                  }}
+                </td>
+                <td class="text-gray-600 px-4 py-3">
+                  {{
+                    String(
                       Math.floor(call.call_duration_in_seconds / 60)
                     ).padStart(2, "0") +
                     ":" +
@@ -100,6 +111,7 @@ let openClientModal = (call) => {
                     ).padStart(2, "0")
                   }}
                 </td>
+
                 <th class="text-gray-600 px-4 py-3">{{ call.call_taken }}</th>
                 <td class="text-gray-600 px-4 py-3">${{ call.amount_spent }}</td>
                <td class="text-gray-600 px-4 py-3">{{ call.call_type.type }}</td>
