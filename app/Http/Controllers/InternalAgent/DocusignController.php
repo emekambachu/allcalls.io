@@ -215,7 +215,8 @@ class DocusignController extends Controller
                         "anchorUnits" => "pixels",
                         "documentId" => $documentId,
                         "pageNumber" => "9",
-                        "required" => "true"
+                        "required" => "true",
+                        "optional" => "true"
                     ],
 
                     [
@@ -225,7 +226,7 @@ class DocusignController extends Controller
                         "anchorUnits" => "pixels",
                         "documentId" => $documentId,
                         "pageNumber" => "10",
-                        "required" => "true"
+                        "required" => "true",
                     ],
 
                     [
