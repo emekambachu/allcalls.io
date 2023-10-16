@@ -214,25 +214,51 @@ let openClientModal = (call) => {
                     class="text-gray-700 px-4 py-3 flex items-center justify-end"
                   >
                     <button
+                      :id="'dropdown-button-' + call.id"
+                      :data-dropdown-toggle="'dropdown-' + call.id"
                       class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
                       type="button"
                     >
                       <svg
-                        class="w-6 h-6 text-gray-800"
+                        class="w-5 h-5"
                         aria-hidden="true"
+                        fill="currentColor"
+                        viewbox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 17 4"
                       >
                         <path
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-width="2"
-                          d="M2.49 2h.01m6 0h.01m5.99 0h.01"
+                          d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z"
                         />
                       </svg>
                     </button>
-                    <button v-else class="text-center" type="button">-</button>
+
+                    <div
+                      :id="'dropdown-' + call.id"
+                      class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow"
+                    >
+                      <ul
+                        class="py-1 text-sm text-gray-700"
+                        :aria-labelledby="'dropdown-button-' + call.id"
+                      >
+                        <li>
+                          <a href="#" class="block py-2 px-4 hover:bg-gray-100"
+                            >Show</a
+                          >
+                        </li>
+                        <li>
+                          <a href="#" class="block py-2 px-4 hover:bg-gray-100"
+                            >Edit</a
+                          >
+                        </li>
+                      </ul>
+                      <div class="py-1">
+                        <a
+                          href="#"
+                          class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100"
+                          >Delete</a
+                        >
+                      </div>
+                    </div>
                   </td>
                 </tr>
               </tbody>
