@@ -213,15 +213,6 @@ let openClientModal = (call) => {
                   <td
                     class="text-gray-700 px-4 py-3 flex items-center justify-end"
                   >
-                    <!-- <button
-                      v-if="call.get_client"
-                      @click="openClientModal(call)"
-                      class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
-                      type="button"
-                    >
-                      View Client
-                    </button> -->
-
                     <button
                       class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
                       type="button"
