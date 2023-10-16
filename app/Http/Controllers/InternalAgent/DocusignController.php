@@ -249,7 +249,7 @@ class DocusignController extends Controller
             'anchor_units' => 'pixels',
             'anchor_y_offset' => '0',
             'anchor_x_offset' => '0',
-            'optional' => true,
+            'optional' => false,
             'tab_label' => 'Key Text',
             'value' => 'Your Key Text Here',
         ]);
