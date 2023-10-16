@@ -31,11 +31,11 @@ class DocusignController extends Controller
 
     public function __construct()
     {
-        $this->clientId = "75d97718-8a98-4d27-8def-17c2fceed79f";
-        $this->clinetSceret = "897ce745-c111-4229-aff4-6637a9a9a066";
+        $this->clientId = env('DOCUSIGN_INTEGRATION_KEY');
+        $this->clinetSceret = env('DOCUSIGN_SECRET_KEY');
         $this->URL = "https://account-d.docusign.com/oauth/auth?";
         $this->tokenUrl = "https://account-d.docusign.com/oauth/token";
-        $this->accountId = "7716918e-104d-4915-b7ca-eff79222ac45";
+        $this->accountId = env('DOCUSIGN_API_ACCOUNT_ID');
         $this->baseUrl = "https://demo.docusign.net/restapi";
     }
 
@@ -211,27 +211,27 @@ class DocusignController extends Controller
 
 
         $signHere1 = new \DocuSign\eSign\Model\SignHere([
-            'anchor_string' => '[ACCOMPANYING_SIGNATURE]',
+            'anchor_string' => 'ACCOMPANYING_SIGNATURE',
             'anchor_units' => 'pixels',
-            'anchor_y_offset' => '10',
-            'anchor_x_offset' => '20',
+            'anchor_y_offset' => '-10',
+            'anchor_x_offset' => '270',
             'optional' => false,
         ]);
 
         $signHere2 = new \DocuSign\eSign\Model\SignHere([
-            'anchor_string' => '[SIGNATURE_AUTHORIZATION]', // Customize this anchor string
+            'anchor_string' => 'SIGNATURE_AUTHORIZATION', // Customize this anchor string
             'anchor_units' => 'pixels',
-            'anchor_y_offset' => '50', // Customize the Y offset
-            'anchor_x_offset' => '30', // Customize the X offset
+            'anchor_y_offset' => '-10', // Customize the Y offset
+            'anchor_x_offset' => '270', // Customize the X offset
             'optional' => false,
         ]);
 
 
         $signHere3 = new \DocuSign\eSign\Model\SignHere([
-            'anchor_string' => '[AGENCY_AUTHORIZATION]', // Customize this anchor string
+            'anchor_string' => 'AGENCY_AUTHORIZATION', // Customize this anchor string
             'anchor_units' => 'pixels',
-            'anchor_y_offset' => '90', // Customize the Y offset
-            'anchor_x_offset' => '40', // Customize the X offset
+            'anchor_y_offset' => '-7', // Customize the Y offset
+            'anchor_x_offset' => '210', // Customize the X offset
             'optional' => false,
         ]);
 

@@ -7,6 +7,7 @@ use App\Models\Activity;
 use App\Models\Call;
 use App\Models\CallType;
 use App\Models\Client;
+use App\Models\InternalAgentContractSigned;
 use App\Models\Role;
 use App\Models\State;
 use App\Models\Transaction;
@@ -302,6 +303,14 @@ class InternalAgentController extends Controller
         set_time_limit(0);
 
         try {
+            $user = User::findOrFail($id);
+
+            $contractPDF = InternalAgentContractSigned::where('reg_info_id', $user->internalAgentContract->id)->first();
+
+            dd($contractPDF->sign_url);
+            return response()->download($contractPDF->sign_url);
+
+
             $returnArr['contractData'] = User::where('id', $id)
                 ->with('internalAgentContract.getState')
                 ->with('internalAgentContract.getDriverLicenseState')
@@ -396,14 +405,14 @@ class InternalAgentController extends Controller
 
     public function signatureAuthrorizationPdf($id)
     {
-        set_time_limit(0);
-
-        $returnArr['contractData'] = User::where('id', $id)
-            ->with('internalAgentContract.getContractSign')
-            ->first();
-
-        $pdf = PDF::loadView('pdf.internal-agent-contract.signature-authorization', $returnArr);
-
-        return $pdf->download('signature-authorization.pdf');
+//        set_time_limit(0);
+//
+//        $returnArr['contractData'] = User::where('id', $id)
+//            ->with('internalAgentContract.getContractSign')
+//            ->first();
+//
+//        $pdf = PDF::loadView('pdf.internal-agent-contract.signature-authorization', $returnArr);
+//
+//        return $pdf->download('signature-authorization.pdf');
     }
 }

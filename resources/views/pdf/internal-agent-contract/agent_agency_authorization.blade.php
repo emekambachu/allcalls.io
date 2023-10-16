@@ -117,11 +117,10 @@
         <br>
         <div style="margin-top: 10px;">
             <div style="display: inline-block;">
-                <span><strong>Signature:</strong></span>
-                [AGENCY_AUTHORIZATION]
+                <span><strong>AGENCY_AUTHORIZATION:</strong></span>
             </div>
-            <div style="border-bottom: 0.5px solid black; width: 45%; display: inline-block;"></div>
-            <div style="display: inline-block; margin-left:40px;">
+            <div style="border-bottom: 0.5px solid black; width: 30%; display: inline-block;"></div>
+            <div style="display: inline-block; margin-left:20px;">
                 <span><strong>Date:</strong></span>
             </div>
             <div style="border-bottom: 0.5px solid black; width: 26.5%; display: inline-block;">{{ \Carbon\Carbon::now()->format('m/d/Y') }}

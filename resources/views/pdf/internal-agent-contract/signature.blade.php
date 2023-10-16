@@ -32,13 +32,13 @@
     <table class="w-100" style="margin-bottom: 30px; margin-top:50px">
         <tr>
             <td style="width: 20%;" class="text-end">
-                <strong>Signature: &nbsp;</strong>
+                <strong>SIGNATURE_AUTHORIZATION: &nbsp;</strong>
                 {{-- <div style="border-bottom:2px solid black"></div> --}}
             </td>
 
             <td style="width: 40%;" class="text-15">
             <div style="border-bottom:2px solid black; margin-top:5px !important">
-                [SIGNATURE_AUTHORIZATION]
+
             </div>
             </td>
 

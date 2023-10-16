@@ -44,8 +44,8 @@ class RegistrationStepController extends Controller
 
     public function __construct()
     {
-        $this->accountId = "7716918e-104d-4915-b7ca-eff79222ac45";
-        $this->baseUrl = "https://demo.docusign.net/restapi";
+        $this->accountId = env('DOCUSIGN_API_ACCOUNT_ID');
+        $this->baseUrl = env('DOCUSIGN_ACCOUNT_BASE_URI_API');
     }
 
 
@@ -78,7 +78,6 @@ class RegistrationStepController extends Controller
                 file_put_contents($pdfPath, $response->body());
                 //End store signed PDF for Accompanying Sign
 
-dd($pdfPath);
                 //Track Signer
                 DocuSignTracker::updateOrCreate(
                     ['user_id' => $user->id, 'sign_type' => 'contract'], // conditions
@@ -90,8 +89,8 @@ dd($pdfPath);
                 //Track Signer
 
                 InternalAgentContractSigned::updateOrCreate(['reg_info_id' => $user->internalAgentContract->id], [
-                    'name' => $pdfFileName,
-                    'sign_url' => asset('internal-agents/contract/' . $pdfFileName),
+                    'name' => $contractedPdf,
+                    'sign_url' => asset('internal-agents/contract/' . $contractedPdf),
                 ]);
                 $user->legacy_key = true;
                 $user->contract_step = 10;
@@ -1834,10 +1833,10 @@ dd($pdfPath);
         try {
             $privateKey = file_get_contents(public_path('private.key'),true);
             $response = $apiClient->requestJWTUserToken(
-                $ikey = "75d97718-8a98-4d27-8def-17c2fceed79f",
-                $userId = "768c0f98-b1a0-49e7-98fb-2ac2c81b72f4",
+                $ikey = env('DOCUSIGN_INTEGRATION_KEY'),
+                $userId =  env('DOCUSIGN_USER_ID'),
                 $key = $privateKey,
-                $scope = "signature impersonation"
+                $scope = env('DOCUSIGN_SCOPE')
             );
             $token = $response[0];
             $accessToken = $token->getAccessToken();
