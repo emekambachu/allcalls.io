@@ -177,7 +177,7 @@ let ChangeTabBack = () => {
             <div v-show="$page.props.auth.role === 'internal-agent'" class="mt-4">
                 <button type="button" :class="{ 'opacity-25': isLoading }" :disabled="isLoading" @click="submit"
                     class="button-custom px-3 py-2 rounded-md">
-                    <global-spinner :spinner="isLoading" /> Start Signature Process
+                    <global-spinner :spinner="isLoading" /> Next Step
                 </button>
 
             </div>
