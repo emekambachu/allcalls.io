@@ -107,7 +107,7 @@ class AgentStatusAPIController extends Controller
             : response()->json(['online' => false, 'price' => $price], 200);
 
         Log::debug('api-logs: Response Data', [
-            'data' => $response->getData(),
+            'data' => json_decode($response->getContent(), true),
             'status' => $response->getStatusCode(),
         ]);
 
@@ -187,7 +187,7 @@ class AgentStatusAPIController extends Controller
             : response()->json(['online' => false], 200);
 
         Log::debug('api-logs: Response Data', [
-            'data' => $response->getData(),
+            'data' => json_decode($response->getContent(), true),
             'status' => $response->getStatusCode(),
         ]);
 
