@@ -216,6 +216,8 @@ class DocusignController extends Controller
             'anchor_y_offset' => '0',
             'anchor_x_offset' => '0',
             'optional' => false,
+            'tab_label' => 'Key Text',
+            'value' => 'Your Key Text Here',
         ]);
 
         $signHere2 = new \DocuSign\eSign\Model\SignHere([
