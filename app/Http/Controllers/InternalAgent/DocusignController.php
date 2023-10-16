@@ -230,7 +230,7 @@ class DocusignController extends Controller
         $signHere3 = new \DocuSign\eSign\Model\SignHere([
             'anchor_string' => 'AGENCY_AUTHORIZATION', // Customize this anchor string
             'anchor_units' => 'pixels',
-            'anchor_y_offset' => '-5', // Customize the Y offset
+            'anchor_y_offset' => '-7', // Customize the Y offset
             'anchor_x_offset' => '210', // Customize the X offset
             'optional' => false,
         ]);

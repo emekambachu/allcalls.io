@@ -89,8 +89,8 @@ class RegistrationStepController extends Controller
                 //Track Signer
 
                 InternalAgentContractSigned::updateOrCreate(['reg_info_id' => $user->internalAgentContract->id], [
-                    'name' => $pdfFileName,
-                    'sign_url' => asset('internal-agents/contract/' . $pdfFileName),
+                    'name' => $contractedPdf,
+                    'sign_url' => asset('internal-agents/contract/' . $contractedPdf),
                 ]);
                 $user->legacy_key = true;
                 $user->contract_step = 10;
