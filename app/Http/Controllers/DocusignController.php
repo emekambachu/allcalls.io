@@ -227,6 +227,7 @@ class DocusignController extends Controller
             'anchor_units' => 'pixels',
             'anchor_y_offset' => '10',
             'anchor_x_offset' => '20',
+            'optional' => false,
         ]);
 
         $signHere2 = new \DocuSign\eSign\Model\SignHere([
@@ -234,6 +235,7 @@ class DocusignController extends Controller
             'anchor_units' => 'pixels',
             'anchor_y_offset' => '50', // Customize the Y offset
             'anchor_x_offset' => '30', // Customize the X offset
+            'optional' => false,
         ]);
 
 
@@ -242,6 +244,7 @@ class DocusignController extends Controller
             'anchor_units' => 'pixels',
             'anchor_y_offset' => '90', // Customize the Y offset
             'anchor_x_offset' => '40', // Customize the X offset
+            'optional' => false,
         ]);
 
 
