@@ -28,8 +28,7 @@ import Layout from "@/Pages/Docs/Layout.vue";
         <h2 class="text-lg font-semibold">Description:</h2>
         <p>
           This endpoint checks if an agent is available for a given phone
-          number's area code and vertical. It also returns the price associated
-          with the vertical.
+          number's area code and vertical.
         </p>
       </div>
 
@@ -77,8 +76,7 @@ import Layout from "@/Pages/Docs/Layout.vue";
         <div class="rounded bg-gray-100 p-3 mb-3">
           <pre class="text-sm">
 {
-    "online": true,
-    "price": 25
+    "online": true
 }
             </pre
           >
@@ -86,9 +84,6 @@ import Layout from "@/Pages/Docs/Layout.vue";
         <p>
           <strong>online</strong>: <code>true</code> if the agent is available,
           <code>false</code> otherwise.
-        </p>
-        <p>
-          <strong>price</strong>: Price associated with the provided vertical.
         </p>
       </div>
 
@@ -109,8 +104,7 @@ GET https://allcalls.io/api/agent-status?phone=1234567890&vertical=auto_insuranc
           <div class="rounded bg-gray-100 p-3">
             <pre class="text-sm">
 {
-    "online": true,
-    "price": 25
+    "online": true
 }
                 </pre
             >
@@ -124,7 +118,7 @@ GET https://allcalls.io/api/agent-status?phone=1234567890&vertical=auto_insuranc
         <ul class="list-disc pl-5">
           <li>
             This API checks the availability of an agent based on the provided
-            parameters and fetches the associated price.
+            parameters.
           </li>
           <li>
             Affiliates using the API must provide valid credentials for

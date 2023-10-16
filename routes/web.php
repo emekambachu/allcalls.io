@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AgentStatusPriceDocsController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -144,3 +145,4 @@ Route::get('/docs', function() {
 
 Route::get('/docs/ping', [PingDocsController::class, 'show'])->name('docs.ping.show');
 Route::get('/docs/agent-status', [AgentStatusDocsController::class, 'show'])->name('docs.agent-status.show');
+Route::get('/docs/agent-status-price', [AgentStatusPriceDocsController::class, 'show'])->name('docs.agent-status-price.show');
