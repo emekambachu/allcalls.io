@@ -1793,6 +1793,7 @@ class RegistrationStepController extends Controller
                 'user_name' => 'Faiz rana',
                 'client_user_id' => '12345'
             ]);
+            dd( $viewRequest);
             $signingUrl = $envelopeApi->createRecipientView("7716918e-104d-4915-b7ca-eff79222ac45", $envelopeSummary->getEnvelopeId(), $viewRequest);
 
             dd($signingUrl);
