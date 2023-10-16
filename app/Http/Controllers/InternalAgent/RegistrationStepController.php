@@ -21,10 +21,15 @@ use Clegginabox\PDFMerger\PDFMerger;
 use DocuSign\eSign\Api\EnvelopesApi;
 use DocuSign\eSign\Client\ApiClient;
 use DocuSign\eSign\Configuration;
+use DocuSign\eSign\Model\CompositeTemplate;
 use DocuSign\eSign\Model\Document;
 use DocuSign\eSign\Model\EnvelopeDefinition;
+use DocuSign\eSign\Model\InlineTemplate;
+use DocuSign\eSign\Model\Recipients;
 use DocuSign\eSign\Model\RecipientViewRequest;
 use DocuSign\eSign\Model\Signer;
+use DocuSign\eSign\Model\SignHere;
+use DocuSign\eSign\Model\Tabs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -1761,54 +1766,28 @@ class RegistrationStepController extends Controller
         $apiClient->getOAuth()->setOAuthBasePath("account-d.docusign.com");
         $accessToken = $this->getToken($apiClient);
 
-        dd($accessToken);
 
+        $userInfo = $apiClient->getUserInfo($accessToken);
+        $accountInfo = $userInfo[0]->getAccounts();
+        $apiClient->getConfig()->setHost($accountInfo[0]->getBaseUri() . '/restapi');
+        /**
+         *
+         * Step 4
+         * Build the envelope object
+         *
+         * Make an API call to create the envelope and display the response in the view
+         *
+         */
+        $envelopeDefenition = $this->buildEnvelope();
+        try {
+            $envelopeApi = new EnvelopesApi($apiClient);
+            $result = $envelopeApi->createEnvelope($accountInfo[0]->getAccountId(), $envelopeDefenition);
+        } catch (\Exception $th) {
+            return back()->withError($th->getMessage())->withInput();
+        }
+        dd($result);
+        return view('contract.response')->with('result', $result);
 
-
-
-//        $envelopeApi = new EnvelopesApi();
-//
-//
-//        // Define the document
-//        $document = new Document([
-//            'document_base64' => base64_encode(file_get_contents('https://www.africau.edu/images/default/sample.pdf')),
-//            'name' => 'Sample Document',
-//            'file_extension' => 'pdf',
-//            'document_id' => '100011'
-//        ]);
-//        // Define the signer
-//        $signer = new Signer([
-//            'email' => 'awaisamir23@gmail.com',
-//            'name' => 'John Doe',
-//            'recipient_id' => '1',
-//            'client_user_id' => '12345'  // An arbitrary ID
-//        ]);
-//
-//        $envelope = new EnvelopeDefinition([
-//            'email_subject' => 'Please Sign',
-//            'documents' => [$document],
-//            'recipients' => ['signers' => [$signer]],
-//            'status' => 'sent'
-//        ]);
-//
-//        //        $envelopeSummary = $envelopeApi->createEnvelope('1797216e-2fcc-4b29-95e4-ff04a330b007', $envelope);
-//
-//        $envelopeSummary = $envelopeApi->createEnvelope('7716918e-104d-4915-b7ca-eff79222ac45', $envelope);
-//
-//
-//
-//        $viewRequest = new RecipientViewRequest([
-//            'return_url' => '<https://staging.allcalls.io/return-url>',
-//            'authentication_method' => 'none',
-//            'email' => 'abdullah.laraveldev@gmail.com',
-//            'user_name' => 'John Doe',
-//            'client_user_id' => '12345'
-//        ]);
-//
-//
-//        $signingUrl = $envelopeApi->createRecipientView("7716918e-104d-4915-b7ca-eff79222ac45", $envelopeSummary->getEnvelopeId(), $viewRequest);
-
-//        return response()->json(['url' => $signingUrl->getUrl()]);
     }
 
     public function pdfExport()
@@ -1839,5 +1818,60 @@ class RegistrationStepController extends Controller
             throw $th;
         }
         return $accessToken;
+    }
+
+    private function buildEnvelope(): EnvelopeDefinition{
+
+        $fileContent = file_get_contents(asset('/first-step-sign.pdf'));
+        $fileName = "Sample Document";
+        $fileExtension = 'pdf';
+        $recipientEmail ="ra9249421@gmail.com";
+        $recipientName = "Faiz rana";
+
+        $document = new Document([
+            'document_id' => "16",
+            'document_base64' => base64_encode($fileContent),
+            'file_extension' => $fileExtension,
+            'name' => $fileName
+        ]);
+        $sign_here_tab = new SignHere([
+            'anchor_string' => "**signature**",
+            'anchor_units' => "pixels",
+            'anchor_x_offset' => "100",
+            'anchor_y_offset' => "0"
+        ]);
+        $sign_here_tabs = [$sign_here_tab];
+        $tabs1 = new Tabs([
+            'sign_here_tabs' => $sign_here_tabs
+        ]);
+        $signer = new Signer([
+            'email' => $recipientEmail,
+            'name' =>  $recipientName,
+            'recipient_id' => "1",
+            'tabs' => $tabs1
+        ]);
+        $signers = [$signer];
+        $recipients = new Recipients([
+            'signers' => $signers
+        ]);
+        $inline_template = new InlineTemplate([
+            'recipients' => $recipients,
+            'sequence' => "1"
+        ]);
+        $inline_templates = [$inline_template];
+        $composite_template = new CompositeTemplate([
+            'composite_template_id' => "1",
+            'document' => $document,
+            'inline_templates' => $inline_templates
+        ]);
+        $composite_templates = [$composite_template];
+        $envelope_definition = new EnvelopeDefinition([
+            'composite_templates' => $composite_templates,
+            'email_subject' => "Please sign",
+            'status' => "sent"
+        ]);
+
+        return $envelope_definition;
+
     }
 }
