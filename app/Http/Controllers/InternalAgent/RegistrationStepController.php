@@ -1796,15 +1796,14 @@ class RegistrationStepController extends Controller
 //            dd($envelopeApi->createRecipientView("7716918e-104d-4915-b7ca-eff79222ac45", $envelopeSummary->getEnvelopeId(), $viewRequest));
             $signingUrl = $envelopeApi->createRecipientView("7716918e-104d-4915-b7ca-eff79222ac45", $envelopeSummary->getEnvelopeId(), $viewRequest);
 
-            dd($signingUrl);
-            dd(esponse()->json(['url' => $signingUrl->getUrl()]));
+            redirect()->to($signingUrl['url']);
 
 
         } catch (\Exception $th) {
             return back()->withError($th->getMessage())->withInput();
         }
-        dd($result);
-        return view('contract.response')->with('result', $result);
+//        dd($result);
+//        return view('contract.response')->with('result', $result);
 
     }
 
