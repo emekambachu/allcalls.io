@@ -1797,6 +1797,7 @@ class RegistrationStepController extends Controller
 
             $signingUrl = $envelopeApi->createRecipientView("7716918e-104d-4915-b7ca-eff79222ac45", $envelopeSummary->getEnvelopeId(), $viewRequest);
 
+            dd($signingUrl);
             dd(esponse()->json(['url' => $signingUrl->getUrl()]));
 
 
