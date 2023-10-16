@@ -206,41 +206,74 @@ class DocusignController extends Controller
             'routing_order' => "1",
             # Setting the client_user_id marks the signer as embedded
             'client_user_id' => $args['signer_client_id'],
+            "tabs" => [
+                "signHereTabs" => [
+                    [
+                        "anchorString" => "[ACCOMPANYING_SIGNATURE]",
+                        "anchorXOffset" => "0",
+                        "anchorYOffset" => "0",
+                        "anchorUnits" => "pixels",
+                        "documentId" => $documentId,
+                        "pageNumber" => "9",
+                        "required" => "true"
+                    ],
+
+                    [
+                        "anchorString" => "[SIGNATURE_AUTHORIZATION]",
+                        "anchorXOffset" => "5",
+                        "anchorYOffset" => "5",
+                        "anchorUnits" => "pixels",
+                        "documentId" => $documentId,
+                        "pageNumber" => "10",
+                        "required" => "true"
+                    ],
+
+                    [
+                        "anchorString" => "[AGENCY_AUTHORIZATION]",
+                        "anchorXOffset" => "5",
+                        "anchorYOffset" => "5",
+                        "anchorUnits" => "pixels",
+                        "documentId" => $documentId,
+                        "pageNumber" => "11",
+                        "required" => "true"
+                    ],
+                ]
+            ]
         ]);
         # Create a sign_here tab (field on the document)
 
 
-        $signHere1 = new \DocuSign\eSign\Model\SignHere([
-            'anchor_string' => '[ACCOMPANYING_SIGNATURE]',
-            'anchor_units' => 'pixels',
-            'anchor_y_offset' => '0',
-            'anchor_x_offset' => '0',
-            'optional' => false,
-            'tab_label' => 'Key Text',
-            'value' => 'Your Key Text Here',
-        ]);
-
-        $signHere2 = new \DocuSign\eSign\Model\SignHere([
-            'anchor_string' => '[SIGNATURE_AUTHORIZATION]', // Customize this anchor string
-            'anchor_units' => 'pixels',
-            'anchor_y_offset' => '0', // Customize the Y offset
-            'anchor_x_offset' => '0', // Customize the X offset
-            'optional' => false,
-        ]);
-
-
-        $signHere3 = new \DocuSign\eSign\Model\SignHere([
-            'anchor_string' => '[AGENCY_AUTHORIZATION]', // Customize this anchor string
-            'anchor_units' => 'pixels',
-            'anchor_y_offset' => '0', // Customize the Y offset
-            'anchor_x_offset' => '0', // Customize the X offset
-            'optional' => false,
-        ]);
+//        $signHere1 = new \DocuSign\eSign\Model\SignHere([
+//            'anchor_string' => '[ACCOMPANYING_SIGNATURE]',
+//            'anchor_units' => 'pixels',
+//            'anchor_y_offset' => '0',
+//            'anchor_x_offset' => '0',
+//            'optional' => false,
+//            'tab_label' => 'Key Text',
+//            'value' => 'Your Key Text Here',
+//        ]);
+//
+//        $signHere2 = new \DocuSign\eSign\Model\SignHere([
+//            'anchor_string' => '[SIGNATURE_AUTHORIZATION]', // Customize this anchor string
+//            'anchor_units' => 'pixels',
+//            'anchor_y_offset' => '0', // Customize the Y offset
+//            'anchor_x_offset' => '0', // Customize the X offset
+//            'optional' => false,
+//        ]);
+//
+//
+//        $signHere3 = new \DocuSign\eSign\Model\SignHere([
+//            'anchor_string' => '[AGENCY_AUTHORIZATION]', // Customize this anchor string
+//            'anchor_units' => 'pixels',
+//            'anchor_y_offset' => '0', // Customize the Y offset
+//            'anchor_x_offset' => '0', // Customize the X offset
+//            'optional' => false,
+//        ]);
 
 
         # Add the tabs model (including the sign_here tab) to the signer
         # The Tabs object wants arrays of the different field/tab types
-        $signer->settabs(new \DocuSign\eSign\Model\Tabs(['sign_here_tabs' => [$signHere1, $signHere2, $signHere3]]));
+//        $signer->settabs(new \DocuSign\eSign\Model\Tabs(['sign_here_tabs' => [$signHere1, $signHere2, $signHere3]]));
         # Next, create the top level envelope definition and populate it.
 
         $envelope_definition = new \DocuSign\eSign\Model\EnvelopeDefinition([
