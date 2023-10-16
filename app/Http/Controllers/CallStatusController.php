@@ -90,11 +90,11 @@ class CallStatusController extends Controller
                 $parentCallSid = $request->ParentCallSid;
                 $childCallSid = $request->CallSid;
 
-                if ($parentCallSid) {
-                    Log::debug('Parent call sid exists.');
-                    $call = $client->calls($parentCallSid)->fetch();
+                if ($childCallSid) {
+                    Log::debug('childCallSid exists.');
+                    $call = $client->calls($childCallSid)->fetch();
                     Log::debug('Call Info:');
-                    Log::debug($call->toArray());
+                    Log::debug($childCallSid->toArray());
                 }
 
 
