@@ -1420,10 +1420,11 @@ dd($pdfPath);
                 ]);
                 $user->contract_step = 6;
                 $user->save();
+                DB::commit();
+
                 return response()->json([
                     'success' => true,
                 ], 200);
-                DB::commit();
 
                 //Accompanying Signature
                 // $returnArr['contractData'] = User::where('id', $user->id)
@@ -1733,13 +1734,14 @@ dd($pdfPath);
                 if (file_exists(public_path() . '/internal-agents/contract/' . $fileName)) {
                     unlink(public_path() . '/internal-agents/contract/' . $fileName);
                 }
+                $pdf->save($directory . $fileName);
+
                 //End deleted PDF without sign for Accompanying Sign
                 $apiClient = new ApiClient();
                 $apiClient->getOAuth()->setOAuthBasePath("account-d.docusign.com");
                 $docuSignAuthCode = $this->getToken($apiClient);
                 $request->session()->put('docusign_auth_code', $docuSignAuthCode);
 
-                $pdf->save($directory . $fileName);
                 //End Contract PDF
                 return response()->json([
                     'success' => true,

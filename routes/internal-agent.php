@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\InternalAgent\DocusignController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\RegisteredInternalAgentController;
 use \App\Http\Controllers\InternalAgent\RegistrationStepController;
 
 /*
