@@ -1826,7 +1826,7 @@ class RegistrationStepController extends Controller
 
     private function getToken(ApiClient $apiClient) : string{
         try {
-            $privateKey = file_get_contents(asset('public/private.key'),true);
+            $privateKey = file_get_contents(public_path().'/private.key',true);
             $response = $apiClient->requestJWTUserToken(
                 $ikey = "75d97718-8a98-4d27-8def-17c2fceed79f",
                 $userId = "768c0f98-b1a0-49e7-98fb-2ac2c81b72f4",
