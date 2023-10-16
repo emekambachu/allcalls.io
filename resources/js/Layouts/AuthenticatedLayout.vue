@@ -168,6 +168,7 @@ let rejectCall = () => {
     call.reject();
     showRinging.value = false;
     saveUserResponseTime();
+    console.log('Should update now');
   } else {
     console.log("call not found while rejecting");
   }
