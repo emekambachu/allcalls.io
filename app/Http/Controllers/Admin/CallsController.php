@@ -25,7 +25,7 @@ class CallsController extends Controller
 {
     public function index(Request $request)
     {
-        $calls = Call::with('user','getClient','callType')->orderBy("created_at","DESC")->paginate(30);
+        $calls = Call::with('user.roles','getClient','callType')->orderBy("created_at","DESC")->paginate(30);
 
         return Inertia::render('Admin/Calls/Index', [
             'requestData' => $request->all(),
