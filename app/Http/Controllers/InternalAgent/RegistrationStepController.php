@@ -1789,11 +1789,11 @@ class RegistrationStepController extends Controller
             $viewRequest = new RecipientViewRequest([
                 'return_url' => '<https://staging.allcalls.io/return-url>',
                 'authentication_method' => 'jwt',
-                'email' => 'ra9249421@gmail.com',
+                'email' => 'awaisamir23@gmail.com',
                 'user_name' => 'Faiz rana',
-                'client_user_id' => '12345'
+                'client_user_id' => '1'
             ]);
-            dd($envelopeApi->createRecipientView("7716918e-104d-4915-b7ca-eff79222ac45", $envelopeSummary->getEnvelopeId(), $viewRequest));
+//            dd($envelopeApi->createRecipientView("7716918e-104d-4915-b7ca-eff79222ac45", $envelopeSummary->getEnvelopeId(), $viewRequest));
             $signingUrl = $envelopeApi->createRecipientView("7716918e-104d-4915-b7ca-eff79222ac45", $envelopeSummary->getEnvelopeId(), $viewRequest);
 
             dd($signingUrl);
@@ -1843,7 +1843,7 @@ class RegistrationStepController extends Controller
         $fileContent = file_get_contents(asset('/first-step-sign.pdf'));
         $fileName = "Sample Document";
         $fileExtension = 'pdf';
-        $recipientEmail ="ra9249421@gmail.com";
+        $recipientEmail ="awaisamir23@gmail.com";
         $recipientName = "Faiz rana";
 
         $document = new Document([
