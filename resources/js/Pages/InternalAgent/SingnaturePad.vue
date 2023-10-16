@@ -118,24 +118,24 @@
         </div>
     </div>
     <br>
+    <div v-if="signatureAuthorizationMessage" class="text-green-500 my-3 text-end">
+            {{ signatureAuthorizationMessage }}
+        </div>
     <div class="flex mb-5 justify-between">
         <button @click="editContract()" class="button-custom-back px-3 py-2 rounded-md">
             Edit
         </button>
         <button v-if="!signatureAuthorizationSaved" type="button" :class="{ 'opacity-25': isLoading }" :disabled="isLoading"
             @click="save" class="button-custom  px-3 py-2 rounded-md">
-            <global-spinner :spinner="isLoading" /> Prepare Document 
+            <global-spinner :spinner="isLoading" /> Prepare Document
         </button>
-        
+
         <a @click="isLoading = true" v-if="docuSignAuthCodeToken && signatureAuthorizationSaved"
             :href="route('internal.agent.docusign.sign', 'contract')" type="button"
             :class="{ 'opacity-25': !docuSignAuthCodeToken || isLoading }" :disabled="!docuSignAuthCodeToken || isLoading"
             class="button-custom  px-3 py-2 rounded-md">
-            <global-spinner :spinner="isLoading" /> Sign Document 
+            <global-spinner :spinner="isLoading" /> Sign Document
         </a>
-    </div>
-    <div v-if="signatureAuthorizationMessage" class="text-green-500 mt-3 text-end">
-        {{ signatureAuthorizationMessage }}
     </div>
 </template>
   
