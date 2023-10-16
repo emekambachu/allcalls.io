@@ -128,7 +128,7 @@
         </button>
         
         <a @click="isLoading = true" v-if="docuSignAuthCodeToken && signatureAuthorizationSaved"
-            :href="route('internal.agent.docusign.callback', 'contract')" type="button"
+            :href="route('internal.agent.docusign.sign', 'contract')" type="button"
             :class="{ 'opacity-25': !docuSignAuthCodeToken }" :disabled="!docuSignAuthCodeToken"
             class="button-custom  px-3 py-2 rounded-md">
             <global-spinner :spinner="isLoading" /> Sign Document
