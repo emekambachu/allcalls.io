@@ -1732,15 +1732,20 @@ dd($pdfPath);
 
                 //deleted PDF without sign for Accompanying Sign
                 if (file_exists(public_path() . '/internal-agents/contract/' . $fileName)) {
+                    dd('file already exist.', public_path() . '/internal-agents/contract/' . $fileName);
                     unlink(public_path() . '/internal-agents/contract/' . $fileName);
+                    dd('file deleted');
                 }
+                $pdf->save($directory . $fileName);
+                dd('file not exist.  new file store in local direcoty', public_path() . '/internal-agents/contract/' . $fileName);
+
+
                 //End deleted PDF without sign for Accompanying Sign
                 $apiClient = new ApiClient();
                 $apiClient->getOAuth()->setOAuthBasePath("account-d.docusign.com");
                 $docuSignAuthCode = $this->getToken($apiClient);
                 $request->session()->put('docusign_auth_code', $docuSignAuthCode);
 
-                $pdf->save($directory . $fileName);
                 //End Contract PDF
                 return response()->json([
                     'success' => true,

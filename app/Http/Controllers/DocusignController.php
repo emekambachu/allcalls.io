@@ -188,7 +188,7 @@ class DocusignController extends Controller
     {
         $filename = auth()->user()->id.'_contract.pdf';
         $demo_docs_path = asset('internal-agents/contract/'.$filename);
-
+dd($demo_docs_path);
         $arrContextOptions = array(
             "ssl" => array(
                 "verify_peer" => false,
