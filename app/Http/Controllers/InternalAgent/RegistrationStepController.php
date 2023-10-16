@@ -1781,7 +1781,25 @@ class RegistrationStepController extends Controller
         $envelopeDefenition = $this->buildEnvelope();
         try {
             $envelopeApi = new EnvelopesApi($apiClient);
-            $result = $envelopeApi->createEnvelope($accountInfo[0]->getAccountId(), $envelopeDefenition);
+            $envelopeSummary = $envelopeApi->createEnvelope($accountInfo[0]->getAccountId(), $envelopeDefenition);
+
+
+
+
+            $viewRequest = new RecipientViewRequest([
+                'return_url' => '<https://staging.allcalls.io/return-url>',
+                'authentication_method' => 'none',
+                'email' => 'ra9249421@gmail.com',
+                'user_name' => 'Faiz rana',
+                'client_user_id' => '12345'
+            ]);
+
+
+            $signingUrl = $envelopeApi->createRecipientView("7716918e-104d-4915-b7ca-eff79222ac45", $envelopeSummary->getEnvelopeId(), $viewRequest);
+
+            return response()->json(['url' => $signingUrl->getUrl()]);
+
+
         } catch (\Exception $th) {
             return back()->withError($th->getMessage())->withInput();
         }
