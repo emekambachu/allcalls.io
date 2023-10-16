@@ -193,15 +193,15 @@ let errorHandle = (data, response) => {
         }we
         // contractStep.value = 0
     } else if (data === 9) {
-        // if (!props.docuSignAuthCode) {
-        //     axios.get(response.route)
-        //     .then((res) => {
-        //         const newURL = res.data.route;
-        //         window.location.href = newURL;
-        //     })
-        // }else{
+        if (!props.docuSignAuthCode) {
+            axios.get(response.route)
+            .then((res) => {
+                const newURL = res.data.route;
+                window.location.href = newURL;
+            })
+        }else{
             router.visit('contract-steps')
-        // }
+        }
 
     }
 }
