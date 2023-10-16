@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\CallType;
 use App\Models\User;
 use App\Models\Client;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -50,5 +51,16 @@ class Call extends Model
 
         // Calculate the difference in seconds between created_at and user_response_time
         return $this->created_at->diffInSeconds($this->user_response_time);
+    }
+
+    /**
+     * Get the call_taken attribute in the desired format.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getCallTakenAttribute($value)
+    {
+        return Carbon::parse($value)->format('F jS Y, g:i:s a');
     }
 }
