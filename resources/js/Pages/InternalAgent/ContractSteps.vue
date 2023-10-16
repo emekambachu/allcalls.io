@@ -310,7 +310,7 @@ let submit = (step) => {
                     signatureAuthorizationMessage.value = null
                 }, 2000);
                 docuSignAuthCodeToken.value = response.data.docuSignAuthCode
-                isLoading.value = false;
+                // isLoading.value = false;
             } else {
                 errorHandle(step, response.data)
                 isLoading.value = false;
