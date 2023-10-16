@@ -73,8 +73,14 @@ class CallStatusController extends Controller
                 Log::debug('completed event for user ' . $request->user_id);
                 $callDuration = (int) $request->input('CallDuration');
 
-                Log::debug('Call duration: ' . $callDuration);
 
+                $call = Call::where('unique_call_id', $request->unique_call_id)->first();
+                $call->completed_at = now();
+                $call->save();
+                Log::debug('Call completed_at updated.');
+
+
+                Log::debug('Call duration: ' . $callDuration);
 
 
 
@@ -129,7 +135,6 @@ class CallStatusController extends Controller
                 // START: Save Call Duration
                 // ========================================
                 Log::debug('SaveCallDuration: start.');
-                $call = Call::where('unique_call_id', $request->unique_call_id)->first();
                 if ($call && $callDuration) {
                     Log::debug('SaveCallDuration: call && callDuration found.');
                     $call->call_duration_in_seconds = $callDuration;
