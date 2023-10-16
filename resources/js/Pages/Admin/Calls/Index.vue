@@ -213,7 +213,7 @@ let openClientModal = (call) => {
                   <td
                     class="text-gray-700 px-4 py-3"
                   >
-                    <div v-if="call.get_client" @click="openClientModal(call)">
+                    <div class="text-gray-900 hover:text-gray-800 cursor-pointer" v-if="call.get_client" @click="openClientModal(call)">
                       View Client
                     </div>
                   </td>
