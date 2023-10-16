@@ -22,6 +22,7 @@ let props = defineProps({
 
 console.log('calls:');
 console.log(props.calls);
+
 let slidingLoader = ref(false)
 
 let fetchCalls = (page) => {
