@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Call;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class CallUserResponseAPIController extends Controller
@@ -21,7 +22,7 @@ class CallUserResponseAPIController extends Controller
             ], 403);
         }
 
-        $call->user_response_time = $request->user_response_time;
+        $call->user_response_time = Carbon::parse($request->user_response_time);
         $call->save();
 
         return response()->json([
