@@ -19,6 +19,9 @@ let props = defineProps({
   }
 
 });
+
+console.log('calls:');
+console.log(calls);
 let slidingLoader = ref(false)
 
 let fetchCalls = (page) => {
@@ -71,6 +74,7 @@ let openClientModal = (call) => {
                 <tr>
                   <th scope="col" class="px-4 py-3 whitespace-no-wrap">ID</th>
                   <th scope="col" class="px-4 py-3 whitespace-no-wrap" style="min-width:150px">Name</th> 
+                  <th scope="col" class="px-4 py-3 whitespace-no-wrap">RING DURATION</th>
                   <th scope="col" class="px-4 py-3 whitespace-no-wrap">CALL DURATION</th>
                   <th scope="col" class="px-4 py-3 whitespace-no-wrap" style="min-width:175px">CALL TAKEN</th>
                   <th scope="col" class="px-4 py-3 whitespace-no-wrap">AMOUNT SPENT</th>
