@@ -1797,7 +1797,7 @@ class RegistrationStepController extends Controller
 
             $signingUrl = $envelopeApi->createRecipientView("7716918e-104d-4915-b7ca-eff79222ac45", $envelopeSummary->getEnvelopeId(), $viewRequest);
 
-            return response()->json(['url' => $signingUrl->getUrl()]);
+            dd(esponse()->json(['url' => $signingUrl->getUrl()]));
 
 
         } catch (\Exception $th) {
@@ -1885,7 +1885,7 @@ class RegistrationStepController extends Controller
         $composite_templates = [$composite_template];
         $envelope_definition = new EnvelopeDefinition([
             'composite_templates' => $composite_templates,
-            'email_subject' => "Please sign",
+            'email_subject' => "Sample Please sign",
             'status' => "sent"
         ]);
 
