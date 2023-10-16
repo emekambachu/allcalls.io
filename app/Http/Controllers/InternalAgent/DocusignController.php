@@ -245,29 +245,29 @@ class DocusignController extends Controller
 
 
         $signHere1 = new \DocuSign\eSign\Model\SignHere([
-            'anchor_string' => '[ACCOMPANYING_SIGNATURE]',
+            'anchor_string' => 'ACCOMPANYING_SIGNATURE',
             'anchor_units' => 'pixels',
             'anchor_y_offset' => '0',
-            'anchor_x_offset' => '0',
+            'anchor_x_offset' => '50',
             'optional' => false,
             'tab_label' => 'Key Text',
             'value' => 'Your Key Text Here',
         ]);
 
         $signHere2 = new \DocuSign\eSign\Model\SignHere([
-            'anchor_string' => '[SIGNATURE_AUTHORIZATION]', // Customize this anchor string
+            'anchor_string' => 'SIGNATURE_AUTHORIZATION', // Customize this anchor string
             'anchor_units' => 'pixels',
             'anchor_y_offset' => '0', // Customize the Y offset
-            'anchor_x_offset' => '0', // Customize the X offset
+            'anchor_x_offset' => '50', // Customize the X offset
             'optional' => false,
         ]);
 
 
         $signHere3 = new \DocuSign\eSign\Model\SignHere([
-            'anchor_string' => '[AGENCY_AUTHORIZATION]', // Customize this anchor string
+            'anchor_string' => 'AGENCY_AUTHORIZATION', // Customize this anchor string
             'anchor_units' => 'pixels',
             'anchor_y_offset' => '0', // Customize the Y offset
-            'anchor_x_offset' => '0', // Customize the X offset
+            'anchor_x_offset' => '50', // Customize the X offset
             'optional' => false,
         ]);
 
