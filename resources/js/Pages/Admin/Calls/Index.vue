@@ -214,6 +214,8 @@ let openClientModal = (call) => {
                     class="text-gray-700 px-4 py-3 flex items-center justify-end"
                   >
                     <button
+                    v-if="call.get_client"
+
                       @click="openClientModal(call)"
                       class="bg-sky-900 text-white px-4 py-2 rounded-md"
                     >
