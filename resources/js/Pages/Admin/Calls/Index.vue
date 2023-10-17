@@ -212,6 +212,7 @@ let openClientModal = (call) => {
                     <span v-else>_</span>
                   </td>
                   <td class="text-gray-700 px-4 py-3">
+
                     <Menu as="div" class="relative inline-block text-left">
                       <div>
                         <MenuButton
