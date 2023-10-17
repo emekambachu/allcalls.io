@@ -7,6 +7,7 @@ import { ref } from "vue";
 import { toaster } from "@/helper.js";
 import Modal from "@/Components/Modal.vue";
 import SearchFilter from "@/Components/SearchFilter.vue";
+import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 let page = usePage();
 if (page.props.flash.message) {
   toaster("success", page.props.flash.message);
@@ -210,11 +211,38 @@ let openClientModal = (call) => {
                     </a>
                     <span v-else>_</span>
                   </td>
-                  <td
-                    class="text-gray-700 px-4 py-3"
-                  >
-                    <div class="text-gray-900 hover:text-gray-800 cursor-pointer" v-if="call.get_client" @click="openClientModal(call)">
-                      View Client
+                  <td class="text-gray-700 px-4 py-3">
+                    <div
+                      class="text-gray-900 hover:text-gray-800 cursor-pointer"
+                      v-if="call.get_client"
+                      @click="openClientModal(call)"
+                    >
+                      <Menu>
+                        <MenuButton>More</MenuButton>
+                        <MenuItems>
+                          <MenuItem v-slot="{ active }">
+                            <a
+                              :class="{ 'bg-blue-500': active }"
+                              href="/account-settings"
+                            >
+                              Account settings
+                            </a>
+                          </MenuItem>
+                          <MenuItem v-slot="{ active }">
+                            <a
+                              :class="{ 'bg-blue-500': active }"
+                              href="/account-settings"
+                            >
+                              Documentation
+                            </a>
+                          </MenuItem>
+                          <MenuItem disabled>
+                            <span class="opacity-75"
+                              >Invite a friend (coming soon!)</span
+                            >
+                          </MenuItem>
+                        </MenuItems>
+                      </Menu>
                     </div>
                   </td>
                 </tr>
