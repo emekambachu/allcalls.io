@@ -212,12 +212,7 @@ let openClientModal = (call) => {
                     <span v-else>_</span>
                   </td>
                   <td class="text-gray-700 px-4 py-3">
-                    <div
-                      class="text-gray-900 hover:text-gray-800 cursor-pointer"
-                      v-if="call.get_client"
-                      @click="openClientModal(call)"
-                    >
-                      <Menu>
+                    <Menu>
                         <MenuButton>More</MenuButton>
                         <MenuItems>
                           <MenuItem v-slot="{ active }">
@@ -243,6 +238,12 @@ let openClientModal = (call) => {
                           </MenuItem>
                         </MenuItems>
                       </Menu>
+                    <div
+                      class="text-gray-900 hover:text-gray-800 cursor-pointer"
+                      v-if="call.get_client"
+                      @click="openClientModal(call)"
+                    >
+                      View Client
                     </div>
                   </td>
                 </tr>
