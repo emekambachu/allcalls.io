@@ -1,5 +1,5 @@
 <template>
-    <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
+    <!-- <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
         Accompanying Documents
     </h1>
     <p class="px-4 py-2">
@@ -27,7 +27,6 @@
         </div>
     </div>
     <br>
-    <!-- <hr class="w-100 h-1 my-4 bg-gray-600 border-0 rounded dark:bg-gray-700"> -->
     <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
         Signature Authorization
     </h1>
@@ -55,30 +54,7 @@
     </div>
     </p>
 
-    <!-- <div class="container mx-auto p-5 flex justify-between flex-wrap">
-        <div class="" style="width: 70%;">
-            <div class=" mb-10 ">
-                <div>Signature:</div>
 
-                <VueSignaturePad id="signature" ref="signaturePad" :options="options" />
-                <button @click="undo" class=" button-custom mt-2 px-2 py-2 rounded-md">
-                    Undo
-                </button>
-                <a v-if="docuSignAuthCodeToken" :href="route('internal.agent.docusign.sign', 'signature_authorization')">Sign
-                    with DocuSign</a>
-                <div v-if="firstStepErrors.signature_authorization" class="text-red-500 mt-4"
-                    v-text="firstStepErrors.signature_authorization[0]">
-                </div>
-                <p v-if="sigError" class="text-red-500 mt-2">{{ sigError }}</p>
-            </div>
-        </div>
-
-
-        <div class="w-30 " style="margin-top: 132px;">
-            <div class="mb-2"><strong>Date:</strong> <span class="mx-2">{{ dateFormat(date) }}</span></div>
-            <div style="width: 200px;" class="border-b border-black "></div>
-        </div>
-    </div> -->
     <div class="w-full  flex justify-between p-4">
         <div class="w-3/5 pr-4 flex">
             <div>Signature:</div>
@@ -116,31 +92,29 @@
             <div>Date:</div>
             <div class="border-b border-gray-400 w-full"><span class="ml-5">{{ dateFormat(date) }}</span></div>
         </div>
-    </div>
+    </div> -->
     <br>
-    <div v-if="signatureAuthorizationMessage" class="text-green-500 my-3 text-end">
-            {{ signatureAuthorizationMessage }}
-        </div>
     <div class="flex mb-5 justify-between">
         <button @click="editContract()" class="button-custom-back px-3 py-2 rounded-md">
             Edit
         </button>
-        <button v-if="!signatureAuthorizationSaved" type="button" :class="{ 'opacity-25': isLoading }" :disabled="isLoading"
+        <!-- <button v-if="!signatureAuthorizationSaved" type="button" :class="{ 'opacity-25': isLoading }" :disabled="isLoading"
             @click="save" class="button-custom  px-3 py-2 rounded-md">
             <global-spinner :spinner="isLoading" /> Prepare Document
-        </button>
+        </button> -->
 
-        <a @click="isLoading = true" v-if="docuSignAuthCodeToken && signatureAuthorizationSaved"
+        <a @click="isLoading = true" v-if="docuSignAuthCode"
             :href="route('internal.agent.docusign.sign', 'contract')" type="button"
-            :class="{ 'opacity-25': !docuSignAuthCodeToken || isLoading }" :disabled="!docuSignAuthCodeToken || isLoading"
+            :class="{ 'opacity-25': !docuSignAuthCode || isLoading }" :disabled="!docuSignAuthCode || isLoading"
             class="button-custom  px-3 py-2 rounded-md">
             <global-spinner :spinner="isLoading" /> Sign Document
         </a>
+        <button v-else :class="{ 'opacity-25':isLoading2 }" :disabled="isLoading2"  @click="ReloadPage" class="button-custom  px-3 py-2 rounded-md"><global-spinner :spinner="isLoading2" />Rload</button>
+
     </div>
 </template>
   
 <script>
-import axios from 'axios';
 export default {
     name: "App",
     data: () => ({
@@ -149,15 +123,14 @@ export default {
         },
         date: new Date(),
         sigError: '',
+        isLoading2:false,
     }),
     props: {
         isLoading: Boolean,
         userData: Object,
         page: Object,
         firstStepErrors: Object,
-        docuSignAuthCodeToken: String,
-        signatureAuthorizationMessage: String,
-        signatureAuthorizationSaved: Boolean,
+        docuSignAuthCode: String,
     },
     mounted() {
         // if (this.page.auth.role === 'internal-agent') {
@@ -171,6 +144,10 @@ export default {
         // undo() {
         //     this.$refs.signaturePad.undoSignature();
         // },
+        ReloadPage(){
+            this.isLoading2 = true
+            location.reload();
+        },
         dateFormat(date) {
             const day = date.getDate().toString().padStart(2, "0"); // Add leading zero if needed
             const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Month is zero-based, so add 1

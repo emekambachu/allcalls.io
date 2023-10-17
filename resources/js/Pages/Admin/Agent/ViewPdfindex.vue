@@ -13,6 +13,7 @@ let props = defineProps({
     },
     userData: Object,
 });
+console.log('userData', props.userData);
 let bankingInfotUrl = ref(null)
 // if (props.userData.internal_agent_contract && props.userData.internal_agent_contract.banking_info) {
 //     bankingInfotUrl.value = props.userData.internal_agent_contract.banking_info.url
@@ -71,7 +72,7 @@ let formatData = (val) => {
                         1. Full Contract
                     </div>
                     <div>
-                        <a target="_blank" :href="route('admin.agent.contract.pdf', userData.id)">
+                        <a target="_blank" :href="userData.internal_agent_contract?.get_contract_sign?.sign_url">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                                 class="w-6 h-6 text-blue-600">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -81,7 +82,7 @@ let formatData = (val) => {
                     </div>
 
                 </div>
-                <div class="bg-white  m-5 flex items-center">
+                <!-- <div class="bg-white  m-5 flex items-center">
                     <div class=" text-lg font-semibold mr-4">
                         2. Signature Authorization
                     </div>
@@ -94,11 +95,11 @@ let formatData = (val) => {
                             </svg>
                         </a>
                     </div>
-                </div>
+                </div> -->
 
                 <div class="bg-white  m-5 flex items-center">
                     <div class=" text-lg font-semibold mr-4">
-                        3. AML Course
+                        2. AML Course
                     </div>
                     <div>
                         <a target="_blank" :href="userData.internal_agent_contract?.aml_course?.url"
@@ -115,7 +116,7 @@ let formatData = (val) => {
 
                 <div class="bg-white  m-5 flex items-center">
                     <div class=" text-lg font-semibold mr-4">
-                        4. Errors and Omissions Insurances
+                        3. Errors and Omissions Insurances
                     </div>
                     <div>
                         <a target="_blank" :href="userData.internal_agent_contract?.error_and_emission?.url"
@@ -131,7 +132,7 @@ let formatData = (val) => {
                 </div>
                 <div class="bg-white  m-5 flex items-center">
                     <div class=" text-lg font-semibold mr-4">
-                        5. Resident License 
+                        4. Resident License 
                     </div>
                     <div>
                         <a target="_blank" :href="userData.internal_agent_contract?.resident_license?.url"
@@ -147,7 +148,7 @@ let formatData = (val) => {
                 </div>
                 <div class="bg-white  m-5 flex items-center">
                     <div class=" text-lg font-semibold mr-4">
-                        6. Banking Information
+                        5. Banking Information
                     </div>
                     <div>
                         <a target="_blank" :href="userData.internal_agent_contract?.banking_info?.url"

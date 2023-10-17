@@ -96,103 +96,6 @@ class RegistrationStepController extends Controller
                 $user->contract_step = 10;
                 $user->save();
             }
-
-
-            // if (isset($_GET['position']) && $_GET['position'] == 'accompanying_sign') {
-            //     $envelopeId =  session()->get('envelope_id');
-            //     $documentId =  session()->get('document_id');
-
-            //     $url = "$this->baseUrl/v2.1/accounts/$this->accountId/envelopes/$envelopeId/documents/$documentId";
-
-            //     $response = Http::withHeaders([
-            //         'Authorization' => 'Bearer ' . session()->get('docusign_auth_code'),
-            //         'Content-Description' => 'File Transfer',
-            //         'Content-Type' => 'application/pdf',
-            //     ])->get($url);
-
-            //     //deleted PDF without sign for Accompanying Sign
-            //     $accompanyingSign = 'accompanying-sign-' . $user->id . '.pdf';
-            //     if (file_exists(asset('internal-agents/contract/' . $accompanyingSign))) {
-            //         unlink(asset('internal-agents/contract/' . $accompanyingSign));
-            //     }
-            //     //End deleted PDF without sign for Accompanying Sign
-
-            //     //store PDF signed for Accompanying Sign
-            //     $pdfFileName = $user->id . '_accompanying_sign' . '.pdf';
-            //     $pdfPath = public_path('internal-agents/contract/' . $pdfFileName);
-            //     file_put_contents($pdfPath, $response->body());
-            //     //End store signed PDF for Accompanying Sign
-
-            //     //Track Signer
-            //     DocuSignTracker::updateOrCreate(
-            //         ['user_id' => $user->id, 'sign_type' => 'accompanying_sign'], // conditions
-            //         [
-            //             'envlope_id' => session()->get('envelope_id'),
-            //             'document_id' => session()->get('document_id'),
-            //         ]
-            //     );
-            //     //Track Signer
-
-            //     InternalAgentQuestionSigned::updateOrCreate(['reg_info_id' => $user->internalAgentContract->id], [
-            //         'name' => $pdfFileName,
-            //         'sign_url' => asset('internal-agents/contract/' . $pdfFileName),
-            //     ]);
-
-            //     $user->contract_step = 6;
-            //     $user->save();
-            // }
-
-            // if (isset($_GET['position']) && $_GET['position'] == 'signature_authorization') {
-            //     $envelopeId =  session()->get('envelope_id');
-            //     $documentId =  session()->get('document_id');
-
-            //     $url = "$this->baseUrl/v2.1/accounts/$this->accountId/envelopes/$envelopeId/documents/$documentId";
-
-            //     $response = Http::withHeaders([
-            //         'Authorization' => 'Bearer ' . session()->get('docusign_auth_code'),
-            //         'Content-Description' => 'File Transfer',
-            //         'Content-Type' => 'application/pdf',
-            //     ])->get($url);
-
-            //     //deleted PDF without sign for Signature Authorization
-            //     $firstStepPdf = 'first-step-sign-' . $user->id . '.pdf';
-            //     if (file_exists(asset('internal-agents/contract/' . $firstStepPdf))) {
-            //         unlink(asset('internal-agents/contract/' . $firstStepPdf));
-            //     }
-            //     //End deleted PDF without sign for Signature Authorization
-
-            //     //store PDF signed  Signature Authorization
-            //     $pdfFileName = $user->id . '_signature_authorization' . '.pdf';
-            //     $pdfPath = public_path('internal-agents/contract/' . $pdfFileName);
-            //     file_put_contents($pdfPath, $response->body());
-            //     //End store signed PDF for Signature Authorization
-
-            //     //Track Signer
-            //     DocuSignTracker::updateOrCreate(
-            //         ['user_id' => $user->id, 'sign_type' => 'signature_authorization'], // conditions
-            //         [
-            //             'envlope_id' => session()->get('envelope_id'),
-            //             'document_id' => session()->get('document_id'),
-            //         ]
-            //     );
-            //     //Track Signer
-
-            //     InternalAgentContractSigned::updateOrCreate(['reg_info_id' => $user->internalAgentContract->id], [
-            //         'name' => $pdfFileName,
-            //         'sign_url' => asset('internal-agents/contract/' . $pdfFileName),
-            //     ]);
-
-            //     $user->contract_step = 11;
-            //     $user->save();
-            // }
-
-            // if (isset($_GET['position']) && $_GET['position'] == 'agency_authorization') {
-            //     dd('agency authorization');
-
-            //     $user->contract_step = 11;
-            //     $user->legacy_key = true;
-            //     $user->save();
-            // }
         }
 
         if (auth()->user()->legacy_key) {
@@ -215,10 +118,19 @@ class RegistrationStepController extends Controller
             ->with('internalAgentContract.getQuestionSign')
             ->with('internalAgentContract.getContractSign')->first();
         $states = State::all();
+        $amlCouseGuide = asset('guid-links/aml-setup.pdf'); 
+
+        //Docusign Auth Token
+        $apiClient = new ApiClient();
+        $apiClient->getOAuth()->setOAuthBasePath("account-d.docusign.com");
+        $docuSignAuthCode = $this->getToken($apiClient);
+        session()->put('docusign_auth_code', $docuSignAuthCode);
+        //End Docusign Auth Token
 
         return Inertia::render('InternalAgent/ContractSteps', [
             'states' => $states,
             'userData' => $user,
+            'amlCouseGuide' => $amlCouseGuide,
             'docuSignAuthCode' => session()->get('docusign_auth_code'),
         ]);
     }
@@ -232,7 +144,6 @@ class RegistrationStepController extends Controller
             $step1Validation = Validator::make($request->all(), [
                 'first_name' => 'required',
                 'last_name' => 'required',
-                'middle_name' => 'required',
                 'ssn' => 'required',
                 'gender' => 'required',
                 'dob' => 'required',
@@ -270,7 +181,6 @@ class RegistrationStepController extends Controller
             ], [
                 'first_name.required' => 'This field is required.',
                 'last_name.required' => 'This field is required.',
-                'middle_name.required' => 'This field is required.',
                 'ssn.required' => 'This field is required.',
                 'gender.required' => 'This field is required.',
                 'dob.required' => 'This field is required.',
@@ -1424,37 +1334,6 @@ class RegistrationStepController extends Controller
                 return response()->json([
                     'success' => true,
                 ], 200);
-
-                //Accompanying Signature
-                // $returnArr['contractData'] = User::where('id', $user->id)
-                //     ->with('internalAgentContract.getState')
-                //     ->with('internalAgentContract.getDriverLicenseState')
-                //     ->with('internalAgentContract.getMoveInState')
-                //     ->with('internalAgentContract.getResidentInsLicenseState')
-                //     ->with('internalAgentContract.getBusinessState')
-                //     ->with('internalAgentContract.additionalInfo.getState')
-                //     ->with('internalAgentContract.addresses.getState')
-                //     ->with('internalAgentContract.legalQuestion')->first();
-
-                // $pdf = PDF::loadView('pdf.internal-agent-contract.agent-contract', $returnArr);
-                // $directory = public_path('internal-agents/contract/');
-                // if (!file_exists($directory)) {
-                //     mkdir($directory, 0777, true);
-                // }
-                // $accompanyingSign = 'accompanying-sign-' . $user->id . '.pdf';
-                // if (file_exists(asset('internal-agents/contract/' . $accompanyingSign))) {
-                //     unlink(asset('internal-agents/contract/' . $accompanyingSign));
-                // }
-                // $pdf->save($directory . $accompanyingSign);
-
-                //Accompanying Signature
-
-                // return response()->json([
-                //     'success' => true,
-                //     'key' => 'accompanying_sign',
-                //     'message' => 'Document is prepared and ready to sign.',
-                //     'step' => 5,
-                // ], 200);
             } catch (\Exception $e) {
                 DB::rollBack();
                 return response()->json([
@@ -1646,71 +1525,7 @@ class RegistrationStepController extends Controller
                     ]);
                 }
 
-                //Generate DocuSign Code
-                // $apiClient = new ApiClient();
-                // $apiClient->getOAuth()->setOAuthBasePath("account-d.docusign.com");
-                // $docuSignAuthCode = $this->getToken($apiClient);
-                // $request->session()->put('docusign_auth_code', $docuSignAuthCode);
-                //End Generate DocuSign Code
-
-                $user->contract_step = 10;
-                $user->save();
-                DB::commit();
-                return response()->json([
-                    'success' => true,
-                    // 'docuSignAuthCode' => session()->get('docusign_auth_code'),
-                ], 200);
-            } catch (\Exception $e) {
-                DB::rollBack();
-                return response()->json([
-                    'success' => false,
-                    'errors' => $e->getMessage(),
-                ], 400);
-            }
-        }
-
-        if ($request->step == 10) {
-            try {
-                //Signature Authorization
-                // $returnArr['contractData'] = User::where('id', $user->id)
-                //     ->with('internalAgentContract.amlCourse')
-                //     ->with('internalAgentContract.bankingInfo')
-                //     ->with('internalAgentContract.errorAndEmission')
-                //     ->with('internalAgentContract.residentLicense')->first();
-
-                //Contract Signature
-                // $pdf = PDF::loadView('pdf.internal-agent-contract.signature-authorization', $returnArr);
-                // $directory = public_path('internal-agents/contract/');
-                // if (!file_exists($directory)) {
-                //     mkdir($directory, 0777, true);
-                // }
-                // $signatureAuthorization = $user->id . '-signature-authorization.pdf';
-                // $pdf->save($directory . $signatureAuthorization);
-                //Contract Signature End
-
-                // $pdfMerger = new PDFMerger;
-                //signed Accompanying PDF
-                // $accompnayingPDF = $user->id . '_accompanying_sign' . '.pdf';
-                // $pdfMerger->addPDF(public_path() . '/internal-agents/contract/' . $accompnayingPDF, 'all');
-                //end signed Accompanying PDF
-
-                // $pdfMerger->addPDF(public_path() . '/internal-agents/aml-course/' . $returnArr['contractData']->internalAgentContract->amlCourse->name, 'all');
-                // $pdfMerger->addPDF(public_path() . '/internal-agents/error-and-omission/' . $returnArr['contractData']->internalAgentContract->errorAndEmission->name, 'all');
-                // $pdfMerger->addPDF(public_path() . '/internal-agents/resident-license-pdf/' . $returnArr['contractData']->internalAgentContract->residentLicense->name, 'all');
-                // $pdfMerger->addPDF(public_path() . '/internal-agents/banking-info/' . $returnArr['contractData']->internalAgentContract->bankingInfo->name, 'all');
-                // $pdfMerger->addPDF(public_path() . '/internal-agents/contract/' . $signatureAuthorization, 'all');
-                // $storeAsPath = 'internal-agents/contract/' . $signatureAuthorization;
-                // $pdfMerger->merge('file', $storeAsPath, 'P');
-
-                //deleted PDF without sign for Signature Authorization
-                // if (file_exists(asset('internal-agents/contract/' . $signatureAuthorization))) {
-                //     unlink(asset('internal-agents/contract/' . $signatureAuthorization));
-                // }
-                //End deleted PDF without sign for Signature Authorization
-                //Signature Authorization
-
-
-                //Start Contract PDF
+                //Start Generate Contract PDF
                 $returnArr['contractData'] = User::where('id', $user->id)
                     ->with('internalAgentContract.getState')
                     ->with('internalAgentContract.getDriverLicenseState')
@@ -1733,20 +1548,14 @@ class RegistrationStepController extends Controller
                 if (file_exists(public_path() . '/internal-agents/contract/' . $fileName)) {
                     unlink(public_path() . '/internal-agents/contract/' . $fileName);
                 }
-                $pdf->save($directory . $fileName);
-
                 //End deleted PDF without sign for Accompanying Sign
-                $apiClient = new ApiClient();
-                $apiClient->getOAuth()->setOAuthBasePath("account-d.docusign.com");
-                $docuSignAuthCode = $this->getToken($apiClient);
-                $request->session()->put('docusign_auth_code', $docuSignAuthCode);
-
-                //End Contract PDF
+                $pdf->save($directory . $fileName);
+                //End Generate Contract PDF
+                $user->contract_step = 10;
+                $user->save();
+                DB::commit();
                 return response()->json([
                     'success' => true,
-                    'message' => 'Document ready to sign.',
-                    'route' => route('internal.agent.docusign.sign'),
-                    'docuSignAuthCode' => session()->get('docusign_auth_code'),
                 ], 200);
             } catch (\Exception $e) {
                 DB::rollBack();

@@ -112,7 +112,7 @@ let ChangeTab = () => {
             "business_city", "business_zip", "business_move_in_date", 'business_state'
         ]
         const requiredFields = [
-            "first_name", "last_name", "middle_name", "ssn", "gender", "dob", "marital_status",
+            "first_name", "last_name", "ssn", "gender", "dob", "marital_status",
             "cell_phone", "email", "driver_license_no", "driver_license_state",
             "address", "city", 'state', "zip", "move_in_date", "resident_insu_license_no", "resident_insu_license_state",
         ];
@@ -181,7 +181,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
             </div>
             <div>
                 <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 ">Middle
-                    Name<span class="text-red-500">*</span></label>
+                    Name</label>
                 <input type="text" v-model="form.middle_name" id="default-input"
                     :disabled="page.props.auth.role === 'admin'"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
@@ -237,7 +237,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
                 <div v-if="firstStepErrors.home_phone" class="text-red-500" v-text="firstStepErrors.home_phone[0]"></div>
             </div>
             <div>
-                <label for="middle_name" class="block mb-2 text-sm font-black text-gray-900 ">Fax#</label>
+                <label for="Fax" class="block mb-2 text-sm font-black text-gray-900 ">Fax#</label>
                 <input type="text" maxLength="15" v-model="form.fax" id="default-input"
                     :disabled="page.props.auth.role === 'admin'"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
@@ -247,7 +247,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
 
         <div class="grid lg:grid-cols-3 mb-2  md:grid-cols-1 sm:grid-cols-1 gap-4">
             <div>
-                <label for="middle_name" class="block mb-2 text-sm font-black text-gray-900 ">Email<span
+                <label for="Email" class="block mb-2 text-sm font-black text-gray-900 ">Email<span
                         class="text-red-500">*</span></label>
                 <input type="email" v-model="form.email" id="default-input"
                     :disabled="page.props.auth.role === 'admin'"
@@ -331,7 +331,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
                 <div v-if="firstStepErrors.zip" class="text-red-500" v-text="firstStepErrors.zip[0]"></div>
             </div>
             <div>
-                <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 ">Move-In
+                <label for="Move-In Date" class="block mb-2   text-sm font-black text-gray-900 ">Move-In
                     Date<span class="text-red-500">*</span></label>
                 <VueDatePicker :disabled="page.props.auth.role === 'admin'" v-model="form.move_in_date" format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply>
                 </VueDatePicker>
@@ -540,7 +540,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
                         v-text="firstStepErrors.business_office_phone[0]"></div>
                 </div>
                 <div>
-                    <label for="middle_name" class="block mb-2 text-sm font-black text-gray-900 ">Email<span
+                    <label for="Email" class="block mb-2 text-sm font-black text-gray-900 ">Email<span
                             class="text-red-500">*</span></label>
                     <input type="email" v-model="form.business_email" id="default-input"
                         :disabled="page.props.auth.role === 'admin'"
@@ -553,7 +553,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
 
             <div class="grid lg:grid-cols-4 mb-2 mt-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
                 <div>
-                    <label for="middle_name"
+                    <label for="Website"
                         class="block mb-2 text-sm font-black text-gray-900 ">Website<span
                             class="text-red-500">*</span></label>
                     <input type="url" v-model="form.business_website" id="default-input"
@@ -607,7 +607,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
                     </div>
                 </div>
                 <div>
-                    <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 ">Move-In
+                    <label for="Move-In Date" class="block mb-2   text-sm font-black text-gray-900 ">Move-In
                         Date<span class="text-red-500">*</span></label>
                     <VueDatePicker :disabled="page.props.auth.role === 'admin'" v-model="form.business_move_in_date" format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply>
                     </VueDatePicker>
