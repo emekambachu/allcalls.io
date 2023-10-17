@@ -32,15 +32,11 @@ let props = defineProps({
     docuSignAuthCode: {
         type: String,
         default: null
-    }
+    },
+    amlCouseGuide:String,
 });
-let docuSignAuthCodeToken = ref(null)
-if(props.docuSignAuthCode){
-    docuSignAuthCodeToken.value = props.docuSignAuthCode
-}
-console.log('docuSignAuthCode docusign_auth_code', props.docuSignAuthCode);
-let StepsModal = ref(true)
-let contractModal = ref(false)
+let StepsModal = ref(false)
+let contractModal = ref(true)
 const isLoading = ref(false);
 let form = ref({
     aml_course: false,
@@ -79,26 +75,9 @@ let firstStepErrors = ref({});
 
 
 let ChangeTab = (route) => {
-    if (contractStep.value === 4 && page.props.auth.role === 'internal-agent') {
-        router.visit('contract-steps')
-        // if (!props.docuSignAuthCode) {
-        //     isLoading.value = true
-        //     // slidingLoader.value = true
-        //     axios.get(route)
-        //         .then((res) => {
-        //             // console.log('res1', res);
-        //             const newURL = res.data.route;
-        //             window.location.href = newURL;
-        //         })
-        // } else {
-        //     router.visit('contract-steps')
-        // }
-    } else {
-        contractStep.value += 1
-    }
-
-    // var element = document.getElementById("modal_main_id");
-    // element.scrollIntoView();
+    contractStep.value += 1
+    var element = document.getElementById("modal_main_id");
+    element.scrollIntoView();
 }
 let ChangeTabBack = () => {
     contractStep.value -= 1
@@ -174,11 +153,7 @@ let previewContract = () => {
 }
 let slidingLoader = ref(false)
 let additional_info_saved = ref(false)
-let accompanyingSignMessage = ref(null)
-let signatureAuthorizationSaved = ref(false)
-let signatureAuthorizationMessage = ref(null)
 let errorHandle = (data, response) => {
-    console.log('data', data);
     if (data < 5) {
         ChangeTab(response.route)
     } else if (data < 9) {
@@ -195,19 +170,13 @@ let errorHandle = (data, response) => {
             step.value = 5
             contractStep.value = 0
         }
-        // contractStep.value = 0
+        var element = document.getElementById("modal_main_id");
+        element.scrollIntoView();
     } else if (data === 9) {
+        slidingLoader.value = true
+        StepsModal.value = false
+        contractModal.value = true
         router.visit('contract-steps')
-        // if (!props.docuSignAuthCode) {
-        //     axios.get(response.route)
-        //     .then((res) => {
-        //         const newURL = res.data.route;
-        //         window.location.href = newURL;
-        //     })
-        // }else{
-        //     router.visit('contract-steps')
-        // }
-
     }
 }
 if (props.userData?.internal_agent_contract) {
@@ -302,22 +271,8 @@ let submit = (step) => {
             }
         })
         .then((response) => {
-            if (step === 10) {
-                // console.log('date save', );
-                signatureAuthorizationSaved.value = true
-                signatureAuthorizationMessage.value = response.data.message
-                setTimeout(() => {
-                    signatureAuthorizationMessage.value = null
-                }, 2000);
-                docuSignAuthCodeToken.value = response.data.docuSignAuthCode
-                isLoading.value = false;
-            } else {
-                errorHandle(step, response.data)
-                isLoading.value = false;
-                
-            }
-            console.log('response', response);
-            
+            errorHandle(step, response.data)
+            isLoading.value = false;
         })
         .catch((error) => {
             isLoading.value = false;
@@ -483,7 +438,6 @@ input[type=number] {
                             </div>
                             <div v-show="contractStep === 5">
                                 <AdditionalInfo :docuSignAuthCode="docuSignAuthCode"
-                                    :accompanyingSignMessage="accompanyingSignMessage"
                                     @additionalInfoData="additionalInformation"
                                     :additional_info_saved="additional_info_saved" :firstStepErrors="firstStepErrors"
                                     :page="$page.props" :states="states" @changeTab="NextStep()" :isLoading="isLoading"
@@ -491,7 +445,7 @@ input[type=number] {
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="step === 2" class="pt-6">
-                                <AmLCourse :firstStepErrors="firstStepErrors" :isLoading="isLoading"
+                                <AmLCourse :firstStepErrors="firstStepErrors" :amlCouseGuide="amlCouseGuide" :isLoading="isLoading"
                                     @uploadPdfAml="uploadPdfAml" @changeTab="NextStep()" @goback="goBack()"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
@@ -552,12 +506,13 @@ input[type=number] {
                                 <span class="sr-only">Close modal</span>
                             </button>
                         </div>
-
-                        <div class="px-12 py-2">
+                        <div v-show="slidingLoader" class="px-12 py-2">
+                            <animation-slider :slidingLoader="slidingLoader" />
+                        </div>
+                        <div v-show="!slidingLoader" class="px-12 py-2">
                             <ContractDetailPage :userData="userData" />
-                            <SingnaturePad :page="$page.props" :userData="userData" :docuSignAuthCodeToken="docuSignAuthCodeToken"
-                                @editContract="editContract" :signatureAuthorizationMessage="signatureAuthorizationMessage"
-                                :signatureAuthorizationSaved="signatureAuthorizationSaved"
+                            <SingnaturePad :page="$page.props" :userData="userData"
+                                :docuSignAuthCode="docuSignAuthCode" @editContract="editContract"
                                 :firstStepErrors="firstStepErrors" :isLoading="isLoading" @signature="signaturePreview" />
                         </div>
                     </div>

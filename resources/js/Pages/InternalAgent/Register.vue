@@ -86,7 +86,7 @@ let form = useForm({
     acc[obj.id] = [];
     return acc;
   }, {}),
-  consent:false,
+  consent: false,
 });
 let isFormValid = ref(true);
 const areAllArraysEmpty = computed(() => {
@@ -111,7 +111,7 @@ watch(
       password === "" ||
       passwordConfirmation === "" ||
       password !== passwordConfirmation || // Check for password mismatch
-      phone === "" || 
+      phone === "" ||
       consent === false
     ) {
       isFormValid.value = true;
@@ -149,9 +149,9 @@ let submit = () => {
           isLoading.value = false
 
           firstStepErrors.value = error.response.data.errors;
-          if(error.response.data.errors.typesWithStates){
+          if (error.response.data.errors.typesWithStates) {
             step.value = 1
-          }else{
+          } else {
             step.value = 0
           }
           if (error.response.status === 400) {
@@ -318,17 +318,29 @@ let StepChange = (val) => {
           <input id="checked-checkbox" type="checkbox" v-model="form.consent"
             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
           <label for="checked-checkbox" class="ml-2 text-xs font-medium text-gray-900 dark:text-gray-400">
-            By checking this box, I verify that this is my mobile number and that I would like to sign up to receive messages from “AllCalls.io” program by AllCalls LLC. I understand that I am not required to provide my consent as a condition of purchasing any products or services. Msg freq may vary. Msg data rates may apply. Reply HELP for help or STOP to optout. Read <a href="https://allcalls.io/terms.php">Terms and Conditions</a>. Read <a href="https://allcalls.io/privacy.php">Privacy Policy</a>.
+            By checking this box, I verify that this is my mobile number and that I would like to sign up to receive
+            messages from “AllCalls.io” program by AllCalls LLC. I understand that I am not required to provide my consent
+            as a condition of purchasing any products or services. Msg freq may vary. Msg data rates may apply. Reply HELP
+            for help or STOP to optout. Read <a href="https://allcalls.io/terms.php">Terms and Conditions</a>. Read <a
+              href="https://allcalls.io/privacy.php">Privacy Policy</a>.
           </label>
         </div>
         <div v-if="firstStepErrors.consent" class="text-red-500 ml-5" v-text="firstStepErrors.consent[0]"></div>
+
         <div class="flex items-center justify-end mt-4" :class="{ 'opacity-25': form.processing || isLoading }"
+          :disabled="form.processing">
+          <button @click="submit" type="button" class="button-custom px-3 py-2 rounded-md"
+            :class="{ 'opacity-25': isFormValid || isLoading }" :disabled="isFormValid || isLoading">
+            <global-spinner :spinner="isLoading" /> Register
+          </button>
+        </div>
+        <!-- <div class="flex items-center justify-end mt-4" :class="{ 'opacity-25': form.processing || isLoading }"
           :disabled="form.processing">
           <button type="button" class="button-custom px-3 py-2 rounded-md" :class="{ 'opacity-25': isFormValid || isLoading }"
                   :disabled="isFormValid || isLoading" @click="StepChange(1)">
             <global-spinner :spinner="isLoading" />Next
           </button>
-        </div>
+        </div> -->
       </div>
       <div v-show="step === 1">
         <div class="px-0">
@@ -369,7 +381,7 @@ let StepChange = (val) => {
                 Back</a>
             </div>
             <div class="mt-4">
-              <button @click="submit" type="button"  class="button-custom px-3 py-2 rounded-md"
+              <button @click="submit" type="button" class="button-custom px-3 py-2 rounded-md"
                 :class="{ 'opacity-25': areAllArraysEmpty || isLoading }" :disabled="areAllArraysEmpty || isLoading">
                 <global-spinner :spinner="isLoading" /> Register
               </button>
@@ -403,28 +415,26 @@ let StepChange = (val) => {
   <Footer />
 </template>
 
-  <style src="@vueform/multiselect/themes/default.css"></style>
-  <style>
-  input[type="number"]::-webkit-outer-spin-button,
-  input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
+<style src="@vueform/multiselect/themes/default.css"></style>
+<style>
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 
-  input[type="number"] {
-    -moz-appearance: textfield;
-  }
+input[type="number"] {
+  -moz-appearance: textfield;
+}
 
-  .multiselect {
-    color: black !important;
-    border: none;
-    border-radius: 10px;
-  }
+.multiselect {
+  color: black !important;
+  border: none;
+  border-radius: 10px;
+}
 
-  .multiselect-wrapper {
-    background-color: #d7d7d7;
-    border-radius: 5px;
-  }
-
-
-  </style>
+.multiselect-wrapper {
+  background-color: #d7d7d7;
+  border-radius: 5px;
+}
+</style>

@@ -8,308 +8,308 @@ let props = defineProps({
 });
 let LegalInformation = ref([
     {
-        id: 43,
+        id: 44,
         name: 'convicted_checkbox_1',
         description: 'convicted_checkbox_1_text',
         heading: 'Have you ever been charged or convicted of, or pled guilty or no contest to, any felony, misdemeanor, federal/state insurance and/or securities or investments regulations or statutes?',
         question: '1',
     },
     {
-        id: 44,
+        id: 45,
         name: 'convicted_checkbox_1a',
         description: 'convicted_checkbox_1a_text',
         heading: 'Have you ever been convicted of, or pled guilty or no contest to, any felony?',
         question: '1A',
     },
     {
-        id: 45,
+        id: 46,
         name: 'convicted_checkbox_1b',
         description: 'convicted_checkbox_1b_text',
         heading: 'Have you ever been convicted of, or pled guilty or no contest to, any misdemeanor?',
         question: '1B',
     },
     {
-        id: 46,
+        id: 47,
         name: 'convicted_checkbox_1c',
         description: 'convicted_checkbox_1c_text',
         heading: 'Have you ever been convicted of, or pled guilty or no contest to, a violation of federal or state securities or investment-related regulations?',
         question: '1C',
     },
     {
-        id: 47,
+        id: 48,
         name: 'convicted_checkbox_1d',
         description: 'convicted_checkbox_1d_text',
         heading: 'Have you ever been convicted of, or pled guilty or no contest to, a violation of state insurance department regulation or statute?',
         question: '1D',
     },
     {
-        id: 48,
+        id: 49,
         name: 'convicted_checkbox_1e',
         description: 'convicted_checkbox_1e_text',
         heading: 'Has any foreign government, court, regulatory agency, or exchange ever entered an order against you related to income investments or fraud?',
         question: '1E',
     },
     {
-        id: 49,
+        id: 50,
         name: 'convicted_checkbox_1f',
         description: 'convicted_checkbox_1f_text',
         heading: 'Have you ever been charged with a felony?',
         question: '1F',
     },
     {
-        id: 50,
+        id: 51,
         name: 'convicted_checkbox_1g',
         description: 'convicted_checkbox_1g_text',
         heading: 'Have you ever been charged with a misdemeanor?',
         question: '1G',
     },
     {
-        id: 51,
+        id: 52,
         name: 'convicted_checkbox_1h',
         description: 'convicted_checkbox_1h_text',
         heading: 'Have you ever been on probation?',
         question: '1H',
     },
     {
-        id: 52,
+        id: 53,
         name: 'lawsuit_checkbox_2',
         description: 'lawsuit_checkbox_2_text',
         heading: 'Have you ever been, or are you currently being investigated, have any pending indictments, lawsuits, or have you ever been in a lawsuit with an insurance company?',
         question: '2',
     },
     {
-        id: 53,
+        id: 54,
         name: 'lawsuit_checkbox_2a',
         description: 'lawsuit_checkbox_2a_text',
         heading: 'Are you currently under investigation by any legal or regulatory agency?',
-        question: '2A'
+        question: '2A',
     },
     {
-        id: 54,
+        id: 55,
         name: 'lawsuit_checkbox_2b',
         description: 'lawsuit_checkbox_2b_text',
         heading: 'Have you been under investigation by any insurance company?',
         question: '2B',
     },
     {
-        id: 55,
+        id: 56,
         name: 'lawsuit_checkbox_2c',
         description: 'lawsuit_checkbox_2c_text',
         heading: 'Have you ever been, or are you currently involved in any pending indictments, lawsuits, civil judgements or other legal proceedings (civil or criminal) (you may omit family court)?',
-        question: '2C'
+        question: '2C',
     },
     {
-        id: 56,
+        id: 57,
         name: 'lawsuit_checkbox_2d',
         description: 'lawsuit_checkbox_2d_text',
         heading: 'Have you ever been named as a defendant or co-defendant in a lawsuit, or have you ever sued or been sued by an insurance company?',
         question: '2D',
     },
     {
-        id: 57,
+        id: 58,
         name: 'alleged_engaged_checkbox_3',
         description: 'alleged_engaged_checkbox_3_text',
         heading: 'Have you ever been alleged to have engaged in any fraud?',
         question: '3',
     },
     {
-        id: 58,
+        id: 59,
         name: 'found_engaged_checkbox_4',
         description: 'found_engaged_checkbox_4_text',
         heading: 'Have you ever been found to have engaged in any fraud?',
         question: '4',
     },
     {
-        id: 59,
+        id: 60,
         name: 'terminate_contract_checkbox_5',
         description: 'terminate_contract_checkbox_5_text',
         heading: 'Has any insurance or financial services company or broker-dealer terminated your contract or appointment or permitted you to resign for reason other than lack of sales?',
-        question: '5'
+        question: '5',
     },
     {
-        id: 60,
+        id: 61,
         name: 'terminate_contract_checkbox_5a',
         description: 'terminate_contract_checkbox_5a_text',
         heading: 'Were you fired because you were accused of violating insurance or investment-related statutes, regulations, rules, or industry standards of conduct?',
         question: '5A',
     },
     {
-        id: 61,
+        id: 62,
         name: 'terminate_contract_checkbox_5b',
         description: 'terminate_contract_checkbox_5b_text',
         heading: 'Were you fired because you were accused of fraud or the wrongful taking of property?',
         question: '5B',
     },
     {
-        id: 62,
+        id: 63,
         name: 'terminate_contract_checkbox_5c',
         description: 'terminate_contract_checkbox_5c_text',
         heading: 'Failure to supervise in connection with insurance or investment-related statutes, regulations, rules, or industry standards of conduct?',
         question: '5C',
     },
     {
-        id: 63,
+        id: 64,
         name: 'cancel_insu_cause_checkbox_6',
         description: 'cancel_insu_cause_checkbox_6_text',
         heading: 'Have you ever had an appointment with any insurance company denied or terminated for cause? (If you have been reported to Vector One, answer YES) ',
         question: '6',
     },
     {
-        id: 64,
+        id: 65,
         name: 'insurer_checkbox_7',
         description: 'insurer_checkbox_7_text',
         heading: 'Does any insurer, insured, or other person claim any commission chargeback or other indebtedness from you as a result of any insurance transactions or business? (If you have been reported to Vector One, answer YES)',
         question: '7',
     },
     {
-        id: 65,
+        id: 66,
         name: 'lawsuit_checkbox_8',
         description: 'lawsuit_checkbox_8_text',
         heading: 'Has any lawsuit or claim ever been made against you, your surety company, or errors and omissions insurer, arising out of your sales or practices, or have you been refused surety bonding or E&O coverage?',
-        question: '8'
-    },
-    {
-        id: 66,
-        name: 'lawsuit_checkbox_8a',
-        description: 'lawsuit_checkbox_8a_text',
-        heading: 'Has a bonding or surety company ever denied, paid on, or revoked a bond for you? 8B. Has any Errors & Omissions company ever denied, paid claims on, or cancelled your coverage?',
-        question: '8A'
+        question: '8',
     },
     {
         id: 67,
-        name: 'lawsuit_checkbox_8b',
-        description: 'lawsuit_checkbox_8b_text',
-        heading: 'Has any Errors & Ommisions company ever denied, paid claims on, or cancelled your coverage?',
-        question: '8b'
+        name: 'lawsuit_checkbox_8a',
+        description: 'lawsuit_checkbox_8a_text',
+        heading: 'Has a bonding or surety company ever denied, paid on, or revoked a bond for you? 8B. Has any Errors & Omissions company ever denied, paid claims on, or cancelled your coverage?',
+        question: '8A',
     },
     {
         id: 68,
-        name: 'license_denied_checkbox_9',
-        description: 'license_denied_checkbox_9_text',
-        heading: 'Have you ever had an insurance or securities license denied, suspended, cancelled, or revoked?',
-        question: '9'
+        name: 'lawsuit_checkbox_8b',
+        description: 'lawsuit_checkbox_8b_text',
+        heading: 'Has any Errors & Ommisions company ever denied, paid claims on, or cancelled your coverage?',
+        question: '8b',
     },
     {
         id: 69,
-        name: 'regulatory_checkbox_10',
-        description: 'regulatory_checkbox_10_text',
-        heading: 'Has any state or federal regulatory body found you to have been a cause of an investment or insurance-related business having its authorization to do business denied, suspended, revoked, or restricted?',
-        question: '10'
+        name: 'license_denied_checkbox_9',
+        description: 'license_denied_checkbox_9_text',
+        heading: 'Have you ever had an insurance or securities license denied, suspended, cancelled, or revoked?',
+        question: '9',
     },
     {
         id: 70,
-        name: 'regulatory_revoked_checkbox_11',
-        description: 'regulatory_revoked_checkbox_11_text',
-        heading: 'Has any state or federal regulatory agency revoked or suspended your license as an attorney, accountant, or federal contractor?',
-        question: '11'
+        name: 'regulatory_checkbox_10',
+        description: 'regulatory_checkbox_10_text',
+        heading: 'Has any state or federal regulatory body found you to have been a cause of an investment or insurance-related business having its authorization to do business denied, suspended, revoked, or restricted?',
+        question: '10',
     },
     {
         id: 71,
-        name: 'regulatory_found_checkbox_12',
-        description: 'regulatory_found_checkbox_12_text',
-        heading: 'Has any state or federal regulatory agency found you to have made a false statement or omission or been dishonest, unfair, or unethical?',
-        question: '12'
+        name: 'regulatory_revoked_checkbox_11',
+        description: 'regulatory_revoked_checkbox_11_text',
+        heading: 'Has any state or federal regulatory agency revoked or suspended your license as an attorney, accountant, or federal contractor?',
+        question: '11',
     },
     {
         id: 72,
-        name: 'interr_licensing_checkbox_13',
-        description: 'interr_licensing_checkbox_13_text',
-        heading: 'Have you ever had any interruptions in licensing?',
-        question: '13'
+        name: 'regulatory_found_checkbox_12',
+        description: 'regulatory_found_checkbox_12_text',
+        heading: 'Has any state or federal regulatory agency found you to have made a false statement or omission or been dishonest, unfair, or unethical?',
+        question: '12',
     },
     {
         id: 73,
-        name: 'self_regularity_checkbox_14',
-        description: 'self_regularity_checkbox_14_text',
-        heading: 'Has any state, federal, or self-regulatory agency filed a complaint against you, fined, sanctioned, censured, penalized, or otherwise disciplined you for a violation of their regulations or state or federal statuses?',
-        question: '14'
+        name: 'interr_licensing_checkbox_13',
+        description: 'interr_licensing_checkbox_13_text',
+        heading: 'Have you ever had any interruptions in licensing?',
+        question: '13',
     },
     {
         id: 74,
-        name: 'self_regularity_checkbox_14a',
-        description: 'self_regularity_checkbox_14a_text',
-        heading: 'Has any regulatory body ever sanctioned, censured, penalized, or otherwise disciplined you?',
-        question: '14A'
+        name: 'self_regularity_checkbox_14',
+        description: 'self_regularity_checkbox_14_text',
+        heading: 'Has any state, federal, or self-regulatory agency filed a complaint against you, fined, sanctioned, censured, penalized, or otherwise disciplined you for a violation of their regulations or state or federal statutes?',
+        question: '14',
     },
     {
         id: 75,
-        name: 'self_regularity_checkbox_14b',
-        description: 'self_regularity_checkbox_14b_text',
-        heading: 'Has any state, federal, or self-regulatory agency filed a complaint against you, fined, or sanctioned you?',
-        question: '14B'
+        name: 'self_regularity_checkbox_14a',
+        description: 'self_regularity_checkbox_14a_text',
+        heading: 'Has any regulatory body ever sanctioned, censured, penalized, or otherwise disciplined you?',
+        question: '14A',
     },
     {
         id: 76,
-        name: 'self_regularity_checkbox_14c',
-        description: 'self_regularity_checkbox_14c_text',
-        heading: 'Have you ever been the subject of a consumer-initiated complaint?',
-        question: '14C'
+        name: 'self_regularity_checkbox_14b',
+        description: 'self_regularity_checkbox_14b_text',
+        heading: 'Has any state, federal, or self-regulatory agency filed a complaint against you, fined, or sanctioned you?',
+        question: '14B',
     },
     {
         id: 77,
-        name: 'bankruptcy_checkbox_15',
-        description: 'bankruptcy_checkbox_15_text',
-        heading: 'Have you personally, or any insurance or securities brokerage firm with whom you have been associated, filed a bankruptcy petition, or declared bankruptcy? 15A. Have you personally filed a bankruptcy petition or declared bankruptcy?',
-        question: '15'
+        name: 'self_regularity_checkbox_14c',
+        description: 'self_regularity_checkbox_14c_text',
+        heading: 'Have you ever been the subject of a consumer-initiated complaint?',
+        question: '14C',
     },
     {
         id: 78,
-        name: 'bankruptcy_checkbox_15a',
-        description: 'bankruptcy_checkbox_15a_text',
+        name: 'bankruptcy_checkbox_15',
+        description: 'bankruptcy_checkbox_15_text',
         heading: 'Have you personally, or any insurance or securities brokerage firm with whom you have been associated, filed a bankruptcy petition, or declared bankruptcy? 15A. Have you personally filed a bankruptcy petition or declared bankruptcy?',
-        question: '15a'
+        question: '15',
     },
     {
         id: 79,
-        name: 'bankruptcy_checkbox_15b',
-        description: 'bankruptcy_checkbox_15b_text',
-        heading: 'Has any insurance or securities brokerage firm, with whom you have been associated, filed a bankruptcy petition, or been declared bankrupt, either during your association with them or within 5 years after termination of such an association?',
-        question: '15B'
+        name: 'bankruptcy_checkbox_15a',
+        description: 'bankruptcy_checkbox_15a_text',
+        heading: 'Have you personally, or any insurance or securities brokerage firm with whom you have been associated, filed a bankruptcy petition, or declared bankruptcy? 15A. Have you personally filed a bankruptcy petition or declared bankruptcy?',
+        question: '15a',
     },
     {
         id: 80,
-        name: 'bankruptcy_checkbox_15c',
-        description: 'bankruptcy_checkbox_15c_text',
-        heading: 'Is the bankruptcy pending?',
-        question: '15C'
+        name: 'bankruptcy_checkbox_15b',
+        description: 'bankruptcy_checkbox_15b_text',
+        heading: 'Has any insurance or securities brokerage firm, with whom you have been associated, filed a bankruptcy petition, or been declared bankrupt, either during your association with them or within 5 years after termination of such an association?',
+        question: '15B',
     },
     {
         id: 81,
-        name: 'liens_against_checkbox_16',
-        description: 'liens_against_checkbox_16_text',
-        heading: 'Are there any unsatisfied judgements or liens against you?',
-        question: '16'
+        name: 'bankruptcy_checkbox_15c',
+        description: 'bankruptcy_checkbox_15c_text',
+        heading: 'Is the bankruptcy pending?',
+        question: '15C',
     },
     {
         id: 82,
-        name: 'connected_checkbox_17',
-        description: 'connected_checkbox_17_text',
-        heading: 'Are you connected in any way with a bank, savings & loan association, or other lending or financial institution?',
-        question: '17'
+        name: 'liens_against_checkbox_16',
+        description: 'liens_against_checkbox_16_text',
+        heading: 'Are there any unsatisfied judgments or liens against you?',
+        question: '16',
     },
     {
         id: 83,
-        name: 'aliases_checkbox_18',
-        description: 'aliases_checkbox_18_text',
-        heading: 'Have you ever used any other names or aliases?',
-        question: '18'
+        name: 'connected_checkbox_17',
+        description: 'connected_checkbox_17_text',
+        heading: 'Are you connected in any way with a bank, savings & loan association, or other lending or financial institution?',
+        question: '17',
     },
     {
         id: 84,
-        name: 'unresolved_matter_checkbox_19',
-        description: 'unresolved_matter_checkbox_19_text',
-        heading: 'Do you have any unresolved matters pending with the Internal Revenue Service, or other taxing authority?',
-        question: '19'
+        name: 'aliases_checkbox_18',
+        description: 'aliases_checkbox_18_text',
+        heading: 'Have you ever used any other names or aliases?',
+        question: '18',
     },
     {
         id: 85,
+        name: 'unresolved_matter_checkbox_19',
+        description: 'unresolved_matter_checkbox_19_text',
+        heading: 'Do you have any unresolved matters pending with the Internal Revenue Service, or other taxing authority?',
+        question: '19',
+    },
+    {
+        id: 86,
         name: 'contract_commission_checkbox_20',
         description: 'contract_commission_checkbox_20_text',
         heading: 'Have you SIGNED CONTRACTS or BEEN PAID COMMISSIONS with any insurance carriers in the last 6 months?',
-        question: '20'
+        question: '20',
     },
-
 ]);
+
 let contract_commissions = ref([
     'Aetna/Accendo',
     'Aig',
@@ -367,6 +367,9 @@ if (props.userData.internal_agent_contract && props.userData.internal_agent_cont
 
 </script>
 <template>
+    <h1 style="text-align: center; color: #336699; font-family: 'Arial', sans-serif; font-size: 2.5em; padding: 20px 0;">
+        Please Review Your Answers Before Submitting.
+    </h1>
     <div class="container mx-auto p-5">
         <h1 style="background-color: #134576;" class="mb-4 mt-4	text-center rounded-md py-2 text-white">
             Basic Information
@@ -544,7 +547,7 @@ if (props.userData.internal_agent_contract && props.userData.internal_agent_cont
         <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
             Your Address History for the Past 7 Years
         </h1>
-        <div v-if="userData.internal_agent_contract.addresses.length > 0"
+        <div v-if="userData.internal_agent_contract?.addresses?.length > 0"
             class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 bg-white rounded-lg shadow-md gap-4">
             <div v-for="address in userData.internal_agent_contract?.addresses" class="bg-white  p-4">
                 <p class="text-gray-600"><strong>Home Address:</strong> {{ address.address }}</p>

@@ -36,22 +36,7 @@ class RegisteredInternalAgentController extends Controller
             'email' => 'required|string|email|max:255|unique:' . User::class,
             'phone' => ['required', 'string', 'max:255', 'unique:' . User::class, 'regex:/^\+?1?[-.\s]?(\([2-9]\d{2}\)|[2-9]\d{2})[-.\s]?\d{3}[-.\s]?\d{4}$/'],
             'password' => ['required', 'confirmed', Password::defaults()],
-            'typesWithStates' => [
-                'required',
-                'array',
-                function ($attribute, $value, $fail) {
-                    foreach ($value as $nestedArray) {
-                        if (!empty($nestedArray)) {
-                            return; // Validation passes if a non-empty nested array is found
-                        }
-                    }
-                    $fail('At least one States you are licensed in is required.');
-                },
-                new CallTypeIdEixst('call_types', 'id')
-            ],
-            'typesWithStates.*' => ['nullable', 'exists:states,id'],
         ]);
-
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
@@ -73,33 +58,6 @@ class RegisteredInternalAgentController extends Controller
             'user_id' => $user->id,
             'role_id' => $agentRole->id,
         ]);
-
-        // Initialize an empty array to hold the data
-        $data = [];
-
-        // Get the current timestamp
-        $now = now()->toDateTimeString();
-
-        // Build the data array
-        foreach ($request->typesWithStates as $typeId => $stateIds) {
-            if (count($stateIds)) {
-                foreach ($stateIds as $stateId) {
-                    $data[] = [
-                        'user_id' => $user->id,  // assuming you have the $user available here
-                        'call_type_id' => $typeId,
-                        'state_id' => $stateId,
-                        'created_at' => $now,  // if you are using timestamps in your pivot table
-                        'updated_at' => $now,  // if you are using timestamps in your pivot table
-                    ];
-                }
-            }
-        }
-        if (count($data)) {
-            DB::transaction(function () use ($data) {
-                // Insert new entries
-                DB::table('users_call_type_state')->insert($data);
-            });
-        }
 
         event(new Registered($user));
 

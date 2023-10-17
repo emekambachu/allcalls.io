@@ -7,6 +7,7 @@ let props = defineProps({
     firstStepErrors: Object,
     userData: Object,
     isLoading: Boolean,
+    amlCouseGuide:String,
 });
 let page = usePage();
 
@@ -126,7 +127,7 @@ const fileErrorMessage = ref("Please select a single PDF file.");
     <div v-show="page.props.auth.role === 'internal-agent'" class="bg-blue-50 py-10 px-6 rounded-lg shadow-md">
         <div class="mb-4">
             <a target="_blank"
-                href="https://www.financialservicecareers.com/_files/ugd/0fb1f5_0a18cb8e43734547b1c42be4c1a0a52b.pdf">
+                :href="amlCouseGuide">
                 <strong class="text-blue-600 mr-1 hover:underline">Detailed PDF Guide</strong>
             </a>outlining the required steps within the AML
             course.
