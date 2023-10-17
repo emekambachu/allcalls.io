@@ -2,8 +2,8 @@
 
 namespace App\Mail;
 
+use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -12,13 +12,14 @@ use Illuminate\Queue\SerializesModels;
 class OnboardingWelcome extends Mailable
 {
     use Queueable, SerializesModels;
+    public User $user;
 
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct(User $user)
     {
-        //
+        $this->user = $user;
     }
 
     /**
@@ -27,7 +28,7 @@ class OnboardingWelcome extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Onboarding Welcome',
+            subject: 'Internal Agent Onboarding',
         );
     }
 
@@ -37,7 +38,10 @@ class OnboardingWelcome extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            markdown: 'emails.onboarding',
+                with: [
+                    'user' => $this->user,
+                ],
         );
     }
 
