@@ -215,13 +215,19 @@ let openClientModal = (call) => {
                     <Menu as="div" class="relative inline-block text-left">
                       <div>
                         <MenuButton
-                          class="inline-flex w-full justify-center rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
+                          class="inline-flex justify-center rounded-md px-4 py-2"
                         >
-                          Options
-                          <ChevronDownIcon
-                            class="ml-2 -mr-1 h-5 w-5 text-violet-200 hover:text-violet-100"
+                          <svg
+                            class="w-6 h-6 text-gray-800"
                             aria-hidden="true"
-                          />
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor"
+                            viewBox="0 0 4 15"
+                          >
+                            <path
+                              d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"
+                            />
+                          </svg>
                         </MenuButton>
                       </div>
 
