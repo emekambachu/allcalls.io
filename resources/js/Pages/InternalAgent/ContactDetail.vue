@@ -640,7 +640,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
             <div class="mt-4">
                 <button type="button" :class="{ 'opacity-25': isLoading }" :disabled="isLoading" @click="ChangeTab"
                     class="button-custom px-3 py-2 rounded-md">
-                    <global-spinner :spinner="isLoading" /> Next 1
+                    <global-spinner :spinner="isLoading" /> Next
                 </button>
             </div>
         </div>
