@@ -120,12 +120,12 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     public function hasRole($role){
-            foreach ($this->roles as $key => $value) {
-                if($value->name==$role){
-                    return true;
-                }
+        foreach ($this->roles as $key => $value) {
+            if($value->name==$role){
+                return true;
             }
-            return false;
+        }
+        return false;
     }
 
     public function activeUser()

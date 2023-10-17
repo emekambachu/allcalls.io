@@ -2,7 +2,9 @@
 
 namespace App\Listeners;
 
+use App\Mail\OnboardingWelcome;
 use App\Mail\Welcome;
+use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Auth\Events\Registered;
@@ -24,6 +26,12 @@ class SendWelcomeEmail
      */
     public function handle(Registered $event): void
     {
-        Mail::to($event->user)->send(new Welcome($event->user));
+
+        if($event->user->hasRole('internal-agent')) {
+            Mail::to($event->user)->send(new OnboardingWelcome($event->user));
+        }
+        else {
+            Mail::to($event->user)->send(new Welcome($event->user));
+        }
     }
 }

@@ -54,6 +54,7 @@ class RegisteredInternalAgentController extends Controller
         ]);
 
         $agentRole = Role::whereName('internal-agent')->first();
+
         DB::table('role_user')->insert([
             'user_id' => $user->id,
             'role_id' => $agentRole->id,
@@ -62,6 +63,7 @@ class RegisteredInternalAgentController extends Controller
         event(new Registered($user));
 
         Auth::login($user);
+
         return response()->json([
             'success' => true,
             'message' => 'Agent added successfully',
