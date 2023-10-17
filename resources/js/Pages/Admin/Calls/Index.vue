@@ -213,7 +213,7 @@ let openClientModal = (call) => {
                   </td>
                   <td class="text-gray-700 px-4 py-3">
 
-                    <Menu as="div" class="relative inline-block text-left">
+                    <Menu as="div" class="relative inline-block text-left" style="z-index: -1;">
                       <div>
                         <MenuButton
                           class="inline-flex justify-center rounded-md px-4 py-2"
