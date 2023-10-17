@@ -35,8 +35,8 @@ let props = defineProps({
     },
     amlCouseGuide:String,
 });
-let StepsModal = ref(false)
-let contractModal = ref(true)
+let StepsModal = ref(true)
+let contractModal = ref(false)
 const isLoading = ref(false);
 let form = ref({
     aml_course: false,
@@ -50,21 +50,22 @@ let emit = defineEmits(["close"]);
 let close = () => {
     emit("close");
 };
-
-let NextStep = () => {
+let pageTop = () => {
     var element = document.getElementById("modal_main_id");
     element.scrollIntoView();
+}
+let NextStep = () => {
     step.value += 1;
     contractStep.value = 0
+    pageTop()
 };
 
 let goBack = () => {
-
     if (step.value === 2) {
         contractStep.value = 5
     }
     step.value -= 1;
-
+    pageTop()
 
 };
 let legalFormData1 = ref(null);
@@ -76,11 +77,11 @@ let firstStepErrors = ref({});
 
 let ChangeTab = (route) => {
     contractStep.value += 1
-    var element = document.getElementById("modal_main_id");
-    element.scrollIntoView();
+    pageTop()
 }
 let ChangeTabBack = () => {
     contractStep.value -= 1
+    pageTop()
 }
 let contactDetailData = ref(null)
 let individual_business = ref(false)
@@ -170,8 +171,7 @@ let errorHandle = (data, response) => {
             step.value = 5
             contractStep.value = 0
         }
-        var element = document.getElementById("modal_main_id");
-        element.scrollIntoView();
+        pageTop()
     } else if (data === 9) {
         slidingLoader.value = true
         StepsModal.value = false
@@ -276,6 +276,7 @@ let submit = (step) => {
         })
         .catch((error) => {
             isLoading.value = false;
+            pageTop()
             if (error.response) {
                 if (error.response.status === 400) {
                     // console.log(error.response.data.step);
