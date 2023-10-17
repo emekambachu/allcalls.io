@@ -138,7 +138,7 @@ let submit = () => {
     return axios
       .post("/internal-agent/register", form)
       .then((response) => {
-        router.visit('/login')
+        router.visit('/dashboard')
         isLoading.value = false
       })
       .catch((error) => {
