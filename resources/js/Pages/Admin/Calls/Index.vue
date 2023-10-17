@@ -213,10 +213,11 @@ let openClientModal = (call) => {
                   </td>
                   <td class="text-gray-700 px-4 py-3">
 
-                    <Menu as="div" class="relative inline-block text-left" style="z-index: -1;">
+                    <Menu as="div" class="relative inline-block text-left">
                       <div>
                         <MenuButton
                           class="inline-flex justify-center rounded-md px-4 py-2"
+                          style="z-index: -1;"
                         >
                           <svg
                             class="w-6 h-6 text-gray-800"
