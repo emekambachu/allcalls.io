@@ -14,7 +14,7 @@
     <meta name="user-timezone" content="{{ (Auth::user())?Auth::user()->timezone:'' }}">
     <!-- Scripts -->
     @routes
-    @vite(['resources/js/app.js?v1', "resources/js/Pages/{$page['component']}.vue"])
+    @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
     @inertiaHead
 </head>
 
