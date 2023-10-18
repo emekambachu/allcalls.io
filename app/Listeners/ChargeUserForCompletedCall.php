@@ -70,6 +70,9 @@ class ChargeUserForCompletedCall
                     if (isset($allBids[$userBidIndex + 1])) { // if there's a lower bid
                         $chargeAmount = $allBids[$userBidIndex + 1]->amount + 1; // next lower bid + 1
                         Log::debug('User is charged next lower bid + 1', ['chargeAmount' => $chargeAmount]);
+                    } else if ($allBids->where('amount', $userBid->amount)->count() > 1) { // if there are multiple users with the same bid amount
+                        $chargeAmount = $userBid->amount; // charge the exact bid amount
+                        Log::debug('User is charged their bid amount as there are multiple users with the same bid amount', ['chargeAmount' => $chargeAmount]);
                     } else {
                         $chargeAmount = $userBid->amount; // lowest bid pays their amount
                         Log::debug('User is charged their bid amount as it\'s the lowest', ['chargeAmount' => $chargeAmount]);
