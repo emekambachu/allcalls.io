@@ -94,6 +94,7 @@ class RegistrationStepController extends Controller
                 ]);
                 $user->legacy_key = true;
                 $user->contract_step = 10;
+                $user->is_locked = 1;
                 $user->save();
             }
         }
@@ -1574,16 +1575,15 @@ class RegistrationStepController extends Controller
 
     public function pdf()
     {
+        return view('pdf.internal-agent-contract.agent_agency_authorization');
 //        $jwt_token="eyJ0eXAiOiJNVCIsImFsZyI6IlJTMjU2Iiwia2lkIjoiNjgxODVmZjEtNGU1MS00Y2U5LWFmMWMtNjg5ODEyMjAzMzE3In0.AQoAAAABAAUABwAA5OLp5MvbSAgAAEynS-3L20gCAJgPjHagsedJmPsqwsgbcvQVAAEAAAAYAAIAAAAFAAAAHQAAAA0AJAAAADc1ZDk3NzE4LThhOTgtNGQyNy04ZGVmLTE3YzJmY2VlZDc5ZiIAJAAAADc1ZDk3NzE4LThhOTgtNGQyNy04ZGVmLTE3YzJmY2VlZDc5ZhIAAQAAAAYAAABqd3RfYnIjACQAAAA3NWQ5NzcxOC04YTk4LTRkMjctOGRlZi0xN2MyZmNlZWQ3OWY.xY21b5yOhNtUbh8eachI2_B6gMqibO-H89FlLdjkBdlF61149VcH-aIw9icDra_uK4rfL-M6DeqBN1XMiqsCuZnCa1yBYIgxZg6mhBER3E-9uVtcL0yYwKWsQyYNZAtz3l5rQJF_lgxLlEvsMIohR6EcGVGC03Oqn1GgvfpX-XbIweTtHBezS-wrjh0Iaep09eA3fCRmEKdGIul7bSuuCRAvKb6PlLEZQ434j2paUlkg4s5kFhI_hukHAKICtCGDxWZQMYshZrn9XAg1SZfsh7ykriybZ_83kXVNTQPZQ8rMS0tqToSqmJvSx1TV_3LWKet1p9zXpr0FqNTLQHP3Nw";
 //        $config = new Configuration();
 //        $config->setHost('<https://demo.docusign.net/restapi>');
 //        $config->addDefaultHeader("Authorization", "Bearer ".$jwt_token);
 
-
         $apiClient = new ApiClient();
         $apiClient->getOAuth()->setOAuthBasePath("account-d.docusign.com");
         $accessToken = $this->getToken($apiClient);
-
 
         $userInfo = $apiClient->getUserInfo($accessToken);
         $accountInfo = $userInfo[0]->getAccounts();
@@ -1601,9 +1601,6 @@ class RegistrationStepController extends Controller
             $envelopeApi = new EnvelopesApi($apiClient);
             $envelopeSummary = $envelopeApi->createEnvelope($accountInfo[0]->getAccountId(), $envelopeDefenition);
 
-
-
-
             $viewRequest = new RecipientViewRequest([
                 'return_url' => '<https://staging.allcalls.io/return-url>',
                 'authentication_method' => 'jwt',
@@ -1615,8 +1612,6 @@ class RegistrationStepController extends Controller
             $signingUrl = $envelopeApi->createRecipientView("7716918e-104d-4915-b7ca-eff79222ac45", $envelopeSummary->getEnvelopeId(), $viewRequest);
 
             redirect()->to($signingUrl['url']);
-
-
         } catch (\Exception $th) {
             return back()->withError($th->getMessage())->withInput();
         }

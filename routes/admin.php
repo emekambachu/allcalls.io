@@ -25,18 +25,19 @@ use App\Http\Controllers\Admin\LegalQuestionPdfController;
 Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(function () {
     //Admin Routes
     Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'show'])->name('admin.dashboard');
-
-
-
     // Customer
     Route::get('/customers', [CustomerController::class, 'index'])->name('admin.customer.index');
+    
     Route::post('/customer/{id}', [CustomerController::class, 'update'])->name('admin.customer.update');
+    
     Route::get('/customer/detail/{id}', [CustomerController::class, 'show'])->name('admin.customer.detail');
+    
     Route::get('/customer/transactions/{id}', [CustomerController::class, 'getTransaction']);
 
     Route::get('/customer/calls/{id}', [CustomerController::class, 'getUserCall']);
 
     Route::get('/customer/banned/{id}',[CustomerController::class,'banUser'])->name('admin.ban.customer');
+    
     Route::get('/customer/activities/{id}', [CustomerController::class, 'getActivity']);
 
     Route::get('/customer/clients/{id}', [CustomerController::class, 'getCustomerClients']);
@@ -59,8 +60,12 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::get('/agent/clients/{id}', [InternalAgentController::class, 'getAgentClients']);
 
     Route::get('/download/agent/contract/pdf/{id}', [InternalAgentController::class, 'downloadAgentContractPdf'])->name('admin.agent.contract.pdf');
+    
     Route::get('/download/legal-question/pdf/{id}/{userId}/{serialNo}', [InternalAgentController::class, 'getQuestionPdf'])->name('admin.agent.legal.question.pdf');
+    
     Route::get('/download/signature-authorization/{id}', [InternalAgentController::class, 'signatureAuthrorizationPdf'])->name('admin.agent.signature.authorization.pdf');
+    
+    Route::get('/approved-internal-agent/{id}', [InternalAgentController::class, 'internalAgentApproved'])->name('admin.approved.internal.agent');
 
     // Available Number
     Route::get('/available-numbers',[AvailableNumberController::class,'index']);

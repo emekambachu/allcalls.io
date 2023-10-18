@@ -29,7 +29,10 @@ let form = ref({
 });
 
 // form = JSON.parse(JSON.stringify(props.userDetail));
-
+let getFormattedText = (name) => {
+    const parts = name.split('_');
+    return parts[parts.length - 1].toUpperCase();
+}
 
 
 let formatData = (val) => {
@@ -132,7 +135,7 @@ let formatData = (val) => {
                 </div>
                 <div class="bg-white  m-5 flex items-center">
                     <div class=" text-lg font-semibold mr-4">
-                        4. Resident License 
+                        4. Resident License
                     </div>
                     <div>
                         <a target="_blank" :href="userData.internal_agent_contract?.resident_license?.url"
@@ -161,6 +164,44 @@ let formatData = (val) => {
                             </svg>
                         </a>
                     </div>
+                </div>
+           
+                <div class="text-center my-5">
+                    <div class="flex items-center justify-center my-3">
+                        <div class="flex-1 h-0.5 bg-black mr-3"></div>
+                        <div class="text-lg font-bold">Legal Questions Explanation</div>
+                        <div class="flex-1 h-0.5 bg-black ml-3"></div>
+                    </div>
+                </div>
+
+                <div v-for="question in userData.internal_agent_contract.legal_question" class="bg-white  m-5 ">
+                    <div>
+                        <div v-if="question.value === 'YES'" class=" text-lg font-semibold mr-4 flex">
+                            <span class="mr-5">{{ getFormattedText(question.name) }}. Explantion</span>
+                            <a :href="route('admin.agent.legal.question.pdf', [question.id, userData.id, getFormattedText(question.name)])"
+                                :disabled="!userData.internal_agent_contract?.banking_info?.url"
+                                :class="{ 'opacity-25': !userData.internal_agent_contract?.banking_info?.url }">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor" class="w-6 h-6 text-blue-600">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                </svg>
+                            </a>
+                        </div>
+
+                        <!-- <div>
+                            <a target="_blank" :href="userData.internal_agent_contract?.banking_info?.url"
+                                :disabled="!userData.internal_agent_contract?.banking_info?.url"
+                                :class="{ 'opacity-25': !userData.internal_agent_contract?.banking_info?.url }">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor" class="w-6 h-6 text-blue-600">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                </svg>
+                            </a>
+                        </div> -->
+                    </div>
+
                 </div>
             </div>
 

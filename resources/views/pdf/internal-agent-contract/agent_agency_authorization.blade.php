@@ -64,9 +64,9 @@
         <p style="font-size: 14px; margin-bottom:5px;"><strong>BY SIGNING BELOW, I HEREBY (PLEASE INITIAL
                 ALL STATEMENTS):</strong></p>
         <div style="line-height:15px; font-size:14px;margin-bottom:8px;">
-            <span style="margin-left: 40px;">(A)</span> <strong> <span
-                    style="border-bottom: 1px solid black;margin-left:20px;">{{ $contractData->internalAgentContract->first_name }}
-                    {{ $contractData->internalAgentContract->last_name }}</span></strong>
+            <span style="margin-left: 20px;">(A)</span> <strong> 
+                <div style="border-bottom: 1px solid black; width:80px; display:inline-block; margin-left:10px;"></div>
+            </strong>
             Authorize the Company to use My Information for purposes of conducting a commission related debit
             balance screening, and periodic commission related debit balance screenings as determined in the Company’s
             sole discretion
@@ -74,35 +74,35 @@
             Company, utilizing DebitCheck.
         </div>
         <div style="line-height:15px; font-size:14px;margin-bottom:8px;">
-            <span style="margin-left: 40px;">(B)</span> <strong> <span
-                    style="border-bottom: 1px solid black;margin-left:20px;">{{ $contractData->internalAgentContract->first_name }}
-                    {{ $contractData->internalAgentContract->last_name }}</span></strong>
+            <span style="margin-left: 20px;">(B)</span> <strong>
+                <div style="border-bottom: 1px solid black; width:80px; display:inline-block; margin-left:10px;"></div>
+            </strong>
             Authorize the Company to consider the results of the commission related debit balance screening in
             order to determine my eligibility to be contracted and appointed or determine my eligibility for advancement
             of commissions as an
             insurance producer.
         </div>
         <div style="line-height:15px; font-size:14px;margin-bottom:8px;">
-            <span style="margin-left: 40px;">(C)</span> <strong> <span
-                    style="border-bottom: 1px solid black;margin-left:20px;">{{ $contractData->internalAgentContract->first_name }}
-                    {{ $contractData->internalAgentContract->last_name }}</span></strong>
+            <span style="margin-left: 20px;">(C)</span> <strong>
+                <div style="border-bottom: 1px solid black; width:80px; display:inline-block; margin-left:10px;"></div>
+            </strong>
             Authorize and direct Vector One to receive and process My Information as necessary to intentionally
             disclose and furnish the results of my commission related debt verification screening, whether directly or
             indirectly, to the Company.
         </div>
-        <div style="line-height:15px; font-size:14px;margin-bottom:8px;">
-            <span style="margin-left: 40px;">(D)</span><strong> <span
-                style="border-bottom: 1px solid black;margin-left:20px;">{{ $contractData->internalAgentContract->first_name }}
-                {{ $contractData->internalAgentContract->last_name }}</span></strong>
+        <div style="line-height:15px; font-size:14px; margin-bottom:8px;">
+            <span style="margin-left: 20px;">(D)</span>
+            <strong>
+                <div style="border-bottom: 1px solid black; width:80px; display:inline-block; margin-left:10px;"></div>
+            </strong>
             Authorize the Company to submit My Information to the Debit-Check service in the event of termination
             or expiration of my engagement with the Company, whether voluntary or involuntary, to the extent a
-            commission related debit
-            balance is owed to the Company.
+            commission related debit balance is owed to the Company.
         </div>
         <div style="line-height:15px; font-size:14px;margin-bottom:8px;">
-            <span style="margin-left: 40px;">(E)</span> <strong> <span
-                    style="border-bottom: 1px solid black;margin-left:20px;">{{ $contractData->internalAgentContract->first_name }}
-                    {{ $contractData->internalAgentContract->last_name }}</span></strong>
+            <span style="margin-left: 20px;">(E)</span> <strong>
+                <div style="border-bottom: 1px solid black; width:80px; display:inline-block; margin-left:10px;"></div>
+            </strong>
             Authorize and direct Vector One to receive and process My Information and intentionally disclose to
             any Debit-Check subscriber who submits an inquiry utilizing My Information the results of my commission
             related debit balance
@@ -123,7 +123,8 @@
             <div style="display: inline-block; margin-left:20px;">
                 <span><strong>Date:</strong></span>
             </div>
-            <div style="border-bottom: 0.5px solid black; width: 26.5%; display: inline-block;">{{ \Carbon\Carbon::now()->format('m/d/Y') }}
+            <div style="border-bottom: 0.5px solid black; width: 26.5%; display: inline-block;">
+                {{ \Carbon\Carbon::now()->format('m/d/Y') }}
             </div>
         </div>
 

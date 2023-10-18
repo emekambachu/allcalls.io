@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use DocuSign\eSign\Api\EnvelopesApi;
 use DocuSign\eSign\Client\ApiClient;
 use DocuSign\eSign\Configuration;
+use DocuSign\eSign\Model\InitialHere;
 use Exception;
 use Illuminate\Http\Request;
 use Session;
@@ -247,7 +248,7 @@ class DocusignController extends Controller
             'optional' => false,
         ]);
 
-
+       
         # Add the tabs model (including the sign_here tab) to the signer
         # The Tabs object wants arrays of the different field/tab types
         $signer->settabs(new \DocuSign\eSign\Model\Tabs(['sign_here_tabs' => [$signHere1, $signHere2, $signHere3]]));
