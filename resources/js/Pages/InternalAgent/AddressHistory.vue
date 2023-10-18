@@ -165,12 +165,12 @@ const ChangeTab = () => {
             isValid = false;
             setTimeout(() => {
                 yearError.value = false
-            }, 5000);
+            }, 10000);
         }
         if (isValid) {
             if (page.props.auth.role === 'internal-agent') {
                 yearError.value = false
-                // emits("addRessHistory", form.value);
+                emits("addRessHistory", form.value);
             } else {
                 emits("changeTab");
             }
@@ -202,10 +202,18 @@ let enforceFiveDigitInput = (fieldName, val) => {
     <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
         Please Provide Your Address History for the Past 7 Years
     </h1>
-    <div v-if="yearError" class="bg-red-100 mb-4 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+    <!-- <div v-if="yearError" class="bg-red-100 mb-4 border border-red-400 text-red-700 px-4 py-3 rounded relative"
         role="alert">
         <span class="block sm:inline">The cumulative period of all addresses should be greater than 7 years.</span>
+    </div> -->
+    <div v-if="yearError">
+        <div 
+            class="bg-red-100 mb-4 text-center border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <span class="block sm:inline">The combined duration of all residences must exceed 7 years.</span>
+        </div>
+        <hr class="w-100 h-1 my-4 bg-gray-600 border-0 rounded dark:bg-gray-700">
     </div>
+
 
     <div v-for="(history, index) in addres_history" :key="history.id">
 
@@ -224,9 +232,6 @@ let enforceFiveDigitInput = (fieldName, val) => {
                         required</span>
                 </div>
             </div>
-
-
-
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">City
                 </label>
@@ -286,11 +291,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
                         required</span>
                 </div>
             </div>
-
         </div>
-
-
-
         <hr class="w-100 h-1 my-4 bg-gray-600 border-0 rounded dark:bg-gray-700">
     </div>
     <div class="px-5 pb-6">
