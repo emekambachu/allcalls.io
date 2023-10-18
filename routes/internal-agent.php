@@ -3,7 +3,7 @@
 use App\Http\Controllers\InternalAgent\DocusignController;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\InternalAgent\RegistrationStepController;
-
+use Inertia\Inertia;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,6 +24,13 @@ Route::prefix('internal-agent')->middleware(['auth', 'verified', 'internal-agent
         ->name('registration.steps');
     Route::post('registration-signature', [RegistrationStepController::class, 'registrationSignature'])
         ->name('registration.signature');
+
+    Route::get('/locked', function () {
+        if(auth()->user()->roles->contains('name', 'internal-agent') && !auth()->user()->is_locked) {
+            return redirect()->route('dashboard');
+        }
+        return Inertia::render('Auth/InternalAgentLocked', []);
+    })->name('internal.agent.locked');
 });
 
 Route::middleware(['auth', 'verified', 'internal-agent'])->group(function () {
@@ -32,4 +39,3 @@ Route::middleware(['auth', 'verified', 'internal-agent'])->group(function () {
     Route::get('docusign/callback', [DocusignController::class, 'callback'])->name('internal.agent.docusign.callback');
     Route::get('sign-document/{key?}', [DocusignController::class, 'signDocument'])->name('internal.agent.docusign.sign');
 });
-

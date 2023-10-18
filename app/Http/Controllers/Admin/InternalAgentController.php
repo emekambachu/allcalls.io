@@ -301,90 +301,16 @@ class InternalAgentController extends Controller
     public function downloadAgentContractPdf($id)
     {
         set_time_limit(0);
-
         try {
             $user = User::findOrFail($id);
-
             $contractPDF = InternalAgentContractSigned::where('reg_info_id', $user->internalAgentContract->id)->first();
-
             return response()->download($contractPDF->sign_url);
-
-
-            $returnArr['contractData'] = User::where('id', $id)
-                ->with('internalAgentContract.getState')
-                ->with('internalAgentContract.getDriverLicenseState')
-                ->with('internalAgentContract.getMoveInState')
-                ->with('internalAgentContract.getResidentInsLicenseState')
-                ->with('internalAgentContract.getBusinessState')
-                ->with('internalAgentContract.additionalInfo.getState')
-                ->with('internalAgentContract.addresses.getState')
-                ->with('internalAgentContract.amlCourse')
-                ->with('internalAgentContract.bankingInfo')
-                ->with('internalAgentContract.errorAndEmission')
-                ->with('internalAgentContract.legalQuestion')
-                ->with('internalAgentContract.residentLicense')
-                ->with('internalAgentContract.getQuestionSign')
-                ->with('internalAgentContract.getContractSign')->first();
-            //First Signature
-            $pdf = PDF::loadView('pdf.internal-agent-contract.agent-contract', $returnArr);
-            $directory = public_path('internal-agents/contract/');
-            if (!file_exists($directory)) {
-                mkdir($directory, 0777, true);
-            }
-            $pdf->save($directory . 'contract-first-sign.pdf');
-            //First Signature End
-
-            //Contract Signature
-            $pdf = PDF::loadView('pdf.internal-agent-contract.signature-authorization', $returnArr);
-            $directory = public_path('internal-agents/contract/');
-            if (!file_exists($directory)) {
-                mkdir($directory, 0777, true);
-            }
-            $pdf->save($directory . 'signature-authorization.pdf');
-            //Contract Signature End
-
-            $pdfMerger = new PDFMerger;
-
-            $pdfMerger->addPDF(public_path() . '/internal-agents/contract/contract-first-sign.pdf', 'all');
-
-            $pdfMerger->addPDF(public_path() . '/internal-agents/aml-course/' . $returnArr['contractData']->internalAgentContract->amlCourse->name, 'all');
-            $pdfMerger->addPDF(public_path() . '/internal-agents/error-and-omission/' . $returnArr['contractData']->internalAgentContract->errorAndEmission->name, 'all');
-            $pdfMerger->addPDF(public_path() . '/internal-agents/resident-license-pdf/' . $returnArr['contractData']->internalAgentContract->residentLicense->name, 'all');
-            $pdfMerger->addPDF(public_path() . '/internal-agents/banking-info/' . $returnArr['contractData']->internalAgentContract->bankingInfo->name, 'all');
-
-            $pdfMerger->addPDF(public_path() . '/internal-agents/contract/signature-authorization.pdf', 'all');
-
-            $pdfMerger->merge('file', 'video/contract-signed-1.pdf', 'P');
-
-            if (file_exists(asset('internal-agents/contract/' . 'contract-first-sign.pdf'))) {
-                unlink(asset('internal-agents/contract/' . 'contract-first-sign.pdf'));
-            }
-
-            if (file_exists(asset('internal-agents/contract/' . 'signature-authorization.pdf'))) {
-                unlink(asset('internal-agents/contract/' . 'signature-authorization.pdf'));
-            }
-
-            // Merge the PDFs
-            $pdfMerger->merge();
-
-            // Get the merged PDF content
-            $mergedPdfContent = $pdfMerger->output();
-
-            // Set the response headers for downloading the PDF
-            $headers = [
-                'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'attachment; filename="contract.pdf"',
-            ];
-
-            // Return the merged PDF as a downloadable response
-            return Response::make($mergedPdfContent, 200, $headers);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'errors' => $e->getMessage(),
             ], 400);
         }
-
     }
 
     public function getQuestionPdf($id, $userId, $serialNo)
@@ -400,6 +326,24 @@ class InternalAgentController extends Controller
 
 
         return $pdf->download($serialNo . '-explaination.pdf');
+    }
+
+    public function internalAgentApproved($id) {
+        try {
+            $user = User::findOrFail($id);
+            $user->is_locked = false;
+            $user->save();
+            return response()->json([
+                'success' => true,
+                'message' => 'Internal Agent Approved Successfully.',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'errors' => $e->getMessage(),
+            ], 400);
+        }
+
     }
 
     public function signatureAuthrorizationPdf($id)

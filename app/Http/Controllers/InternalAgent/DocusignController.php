@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use DocuSign\eSign\Api\EnvelopesApi;
 use DocuSign\eSign\Client\ApiClient;
 use DocuSign\eSign\Configuration;
+use DocuSign\eSign\Model\InitialHere;
 use Exception;
 use Illuminate\Http\Request;
 use Session;
@@ -174,8 +175,8 @@ class DocusignController extends Controller
 
     private function make_envelope($args)
     {
-        $filename = auth()->user()->id.'_contract.pdf';
-        $demo_docs_path = asset('internal-agents/contract/'.$filename);
+        $filename = auth()->user()->id . '_contract.pdf';
+        $demo_docs_path = asset('internal-agents/contract/' . $filename);
 
         $arrContextOptions = array(
             "ssl" => array(
@@ -210,7 +211,7 @@ class DocusignController extends Controller
         # Create a sign_here tab (field on the document)
 
 
-        $signHere1 = new \DocuSign\eSign\Model\SignHere([
+        $accompanyingSignature = new \DocuSign\eSign\Model\SignHere([
             'anchor_string' => 'ACCOMPANYING_SIGNATURE',
             'anchor_units' => 'pixels',
             'anchor_y_offset' => '-10',
@@ -218,7 +219,7 @@ class DocusignController extends Controller
             'optional' => false,
         ]);
 
-        $signHere2 = new \DocuSign\eSign\Model\SignHere([
+        $signatureAuthorization = new \DocuSign\eSign\Model\SignHere([
             'anchor_string' => 'SIGNATURE_AUTHORIZATION', // Customize this anchor string
             'anchor_units' => 'pixels',
             'anchor_y_offset' => '-10', // Customize the Y offset
@@ -227,7 +228,7 @@ class DocusignController extends Controller
         ]);
 
 
-        $signHere3 = new \DocuSign\eSign\Model\SignHere([
+        $agencyAuthorization = new \DocuSign\eSign\Model\SignHere([
             'anchor_string' => 'AGENCY_AUTHORIZATION', // Customize this anchor string
             'anchor_units' => 'pixels',
             'anchor_y_offset' => '-7', // Customize the Y offset
@@ -235,10 +236,74 @@ class DocusignController extends Controller
             'optional' => false,
         ]);
 
+        $agAintial = new InitialHere([
+            'anchor_string' => '(A)', // Customize this anchor string
+            'anchor_units' => 'pixels',
+            'anchor_y_offset' => '7', // Customize the Y offset
+            'anchor_x_offset' => '35', // Customize the X offset
+            'optional' => false,
+            'font_size' => 'Size12',
+        ]);
+
+        $agBintial = new InitialHere([
+            'anchor_string' => '(B)', // Customize this anchor string
+            'anchor_units' => 'pixels',
+            'anchor_y_offset' => '7', // Customize the Y offset
+            'anchor_x_offset' => '35', // Customize the X offset
+            'optional' => false,
+            'font_size' => 'Size12',
+        ]);
+
+        $agCintial = new InitialHere([
+            'anchor_string' => '(C)', // Customize this anchor string
+            'anchor_units' => 'pixels',
+            'anchor_y_offset' => '7', // Customize the Y offset
+            'anchor_x_offset' => '35', // Customize the X offset
+            'optional' => false,
+            'font_size' => 'Size12',
+        ]);
+
+        $agDintial = new InitialHere([
+            'anchor_string' => '(D)', // Customize this anchor string
+            'anchor_units' => 'pixels',
+            'anchor_y_offset' => '7', // Customize the Y offset
+            'anchor_x_offset' => '35', // Customize the X offset
+            'optional' => false,
+            'font_size' => 'Size12',
+        ]);
+
+        $agEintial = new InitialHere([
+            'anchor_string' => '(E)', // Customize this anchor string
+            'anchor_units' => 'pixels',
+            'anchor_y_offset' => '7', // Customize the Y offset
+            'anchor_x_offset' => '35', // Customize the X offset
+            'optional' => false,
+            'font_size' => 'Size12',
+        ]);
+
+        $signatures = [
+            $accompanyingSignature,
+            $signatureAuthorization,
+            $agencyAuthorization,
+        ];
+
+        $intialSignature = [
+            $agAintial,
+            $agBintial,
+            $agCintial,
+            $agDintial,
+            $agEintial,
+        ];
 
         # Add the tabs model (including the sign_here tab) to the signer
         # The Tabs object wants arrays of the different field/tab types
-        $signer->settabs(new \DocuSign\eSign\Model\Tabs(['sign_here_tabs' => [$signHere1, $signHere2, $signHere3]]));
+
+        $signer->settabs(new \DocuSign\eSign\Model\Tabs(
+            [
+                'sign_here_tabs' => $signatures,
+                'initial_here_tabs' => $intialSignature,
+            ]
+        ));
         # Next, create the top level envelope definition and populate it.
 
         $envelope_definition = new \DocuSign\eSign\Model\EnvelopeDefinition([

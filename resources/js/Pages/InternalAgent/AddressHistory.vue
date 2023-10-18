@@ -207,7 +207,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
     </div> -->
     <div v-if="yearError">
         <div 
-            class="bg-red-100 mb-4 text-center border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            class="bg-red-100 mb-4  border border-red-400 text-red-700 px-4 py-2 rounded relative" role="alert">
             <span class="block sm:inline">The combined duration of all residences must exceed 7 years.</span>
         </div>
         <hr class="w-100 h-1 my-4 bg-gray-600 border-0 rounded dark:bg-gray-700">

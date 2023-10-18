@@ -10,6 +10,8 @@ import Modal from "@/Components/Modal.vue";
 import SearchFilter from "@/Components/SearchFilter.vue";
 import ContractSteps from '@/Pages/InternalAgent/ContractSteps.vue'
 import ViewPdfindex from "@/Pages/Admin/Agent/ViewPdfindex.vue";
+import ApproveConfirm from "@/Pages/Admin/Agent/ApproveConfirm.vue";
+import axios from "axios";
 let page = usePage();
 if (page.props.flash.message) {
   toaster("success", page.props.flash.message);
@@ -121,9 +123,57 @@ let viewPdfData = (agent) => {
   userData.value = agent
   viewModalpdf.value = true
 }
-
+let showModalConfirm = ref(false)
+let ApproveAgentVal = ref(null)
+let isLoading = ref(false)
+let ApproveAgent = (agent) => {
+  
+  ApproveAgentVal.value = agent
+  showModalConfirm.value = true;
+}
+let onApprove = () => {
+  // Logic for approval
+  isLoading.value = true
+  axios.get(`/admin/approved-internal-agent/${ApproveAgentVal.value.id}`)
+    .then((res) => {
+      router.visit('/admin/agents')
+      toaster("success", res.data.message);
+      showModalConfirm.value = false;
+    })
+    .catch((error) => {
+      toaster("error", error.message);
+      showModalConfirm.value = false;
+      isLoading.value = false
+    });
+}
+let onCancel = () => {
+  showModalConfirm.value = false;
+}
 </script>
+<style scoped>
+.modal {
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
 
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 4px;
+}
+
+#alert-additional-content-3 {
+  width: 30%;
+}
+</style>
 <template>
   <Head title="Agent Information" />
   <AuthenticatedLayout>
@@ -134,12 +184,7 @@ let viewPdfData = (agent) => {
     </template>
 
     <div class="pt-14 flex justify-between px-16">
-      <!-- <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-                <div class="px-4 sm:px-8 sm:rounded-lg">
-                    <div class="text-4xl text-custom-sky font-bold mb-6">Agents</div>
-                    <hr class="mb-4" />
-                </div>
-            </div> -->
+
       <div>
         <div class="text-4xl text-custom-sky font-bold mb-6">Agents</div>
       </div>
@@ -152,6 +197,8 @@ let viewPdfData = (agent) => {
         <hr class="mb-4" />
       </div>
     </div>
+
+
     <SearchFilter :route="page.url" :requestData="requestData" />
     <section v-if="agents.data.length" class="p-3">
       <div class="mx-auto max-w-screen-xl sm:px-12">
@@ -206,9 +253,9 @@ let viewPdfData = (agent) => {
                           d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
                       </svg>
                     </button>
+                    {{ }}
 
-                   
-               
+
                     <button class="ml-2" @click="viewPdfData(agent)"
                       v-show="agent.internal_agent_contract && agent.legacy_key === 1 && agent.contract_step === 10"
                       title="Contracting">
@@ -230,6 +277,16 @@ let viewPdfData = (agent) => {
                             d="m237.783,98.361c0-1.591-0.632-3.117-1.757-4.243l-16.356-16.355c-1.125-1.125-2.651-1.757-4.243-1.757s-3.117,0.632-4.243,1.757l-28.756,28.756v-88.117c0-3.313-2.686-6-6-6h-170.428c-3.314,0-6,2.687-6,6v200.979c0,3.313 2.686,6 6,6h170.429c3.314,0 6-2.687 6-6v-63.18l53.597-53.597c1.125-1.125 1.757-2.651 1.757-4.243zm-225.783,115.02v-188.979h158.429v94.117l-35.291,35.291h-92.403c-3.313,0-6,2.687-6,6s2.687,6 6,6h80.403l-1.033,1.033c-0.777,0.777-1.326,1.753-1.586,2.821l-4.157,17.05h-25.148c-3.313,0-6,2.687-6,6s2.687,6 6,6c0,0 29.714,0 29.86,0 0.473,0 0.95-0.056 1.421-0.171l21.629-5.273c1.068-0.26 2.044-0.809 2.821-1.586l23.482-23.482v45.181h-158.427zm127.649-31.374l-10.408,2.538 2.538-10.408 83.648-83.648 7.871,7.871-83.649,83.647z" />
                         </g>
                       </svg>
+                    </button>
+                    <button class="ml-2" @click="agent.is_locked !== 0 ? ApproveAgent(agent) : null"
+                      v-show="agent.internal_agent_contract && agent.legacy_key === 1 && agent.contract_step === 10"
+                      :title="agent.is_locked === 0 ? 'Approved' : 'Approve Agent'">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" :class="{ 'text-green-400': agent.is_locked === 0 }" class="w-5 h-5 ">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                      </svg>
+
+
                     </button>
                   </td>
                 </tr>
@@ -293,10 +350,11 @@ let viewPdfData = (agent) => {
     <section v-else class="p-3">
       <p class="text-center text-gray-600">No clients yet.</p>
     </section>
+
     <ContractSteps v-if="contractModal" @close="contractModal = false" :states="states" :userData="userData" />
 
     <Modal :show="viewModalpdf" @close="viewModalpdf = false">
-      <ViewPdfindex @close="viewModalpdf = false" :userData="userData.value"  />
+      <ViewPdfindex @close="viewModalpdf = false" :userData="userData.value" />
     </Modal>
 
     <Modal :show="showModal" @close="showModal = false">
@@ -307,12 +365,13 @@ let viewPdfData = (agent) => {
       <Create :agentModal="agentModal" :currentPage="currentPage" :callTypes="callTypes" :states="states"
         @close="agentModal = false"></Create>
     </Modal>
-
+    <ApproveConfirm @close="showModalConfirm = false" :showModalConfirm="showModalConfirm" @onApprove="onApprove" :isLoading="isLoading"
+      @onCancel="onCancel" />
   </AuthenticatedLayout>
 </template>
 
 <style src="@vueform/multiselect/themes/default.css"></style>
-<style>
+<style >
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
