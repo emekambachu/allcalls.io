@@ -91,9 +91,12 @@
             indirectly, to the Company.
         </div>
         <div style="line-height:15px; font-size:14px;margin-bottom:8px;">
-            <span style="margin-left: 40px;">(D)</span><strong> <span
-                style="border-bottom: 1px solid black;margin-left:20px;">{{ $contractData->internalAgentContract->first_name }}
-                {{ $contractData->internalAgentContract->last_name }}</span></strong>
+            <span style="margin-left: 40px;">(D)</span>
+            <strong>
+                <span style="border-bottom: 1px solid black;margin-left:20px;">
+                    {{ $contractData->internalAgentContract->first_name }}
+                {{ $contractData->internalAgentContract->last_name }}</span>
+            </strong>
             Authorize the Company to submit My Information to the Debit-Check service in the event of termination
             or expiration of my engagement with the Company, whether voluntary or involuntary, to the extent a
             commission related debit
