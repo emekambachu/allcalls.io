@@ -36,7 +36,7 @@ class AgentStatusAPIController extends Controller
      */
     public function show(Request $request): JsonResponse
     {
-        Log::debug('api-logs: Request Data', [
+        Log::debug('api-logs:agent-status-price: Request Data', [
             'headers' => $request->headers->all(),
             'payload' => $request->all(),
             'query_string' => $request->getQueryString(),
@@ -106,7 +106,7 @@ class AgentStatusAPIController extends Controller
             ? response()->json(['online' => true, 'price' => $price], 200)
             : response()->json(['online' => false, 'price' => $price], 200);
 
-        Log::debug('api-logs: Response Data', [
+        Log::debug('api-logs:agent-status-price: Response Data', [
             'data' => json_decode($response->getContent(), true),
             'status' => $response->getStatusCode(),
         ]);
@@ -116,7 +116,7 @@ class AgentStatusAPIController extends Controller
 
     public function showWithoutPrice(Request $request): JsonResponse
     {
-        Log::debug('api-logs: Request Data', [
+        Log::debug('api-logs:agent-status: Request Data', [
             'headers' => $request->headers->all(),
             'payload' => $request->all(),
             'query_string' => $request->getQueryString(),
@@ -186,7 +186,7 @@ class AgentStatusAPIController extends Controller
             ? response()->json(['online' => true], 200)
             : response()->json(['online' => false], 200);
 
-        Log::debug('api-logs: Response Data', [
+        Log::debug('api-logs:agent-status:', [
             'data' => json_decode($response->getContent(), true),
             'status' => $response->getStatusCode(),
         ]);

@@ -3,12 +3,20 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
 class PingAPIController extends Controller
 {
     public function show(Request $request)
     {
+        // Log the request data
+        Log::debug('api-logs:ping: Request Data', [
+            'headers' => $request->headers->all(),
+            'payload' => $request->all(),
+            'query_string' => $request->getQueryString(),
+        ]);
+
         $callerId = $request->input('callerId');
 
         $formattedCallerId = $this->formatPhoneNumber($callerId);
@@ -16,9 +24,17 @@ class PingAPIController extends Controller
         if ($formattedCallerId !== false) {
             $url = "https://enhance.tldcrm.com/api/public/dialer/ready/$formattedCallerId?erq=58-OC9YbjEwZURmQldBRHZKYng4UkNiRGhrdmlSeEtqak51dEY5MWZ3T0IvOExQd05YcnRYbzdQQURXTGRZRXJ5S3RhNkR3NGdoQ1gxbjhhVnZLb3RYL2c9PQ&key=downline";
 
-            $response = file_get_contents($url);
+            $responseContent = file_get_contents($url);
 
-            return response()->json(json_decode($response));
+            $response = response()->json(json_decode($responseContent));
+
+            // Log the response data
+            Log::debug('api-logs:ping: Response Data', [
+                'data' => json_decode($response->getContent(), true),
+                'status' => $response->getStatusCode(),
+            ]);
+
+            return $response;
         }
 
         throw ValidationException::withMessages([
