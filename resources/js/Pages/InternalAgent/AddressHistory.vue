@@ -56,7 +56,6 @@ if (props.userData.internal_agent_contract && props.userData.internal_agent_cont
             form.value[formKey].state = address.state;
             form.value[formKey].move_in_date = address.move_in_date;
             form.value[formKey].move_out_date = address.move_out_date;
-
             // Add more properties as needed
         }
     });
