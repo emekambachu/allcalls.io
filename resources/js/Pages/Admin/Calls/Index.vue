@@ -216,8 +216,7 @@ let openClientModal = (call) => {
                     <Menu as="div" class="relative inline-block text-left">
                       <div>
                         <MenuButton
-                          class="inline-flex justify-center rounded-md px-4 py-2 relative"
-                          style="z-index: -1;"
+                          class="inline-flex justify-center rounded-md px-4 py-2"
                         >
                           <svg
                             class="w-6 h-6 text-gray-800"
