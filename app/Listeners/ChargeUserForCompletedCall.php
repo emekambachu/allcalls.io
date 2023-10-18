@@ -43,24 +43,41 @@ class ChargeUserForCompletedCall
                 ->orderBy('amount', 'desc')
                 ->get();
 
+            Log::debug('All Bids:', ['bids' => $allBids->toArray()]);
+
             $userBid = $allBids->firstWhere('user_id', $event->user->id);
+            Log::debug('User Bid:', ['userBid' => $userBid]);
 
             if ($userBid) {
                 $userBidIndex = $allBids->search(function ($bid) use ($userBid) {
                     return $bid->id == $userBid->id;
                 });
+                Log::debug('User Bid Index:', ['index' => $userBidIndex]);
 
                 if ($userBidIndex == 0) { // if the user has the highest bid
-                    $chargeAmount = $allBids[1]->amount + 1; // second highest bid + 1
+                    Log::debug('User has the highest bid');
+                    if ($allBids->where('amount', $userBid->amount)->count() > 1) {
+                        // Multiple users have bid the same highest amount
+                        $chargeAmount = $userBid->amount; // charge the exact bid amount
+                    } else if (count($allBids) == 1) {
+                        $chargeAmount = 35;
+                    } else {
+                        $chargeAmount = $allBids[1]->amount + 1; // second highest bid + 1
+                    }
+                
                 } else {
+                    Log::debug('User does not have the highest bid');
                     if (isset($allBids[$userBidIndex + 1])) { // if there's a lower bid
                         $chargeAmount = $allBids[$userBidIndex + 1]->amount + 1; // next lower bid + 1
+                        Log::debug('User is charged next lower bid + 1', ['chargeAmount' => $chargeAmount]);
                     } else {
                         $chargeAmount = $userBid->amount; // lowest bid pays their amount
+                        Log::debug('User is charged their bid amount as it\'s the lowest', ['chargeAmount' => $chargeAmount]);
                     }
                 }
             }
         }
+
 
         Log::debug("Charge amount: $$chargeAmount");
 
