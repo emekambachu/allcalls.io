@@ -25,12 +25,9 @@ class CustomerController extends Controller
 {
     public function index(Request $request)
     {
-        $excludeRoles = Role::whereIn('name', ['admin', 'internal-agent'])->pluck('id');
-        $users = User::whereDoesntHave('roles', function ($query) use ($excludeRoles) {
-            if (count($excludeRoles)) {
-                $query->whereIn('role_id', $excludeRoles);
-            }
-        })
+        $excludeRoles = Role::whereIn('name', ['admin', 'internal-agent', 'user'])->pluck('id');
+        $roles = Role::get();
+        $users = User::select('users.*', 'role_user.role_id')->leftjoin('role_user', 'role_user.user_id', 'users.id')
             ->where(function ($query) use ($request) {
                 if (isset($request->name) && $request->name != '') {
                     $query->where('first_name', 'LIKE', '%' . $request->name . '%')
@@ -63,18 +60,19 @@ class CustomerController extends Controller
                 }
             })
             ->with('states')
+            ->with('roles')
             ->with('callTypes')
-            ->orderBy("created_at","DESC")
+            ->orderBy("users.created_at","DESC")
             ->paginate(10);
 
         $callTypes = CallType::get();
         $states = State::get();
-
         return Inertia::render('Admin/User/Index', [
             'requestData' => $request->all(),
             'users' => $users,
             'callTypes' => $callTypes,
-            'states' => $states
+            'states' => $states,
+            'roles' => $roles,
         ]);
     }
 
@@ -240,6 +238,22 @@ class CustomerController extends Controller
                 'phone' => $request->phone,
                 'balance' => isset($request->balance) ? $request->balance : 0,
             ]);
+            // check roles user exix
+            // $rolesUser = DB::table('role_user')->where('user_id', $user->id)->exists();
+            if (isset($request->roles) && !empty($request->roles)) {
+                $rolesUser = DB::table('role_user')->where('user_id', $user->id)->exists();
+                if ($rolesUser) {
+                    DB::table('role_user')->where('user_id', $id)->update(['role_id' => $request->roles]);
+                }else{
+                    DB::table('role_user')->insert([
+                        'user_id' => $user->id,
+                        'role_id' => $request->roles,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+            }    
+
             return response()->json([
                 'success' => true,
                 'message' => 'Customer updated successfully.',

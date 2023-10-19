@@ -66,6 +66,26 @@ let showIncomingCall = (conn) => {
   showRinging.value = true;
 };
 
+let saveUserResponseTime = () => {
+  axios
+    .patch("/web-api/calls/" + connectedUniqueCallId.value + "/user-response", {
+      user_response_time: new Date(),
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      }
+    })
+    .then((response) => {
+      console.log(response.data);
+      console.log("user response time saved successfully");
+    })
+    .catch((error) => {
+      // Handle any error that occurred during the request
+      console.error("Error saving the user response time:", error);
+    });
+};
+
 let acceptCall = () => {
   console.log("accept call now");
 
@@ -79,6 +99,7 @@ let acceptCall = () => {
     showOngoing.value = true;
 
     callConnectionTime = new Date();
+    saveUserResponseTime();
 
     setInterval(() => {
       callDuration.value = getFormattedTime(callConnectionTime);
@@ -146,6 +167,8 @@ let rejectCall = () => {
   if (call) {
     call.reject();
     showRinging.value = false;
+    saveUserResponseTime();
+    console.log('Should update now');
   } else {
     console.log("call not found while rejecting");
   }
@@ -397,6 +420,17 @@ let appDownloadModal = ref(false);
             </div>
             <div class="pt-2 pb-3 space-y-1">
               <ResponsiveNavLink
+                :href="route('admin.calls.index')"
+                :active="
+                  route().current('admin.calls.index') ||
+                  route().current('admin.calls.detail')
+                "
+              >
+                Calls
+              </ResponsiveNavLink>
+            </div>
+            <div class="pt-2 pb-3 space-y-1">
+              <ResponsiveNavLink
                 :href="route('admin.customer.index')"
                 :active="
                   route().current('admin.customer.index') ||
@@ -406,7 +440,34 @@ let appDownloadModal = ref(false);
                 Customers
               </ResponsiveNavLink>
             </div>
+            <div class="pt-2 pb-3 space-y-1">
+              <ResponsiveNavLink
+                :href="route('admin.agent.index')"
+                :active="
+                  route().current('admin.agent.index') ||
+                  route().current('admin.agent.detail')
+                "
+              >
+                Internal Agents
+              </ResponsiveNavLink>
+            </div>
 
+            <div class="pt-2 pb-3 space-y-1">
+              <ResponsiveNavLink
+                :href="route('admin.online-agents.index')"
+                :active="route().current('admin.online-agents.index')"
+              >
+                Online Agents
+              </ResponsiveNavLink>
+            </div>
+            <div class="pt-2 pb-3 space-y-1">
+              <ResponsiveNavLink
+                :href="route('admin.agent-invites.index')"
+                :active="route().current('admin.agent-invites.index')"
+              >
+                Agent Invites
+              </ResponsiveNavLink>
+            </div>
             <!-- Responsive Settings Options -->
             <div
               class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600"
@@ -497,6 +558,7 @@ let appDownloadModal = ref(false);
               <img src="/img/clients.png" alt="" />
               Internal Agents
             </NavLink>
+
             <NavLink
               class="mb-10 gap-2"
               :href="route('admin.online-agents.index')"
@@ -888,14 +950,37 @@ let appDownloadModal = ref(false);
           <div
             class="py-12 hidden sm:-my-px sm:ml-10 col-span-1 md:flex md:flex-col"
           >
-            <NavLink
+            <!-- <NavLink
               class="mb-10 gap-2"
               :href="route('dashboard')"
               :active="route().current('dashboard')"
             >
               <img src="/img/dashboard.png" alt="" />
               Dashboard
+            </NavLink> -->
+
+            <NavLink
+              class="mb-10 gap-2"
+              :href="route('take-calls.show')"
+              :active="route().current('take-calls.show')"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-8 h-8 mr-2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"
+                />
+              </svg>
+              Take Calls
             </NavLink>
+
             <NavLink
               class="mb-10 gap-2"
               :href="route('clients.index')"
@@ -947,11 +1032,12 @@ let appDownloadModal = ref(false);
             </NavLink>
 
             <NavLink
+              v-if="$page.props.auth.role === 'internal-agent'"
               class="mb-10 gap-2"
-              :href="route('take-calls.show')"
-              :active="route().current('take-calls.show')"
+              :href="route('additional-files.index')"
+              :active="route().current('additional-files.index')"
             >
-            <svg
+              <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -962,10 +1048,11 @@ let appDownloadModal = ref(false);
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
-                  d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"
+                  d="M12 10.5v6m3-3H9m4.06-7.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"
                 />
               </svg>
-              Take Calls
+
+              Additional Files
             </NavLink>
 
             <NavLink
@@ -1164,8 +1251,7 @@ let appDownloadModal = ref(false);
           </h2>
 
           <div>
-            <a
-              href="https://play.google.com/store/apps/details?id=io.allcalls"
+            <a href="https://play.google.com/store/apps/details?id=io.allcalls"
               ><img
                 style="max-width: 200px; margin: auto"
                 src="/img/google-store.png"

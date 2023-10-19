@@ -109,7 +109,7 @@ let lastFourDigit = (e) => {
 }
 </style>
 <template>
-    <div class="grid grid-cols-4 gap-4 px-12 mb-3 mx-3">
+    <div class="grid lg:grid-cols-4   md:grid-cols-3 sm:grid-cols-1  gap-4 px-12 mb-3 mx-3">
 
         <div>
             <InputLabel for="name" value="name" />

@@ -7,7 +7,7 @@ const props = defineProps({
 <style scoped>
 .active-tab {
    color: #5f30e2;
-   /* border-bottom: 2px solid #5f30e2; */
+   border-bottom: 0px solid #5f30e2;
 }
 .active-icon {
     color: #5f30e2; 

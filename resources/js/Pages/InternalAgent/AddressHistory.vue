@@ -1,11 +1,15 @@
 <script setup>
 import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
-import { Head, Link, useForm } from "@inertiajs/vue3";
+import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
 let maxDate = ref(new Date)
+maxDate.value.setHours(23, 59, 59, 999);
 const emits = defineEmits();
 let props = defineProps({
     states: Array,
+    userData: Object,
+    isLoading: Boolean,
 });
+let page = usePage();
 let addres_history = ref([
     {
         address: 'history_address1',
@@ -31,123 +35,154 @@ let addres_history = ref([
     },
 ])
 let form = ref({
-    history_address1: { id: 1, state: "Choose", zip_code: '', address: '', city: '', zip_code: '' },
-    history_address2: { id: 2, state: "Choose", zip_code: '', address: '', city: '', zip_code: '' },
-    history_address3: { id: 3, state: "Choose", zip_code: '', address: '', city: '', zip_code: '' },
-    history_address4: { id: 4, state: "Choose", zip_code: '', address: '', city: '', zip_code: '' },
-    history_address5: { id: 5, state: "Choose", zip_code: '', address: '', city: '', zip_code: '' },
-    history_address6: { id: 6, state: "Choose", zip_code: '', address: '', city: '', zip_code: '' },
-    history_address7: { id: 7, state: "Choose", zip_code: '', address: '', city: '', zip_code: '' },
+    history_address1: { id: 1, state: "Choose", zip_code: '', address: '', city: '', move_in_date: '', move_out_date: '', },
+    history_address2: { id: 2, state: "Choose", zip_code: '', address: '', city: '', move_in_date: '', move_out_date: '', },
+    history_address3: { id: 3, state: "Choose", zip_code: '', address: '', city: '', move_in_date: '', move_out_date: '', },
+    history_address4: { id: 4, state: "Choose", zip_code: '', address: '', city: '', move_in_date: '', move_out_date: '', },
+    history_address5: { id: 5, state: "Choose", zip_code: '', address: '', city: '', move_in_date: '', move_out_date: '', },
+    history_address6: { id: 6, state: "Choose", zip_code: '', address: '', city: '', move_in_date: '', move_out_date: '', },
+    history_address7: { id: 7, state: "Choose", zip_code: '', address: '', city: '', move_in_date: '', move_out_date: '', },
 })
-let hasValidationErrors = ref({});
-
-// const ChangeTab = () => {
-//     hasValidationErrors.value = {};
-//     for (const history of addres_history.value) {
-//         const formData = form.value[history.address];
-//         console.log('formData',formData);
-//         if (formData.address === '' && formData.city === '' && formData.zip_code === '' && formData.state === 'Choose') {
-//                 emits("changeTab");
-//                 return
-//         }
-//         if (!formData.address || !formData.city || !formData.zip_code || !formData.state === 'Choose') {
-//                 hasValidationErrors.value[history.address] = {
-//                     address: !formData.address,
-//                     city: !formData.city,
-//                     state: formData.state === 'Choose',
-//                     zip_code: !formData.zip_code,
-//                 };
-
-//                 var element = document.getElementById("modal_main_id");
-//                 element.scrollIntoView();
-
-//                 return; // Stop tab change
-//             }
-//         return
-//         // Object.assign(formData, form.value[history.id]);
-//         if (Object.keys(formData).length != 2) {
-//             // const isAllFieldsEmpty = Object.keys(formData)
-//             // .filter(key => key !== 'id')
-//             // .every(key => formData[key] === '' || (key === 'state' && formData[key] === 'Choose'));
-
-//             // console.log('isAllFieldsEmpty',isAllFieldsEmpty);
-//             console.log('formData',formData);
-//             if (formData.address === '' && formData.city === '' && formData.zip_code === '' && formData.state === 'Choose') {
-//                 emits("changeTab");
-//                 return
-//             }
-//             if (!formData.address || !formData.city || !formData.zip_code || formData.state === 'Choose') {
-//                 hasValidationErrors.value[history.address] = {
-//                     address: !formData.address,
-//                     city: !formData.city,
-//                     state: formData.state === 'Choose',
-//                     zip_code: !formData.zip_code,
-//                 };
-
-//                 var element = document.getElementById("modal_main_id");
-//                 element.scrollIntoView();
-
-//                 return; // Stop tab change
-//             }
-//             if (formData.id === 7) {
-//                 if (formData.address && formData.city && formData.zip_code && formData.state) {
-//                     emits("changeTab");
-//                     return
-//                 }
-//             }
-//         } else {
-//             emits("changeTab");
-//             return
-//         }
-//     }
-
-// }
-const ChangeTab = () => {
-    hasValidationErrors.value = {};
-    let isValid = true; // Initialize a flag to check if all elements are valid
-
-    for (const history of addres_history.value) {
-        const formData = form.value[history.address];
-        console.log('formData', formData);
-
-        // Check if any field is filled and if it's a string
-        if (
-            (typeof formData.address === 'string' && formData.address.trim() !== '') ||
-            (typeof formData.city === 'string' && formData.city.trim() !== '') ||
-            (typeof formData.zip_code === 'string' && formData.zip_code.trim() !== '') ||
-            formData.state !== 'Choose'
-        ) {
-            // If any field is filled, check if all fields are filled for the current address
-            if (
-                (typeof formData.address !== 'string' || formData.address.trim() === '') ||
-                (typeof formData.city !== 'string' || formData.city.trim() === '') ||
-                (typeof formData.zip_code !== 'string' || formData.zip_code.trim() === '') ||
-                formData.state === 'Choose'
-            ) {
-                hasValidationErrors.value[history.address] = {
-                    address: !formData.address || typeof formData.address !== 'string',
-                    city: !formData.city || typeof formData.city !== 'string',
-                    state: formData.state === 'Choose',
-                    zip_code: !formData.zip_code || typeof formData.zip_code !== 'string',
-                };
-                isValid = false; // Set isValid to false if there's a validation error
-            }
+if (props.userData.internal_agent_contract && props.userData.internal_agent_contract.addresses) {
+    props.userData.internal_agent_contract.addresses.forEach((address, index) => {
+        // Check if the index is within the range of your form addresses
+        if (index < addres_history.value.length) {
+            const formKey = `history_address${index + 1}`;
+            form.value[formKey].address = address.address;
+            // Set other properties such as city, state, zip_code as needed
+            form.value[formKey].city = address.city;
+            form.value[formKey].state = address.state;
+            form.value[formKey].zip_code = address.zip;
+            form.value[formKey].state = address.state;
+            form.value[formKey].move_in_date = address.move_in_date;
+            form.value[formKey].move_out_date = address.move_out_date;
+            // Add more properties as needed
         }
-    }
-
-    // If isValid is still true, it means there are no validation errors
-    if (isValid) {
-        emits("changeTab");
-    }
+    });
 }
 
+let hasValidationErrors = ref({});
+
+let pageTop = () => {
+    var element = document.getElementById("modal_main_id");
+    element.scrollIntoView();
+}
+let dateFormat = (data) => {
+    if (data) {
+        let date = new Date(data)
+        const day = date.getDate().toString().padStart(2, "0"); // Add leading zero if needed
+        const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Month is zero-based, so add 1
+        const year = date.getFullYear();
+        // Create the formatted date string
+        return `${day}/${month}/${year}`;
+    }
+
+}
+let getYearDifference = (date1, date2) => {
+    const date1Parts = date1.split('/');
+    const date2Parts = date2.split('/');
+    const d1 = new Date(+date1Parts[2], date1Parts[0] - 1, +date1Parts[1]);
+    const d2 = new Date(+date2Parts[2], date2Parts[0] - 1, +date2Parts[1]);
+    const diffTime = Math.abs(d2 - d1);
+    const diffYears = diffTime / (1000 * 60 * 60 * 24 * 365);
+    return diffYears;
+}
+let yearError = ref(false)
+const ChangeTab = () => {
+    if (page.props.auth.role === 'admin') {
+        emits("changeTab");
+    } else {
+        hasValidationErrors.value = {};
+        let isValid = true; // Initialize a flag to check if all elements are valid
+        if (page.props.auth.role === 'internal-agent') {
+            for (const history of addres_history.value) {
+                const formData = form.value[history.address];
+                // Check if any field is filled and if it's a string
+                if (
+                    (typeof formData.address === 'string' && formData.address.trim() !== '') ||
+                    (typeof formData.city === 'string' && formData.city.trim() !== '') ||
+                    (typeof formData.zip_code === 'string' && formData.zip_code.trim() !== '') ||
+                    formData.state !== 'Choose' ||
+                    formData.move_in_date !== '' ||
+                    formData.move_out_date !== ''
+                ) {
+                    // If any field is filled, check if all fields are filled for the current address
+                    if (
+                        (typeof formData.address !== 'string' || formData.address.trim() === '') ||
+                        (typeof formData.city !== 'string' || formData.city.trim() === '') ||
+                        (typeof formData.zip_code !== 'string' || formData.zip_code.trim() === '') ||
+                        formData.state === 'Choose' ||
+                        (!formData.move_in_date || !formData.move_out_date)
+                    ) {
+                        hasValidationErrors.value[history.address] = {
+                            address: !formData.address || typeof formData.address !== 'string',
+                            city: !formData.city || typeof formData.city !== 'string',
+                            state: formData.state === 'Choose',
+                            zip_code: !formData.zip_code || typeof formData.zip_code !== 'string',
+                            move_in_date: !formData.move_in_date,
+                            move_out_date: !formData.move_out_date,
+                        };
+                        isValid = false; // Set isValid to false if there's a validation error
+                    }
+                }
+
+            }
+        }
+        let accumulatedYears = 0;
+        // let addresdCount = 0;
+        for (const history of addres_history.value) {
+            const formData = form.value[history.address];
+            if (formData.move_in_date && formData.move_out_date) {
+                const differenceInYears = getYearDifference(dateFormat(formData.move_in_date), dateFormat(formData.move_out_date))
+                accumulatedYears += differenceInYears;
+                // addresdCount++
+            }
+
+        }
+        if (isValid && accumulatedYears < 7) {
+            yearError.value = true
+            const firstAddress = addres_history.value[0];
+            const firstFormData = form.value[firstAddress.address];
+            const isFirstAddressEmpty =
+                !firstFormData.address ||
+                !firstFormData.city ||
+                firstFormData.state === "Choose" ||
+                !firstFormData.zip_code ||
+                !firstFormData.move_in_date ||
+                !firstFormData.move_out_date;
+            if (isFirstAddressEmpty) {
+                hasValidationErrors.value[firstAddress.address] = {
+                    address: !firstFormData.address || typeof firstFormData.address !== 'string',
+                    city: !firstFormData.city || typeof firstFormData.city !== 'string',
+                    state: firstFormData.state === 'Choose',
+                    zip_code: !firstFormData.zip_code || typeof firstFormData.zip_code !== 'string',
+                    move_in_date: !firstFormData.move_in_date,
+                    move_out_date: !firstFormData.move_out_date,
+                    year_error: !firstFormData.year_error,
+                };
+            }
+            isValid = false;
+            setTimeout(() => {
+                yearError.value = false
+            }, 10000);
+        }
+        if (isValid) {
+            if (page.props.auth.role === 'internal-agent') {
+                yearError.value = false
+                emits("addRessHistory", form.value);
+            } else {
+                emits("changeTab");
+            }
+        } else {
+            pageTop()
+        }
+    }
+}
 
 let ChangeTabBack = () => {
     emits("goback");
 }
-watch(form.value, (newForm, oldForm) => {
-    emits("addRessHistory", newForm);
-});
+
 let enforceFiveDigitInput = (fieldName, val) => {
     addres_history.value.forEach((history) => {
         let field = form.value[history.address][fieldName];
@@ -166,15 +201,29 @@ let enforceFiveDigitInput = (fieldName, val) => {
     <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
         Please Provide Your Address History for the Past 7 Years
     </h1>
+    <!-- <div v-if="yearError" class="bg-red-100 mb-4 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+        role="alert">
+        <span class="block sm:inline">The cumulative period of all addresses should be greater than 7 years.</span>
+    </div> -->
+    <div v-if="yearError">
+        <div 
+            class="bg-red-100 mb-4  border border-red-400 text-red-700 px-4 py-2 rounded relative" role="alert">
+            <span class="block sm:inline">The combined duration of all residences must exceed 7 years.</span>
+        </div>
+        <hr class="w-100 h-1 my-4 bg-gray-600 border-0 rounded dark:bg-gray-700">
+    </div>
+
+
     <div v-for="(history, index) in addres_history" :key="history.id">
 
         <div class="grid lg:grid-cols-3 mb-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
             <div>
-                <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Home
+                <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 ">Home
                     Address</label>
                 <div>
-                    <input type="text" v-model="form[history.address].address" id="default-input"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <input :disabled="page.props.auth.role === 'admin'" type="text" v-model="form[history.address].address"
+                        id="default-input"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                     <span style="font-size: 14px;">Include Apt/Unit #</span>
                 </div>
                 <div v-if="hasValidationErrors[history.address]">
@@ -182,14 +231,12 @@ let enforceFiveDigitInput = (fieldName, val) => {
                         required</span>
                 </div>
             </div>
-
-
-
             <div>
-                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">City
+                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">City
                 </label>
-                <input type="text" v-model="form[history.address].city" id="default-input"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <input :disabled="page.props.auth.role === 'admin'" type="text" v-model="form[history.address].city"
+                    id="default-input"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                 <div v-if="hasValidationErrors[history.address]">
                     <span v-if="hasValidationErrors[history.address].city" class="text-red-600">City is
                         required</span>
@@ -197,10 +244,10 @@ let enforceFiveDigitInput = (fieldName, val) => {
             </div>
 
             <div>
-                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">
+                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">
                     State</label>
-                <select v-model="form[history.address].state" id="countries"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <select :disabled="page.props.auth.role === 'admin'" v-model="form[history.address].state" id="countries"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                     <option>Choose </option>
                     <option v-for="state in states" :value="state.id">{{ state.full_name }} </option>
                 </select>
@@ -211,10 +258,10 @@ let enforceFiveDigitInput = (fieldName, val) => {
             </div>
 
             <div>
-                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 dark:text-white">Zip Code</label>
-                <input type="number" @input="enforceFiveDigitInput('zip_code')" v-model="form[history.address].zip_code"
-                    id="default-input"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">Zip Code</label>
+                <input :disabled="page.props.auth.role === 'admin'" type="number" @input="enforceFiveDigitInput('zip_code')"
+                    v-model="form[history.address].zip_code" id="default-input"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                 <div v-if="hasValidationErrors[history.address]">
                     <span v-if="hasValidationErrors[history.address].zip_code" class="text-red-600">Zip Code is
                         required</span>
@@ -222,22 +269,28 @@ let enforceFiveDigitInput = (fieldName, val) => {
             </div>
 
             <div>
-                <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 dark:text-white">Move-In
+                <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 ">Move-In
                     Date</label>
-                <VueDatePicker v-model="form[history.address].move_in_date" format="dd-MMM-yyyy" :maxDate="maxDate">
+                <VueDatePicker :disabled="page.props.auth.role === 'admin'" v-model="form[history.address].move_in_date"
+                    format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply>
                 </VueDatePicker>
+                <div v-if="hasValidationErrors[history.address]">
+                    <span v-if="hasValidationErrors[history.address].move_in_date" class="text-red-600">This Field is
+                        required</span>
+                </div>
             </div>
             <div>
-                <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 dark:text-white">Move-Out
+                <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 ">Move-Out
                     Date</label>
-                <VueDatePicker v-model="form[history.address].move_out_date" format="dd-MMM-yyyy" :maxDate="maxDate">
+                <VueDatePicker :disabled="page.props.auth.role === 'admin'" v-model="form[history.address].move_out_date"
+                    format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply>
                 </VueDatePicker>
+                <div v-if="hasValidationErrors[history.address]">
+                    <span v-if="hasValidationErrors[history.address].move_out_date" class="text-red-600">This Field is
+                        required</span>
+                </div>
             </div>
-
         </div>
-
-
-
         <hr class="w-100 h-1 my-4 bg-gray-600 border-0 rounded dark:bg-gray-700">
     </div>
     <div class="px-5 pb-6">
@@ -253,8 +306,9 @@ let enforceFiveDigitInput = (fieldName, val) => {
                 </button>
             </div>
             <div class="mt-4">
-                <button type="button" @click="ChangeTab" class="button-custom px-3 py-2 rounded-md">
-                    Next
+                <button type="button" :class="{ 'opacity-25': isLoading }" :disabled="isLoading" @click="ChangeTab"
+                    class="button-custom px-3 py-2 rounded-md">
+                    <global-spinner :spinner="isLoading" /> Next
                 </button>
 
             </div>

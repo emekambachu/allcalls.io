@@ -1,23 +1,33 @@
 <script setup>
 import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
 import UploadPdfFile from "@/Components/UploadPdfFile.vue";
+import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
 let emits = defineEmits()
 let props = defineProps({
     firstStepErrors: Object,
+    userData: Object,
+    isLoading: Boolean,
 });
+let page = usePage();
+let omissionUrl = ref(null)
+const selectedFileName = ref(""); // To store the selected file name
 let form = ref({
     omissions_insurance: false,
 });
-let omissionsInsurance = ref(true)
-const selectedFile = ref(null)
-watch(form.value, (newVal, oldVal) => {
-    if (newVal.omissions_insurance == true) {
-        omissionsInsurance.value = false
-    } else {
-        omissionsInsurance.value = true
+if (page.props.auth.role === 'admin') {
+    form.value.omissions_insurance = true
+}
+if (props.userData.internal_agent_contract && props.userData.internal_agent_contract.error_and_emission) {
+    if (props.userData.internal_agent_contract.error_and_emission.omissions_insurance === 1) {
+        selectedFileName.value = props.userData.internal_agent_contract.error_and_emission.name
+        form.value.omissions_insurance = true
+        omissionUrl.value = props.userData.internal_agent_contract.error_and_emission.url
     }
 
-})
+}
+let omissionsInsurance = ref(true)
+const selectedFile = ref(null)
+
 let ChangeTab = () => {
     for (const key in props.firstStepErrors) {
         if (props.firstStepErrors.hasOwnProperty(key)) {
@@ -25,16 +35,18 @@ let ChangeTab = () => {
         }
     }
 
-    if (!selectedFile.value) {
-        props.firstStepErrors.omissions_insurance = [`The Omissions Insurances certificate is required.`];
+    if (!selectedFile.value && page.props.auth.role === 'internal-agent' && !props.userData.internal_agent_contract.error_and_emission) {
+        props.firstStepErrors.uploadOmmisionPdf = [`The Omissions Insurances certificate is required.`];
     } else {
-        emits("uploadPdfOmmision", { selectedFile: selectedFile.value, omissions_insurance: form.value.omissions_insurance });
-        emits("changeTab");
+        if (page.props.auth.role === 'internal-agent') {
+            emits("uploadPdfOmmision", { selectedFile: selectedFile.value, omissions_insurance: form.value.omissions_insurance });
+        } else {
+            emits("changeTab");
+        }
     }
 }
 
 const fileError = ref(false);
-const selectedFileName = ref(""); // To store the selected file name
 
 const handleFileChange = (event) => {
     const files = event.target.files;
@@ -98,7 +110,7 @@ let goBack = () => {
     <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
         Errors and Omissions Insurances
     </h1>
-    <div class="bg-blue-50 py-10 px-6 rounded-lg shadow-md">
+    <div v-show="page.props.auth.role === 'internal-agent'" class="bg-blue-50 py-10 px-6 rounded-lg shadow-md">
         <div class="text-gray-600 mb-4">
             Complete the sign-up process and apply for Errors and Omissions Insurance.
         </div>
@@ -110,8 +122,16 @@ let goBack = () => {
             </a>for registration and application.
         </div>
     </div>
+    <div v-show="page.props.auth.role === 'admin'" class="bg-blue-50 py-10 px-6 rounded-lg shadow-md">
+        <div>
+            <a target="_blank" :href="omissionUrl" :disabled="!omissionUrl" :class="{ 'opacity-25': !omissionUrl }">
+                <strong class="text-blue-600 mr-1 hover:underline">Click here
+                </strong>
+            </a>Preview / Download omissions insurances
+        </div>
+    </div>
     <div class="mt-5">
-        <div class="flex items-center justify-center w-full">
+        <div v-show="page.props.auth.role === 'internal-agent'" class="flex items-center justify-center w-full">
             <label for="dropzone-file-ommision"
                 class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
                 @dragover.prevent @drop="handleDrop">
@@ -130,26 +150,27 @@ let goBack = () => {
                 <input id="dropzone-file-ommision" type="file" class="hidden" @change="handleFileChange" accept=".pdf" />
             </label>
         </div>
+        <div v-if="firstStepErrors.uploadOmmisionPdf" class="text-red-500 mt-1"
+            v-text="firstStepErrors.uploadOmmisionPdf[0]">
+        </div>
         <p v-if="fileError" class="text-red-500 mt-4">{{ fileErrorMessage }}</p>
         <!-- Display the selected file name with styling -->
-        <div v-if="selectedFileName" class="text-green-500 mt-4">
+        <div v-if="selectedFileName && page.props.auth.role === 'internal-agent'" class="text-green-500 mt-4">
             Selected File: {{ selectedFileName }}
         </div>
     </div>
     <div class="flex justify-between my-5">
         <div></div>
         <div>
-            <input id="link-omissions_insurance" v-model="form.omissions_insurance" type="checkbox" value=""
+            <input :disabled="page.props.auth.role === 'admin'" id="link-omissions_insurance" v-model="form.omissions_insurance" type="checkbox" value=""
                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
             <label for="link-omissions_insurance" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Errors
                 and
                 Omissions Insurances.<span class="text-red-500 ">*</span></label>
+            <div v-if="firstStepErrors.omissions_insurance" class="text-red-500 mt-1"
+                v-text="firstStepErrors.omissions_insurance[0]">
+            </div>
         </div>
-    </div>
-
-    <div v-if="firstStepErrors.omissions_insurance" class="text-red-500" v-text="firstStepErrors.omissions_insurance[0]">
-    </div>
-    <div v-if="firstStepErrors.uploadOmmisionPdf" class="text-red-500" v-text="firstStepErrors.uploadOmmisionPdf[0]">
     </div>
     <div class="px-5 pb-6">
         <div class="flex justify-between flex-wrap">
@@ -164,9 +185,10 @@ let goBack = () => {
                 </button>
             </div>
             <div class="mt-4">
-                <button type="button" :class="{ 'opacity-25': omissionsInsurance }" :disabled="omissionsInsurance"
-                    @click.prevent="ChangeTab" class="button-custom px-3 py-2 rounded-md">
-                    Next Step
+                <button type="button" :class="{ 'opacity-25': form.omissions_insurance === false || isLoading }"
+                    :disabled="form.omissions_insurance === false || isLoading" @click.prevent="ChangeTab"
+                    class="button-custom px-3 py-2 rounded-md">
+                    <global-spinner :spinner="isLoading" /> Next Step
                 </button>
 
             </div>

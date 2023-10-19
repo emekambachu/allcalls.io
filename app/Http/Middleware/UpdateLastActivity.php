@@ -17,6 +17,16 @@ class UpdateLastActivity
      */
     public function handle(Request $request, Closure $next): Response
     {     
+        $devices_details = "";
+        if((new \Jenssegers\Agent\Agent())->isDesktop()){
+            $devices_details = "Desktop";
+        }
+        if((new \Jenssegers\Agent\Agent())->isMobile()){
+            $devices_details = "Mobile";
+        }
+        if((new \Jenssegers\Agent\Agent())->isTablet()){
+            $devices_details = "Tablet";
+        }
         if (Auth::check()) {
             $sessionId = session()->getId();
 
@@ -24,6 +34,9 @@ class UpdateLastActivity
             $activity = $user->activities->where('session_id', $sessionId)->first();
             if ($activity) {
                 $activity->last_activity_at = now();
+                $activity->ip_address = $request->ip();
+                $activity->user_agent = $request->header('user-agent');
+                $activity->devices_details = $devices_details;
                 $activity->save();
             }
         }

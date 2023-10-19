@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\OnlineUserListUpdated;
 use Inertia\Inertia;
 use App\Models\OnlineUser;
 use Illuminate\Http\Request;
@@ -21,6 +22,8 @@ class OnlineAgentsController extends Controller
     public function destroy($userId)
     {
         OnlineUser::whereUserId($userId)->delete();
+
+        OnlineUserListUpdated::dispatch();
 
         return redirect()->back()->with([
             'message' => 'Agent removed from online list.'

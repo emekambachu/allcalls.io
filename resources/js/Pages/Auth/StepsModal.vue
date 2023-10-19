@@ -266,7 +266,7 @@ let submit = () => {
                       v-if="selectedTypes.includes(callType.id)"
                       class="pt-2 mb-8"
                     >
-                      <div v-if="!agentToken">
+                      <div v-if="!agentToken && $page.props.auth.role != 'internal-agent'">
                         <label class="ml-2 text-xs font-medium">Your Bid</label>
                         <div class="relative mb-2">
                           <div

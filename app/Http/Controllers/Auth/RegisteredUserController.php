@@ -116,7 +116,7 @@ class RegisteredUserController extends Controller
     public function steps(Request $request)
     {
         if (DB::table('users_call_type_state')->where('user_id', auth()->user()->id)->count()) {
-            return redirect()->route('dashboard');
+            return redirect('/take-calls');
         }
 
         $sevenDaysAgo = Carbon::now()->subDays(7);

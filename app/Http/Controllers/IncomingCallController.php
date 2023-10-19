@@ -206,8 +206,11 @@ class IncomingCallController extends Controller
             $call_type_id = $availableNumber->call_type_id;
             $uniqueCallId = uniqid();
 
-            $twimlBody .= '<Dial record="record-from-answer" recordingStatusCallbackMethod="GET" recordingStatusCallbackEvent="completed" recordingStatusCallback="https://allcalls.io/api/handle-call-recording?user_id=' . $user_id . '&amp;call_type_id=' . $call_type_id . '&amp;unique_call_id=' . $uniqueCallId . '&amp;from=' . urlencode($availableNumber->from) . '" callerId="+12518626328" timeout="20">';
-            $twimlBody .= '<Client statusCallbackMethod="GET" statusCallbackEvent="initiated ringing answered completed" statusCallback="https://allcalls.io/api/handle-call-status?user_id=' . $user_id . '&amp;call_type_id=' . $call_type_id . '&amp;from=' . urlencode($availableNumber->from) . '&amp;unique_call_id=' . $uniqueCallId . '">';
+            $statusCallbackBaseUrl = env('APP_URL') . '/api/handle-call-status';
+            $recordingStatusCallBackBaseUrl = env('APP_URL') . '/api/handle-call-recording';
+            
+            $twimlBody .= '<Dial record="record-from-answer" recordingStatusCallbackMethod="GET" recordingStatusCallbackEvent="completed" recordingStatusCallback="' . $recordingStatusCallBackBaseUrl . '?user_id=' . $user_id . '&amp;call_type_id=' . $call_type_id . '&amp;unique_call_id=' . $uniqueCallId . '&amp;from=' . urlencode($availableNumber->from) . '" callerId="+12518626328" timeout="20">';
+            $twimlBody .= '<Client statusCallbackMethod="GET" statusCallbackEvent="initiated ringing answered completed" statusCallback="' . $statusCallbackBaseUrl . '?user_id=' . $user_id . '&amp;call_type_id=' . $call_type_id . '&amp;from=' . urlencode($availableNumber->from) . '&amp;unique_call_id=' . $uniqueCallId . '">';
             $twimlBody .= '<Identity>' . $user_id . '</Identity>';
             $twimlBody .= '<Parameter name="unique_call_id" value="' . $uniqueCallId . '"/>';
             $twimlBody .= '<Parameter name="request_from_number" value="' . $requestFrom . '"/>';

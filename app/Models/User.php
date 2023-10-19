@@ -10,6 +10,7 @@ use App\Models\CallType;
 use App\Models\ActiveUser;
 use App\Models\Transaction;
 use Laravel\Cashier\Billable;
+use App\Models\AdditionalFile;
 use App\Models\UserCallTypeState;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
@@ -37,6 +38,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'device_token',
         'banned',
         'call_status',
+        'legacy_key',
+        'timezone',
     ];
 
     /**
@@ -117,12 +120,12 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     public function hasRole($role){
-            foreach ($this->roles as $key => $value) {
-                if($value->name==$role){
-                    return true;
-                }
+        foreach ($this->roles as $key => $value) {
+            if($value->name==$role){
+                return true;
             }
-            return false;
+        }
+        return false;
     }
 
     public function activeUser()
@@ -137,5 +140,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function bids()
     {
         return $this->hasMany(Bid::class);
+    }
+
+    public function additionalFiles()
+    {
+        return $this->hasMany(AdditionalFile::class);
     }
 }

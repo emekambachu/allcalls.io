@@ -25,6 +25,9 @@ let props = defineProps({
   internalAgent: {
     type: Boolean,
   },
+  timezones:{
+    type: Object,
+  }
 });
 
 let bidsInput = ref(
@@ -66,7 +69,7 @@ let saveBids = () => {
           <UpdateProfileInformationForm
             :must-verify-email="mustVerifyEmail"
             :status="status"
-            :call-types="callTypes"
+            :call-types="callTypes" :timezones="timezones"
             class="max-w-xl"
           />
         </div>

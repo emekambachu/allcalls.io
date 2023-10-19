@@ -32,6 +32,9 @@ let props = defineProps({
   },
   callTypes: Array,
   states: Array,
+  roles: {
+    type:Object,
+  }
 });
 
 let formData = ref({
@@ -257,6 +260,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
         @close="showModal = false"
         :callTypes="callTypes"
         :states="states"
+        :roles="roles"
         :route="'/admin/customer'"
       ></Edit>
     </Modal>

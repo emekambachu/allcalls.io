@@ -14,4 +14,8 @@ class InternalAgentAddress extends Model
     public function agentDetail() {
         return $this->belongsTo(InternalAgentRegInfo::class);
     }
+
+    public function getState() {
+        return $this->hasOne(State::class, 'id', 'state');
+    }
 }

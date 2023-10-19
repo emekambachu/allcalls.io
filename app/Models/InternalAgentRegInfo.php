@@ -15,19 +15,19 @@ class InternalAgentRegInfo extends Model
     }
 
     public function addresses() {
-        return $this->hasMany(InternalAgentLegalQuestion::class, 'reg_info_id', 'id');
+        return $this->hasMany(InternalAgentAddress::class, 'reg_info_id', 'id');
     }
 
     public function amlCourse() {
-        return $this->hasOne(InternalAgentLegalQuestion::class, 'reg_info_id', 'id');
+        return $this->hasOne(InternalAgentAmlCourse::class, 'reg_info_id', 'id');
     }
 
     public function bankingInfo() {
-        return $this->hasOne(InternalAgentLegalQuestion::class, 'reg_info_id', 'id');
+        return $this->hasOne(InternalAgentBankingInfo::class, 'reg_info_id', 'id');
     }
 
     public function errorAndEmission() {
-        return $this->hasOne(InternalAgentLegalQuestion::class, 'reg_info_id', 'id');
+        return $this->hasOne(InternalAgentErrorAndEmission::class, 'reg_info_id', 'id');
     }
 
     public function legalQuestion() {
@@ -35,7 +35,34 @@ class InternalAgentRegInfo extends Model
     }
 
     public function residentLicense() {
-        return $this->hasOne(InternalAgentLegalQuestion::class, 'reg_info_id', 'id');
+        return $this->hasOne(InternalAgentResidentLicense::class, 'reg_info_id', 'id');
     }
 
+    public function getQuestionSign() {
+        return $this->hasOne(InternalAgentQuestionSigned::class, 'reg_info_id', 'id');
+    }
+
+    public function getContractSign() {
+        return $this->hasOne(InternalAgentContractSigned::class, 'reg_info_id', 'id');
+    }
+
+    public function getState() {
+        return $this->hasOne(State::class, 'id', 'state');
+    }
+
+    public function getDriverLicenseState() {
+        return $this->hasOne(State::class, 'id', 'driver_license_state');
+    }
+
+    public function getMoveInState() {
+        return $this->hasOne(State::class, 'id', 'move_in_state');
+    }
+
+    public function getResidentInsLicenseState() {
+        return $this->hasOne(State::class, 'id', 'resident_insu_license_state');
+    }
+
+    public function getBusinessState() {
+        return $this->hasOne(State::class, 'id', 'business_state');
+    }
 }

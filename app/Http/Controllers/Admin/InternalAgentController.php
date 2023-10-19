@@ -7,11 +7,14 @@ use App\Models\Activity;
 use App\Models\Call;
 use App\Models\CallType;
 use App\Models\Client;
+use App\Models\InternalAgentContractSigned;
 use App\Models\Role;
 use App\Models\State;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Rules\CallTypeIdEixst;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Clegginabox\PDFMerger\PDFMerger;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -19,6 +22,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Http\Client\Response;
 use Inertia\Inertia;
 
 class InternalAgentController extends Controller
@@ -30,45 +34,55 @@ class InternalAgentController extends Controller
         $agents = User::whereHas('roles', function ($query) use ($agent) {
             $query->where('role_id', $agent->id);
         })
-        ->where(function($query) use ($request) {
-            if(isset($request->name) && $request->name != '') {
-                $query->where('first_name', 'LIKE', '%' . $request->name . '%')
-                ->orWhere('last_name', 'LIKE', '%' . $request->name . '%');
-            }
-        })
-        ->where(function($query) use ($request) {
-            if(isset($request->email) && $request->email != '') {
-                $query->where('email', 'LIKE', '%' . $request->email . '%');
-            }
-        })
-        ->where(function($query) use ($request) {
-            if(isset($request->phone) && $request->phone != '') {
-                $query->where('phone', 'LIKE', '%' . $request->phone . '%');
-            }
-        })
-        ->where(function ($query) use ($request) {
-            if (isset($request->first_six_card_no) && $request->first_six_card_no != '') {
-                $query->whereHas('cards', function ($query) use ($request) {
-                    $query->whereRaw('SUBSTRING(number, 1, 6) = ?', [$request->first_six_card_no]);
-                });
-            }
-        })
-        ->where(function ($query) use ($request) {
-            if (isset($request->last_four_card_no) && $request->last_four_card_no != '') {
-                $query->whereHas('cards', function ($query) use ($request) {
-                    $query->whereRaw('SUBSTRING(number, -4) = ?', [$request->last_four_card_no]);
-                });
-            }
-        })
-        ->with('states')
-        ->with('callTypes')
-        ->orderBy('created_at','desc')
-        ->paginate(10);
+            ->where(function ($query) use ($request) {
+                if (isset($request->name) && $request->name != '') {
+                    $query->where('first_name', 'LIKE', '%' . $request->name . '%')
+                        ->orWhere('last_name', 'LIKE', '%' . $request->name . '%');
+                }
+            })
+            ->where(function ($query) use ($request) {
+                if (isset($request->email) && $request->email != '') {
+                    $query->where('email', 'LIKE', '%' . $request->email . '%');
+                }
+            })
+            ->where(function ($query) use ($request) {
+                if (isset($request->phone) && $request->phone != '') {
+                    $query->where('phone', 'LIKE', '%' . $request->phone . '%');
+                }
+            })
+            ->where(function ($query) use ($request) {
+                if (isset($request->first_six_card_no) && $request->first_six_card_no != '') {
+                    $query->whereHas('cards', function ($query) use ($request) {
+                        $query->whereRaw('SUBSTRING(number, 1, 6) = ?', [$request->first_six_card_no]);
+                    });
+                }
+            })
+            ->where(function ($query) use ($request) {
+                if (isset($request->last_four_card_no) && $request->last_four_card_no != '') {
+                    $query->whereHas('cards', function ($query) use ($request) {
+                        $query->whereRaw('SUBSTRING(number, -4) = ?', [$request->last_four_card_no]);
+                    });
+                }
+            })
+            ->with('internalAgentContract.additionalInfo')
+            ->with('internalAgentContract.addresses')
+            ->with('internalAgentContract.amlCourse')
+            ->with('internalAgentContract.bankingInfo')
+            ->with('internalAgentContract.errorAndEmission')
+            ->with('internalAgentContract.legalQuestion')
+            ->with('internalAgentContract.residentLicense')
+            ->with('internalAgentContract.getQuestionSign')
+            ->with('internalAgentContract.getContractSign')
+            ->with('states')
+            ->with('callTypes')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
 
         $callTypes = CallType::get();
         $states = State::get();
         return Inertia::render('Admin/Agent/Index', [
-            'requestData'=>$request->all(),
+            'requestData' => $request->all(),
             'agents' => $agents,
             'callTypes' => $callTypes,
             'states' => $states,
@@ -84,6 +98,7 @@ class InternalAgentController extends Controller
         $ClientCount = Client::where('user_id', $id)->count();
         return Inertia::render('Admin/Agent/Show', [
             'user' => $user,
+            'additionalFiles' => $user->additionalFiles,
             'callsCount' => $callsCount,
             'transactionsCount' => $transactionsCount,
             'activitiesCount' => $activitiesCount,
@@ -91,8 +106,8 @@ class InternalAgentController extends Controller
         ]);
     }
 
-
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -127,7 +142,7 @@ class InternalAgentController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
-            'balance' => isset($request->balance)?$request->balance:0,
+            'balance' => isset($request->balance) ? $request->balance : 0,
         ]);
 
         $user->markEmailAsVerified();
@@ -169,12 +184,11 @@ class InternalAgentController extends Controller
             'success' => true,
             'message' => 'Agent added successfully',
         ], 200);
-
     }
 
     public function getCall($id)
     {
-        $calls = Call::whereUserId($id)->with('user','getClient',  'callType')->paginate(10);
+        $calls = Call::whereUserId($id)->with('user', 'getClient',  'callType')->paginate(10);
         $states = State::all();
         return response()->json([
             'calls' => $calls,
@@ -197,12 +211,15 @@ class InternalAgentController extends Controller
             'activities' => $activities
         ]);
     }
-    public function getAgentClients($id){
+
+    public function getAgentClients($id)
+    {
         $Clients = Client::where('user_id', $id)->paginate(10);
         return response()->json([
             'clients' => $Clients
         ]);
     }
+
     public function update(Request $request, $id)
     {
         // echo $request->all();
@@ -232,15 +249,15 @@ class InternalAgentController extends Controller
             ], 400);
         }
 
-        try{
-            $user= User::find($id);
-            if($user->balance!=$request->balance){
+        try {
+            $user = User::find($id);
+            if ($user->balance != $request->balance) {
                 Transaction::create([
-                    'amount'=>$request->balance-$user->balance,
-                    'sign'=> 1,
-                    'bonus'=>0,
-                    'user_id'=>$id,
-                    'comment'=>$request->comment
+                    'amount' => $request->balance - $user->balance,
+                    'sign' => 1,
+                    'bonus' => 0,
+                    'user_id' => $id,
+                    'comment' => $request->comment
                 ]);
             }
             //Call Types And State
@@ -268,17 +285,77 @@ class InternalAgentController extends Controller
             //Call Types And State
             $user->update([
                 'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'phone' => $request->phone,
-            'balance' => isset($request->balance)?$request->balance:0,
-        ]);
-        return response()->json([
-            'success' => true,
-            'message' => 'Agent updated successfully.',
-        ], 200);
-    }catch(Exception $e){
-        return response()->json(['error'=>$e], 500);
+                'last_name' => $request->last_name,
+                'phone' => $request->phone,
+                'balance' => isset($request->balance) ? $request->balance : 0,
+            ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Agent updated successfully.',
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e], 500);
+        }
     }
 
+    public function downloadAgentContractPdf($id)
+    {
+        set_time_limit(0);
+        try {
+            $user = User::findOrFail($id);
+            $contractPDF = InternalAgentContractSigned::where('reg_info_id', $user->internalAgentContract->id)->first();
+            return response()->download($contractPDF->sign_url);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'errors' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    public function getQuestionPdf($id, $userId, $serialNo)
+    {
+        set_time_limit(0);
+
+        $returnArr['contractData'] = User::where('id', $userId)
+            ->with(['internalAgentContract.legalQuestion' => function ($query) use ($id) {
+                $query->where('id', $id);
+            }])
+            ->first();
+        $pdf = PDF::loadView('pdf.internal-agent-contract.legal-question-by-detail', $returnArr);
+
+
+        return $pdf->download($serialNo . '-explaination.pdf');
+    }
+
+    public function internalAgentApproved($id) {
+        try {
+            $user = User::findOrFail($id);
+            $user->is_locked = false;
+            $user->save();
+            return response()->json([
+                'success' => true,
+                'message' => 'Internal Agent Approved Successfully.',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'errors' => $e->getMessage(),
+            ], 400);
+        }
+
+    }
+
+    public function signatureAuthrorizationPdf($id)
+    {
+//        set_time_limit(0);
+//
+//        $returnArr['contractData'] = User::where('id', $id)
+//            ->with('internalAgentContract.getContractSign')
+//            ->first();
+//
+//        $pdf = PDF::loadView('pdf.internal-agent-contract.signature-authorization', $returnArr);
+//
+//        return $pdf->download('signature-authorization.pdf');
     }
 }

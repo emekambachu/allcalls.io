@@ -68,12 +68,12 @@ let fetchTransactions = (page) => {
       <div class="mx-auto max-w-screen-xl sm:px-12">
         <div class="relative sm:rounded-lg overflow-hidden">
           <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left text-gray-400">
+            <table class="w-full text-sm text-left text-gray-400 table-responsive">
               <thead class="text-xs text-gray-300 uppercase bg-sky-900">
                 <tr>
                   <th scope="col" class="px-4 py-3">ID</th>
                   <th scope="col" class="px-4 py-3">Amount</th>
-                  <th scope="col" class="px-4 py-3">Date & Time</th>
+                  <th scope="col" class="px-4 py-3" style="min-width:240px">Date & Time</th>
                   <th scope="col" class="px-4 py-3">Label</th>
                   <th scope="col" class="px-4 py-3">Direction</th>
                 </tr>
@@ -95,7 +95,7 @@ let fetchTransactions = (page) => {
                     {{ formatMoney(transaction.amount) }}
                   </td>
                   <td class="text-gray-600 px-4 py-3">
-                    {{ formatDate(transaction.created_at) }}
+                    {{ formatDate(moment(moment(transaction.created_at).utc().format("YYYY-MM-DD HH:mm:ss")).tz(timezone).format("YYYY-MM-DD HH:mm:ss")) }}
                   </td>
                   <td class="text-gray-600 px-4 py-3">{{ transaction.label ? transaction.label : '-' }}</td>
                   <td class="text-gray-300 px-4 py-3">

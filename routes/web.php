@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Controllers\CallUserResponseAPIController;
 use App\Http\Controllers\AgentStatusPriceDocsController;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\BidsController;
@@ -18,17 +18,14 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TakeCallsController;
 use App\Http\Controllers\StripeTestController;
 use App\Http\Controllers\DefaultCardController;
-use App\Http\Controllers\StripeFundsController;
 use App\Http\Controllers\TwilioTokenController;
 use App\Http\Controllers\TransactionsController;
-use App\Http\Controllers\FundsWithCardController;
 use App\Http\Controllers\UsageActivityController;
 use App\Http\Controllers\WebAPIClientsController;
 use App\Http\Controllers\CallClientInfoController;
+use App\Http\Controllers\AdditionalFilesController;
 use App\Http\Controllers\AgentStatusDocsController;
-use App\Http\Controllers\ActiveUserChannelController;
 use App\Http\Controllers\TwilioDeviceTokenController;
-use App\Http\Controllers\Admin\OnlineAgentsController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\TakeCallsOnlineUsersController;
 
@@ -51,7 +48,8 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-Route::get('/pdf', [\App\Http\Controllers\InternalAgent\RegistrationStepController::class, 'pdf'])->name('dashboard');
+Route::get('/pdf', [\App\Http\Controllers\InternalAgent\RegistrationStepController::class, 'pdf']);
+Route::get('/pdf-export', [\App\Http\Controllers\InternalAgent\RegistrationStepController::class, 'pdfExport']);
 
 require __DIR__ . '/auth.php';
 require 'admin.php';
@@ -62,7 +60,7 @@ require 'internal-agent.php';
 Route::get('/transactions', [TransactionsController::class, 'index'])->middleware(['auth', 'verified', 'notBanned'])->name('transactions.index');
 Route::delete('/transactions/{transaction}', [TransactionsController::class, 'destroy'])->middleware(['auth', 'verified', 'notBanned'])->name('transactions.destroy');
 
-Route::middleware(['auth', 'verified', 'notBanned'])->group(function () {
+Route::middleware(['auth', 'verified', 'notBanned', 'isLocked'])->group(function () {
     Route::get('/registration-steps', [RegisteredUserController::class, 'steps'])->name('registration.steps');
     Route::post('/store-registration-steps', [RegisteredUserController::class, 'storeSteps'])->name('store.registration.steps');
 });
@@ -92,6 +90,10 @@ Route::middleware(['auth', 'verified', 'registration-step-check', 'notBanned'])-
     Route::post('/take-calls/online-users', [TakeCallsOnlineUsersController::class, 'store'])->name('take-calls.online-users.store');
     Route::delete('/take-calls/online-users/{callTypeId}', [TakeCallsOnlineUsersController::class, 'destroy'])->name('take-calls.online-users.destroy');
 
+    Route::get('/additional-files', [AdditionalFilesController::class, 'index'])->name('additional-files.index');
+    Route::post('/additional-files', [AdditionalFilesController::class, 'store'])->name('additional-files.store');
+    Route::get('/additional-files/{additionalFile}', [AdditionalFilesController::class, 'show'])->name('additional-files.show');
+    Route::delete('/additional-files/{additionalFile}', [AdditionalFilesController::class, 'destroy'])->name('additional-files.destroy');
 
     Route::get('/twilio-device-token', [TwilioDeviceTokenController::class, 'show']);
     Route::get('/call-client-info', [CallClientInfoController::class, 'show']);
@@ -125,6 +127,8 @@ Route::get('/device/incoming', function () {
 Route::get('/clients', [ClientsController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.index');
 Route::patch('/clients/{client}', [ClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.update');
 Route::patch('/web-api/clients/{client}', [WebAPIClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.web-api.update');
+
+Route::patch('/web-api/calls/{uniqueCallId}/user-response', [CallUserResponseAPIController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check']);
 
 Route::get('/support', [SupportController::class, 'index'])->name('support.index');
 

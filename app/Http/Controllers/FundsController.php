@@ -100,6 +100,8 @@ class FundsController extends Controller
 
 
         if (!in_array($response, ['SUCCESS', 'Approved'])) {
+            Log::debug('The status is not SUCCESS or Approved payment failed');
+            Log::debug('RESPONSE TEXT: ' . $response);
             return redirect()->back()->with(['message' => 'Payment failed.']);
         }
 
@@ -116,6 +118,7 @@ class FundsController extends Controller
 
         FundsAdded::dispatch($request->user(), $subtotal, $processingFee, $finalAmount, $totalWithBonus ? $subtotal : 0, $card);
         FundsAddedNotification::dispatch($request->user()->id, $finalAmount);
+        Log::debug('FundsAddedNotification dispatched');
 
         // Prepare the flash message
         $flashMessage = 'Payment successful!';
