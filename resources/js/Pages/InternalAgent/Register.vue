@@ -16,50 +16,12 @@ import axios from "axios";
 import "vue3-carousel/dist/carousel.css";
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
 import { router } from "@inertiajs/vue3"
-
+import { toaster } from "@/helper.js";
 let step = ref(0);
 let firstStepErrors = ref({});
 let uiEmailValidation = ref({
   "isValid": false
 });
-
-let insuranceTypes = ref([
-  "Auto Insurance",
-  "Final Expense",
-  "U65 Health",
-  "ACA",
-  "Medicare/Medicaid",
-  "Debt Relief",
-]);
-
-let selectedTypes = ref([]);
-
-let selectedTypesWithStates = ref({
-  "Auto Insurance": [],
-  "Final Expense": [],
-  "U65 Health": [],
-  ACA: [],
-  "Medicare/Medicaid": [],
-  "Debt Relief": [],
-});
-
-let onTypeUpdate = (event) => {
-  if (event.target.checked) {
-    selectedTypes.value.push(Number(event.target.value));
-  } else {
-    selectedTypes.value.splice(
-      selectedTypes.value.indexOf(Number(event.target.value)),
-      1
-    );
-    delete form.typesWithStates[Number(event.target.value)];
-  }
-};
-
-let customLabel = function (options, select$) {
-  let labels = options.map((option) => option.label).join(", ");
-
-  return labels;
-};
 
 let props = defineProps({
   callTypes: Array,
@@ -82,17 +44,10 @@ let form = useForm({
   password: "",
   password_confirmation: "",
   phone: "",
-  typesWithStates: props.callTypes.reduce((acc, obj) => {
-    acc[obj.id] = [];
-    return acc;
-  }, {}),
   consent: false,
 });
 let isFormValid = ref(true);
-const areAllArraysEmpty = computed(() => {
-  const arrays = Object.values(form.typesWithStates); // Get all arrays
-  return arrays.every((array) => array.length === 0); // Check if all arrays are empty
-});
+
 watch(
   () => [
     form.first_name,
@@ -120,56 +75,36 @@ watch(
     }
   }
 );
-let text = ref([]);
 
-let check = () => {
 
-};
-
-let errors = ref(null);
 
 let validateEmail = (email) => {
   return /\S+@\S+\.\S+/.test(email); // Simple regex for email validation
 }
 const isLoading = ref(false);
 let submit = () => {
+
   isLoading.value = true
   if (validateEmail(form.email)) {
     return axios
       .post("/internal-agent/register", form)
       .then((response) => {
+        toaster("success", response.data.message);
         router.visit('/dashboard')
         isLoading.value = false
       })
       .catch((error) => {
         if (error.response) {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
-          errors.value = error.response.data.errors;
           isLoading.value = false
-
-          firstStepErrors.value = error.response.data.errors;
-          if (error.response.data.errors.typesWithStates) {
-            step.value = 1
-          } else {
-            step.value = 0
-          }
           if (error.response.status === 400) {
-            uiEmailValidation.value.isValid = false;
-            // Handle validation errors here.
             firstStepErrors.value = error.response.data.errors;
+            uiEmailValidation.value.isValid = false;
             isLoading.value = false
-          } else {
-            // Handle other types of errors.
-            console.log("Other errors", error.response.data);
+          } else if(error.response.status === 401) {
+            toaster("error", error.response.data.message);
+            router.visit('/')
           }
-        } else if (error.request) {
-          // The request was made but no response was received
-          console.log("No response received", error.request);
-        } else {
-          // Something happened in setting up the request that triggered an Error
-          console.log("Error", error.message);
-        }
+        } 
       });
   }
   else {
@@ -263,7 +198,6 @@ let StepChange = (val) => {
 
           <GuestTextInput id="first_name" type="text" class="mt-1 block w-full" v-model="form.first_name" minlength="2"
             required pattern="[A-Za-z]{1,32}" onkeyup="this.value=this.value.replace(/[0-9]/g,'');" />
-          <!-- <InputError class="mt-2" :message="form.errors.first_name" /> -->
           <div v-if="firstStepErrors.first_name" class="text-red-500" v-text="firstStepErrors.first_name[0]"></div>
         </div>
 
@@ -273,7 +207,6 @@ let StepChange = (val) => {
           <GuestTextInput id="last_name" type="text" class="mt-1 block w-full" v-model="form.last_name" required
             pattern="[A-Za-z]{1,32}" onkeyup="this.value=this.value.replace(/[0-9]/g,'');" />
 
-          <!-- <InputError class="mt-2" :message="form.errors.last_name" /> -->
           <div v-if="firstStepErrors.last_name" class="text-red-500" v-text="firstStepErrors.last_name[0]"></div>
         </div>
 
@@ -283,7 +216,6 @@ let StepChange = (val) => {
           <GuestTextInput id="email" type="email" class="mt-1 block w-full" v-model="form.email" required
             pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}" />
           <div v-if="uiEmailValidation.isValid" class="text-red-500">Please enter valid email address.</div>
-          <!-- <InputError class="mt-2" :message="form.errors.email" /> -->
           <div v-if="firstStepErrors.email" class="text-red-500" v-text="firstStepErrors.email[0]"></div>
         </div>
 
@@ -292,7 +224,6 @@ let StepChange = (val) => {
 
           <GuestTextInput id="phone" type="text" class="mt-1 block w-full" v-model="form.phone" minlength="10" />
 
-          <!-- <InputError class="mt-2" :message="form.errors.phone" /> -->
           <div v-if="firstStepErrors.phone" class="text-red-500" v-text="firstStepErrors.phone[0]"></div>
         </div>
 
@@ -302,7 +233,6 @@ let StepChange = (val) => {
           <GuestTextInput id="password" type="password" class="mt-1 block w-full" v-model="form.password"
             autocomplete="new-password" />
 
-          <!-- <InputError class="mt-2" :message="form.errors.password" /> -->
           <div v-if="firstStepErrors.password" class="text-red-500" v-text="firstStepErrors.password[0]"></div>
         </div>
 
@@ -312,7 +242,7 @@ let StepChange = (val) => {
           <GuestTextInput id="password_confirmation" type="password" class="mt-1 block w-full"
             v-model="form.password_confirmation" autocomplete="new-password" />
 
-          <InputError class="mt-2" :message="form.errors.password_confirmation" />
+          <InputError v-if="firstStepErrors.password_confirmation" class="mt-2" :message="firstStepErrors.password_confirmation[0]" />
         </div>
         <div class="flex pt-6 box-shadow">
           <input id="checked-checkbox" type="checkbox" v-model="form.consent"
@@ -334,61 +264,8 @@ let StepChange = (val) => {
             <global-spinner :spinner="isLoading" /> Register
           </button>
         </div>
-        <!-- <div class="flex items-center justify-end mt-4" :class="{ 'opacity-25': form.processing || isLoading }"
-          :disabled="form.processing">
-          <button type="button" class="button-custom px-3 py-2 rounded-md" :class="{ 'opacity-25': isFormValid || isLoading }"
-                  :disabled="isFormValid || isLoading" @click="StepChange(1)">
-            <global-spinner :spinner="isLoading" />Next
-          </button>
-        </div> -->
       </div>
-      <div v-show="step === 1">
-        <div class="px-0">
-          <div class="mt-4">
-            <GuestInputLabel class="mb-3" for="insurance_type" value="What types of calls do you want to receive?" />
-
-            <div v-for="(callType, index) in callTypes" :key="callType.id" class="mb-4">
-              <input :id="`insurance_type_${callType.id}`" type="checkbox"
-                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                :checked="selectedTypes.includes(callType.id)" @change="onTypeUpdate" :value="callType.id" />
-
-              <label class="ml-2 text-md font-medium text-custom-indigo" :for="`insurance_type_${callType.id}`"
-                v-text="callType.type"></label>
-
-              <div v-if="selectedTypes.includes(callType.id)" class="pt-2 mb-8">
-                <label class="ml-2 text-xs font-medium">States you're licensed in:</label>
-                <Multiselect :options="stateOptions" v-model="form.typesWithStates[callType.id]" track-by="value"
-                  label="label" mode="tags" :close-on-select="false" placeholder="Select a state">
-                </Multiselect>
-              </div>
-            </div>
-
-            <InputError class="mt-2" :message="form.errors.insurance_type" />
-            <div v-if="firstStepErrors">
-              <div v-if="firstStepErrors.typesWithStates" class="text-red-500"
-                v-text="firstStepErrors.typesWithStates[0]"></div>
-            </div>
-          </div>
-        </div>
-        <div class="px-0 pb-6">
-          <div class="flex justify-between">
-            <div class="mt-4">
-              <a v-if="step != 0" href="#" @click.prevent="StepChange(0)" class="button-custom-back px-3 py-2 rounded-md">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                  stroke="currentColor" class="w-4 h-4 mr-2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
-                </svg>
-                Back</a>
-            </div>
-            <div class="mt-4">
-              <button @click="submit" type="button" class="button-custom px-3 py-2 rounded-md"
-                :class="{ 'opacity-25': areAllArraysEmpty || isLoading }" :disabled="areAllArraysEmpty || isLoading">
-                <global-spinner :spinner="isLoading" /> Register
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+     
     </form>
 
     <template v-slot:titles>

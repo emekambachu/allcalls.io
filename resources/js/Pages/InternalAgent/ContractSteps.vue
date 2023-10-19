@@ -262,8 +262,7 @@ let submit = (step) => {
             requestData[key] = null
         }
     }
-
-
+ 
     return axios
         .post("/internal-agent/registration-steps", requestData, {
             headers: {

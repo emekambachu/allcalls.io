@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\AgentTokenIsValid;
 use App\Http\Middleware\InternalAgent;
 use App\Http\Middleware\IsLocked;
 use App\Http\Middleware\notBanned;
@@ -77,5 +78,6 @@ class Kernel extends HttpKernel
         'twilio' => \App\Http\Middleware\TwilioRequestValidator::class,
         'internal-agent' => InternalAgent::class,
         'isLocked' => IsLocked::class,
+        'agentTokenValid' => AgentTokenIsValid::class,
     ];
 }

@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
     Route::get('internal-agent/register', [RegisteredInternalAgentController::class, 'create'])
-        ->name('internal.agent.register');
+        ->name('internal.agent.register')->middleware('agentTokenValid');
 
     Route::post('internal-agent/register', [RegisteredInternalAgentController::class, 'store'])
         ->name('internal.agent.register');

@@ -29,21 +29,25 @@ let omissionsInsurance = ref(true)
 const selectedFile = ref(null)
 
 let ChangeTab = () => {
-    for (const key in props.firstStepErrors) {
-        if (props.firstStepErrors.hasOwnProperty(key)) {
-            props.firstStepErrors[key] = [];
-        }
-    }
-
-    if (!selectedFile.value && page.props.auth.role === 'internal-agent' && !props.userData.internal_agent_contract.error_and_emission) {
-        props.firstStepErrors.uploadOmmisionPdf = [`The Omissions Insurances certificate is required.`];
+    // for (const key in props.firstStepErrors) {
+    //     if (props.firstStepErrors.hasOwnProperty(key)) {
+    //         props.firstStepErrors[key] = [];
+    //     }
+    // }
+    if (page.props.auth.role === 'internal-agent') {
+        emits("uploadPdfOmmision", { selectedFile: selectedFile.value, omissions_insurance: form.value.omissions_insurance });
     } else {
-        if (page.props.auth.role === 'internal-agent') {
-            emits("uploadPdfOmmision", { selectedFile: selectedFile.value, omissions_insurance: form.value.omissions_insurance });
-        } else {
-            emits("changeTab");
-        }
+        emits("changeTab");
     }
+    // if (!selectedFile.value && page.props.auth.role === 'internal-agent' && !props.userData.internal_agent_contract.error_and_emission) {
+    //     props.firstStepErrors.uploadOmmisionPdf = [`The Omissions Insurances certificate is required.`];
+    // } else {
+    //     if (page.props.auth.role === 'internal-agent') {
+    //         emits("uploadPdfOmmision", { selectedFile: selectedFile.value, omissions_insurance: form.value.omissions_insurance });
+    //     } else {
+    //         emits("changeTab");
+    //     }
+    // }
 }
 
 const fileError = ref(false);
@@ -162,7 +166,8 @@ let goBack = () => {
     <div class="flex justify-between my-5">
         <div></div>
         <div>
-            <input :disabled="page.props.auth.role === 'admin'" id="link-omissions_insurance" v-model="form.omissions_insurance" type="checkbox" value=""
+            <input :disabled="page.props.auth.role === 'admin'" id="link-omissions_insurance"
+                v-model="form.omissions_insurance" type="checkbox" value=""
                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
             <label for="link-omissions_insurance" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Errors
                 and
@@ -185,8 +190,8 @@ let goBack = () => {
                 </button>
             </div>
             <div class="mt-4">
-                <button type="button" :class="{ 'opacity-25': form.omissions_insurance === false || isLoading }"
-                    :disabled="form.omissions_insurance === false || isLoading" @click.prevent="ChangeTab"
+                <button type="button" :class="{ 'opacity-25':  isLoading }"
+                    :disabled=" isLoading" @click.prevent="ChangeTab"
                     class="button-custom px-3 py-2 rounded-md">
                     <global-spinner :spinner="isLoading" /> Next Step
                 </button>
