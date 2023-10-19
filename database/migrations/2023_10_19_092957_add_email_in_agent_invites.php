@@ -10,7 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        if (!Schema::hasColumn('email', 'url')) {
+        if (!Schema::hasColumn('agent_invites', 'email')) {
             Schema::table('agent_invites', function (Blueprint $table) {
                 $table->string('email')->unique()->after('id');
                 $table->string('url')->after('token');
