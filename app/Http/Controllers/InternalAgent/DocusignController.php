@@ -34,10 +34,10 @@ class DocusignController extends Controller
     {
         $this->clientId = env('DOCUSIGN_INTEGRATION_KEY');
         $this->clinetSceret = env('DOCUSIGN_SECRET_KEY');
-        $this->URL = "https://account-d.docusign.com/oauth/auth?";
-        $this->tokenUrl = "https://account-d.docusign.com/oauth/token";
+        $this->URL = "https://account.docusign.com/oauth/auth?";
+        $this->tokenUrl = "https://account.docusign.com/oauth/token";
         $this->accountId = env('DOCUSIGN_API_ACCOUNT_ID');
-        $this->baseUrl = "https://demo.docusign.net/restapi";
+        $this->baseUrl = env('DOCUSIGN_ACCOUNT_BASE_URI_API');
     }
 
     /**
