@@ -71,4 +71,41 @@ class ChargeUserForCompletedCallTest extends TestCase
         $this->assertEquals(70, $buyer4->fresh()->balance); // buyer4 should also be charged $30 (their bid amount, since there's a tie)
 
     }
+
+
+
+    public function testWhenTwoUsersBidSameAmount()
+    {
+        $callType = CallType::create(['type' => 'Auto Insurance']);
+        $buyer1 = User::factory()->create(['balance' => 100]);
+        $buyer2 = User::factory()->create(['balance' => 100]);
+
+        Bid::create(['user_id' => $buyer1->id, 'call_type_id' => $callType->id, 'amount' => 40]);
+        Bid::create(['user_id' => $buyer2->id, 'call_type_id' => $callType->id, 'amount' => 40]);
+
+        $uniqueCallId = 'unique-id-1';
+
+        event(new CompletedCallEvent($buyer1, $callType, $uniqueCallId));
+        $this->assertEquals(60, $buyer1->fresh()->balance); // buyer1 should be charged $40 since both bids are the same
+
+        $uniqueCallId = 'unique-id-2';
+
+        event(new CompletedCallEvent($buyer2, $callType, $uniqueCallId));
+        $this->assertEquals(60, $buyer2->fresh()->balance); // buyer2 should also be charged $40
+    }
+
+
+    /** @test */
+    public function testWhenOnlyOneUserBids()
+    {
+        $callType = CallType::create(['type' => 'Auto Insurance']);
+        $buyer = User::factory()->create(['balance' => 100]);
+
+        Bid::create(['user_id' => $buyer->id, 'call_type_id' => $callType->id, 'amount' => 40]);
+
+        $uniqueCallId = 'unique-id-1';
+
+        event(new CompletedCallEvent($buyer, $callType, $uniqueCallId));
+        $this->assertEquals(65, $buyer->fresh()->balance); // buyer should be charged $35 since no one else is bidding
+    }
 }

@@ -41,6 +41,16 @@ import { Link, Head } from "@inertiajs/vue3";
               >/api/agent-status</Link
             >
           </li>
+          <li class="cursor-pointer">
+            <Link
+              :href="route('docs.agent-status-price.show')"
+              :class="{
+                'text-gray-500': !route().current('docs.agent-status-price.show'),
+                'text-blue-500': route().current('docs.agent-status-price.show'),
+              }"
+              >/api/agent-status-price</Link
+            >
+          </li>
         </ul>
       </div>
 

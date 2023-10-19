@@ -4,13 +4,13 @@ import Layout from "@/Pages/Docs/Layout.vue";
 </script>
 
 <template>
-  <Head title="/api/agent-status" />
+  <Head title="/api/agent-status-price" />
   <Layout>
     <!-- Main Content -->
     <div class="ml-80 mt-5">
-      <h1 class="mb-3 text-2xl font-semibold">/api/agent-status Endpoint</h1>
+      <h1 class="mb-3 text-2xl font-semibold">/api/agent-status-price Endpoint</h1>
       <p class="mb-5 text-gray-600">
-        Detailed documentation for the `/api/agent-status` endpoint.
+        Detailed documentation for the `/api/agent-status-price` endpoint.
       </p>
 
       <!-- Endpoint Details -->
@@ -18,7 +18,7 @@ import Layout from "@/Pages/Docs/Layout.vue";
         <h2 class="text-lg font-semibold">Endpoint:</h2>
         <p>
           <strong>URL:</strong>
-          <code>https://allcalls.io/api/agent-status</code>
+          <code>https://allcalls.io/api/agent-status-price</code>
         </p>
         <p><strong>Methods:</strong> <code>GET</code>, <code>POST</code></p>
       </div>
@@ -28,7 +28,8 @@ import Layout from "@/Pages/Docs/Layout.vue";
         <h2 class="text-lg font-semibold">Description:</h2>
         <p>
           This endpoint checks if an agent is available for a given phone
-          number's area code and vertical.
+          number's area code and vertical. It also returns the price associated
+          with the vertical.
         </p>
       </div>
 
@@ -76,7 +77,8 @@ import Layout from "@/Pages/Docs/Layout.vue";
         <div class="rounded bg-gray-100 p-3 mb-3">
           <pre class="text-sm">
 {
-    "online": true
+    "online": true,
+    "price": 25
 }
             </pre
           >
@@ -84,6 +86,9 @@ import Layout from "@/Pages/Docs/Layout.vue";
         <p>
           <strong>online</strong>: <code>true</code> if the agent is available,
           <code>false</code> otherwise.
+        </p>
+        <p>
+          <strong>price</strong>: Price associated with the provided vertical.
         </p>
       </div>
 
@@ -94,7 +99,7 @@ import Layout from "@/Pages/Docs/Layout.vue";
           <p><strong>Request:</strong></p>
           <div class="rounded bg-gray-100 p-3">
             <pre class="text-sm">
-GET https://allcalls.io/api/agent-status?phone=1234567890&vertical=auto_insurance&affiliate_id=YOUR_AFFILIATE_ID&api_key=YOUR_API_KEY
+GET https://allcalls.io/api/agent-status-price?phone=1234567890&vertical=auto_insurance&affiliate_id=YOUR_AFFILIATE_ID&api_key=YOUR_API_KEY
 </pre
             >
           </div>
@@ -104,7 +109,8 @@ GET https://allcalls.io/api/agent-status?phone=1234567890&vertical=auto_insuranc
           <div class="rounded bg-gray-100 p-3">
             <pre class="text-sm">
 {
-    "online": true
+    "online": true,
+    "price": 25
 }
                 </pre
             >
@@ -118,7 +124,7 @@ GET https://allcalls.io/api/agent-status?phone=1234567890&vertical=auto_insuranc
         <ul class="list-disc pl-5">
           <li>
             This API checks the availability of an agent based on the provided
-            parameters.
+            parameters and fetches the associated price.
           </li>
           <li>
             Affiliates using the API must provide valid credentials for

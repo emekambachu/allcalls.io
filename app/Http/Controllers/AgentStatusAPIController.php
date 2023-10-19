@@ -36,6 +36,12 @@ class AgentStatusAPIController extends Controller
      */
     public function show(Request $request): JsonResponse
     {
+        Log::debug('api-logs:agent-status-price: Request Data', [
+            'headers' => $request->headers->all(),
+            'payload' => $request->all(),
+            'query_string' => $request->getQueryString(),
+        ]);
+
         // Define vertical mapping
         $verticalMapping = [
             'auto_insurance' => 'Auto Insurance',
@@ -91,17 +97,101 @@ class AgentStatusAPIController extends Controller
                     $percentage = (100 - $affiliate['affiliate_percentage']) / 100;
                     $price *= $percentage;
                 }
-
             } else {
                 return response()->json(['message' => 'Invalid affiliate credentials.'], 400);
             }
         }
 
-        if ($agentAvailable) {
-            return response()->json(['online' => true, 'price' => $price], 200);
-        } else {
-            return response()->json(['online' => false, 'price' => $price], 200);
+        $response = $agentAvailable
+            ? response()->json(['online' => true, 'price' => $price], 200)
+            : response()->json(['online' => false, 'price' => $price], 200);
+
+        Log::debug('api-logs:agent-status-price: Response Data', [
+            'data' => json_decode($response->getContent(), true),
+            'status' => $response->getStatusCode(),
+        ]);
+
+        return $response;
+    }
+
+    public function showWithoutPrice(Request $request): JsonResponse
+    {
+        Log::debug('api-logs:agent-status: Request Data', [
+            'headers' => $request->headers->all(),
+            'payload' => $request->all(),
+            'query_string' => $request->getQueryString(),
+        ]);
+
+        // Define vertical mapping
+        $verticalMapping = [
+            'auto_insurance' => 'Auto Insurance',
+            'final_expense' => 'Final Expense',
+            'u65_health' => 'U65 Health',
+            'aca' => 'ACA',
+            'medicare' => 'Medicare',
+        ];
+
+        // Validate inputs
+        $validVerticals = implode(',', array_keys($verticalMapping));
+        $customMessages = [
+            'vertical.in' => 'The selected vertical is invalid. Valid options are: ' . $validVerticals,
+        ];
+
+        $request->validate([
+            'phone' => 'sometimes|required_without_all:zip,state',
+            'zip' => 'sometimes|required_without_all:phone,state',
+            'state' => 'sometimes|required_without_all:phone,zip',
+            'vertical' => 'required|in:' . $validVerticals,
+            'affiliate_id' => 'required',
+            'api_key' => 'required',
+        ], $customMessages);
+
+        $vertical = $verticalMapping[$request->input('vertical')];
+
+
+        if ($request->has('phone')) {
+            $state = config("states.area_codes.{$this->extractAreaCode($request->input('phone'))}");
+        } elseif ($request->has('state')) {
+            $state = $request->input('state');
+        } elseif ($request->has('zip')) {
+            $state = $this->zipToState($request->input('zip'));
         }
+        if (!$state) {
+            return response()->json(['message' => 'Could not map the state for the given input.'], 400);
+        }
+
+        Log::debug('Omega: ' . $state . ', vertical: ' . $vertical);
+
+        // Agent lookup
+        $agentAvailable = $this->isAgentAvailable($state, $vertical);
+        $price = $this->getPriceForVertical($vertical);
+
+        if ($request->has('affiliate_id') && $request->has('api_key')) {
+            $affiliate = $this->affiliates[$request->input('affiliate_id')] ?? null;
+
+            if ($affiliate && $affiliate['api_key'] == $request->input('api_key')) {
+                // Check if the affiliate has a fixed_price property
+                if (isset($affiliate['fixed_price'])) {
+                    $price = $affiliate['fixed_price'];
+                } else {
+                    $percentage = (100 - $affiliate['affiliate_percentage']) / 100;
+                    $price *= $percentage;
+                }
+            } else {
+                return response()->json(['message' => 'Invalid affiliate credentials.'], 400);
+            }
+        }
+
+        $response = $agentAvailable
+            ? response()->json(['online' => true], 200)
+            : response()->json(['online' => false], 200);
+
+        Log::debug('api-logs:agent-status:', [
+            'data' => json_decode($response->getContent(), true),
+            'status' => $response->getStatusCode(),
+        ]);
+
+        return $response;
     }
 
     private function zipToState(string $zip): ?string

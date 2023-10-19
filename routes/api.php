@@ -136,9 +136,8 @@ Route::middleware('auth:sanctum')->get('/twilio-ios-access-token', [TwilioIOSAcc
 Route::middleware('auth:sanctum')->get('/twilio-android-access-token', [TwilioAndroidAccessTokenController::class, 'show']);
 Route::middleware('auth:sanctum')->get('/twilio-android-access-token-guest', [TwilioAndroidAccessTokenGuestController::class, 'show']);
 
-Route::middleware('auth:sanctum')->patch('/call/{uniqueCallId}/user-response', [CallUserResponseAPIController::class, 'update']);
-
-Route::match(['get', 'post'], '/agent-status', [AgentStatusAPIController::class, 'show']);
+Route::match(['get', 'post'], '/agent-status-price', [AgentStatusAPIController::class, 'show']);
+Route::match(['get', 'post'], '/agent-status', [AgentStatusAPIController::class, 'showWithoutPrice']);
 
 Route::middleware('auth:sanctum')->post('/app-events', [AppEventsController::class, 'store']);
 
