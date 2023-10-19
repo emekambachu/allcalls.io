@@ -52,7 +52,6 @@ class RegistrationStepController extends Controller
     }
     public function contractSteps()
     {   
-        dd($this->accountId, $this->baseUrl);
         if (isset($_GET['event']) && $_GET['event'] == 'signing_complete') {
             $user = auth()->user();
             if (isset($_GET['position']) && $_GET['position'] == 'contract') {
