@@ -2,27 +2,60 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\InviteAgent;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use App\Models\AgentInvite;
+use Illuminate\Http\Request;
 
 class AgentInvitesController extends Controller
 {
     public function index()
     {
-        $agentInvites = AgentInvite::latest()->get();
-        $baseUrl = url('/');
-
-        return Inertia::render('Admin/AgentInvites/Index', compact('agentInvites', 'baseUrl'));
+        $agentInvites = AgentInvite::orderBy('created_at', 'desc')->paginate(10);
+        return Inertia::render('Admin/AgentInvites/Index', compact('agentInvites'));
     }
 
-    public function store()
+    public function store(Request $request)
     {
-        $agentInvite = AgentInvite::create([ 'token' => uniqid() ]);
-    
-        $link = url('/register?agentToken=' . $agentInvite->token);
-    
-        return redirect('/admin/agent-invites')->with([
-            'agentInvitationLink' => $link
+        $valdiation = Validator::make($request->all(), [
+            'email' => 'required|unique:agent_invites',
+        ]);
+        if ($valdiation->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $valdiation->errors(),
+            ], 400);
+        }
+
+        $uuId = uniqid();
+        $inviteSent = AgentInvite::create(
+            [
+                'token' => $uuId,
+                'email' => $request->email,
+                'url' => url('/internal-agent/register?agentToken=' . $uuId)
+            ]
+        );
+        event(new InviteAgent($inviteSent->email, $inviteSent->url));
+        return response()->json([
+            'success' =>  true,
+            'message' => 'Agent invited successfully.',
+        ]);
+    }
+
+    public function reInvite($id)
+    {
+        $agentreInvite = AgentInvite::findOrFail($id);
+        $uuId = uniqid();
+        $agentreInvite->token = $uuId;
+        $agentreInvite->url = url('/internal-agent/register?agentToken=' . $uuId);
+        $agentreInvite->created_at = now();
+        $agentreInvite->updated_at = now();
+        $agentreInvite->save();
+        event(new InviteAgent($agentreInvite->email, $agentreInvite->url));
+        return response()->json([
+            'success' =>  true,
+            'message' => 'Agent re-invted successfully.',
         ]);
     }
 
@@ -31,7 +64,10 @@ class AgentInvitesController extends Controller
         $invite = AgentInvite::findOrFail($id);
 
         $invite->delete();
-
-        return redirect()->back()->with(['message' => 'Invite deleted successfully.']);
+        return response()->json([
+            'success' =>  true,
+            'message' => 'Invite deleted successfully.'
+        ]);
+        // return redirect()->back()->with(['message' => 'Invite deleted successfully.']);
     }
 }

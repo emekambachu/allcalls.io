@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\InternalAgent;
 
 use App\Http\Controllers\Controller;
+use App\Models\AgentInvite;
 use App\Models\DocuSignTracker;
 use App\Models\InternalAgentAdditionalInfo;
 use App\Models\InternalAgentAddress;
@@ -50,7 +51,7 @@ class RegistrationStepController extends Controller
 
 
     public function contractSteps()
-    {
+    {   
         if (isset($_GET['event']) && $_GET['event'] == 'signing_complete') {
             $user = auth()->user();
             if (isset($_GET['position']) && $_GET['position'] == 'contract') {
@@ -1397,13 +1398,13 @@ class RegistrationStepController extends Controller
         }
 
         if ($request->step == 7) {
+            
             DB::beginTransaction();
             try {
-                $uploadOmmisionPdf = InternalAgentErrorAndEmission::where('reg_info_id', $basicInfo->id)->first();
-                if (!$uploadOmmisionPdf) {
+                
+                if ($request->file('uploadOmmisionPdf') && $request->file('uploadOmmisionPdf')->isValid()) {
                     $step3Validation = Validator::make($request->all(), [
-                        'omissions_insurance' => 'required',
-                        'uploadOmmisionPdf' => 'required|mimetypes:application/pdf|max:2048',
+                        'uploadOmmisionPdf' => 'mimetypes:application/pdf|max:2048',
                     ]);
                     if ($step3Validation->fails()) {
                         return response()->json([
@@ -1412,9 +1413,8 @@ class RegistrationStepController extends Controller
                             'errors' => $step3Validation->errors(),
                         ], 400);
                     }
-                }
+                    $uploadOmmisionPdf = InternalAgentErrorAndEmission::where('reg_info_id', $basicInfo->id)->first();
 
-                if ($request->file('uploadOmmisionPdf') && $request->file('uploadOmmisionPdf')->isValid()) {
                     if ($uploadOmmisionPdf) {
                         if (file_exists(asset('internal-agents/error-and-omission/' . $uploadOmmisionPdf->name))) {
                             unlink(asset('internal-agents/error-and-omission/' . $uploadOmmisionPdf->name));

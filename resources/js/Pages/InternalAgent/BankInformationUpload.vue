@@ -151,17 +151,7 @@ let ChangeTabBack = () => {
         </div>
         
     </div>
-    <div v-if="page.props.auth.role === 'admin'">
-        <div class=" flex bg-white justify-end rounded-lg  gap-4 mt-4 mb-4">
-            <div style="padding: 10px; width: 30%; background: #ebe8e8;">
-                <img width="250" height="100" class="mb-5"
-                    :src="userData.internal_agent_contract?.get_contract_sign?.sign_url" alt="signature" />
-                <div> <strong class="mx-2">Date: </strong> {{
-                    dateFormat(userData.internal_agent_contract?.get_contract_sign?.created_at)
-                }}</div>
-            </div>
-        </div>
-    </div>
+
     <div class="px-5 pb-6">
         <div class="flex justify-between flex-wrap">
             <div class="mt-4">

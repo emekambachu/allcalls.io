@@ -11,6 +11,7 @@ use App\Events\RingingCallEvent;
 use App\Events\CallStatusUpdated;
 use App\Listeners\AddDefaultBids;
 use App\Events\CompletedCallEvent;
+use App\Events\InviteAgent;
 use App\Listeners\MakeUserOffline;
 use App\Listeners\SendWelcomeEmail;
 use App\Events\OnlineUserListUpdated;
@@ -28,6 +29,7 @@ use App\Http\Controllers\FundsController;
 use App\Listeners\UpdateActiveUserStatus;
 use App\Listeners\ChargeUserForMissedCall;
 use App\Listeners\ChargeUserForCompletedCall;
+use App\Listeners\InviteAgent as ListenersInviteAgent;
 use App\Listeners\NotifyUserForLowFundsViaSMS;
 use App\Listeners\NotifyUserForLowFundsViaEmail;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -44,6 +46,10 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
             SendWelcomeEmail::class,
+        ],
+
+        InviteAgent::class => [
+            ListenersInviteAgent::class,
         ],
 
         RingingCallEvent::class => [
