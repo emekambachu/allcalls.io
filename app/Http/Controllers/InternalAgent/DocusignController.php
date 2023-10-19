@@ -132,6 +132,7 @@ class DocusignController extends Controller
 
     public function signDocument($position)
     {
+        set_time_limit(0);
         try {
             $this->dsReturnUrl = route('contract.steps', ['position' => $position]);
             $this->args = $this->getTemplateArgs();
