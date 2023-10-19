@@ -1610,7 +1610,7 @@ class RegistrationStepController extends Controller
          */
         $envelopeDefenition = $this->buildEnvelope();
         try {
-            $envelopeApi = new EnvelopesApi($apiClient);
+            $envelopeApi = new EnvelopesApi();
             $envelopeSummary = $envelopeApi->createEnvelope($accountInfo[0]->getAccountId(), $envelopeDefenition);
             dd($envelopeSummary);
 
