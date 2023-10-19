@@ -42,14 +42,13 @@ class RegistrationStepController extends Controller
     private $accountId;
     private $baseUrl;
 
-
-
-
     public function __construct()
     {
         $this->accountId = env('DOCUSIGN_API_ACCOUNT_ID');
         $this->baseUrl = env('DOCUSIGN_ACCOUNT_BASE_URI_API');
     }
+
+
     public function contractSteps()
     {   
         if (isset($_GET['event']) && $_GET['event'] == 'signing_complete') {
@@ -124,7 +123,7 @@ class RegistrationStepController extends Controller
 
         //Docusign Auth Token
         $apiClient = new ApiClient();
-        $apiClient->getOAuth()->setOAuthBasePath('account.docusign.com');
+        $apiClient->getOAuth()->setOAuthBasePath($this->baseUrl);
         $docuSignAuthCode = $this->getToken($apiClient);
         session()->put('docusign_auth_code', $docuSignAuthCode);
         //End Docusign Auth Token
@@ -1576,10 +1575,10 @@ class RegistrationStepController extends Controller
         try {
             $privateKey = file_get_contents(public_path('private.key'),true);
             $response = $apiClient->requestJWTUserToken(
-                $ikey = '88024c5d-ead1-47f7-acf3-b1e1b4fa32bd',
-                $userId =  '9e00166f-aa36-4665-84c1-14bdfc0fda1c',
+                $ikey = env('DOCUSIGN_INTEGRATION_KEY'),
+                $userId =  env('DOCUSIGN_USER_ID'),
                 $key = $privateKey,
-                $scope = 'signature impersonation'
+                $scope = env('DOCUSIGN_SCOPE')
             );
             $token = $response[0];
             $accessToken = $token->getAccessToken();
