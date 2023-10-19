@@ -124,7 +124,7 @@ class RegistrationStepController extends Controller
 
         //Docusign Auth Token
         $apiClient = new ApiClient();
-        $apiClient->getOAuth()->setOAuthBasePath("account-d.docusign.com");
+        $apiClient->getOAuth()->setOAuthBasePath($this->baseUrl);
         $docuSignAuthCode = $this->getToken($apiClient);
         session()->put('docusign_auth_code', $docuSignAuthCode);
         //End Docusign Auth Token
