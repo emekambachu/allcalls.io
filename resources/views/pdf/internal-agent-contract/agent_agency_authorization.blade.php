@@ -112,7 +112,9 @@
             <div style="display: inline-block;">
                 <span><strong>Agent/Agency Printed Name:</strong></span>
             </div>
-            <div style="border-bottom: 1px solid black; width: 65%; display: inline-block;"></div>
+            <div style="border-bottom: 1px solid black; width: 65%; display: inline-block;">
+                {{ $contractData->internalAgentContract->first_name.' '.$contractData->internalAgentContract->last_name }}
+            </div>
         </div>
         <br>
         <div style="margin-top: 10px;">
