@@ -45,10 +45,10 @@ class DocusignController extends Controller
      *
      * @return render
      */
-    public function index()
-    {
-        return view('connect');
-    }
+    // public function index()
+    // {
+    //     return view('connect');
+    // }
 
 
     /**
@@ -56,79 +56,79 @@ class DocusignController extends Controller
      *
      * @return url
      */
-    public function connectDocusign()
-    {
-        try {
-            $params = [
-                'response_type' => 'code',
-                'scope' => 'signature',
-                'client_id' => $this->clientId, //change
-                'state' => 'a39fh23hnf23',
-                'redirect_uri' => route('internal.agent.docusign.callback'),
-            ];
-            $queryBuild = http_build_query($params);
+    // public function connectDocusign()
+    // {
+    //     try {
+    //         $params = [
+    //             'response_type' => 'code',
+    //             'scope' => 'signature',
+    //             'client_id' => $this->clientId, //change
+    //             'state' => 'a39fh23hnf23',
+    //             'redirect_uri' => route('internal.agent.docusign.callback'),
+    //         ];
+    //         $queryBuild = http_build_query($params);
 
-            $botUrl = $this->URL . $queryBuild;
+    //         $botUrl = $this->URL . $queryBuild;
 
-            return response()->json([
-                'success' => true,
-                'route' => $botUrl,
-            ], 200);
-        } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 404);
-        }
-    }
+    //         return response()->json([
+    //             'success' => true,
+    //             'route' => $botUrl,
+    //         ], 200);
+    //     } catch (Exception $e) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => $e->getMessage(),
+    //         ], 404);
+    //     }
+    // }
 
     /**
      * This function called when you auth your application with docusign
      *
      * @return url
      */
-    public function callback(Request $request)
-    {
-        $code = $request->code;
+    // public function callback(Request $request)
+    // {
+    //     $code = $request->code;
 
-        $client_id = $this->clientId; //change
-        $client_secret = $this->clinetSceret; //change
+    //     $client_id = $this->clientId; //change
+    //     $client_secret = $this->clinetSceret; //change
 
-        $integrator_and_secret_key = "Basic " . utf8_decode(base64_encode("{$client_id}:{$client_secret}"));
+    //     $integrator_and_secret_key = "Basic " . utf8_decode(base64_encode("{$client_id}:{$client_secret}"));
 
-        $ch = curl_init();
+    //     $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, $this->tokenUrl);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        $post = array(
-            'grant_type' => 'authorization_code',
-            'code' => $code,
-        );
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+    //     curl_setopt($ch, CURLOPT_URL, $this->tokenUrl);
+    //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    //     curl_setopt($ch, CURLOPT_POST, 1);
+    //     $post = array(
+    //         'grant_type' => 'authorization_code',
+    //         'code' => $code,
+    //     );
+    //     curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
 
-        $headers = array();
-        $headers[] = 'Cache-Control: no-cache';
-        $headers[] = "authorization: $integrator_and_secret_key";
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    //     $headers = array();
+    //     $headers[] = 'Cache-Control: no-cache';
+    //     $headers[] = "authorization: $integrator_and_secret_key";
+    //     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
-        $result = curl_exec($ch);
-        if (curl_errno($ch)) {
-            echo 'Error:' . curl_error($ch);
-        }
-        curl_close($ch);
-        $decodedData = json_decode($result);
-        $request->session()->put('docusign_auth_code', $decodedData->access_token);
-
-
-        // return response()->json([
-        //     'success' => true,
-        //     'docuSignAuthCode' => $decodedData->access_token
-        // ], 200);
+    //     $result = curl_exec($ch);
+    //     if (curl_errno($ch)) {
+    //         echo 'Error:' . curl_error($ch);
+    //     }
+    //     curl_close($ch);
+    //     $decodedData = json_decode($result);
+    //     $request->session()->put('docusign_auth_code', $decodedData->access_token);
 
 
-        return redirect()->route('contract.steps');
-    }
+    //     // return response()->json([
+    //     //     'success' => true,
+    //     //     'docuSignAuthCode' => $decodedData->access_token
+    //     // ], 200);
+
+
+    //     return redirect()->route('contract.steps');
+    // }
 
     public function signDocument($position)
     {
@@ -151,6 +151,7 @@ class DocusignController extends Controller
             $envelope_id = $results->getEnvelopeId();
             session()->put('envelope_id', $envelope_id);
             $authentication_method = 'None'; # How is this application authenticating
+            dd($results);
             # the signer? See the `authenticationMethod' definition
             # https://developers.docusign.com/esign-rest-api/reference/Envelopes/EnvelopeViews/createRecipient
             $recipient_view_request = new \DocuSign\eSign\Model\RecipientViewRequest([
