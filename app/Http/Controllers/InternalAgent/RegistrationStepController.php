@@ -1574,6 +1574,7 @@ class RegistrationStepController extends Controller
     private function getToken(ApiClient $apiClient) : string{
         try {
             $privateKey = file_get_contents(public_path('private.key'),true);
+            dd(env('DOCUSIGN_INTEGRATION_KEY'), env('DOCUSIGN_USER_ID'), env('DOCUSIGN_SCOPE'));
             $response = $apiClient->requestJWTUserToken(
                 $ikey = env('DOCUSIGN_INTEGRATION_KEY'),
                 $userId =  env('DOCUSIGN_USER_ID'),
