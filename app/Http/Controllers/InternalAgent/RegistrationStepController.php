@@ -39,14 +39,25 @@ use Inertia\Inertia;
 
 class RegistrationStepController extends Controller
 {
-    private $accountId;
-    private $baseUrl;
-
+    private $DOCUSIGN_USER_ID;
+    private $DOCUSIGN_API_ACCOUNT_ID;
+    private $DOCUSIGN_ACCOUNT_BASE_URI;
+    private $DOCUSIGN_APP_NAME;
+    private $DOCUSIGN_INTEGRATION_KEY;
+    private $DOCUSIGN_SECRET_KEY;
+    private $DOCUSIGN_ACCOUNT_BASE_URI_API;
+    private $DOCUSIGN_SCOPE;
 
     public function __construct()
     {
-        $this->accountId = env('DOCUSIGN_API_ACCOUNT_ID');
-        $this->baseUrl = env('DOCUSIGN_ACCOUNT_BASE_URI_API');
+        $this->DOCUSIGN_USER_ID = env('DOCUSIGN_USER_ID');
+        $this->DOCUSIGN_API_ACCOUNT_ID = env('DOCUSIGN_API_ACCOUNT_ID');
+        $this->DOCUSIGN_ACCOUNT_BASE_URI = env('DOCUSIGN_ACCOUNT_BASE_URI');
+        $this->DOCUSIGN_APP_NAME = env('DOCUSIGN_APP_NAME');
+        $this->DOCUSIGN_INTEGRATION_KEY = env('DOCUSIGN_INTEGRATION_KEY');
+        $this->DOCUSIGN_SECRET_KEY = env('DOCUSIGN_SECRET_KEY');
+        $this->DOCUSIGN_ACCOUNT_BASE_URI_API = env('DOCUSIGN_ACCOUNT_BASE_URI_API');
+        $this->DOCUSIGN_SCOPE = env('DOCUSIGN_SCOPE');
     }
 
 
@@ -57,7 +68,7 @@ class RegistrationStepController extends Controller
             if (isset($_GET['position']) && $_GET['position'] == 'contract') {
                 $envelopeId =  session()->get('envelope_id');
                 $documentId =  session()->get('document_id');
-                $url = "$this->baseUrl/v2.1/accounts/$this->accountId/envelopes/$envelopeId/documents/$documentId";
+                $url = "$this->DOCUSIGN_ACCOUNT_BASE_URI/v2.1/accounts/$this->DOCUSIGN_API_ACCOUNT_ID/envelopes/$envelopeId/documents/$documentId";
 
                 $response = Http::withHeaders([
                     'Authorization' => 'Bearer ' . session()->get('docusign_auth_code'),
@@ -124,7 +135,7 @@ class RegistrationStepController extends Controller
 
         //Docusign Auth Token
         $apiClient = new ApiClient();
-        $apiClient->getOAuth()->setOAuthBasePath($this->baseUrl);
+        $apiClient->getOAuth()->setOAuthBasePath($this->DOCUSIGN_ACCOUNT_BASE_URI);
         $docuSignAuthCode = $this->getToken($apiClient);
         session()->put('docusign_auth_code', $docuSignAuthCode);
         //End Docusign Auth Token
@@ -1643,10 +1654,10 @@ class RegistrationStepController extends Controller
         try {
             $privateKey = file_get_contents(public_path('private.key'),true);
             $response = $apiClient->requestJWTUserToken(
-                $ikey = env('DOCUSIGN_INTEGRATION_KEY'),
-                $userId =  env('DOCUSIGN_USER_ID'),
+                $ikey = $this->DOCUSIGN_INTEGRATION_KEY,
+                $userId =  $this->DOCUSIGN_USER_ID,
                 $key = $privateKey,
-                $scope = env('DOCUSIGN_SCOPE')
+                $scope = $this->DOCUSIGN_SCOPE
             );
             $token = $response[0];
             $accessToken = $token->getAccessToken();

@@ -25,7 +25,6 @@ class DocusignController extends Controller
     private $clientId;
     private $clinetSceret;
     private $URL;
-    private $tokenUrl;
     private $accountId;
     private $baseUrl;
     private $dsReturnUrl;
@@ -34,100 +33,8 @@ class DocusignController extends Controller
     {
         $this->clientId = env('DOCUSIGN_INTEGRATION_KEY');
         $this->clinetSceret = env('DOCUSIGN_SECRET_KEY');
-        $this->URL = "https://account-d.docusign.com/oauth/auth?";
-        $this->tokenUrl = "https://account-d.docusign.com/oauth/token";
         $this->accountId = env('DOCUSIGN_API_ACCOUNT_ID');
-        $this->baseUrl = "https://demo.docusign.net/restapi";
-    }
-
-    /**
-     * Show the html page
-     *
-     * @return render
-     */
-    public function index()
-    {
-        return view('connect');
-    }
-
-
-    /**
-     * Connect your application to docusign
-     *
-     * @return url
-     */
-    public function connectDocusign()
-    {
-        try {
-            $params = [
-                'response_type' => 'code',
-                'scope' => 'signature',
-                'client_id' => $this->clientId, //change
-                'state' => 'a39fh23hnf23',
-                'redirect_uri' => route('internal.agent.docusign.callback'),
-            ];
-            $queryBuild = http_build_query($params);
-
-            $botUrl = $this->URL . $queryBuild;
-
-            return response()->json([
-                'success' => true,
-                'route' => $botUrl,
-            ], 200);
-        } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 404);
-        }
-    }
-
-    /**
-     * This function called when you auth your application with docusign
-     *
-     * @return url
-     */
-    public function callback(Request $request)
-    {
-        $code = $request->code;
-
-        $client_id = $this->clientId; //change
-        $client_secret = $this->clinetSceret; //change
-
-        $integrator_and_secret_key = "Basic " . utf8_decode(base64_encode("{$client_id}:{$client_secret}"));
-
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, $this->tokenUrl);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        $post = array(
-            'grant_type' => 'authorization_code',
-            'code' => $code,
-        );
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-
-        $headers = array();
-        $headers[] = 'Cache-Control: no-cache';
-        $headers[] = "authorization: $integrator_and_secret_key";
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-        $result = curl_exec($ch);
-        if (curl_errno($ch)) {
-            echo 'Error:' . curl_error($ch);
-        }
-        curl_close($ch);
-        $decodedData = json_decode($result);
-        $request->session()->put('docusign_auth_code', $decodedData->access_token);
-
-
-        // return response()->json([
-        //     'success' => true,
-        //     'docuSignAuthCode' => $decodedData->access_token
-        // ], 200);
-
-
-        return redirect()->route('contract.steps');
+        $this->baseUrl = env('DOCUSIGN_ACCOUNT_BASE_URI_API');
     }
 
     public function signDocument($position)
@@ -145,10 +52,16 @@ class DocusignController extends Controller
             # Exceptions will be caught by the calling function
 
             $api_client = new \DocuSign\eSign\client\ApiClient($this->config);
+           
             $envelope_api = new \DocuSign\eSign\Api\EnvelopesApi($api_client);
-            $results = $envelope_api->createEnvelope($args['account_id'], $envelope_definition);
+dd('sd');
+           
+            $results = $envelope_api->createEnvelope('cf56cad6-f8ce-4274-ab9b-8c7e07c0511a', $envelope_definition);
+           
             $envelope_id = $results->getEnvelopeId();
+            
             session()->put('envelope_id', $envelope_id);
+            
             $authentication_method = 'None'; # How is this application authenticating
             # the signer? See the `authenticationMethod' definition
             # https://developers.docusign.com/esign-rest-api/reference/Envelopes/EnvelopeViews/createRecipient
