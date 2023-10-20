@@ -51,10 +51,12 @@ class ChargeUserForCompletedCall
             if ($userBid) {
                 // If the user’s bid amount matches another user’s bid amount:
                 if ($allBids->where('amount', $userBid->amount)->count() > 1) {
+                    Log::debug('Charge amount is the same as the user bid amount');
                     $chargeAmount = $userBid->amount;
                 } 
                 // Else if user's bid is greater than 35 AND there’s no other bid amount greater than 35 in the list, apart from this user’s bid:
                 elseif ($userBid->amount > 35 && $allBids->where('amount', '>', 35)->count() < 2) {
+                    Log::debug('Charge amount is 35 as there are no other bids greater than 35');
                     $chargeAmount = 35;
                 }
                 // Else, find the bidder after this user’s bid
@@ -65,8 +67,10 @@ class ChargeUserForCompletedCall
                     Log::debug('User Bid Index:', ['index' => $userBidIndex]);
                     
                     if (isset($allBids[$userBidIndex + 1])) {
-                        $chargeAmount = $allBids[$userBidIndex + 1]->amount;
+                        Log::debug('Charge amount is the next highest bid amount');
+                        $chargeAmount = $allBids[$userBidIndex + 1]->amount + 1;
                     } else {
+                        Log::debug('Charge amount is 35 as there are no other bids greater than 35 in the final else block');
                         $chargeAmount = 35; // default as there's no bidder after this user's bid
                     }
                 }
