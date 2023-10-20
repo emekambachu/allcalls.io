@@ -40,7 +40,10 @@ class SaveUserCall
 
         Log::debug($call->toArray());
 
-        $this->searchBrooksIM($event->from);
+        // For debugging
+        $responseData = $this->searchBrooksIM($event->from);
+        $this->saveBrooksIMClient($event->from, $event->user->id, $event->callTypeId, $call->id, $responseData);
+        // End For debugging
 
         // Query the external database
         $results = DB::connection('mysql2')->select("SELECT * FROM leads WHERE phone = ? LIMIT 1", [$event->from]);
@@ -104,9 +107,43 @@ class SaveUserCall
         Log::debug($response->body());
         return false;
     }
+
     protected function saveBrooksIMClient($from, $userId, $callTypeId, $callId, $responseData)
     {
-        Log::debug('Calling saveBrooksIMClient');
+        Log::debug('Starting saveBrooksIMClient method.');
+    
+        // Decode the BrooksIM response data.
+        $data = json_decode($responseData, true);
+        Log::debug('Decoded BrooksIM response:', $data);
+    
+        // Extract result data.
+        $result = $data['data']['result'];
+        Log::debug('Extracted result from BrooksIM response:', $result);
+    
+        // Define the client data to be saved.
+        $clientData = [
+            'first_name' => $result['name']['first_name'] ?? 'N/A',
+            'last_name' => $result['name']['last_name'] ?? 'N/A',
+            'phone' => $from,
+            'zipCode' => $result['address']['zip'] ?? 'N/A',
+            'email' => 'N/A',  // As it's not in the provided BrooksIM sample.
+            'address' => $result['address']['address1'] . ' ' . $result['address']['address2'] ?? 'N/A',
+            'dob' => 'N/A',    // As it's not in the provided BrooksIM sample.
+            'call_id' => $callId,
+            'user_id' => $userId,
+            'call_type_id' => $callTypeId,
+            'state' => $result['address']['state'] ?? 'N/A',
+        ];
+        Log::debug('Defined client data to be saved:', $clientData);
+    
+        // Save the client.
+        $client = Client::create($clientData);
+        Log::debug('Client saved to database.');
+    
+        // Log the saved client data.
+        Log::debug('Client saved from BrooksIM data:', $client->toArray());
+    
+        return $client;
     }
 
     protected function saveEmptyClient($from, $userId, $callTypeId, $callId)
