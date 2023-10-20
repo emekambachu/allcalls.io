@@ -111,7 +111,7 @@ class SaveUserCall
 
         Log::debug('BrooksIM returned a response.');
         Log::debug($response->body());
-        return false;
+        return $response->body();
     }
 
     protected function saveBrooksIMClient($from, $userId, $callTypeId, $callId, $responseData)
@@ -119,7 +119,7 @@ class SaveUserCall
         Log::debug('Starting saveBrooksIMClient method.');
     
         // Decode the BrooksIM response data.
-        $data = $responseData;
+        $data = json_decode($responseData, true);
         Log::debug('Decoded BrooksIM response:');
         Log::debug($data);
     
