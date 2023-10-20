@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\AgentInvite;
 use App\Models\Call;
 use Illuminate\Http\Request;
 use Inertia\Response;
@@ -44,29 +45,40 @@ class RegisteredInternalAgentController extends Controller
             ], 400);
         }
 
-        $user = User::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'password' => Hash::make($request->password),
-            'legacy_key' => false,
-        ]);
-
-        $agentRole = Role::whereName('internal-agent')->first();
-
-        DB::table('role_user')->insert([
-            'user_id' => $user->id,
-            'role_id' => $agentRole->id,
-        ]);
-
-        event(new Registered($user));
-
-        Auth::login($user);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Agent added successfully',
-        ], 200);
+        DB::beginTransaction();
+        try {
+            $user = User::create([
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'password' => Hash::make($request->password),
+                'legacy_key' => false,
+            ]);
+    
+            $agentRole = Role::whereName('internal-agent')->first();
+    
+            DB::table('role_user')->insert([
+                'user_id' => $user->id,
+                'role_id' => $agentRole->id,
+            ]);
+            $token = AgentInvite::where('token', '=', session()->get('agent-token'))->first();
+            $token->isUsed($token->token);
+            DB::commit();
+            session()->remove('agent-token');
+            event(new Registered($user));
+            Auth::login($user);
+            return response()->json([
+                'success' => true,
+                'message' => 'Agent added successfully',
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            dd($e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid agent invite token.',
+            ], 401);
+        }
     }
 }

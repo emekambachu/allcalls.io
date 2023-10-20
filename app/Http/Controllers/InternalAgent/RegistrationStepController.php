@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\InternalAgent;
 
 use App\Http\Controllers\Controller;
+use App\Models\AgentInvite;
 use App\Models\DocuSignTracker;
 use App\Models\InternalAgentAdditionalInfo;
 use App\Models\InternalAgentAddress;
@@ -38,16 +39,26 @@ use Inertia\Inertia;
 
 class RegistrationStepController extends Controller
 {
-    private $accountId;
-    private $baseUrl;
-
+    private $DOCUSIGN_USER_ID;
+    private $DOCUSIGN_API_ACCOUNT_ID;
+    private $DOCUSIGN_ACCOUNT_BASE_URI;
+    private $DOCUSIGN_APP_NAME;
+    private $DOCUSIGN_INTEGRATION_KEY;
+    private $DOCUSIGN_SECRET_KEY;
+    private $DOCUSIGN_ACCOUNT_BASE_URI_API;
+    private $DOCUSIGN_SCOPE;
 
     public function __construct()
     {
-        $this->accountId = env('DOCUSIGN_API_ACCOUNT_ID');
-        $this->baseUrl = env('DOCUSIGN_ACCOUNT_BASE_URI_API');
+        $this->DOCUSIGN_USER_ID = env('DOCUSIGN_USER_ID');
+        $this->DOCUSIGN_API_ACCOUNT_ID = env('DOCUSIGN_API_ACCOUNT_ID');
+        $this->DOCUSIGN_ACCOUNT_BASE_URI = env('DOCUSIGN_ACCOUNT_BASE_URI');
+        $this->DOCUSIGN_APP_NAME = env('DOCUSIGN_APP_NAME');
+        $this->DOCUSIGN_INTEGRATION_KEY = env('DOCUSIGN_INTEGRATION_KEY');
+        $this->DOCUSIGN_SECRET_KEY = env('DOCUSIGN_SECRET_KEY');
+        $this->DOCUSIGN_ACCOUNT_BASE_URI_API = env('DOCUSIGN_ACCOUNT_BASE_URI_API');
+        $this->DOCUSIGN_SCOPE = env('DOCUSIGN_SCOPE');
     }
-
 
     public function contractSteps()
     {
@@ -56,7 +67,8 @@ class RegistrationStepController extends Controller
             if (isset($_GET['position']) && $_GET['position'] == 'contract') {
                 $envelopeId =  session()->get('envelope_id');
                 $documentId =  session()->get('document_id');
-                $url = "$this->baseUrl/v2.1/accounts/$this->accountId/envelopes/$envelopeId/documents/$documentId";
+                $startUrl = "https://".env('DOCUSIGN_ACCOUNT_BASE_URI_API');
+                $url = $startUrl."v2.1/accounts/$this->DOCUSIGN_API_ACCOUNT_ID/envelopes/$envelopeId/documents/$documentId";
 
                 $response = Http::withHeaders([
                     'Authorization' => 'Bearer ' . session()->get('docusign_auth_code'),
@@ -77,6 +89,7 @@ class RegistrationStepController extends Controller
                 $pdfPath = public_path('internal-agents/contract/' . $contractedPdf);
                 file_put_contents($pdfPath, $response->body());
                 //End store signed PDF for Accompanying Sign
+
 
                 //Track Signer
                 DocuSignTracker::updateOrCreate(
@@ -119,11 +132,11 @@ class RegistrationStepController extends Controller
             ->with('internalAgentContract.getQuestionSign')
             ->with('internalAgentContract.getContractSign')->first();
         $states = State::all();
-        $amlCouseGuide = asset('guid-links/aml-setup.pdf'); 
+        $amlCouseGuide = asset('guid-links/aml-setup.pdf');
 
         //Docusign Auth Token
         $apiClient = new ApiClient();
-        $apiClient->getOAuth()->setOAuthBasePath("account-d.docusign.com");
+        $apiClient->getOAuth()->setOAuthBasePath($this->DOCUSIGN_ACCOUNT_BASE_URI);
         $docuSignAuthCode = $this->getToken($apiClient);
         session()->put('docusign_auth_code', $docuSignAuthCode);
         //End Docusign Auth Token
@@ -1397,13 +1410,13 @@ class RegistrationStepController extends Controller
         }
 
         if ($request->step == 7) {
+
             DB::beginTransaction();
             try {
-                $uploadOmmisionPdf = InternalAgentErrorAndEmission::where('reg_info_id', $basicInfo->id)->first();
-                if (!$uploadOmmisionPdf) {
+
+                if ($request->file('uploadOmmisionPdf') && $request->file('uploadOmmisionPdf')->isValid()) {
                     $step3Validation = Validator::make($request->all(), [
-                        'omissions_insurance' => 'required',
-                        'uploadOmmisionPdf' => 'required|mimetypes:application/pdf|max:2048',
+                        'uploadOmmisionPdf' => 'mimetypes:application/pdf|max:2048',
                     ]);
                     if ($step3Validation->fails()) {
                         return response()->json([
@@ -1412,9 +1425,8 @@ class RegistrationStepController extends Controller
                             'errors' => $step3Validation->errors(),
                         ], 400);
                     }
-                }
+                    $uploadOmmisionPdf = InternalAgentErrorAndEmission::where('reg_info_id', $basicInfo->id)->first();
 
-                if ($request->file('uploadOmmisionPdf') && $request->file('uploadOmmisionPdf')->isValid()) {
                     if ($uploadOmmisionPdf) {
                         if (file_exists(asset('internal-agents/error-and-omission/' . $uploadOmmisionPdf->name))) {
                             unlink(asset('internal-agents/error-and-omission/' . $uploadOmmisionPdf->name));
@@ -1575,15 +1587,16 @@ class RegistrationStepController extends Controller
 
     public function pdf()
     {
-        return view('pdf.internal-agent-contract.agent_agency_authorization');
 //        $jwt_token="eyJ0eXAiOiJNVCIsImFsZyI6IlJTMjU2Iiwia2lkIjoiNjgxODVmZjEtNGU1MS00Y2U5LWFmMWMtNjg5ODEyMjAzMzE3In0.AQoAAAABAAUABwAA5OLp5MvbSAgAAEynS-3L20gCAJgPjHagsedJmPsqwsgbcvQVAAEAAAAYAAIAAAAFAAAAHQAAAA0AJAAAADc1ZDk3NzE4LThhOTgtNGQyNy04ZGVmLTE3YzJmY2VlZDc5ZiIAJAAAADc1ZDk3NzE4LThhOTgtNGQyNy04ZGVmLTE3YzJmY2VlZDc5ZhIAAQAAAAYAAABqd3RfYnIjACQAAAA3NWQ5NzcxOC04YTk4LTRkMjctOGRlZi0xN2MyZmNlZWQ3OWY.xY21b5yOhNtUbh8eachI2_B6gMqibO-H89FlLdjkBdlF61149VcH-aIw9icDra_uK4rfL-M6DeqBN1XMiqsCuZnCa1yBYIgxZg6mhBER3E-9uVtcL0yYwKWsQyYNZAtz3l5rQJF_lgxLlEvsMIohR6EcGVGC03Oqn1GgvfpX-XbIweTtHBezS-wrjh0Iaep09eA3fCRmEKdGIul7bSuuCRAvKb6PlLEZQ434j2paUlkg4s5kFhI_hukHAKICtCGDxWZQMYshZrn9XAg1SZfsh7ykriybZ_83kXVNTQPZQ8rMS0tqToSqmJvSx1TV_3LWKet1p9zXpr0FqNTLQHP3Nw";
 //        $config = new Configuration();
 //        $config->setHost('<https://demo.docusign.net/restapi>');
 //        $config->addDefaultHeader("Authorization", "Bearer ".$jwt_token);
 
+
         $apiClient = new ApiClient();
-        $apiClient->getOAuth()->setOAuthBasePath("account-d.docusign.com");
+        $apiClient->getOAuth()->setOAuthBasePath("account.docusign.com");
         $accessToken = $this->getToken($apiClient);
+
 
         $userInfo = $apiClient->getUserInfo($accessToken);
         $accountInfo = $userInfo[0]->getAccounts();
@@ -1598,20 +1611,26 @@ class RegistrationStepController extends Controller
          */
         $envelopeDefenition = $this->buildEnvelope();
         try {
-            $envelopeApi = new EnvelopesApi($apiClient);
+            $envelopeApi = new EnvelopesApi();
             $envelopeSummary = $envelopeApi->createEnvelope($accountInfo[0]->getAccountId(), $envelopeDefenition);
+            dd($envelopeSummary);
+
+
+
 
             $viewRequest = new RecipientViewRequest([
                 'return_url' => '<https://staging.allcalls.io/return-url>',
                 'authentication_method' => 'jwt',
                 'email' => 'awaisamir23@gmail.com',
-                'user_name' => 'Faiz rana',
+                'user_name' => ' Ryaan',
                 'client_user_id' => '1'
             ]);
 //            dd($envelopeApi->createRecipientView("7716918e-104d-4915-b7ca-eff79222ac45", $envelopeSummary->getEnvelopeId(), $viewRequest));
             $signingUrl = $envelopeApi->createRecipientView("7716918e-104d-4915-b7ca-eff79222ac45", $envelopeSummary->getEnvelopeId(), $viewRequest);
 
             redirect()->to($signingUrl['url']);
+
+
         } catch (\Exception $th) {
             return back()->withError($th->getMessage())->withInput();
         }
@@ -1637,10 +1656,10 @@ class RegistrationStepController extends Controller
         try {
             $privateKey = file_get_contents(public_path('private.key'),true);
             $response = $apiClient->requestJWTUserToken(
-                $ikey = env('DOCUSIGN_INTEGRATION_KEY'),
-                $userId =  env('DOCUSIGN_USER_ID'),
+                $ikey = $this->DOCUSIGN_INTEGRATION_KEY,
+                $userId =  $this->DOCUSIGN_USER_ID,
                 $key = $privateKey,
-                $scope = env('DOCUSIGN_SCOPE')
+                $scope = $this->DOCUSIGN_SCOPE
             );
             $token = $response[0];
             $accessToken = $token->getAccessToken();
@@ -1656,7 +1675,7 @@ class RegistrationStepController extends Controller
         $fileName = "Sample Document";
         $fileExtension = 'pdf';
         $recipientEmail ="awaisamir23@gmail.com";
-        $recipientName = "Faiz rana";
+        $recipientName = "Ryaan";
 
         $document = new Document([
             'document_id' => "16",

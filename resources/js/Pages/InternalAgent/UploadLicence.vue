@@ -80,7 +80,6 @@ let ChangeTab = () => {
             props.firstStepErrors[key] = [];
         }
     }
-
     if (!selectedFile.value && page.props.auth.role === 'internal-agent' && !props.userData.internal_agent_contract.resident_license) {
         fileError.value = false;
         props.firstStepErrors.residentLicensePdf = [`The Resident License field is required.`];

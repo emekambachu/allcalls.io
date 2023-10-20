@@ -23,50 +23,37 @@ class AgentInvite extends Model
      *
      * @return bool True if the token is valid and marked as used, false otherwise.
      */
-    public static function verify($token, $checkUsed = true)
+    public static function isUsed($token, $checkUsed = true)
     {
         // Find the invite by token
         $invite = self::where('token', $token)->first();
-
-        // If no invite found or the invite is already used and checkUsed is true, return false
-        if (!$invite || ($checkUsed && $invite->used)) {
-            return false;
-        }
-
-        // Check if the invite has expired (older than 24 hours)
-        $created = $invite->created_at;
-        if ($created->lt(now()->subHours(24))) {
-            return false; // Invite has expired
-        }
-
-        // If it's a valid invite, mark it as used
         $invite->used = true;
         $invite->save();
-
         return true; // Successfully verified and marked as used
     }
 
-    public static function verifyUsed($token)
+    public static function isAvailable($token)
     {
         // Find the invite by token
-        $invite = self::where('token', $token)->where('used', true)->first();
+        $invite = self::where('token', $token)->first();
 
         // If no invite found or the invite is already used, return false
         if (!$invite || $invite->used) {
             return false;
         }
 
+        return true; // Successfully verified and marked as used
+    }
+
+    public static function tokenExpired($token) {
         // Check if the invite has expired (older than 24 hours)
+        $invite = self::where('token', $token)->first();
         $created = $invite->created_at;
         if ($created->lt(now()->subHours(24))) {
-            return false; // Invite has expired
-        }
+            return true; // Invite has expired
+        } 
+        return false;
 
-        // If it's a valid invite, mark it as used
-        $invite->used = true;
-        $invite->save();
-
-        return true; // Successfully verified and marked as used
     }
 
 }

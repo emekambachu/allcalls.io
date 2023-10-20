@@ -1,12 +1,12 @@
 <script setup>
-  import { Head, Link } from "@inertiajs/vue3";
+  import { Head, Link, usePage } from "@inertiajs/vue3";
   import  { onMounted, onBeforeUnmount, ref } from "vue";
   import PrimaryButton from "@/Components/PrimaryButton.vue";
   import ApplicationLogo from "@/Components/ApplicationLogo.vue";
   import Footer from "@/Components/Footer.vue";
   import ScrollAnimation from "@/Components/ScrollAnimation.vue";
   import DownloadAppModal from "@/Components/DownloadAppModal.vue";
-  
+  import { toaster } from "@/helper.js";
   defineProps({
     canLogin: {
       type: Boolean,
@@ -23,6 +23,10 @@
       required: true,
     },
   });
+  let page = usePage();
+if (page.props.flash.error) {
+    toaster("error", page.props.flash.error);
+}
   let appDownloadModal = ref(false)
   // Define a reactive property for v-show
   const showHamburger = ref(false);
