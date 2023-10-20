@@ -67,7 +67,8 @@ class RegistrationStepController extends Controller
             if (isset($_GET['position']) && $_GET['position'] == 'contract') {
                 $envelopeId =  session()->get('envelope_id');
                 $documentId =  session()->get('document_id');
-                $url = "https://account.docusign.com/restapi/v2.1/accounts/$this->DOCUSIGN_API_ACCOUNT_ID/envelopes/$envelopeId/documents/$documentId";
+                $startUrl = "https://".$this->DOCUSIGN_ACCOUNT_BASE_URI;
+                $url = $startUrl."v2.1/accounts/$this->DOCUSIGN_API_ACCOUNT_ID/envelopes/$envelopeId/documents/$documentId";
 
                 $response = Http::withHeaders([
                     'Authorization' => 'Bearer ' . session()->get('docusign_auth_code'),
@@ -89,7 +90,7 @@ class RegistrationStepController extends Controller
                 file_put_contents($pdfPath, $response->body());
                 //End store signed PDF for Accompanying Sign
 
-                dd($response, $response->body(), session()->get('docusign_auth_code'), $envelopeId, $documentId);
+                dd($url,$response, $response->body(), session()->get('docusign_auth_code'), $envelopeId, $documentId);
 
                 //Track Signer
                 DocuSignTracker::updateOrCreate(
