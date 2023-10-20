@@ -7,6 +7,7 @@ use App\Models\Client;
 use App\Events\RingingCallEvent;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
@@ -42,6 +43,14 @@ class SaveUserCall
         // Query the external database
         $results = DB::connection('mysql2')->select("SELECT * FROM leads WHERE phone = ? LIMIT 1", [$event->from]);
         if (!sizeof($results)) {
+
+
+            // First check if brooksIM returned something:
+            if ($responseData = $this->searchBrooksIM($event->from)) {
+                $this->saveBrooksIMClient($event->from, $event->user->id, $event->callTypeId, $call->id, $responseData);
+                return;
+            }
+
             $this->saveEmptyClient($event->from, $event->user->id, $event->callTypeId, $call->id);
             return;
         }
@@ -66,6 +75,36 @@ class SaveUserCall
 
         Log::debug('Client saved.');
         Log::debug($client->toArray());
+    }
+
+    protected function searchBrooksIM($phone)
+    {
+        $response = Http::withHeaders(['x-api-key' => env('BROOKS_IM_API_KEY')])
+            ->post(
+                'https://api.imdatacenter.com/1.0/phone',
+                [
+                    'client_id' => uniqid(),
+                    'phone' => (int) $phone,
+                    'process' => ['fd', 'fe'],
+                    'wireless_only' => false,
+                    'immediate' => true,
+                    'match_level' => 'individual'
+                ]
+            );
+
+        if ( !$response->ok() )
+        {
+            return false;
+        }
+
+
+        Log::debug('BrooksIM returned a response.');
+        Log::debug($response->body());
+        return false;
+    }
+    protected function saveBrooksIMClient($from, $userId, $callTypeId, $callId, $responseData)
+    {
+        Log::debug('Calling saveBrooksIMClient');
     }
 
     protected function saveEmptyClient($from, $userId, $callTypeId, $callId)
