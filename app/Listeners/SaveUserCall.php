@@ -41,24 +41,19 @@ class SaveUserCall
 
         Log::debug($call->toArray());
 
-        // For debugging
-        try {
-            $responseData = $this->searchBrooksIM($event->from);
-            $this->saveBrooksIMClient($event->from, $event->user->id, $event->callTypeId, $call->id, $responseData);
-        } catch (Exception $e) {
-            Log::debug('Exception thrown: ' . $e->getMessage());
-        }
-
-        // End For debugging
-
         // Query the external database
         $results = DB::connection('mysql2')->select("SELECT * FROM leads WHERE phone = ? LIMIT 1", [$event->from]);
         if (!sizeof($results)) {
-
-
             // First check if brooksIM returned something:
             if ($responseData = $this->searchBrooksIM($event->from)) {
-                $this->saveBrooksIMClient($event->from, $event->user->id, $event->callTypeId, $call->id, $responseData);
+                try {
+                    $this->saveBrooksIMClient($event->from, $event->user->id, $event->callTypeId, $call->id, $responseData);
+                    return;
+                } catch (Exception $e) {
+                    Log::debug('Exception thrown while saving brooksim client: ' . $e->getMessage());
+                }
+
+                $this->saveEmptyClient($event->from, $event->user->id, $event->callTypeId, $call->id);
                 return;
             }
 
