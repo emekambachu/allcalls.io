@@ -62,7 +62,7 @@ class RegistrationStepController extends Controller
 
 
     public function contractSteps()
-    {   
+    {
         if (isset($_GET['event']) && $_GET['event'] == 'signing_complete') {
             $user = auth()->user();
             if (isset($_GET['position']) && $_GET['position'] == 'contract') {
@@ -131,7 +131,7 @@ class RegistrationStepController extends Controller
             ->with('internalAgentContract.getQuestionSign')
             ->with('internalAgentContract.getContractSign')->first();
         $states = State::all();
-        $amlCouseGuide = asset('guid-links/aml-setup.pdf'); 
+        $amlCouseGuide = asset('guid-links/aml-setup.pdf');
 
         //Docusign Auth Token
         $apiClient = new ApiClient();
@@ -1409,10 +1409,10 @@ class RegistrationStepController extends Controller
         }
 
         if ($request->step == 7) {
-            
+
             DB::beginTransaction();
             try {
-                
+
                 if ($request->file('uploadOmmisionPdf') && $request->file('uploadOmmisionPdf')->isValid()) {
                     $step3Validation = Validator::make($request->all(), [
                         'uploadOmmisionPdf' => 'mimetypes:application/pdf|max:2048',
@@ -1583,6 +1583,74 @@ class RegistrationStepController extends Controller
     {
         dd($request);
     }
+
+    public function pdf()
+    {
+//        $jwt_token="eyJ0eXAiOiJNVCIsImFsZyI6IlJTMjU2Iiwia2lkIjoiNjgxODVmZjEtNGU1MS00Y2U5LWFmMWMtNjg5ODEyMjAzMzE3In0.AQoAAAABAAUABwAA5OLp5MvbSAgAAEynS-3L20gCAJgPjHagsedJmPsqwsgbcvQVAAEAAAAYAAIAAAAFAAAAHQAAAA0AJAAAADc1ZDk3NzE4LThhOTgtNGQyNy04ZGVmLTE3YzJmY2VlZDc5ZiIAJAAAADc1ZDk3NzE4LThhOTgtNGQyNy04ZGVmLTE3YzJmY2VlZDc5ZhIAAQAAAAYAAABqd3RfYnIjACQAAAA3NWQ5NzcxOC04YTk4LTRkMjctOGRlZi0xN2MyZmNlZWQ3OWY.xY21b5yOhNtUbh8eachI2_B6gMqibO-H89FlLdjkBdlF61149VcH-aIw9icDra_uK4rfL-M6DeqBN1XMiqsCuZnCa1yBYIgxZg6mhBER3E-9uVtcL0yYwKWsQyYNZAtz3l5rQJF_lgxLlEvsMIohR6EcGVGC03Oqn1GgvfpX-XbIweTtHBezS-wrjh0Iaep09eA3fCRmEKdGIul7bSuuCRAvKb6PlLEZQ434j2paUlkg4s5kFhI_hukHAKICtCGDxWZQMYshZrn9XAg1SZfsh7ykriybZ_83kXVNTQPZQ8rMS0tqToSqmJvSx1TV_3LWKet1p9zXpr0FqNTLQHP3Nw";
+//        $config = new Configuration();
+//        $config->setHost('<https://demo.docusign.net/restapi>');
+//        $config->addDefaultHeader("Authorization", "Bearer ".$jwt_token);
+
+
+        $apiClient = new ApiClient();
+        $apiClient->getOAuth()->setOAuthBasePath("account.docusign.com");
+        $accessToken = $this->getToken($apiClient);
+
+
+        $userInfo = $apiClient->getUserInfo($accessToken);
+        $accountInfo = $userInfo[0]->getAccounts();
+        $apiClient->getConfig()->setHost($accountInfo[0]->getBaseUri() . '/restapi');
+        /**
+         *
+         * Step 4
+         * Build the envelope object
+         *
+         * Make an API call to create the envelope and display the response in the view
+         *
+         */
+        $envelopeDefenition = $this->buildEnvelope();
+        try {
+            $envelopeApi = new EnvelopesApi();
+            $envelopeSummary = $envelopeApi->createEnvelope($accountInfo[0]->getAccountId(), $envelopeDefenition);
+            dd($envelopeSummary);
+
+
+
+
+            $viewRequest = new RecipientViewRequest([
+                'return_url' => '<https://staging.allcalls.io/return-url>',
+                'authentication_method' => 'jwt',
+                'email' => 'ryan@allcalls.io',
+                'user_name' => ' Ryaan',
+                'client_user_id' => '1'
+            ]);
+//            dd($envelopeApi->createRecipientView("7716918e-104d-4915-b7ca-eff79222ac45", $envelopeSummary->getEnvelopeId(), $viewRequest));
+            $signingUrl = $envelopeApi->createRecipientView("7716918e-104d-4915-b7ca-eff79222ac45", $envelopeSummary->getEnvelopeId(), $viewRequest);
+
+            redirect()->to($signingUrl['url']);
+
+
+        } catch (\Exception $th) {
+            return back()->withError($th->getMessage())->withInput();
+        }
+//        dd($result);
+//        return view('contract.response')->with('result', $result);
+
+    }
+
+    public function pdfExport()
+    {
+        set_time_limit(0);
+
+        $returnArr['contractData'] = User::where('id', 3)
+            ->with('internalAgentContract')
+            ->first();
+
+        $pdf = PDF::loadView('pdf.internal-agent-contract.agent-contract', $returnArr);
+
+        return $pdf->stream('signature-authorization.pdf');
+    }
+
     private function getToken(ApiClient $apiClient) : string{
         try {
             $privateKey = file_get_contents(public_path('private.key'),true);
@@ -1598,5 +1666,60 @@ class RegistrationStepController extends Controller
             throw $th;
         }
         return $accessToken;
+    }
+
+    private function buildEnvelope(): EnvelopeDefinition{
+
+        $fileContent = file_get_contents(asset('/first-step-sign.pdf'));
+        $fileName = "Sample Document";
+        $fileExtension = 'pdf';
+        $recipientEmail ="ryan@allcalls.io";
+        $recipientName = "Ryaan";
+
+        $document = new Document([
+            'document_id' => "16",
+            'document_base64' => base64_encode($fileContent),
+            'file_extension' => $fileExtension,
+            'name' => $fileName
+        ]);
+        $sign_here_tab = new SignHere([
+            'anchor_string' => "**signature**",
+            'anchor_units' => "pixels",
+            'anchor_x_offset' => "100",
+            'anchor_y_offset' => "0"
+        ]);
+        $sign_here_tabs = [$sign_here_tab];
+        $tabs1 = new Tabs([
+            'sign_here_tabs' => $sign_here_tabs
+        ]);
+        $signer = new Signer([
+            'email' => $recipientEmail,
+            'name' =>  $recipientName,
+            'recipient_id' => "1",
+            'tabs' => $tabs1
+        ]);
+        $signers = [$signer];
+        $recipients = new Recipients([
+            'signers' => $signers
+        ]);
+        $inline_template = new InlineTemplate([
+            'recipients' => $recipients,
+            'sequence' => "1"
+        ]);
+        $inline_templates = [$inline_template];
+        $composite_template = new CompositeTemplate([
+            'composite_template_id' => "1",
+            'document' => $document,
+            'inline_templates' => $inline_templates
+        ]);
+        $composite_templates = [$composite_template];
+        $envelope_definition = new EnvelopeDefinition([
+            'composite_templates' => $composite_templates,
+            'email_subject' => "Sample Please sign",
+            'status' => "sent"
+        ]);
+
+        return $envelope_definition;
+
     }
 }
