@@ -124,7 +124,7 @@ class SaveUserCall
         Log::debug($data);
     
         // Extract result data.
-        $result = $data['data']['result'];
+        $result = $data['result'];
         Log::debug('Extracted result from BrooksIM response:');
         Log::debug($result);
     
