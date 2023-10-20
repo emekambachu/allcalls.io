@@ -140,6 +140,7 @@ class RegistrationStepController extends Controller
         $apiClient->getOAuth()->setOAuthBasePath($this->DOCUSIGN_ACCOUNT_BASE_URI);
         $docuSignAuthCode = $this->getToken($apiClient);
         session()->put('docusign_auth_code', $docuSignAuthCode);
+        dd($docuSignAuthCode);
         //End Docusign Auth Token
 
         return Inertia::render('InternalAgent/ContractSteps', [
