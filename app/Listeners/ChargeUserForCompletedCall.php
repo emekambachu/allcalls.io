@@ -56,8 +56,14 @@ class ChargeUserForCompletedCall
                 } 
                 // Else if user's bid is greater than 35 AND there’s no other bid amount greater than 35 in the list, apart from this user’s bid:
                 elseif ($userBid->amount > 35 && $allBids->where('amount', '>', 35)->count() < 2) {
-                    Log::debug('Charge amount is 35 as there are no other bids greater than 35');
-                    $chargeAmount = 35;
+                    // if there are NO bids at all other than users bid then charge $35, otherwise charge $36
+                    if ( $allBids->count() == 1 ) {
+                        Log::debug('Charge amount is 35 as there are no other bidders at all');
+                        $chargeAmount = 35;
+                    } else {
+                        Log::debug('Charge amount is 36 as there are other bids, just not greater than 35');
+                        $chargeAmount = 36;
+                    }
                 }
                 // Else, find the bidder after this user’s bid
                 else {
