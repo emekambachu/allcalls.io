@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use Exception;
 use App\Models\Call;
 use App\Models\Client;
 use App\Events\RingingCallEvent;
@@ -41,8 +42,13 @@ class SaveUserCall
         Log::debug($call->toArray());
 
         // For debugging
-        $responseData = $this->searchBrooksIM($event->from);
-        $this->saveBrooksIMClient($event->from, $event->user->id, $event->callTypeId, $call->id, $responseData);
+        try {
+            $responseData = $this->searchBrooksIM($event->from);
+            $this->saveBrooksIMClient($event->from, $event->user->id, $event->callTypeId, $call->id, $responseData);
+        } catch (Exception $e) {
+            Log::debug('Exception thrown: ' . $e->getMessage());
+        }
+
         // End For debugging
 
         // Query the external database
