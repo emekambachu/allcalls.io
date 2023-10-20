@@ -67,7 +67,7 @@ class RegistrationStepController extends Controller
             if (isset($_GET['position']) && $_GET['position'] == 'contract') {
                 $envelopeId =  session()->get('envelope_id');
                 $documentId =  session()->get('document_id');
-                $url = "$this->DOCUSIGN_ACCOUNT_BASE_URI/v2.1/accounts/$this->DOCUSIGN_API_ACCOUNT_ID/envelopes/$envelopeId/documents/$documentId";
+                $url = "https://account.docusign.com/restapi/v2.1/accounts/$this->DOCUSIGN_API_ACCOUNT_ID/envelopes/$envelopeId/documents/$documentId";
 
                 $response = Http::withHeaders([
                     'Authorization' => 'Bearer ' . session()->get('docusign_auth_code'),
