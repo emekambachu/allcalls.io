@@ -40,6 +40,8 @@ class SaveUserCall
 
         Log::debug($call->toArray());
 
+        $this->searchBrooksIM($event->from);
+
         // Query the external database
         $results = DB::connection('mysql2')->select("SELECT * FROM leads WHERE phone = ? LIMIT 1", [$event->from]);
         if (!sizeof($results)) {
