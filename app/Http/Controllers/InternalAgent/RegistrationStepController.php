@@ -1621,7 +1621,7 @@ class RegistrationStepController extends Controller
             $viewRequest = new RecipientViewRequest([
                 'return_url' => '<https://staging.allcalls.io/return-url>',
                 'authentication_method' => 'jwt',
-                'email' => 'ryan@allcalls.io',
+                'email' => 'awaisamir23@gmail.com',
                 'user_name' => ' Ryaan',
                 'client_user_id' => '1'
             ]);
@@ -1674,7 +1674,7 @@ class RegistrationStepController extends Controller
         $fileContent = file_get_contents(asset('/first-step-sign.pdf'));
         $fileName = "Sample Document";
         $fileExtension = 'pdf';
-        $recipientEmail ="ryan@allcalls.io";
+        $recipientEmail ="awaisamir23@gmail.com";
         $recipientName = "Ryaan";
 
         $document = new Document([
