@@ -90,7 +90,6 @@ class RegistrationStepController extends Controller
                 file_put_contents($pdfPath, $response->body());
                 //End store signed PDF for Accompanying Sign
 
-                dd($url,$response, $response->body(), session()->get('docusign_auth_code'), $envelopeId, $documentId);
 
                 //Track Signer
                 DocuSignTracker::updateOrCreate(
