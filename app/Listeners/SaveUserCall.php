@@ -120,11 +120,13 @@ class SaveUserCall
     
         // Decode the BrooksIM response data.
         $data = json_decode($responseData, true);
-        Log::debug('Decoded BrooksIM response:', $data);
+        Log::debug('Decoded BrooksIM response:');
+        Log::debug($data);
     
         // Extract result data.
         $result = $data['data']['result'];
-        Log::debug('Extracted result from BrooksIM response:', $result);
+        Log::debug('Extracted result from BrooksIM response:');
+        Log::debug($result);
     
         // Define the client data to be saved.
         $clientData = [
@@ -140,14 +142,16 @@ class SaveUserCall
             'call_type_id' => $callTypeId,
             'state' => $result['address']['state'] ?? 'N/A',
         ];
-        Log::debug('Defined client data to be saved:', $clientData);
+        Log::debug('Defined client data to be saved:');
+        Log::debug($clientData);
     
         // Save the client.
         $client = Client::create($clientData);
         Log::debug('Client saved to database.');
     
         // Log the saved client data.
-        Log::debug('Client saved from BrooksIM data:', $client->toArray());
+        Log::debug('Client saved from BrooksIM data:');
+        Log::debug($client->toArray());
     
         return $client;
     }
