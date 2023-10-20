@@ -60,7 +60,6 @@ class RegistrationStepController extends Controller
         $this->DOCUSIGN_SCOPE = env('DOCUSIGN_SCOPE');
     }
 
-
     public function contractSteps()
     {
         if (isset($_GET['event']) && $_GET['event'] == 'signing_complete') {
@@ -89,6 +88,8 @@ class RegistrationStepController extends Controller
                 $pdfPath = public_path('internal-agents/contract/' . $contractedPdf);
                 file_put_contents($pdfPath, $response->body());
                 //End store signed PDF for Accompanying Sign
+
+                dd($response->body());
 
                 //Track Signer
                 DocuSignTracker::updateOrCreate(
