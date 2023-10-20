@@ -34,7 +34,7 @@ class DocusignController extends Controller
         $this->clientId = env('DOCUSIGN_INTEGRATION_KEY');
         $this->clinetSceret = env('DOCUSIGN_SECRET_KEY');
         $this->accountId = env('DOCUSIGN_API_ACCOUNT_ID');
-        $this->baseUrl = env('DOCUSIGN_ACCOUNT_BASE_URI_API');
+        $this->baseUrl = "https://".env('DOCUSIGN_ACCOUNT_BASE_URI_API');
     }
 
     public function signDocument($position)
@@ -52,16 +52,10 @@ class DocusignController extends Controller
             # Exceptions will be caught by the calling function
 
             $api_client = new \DocuSign\eSign\client\ApiClient($this->config);
-           
             $envelope_api = new \DocuSign\eSign\Api\EnvelopesApi($api_client);
-dd('sd');
-           
-            $results = $envelope_api->createEnvelope('cf56cad6-f8ce-4274-ab9b-8c7e07c0511a', $envelope_definition);
-           
+            $results = $envelope_api->createEnvelope($args['account_id'], $envelope_definition);
             $envelope_id = $results->getEnvelopeId();
-            
             session()->put('envelope_id', $envelope_id);
-            
             $authentication_method = 'None'; # How is this application authenticating
             # the signer? See the `authenticationMethod' definition
             # https://developers.docusign.com/esign-rest-api/reference/Envelopes/EnvelopeViews/createRecipient
