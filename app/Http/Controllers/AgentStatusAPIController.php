@@ -250,35 +250,28 @@ class AgentStatusAPIController extends Controller
     {
         // Query for the call type
         $callType = CallType::whereType($vertical)->firstOrFail();
-
-        // Get the total number of bids for this call type
-        $bidCount = Bid::where('call_type_id', $callType->id)->count();
-
-        // If there are no bids or only one bid, return $25
-        if ($bidCount <= 1) {
-            return 25;
-        }
-
-        // Get the highest and second highest bid amounts for the call type
+    
+        // Get the top two highest bid amounts for the call type
         $highestBids = Bid::where('call_type_id', $callType->id)
             ->orderBy('amount', 'desc')
-            ->take(2) // This will take the highest and second highest bids
+            ->take(2)
             ->get();
-
-        // If there are not enough bids to compare, return $25
-        if ($highestBids->count() < 2) {
-            return 25;
+    
+        // If there are no bids, or only one bid, return $25
+        if ($highestBids->count() <= 1) {
+            return 35;
         }
-
-        $highestBid = $highestBids[0];
-        $secondHighestBid = $highestBids[1];
-
-        // Check if the second highest bid is the same as the highest bid, or only $1 less
-        if ($secondHighestBid->amount == $highestBid->amount || $highestBid->amount - $secondHighestBid->amount == 1) {
-            return $highestBid->amount;
+    
+        $highestBid = $highestBids[0]->amount;
+        $secondHighestBid = $highestBids[1]->amount;
+    
+        // If the second highest bid is the same as the highest bid
+        // Or if the difference between the highest bid and the second highest bid is $1
+        if ($secondHighestBid == $highestBid || $highestBid - $secondHighestBid == 1) {
+            return $highestBid;
         }
-
+    
         // Otherwise, return the second highest bid amount + 1
-        return $secondHighestBid->amount + 1;
+        return $secondHighestBid + 1;
     }
 }

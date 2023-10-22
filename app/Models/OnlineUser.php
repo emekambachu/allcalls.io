@@ -51,12 +51,11 @@ class OnlineUser extends Model
         Log::debug('Entering scopeWithSufficientBalance method');
     
         return $query->whereHas('user', function ($query) use ($callType) {
-            
             Log::debug('Filtering by user relationship');
-            
+    
             $query->where(function ($query) {
                 Log::debug('Checking for internal agents');
-                
+    
                 // For internal agents, they should always have a balance of at least $35
                 $query->whereHas('roles', function ($subQuery) {
                     Log::debug('Filtering by roles for internal-agent');
@@ -65,26 +64,29 @@ class OnlineUser extends Model
             })->orWhere(function ($query) use ($callType) {
                 Log::debug('Checking for normal users');
     
-                // For normal users, determine the required minimum balance based on the bid below theirs for the specific call type
-                $userBid = DB::table('bids')
+                $allBids = DB::table('bids')
                     ->where('call_type_id', $callType->id)
-                    ->where('user_id', $query->getModel()->getAttribute('id'))
-                    ->value('amount');
+                    ->orderBy('amount', 'desc')
+                    ->get();
     
-                Log::debug("User bid for call type {$callType->id}: {$userBid}");
+                $userBid = $allBids->firstWhere('user_id', $query->getModel()->getAttribute('id'));
     
                 $minimumRequiredBalance = 35; // Default
     
-                if ($userBid !== null) {
-                    $lowerBid = DB::table('bids')
-                        ->where('call_type_id', $callType->id)
-                        ->where('amount', '<', $userBid)
-                        ->orderBy('amount', 'desc')
-                        ->value('amount');
+                if ($userBid) {
+                    if ($allBids->where('amount', $userBid->amount)->count() > 1) {
+                        $minimumRequiredBalance = $userBid->amount;
+                    } elseif ($userBid->amount > 35 && $allBids->where('amount', '>', 35)->count() < 2) {
+                        $minimumRequiredBalance = $allBids->count() == 1 ? 35 : 36;
+                    } else {
+                        $userBidIndex = $allBids->search(function ($bid) use ($userBid) {
+                            return $bid->id == $userBid->id;
+                        });
     
-                    Log::debug("Lower bid for call type {$callType->id}: {$lowerBid}");
-    
-                    $minimumRequiredBalance = $lowerBid ? ($lowerBid + 1) : 35;
+                        if (isset($allBids[$userBidIndex + 1])) {
+                            $minimumRequiredBalance = $allBids[$userBidIndex + 1]->amount + 1;
+                        }
+                    }
                 }
     
                 Log::debug("Minimum required balance for user: {$minimumRequiredBalance}");
@@ -96,6 +98,7 @@ class OnlineUser extends Model
             });
         });
     }
+    
 
     public function user()
     {
