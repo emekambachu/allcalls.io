@@ -28,6 +28,7 @@ use App\Http\Controllers\ActiveUsersPusherWebhookController;
 use App\Http\Controllers\TwilioAndroidAccessTokenController;
 use App\Http\Controllers\TwilioIOSAccessTokenGuestController;
 use App\Http\Controllers\TwilioAndroidAccessTokenGuestController;
+use App\Http\Controllers\TwilioIOSSandboxAccessTokenController;
 
 /*
 |--------------------------------------------------------------------------
