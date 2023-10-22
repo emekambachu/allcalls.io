@@ -19,6 +19,7 @@ use App\Rules\CallTypeIdEixst;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -102,7 +103,7 @@ class RegisteredUserController extends Controller
         if ($request->agentToken && AgentInvite::verify($request->agentToken)) {
             $user->markEmailAsVerified();
 
-            $agentRole = Role::whereName('internal-agent')->first(); 
+            $agentRole = Role::whereName('internal-agent')->first();
             $user->roles()->attach($agentRole->id);
         }
 
@@ -191,7 +192,7 @@ class RegisteredUserController extends Controller
                 },
                 new CallTypeIdEixst('call_types', 'id')
             ],
-            'typesWithStates.*' => ['nullable','array', 'exists:states,id'],
+            'typesWithStates.*' => ['nullable', 'array', 'exists:states,id'],
             'bids' => 'required|array',
         ]);
 
@@ -208,15 +209,21 @@ class RegisteredUserController extends Controller
 
         $user = $request->user();
 
+        Log::debug('All bids that were passed:', ['bids' => $request->bids]);
+        
         foreach ($request->bids as $bid) {
-            // Ensure that the bid amount is greater than or equal to 35
-            $amount = max((float) $bid['amount'], 35.0);
+            // Check if the call type is selected by the user in typesWithStates
+            if (isset($request->typesWithStates[$bid['call_type_id']])) {
+                Log::debug('Call type id found and adding or updating it \'s bid for new user', ['call_type_id' => $bid['call_type_id'], 'user_id' => $user->id]);
+                // Ensure that the bid amount is greater than or equal to 35
+                $amount = max((float) $bid['amount'], 35.0);
 
-            Bid::updateOrCreate([
-                'call_type_id' => $bid['call_type_id'],
-                'amount' => $amount,
-                'user_id' => $user->id,
-            ]);
+                Bid::updateOrCreate([
+                    'call_type_id' => $bid['call_type_id'],
+                    'amount' => $amount,
+                    'user_id' => $user->id,
+                ]);
+            }
         }
         // Initialize an empty array to hold the data
         $data = [];
