@@ -216,7 +216,7 @@ class RegisteredUserController extends Controller
         
         foreach ($request->bids as $bid) {
             // Check if the call type is selected by the user in typesWithStates
-            if (isset($request->typesWithStates[$bid['call_type_id']])) {
+            if (isset($request->typesWithStates[$bid['call_type_id']]) && sizeof($request->typesWithStates[$bid['call_type_id']]) >= 1) {
                 Log::debug('Call type id found and adding or updating it \'s bid for new user', ['call_type_id' => $bid['call_type_id'], 'user_id' => $user->id]);
                 // Ensure that the bid amount is greater than or equal to 35
                 $amount = max((float) $bid['amount'], 35.0);
