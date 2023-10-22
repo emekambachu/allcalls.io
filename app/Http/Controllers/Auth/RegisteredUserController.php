@@ -210,6 +210,9 @@ class RegisteredUserController extends Controller
         $user = $request->user();
 
         Log::debug('All bids that were passed:', ['bids' => $request->bids]);
+        Log::debug('Types with states: ', [
+            'typesWithStates' => $request->typesWithStates
+        ]);
         
         foreach ($request->bids as $bid) {
             // Check if the call type is selected by the user in typesWithStates
