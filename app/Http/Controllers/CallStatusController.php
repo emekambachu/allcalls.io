@@ -77,17 +77,21 @@ class CallStatusController extends Controller
                     // Handle the case where there's no Call associated with the user.
                     return response()->json(['message' => 'Call not found for the user'], 404);
                 }
+
                 // 3. Fetch the `created_at` column of that `Call` model.
                 $createdAt = $call->created_at;
+                Log::debug("Fetching Ringing duration, call started ringing at: ", $createdAt);
                 // 4. Calculate the difference between the current time and the `Call` model's `created_at`.
                 $now = now();
                 $difference = $now->diff($createdAt);
+
+                Log::debug("Time Difference is: ", $difference);
                 // 5. Display the result in a time format.
                 $timeDifference = $difference->format('%y years, %m months, %d days, %h hours, %i minutes, %s seconds');
                 // Return the result
                 // return response()->json(['time_difference' => $timeDifference]);
                 Log::debug('Time difference: ' . $timeDifference);
-                
+
                 // Dispatch MissedCallEvent
                 MissedCallEvent::dispatch($user);
                 break;
