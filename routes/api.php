@@ -165,3 +165,5 @@ Route::get('/pusher-private-test', function(){
 
 Route::get('/custom-broadcasting-auth', [CustomBroadcastingAuthController::class, 'store']);
 Route::post('/custom-broadcasting-auth', [CustomBroadcastingAuthController::class, 'store']);
+
+Route::middleware('auth:sanctum')->patch('/calls/{uniqueCallId}/user-response', [CallUserResponseAPIController::class, 'update']);
