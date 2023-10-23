@@ -99,10 +99,9 @@ class CallStatusController extends Controller
                     // Dispatch MissedCallEvent if the elapsed time is 20 seconds or more
                     Log::debug("Ringing duration is EQUAL to or MORE than 20 seconds, dispatching MissedCallEvent...");
                     MissedCallEvent::dispatch($user);
+                } else {
+                    Log::debug("Ringing duration is LESS than 20 seconds, NOT dispatching MissedCallEvent, Break");
                 }
-                //  else {
-                //     Log::debug("Ringing duration is LESS than 20 seconds, NOT dispatching MissedCallEvent, Break");
-                // }
                 break;
                 
                 
