@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bid;
 use App\Models\User;
 use Inertia\Inertia;
 use App\Models\State;
@@ -15,6 +16,15 @@ class TakeCallsController extends Controller
     {
         $callTypes = $this->getCallTypesForUser($request->user());
         $onlineCallType = $this->getOnlineCallTypeForUser($request->user());
+
+        $callTypes->map(function ($callType) use ($request) {
+            $bid = Bid::getForUserAndCallType($request->user(), $callType);
+
+            $callType->bid = $bid ?? null;
+            $callType->bidAmount = $bid ? $bid->amount : null;
+
+            return $callType;
+        });
 
         return Inertia::render('TakeCalls/Show', compact('callTypes', 'onlineCallType'));
     }

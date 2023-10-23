@@ -37,9 +37,19 @@ let callTypesWithToggles = ref(
   props.callTypes
     .filter((callType) => callType.selected)
     .map((callType) => {
-      return { callType: callType, toggle: false };
+      return { callType: callType, toggle: false, bidAmount: Number(callType.bidAmount) };
     })
 );
+
+let openedEditMenus = reactive([]);
+
+let openEditMenu = (callTypeId) => {
+  openedEditMenus.push(Number(callTypeId));
+};
+
+let closeEditMenu = (callTypeId) => {
+  openedEditMenus.splice(openedEditMenus.indexOf(Number(callTypeId)), 1);
+}
 
 let userCallTypesToggles = ref(
   props.callTypes
@@ -120,30 +130,105 @@ watchEffect(async () => {
         <!-- List here -->
         <div>
           <h1 class="text-2xl font-bold mb-4 text-gray-700">Verticals</h1>
-          <ul class="max-w-md divide-y divide-gray-200 mb-8">
+          <!-- Call Types and Bids List -->
+          <ul>
             <li
               v-for="callType in callTypesWithToggles"
               :key="callType.callType.id"
-              class="py-3 sm:py-4 flex items-center justify-between"
+              class="py-3 sm:py-4"
             >
-              <!-- Title on the left -->
-              <p
-                class="text-xl text-gray-900"
-                v-text="callType.callType.type"
-              ></p>
+              <div class="flex items-center justify-between">
+                <!-- Call Type Title on the left -->
+                <p
+                  class="text-xl text-gray-900 font-medium"
+                  v-text="callType.callType.type"
+                ></p>
 
-              <!-- Toggle on the right -->
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  v-model="callType.toggle"
-                  class="sr-only peer"
-                  @change="toggled($event, callType.callType)"
-                />
+                <!-- Toggle and Bids on the right -->
+                <div class="flex items-center space-x-4">
+                  <!-- Toggle Button -->
+                  <label
+                    class="relative inline-flex items-center cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      v-model="callType.toggle"
+                      class="sr-only peer"
+                      @change="toggled($event, callType.callType)"
+                    />
+                    <div
+                      class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"
+                    ></div>
+                  </label>
+                </div>
+              </div>
+
+              <div class="flex items-center mt-2 mb-2">
+                <h4 class="text-gray-800 text-sm text-bold mr-1 font-medium">
+                  Your Bid:
+                </h4>
                 <div
-                  class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"
-                ></div>
-              </label>
+                  class="text-gray-600 hover:text-gray-800 cursor-pointer text-sm rounded-md flex"
+                >
+                  <div class="mr-2">${{ callType.bidAmount }}</div>
+
+                  <svg
+                    @click.prevent="openEditMenu(callType.callType.id)"
+                    v-if="!openedEditMenus.includes(callType.callType.id)"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-4 h-4"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+                    />
+                  </svg>
+                  <svg
+                    v-if="openedEditMenus.includes(callType.callType.id)"
+                    @click.prevent="closeEditMenu(callType.callType.id)"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-4 h-4"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M4.5 12.75l6 6 9-13.5"
+                    />
+                  </svg>
+                </div>
+              </div>
+
+              <div v-if="openedEditMenus.includes(callType.callType.id)" class="flex items-center mt-2 mb-2">
+                <input
+                  v-on:keyup.enter="closeEditMenu(callType.callType.id)"
+                  type="number"
+                  class="border-gray-400 rounded-lg font-xs mr-2 py-1 px-2 text-sm bg-sky"
+                  v-model="callType.bidAmount"
+                />
+              </div>
+
+              <div class="flex items-center mt-2 mb-2">
+                <h4 class="text-gray-800 text-sm text-bold mr-1 font-medium">
+                  Top Bid:
+                </h4>
+                <p class="text-gray-600 text-sm rounded-md">$35.00</p>
+              </div>
+
+              <div class="flex items-center mt-2 mb-2">
+                <h4 class="text-gray-800 text-sm text-bold mr-1 font-medium">
+                  Average Bid:
+                </h4>
+                <p class="text-gray-600 text-sm rounded-md">$35.00</p>
+              </div>
             </li>
           </ul>
         </div>
