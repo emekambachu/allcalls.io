@@ -40,10 +40,10 @@ let fetchCalls = (page) => {
 };
 
 let showModal = ref(false);
-let callDetail = ref(null);
+let selectedCall = ref(null);
 
 let openClientModal = (call) => {
-  callDetail.value = call;
+  selectedCall.value = call;
   showModal.value = true;
 };
 </script>
@@ -216,10 +216,11 @@ let openClientModal = (call) => {
                     <Menu as="div" class="relative inline-block text-left">
                       <div>
                         <MenuButton
-                          class="inline-flex justify-center rounded-md px-4 py-2"
+                          class="inline-flex justify-center rounded-md px-4 py-2 relative"
+                          style="z-index: 1;"
                         >
                           <svg
-                            class="w-6 h-6 text-gray-800"
+                            class="w-3 h-3 text-gray-800"
                             aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg"
                             fill="currentColor"
@@ -242,99 +243,48 @@ let openClientModal = (call) => {
                       >
                         <MenuItems
                           class="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                          style="z-index: 10;"
                         >
                           <div class="px-1 py-1">
                             <MenuItem v-slot="{ active }">
                               <button
                                 :class="[
                                   active
-                                    ? 'bg-violet-500 text-white'
+                                    ? 'bg-sky-900 text-white'
                                     : 'text-gray-900',
-                                  'group flex w-full items-center rounded-md px-2 py-2 text-sm',
+                                  'group flex w-full items-center rounded-md py-2 px-2 text-xs',
                                 ]"
+                                @click.prevent="openClientModal(call)"
                               >
-                                <EditIcon
-                                  :active="active"
-                                  class="mr-2 h-5 w-5 text-violet-400"
-                                  aria-hidden="true"
-                                />
-                                Edit
+                                Open Client Details
                               </button>
                             </MenuItem>
                             <MenuItem v-slot="{ active }">
                               <button
                                 :class="[
                                   active
-                                    ? 'bg-violet-500 text-white'
+                                    ? 'bg-sky-900 text-white'
                                     : 'text-gray-900',
-                                  'group flex w-full items-center rounded-md px-2 py-2 text-sm',
+                                  'group flex w-full items-center rounded-md py-2 px-2 text-xs',
                                 ]"
                               >
-                                <DuplicateIcon
-                                  :active="active"
-                                  class="mr-2 h-5 w-5 text-violet-400"
-                                  aria-hidden="true"
-                                />
-                                Duplicate
-                              </button>
-                            </MenuItem>
-                          </div>
-                          <div class="px-1 py-1">
-                            <MenuItem v-slot="{ active }">
-                              <button
-                                :class="[
-                                  active
-                                    ? 'bg-violet-500 text-white'
-                                    : 'text-gray-900',
-                                  'group flex w-full items-center rounded-md px-2 py-2 text-sm',
-                                ]"
-                              >
-                                <ArchiveIcon
-                                  :active="active"
-                                  class="mr-2 h-5 w-5 text-violet-400"
-                                  aria-hidden="true"
-                                />
-                                Archive
+                                Open User Details
                               </button>
                             </MenuItem>
                             <MenuItem v-slot="{ active }">
                               <button
                                 :class="[
                                   active
-                                    ? 'bg-violet-500 text-white'
+                                    ? 'bg-sky-900 text-white'
                                     : 'text-gray-900',
-                                  'group flex w-full items-center rounded-md px-2 py-2 text-sm',
+                                  'group flex w-full items-center rounded-md py-2 px-2 text-xs',
                                 ]"
                               >
-                                <MoveIcon
-                                  :active="active"
-                                  class="mr-2 h-5 w-5 text-violet-400"
-                                  aria-hidden="true"
-                                />
-                                Move
+                                Open Call Details
                               </button>
                             </MenuItem>
                           </div>
 
-                          <div class="px-1 py-1">
-                            <MenuItem v-slot="{ active }">
-                              <button
-                                :class="[
-                                  active
-                                    ? 'bg-violet-500 text-white'
-                                    : 'text-gray-900',
-                                  'group flex w-full items-center rounded-md px-2 py-2 text-sm',
-                                ]"
-                              >
-                                <DeleteIcon
-                                  :active="active"
-                                  class="mr-2 h-5 w-5 text-violet-400"
-                                  aria-hidden="true"
-                                />
-                                Delete
-                              </button>
-                            </MenuItem>
-                          </div>
                         </MenuItems>
                       </transition>
                     </Menu>
@@ -431,12 +381,9 @@ let openClientModal = (call) => {
     </section>
 
     <Modal :show="showModal" @close="showModal = false">
-      <ClientDetailsModal
-        :showModal="showModal"
-        :callDetail="callDetail"
-        :states="states"
-        @close="showModal = false"
-      ></ClientDetailsModal>
+      <div>
+        <!-- {{ selectedCall }} -->
+      </div>
     </Modal>
   </AuthenticatedLayout>
 </template>
