@@ -175,7 +175,7 @@ watchEffect(async () => {
                 </div>
               </div>
 
-              <div class="flex items-center mt-2 mb-2">
+              <div v-if="page.props.auth.role !== 'internal-agent'" class="flex items-center mt-2 mb-2">
                 <h4 class="text-gray-800 text-sm text-bold mr-1 font-medium">
                   Your Bid:
                 </h4>
@@ -203,7 +203,7 @@ watchEffect(async () => {
                 </div>
               </div>
 
-              <div v-if="openedEditMenus.includes(callType.callType.id)" class="flex items-center mt-2 mb-2">
+              <div v-if="page.props.auth.role !== 'internal-agent' && openedEditMenus.includes(callType.callType.id)" class="flex items-center mt-2 mb-2">
                 <input
                   v-on:keyup.enter="closeEditMenu(callType.callType.id)"
                   type="number"
@@ -215,14 +215,14 @@ watchEffect(async () => {
                 <button class="px-2 py-0.5 text-sm rounded" @click="cancelEditMenu(callType.callType.id)">Cancel</button>
               </div>
 
-              <div class="flex items-center mt-2 mb-2">
+              <div v-if="page.props.auth.role !== 'internal-agent'" class="flex items-center mt-2 mb-2">
                 <h4 class="text-gray-800 text-sm text-bold mr-1 font-medium">
                   Top Bid:
                 </h4>
                 <p class="text-gray-600 text-sm rounded-md">${{ callType.topBid }}</p>
               </div>
 
-              <div class="flex items-center mt-2 mb-2">
+              <div v-if="page.props.auth.role !== 'internal-agent'" class="flex items-center mt-2 mb-2">
                 <h4 class="text-gray-800 text-sm text-bold mr-1 font-medium">
                   Average Bid:
                 </h4>
