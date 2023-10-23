@@ -49,6 +49,12 @@ let openEditMenu = (callTypeId) => {
 
 let closeEditMenu = (callTypeId) => {
   openedEditMenus.splice(openedEditMenus.indexOf(Number(callTypeId)), 1);
+  router.visit('/web-api/bids/' + callTypeId, {
+    method: "PATCH",
+    data: {
+      amount: callTypesWithToggles.value.find((callType) => callType.callType.id === callTypeId).bidAmount,
+    },
+  });
 }
 
 let userCallTypesToggles = ref(

@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\CallUserResponseAPIController;
-use App\Http\Controllers\AgentStatusPriceDocsController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
@@ -19,6 +17,7 @@ use App\Http\Controllers\TakeCallsController;
 use App\Http\Controllers\StripeTestController;
 use App\Http\Controllers\DefaultCardController;
 use App\Http\Controllers\TwilioTokenController;
+use App\Http\Controllers\CallTypeBidsController;
 use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\UsageActivityController;
 use App\Http\Controllers\WebAPIClientsController;
@@ -27,6 +26,8 @@ use App\Http\Controllers\AdditionalFilesController;
 use App\Http\Controllers\AgentStatusDocsController;
 use App\Http\Controllers\TwilioDeviceTokenController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\CallUserResponseAPIController;
+use App\Http\Controllers\AgentStatusPriceDocsController;
 use App\Http\Controllers\TakeCallsOnlineUsersController;
 
 /*
@@ -127,8 +128,8 @@ Route::get('/device/incoming', function () {
 Route::get('/clients', [ClientsController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.index');
 Route::patch('/clients/{client}', [ClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.update');
 Route::patch('/web-api/clients/{client}', [WebAPIClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.web-api.update');
-
 Route::patch('/web-api/calls/{uniqueCallId}/user-response', [CallUserResponseAPIController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check']);
+Route::patch('/web-api/bids/{callType}', [CallTypeBidsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check']);
 
 Route::get('/support', [SupportController::class, 'index'])->name('support.index');
 
