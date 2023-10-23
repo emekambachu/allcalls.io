@@ -212,7 +212,7 @@ let submit = () => {
         <div class="mt-4">
           <GuestInputLabel for="phone" value="Phone" />
 
-          <GuestTextInput id="phone" type="text" class="mt-1 block w-full" v-model="form.phone" minlength="10" />
+          <GuestTextInput id="phone" type="text" placeholder="+1 (000) 000-0000" class="mt-1 block w-full" v-model="form.phone" minlength="10" />
 
           <!-- <InputError class="mt-2" :message="form.errors.phone" /> -->
           <div v-if="firstStepErrors.phone" class="text-red-500" v-text="firstStepErrors.phone[0]"></div>
