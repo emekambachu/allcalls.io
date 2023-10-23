@@ -14,8 +14,18 @@ class CallTypeBidsController extends Controller
             'amount' => 'required|numeric|min:35'
         ]);
 
-        Bid::getForUserAndCallType($request->user(), $callType)
-            ->update(['amount' => $request->amount]);
+        $bid = Bid::getForUserAndCallType($request->user(), $callType);
+
+        if ($bid) {
+            $bid->update(['amount' => $request->amount]);
+        } else {
+            // Create a new bid
+            Bid::create([
+                'user_id' => $request->user()->id,
+                'call_type_id' => $callType->id,
+                'amount' => $request->amount
+            ]);
+        }
 
         return redirect()->back()->with(['message' => 'Bid updated successfully for vertical ' . $callType->type]);
     }
