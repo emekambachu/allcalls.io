@@ -212,22 +212,24 @@ let openClientModal = (call) => {
                     <span v-else>_</span>
                   </td>
                   <td class="text-gray-700 px-4 py-3">
-
                     <Menu as="div" class="relative inline-block text-left">
                       <div>
                         <MenuButton
                           class="inline-flex justify-center rounded-md px-4 py-2 relative"
-                          style="z-index: 1;"
+                          style="z-index: 1"
                         >
                           <svg
-                            class="w-3 h-3 text-gray-800"
+                            class="w-4 h-4 text-gray-800 dark:text-white"
                             aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg"
-                            fill="currentColor"
-                            viewBox="0 0 4 15"
+                            fill="none"
+                            viewBox="0 0 17 4"
                           >
                             <path
-                              d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-width="2"
+                              d="M2.49 2h.01m6 0h.01m5.99 0h.01"
                             />
                           </svg>
                         </MenuButton>
@@ -243,7 +245,7 @@ let openClientModal = (call) => {
                       >
                         <MenuItems
                           class="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                          style="z-index: 10;"
+                          style="z-index: 10"
                         >
                           <div class="px-1 py-1">
                             <MenuItem v-slot="{ active }">
@@ -284,7 +286,6 @@ let openClientModal = (call) => {
                               </button>
                             </MenuItem>
                           </div>
-
                         </MenuItems>
                       </transition>
                     </Menu>
