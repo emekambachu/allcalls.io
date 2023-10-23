@@ -94,6 +94,7 @@ class CallStatusController extends Controller
             
                 // Check the difference in seconds
                 $elapsedSeconds = $now->getTimestamp() - $createdAt->getTimestamp();
+                Log::debug($elapsedSeconds);
                 if ($elapsedSeconds >= 20) {
                     // Dispatch MissedCallEvent if the elapsed time is 20 seconds or more
                     Log::debug("Ringing duration is EQUAL to or MORE than 20 seconds, dispatching MissedCallEvent...");
