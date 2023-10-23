@@ -104,7 +104,7 @@ let submit = () => {
             toaster("error", error.response.data.message);
             router.visit('/')
           }
-        } 
+        }
       });
   }
   else {
@@ -222,7 +222,7 @@ let StepChange = (val) => {
         <div class="mt-4">
           <GuestInputLabel for="phone" value="Phone" />
 
-          <GuestTextInput id="phone" type="text" class="mt-1 block w-full" v-model="form.phone" minlength="10" />
+          <GuestTextInput id="phone" type="text" placeholder="+1 (000) 000-0000" class="mt-1 block w-full" v-model="form.phone" minlength="10" />
 
           <div v-if="firstStepErrors.phone" class="text-red-500" v-text="firstStepErrors.phone[0]"></div>
         </div>
@@ -265,7 +265,7 @@ let StepChange = (val) => {
           </button>
         </div>
       </div>
-     
+
     </form>
 
     <template v-slot:titles>

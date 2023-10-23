@@ -28,6 +28,7 @@ use App\Http\Controllers\ActiveUsersPusherWebhookController;
 use App\Http\Controllers\TwilioAndroidAccessTokenController;
 use App\Http\Controllers\TwilioIOSAccessTokenGuestController;
 use App\Http\Controllers\TwilioAndroidAccessTokenGuestController;
+use App\Http\Controllers\TwilioIOSSandboxAccessTokenController;
 
 /*
 |--------------------------------------------------------------------------
@@ -133,6 +134,7 @@ Route::post('/active-users-pusher-webhook', [ActiveUsersPusherWebhookController:
 
 Route::get('/twilio-ios-access-token-guest', [TwilioIOSAccessTokenGuestController::class, 'show']);
 Route::middleware('auth:sanctum')->get('/twilio-ios-access-token', [TwilioIOSAccessTokenController::class, 'show']);
+Route::middleware('auth:sanctum')->get('/twilio-ios-sandbox-access-token', [TwilioIOSSandboxAccessTokenController::class, 'show']);
 Route::middleware('auth:sanctum')->get('/twilio-android-access-token', [TwilioAndroidAccessTokenController::class, 'show']);
 Route::middleware('auth:sanctum')->get('/twilio-android-access-token-guest', [TwilioAndroidAccessTokenGuestController::class, 'show']);
 
@@ -163,3 +165,5 @@ Route::get('/pusher-private-test', function(){
 
 Route::get('/custom-broadcasting-auth', [CustomBroadcastingAuthController::class, 'store']);
 Route::post('/custom-broadcasting-auth', [CustomBroadcastingAuthController::class, 'store']);
+
+Route::middleware('auth:sanctum')->patch('/calls/{uniqueCallId}/user-response', [CallUserResponseAPIController::class, 'update']);

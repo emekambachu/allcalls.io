@@ -63,6 +63,12 @@ class CallStatusController extends Controller
                 Log::debug('Device token was not found for user_id ' . $user->id);
                 break;
 
+            case 'busy':
+                Log::debug('busy event for user ' . $request->user_id);
+                // Dispatch MissedCallEvent
+                MissedCallEvent::dispatch($user);
+                break;
+
             case 'no-answer':
                 Log::debug('no-answer event for user ' . $request->user_id);
                 // Dispatch MissedCallEvent
