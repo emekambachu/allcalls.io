@@ -23,6 +23,18 @@ class TakeCallsController extends Controller
             $callType->bid = $bid ?? null;
             $callType->bidAmount = $bid ? $bid->amount : null;
 
+            // Fetch the highest bid amount for this call type
+            $topBid = Bid::where('call_type_id', $callType->id)
+                ->orderBy('amount', 'desc')
+                ->first();
+
+            $callType->topBid = $topBid ? $topBid->amount : null;
+
+            // Fetch the average bid amount for this call type
+            $averageBid = Bid::where('call_type_id', $callType->id)
+                ->avg('amount');
+            $callType->averageBid = number_format($averageBid, 2, '.', '');
+
             return $callType;
         });
 
@@ -39,7 +51,7 @@ class TakeCallsController extends Controller
             $firstId = $firstRecord->id; // Get the ID of the first record.
             OnlineUser::where('user_id', $user->id)->where('id', '!=', $firstId)->delete();
         }
-        
+
         return ($count >= 1) ? $onlineCallTypes[0] : null;
     }
 

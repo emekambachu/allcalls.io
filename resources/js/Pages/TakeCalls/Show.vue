@@ -10,6 +10,8 @@ let props = defineProps({
   onlineCallType: Object,
 });
 
+console.log(props.callTypes);
+
 let setupFlashMessages = () => {
   console.log(page.props.flash);
   if (page.props.flash.message) {
@@ -37,7 +39,7 @@ let callTypesWithToggles = ref(
   props.callTypes
     .filter((callType) => callType.selected)
     .map((callType) => {
-      return { callType: callType, toggle: false, bidAmount: Number(callType.bidAmount) };
+      return { callType: callType, toggle: false, bidAmount: Number(callType.bidAmount), topBid: Number(callType.topBid), averageBid: Number(callType.averageBid) };
     })
 );
 
@@ -226,14 +228,14 @@ watchEffect(async () => {
                 <h4 class="text-gray-800 text-sm text-bold mr-1 font-medium">
                   Top Bid:
                 </h4>
-                <p class="text-gray-600 text-sm rounded-md">$35.00</p>
+                <p class="text-gray-600 text-sm rounded-md">${{ callType.topBid }}</p>
               </div>
 
               <div class="flex items-center mt-2 mb-2">
                 <h4 class="text-gray-800 text-sm text-bold mr-1 font-medium">
                   Average Bid:
                 </h4>
-                <p class="text-gray-600 text-sm rounded-md">$35.00</p>
+                <p class="text-gray-600 text-sm rounded-md">${{ callType.averageBid }}</p>
               </div>
             </li>
           </ul>
