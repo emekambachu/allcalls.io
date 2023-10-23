@@ -69,34 +69,32 @@ class CallStatusController extends Controller
                 MissedCallEvent::dispatch($user);
                 break;
 
-                case 'no-answer':
-                    Log::debug('no-answer event for user ' . $request->user_id);
-                    
-                    $call = Call::where('unique_call_id', $request->unique_call_id)->first();
-                    if (!$call) {
-                        // Handle the case where there's no Call associated with the user.
-                        return response()->json(['message' => 'Call not found for the user'], 404);
-                    }
+            case 'no-answer':
+                Log::debug('no-answer event for user ' . $request->user_id);
+
+                $call = Call::where('unique_call_id', $request->unique_call_id)->first();
+                if (!$call) {
+                    // Handle the case where there's no Call associated with the user.
+                    return response()->json(['message' => 'Call not found for the user'], 404);
+                }
                 
-                    // 3. Fetch the `created_at` column of that `Call` model.
-                    $createdAt = $call->created_at;
-                    Log::debug("Fetching Ringing duration, call started ringing at: " . $createdAt);
-                    
-                    // 4. Calculate the difference between the current time and the `Call` model's `created_at`.
-                    $now = now();
-                    $difference = $now->diff($createdAt);
+                // Fetch the `created_at` column of that `Call` model.
+                $createdAt = $call->created_at;
+                Log::debug("Fetching Ringing duration, call started ringing at: " . $createdAt);
                 
-                    Log::debug("Time Difference is: " . $difference->format('%y years, %m months, %d days, %h hours, %i minutes, %s seconds'));
+                // Calculate the difference between the current time and the `Call` model's `created_at`.
+                $now = now();
+                $differenceInSeconds = $this->getTimeDifferenceInSeconds($now, $createdAt);
+                Log::debug("Time Difference in seconds is: " . $differenceInSeconds);
                 
-                    // 5. Display the result in a time format.
-                    $timeDifference = $difference->format('%y years, %m months, %d days, %h hours, %i minutes, %s seconds');
-                    
-                    // Log the result
-                    Log::debug('Time difference: ' . $timeDifference);
-                
-                    // Dispatch MissedCallEvent
+                // Fire the event only if the difference is 20 seconds or more.
+                if ($differenceInSeconds >= 20) {
+                    Log::debug("Ringing duration is equal to or more than 20 seconds, dispatching MissedCallEvent");
                     MissedCallEvent::dispatch($user);
-                    break;
+                } else {
+                    Log::debug("Ringing duration LESS than 20 seconds, NOT dispatching MissedCallEvent, break");
+                }
+                break;
                 
             case 'completed':
                 Log::debug('completed event for user ' . $request->user_id);
@@ -194,5 +192,9 @@ class CallStatusController extends Controller
         }
 
         return;
+    }
+
+    public function getTimeDifferenceInSeconds($timeNow, $timeBefore) {
+        return $timeNow->diffInSeconds($timeBefore);
     }
 }
