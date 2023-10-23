@@ -77,24 +77,33 @@ class CallStatusController extends Controller
                     // Handle the case where there's no Call associated with the user.
                     return response()->json(['message' => 'Call not found for the user'], 404);
                 }
-
-                // 3. Fetch the `created_at` column of that `Call` model.
+            
+                // Fetch the `created_at` column of that `Call` model.
                 $createdAt = $call->created_at;
-                Log::debug("Fetching Ringing duration, call started ringing at: ", $createdAt);
-                // 4. Calculate the difference between the current time and the `Call` model's `created_at`.
+                Log::debug("Fetching Ringing duration, call started ringing at: " . $createdAt);
+                
+                // Calculate the difference between the current time and the `Call` model's `created_at`.
                 $now = now();
                 $difference = $now->diff($createdAt);
-
-                Log::debug("Time Difference is: ", $difference);
-                // 5. Display the result in a time format.
+            
+                // Display the result in a time format.
                 $timeDifference = $difference->format('%y years, %m months, %d days, %h hours, %i minutes, %s seconds');
-                // Return the result
-                // return response()->json(['time_difference' => $timeDifference]);
+                
+                // Log the result
                 Log::debug('Time difference: ' . $timeDifference);
-
-                // Dispatch MissedCallEvent
-                MissedCallEvent::dispatch($user);
+            
+                // Check the difference in seconds
+                $elapsedSeconds = $now->getTimestamp() - $createdAt->getTimestamp();
+                if ($elapsedSeconds >= 20) {
+                    // Dispatch MissedCallEvent if the elapsed time is 20 seconds or more
+                    Log::debug("Ringing duration is EQUAL to or MORE than 20 seconds, dispatching MissedCallEvent...");
+                    MissedCallEvent::dispatch($user);
+                } else {
+                    Log::debug("Ringing duration is LESS than 20 seconds, NOT dispatching MissedCallEvent, Break");
+                }
                 break;
+                
+                
 
             case 'completed':
                 Log::debug('completed event for user ' . $request->user_id);
