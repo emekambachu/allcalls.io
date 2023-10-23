@@ -72,7 +72,7 @@ class CallStatusController extends Controller
             case 'no-answer':
                 Log::debug('no-answer event for user ' . $request->user_id);
                 
-                $call = $user->call;
+                $call = Call::where('unique_call_id', $request->unique_call_id)->first();
                 if (!$call) {
                     // Handle the case where there's no Call associated with the user.
                     return response()->json(['message' => 'Call not found for the user'], 404);
