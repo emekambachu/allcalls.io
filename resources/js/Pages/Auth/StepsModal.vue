@@ -280,7 +280,6 @@ let submit = () => {
                             class="bg-custom-gray border-none focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm pl-8 w-full"
                             placeholder="35.00"
                             v-model="form.bids[index].amount"
-                            disabled
                           />
                         </div>
                       </div>
