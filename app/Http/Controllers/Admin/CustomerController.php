@@ -138,6 +138,13 @@ class CustomerController extends Controller
         ]);
     }
 
+    public function destroy($id) {
+        User::where('id', $id)->delete();
+        return response()->json([
+            'success' =>  true,
+            'message' => 'User deleted successfully.'
+        ]);
+    }
     public function getUserCall($id)
     {
         $calls = Call::whereUserId($id)->with('user','getClient', 'callType')->paginate(10);
