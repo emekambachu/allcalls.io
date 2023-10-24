@@ -6,10 +6,15 @@
     let props = defineProps({
         deleteUserModal: Boolean,
         isLoading: Boolean,
+        confirmMessage:Object,
     });
-
+    console.log('confirmMessage', props.confirmMessage);
+    console.log('deleteUserModal', props.deleteUserModal);
     let close = () => {
         emits('close')
+    }
+    let actionToDeleteUser = () => {
+        emits('actionToDeleteUser')
     }
 </script>
 <style scoped>
@@ -95,9 +100,9 @@
                         </button>
                     </div>
                     <div class="px-12 py-2">
-                        <h1 class="text-gray-800 text-2xl font-bold">Delete User</h1>
+                        <h1 class="text-gray-800 text-2xl font-bold">{{ confirmMessage.heading }}</h1>
                         <div class="mt-2 mb-2 text-sm">
-                            Are you sure you want to delete this user?
+                            {{ confirmMessage.confirm }}
                         </div>
                         <div class=" mb-3">
                             <div class="flex justify-end">
@@ -108,7 +113,7 @@
                                 <div class="mt-4">
                                     <button type="button" @click="actionToDeleteUser" :class="{ 'opacity-25': isLoading }"
                                             :disabled="isLoading" class="button-custom px-3 py-2 rounded-md flex items-center">
-                                        <global-spinner :spinner="isLoading" /> yes
+                                        <global-spinner :spinner="isLoading" /> yes 
                                     </button>
                                 </div>
                             </div>

@@ -6,8 +6,8 @@ import { ref } from "vue";
 import { toaster } from "@/helper.js";
 import Modal from "@/Components/Modal.vue";
 import SearchFilter from "@/Components/SearchFilter.vue";
-import InvitesModal from "@/Pages/Admin/User/Delete.vue";
-
+import DeleteModal from "@/Components/DeleteModal.vue";
+import Delete from "@/Pages/Admin/User/Delete.vue";
 let page = usePage();
 if (page.props.flash.message) {
   toaster("success", page.props.flash.message);
@@ -37,7 +37,7 @@ let props = defineProps({
   callTypes: Array,
   states: Array,
   roles: {
-    type:Object,
+    type: Object,
   },
 });
 
@@ -114,18 +114,24 @@ let capitalizeAndReplaceUnderscore = (str) => {
 
   return result;
 };
-
-let deleteUser = () => {
-    deleteUserModal.value = true
+let confirmMessage = ref(null)
+let deleteUser = (user_id) => {
+   confirmMessage.value = {
+    heading: 'Delete User',
+    confirm: 'Are you sure you want to delete this user?',
+    user_id: user_id
+  }
+  deleteUserModal.value = true
 };
 
-let actionToDeleteUser = (user = null) => {
-    axios.delete(`/admin/customer/${user.id}`)
-        .then((res) => {
-            toaster("success", res.data.message)
-            router.visit('/admin/customers')
-        }).catch((error) => {
-        toaster("error", error.message)
+let actionToDeleteUser = () => {
+  axios.delete(`/admin/customer/${confirmMessage.value.user_id}`)
+    .then((res) => {
+      deleteUserModal.value = false
+      toaster("success", res.data.message)
+      router.visit('/admin/customers')
+    }).catch((error) => {
+      toaster("error", error.message)
     })
 }
 </script>
@@ -165,11 +171,7 @@ let actionToDeleteUser = (user = null) => {
                 </tr>
               </thead>
               <tbody>
-                <tr
-                  v-for="user in users.data"
-                  :key="user.id"
-                  class="border-b border-gray-500"
-                >
+                <tr v-for="user in users.data" :key="user.id" class="border-b border-gray-500">
                   <td class="text-gray-600 px-4 py-3">{{ user.id }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ user.first_name }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ user.last_name }}</td>
@@ -180,26 +182,23 @@ let actionToDeleteUser = (user = null) => {
                   <td class="text-gray-600 px-4 py-3">{{ user.phone }}</td>
                   <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
                     <a :href="route('admin.customer.detail', user.id)">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-5 h-5">
                         <path stroke-linecap="round" stroke-linejoin="round"
                           d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
                     </a>
-                    <button
-                      @click="openClientModal(user, users.current_page)"
+                    <button @click="openClientModal(user, users.current_page)"
                       class="inline-flex items-center mx-2 p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
-                      type="button"
-                    >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                      type="button">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-4 h-4">
                         <path stroke-linecap="round" stroke-linejoin="round"
                           d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                       </svg>
                     </button>
-                    <button @click="deleteUser">
+                    <button @click="deleteUser(user.id)">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-4 h-4 text-red-600 mr-1">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -213,8 +212,7 @@ let actionToDeleteUser = (user = null) => {
             <div class="p-4">
               <nav
                 class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
-                aria-label="Table navigation"
-              >
+                aria-label="Table navigation">
                 <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
                   Showing
                   <span class="font-semibold text-custom-blue">{{
@@ -227,54 +225,34 @@ let actionToDeleteUser = (user = null) => {
                 </span>
                 <ul class="inline-flex items-stretch -space-x-px cursor-pointer">
                   <li>
-                    <a
-                      v-if="users.prev_page_url"
-                      @click="fetchClients(users.prev_page_url)"
-                      class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-custom-white rounded-l-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white"
-                    >
+                    <a v-if="users.prev_page_url" @click="fetchClients(users.prev_page_url)"
+                      class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-custom-white rounded-l-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white">
                       <span class="sr-only">Previous</span>
-                      <svg
-                        class="w-5 h-5"
-                        aria-hidden="true"
-                        fill="currentColor"
-                        viewbox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          fill-rule="evenodd"
+                      <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
                           d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                          clip-rule="evenodd"
-                        />
+                          clip-rule="evenodd" />
                       </svg>
                     </a>
                   </li>
 
                   <li>
                     <a
-                      class="flex items-center justify-center text-sm py-2 px-3 leading-tight font-extrabold text-gray-500 bg-custom-white shadow-2xl hover:bg-sky-950 hover:shadow-2xl hover:text-white"
-                      >{{ users.current_page }}
+                      class="flex items-center justify-center text-sm py-2 px-3 leading-tight font-extrabold text-gray-500 bg-custom-white shadow-2xl hover:bg-sky-950 hover:shadow-2xl hover:text-white">{{
+                        users.current_page }}
                     </a>
                   </li>
 
                   <li>
-                    <a
-                      v-if="users.next_page_url"
-                      @click="fetchClients(users.next_page_url)"
-                      class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-custom-white rounded-r-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white"
-                    >
+                    <a v-if="users.next_page_url" @click="fetchClients(users.next_page_url)"
+                      class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-custom-white rounded-r-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white">
                       <span class="sr-only">Next</span>
-                      <svg
-                        class="w-5 h-5"
-                        aria-hidden="true"
-                        fill="currentColor"
-                        viewbox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          fill-rule="evenodd"
+                      <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
                           d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                          clip-rule="evenodd"
-                        />
+                          clip-rule="evenodd" />
                       </svg>
                     </a>
                   </li>
@@ -290,17 +268,10 @@ let actionToDeleteUser = (user = null) => {
       <p class="text-center text-gray-600">No clients yet.</p>
     </section>
     <Modal :show="showModal" @close="showModal = false">
-      <Edit
-        :showModal="showModal"
-        :userDetail="userDetail"
-        :currentPage="currentPage"
-        @close="showModal = false"
-        :callTypes="callTypes"
-        :states="states"
-        :roles="roles"
-        :route="'/admin/customer'"
-      ></Edit>
+      <Edit :showModal="showModal" :userDetail="userDetail" :currentPage="currentPage" @close="showModal = false"
+        :callTypes="callTypes" :states="states" :roles="roles" :route="'/admin/customer'"></Edit>
     </Modal>
+    <DeleteModal @actionToDeleteUser="actionToDeleteUser" :deleteUserModal="deleteUserModal" @close="deleteUserModal = false" :confirmMessage="confirmMessage" />
   </AuthenticatedLayout>
 </template>
 

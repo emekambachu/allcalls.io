@@ -142,7 +142,7 @@ class CustomerController extends Controller
 
     public function destroy($id) {
         $user = User::findOrFail($id);
-
+        
         Card::where('user_id', $user->id)->delete();
         UserCallTypeState::where('user_id', $user->id)->delete();
         Transaction::where('user_id', $user->id)->delete();
