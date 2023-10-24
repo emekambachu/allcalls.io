@@ -17,6 +17,10 @@ let setupFlashMessages = () => {
   if (page.props.flash.message) {
     toaster("success", page.props.flash.message);
   }
+
+  if (page.props.errors.balance) {
+    toaster("error", page.props.errors.balance);
+  }
 };
 let setOnlineCallType = () => {
   callTypesWithToggles.value.map((type) => {
