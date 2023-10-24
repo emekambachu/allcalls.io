@@ -15,6 +15,12 @@ class TakeCallsOnlineUsersController extends Controller
             'call_type_id' => 'required'
         ]);
 
+        if ($request->user()->balance < 35) {
+            return redirect()->back()->withErrors([
+                'balance' => 'You must have at least $35 in your account to take calls.'
+            ]);
+        }
+
         // Retrieve the authenticated user's ID
         $userId = $request->user()->id;
 
