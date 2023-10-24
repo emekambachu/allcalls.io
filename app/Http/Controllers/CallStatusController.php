@@ -71,9 +71,40 @@ class CallStatusController extends Controller
 
             case 'no-answer':
                 Log::debug('no-answer event for user ' . $request->user_id);
-                // Dispatch MissedCallEvent
-                MissedCallEvent::dispatch($user);
+                
+                $call = Call::where('unique_call_id', $request->unique_call_id)->first();
+                if (!$call) {
+                    // Handle the case where there's no Call associated with the user.
+                    return response()->json(['message' => 'Call not found for the user'], 404);
+                }
+            
+                // Fetch the `created_at` column of that `Call` model.
+                $createdAt = $call->created_at;
+                Log::debug("Fetching Ringing duration, call started ringing at: " . $createdAt);
+                
+                // Calculate the difference between the current time and the `Call` model's `created_at`.
+                $now = now();
+                $difference = $now->diff($createdAt);
+            
+                // Display the result in a time format.
+                $timeDifference = $difference->format('%y years, %m months, %d days, %h hours, %i minutes, %s seconds');
+                
+                // Log the result
+                Log::debug('Time difference: ' . $timeDifference);
+            
+                // Check the difference in seconds
+                $elapsedSeconds = $now->getTimestamp() - $createdAt->getTimestamp();
+                Log::debug($elapsedSeconds);
+                if ($elapsedSeconds >= 20) {
+                    // Dispatch MissedCallEvent if the elapsed time is 20 seconds or more
+                    Log::debug("Ringing duration is EQUAL to or MORE than 20 seconds, dispatching MissedCallEvent...");
+                    MissedCallEvent::dispatch($user);
+                } else {
+                    Log::debug("Ringing duration is LESS than 20 seconds, NOT dispatching MissedCallEvent, Break");
+                }
                 break;
+                
+                
 
             case 'completed':
                 Log::debug('completed event for user ' . $request->user_id);
