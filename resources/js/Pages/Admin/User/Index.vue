@@ -7,7 +7,7 @@ import { toaster } from "@/helper.js";
 import Modal from "@/Components/Modal.vue";
 import SearchFilter from "@/Components/SearchFilter.vue";
 import DeleteModal from "@/Components/DeleteModal.vue";
-import Delete from "@/Pages/Admin/User/Delete.vue";
+import { faL } from "@fortawesome/free-solid-svg-icons";
 let page = usePage();
 if (page.props.flash.message) {
   toaster("success", page.props.flash.message);
@@ -115,6 +115,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
   return result;
 };
 let confirmMessage = ref(null)
+let isLoading = ref(false)
 let deleteUser = (user_id) => {
    confirmMessage.value = {
     heading: 'Delete User',
@@ -125,12 +126,14 @@ let deleteUser = (user_id) => {
 };
 
 let actionToDeleteUser = () => {
+  isLoading.value = true
   axios.delete(`/admin/customer/${confirmMessage.value.user_id}`)
     .then((res) => {
       deleteUserModal.value = false
       toaster("success", res.data.message)
       router.visit('/admin/customers')
     }).catch((error) => {
+      isLoading.value = false
       toaster("error", error.message)
     })
 }
@@ -271,7 +274,7 @@ let actionToDeleteUser = () => {
       <Edit :showModal="showModal" :userDetail="userDetail" :currentPage="currentPage" @close="showModal = false"
         :callTypes="callTypes" :states="states" :roles="roles" :route="'/admin/customer'"></Edit>
     </Modal>
-    <DeleteModal @actionToDeleteUser="actionToDeleteUser" :deleteUserModal="deleteUserModal" @close="deleteUserModal = false" :confirmMessage="confirmMessage" />
+    <DeleteModal :isLoading="isLoading" @actionToDeleteUser="actionToDeleteUser" :deleteUserModal="deleteUserModal" @close="deleteUserModal = false" :confirmMessage="confirmMessage" />
   </AuthenticatedLayout>
 </template>
 
