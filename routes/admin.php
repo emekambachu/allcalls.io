@@ -42,6 +42,8 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
     Route::get('/customer/clients/{id}', [CustomerController::class, 'getCustomerClients']);
 
+    Route::delete('/customer/{id}', [CustomerController::class, 'destroy'])->name('admin.customer.destroy');
+
     //Agents
     Route::get('/agents', [InternalAgentController::class, 'index'])->name('admin.agent.index');
 

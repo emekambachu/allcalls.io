@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Models\Call;
 use App\Models\CallType;
+use App\Models\Card;
 use App\Models\Role;
 use App\Models\State;
+use App\Models\UserCallTypeState;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -138,6 +140,21 @@ class CustomerController extends Controller
         ]);
     }
 
+    public function destroy($id) {
+        $user = User::findOrFail($id);
+        
+        Card::where('user_id', $user->id)->delete();
+        UserCallTypeState::where('user_id', $user->id)->delete();
+        Transaction::where('user_id', $user->id)->delete();
+        DB::table('role_user')->where('user_id', $user->id)->delete();
+        $user->delete();
+
+        return response()->json([
+            'success' =>  true,
+            'message' => 'User deleted successfully.'
+        ]);
+    }
+
     public function getUserCall($id)
     {
         $calls = Call::whereUserId($id)->with('user','getClient', 'callType')->paginate(10);
@@ -154,6 +171,7 @@ class CustomerController extends Controller
             'clients' => $Clients
         ]);
     }
+
     public function getTransaction($id)
     {
         $transactions = Transaction::whereUserId($id)->with('card')->paginate(10);
@@ -252,7 +270,7 @@ class CustomerController extends Controller
                         'updated_at' => now(),
                     ]);
                 }
-            }    
+            }
 
             return response()->json([
                 'success' => true,
@@ -263,6 +281,7 @@ class CustomerController extends Controller
             return response()->json(['error' => $e], 500);
         }
     }
+
     public function banUser($id){
         $user=User::find($id);
         if(!$user->banned){
