@@ -82,37 +82,10 @@ let openClientModal = (user, page) => {
   currentPage.value = page;
   showModal.value = true;
 };
-
-let formatTime = (duration) => {
-  const minutes = Math.floor(duration / 60);
-  const seconds = Math.floor(duration % 60);
-  return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-};
-
 let formatMoney = (amount) => {
   return parseFloat(amount)
     .toFixed(2)
     .replace(/\d(?=(\d{3})+\.)/g, "$&,");
-};
-
-let formatDate = (inputDate) => {
-  // Split the input date by the hyphen ("-") to get year, month, and day
-  const [year, month, day] = inputDate.split("-");
-
-  // Rearrange the components in the "mm-dd-yyyy" format
-  const formattedDate = `${month}-${day}-${year}`;
-
-  return formattedDate;
-};
-
-let capitalizeAndReplaceUnderscore = (str) => {
-  // Replace underscores with spaces
-  let result = str.replace(/_/g, " ");
-
-  // Capitalize the first letter of each word
-  result = result.replace(/\b(\w)/g, (match) => match.toUpperCase());
-
-  return result;
 };
 let confirmMessage = ref(null)
 let isLoading = ref(false)

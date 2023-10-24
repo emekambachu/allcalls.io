@@ -8,8 +8,6 @@
         isLoading: Boolean,
         confirmMessage:Object,
     });
-    console.log('confirmMessage', props.confirmMessage);
-    console.log('deleteUserModal', props.deleteUserModal);
     let close = () => {
         emits('close')
     }
