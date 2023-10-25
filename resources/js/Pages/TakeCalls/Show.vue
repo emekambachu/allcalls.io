@@ -17,6 +17,10 @@ let setupFlashMessages = () => {
   if (page.props.flash.message) {
     toaster("success", page.props.flash.message);
   }
+
+  if (page.props.errors.balance) {
+    toaster("error", page.props.errors.balance);
+  }
 };
 let setOnlineCallType = () => {
   callTypesWithToggles.value.map((type) => {
@@ -227,6 +231,13 @@ watchEffect(async () => {
                   Average Bid:
                 </h4>
                 <p class="text-gray-600 text-sm rounded-md">${{ callType.averageBid }}</p>
+              </div>
+
+              <div v-if="page.props.auth.role !== 'internal-agent'" class="flex items-center mt-2 mb-2">
+                <h4 class="text-gray-800 text-sm text-bold mr-1 font-medium">
+                  Minimum Bid:
+                </h4>
+                <p class="text-gray-600 text-sm rounded-md">$35</p>
               </div>
             </li>
           </ul>

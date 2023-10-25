@@ -346,8 +346,28 @@ class InternalAgentController extends Controller
 
     }
 
-    public function signatureAuthrorizationPdf($id)
+    public function internalAgentProgress(Request $request) {
+
+        try {
+            $user = User::findOrFail($request->id);
+            $user->progress = $request->progress;
+            $user->save();
+            return response()->json([
+                'success' => true,
+                'message' => 'Internal Agent Progress Status Updated Successfully.',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'errors' => $e->getMessage(),
+            ], 400);
+        }
+
+    }
+
+    public function signatureAuthorizationPdf($id)
     {
+
 //        set_time_limit(0);
 //
 //        $returnArr['contractData'] = User::where('id', $id)
