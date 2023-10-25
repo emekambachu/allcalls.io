@@ -347,7 +347,7 @@ class InternalAgentController extends Controller
     }
 
     public function internalAgentProgress(Request $request) {
-        
+
         try {
             $user = User::findOrFail($request->id);
             $user->progress = $request->progress;
@@ -367,6 +367,7 @@ class InternalAgentController extends Controller
 
     public function signatureAuthorizationPdf($id)
     {
+
 //        set_time_limit(0);
 //
 //        $returnArr['contractData'] = User::where('id', $id)
