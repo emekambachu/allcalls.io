@@ -347,7 +347,7 @@ class InternalAgentController extends Controller
     }
 
     public function internalAgentProgress(Request $request) {
-        
+
         try {
             $user = User::findOrFail($request->id);
             $user->progress = $request->progress;
@@ -376,5 +376,6 @@ class InternalAgentController extends Controller
 //        $pdf = PDF::loadView('pdf.internal-agent-contract.signature-authorization', $returnArr);
 //
 //        return $pdf->download('signature-authorization.pdf');
+
     }
 }
