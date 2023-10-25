@@ -324,7 +324,6 @@ class InternalAgentController extends Controller
             ->first();
         $pdf = PDF::loadView('pdf.internal-agent-contract.legal-question-by-detail', $returnArr);
 
-
         return $pdf->download($serialNo . '-explaination.pdf');
     }
 
