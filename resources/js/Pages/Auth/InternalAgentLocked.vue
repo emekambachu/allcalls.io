@@ -19,7 +19,6 @@ let StepsModal = ref(true)
     background-color: white;
     color: black;
 }
-
 .blurred-overlay {
     backdrop-filter: blur(10px);
     /* Adjust the blur intensity as needed */
@@ -58,7 +57,7 @@ let StepsModal = ref(true)
                                 24 - 48 hours.
 
                             <div v-if="page.props.auth.user.progress"  class="mt-6">
-                                
+
                                 <strong class="ml-2">Contract Status:</strong><br><span
                                     class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">
                                     {{ page.props.auth.user.progress }}

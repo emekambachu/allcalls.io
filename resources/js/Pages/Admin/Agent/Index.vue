@@ -33,7 +33,6 @@ let props = defineProps({
   states: Array,
   statuses: Array,
 });
-console.log('statuses', props.statuses);
 let contractModal = ref(false)
 let formData = ref({
   name: props.requestData.name,
@@ -86,7 +85,6 @@ let openContractModal = (agent) => {
   userData.value = agent
   contractModal.value = true
 }
-
 let agentModal = ref(false);
 let addAgentModal = (page) => {
   agentModal.value = true;

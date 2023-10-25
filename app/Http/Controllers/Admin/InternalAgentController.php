@@ -78,6 +78,7 @@ class InternalAgentController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
+
         $callTypes = CallType::get();
         $states = State::get();
         return Inertia::render('Admin/Agent/Index', [
@@ -375,6 +376,5 @@ class InternalAgentController extends Controller
 //        $pdf = PDF::loadView('pdf.internal-agent-contract.signature-authorization', $returnArr);
 //
 //        return $pdf->download('signature-authorization.pdf');
-
     }
 }

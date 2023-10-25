@@ -48,7 +48,6 @@ class AgentInvitesController extends Controller
         $agentreInvite = AgentInvite::findOrFail($id);
         $uuId = uniqid();
         $agentreInvite->token = $uuId;
-        $agentreInvite->used = false;
         $agentreInvite->url = url('/internal-agent/register?agentToken=' . $uuId);
         $agentreInvite->created_at = now();
         $agentreInvite->updated_at = now();
