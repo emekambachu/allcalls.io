@@ -89,9 +89,8 @@ let formatData = (val) => {
             </div>
             <div class="flex justify-end p-5">
                 <PrimaryButton type="submit" :class="{ 'opacity-25':  isLoading }" :disabled=" isLoading" @click.prevent="updateProgress">
-                    <global-spinner :spinner="isLoading" /> Update 
+                    <global-spinner :spinner="isLoading" /> Update
                 </PrimaryButton>
-
                 <SecondaryButton @click.prevent="close" type="button" class="ml-3">
                     Cancel
                 </SecondaryButton>

@@ -116,12 +116,9 @@ let close = () => {
                                     <button @click="onCancel" class="button-custom-back  px-3 py-2 rounded-md">
                                         Cancel</button>
                                 </div>
-                              
                             </div>
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </div>

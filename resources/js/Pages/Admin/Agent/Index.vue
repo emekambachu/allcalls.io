@@ -172,7 +172,7 @@ let updateProgress = (data) => {
     isLoading.value = false
     toaster("error", error.response.data.errors);
   })
-  
+
 }
 </script>
 <style scoped>
@@ -314,7 +314,7 @@ let updateProgress = (data) => {
                     <button class="ml-2" @click="progressFun(agent)"
                       title="Progress"
                       >
-                      <svg version="1.0" xmlns="http://www.w3.org/2000/svg" 
+                      <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 512.000000 512.000000" preserveAspectRatio="xMidYMid meet" class="w-5 h-5 ">
 
                         <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" fill="#000000"
@@ -424,10 +424,12 @@ let updateProgress = (data) => {
       <Edit :showModal="showModal" :userDetail="userDetail" :currentPage="currentPage" @close="showModal = false"
         :callTypes="callTypes" :states="states" :route="'/admin/agent'"></Edit>
     </Modal>
+
     <Modal :show="agentModal" @close="agentModal = false">
       <Create :agentModal="agentModal" :currentPage="currentPage" :callTypes="callTypes" :states="states"
         @close="agentModal = false"></Create>
     </Modal>
+
     <ApproveConfirm @close="showModalConfirm = false" :showModalConfirm="showModalConfirm" @onApprove="onApprove"
       :isLoading="isLoading" @onCancel="onCancel" />
   </AuthenticatedLayout>

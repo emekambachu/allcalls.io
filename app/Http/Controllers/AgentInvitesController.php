@@ -53,10 +53,12 @@ class AgentInvitesController extends Controller
         $agentreInvite->created_at = now();
         $agentreInvite->updated_at = now();
         $agentreInvite->save();
+
         event(new InviteAgent($agentreInvite->email, $agentreInvite->url));
+
         return response()->json([
             'success' =>  true,
-            'message' => 'Agent re-invted successfully.',
+            'message' => 'Agent re-invited successfully.',
         ]);
     }
 

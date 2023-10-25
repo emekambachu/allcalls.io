@@ -132,8 +132,10 @@ class RegistrationStepController extends Controller
             ->with('internalAgentContract.residentLicense')
             ->with('internalAgentContract.getQuestionSign')
             ->with('internalAgentContract.getContractSign')->first();
+
         $states = State::all();
-        $amlCouseGuide = asset('guid-links/aml-setup.pdf');
+
+        $amlCourseGuide = asset('guid-links/aml-setup.pdf');
 
         //Docusign Auth Token
         $apiClient = new ApiClient();
@@ -145,7 +147,7 @@ class RegistrationStepController extends Controller
         return Inertia::render('InternalAgent/ContractSteps', [
             'states' => $states,
             'userData' => $user,
-            'amlCouseGuide' => $amlCouseGuide,
+            'amlCouseGuide' => $amlCourseGuide,
             'docuSignAuthCode' => session()->get('docusign_auth_code'),
         ]);
     }
