@@ -78,6 +78,7 @@ class InternalAgentController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
+
         $callTypes = CallType::get();
         $states = State::get();
         return Inertia::render('Admin/Agent/Index', [
@@ -85,7 +86,6 @@ class InternalAgentController extends Controller
             'agents' => $agents,
             'callTypes' => $callTypes,
             'states' => $states,
-            'statuses' => PROGRESS_STATUSES
         ]);
     }
 
