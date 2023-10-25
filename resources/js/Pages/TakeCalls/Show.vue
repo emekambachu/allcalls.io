@@ -120,7 +120,7 @@ watchEffect(async () => {
       </div>
     </div>
     <section class="p-3">
-      <div class="mx-auto max-w-screen-xl sm:px-12 grid grid-cols-2 gap-3">
+      <div class="mx-auto max-w-screen-xl sm:px-12 grid grid-cols-2 gap-2" style="grid-template-columns: 2fr 3fr;">
         <div>
           <h1 class="text-2xl font-bold mb-4 text-gray-700">Guidelines</h1>
           <ul class="pl-2 max-w-md text-gray-500 list-disc list-inside">
