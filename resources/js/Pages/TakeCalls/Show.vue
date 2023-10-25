@@ -155,6 +155,9 @@ watchEffect(async () => {
           <!-- Call Types and Bids List -->
           <ul>
             <li v-for="callType in callTypesWithToggles" :key="callType.callType.id" class="py-3 sm:py-4">
+              <div class="flex justify-end items-center">
+                <div class="text-xs">Turn calls on</div>
+              </div>
               <div class="flex items-center justify-between">
                 <!-- Call Type Title on the left -->
                 <p class="text-xl text-gray-900 font-medium" v-text="callType.callType.type"></p>
