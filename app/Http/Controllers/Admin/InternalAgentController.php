@@ -367,7 +367,6 @@ class InternalAgentController extends Controller
 
     public function signatureAuthorizationPdf($id)
     {
-
 //        set_time_limit(0);
 //
 //        $returnArr['contractData'] = User::where('id', $id)
