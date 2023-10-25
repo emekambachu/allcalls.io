@@ -89,14 +89,6 @@ class User extends Authenticatable implements MustVerifyEmail
             ->as('userCallTypeState')
             ->using(UserCallTypeState::class)
             ->withTimestamps();
-
-
-        // return $this->belongsToMany(
-        //     CallType::class,
-        //     'users_call_type_state',
-        //     'user_id',
-        //     'call_type_id'
-        // )->withPivot('state_id');
     }
 
     public function states()
