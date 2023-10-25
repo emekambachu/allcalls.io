@@ -108,6 +108,7 @@ class RegistrationStepController extends Controller
                 $user->legacy_key = true;
                 $user->contract_step = 10;
                 $user->is_locked = 1;
+                $user->progress = 'Agent signed';
                 $user->save();
             }
         }
@@ -1565,6 +1566,7 @@ class RegistrationStepController extends Controller
                 $pdf->save($directory . $fileName);
                 //End Generate Contract PDF
                 $user->contract_step = 10;
+                $user->progress = "Completed and uploaded documents";
                 $user->save();
                 DB::commit();
                 return response()->json([

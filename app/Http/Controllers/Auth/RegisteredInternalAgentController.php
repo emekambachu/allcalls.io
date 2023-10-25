@@ -54,10 +54,11 @@ class RegisteredInternalAgentController extends Controller
                 'phone' => $request->phone,
                 'password' => Hash::make($request->password),
                 'legacy_key' => false,
+                'progress' => 'Started contracting'
             ]);
-    
+
             $agentRole = Role::whereName('internal-agent')->first();
-    
+
             DB::table('role_user')->insert([
                 'user_id' => $user->id,
                 'role_id' => $agentRole->id,
@@ -65,16 +66,19 @@ class RegisteredInternalAgentController extends Controller
             $token = AgentInvite::where('token', '=', session()->get('agent-token'))->first();
             $token->isUsed($token->token);
             DB::commit();
+
             session()->remove('agent-token');
+
             event(new Registered($user));
+
             Auth::login($user);
+
             return response()->json([
                 'success' => true,
                 'message' => 'Agent added successfully',
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Invalid agent invite token.',

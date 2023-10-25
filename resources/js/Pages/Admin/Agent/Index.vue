@@ -10,8 +10,10 @@ import Modal from "@/Components/Modal.vue";
 import SearchFilter from "@/Components/SearchFilter.vue";
 import ContractSteps from '@/Pages/InternalAgent/ContractSteps.vue'
 import ViewPdfindex from "@/Pages/Admin/Agent/ViewPdfindex.vue";
+import ProgressView from "@/Pages/Admin/Agent/ProgressView.vue";
 import ApproveConfirm from "@/Pages/Admin/Agent/ApproveConfirm.vue";
 import axios from "axios";
+import { rule } from "postcss";
 let page = usePage();
 if (page.props.flash.message) {
   toaster("success", page.props.flash.message);
@@ -29,7 +31,9 @@ let props = defineProps({
   },
   callTypes: Array,
   states: Array,
+  statuses: Array,
 });
+console.log('statuses', props.statuses);
 let contractModal = ref(false)
 let formData = ref({
   name: props.requestData.name,
@@ -82,6 +86,7 @@ let openContractModal = (agent) => {
   userData.value = agent
   contractModal.value = true
 }
+
 let agentModal = ref(false);
 let addAgentModal = (page) => {
   agentModal.value = true;
@@ -119,15 +124,20 @@ let capitalizeAndReplaceUnderscore = (str) => {
   return result;
 };
 let viewModalpdf = ref(false)
+let progressModal = ref(false)
 let viewPdfData = (agent) => {
   userData.value = agent
   viewModalpdf.value = true
+}
+let progressFun = (agent) => {
+  userData.value = agent
+  progressModal.value = true
 }
 let showModalConfirm = ref(false)
 let ApproveAgentVal = ref(null)
 let isLoading = ref(false)
 let ApproveAgent = (agent) => {
-  
+
   ApproveAgentVal.value = agent
   showModalConfirm.value = true;
 }
@@ -148,6 +158,21 @@ let onApprove = () => {
 }
 let onCancel = () => {
   showModalConfirm.value = false;
+}
+let updateProgress = (data) => {
+  isLoading.value = true
+  axios.post('/admin/progress-internal-agent', {
+    id:data.user_id,
+    progress:data.progress
+  }).then((res)=>{
+    progressModal.value = false
+    router.visit('/admin/agents')
+    toaster("success", res.data.message);
+  }).catch((error)=>{
+    isLoading.value = false
+    toaster("error", error.response.data.errors);
+  })
+  
 }
 </script>
 <style scoped>
@@ -213,6 +238,7 @@ let onCancel = () => {
                   <th scope="col" class="px-4 py-3">Email</th>
                   <th scope="col" class="px-4 py-3">Balance</th>
                   <th scope="col" class="px-4 py-3">Phone</th>
+                  <th scope="col" class="px-4 py-3">Progress</th>
                   <th scope="col" class="px-4 py-3 text-end">Actions</th>
                 </tr>
               </thead>
@@ -226,6 +252,7 @@ let onCancel = () => {
                     ${{ formatMoney(agent.balance) }}
                   </td>
                   <td class="text-gray-600 px-4 py-3">{{ agent.phone }}</td>
+                  <td class="text-gray-600 px-4 py-3">{{ agent.progress ? agent.progress : "-" }}</td>
                   <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
                     <a title="View Agent" :href="route('admin.agent.detail', agent.id)"><svg
                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -283,8 +310,42 @@ let onCancel = () => {
                         stroke="currentColor" :class="{ 'text-green-400': agent.is_locked === 0 }" class="w-5 h-5 ">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                       </svg>
+                    </button>
+                    <button class="ml-2" @click="progressFun(agent)"
+                      title="Progress"
+                      >
+                      <svg version="1.0" xmlns="http://www.w3.org/2000/svg" 
+                        viewBox="0 0 512.000000 512.000000" preserveAspectRatio="xMidYMid meet" class="w-5 h-5 ">
 
-
+                        <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" fill="#000000"
+                          stroke="none">
+                          <path d="M2320 5109 c-146 -15 -259 -36 -293 -57 -74 -42 -119 -141 -103 -225
+                              8 -45 50 -108 89 -134 51 -35 103 -42 198 -26 127 20 436 28 570 14 645 -68
+                              1213 -419 1579 -976 74 -113 172 -319 219 -460 77 -231 111 -440 111 -687 0
+                              -573 -218 -1098 -624 -1504 -351 -351 -795 -564 -1285 -615 -134 -14 -443 -6
+                              -570 14 -130 21 -200 -3 -255 -87 -49 -76 -47 -167 7 -238 43 -56 80 -76 173
+                              -92 225 -40 551 -45 779 -12 463 67 912 263 1260 551 514 424 831 996 927
+                              1670 17 118 17 512 0 630 -70 491 -250 916 -544 1284 -142 179 -376 395 -560
+                              519 -325 219 -690 360 -1083 418 -124 18 -468 26 -595 13z" />
+                          <path d="M1338 4799 c-81 -19 -340 -199 -503 -350 -175 -161 -372 -397 -430
+                            -513 -55 -110 -13 -230 99 -288 31 -16 53 -19 102 -16 83 5 129 37 194 133
+                            152 225 363 429 613 592 143 94 174 130 184 211 12 102 -52 198 -150 227 -56
+                            17 -57 17 -109 4z" />
+                          <path d="M3538 3394 c-26 -11 -218 -208 -704 -722 -368 -389 -671 -707 -674
+                              -707 -3 0 -128 129 -278 287 -257 271 -276 288 -325 303 -105 31 -204 -11
+                              -252 -109 -31 -64 -32 -124 -2 -186 10 -19 158 -183 330 -365 285 -302 318
+                              -333 380 -364 61 -31 78 -35 147 -35 69 0 86 4 147 35 64 32 106 74 784 791
+                              394 417 721 770 728 784 65 142 -38 305 -191 303 -29 0 -69 -7 -90 -15z" />
+                          <path d="M222 3300 c-56 -13 -110 -58 -136 -114 -44 -91 -86 -400 -86 -626 0
+                              -226 42 -535 86 -626 64 -134 240 -161 341 -51 61 66 70 118 44 249 -31 158
+                              -41 258 -41 428 0 170 9 268 42 432 18 95 19 113 7 155 -18 67 -78 129 -142
+                              148 -55 16 -66 17 -115 5z" />
+                          <path d="M505 1473 c-113 -59 -155 -180 -100 -289 58 -116 255 -352 430 -513
+                              172 -159 423 -331 510 -351 93 -21 187 27 231 117 23 45 26 62 21 109 -9 87
+                              -38 121 -184 217 -220 144 -425 334 -558 517 -33 45 -73 101 -90 123 -42 56
+                              -104 87 -174 87 -31 -1 -69 -8 -86 -17z" />
+                        </g>
+                      </svg>
                     </button>
                   </td>
                 </tr>
@@ -355,6 +416,10 @@ let onCancel = () => {
       <ViewPdfindex @close="viewModalpdf = false" :userData="userData.value" />
     </Modal>
 
+    <Modal :show="progressModal" @close="progressModal = false">
+      <ProgressView @close="progressModal = false" :statuses="statuses" :isLoading="isLoading" @updateProgress="updateProgress" :userData="userData.value"  />
+    </Modal>
+
     <Modal :show="showModal" @close="showModal = false">
       <Edit :showModal="showModal" :userDetail="userDetail" :currentPage="currentPage" @close="showModal = false"
         :callTypes="callTypes" :states="states" :route="'/admin/agent'"></Edit>
@@ -363,8 +428,8 @@ let onCancel = () => {
       <Create :agentModal="agentModal" :currentPage="currentPage" :callTypes="callTypes" :states="states"
         @close="agentModal = false"></Create>
     </Modal>
-    <ApproveConfirm @close="showModalConfirm = false" :showModalConfirm="showModalConfirm" @onApprove="onApprove" :isLoading="isLoading"
-      @onCancel="onCancel" />
+    <ApproveConfirm @close="showModalConfirm = false" :showModalConfirm="showModalConfirm" @onApprove="onApprove"
+      :isLoading="isLoading" @onCancel="onCancel" />
   </AuthenticatedLayout>
 </template>
 
