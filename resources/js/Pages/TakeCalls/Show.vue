@@ -227,14 +227,14 @@ watchEffect(async () => {
                 <p class="text-gray-600 text-sm rounded-md">${{ callType.topBid }}</p>
               </div>
 
-              <div v-if="page.props.auth.role !== 'internal-agent'" class="flex items-center mt-2 mb-2">
+              <div v-if="page.props.auth.role !== 'internal-agent' && openedEditMenus.includes(callType.callType.id)" class="flex items-center mt-2 mb-2">
                 <h4 class="text-gray-800 text-sm text-bold mr-1 font-medium">
                   Average Bid:
                 </h4>
                 <p class="text-gray-600 text-sm rounded-md">${{ callType.averageBid }}</p>
               </div>
 
-              <div v-if="page.props.auth.role !== 'internal-agent'" class="flex items-center mt-2 mb-2">
+              <div v-if="page.props.auth.role !== 'internal-agent' && openedEditMenus.includes(callType.callType.id)" class="flex items-center mt-2 mb-2">
                 <h4 class="text-gray-800 text-sm text-bold mr-1 font-medium">
                   Minimum Bid:
                 </h4>
