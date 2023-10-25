@@ -127,7 +127,7 @@ let showModalConfirm = ref(false)
 let ApproveAgentVal = ref(null)
 let isLoading = ref(false)
 let ApproveAgent = (agent) => {
-  
+
   ApproveAgentVal.value = agent
   showModalConfirm.value = true;
 }
@@ -213,6 +213,7 @@ let onCancel = () => {
                   <th scope="col" class="px-4 py-3">Email</th>
                   <th scope="col" class="px-4 py-3">Balance</th>
                   <th scope="col" class="px-4 py-3">Phone</th>
+                  <th scope="col" class="px-4 py-3">Progress</th>
                   <th scope="col" class="px-4 py-3 text-end">Actions</th>
                 </tr>
               </thead>
@@ -226,6 +227,7 @@ let onCancel = () => {
                     ${{ formatMoney(agent.balance) }}
                   </td>
                   <td class="text-gray-600 px-4 py-3">{{ agent.phone }}</td>
+                  <td class="text-gray-600 px-4 py-3">{{ agent.progress?agent.progress:"-" }}</td>
                   <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
                     <a title="View Agent" :href="route('admin.agent.detail', agent.id)"><svg
                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
