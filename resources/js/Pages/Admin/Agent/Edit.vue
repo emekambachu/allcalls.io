@@ -7,6 +7,7 @@ import GuestInputLabel from "@/Components/GuestInputLabel.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import { toaster } from "@/helper.js";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
 import axios from "axios";
 import { fromJSON } from "postcss";
 let page = usePage();
@@ -253,9 +254,9 @@ let saveChanges = () => {
             <global-spinner :spinner="isLoading" /> Save Changes
           </PrimaryButton>
 
-          <PrimaryButton @click.prevent="close" type="button" class="ml-3">
+          <SecondaryButton @click.prevent="close" type="button" class="ml-3">
             Close
-          </PrimaryButton>
+          </SecondaryButton>
         </div>
       </form>
     </div>
