@@ -62,8 +62,11 @@ class RegisteredInternalAgentController extends Controller
                 'user_id' => $user->id,
                 'role_id' => $agentRole->id,
             ]);
+
             $token = AgentInvite::where('token', '=', session()->get('agent-token'))->first();
+
             $token->isUsed($token->token);
+
             DB::commit();
             session()->remove('agent-token');
             event(new Registered($user));

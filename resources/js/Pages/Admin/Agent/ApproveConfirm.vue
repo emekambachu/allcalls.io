@@ -119,8 +119,6 @@ let close = () => {
                             </div>
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </div>

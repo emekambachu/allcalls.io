@@ -7,6 +7,7 @@ import GuestInputLabel from "@/Components/GuestInputLabel.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import { toaster } from "@/helper.js";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
 import axios from "axios";
 import { fromJSON } from "postcss";
 let page = usePage();
@@ -210,7 +211,8 @@ let saveChanges = () => {
             class="mt-1 block w-full"
             v-model="form.phone"
           />
-          <div
+
+            <div
             v-if="firstStepErrors.phone"
             class="text-red-500"
             v-text="firstStepErrors.phone[0]"
@@ -252,10 +254,9 @@ let saveChanges = () => {
           <PrimaryButton type="submit" @click.prevent="saveChanges">
             <global-spinner :spinner="isLoading" /> Save Changes
           </PrimaryButton>
-
-          <PrimaryButton @click.prevent="close" type="button" class="ml-3">
+          <SecondaryButton @click.prevent="close" type="button" class="ml-3">
             Close
-          </PrimaryButton>
+          </SecondaryButton>
         </div>
       </form>
     </div>

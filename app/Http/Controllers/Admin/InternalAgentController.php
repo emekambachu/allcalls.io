@@ -86,6 +86,7 @@ class InternalAgentController extends Controller
             'agents' => $agents,
             'callTypes' => $callTypes,
             'states' => $states,
+            'statuses' => PROGRESS_STATUSES
         ]);
     }
 
@@ -324,7 +325,6 @@ class InternalAgentController extends Controller
             ->first();
         $pdf = PDF::loadView('pdf.internal-agent-contract.legal-question-by-detail', $returnArr);
 
-
         return $pdf->download($serialNo . '-explaination.pdf');
     }
 
@@ -367,7 +367,6 @@ class InternalAgentController extends Controller
 
     public function signatureAuthorizationPdf($id)
     {
-
 //        set_time_limit(0);
 //
 //        $returnArr['contractData'] = User::where('id', $id)
