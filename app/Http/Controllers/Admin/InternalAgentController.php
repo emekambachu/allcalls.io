@@ -86,6 +86,7 @@ class InternalAgentController extends Controller
             'agents' => $agents,
             'callTypes' => $callTypes,
             'states' => $states,
+            'statuses' => PROGRESS_STATUSES
         ]);
     }
 
