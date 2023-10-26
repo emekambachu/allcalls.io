@@ -55,7 +55,7 @@ const fileError = ref(false);
 const handleFileChange = (event) => {
     const files = event.target.files;
     selectedFile.value = null
-    if (files.length === 1 && files[0].type === "application/pdf") {
+    if (files.length === 1) {
         // Handle the single PDF file here
         fileError.value = false; // Reset the error message
         selectedFileName.value = files[0].name; // Set the selected file name
@@ -81,7 +81,7 @@ const handleFileChange = (event) => {
 const handleDrop = (event) => {
     event.preventDefault();
     const files = event.dataTransfer.files;
-    if (files.length === 1 && files[0].type === "application/pdf") {
+    if (files.length === 1) {
         // Handle the dropped single PDF file here
         fileError.value = false; // Reset the error message
         selectedFileName.value = files[0].name; // Set the selected file name
@@ -104,7 +104,7 @@ const handleDrop = (event) => {
     }
 };
 
-const fileErrorMessage = ref("Please select a single PDF file.");
+const fileErrorMessage = ref("Please select a single file.");
 
 let goBack = () => {
     emits("goback");
@@ -148,10 +148,8 @@ let goBack = () => {
                     <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
                         <span class="font-semibold">Click to upload</span> or drag and drop
                     </p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">PDF files only<span class="text-red-500 ">*</span>
-                    </p>
                 </div>
-                <input id="dropzone-file-ommision" type="file" class="hidden" @change="handleFileChange" accept=".pdf" />
+                <input id="dropzone-file-ommision" type="file" class="hidden" @change="handleFileChange"/>
             </label>
         </div>
         <div v-if="firstStepErrors.uploadOmmisionPdf" class="text-red-500 mt-1"
@@ -169,9 +167,9 @@ let goBack = () => {
             <input :disabled="page.props.auth.role === 'admin'" id="link-omissions_insurance"
                 v-model="form.omissions_insurance" type="checkbox" value=""
                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-            <label for="link-omissions_insurance" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Errors
-                and
-                Omissions Insurances.<span class="text-red-500 ">*</span></label>
+            <label for="link-omissions_insurance" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                Errors and Omissions Insurances
+            </label>
             <div v-if="firstStepErrors.omissions_insurance" class="text-red-500 mt-1"
                 v-text="firstStepErrors.omissions_insurance[0]">
             </div>
