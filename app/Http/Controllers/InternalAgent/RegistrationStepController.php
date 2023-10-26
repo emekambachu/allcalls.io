@@ -1418,7 +1418,7 @@ class RegistrationStepController extends Controller
 
                 if ($request->file('uploadOmmisionPdf') && $request->file('uploadOmmisionPdf')->isValid()) {
                     $step3Validation = Validator::make($request->all(), [
-                        'uploadOmmisionPdf' => 'mimetypes:application/pdf|max:2048',
+                        'uploadOmmisionPdf' => 'required',
                     ]);
                     if ($step3Validation->fails()) {
                         return response()->json([
@@ -1594,7 +1594,6 @@ class RegistrationStepController extends Controller
 //        $config->setHost('<https://demo.docusign.net/restapi>');
 //        $config->addDefaultHeader("Authorization", "Bearer ".$jwt_token);
 
-
         $apiClient = new ApiClient();
         $apiClient->getOAuth()->setOAuthBasePath("account.docusign.com");
         $accessToken = $this->getToken($apiClient);
@@ -1616,9 +1615,6 @@ class RegistrationStepController extends Controller
             $envelopeApi = new EnvelopesApi();
             $envelopeSummary = $envelopeApi->createEnvelope($accountInfo[0]->getAccountId(), $envelopeDefenition);
             dd($envelopeSummary);
-
-
-
 
             $viewRequest = new RecipientViewRequest([
                 'return_url' => '<https://staging.allcalls.io/return-url>',
