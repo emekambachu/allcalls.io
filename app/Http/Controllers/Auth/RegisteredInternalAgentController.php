@@ -55,9 +55,9 @@ class RegisteredInternalAgentController extends Controller
                 'password' => Hash::make($request->password),
                 'legacy_key' => false,
             ]);
-    
+
             $agentRole = Role::whereName('internal-agent')->first();
-    
+
             DB::table('role_user')->insert([
                 'user_id' => $user->id,
                 'role_id' => $agentRole->id,
@@ -77,7 +77,6 @@ class RegisteredInternalAgentController extends Controller
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Invalid agent invite token.',

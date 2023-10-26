@@ -1367,7 +1367,7 @@ class RegistrationStepController extends Controller
                 if (!$amlCoursePdf) {
                     $step2Validation = Validator::make($request->all(), [
                         'aml_course' => 'required',
-                        'uploadAmlPdf' => 'required|mimetypes:application/pdf|max:2048',
+                        'uploadAmlPdf' => 'required',
                     ]);
                     if ($step2Validation->fails()) {
                         return response()->json([
@@ -1467,7 +1467,7 @@ class RegistrationStepController extends Controller
                 $residentPDf = InternalAgentResidentLicense::where('reg_info_id', $basicInfo->id)->first();
                 if (!$residentPDf) {
                     $step4Validation = Validator::make($request->all(), [
-                        'residentLicensePdf' => 'required|mimetypes:application/pdf|max:2048',
+                        'residentLicensePdf' => 'required',
                     ]);
                     if ($step4Validation->fails()) {
                         return response()->json([
@@ -1513,7 +1513,7 @@ class RegistrationStepController extends Controller
                 $bankingInfoPdf = InternalAgentBankingInfo::where('reg_info_id', $basicInfo->id)->first();
                 if (!$bankingInfoPdf) {
                     $step5Validation = Validator::make($request->all(), [
-                        'bankingInfoPdf' => 'required|mimetypes:application/pdf|max:2048',
+                        'bankingInfoPdf' => 'required',
                     ]);
                     if ($step5Validation->fails()) {
                         return response()->json([
