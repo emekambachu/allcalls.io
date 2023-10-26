@@ -140,8 +140,8 @@ watchEffect(async () => {
             <li>Please make sure notifications are turned on for this app.</li>
           </ul>
 
-          <h1 class="text-2xl font-bold mb-4 text-gray-700 mt-6">Tools:</h1>
-          <div>
+          <h1 v-if="page.props.auth.role === 'internal-agent'" class="text-2xl font-bold mb-4 text-gray-700 mt-6">Tools:</h1>
+          <div v-if="page.props.auth.role === 'internal-agent'">
             <a href="https://insurancetoolkits.com/signup?paidAgency=lat4w7gAOHlVGSZJJONBUZKYLDQUAWKH2GB9fy4y"
               target="_blank"
               class="inline-flex items-center px-4 py-3 border border-transparent rounded-md font-semibold text-md uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 bg-custom-blue text-custom-green hover:bg-white hover:drop-shadow-2xl hover:text-custom-blue hover:ring-2 hover:ring-custom-sky focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 my-4">Underwriting
