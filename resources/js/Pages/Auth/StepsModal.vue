@@ -181,7 +181,7 @@ let submit = () => {
           </div>
           <div>
             <!-- Step 0 -->
-            <div v-if="step === 0 && !agentToken">
+            <div v-if="step === 0 && $page.props.auth.role !== 'internal-agent'">
               <div class="px-12">
                 <p class="text-gray-700 text-lg text-left leading-relaxed">
                   Our dynamic bidding system allows you to set a maximum bid for
@@ -190,7 +190,7 @@ let submit = () => {
                 </p>
               </div>
             </div>
-            <div v-if="step === 0 && agentToken">
+            <div v-if="step === 0 && $page.props.auth.role === 'internal-agent'">
               <div class="px-12">
                 <p class="text-gray-700 text-sm text-left leading-relaxed">
                   Hello, {{ $page.props.auth.user.first_name }}! Let's tailor your experience. Begin by indicating which call types resonate with your expertise. The perfect leads are just a few taps away!
@@ -199,7 +199,7 @@ let submit = () => {
             </div>
 
             <!-- Step 1 -->
-            <div v-if="step === 1 && !agentToken">
+            <div v-if="step === 1 && $page.props.auth.role !== 'internal-agent'">
               <div class="px-12">
                 <p class="text-gray-700 text-sm text-left leading-relaxed">
                   Each call type has a minimum price of $35. Bid higher to
@@ -208,7 +208,7 @@ let submit = () => {
                 </p>
               </div>
             </div>
-            <div v-if="step === 1 && agentToken">
+            <div v-if="step === 1 && $page.props.auth.role === 'internal-agent'">
               <div class="px-12">
                 <p class="text-gray-700 text-sm text-left leading-relaxed">
                   Special note for you, {{ $page.props.auth.user.first_name }}! As an esteemed agent, you hold priority for each category over our entire user base. Here, quality leads meet unmatched privilege.
@@ -217,7 +217,7 @@ let submit = () => {
             </div>
 
             <!-- Step 2 -->
-            <div v-if="step === 2 && !agentToken">
+            <div v-if="step === 2 && $page.props.auth.role !== 'internal-agent'">
               <div class="px-12">
                 <p class="text-gray-700 text-sm text-left leading-relaxed">
                   Select your desired call types and set your maximum price.
@@ -225,7 +225,7 @@ let submit = () => {
                 </p>
               </div>
             </div>
-            <div v-if="step === 2 && agentToken">
+            <div v-if="step === 2 && $page.props.auth.role === 'internal-agent'">
               <div class="px-12">
                 <p class="text-gray-700 text-sm text-left leading-relaxed">
                   Select your preferred call types and cross-verify the states you're officially licensed in. Every detail here fine-tunes your lead matching.

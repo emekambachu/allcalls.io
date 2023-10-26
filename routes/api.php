@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\CallUserResponseAPIController;
 use Pusher\Pusher;
 use App\Models\User;
 use App\Models\ActiveUser;
@@ -17,18 +16,20 @@ use App\Http\Controllers\ActiveUsersController;
 use App\Http\Controllers\OnlineUsersController;
 use App\Http\Controllers\TwilioTokenController;
 use App\Http\Controllers\CallTypesAPIController;
+use App\Http\Controllers\DispositionsController;
 use App\Http\Controllers\IncomingCallController;
 use App\Http\Controllers\CallRecordingController;
 use App\Http\Controllers\AgentStatusAPIController;
 use App\Http\Controllers\LiveCallClientController;
+use App\Http\Controllers\CallUserResponseAPIController;
 use App\Http\Controllers\CallTypesSelectedAPIController;
 use App\Http\Controllers\TwilioIOSAccessTokenController;
 use App\Http\Controllers\CustomBroadcastingAuthController;
 use App\Http\Controllers\ActiveUsersPusherWebhookController;
 use App\Http\Controllers\TwilioAndroidAccessTokenController;
 use App\Http\Controllers\TwilioIOSAccessTokenGuestController;
-use App\Http\Controllers\TwilioAndroidAccessTokenGuestController;
 use App\Http\Controllers\TwilioIOSSandboxAccessTokenController;
+use App\Http\Controllers\TwilioAndroidAccessTokenGuestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -144,6 +145,7 @@ Route::match(['get', 'post'], '/agent-status', [AgentStatusAPIController::class,
 Route::middleware('auth:sanctum')->post('/app-events', [AppEventsController::class, 'store']);
 
 Route::match(['get', 'post'], '/ping', [PingAPIController::class, 'show']);
+Route::match(['get', 'post'], '/disposition', [DispositionsController::class, 'update']);
 
 
 Route::post('/custom-pusher-auth', function (Request $request) {
