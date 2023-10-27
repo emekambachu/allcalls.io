@@ -183,11 +183,10 @@ let StepChange = (val) => {
 
     <template v-slot:loadingText>
       <div class="px-10 text-center text-4xl xl:text-5xl text-custom-white font-extrabold tracking-tighter">
-        Start Receiving Live Calls Now!
+        Start Earning High Commissions Today!
       </div>
       <div class="text-md text-blue-400 font-semibold text-center px-10 mb-6">
-        No risk, no contracts, and no long-term commitment. Cancel anytime,
-        hassle-free.
+        Receive Competitive Top-Level Commissions - Fully Vested.
       </div>
     </template>
 
@@ -270,7 +269,7 @@ let StepChange = (val) => {
 
     <template v-slot:titles>
       <div class="text-4xl lg:text-5xl xl:text-8xl text-white mb-10">
-        Getting Started is Easy.<span class="text-custom-green">Create your account today!</span>
+        Welcome to AllCalls and <br><span class="text-custom-green">Congratulation on Your New Career.</span>
       </div>
     </template>
 
