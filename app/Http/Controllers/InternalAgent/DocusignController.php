@@ -103,9 +103,10 @@ class DocusignController extends Controller
         // dd($base64_file_content);
         # Create the document model
         $documentId = rand(1, 10) . auth()->user()->id . rand(1, 10);
+        $contractingName = auth()->user()->first_name . '-' . auth()->user()->last_name;
         $document = new \DocuSign\eSign\Model\Document([ # create the DocuSign document object
             'document_base64' => $base64_file_content,
-            'name' => 'Example document', # can be different from actual file name
+            'name' => "$contractingName-contracting-packet", # can be different from actual file name
             'file_extension' => 'pdf', # many different document types are accepted
             'document_id' => $documentId, # a label used to reference the doc
         ]);
@@ -114,7 +115,7 @@ class DocusignController extends Controller
         # Create the signer recipient model
         $signer = new \DocuSign\eSign\Model\Signer([ # The signer
             'email' => auth()->user()->email,
-            'name' => auth()->user()->first_name . ' ' . auth()->user()->last_name,
+            'name' => $contractingName,
             'recipient_id' => auth()->user()->id,
             'routing_order' => "1",
             # Setting the client_user_id marks the signer as embedded

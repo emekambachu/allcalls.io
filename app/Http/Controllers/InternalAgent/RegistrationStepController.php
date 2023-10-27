@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\InternalAgent;
 
+use App\Events\OnboardingCompleted;
 use App\Http\Controllers\Controller;
 use App\Models\AgentInvite;
 use App\Models\DocuSignTracker;
@@ -109,6 +110,8 @@ class RegistrationStepController extends Controller
                 $user->contract_step = 10;
                 $user->is_locked = 1;
                 $user->save();
+
+                event(new OnboardingCompleted($user));
             }
         }
 
