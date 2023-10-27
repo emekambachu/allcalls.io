@@ -1422,6 +1422,7 @@ class RegistrationStepController extends Controller
                 if ($request->file('uploadOmmisionPdf') && $request->file('uploadOmmisionPdf')->isValid()) {
                     $step3Validation = Validator::make($request->all(), [
                         'uploadOmmisionPdf' => 'required',
+                        'omissions_insurance' => 'required',
                     ]);
                     if ($step3Validation->fails()) {
                         return response()->json([
