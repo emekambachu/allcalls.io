@@ -105,10 +105,6 @@ let close = () => {
                         <div class=" mb-3">
                             <div class="flex justify-end">
                                 <div class="mt-4">
-                                    <button @click="onCancel" class="button-custom-back mr-3 px-3 py-2 rounded-md">
-                                        Cancel</button>
-                                </div>
-                                <div class="mt-4">
                                     <button type="button" @click="onApprove"
                                         :class="{ 'opacity-25': isLoading }"
                                         :disabled="isLoading"
