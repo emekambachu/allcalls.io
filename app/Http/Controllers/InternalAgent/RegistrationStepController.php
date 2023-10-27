@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\InternalAgent;
 
+use App\Events\OnboardingCompleted;
 use App\Http\Controllers\Controller;
 use App\Models\AgentInvite;
 use App\Models\DocuSignTracker;
@@ -109,6 +110,8 @@ class RegistrationStepController extends Controller
                 $user->contract_step = 10;
                 $user->is_locked = 1;
                 $user->save();
+
+                event(new OnboardingCompleted($user));
             }
         }
 
@@ -1419,6 +1422,7 @@ class RegistrationStepController extends Controller
                 if ($request->file('uploadOmmisionPdf') && $request->file('uploadOmmisionPdf')->isValid()) {
                     $step3Validation = Validator::make($request->all(), [
                         'uploadOmmisionPdf' => 'required',
+                        'omissions_insurance' => 'required',
                     ]);
                     if ($step3Validation->fails()) {
                         return response()->json([

@@ -157,25 +157,18 @@ let submit = () => {
 }
 </style>
 <template>
-  <Transition
-    name="modal"
-    enter-active-class="transition ease-out duration-300 transform"
+  <Transition name="modal" enter-active-class="transition ease-out duration-300 transform"
     enter-from-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-    enter-to-class="opacity-100 translate-y-0 sm:scale-100"
-    leave-active-class="transition ease-in duration-200 transform"
+    enter-to-class="opacity-100 translate-y-0 sm:scale-100" leave-active-class="transition ease-in duration-200 transform"
     leave-from-class="opacity-100 translate-y-0 sm:scale-100"
-    leave-to-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-  >
-    <div
-      id="defaultModal"
-      v-if="StepsModal"
-      tabindex="-1"
-      class="flex items-center justify-center fixed inset-0 z-50 w-full h-full overflow-x-hidden overflow-y-auto max-h-full mx-4 sm:mx-0"
-    >
+    leave-to-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+    <div id="defaultModal" v-if="StepsModal" tabindex="-1"
+      class="flex items-center justify-center fixed inset-0 z-50 w-full h-full overflow-x-hidden overflow-y-auto max-h-full mx-4 sm:mx-0">
       <div class="fixed inset-0 bg-black opacity-90 blurred-overlay"></div>
       <!-- This is the overlay -->
       <div class="relative w-full max-w-xl max-h-full mx-auto">
-        <div class="relative bg-white rounded-lg shadow-lg transition-all">
+        <div v-if="$page.props.auth.role !== 'internal-agent'"
+          class="relative bg-white rounded-lg shadow-lg transition-all">
           <div class="px-12 py-2">
             <h1 class="mt-8 text-gray-800 text-3xl font-bold">Welcome to AllCalls.io!</h1>
           </div>
@@ -193,7 +186,8 @@ let submit = () => {
             <div v-if="step === 0 && $page.props.auth.role === 'internal-agent'">
               <div class="px-12">
                 <p class="text-gray-700 text-sm text-left leading-relaxed">
-                  Hello, {{ $page.props.auth.user.first_name }}! Let's tailor your experience. Begin by indicating which call types resonate with your expertise. The perfect leads are just a few taps away!
+                  Hello, {{ $page.props.auth.user.first_name }}! Let's tailor your experience. Begin by indicating which
+                  call types resonate with your expertise. The perfect leads are just a few taps away!
                 </p>
               </div>
             </div>
@@ -211,7 +205,8 @@ let submit = () => {
             <div v-if="step === 1 && $page.props.auth.role === 'internal-agent'">
               <div class="px-12">
                 <p class="text-gray-700 text-sm text-left leading-relaxed">
-                  Special note for you, {{ $page.props.auth.user.first_name }}! As an esteemed agent, you hold priority for each category over our entire user base. Here, quality leads meet unmatched privilege.
+                  Special note for you, {{ $page.props.auth.user.first_name }}! As an esteemed agent, you hold priority
+                  for each category over our entire user base. Here, quality leads meet unmatched privilege.
                 </p>
               </div>
             </div>
@@ -228,87 +223,139 @@ let submit = () => {
             <div v-if="step === 2 && $page.props.auth.role === 'internal-agent'">
               <div class="px-12">
                 <p class="text-gray-700 text-sm text-left leading-relaxed">
-                  Select your preferred call types and cross-verify the states you're officially licensed in. Every detail here fine-tunes your lead matching.
+                  Select your preferred call types and cross-verify the states you're officially licensed in. Every detail
+                  here fine-tunes your lead matching.
                 </p>
               </div>
             </div>
 
-            <div v-if="step === 3">
+            <div v-if="step === 3 && $page.props.auth.role !== 'internal-agent'">
               <div class="px-12">
                 <div class="mt-4">
-                  <GuestInputLabel
-                    class="mb-3"
-                    for="insurance_type"
-                    value="What types of calls do you want to receive?"
-                  />
+                  <GuestInputLabel class="mb-3" for="insurance_type"
+                    value="What types of calls do you want to receive?" />
 
-                  <div
-                    v-for="(callType, index) in callTypes"
-                    :key="callType.id"
-                    class="mb-4"
-                  >
-                    <input
-                      :id="`insurance_type_${callType.id}`"
-                      type="checkbox"
+                  <div v-for="(callType, index) in callTypes" :key="callType.id" class="mb-4">
+                    <input :id="`insurance_type_${callType.id}`" type="checkbox"
                       class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                      :checked="selectedTypes.includes(callType.id)"
-                      @change="onTypeUpdate"
-                      :value="callType.id"
-                    />
+                      :checked="selectedTypes.includes(callType.id)" @change="onTypeUpdate" :value="callType.id" />
 
-                    <label
-                      class="ml-2 text-md font-medium text-custom-indigo"
-                      :for="`insurance_type_${callType.id}`"
-                      v-text="callType.type"
-                    ></label>
+                    <label class="ml-2 text-md font-medium text-custom-indigo" :for="`insurance_type_${callType.id}`"
+                      v-text="callType.type"></label>
 
-                    <div
-                      v-if="selectedTypes.includes(callType.id)"
-                      class="pt-2 mb-8"
-                    >
-                      <div v-if="!agentToken && $page.props.auth.role != 'internal-agent'">
+                    <div v-if="selectedTypes.includes(callType.id)" class="pt-2 mb-8">
+                      <div>
                         <label class="ml-2 text-xs font-medium">Your Bid</label>
                         <div class="relative mb-2">
-                          <div
-                            class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none"
-                          >
+                          <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
                             $
                           </div>
-                          <input
-                            type="number"
-                            min="20"
+                          <input type="number" min="20"
                             class="bg-custom-gray border-none focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm pl-8 w-full"
-                            placeholder="35.00"
-                            v-model="form.bids[index].amount"
-                          />
+                            placeholder="35.00" v-model="form.bids[index].amount" />
                         </div>
                       </div>
-                      <label class="ml-2 text-xs font-medium"
-                        >States you're licensed in:</label
-                      >
-                      <Multiselect
-                        :options="stateOptions"
-                        v-model="form.typesWithStates[callType.id]"
-                        track-by="value"
-                        label="label"
-                        mode="tags"
-                        :close-on-select="false"
-                        placeholder="Select a state"
-                      >
+                      <label class="ml-2 text-xs font-medium">States you're licensed in:</label>
+                      <Multiselect :options="stateOptions" v-model="form.typesWithStates[callType.id]" track-by="value"
+                        label="label" mode="tags" :close-on-select="false" placeholder="Select a state">
                       </Multiselect>
                     </div>
                   </div>
 
-                  <InputError
-                    class="mt-2"
-                    :message="form.errors.insurance_type"
-                  />
+                  <InputError class="mt-2" :message="form.errors.insurance_type" />
                   <div v-if="firstStepErrors">
-                    <div
-                      v-if="firstStepErrors.typesWithStates"
-                      class="text-red-500"
-                      v-text="firstStepErrors.typesWithStates[0]"
-                    ></div>
+                    <div v-if="firstStepErrors.typesWithStates" class="text-red-500"
+                      v-text="firstStepErrors.typesWithStates[0]"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+
+            <div class="px-12 pb-6 mt-10">
+              <div class="flex justify-between">
+                <div class="mt-4">
+                  <a v-if="step != 0" href="#" @click.prevent="goBack" class="button-custom-back px-3 py-2 rounded-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                      stroke="currentColor" class="w-4 h-4 mr-1">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
+                    </svg>
+
+                    Back</a>
+                </div>
+                <div class="mt-4">
+                  <button v-if="step != 3" type="button" @click.prevent="NextStep"
+                    class="button-custom px-3 py-2 rounded-md flex items-center">
+                    Next
+
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                      stroke="currentColor" class="w-4 h-4 ml-1">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                    </svg>
+                  </button>
+                  <button @click="submit" type="button" v-if="step === 3" class="button-custom px-3 py-2 rounded-md"
+                    :class="{ 'opacity-25': areAllArraysEmpty || isLoading }" :disabled="areAllArraysEmpty || isLoading">
+                    <global-spinner :spinner="isLoading" /> Register
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-else-if="$page.props.auth.role === 'internal-agent'" class="relative bg-white rounded-lg shadow-lg transition-all">
+          <div class="px-12 py-2">
+            <h1 class="mt-8 text-gray-800 text-3xl font-bold">Welcome to AllCalls.io!</h1>
+          </div>
+          <div>
+            <!-- Step 0 -->
+            <div v-if="step === 0">
+              <div class="px-12">
+                <p class="text-gray-700 text-sm text-left leading-relaxed">
+                  Hello, <strong class="text-lg">{{ $page.props.auth.user.first_name }} {{ $page.props.auth.user.last_name }}</strong> Let's customize your call system. Begin by indicating which states you are licensed in and want to receive calls from.
+                </p>
+              </div>
+            </div>
+            <!-- Step 1 -->
+            <div v-if="step === 1">
+              <div class="px-12">
+                <p class="text-gray-700 text-sm text-left leading-relaxed">
+                  Special note for you, <strong class="text-lg">{{ $page.props.auth.user.first_name }} {{ $page.props.auth.user.last_name }}</strong>  As an esteemed AllCalls Insurance Agent, you hold priority over our entire user base. When you login and take calls, our system will prioritize you over normal users so that you can receive calls as fast as possible without having to wait.
+                </p>
+              </div>
+            </div>
+           
+
+            <!-- Step 2 -->
+            <div v-else-if="step === 2">
+              <div class="px-12">
+                <div class="mt-4">
+                  <GuestInputLabel class="mb-3" for="insurance_type"
+                    value="What types of calls do you want to receive?" />
+
+                  <div v-for="(callType, index) in callTypes" :key="callType.id" class="mb-4">
+                    <div v-if="callType.type === 'Final Expense'">
+
+                      <input :id="`insurance_type_${callType.id}`" type="checkbox" disabled
+                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                        :checked="($page.props.auth.role === 'internal-agent' && callType.type === 'Final Expense')"
+                        @change="onTypeUpdate" :value="callType.id" />
+
+                      <label class="ml-2 text-md font-medium text-custom-indigo" :for="`insurance_type_${callType.id}`"
+                        v-text="callType.type"></label>
+
+                      <div class="pt-2 mb-8">
+                        <label class="ml-2 text-xs font-medium">States you're licensed in:</label>
+                        <Multiselect :options="stateOptions" v-model="form.typesWithStates[callType.id]" track-by="value"
+                          label="label" mode="tags" :close-on-select="false" placeholder="Select a state">
+                        </Multiselect>
+                      </div>
+                    </div>
+                  </div>
+
+                  <InputError class="mt-2" :message="form.errors.insurance_type" />
+                  <div v-if="firstStepErrors">
+                    <div v-if="firstStepErrors.typesWithStates" class="text-red-500"
+                      v-text="firstStepErrors.typesWithStates[0]"></div>
                   </div>
                 </div>
               </div>
@@ -317,62 +364,26 @@ let submit = () => {
             <div class="px-12 pb-6 mt-10">
               <div class="flex justify-between">
                 <div class="mt-4">
-                  <a
-                    v-if="step != 0"
-                    href="#"
-                    @click.prevent="goBack"
-                    class="button-custom-back px-3 py-2 rounded-md"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      class="w-4 h-4 mr-1"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18"
-                      />
+                  <a v-if="step != 0" href="#" @click.prevent="goBack" class="button-custom-back px-3 py-2 rounded-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                      stroke="currentColor" class="w-4 h-4 mr-1">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
                     </svg>
 
-                    Back</a
-                  >
+                    Back</a>
                 </div>
                 <div class="mt-4">
-                  <button
-                    v-if="step != 3"
-                    type="button"
-                    @click.prevent="NextStep"
-                    class="button-custom px-3 py-2 rounded-md flex items-center"
-                  >
+                  <button v-if="step != 2" type="button" @click.prevent="NextStep"
+                    class="button-custom px-3 py-2 rounded-md flex items-center">
                     Next
 
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      class="w-4 h-4 ml-1"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
-                      />
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                      stroke="currentColor" class="w-4 h-4 ml-1">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
                     </svg>
                   </button>
-                  <button
-                    @click="submit"
-                    type="button"
-                    v-if="step === 3"
-                    class="button-custom px-3 py-2 rounded-md"
-                    :class="{ 'opacity-25': areAllArraysEmpty || isLoading }"
-                    :disabled="areAllArraysEmpty || isLoading"
-                  >
+                  <button @click="submit" type="button" v-if="step === 2" class="button-custom px-3 py-2 rounded-md"
+                    :class="{ 'opacity-25': areAllArraysEmpty || isLoading }" :disabled="areAllArraysEmpty || isLoading">
                     <global-spinner :spinner="isLoading" /> Register
                   </button>
                 </div>

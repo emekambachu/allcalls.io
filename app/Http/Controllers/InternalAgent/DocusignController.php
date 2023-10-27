@@ -103,9 +103,10 @@ class DocusignController extends Controller
         // dd($base64_file_content);
         # Create the document model
         $documentId = rand(1, 10) . auth()->user()->id . rand(1, 10);
+        $contractingName = auth()->user()->first_name . '-' . auth()->user()->last_name;
         $document = new \DocuSign\eSign\Model\Document([ # create the DocuSign document object
             'document_base64' => $base64_file_content,
-            'name' => 'Example document', # can be different from actual file name
+            'name' => "$contractingName-contracting-packet", # can be different from actual file name
             'file_extension' => 'pdf', # many different document types are accepted
             'document_id' => $documentId, # a label used to reference the doc
         ]);

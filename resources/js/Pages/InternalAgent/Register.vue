@@ -275,14 +275,16 @@ let StepChange = (val) => {
 
     <template v-slot:subtitles>
       <div class="text-custom-blue font-bold text-2xl lg:text-2xl xl:text-5xl text-3xl">
-        Try our Calls for Yourself!
+        Why AllCalls.io?
       </div>
 
       <div class="text-custom-blue text-sm md:text-lg lg:text-2xl mt-6 font-bold">
-        We pride ourselves on ease of use. Once you have created an account, you
-        will be able to select what kind of calls you would like to receive and
-        begin speaking with customers right away! Create an account to get
-        started.
+          With AllCalls leading-edge technology we make selling
+          life insurance easier than ever before. Developed from
+          scratch by industry veterans - we know exactly what
+          you need to have a success career in life insurance and
+          we've built our business around just that. Helping agents
+          succeed is our job.
       </div>
     </template>
   </NewGuestLayout>
