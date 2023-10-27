@@ -17,6 +17,8 @@ const PROGRESS_STATUSES = [
     'Contracts Sent to Carrier',
 ];
 
+const SYSTEM_EMAILS = ['contracting@allcalls.io', 'maria@allcalls.io', 'awaisamir23@gmail.com'];
+
 function getStateName($id)
 {
     $state = \App\Models\State::find($id);

@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Events\FundsAdded;
 use App\Events\FundsTooLow;
+use App\Events\OnboardingCompleted;
+use App\Listeners\OnboardingCompletedTrigger;
 use App\Models\Transaction;
 use App\Events\MissedCallEvent;
 use App\Listeners\SaveUserCall;
@@ -78,6 +80,10 @@ class EventServiceProvider extends ServiceProvider
         CallStatusUpdated::class => [
             LogCallStatusChange::class,
             UpdateUserCallStatus::class,
+        ],
+
+        OnboardingCompleted::class => [
+            OnboardingCompletedTrigger::class,
         ],
     ];
 
