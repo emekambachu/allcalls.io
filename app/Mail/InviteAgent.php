@@ -28,7 +28,7 @@ class InviteAgent extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'You have been invited as a internal agent on allcall.io',
+            subject: 'You have been invited to join the AllCalls Insurance Team',
         );
     }
 
