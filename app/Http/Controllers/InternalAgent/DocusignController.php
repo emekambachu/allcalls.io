@@ -115,7 +115,7 @@ class DocusignController extends Controller
         # Create the signer recipient model
         $signer = new \DocuSign\eSign\Model\Signer([ # The signer
             'email' => auth()->user()->email,
-            'name' => $contractingName,
+            'name' => "$contractingName-contracting-packet",
             'recipient_id' => auth()->user()->id,
             'routing_order' => "1",
             # Setting the client_user_id marks the signer as embedded
