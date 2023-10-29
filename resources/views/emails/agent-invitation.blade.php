@@ -1,14 +1,14 @@
 <x-mail::message>
 Welcome to **AllCalls.io**.<br>
 
-You have been invited to join our company as a **1099** Insurance agent and begin partnering with our insurance carriers. <br>
+You have been invited to join our company and begin your career as an Independent AllCalls Insurance Agent. <br>
 
 This link will expire in the next **24 hours**<br>
 
 **Click below to Begin**<br>
 
 @component('mail::button', ['url' => $url])
-Click Here
+Begin your career
 @endcomponent
 <br>
 If the above link is expired, please contact our support team or the person who invited you, to resend the link.<br>

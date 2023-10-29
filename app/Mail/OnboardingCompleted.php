@@ -2,24 +2,25 @@
 
 namespace App\Mail;
 
+use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class InviteAgent extends Mailable
+class OnboardingCompleted extends Mailable
 {
     use Queueable, SerializesModels;
-
-    public $url;
+    public User $user;
+    public $name;
     /**
-     * Create a new event instance.
+     * Create a new message instance.
      */
-    public function __construct($url)
+    public function __construct(User $user)
     {
-        $this->url = $url;
+        $this->user = $user;
+        $this->name = $user->first_name.' '.$user->last_name;
     }
 
     /**
@@ -28,7 +29,7 @@ class InviteAgent extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'You have been invited to join the AllCalls Insurance Team',
+            subject: "$this->name Has Completed Their Onboarding Paperwork",
         );
     }
 
@@ -38,10 +39,10 @@ class InviteAgent extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.agent-invitation',
-                with: [
-                    'url' => $this->url,
-                ],
+            markdown: 'emails.onboarding_completed',
+            with: [
+                'user' => $this->user,
+            ],
         );
     }
 
