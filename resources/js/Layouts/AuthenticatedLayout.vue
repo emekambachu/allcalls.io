@@ -253,6 +253,9 @@ onMounted(() => {
     }
   );
 
+  console.log('Attaching call accepted or rejected listener:');
+  console.log(`${page.props.auth.user.id}.notifications`);
+
   Echo.private(`${page.props.auth.user.id}.notifications`)
     .listen('CallAcceptedOrRejected', e => {
       console.log('call accepted or rejected by one of the phone devices');
