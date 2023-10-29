@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Call;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\Events\CallAcceptedOrRejected;
 
 class CallUserResponseAPIController extends Controller
 {
@@ -30,6 +31,8 @@ class CallUserResponseAPIController extends Controller
         $call->user_response_time = Carbon::parse($request->user_response_time);
         $call->save();
         Log::debug('CallUserResponseAPIController::update - call updated successfully');
+
+        CallAcceptedOrRejected::dispatch($request->user());
 
         return response()->json([
             'message' => 'Call updated successfully.',

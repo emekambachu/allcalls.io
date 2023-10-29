@@ -253,6 +253,15 @@ onMounted(() => {
     }
   );
 
+  Echo.private(`${page.props.auth.user.id}.notifications`)
+    .listen('CallAcceptedOrRejected', e => {
+      console.log('call accepted or rejected by one of the phone devices');
+      conosle.log(e);
+      showRinging.value = false;
+      showOngoing.value = false;
+    });
+
+
   setupTwilioDevice();
 });
 
