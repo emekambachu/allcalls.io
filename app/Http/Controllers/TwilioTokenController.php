@@ -19,7 +19,7 @@ class TwilioTokenController extends Controller
         // $user = auth()->user();
 
         // set the identity to the user's id
-        $identity = $request->user()->id;
+        $identity = uniqid();
         // $identity = '5736523170';
 
         $accessToken = new AccessToken(
