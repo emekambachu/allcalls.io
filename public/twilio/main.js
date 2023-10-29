@@ -3,7 +3,7 @@ $(function () {
 
     console.log("Requesting Access Token...");
     // Using a relative link to access the Voice Token function
-    $.getJSON("/device/token")
+    $.getJSON("/device/token/dialer")
         .then(function (data) {
             console.log("Got a token.");
             console.log("Token: " + data.token);
