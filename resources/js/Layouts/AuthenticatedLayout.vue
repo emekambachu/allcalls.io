@@ -70,6 +70,7 @@ let saveUserResponseTime = () => {
   axios
     .patch("/web-api/calls/" + connectedUniqueCallId.value + "/user-response", {
       user_response_time: new Date(),
+      device: 'desktop',
     }, {
       headers: {
         'Content-Type': 'application/json',

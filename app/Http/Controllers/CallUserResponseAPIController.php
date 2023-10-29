@@ -32,7 +32,9 @@ class CallUserResponseAPIController extends Controller
         $call->save();
         Log::debug('CallUserResponseAPIController::update - call updated successfully');
 
-        CallAcceptedOrRejected::dispatch($request->user());
+        if (!$request->device) {
+            CallAcceptedOrRejected::dispatch($request->user());
+        }
 
         return response()->json([
             'message' => 'Call updated successfully.',
