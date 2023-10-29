@@ -230,8 +230,8 @@ let setupTwilioDevice = () => {
 
     device.on("disconnect", function (conn) {
       console.log("Call should disconnect now.");
-      showRinging.value = false;
-      showOngoing.value = false;
+      // showRinging.value = false;
+      // showOngoing.value = false;
     });
 
     device.on("incoming", (incomingCall) => {
