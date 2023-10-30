@@ -11,9 +11,9 @@ const props = defineProps({
 let page = usePage();
 
 const refreshPage = () => {
-  console.log('PAGE IS BEFORE REFRESHING:');
-  console.log(page);
-  router.visit("/admin/online-agents");
+  if (page.url === '/admin/online-agents') {
+    router.visit("/admin/online-agents");
+  }
 };
 
 onMounted(() => {
