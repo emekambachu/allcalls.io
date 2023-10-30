@@ -748,7 +748,7 @@ let appDownloadModal = ref(false);
                 <div class="pl-14 text-white text-xs mb-5">
                   <ul>
                     <li class="mb-3">
-                      <Link href="/usage-activties" class="inline-flex items-center rounded-t-lg hover:text-custom-green"
+                      <Link href="/usage-activities" class="inline-flex items-center rounded-t-lg hover:text-custom-green"
                         :class="{
                           'text-custom-green': route().current(
                             'activities.index'
