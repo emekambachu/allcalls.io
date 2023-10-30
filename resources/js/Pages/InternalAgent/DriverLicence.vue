@@ -10,7 +10,6 @@ let props = defineProps({
 const selectedFileName = ref(""); // To store the selected file name
 let page = usePage();
 let residentUrl = ref(null)
-
 if (props.userData.internal_agent_contract && props.userData.internal_agent_contract.driver_license) {
     selectedFileName.value = props.userData.internal_agent_contract.driver_license.name
     residentUrl.value = props.userData.internal_agent_contract.driver_license.url

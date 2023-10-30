@@ -66,6 +66,7 @@ class InternalAgentController extends Controller
             })
             ->with('internalAgentContract.additionalInfo')
             ->with('internalAgentContract.addresses')
+            ->with('internalAgentContract.driverLicense')
             ->with('internalAgentContract.amlCourse')
             ->with('internalAgentContract.bankingInfo')
             ->with('internalAgentContract.errorAndEmission')

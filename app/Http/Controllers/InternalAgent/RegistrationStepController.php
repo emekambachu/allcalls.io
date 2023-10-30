@@ -129,6 +129,7 @@ class RegistrationStepController extends Controller
             ->with('internalAgentContract.additionalInfo.getState')
             ->with('internalAgentContract.addresses.getState')
             ->with('internalAgentContract.legalQuestion')
+            ->with('internalAgentContract.driverLicense')
             ->with('internalAgentContract.amlCourse')
             ->with('internalAgentContract.bankingInfo')
             ->with('internalAgentContract.errorAndEmission')
