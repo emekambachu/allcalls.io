@@ -61,7 +61,6 @@ const handleDrop = (event) => {
         props.firstStepErrors.residentLicensePdf = [];
         selectedFile.value = null
     } else {
-        // Display an error message for invalid file type or no files dropped
         fileError.value = true;
         selectedFileName.value = ""; // Clear the selected file name
         props.firstStepErrors.residentLicensePdf = [];
@@ -71,9 +70,6 @@ const handleDrop = (event) => {
 
 const fileErrorMessage = ref("Please select a single file.");
 const emits = defineEmits();
-// watch(selectedFile, (newForm, oldForm) => {
-//     emits("uploadLicense", newForm);
-// });
 let ChangeTab = () => {
     for (const key in props.firstStepErrors) {
         if (props.firstStepErrors.hasOwnProperty(key)) {
@@ -100,6 +96,20 @@ let ChangeTabBack = () => {
         <h1 style="background-color: #134576;" class="mb-4 text-center rounded-md py-2 text-white">
             Upload Resident License PDF
         </h1>
+        <div v-show="page.props.auth.role === 'internal-agent'" class="flex items-center p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-700 dark:text-blue-400"
+            role="alert">
+            <svg class="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor" viewBox="0 0 20 20">
+                <path
+                    d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+            </svg>
+            <span class="sr-only">Info</span>
+            <div class="dark:text-gray-100">
+                <span class="font-medium "></span> We will need a copy of your Resident License To Provide the Carriers. Please Upload a Copy Below.
+                <br>
+                If you do not have a copy, you can obtain one at by creating an account at <strong><a target="_blank" class="underline font-bold" href="https://www.sircon.com/">Sircon.com</a></strong>  and following their instructions. Once obtained, please return and upload the pdf copy here.
+            </div>
+        </div>
         <div v-show="page.props.auth.role === 'admin'" class="bg-blue-50 py-10 px-6 rounded-lg shadow-md">
             <div>
                 <a target="_blank" :href="residentUrl" :disabled="!residentUrl" :class="{ 'opacity-25': !residentUrl }">

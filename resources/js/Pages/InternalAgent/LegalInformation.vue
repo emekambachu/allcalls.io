@@ -152,7 +152,6 @@ if (props.userData.internal_agent_contract && props.userData.internal_agent_cont
     props.userData.internal_agent_contract.legal_question.forEach((question) => {
         const matchingLegalInfo = LegalInformation.value.find((info) => info.name === question.name);
         if (matchingLegalInfo) {
-            // console.log('question',question);
             form.value[matchingLegalInfo.id] = question.id
             form.value[matchingLegalInfo.name] = question.value;
             form.value[matchingLegalInfo.name + '_text'] = question.description
@@ -163,10 +162,6 @@ if (props.userData.internal_agent_contract && props.userData.internal_agent_cont
 
 
 const emits = defineEmits();
-// watch(form.value, (newForm, oldForm) => {
-//     emits("updateFormData", newForm);
-// });
-
 let ChangeTab = () => {
     if (page.props.auth.role === 'admin') {
         emits("changeTab");

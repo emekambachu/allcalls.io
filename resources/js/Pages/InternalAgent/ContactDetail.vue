@@ -10,7 +10,6 @@ let props = defineProps({
 });
 let individual_business = ref(false)
 
-// console.log('user dagta', props.userData.internal_agent_contract);
 let maxDate = ref(new Date)
 maxDate.value.setHours(23, 59, 59, 999);
 let form = ref({
@@ -73,9 +72,7 @@ onMounted(() => {
 
 })
 const emits = defineEmits();
-// watch(form.value, (newForm, oldForm) => {
-//     emits("updateFormData", newForm);
-// });
+
 watch(individual_business, (newVal) => {
     if (newVal === false && page.props.auth.role != 'admin') {
             form.value.business_name = null,
@@ -116,7 +113,6 @@ let ChangeTab = () => {
             "cell_phone", "email", "driver_license_no", "driver_license_state",
             "address", "city", 'state', "zip", "move_in_date", "resident_insu_license_no", "resident_insu_license_state",
         ];
-        // console.log('form', form.value);
         let hasBusinessValue = individual_business && businessInputs.some(fieldName => {
             const value = form.value[fieldName];
             return value !== null && value !== "Choose" && value !== '';

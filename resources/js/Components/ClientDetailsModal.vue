@@ -47,19 +47,6 @@ let openEdit = () => {
 </script>
 
 <template>
-  <!-- <Transition
-    name="modal"
-    enter-active-class="transition ease-out duration-300 transform"
-    enter-from-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-    enter-to-class="opacity-100 translate-y-0 sm:scale-100"
-    leave-active-class="transition ease-in duration-200 transform"
-    leave-from-class="opacity-100 translate-y-0 sm:scale-100"
-    leave-to-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-  > -->
-  <!-- <div> -->
-  <!-- <div class="fixed inset-0 bg-black opacity-60"></div> -->
-  <!-- This is the overlay -->
-
   <div v-if="!editScreen" class="relative w-full max-w-4xl max-h-full mx-auto">
     <div class="relative bg-white rounded-lg shadow-lg">
       <div class="flex items-start justify-between p-4 border-b rounded-t border-gray-600">
@@ -251,9 +238,6 @@ let openEdit = () => {
             </select>
           </div>
         </div>
-
-        <!-- (The rest of your sections would follow a similar structure) -->
-
         <div class="flex justify-end mt-6">
           <PrimaryButton type="submit" @click.prevent="saveChanges">
             <global-spinner :spinner="isLoading" /> Save Changes

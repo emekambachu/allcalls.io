@@ -104,17 +104,30 @@ let ChangeTabBack = () => {
         <h1 style="background-color: #134576;" class="mb-4 text-center rounded-md py-2 text-white">
             Banking Information
         </h1>
+        <div v-show="page.props.auth.role === 'internal-agent'" class="flex items-center p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-700 dark:text-blue-400"
+            role="alert">
+            <svg class="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor" viewBox="0 0 20 20">
+                <path
+                    d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+            </svg>
+            <span class="sr-only">Info</span>
+            <div class="dark:text-gray-100">
+                <span class="font-medium "></span> Please provide and upload banking information so our carriers know where to deposit your commissions.
+                <br>
+                Only certain forms of banking information are accepted, the most common form is a copy of a voided check. Please see the pdf below for other accepted examples.
+            </div>
+        </div>
 
-
-        <div v-show="page.props.auth.role === 'internal-agent'" class="bg-blue-50 py-7 px-6 mb-5 rounded-lg shadow-md">
+        <div v-show="page.props.auth.role === 'internal-agent'" class="bg-gray-50 dark:bg-gray-700 py-7 px-6 mb-5 rounded-lg shadow-md">
             <div class="">
                 <a target="_blank"
                     href="https://www.financialservicecareers.com/_files/ugd/0fb1f5_f3cad5300c3b4706ae1b5daf6fe16908.pdf">
-                    <strong class="text-blue-600 mr-1 hover:underline">Detailed PDF Guide</strong>
-                </a>for banking information.
+                    <strong class="text-blue-600 mr-1 hover:underline">Download pdf guide</strong>
+                </a> <span class="dark:text-gray-100">for banking information.</span> 
             </div>
         </div>
-        <div v-show="page.props.auth.role === 'admin'" class="bg-blue-50 py-7 px-6 mb-5 rounded-lg shadow-md">
+        <div v-show="page.props.auth.role === 'admin'" class="bg-blue-50  py-7 px-6 mb-5 rounded-lg shadow-md">
             <div class="">
                 <a target="_blank" :href="bankingInfotUrl" :disabled="!bankingInfotUrl"
                     :class="{ 'opacity-25': !bankingInfotUrl }">
@@ -123,7 +136,7 @@ let ChangeTabBack = () => {
             </div>
         </div>
 
-        <div v-show="page.props.auth.role === 'internal-agent'" class="flex items-center justify-center mb-2 w-full">
+        <div v-show="page.props.auth.role === 'internal-agent'" class="flex items-center  justify-center mb-2 w-full">
             <label for="dropzone-file-bank-info"
                 class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
                 @dragover.prevent @drop="handleDrop">

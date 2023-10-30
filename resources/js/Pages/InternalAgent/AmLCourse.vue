@@ -124,27 +124,44 @@ const fileErrorMessage = ref("Please select a single file.");
         AML Course
     </h1>
 
-    <div v-show="page.props.auth.role === 'internal-agent'" class="bg-blue-50 py-10 px-6 rounded-lg shadow-md">
+    <div v-show="page.props.auth.role === 'internal-agent'"
+        class="flex items-center p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-700 dark:text-blue-400"
+        role="alert">
+        <svg class="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor" viewBox="0 0 20 20">
+            <path
+                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+        </svg>
+        <span class="sr-only">Info</span>
+        <div class="dark:text-gray-100">
+            <span class="font-medium "></span> Please Complete the following Anti Money Laundering Training Course that is
+            Required at all of our carriers.
+
+            Please use the detailed PDF instructions and Link Below to get Started.
+        </div>
+    </div>
+    <div v-show="page.props.auth.role === 'internal-agent'"
+        class="bg-gray-50 dark:bg-gray-700 py-10 px-6 rounded-lg shadow-md">
+
         <div class="mb-4">
-            <a target="_blank"
-                :href="amlCouseGuide">
-                <strong class="text-blue-600 mr-1 hover:underline">Detailed PDF Guide</strong>
-            </a>outlining the required steps within the AML
-            course.
+            <a target="_blank" :href="amlCouseGuide">
+                <strong class="text-blue-600   mr-1 hover:underline">Detailed PDF Guide</strong>
+            </a> <span class="dark:text-gray-100">outlining the required steps within the AML
+                course.</span>
         </div>
         <div class="mb-4">
             <a target="_blank" href="https://secure.reged.com/Login/vu/VirtualUniversity/EQUIS">
-                <strong class="text-blue-600 mr-1  hover:underline">Click Here</strong>
-            </a> <span>for the registration and course completion</span>
+                <strong class="text-blue-600 mr-1   hover:underline">Click Here</strong>
+            </a> <span class="dark:text-gray-100">for the registration and course completion</span>
         </div>
-        <div class="text-gray-600">
+        <div class="text-gray-600 dark:text-gray-100">
             Please download PDF for course completion after completing the course.
         </div>
     </div>
     <div v-show="page.props.auth.role === 'admin'" class="bg-blue-50 py-10 px-6 rounded-lg shadow-md">
         <div>
             <a target="_blank" :href="amlUrl" :disabled="!amlUrl" :class="{ 'opacity-25': !amlUrl }">
-                <strong class="text-blue-600 mr-1 hover:underline">Click Here </strong>
+                <strong class="text-blue-600    mr-1 hover:underline">Click Here </strong>
             </a> Preview / Download AML course
         </div>
     </div>
@@ -160,11 +177,12 @@ const fileErrorMessage = ref("Please select a single file.");
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
                     </svg>
-                    <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                        <span class="font-semibold">Click to upload</span> or drag and drop<span class="text-red-500 ">*</span>
+                    <p class="mb-2 text-sm text-gray-500 dark:text-gray-100">
+                        <span class="font-semibold">Click to upload</span> or drag and drop<span
+                            class="text-red-500 ">*</span>
                     </p>
                 </div>
-                <input id="dropzone-file-aml" type="file" class="hidden" @change="handleFileChange"/>
+                <input id="dropzone-file-aml" type="file" class="hidden" @change="handleFileChange" />
             </label>
         </div>
         <div v-if="firstStepErrors.uploadAmlPdf" class="text-red-500 mt-1" v-text="firstStepErrors.uploadAmlPdf[0]"></div>
@@ -179,7 +197,8 @@ const fileErrorMessage = ref("Please select a single file.");
     <div class="flex justify-between my-5">
         <div></div>
         <div>
-            <input :disabled="page.props.auth.role === 'admin'" id="link-checkbox" v-model="form.aml_course" type="checkbox" value=""
+            <input :disabled="page.props.auth.role === 'admin'" id="link-checkbox" v-model="form.aml_course" type="checkbox"
+                value=""
                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
             <label for="link-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">I have
                 completed
@@ -213,5 +232,4 @@ const fileErrorMessage = ref("Please select a single file.");
 
             </div>
         </div>
-    </div>
-</template>
+</div></template>

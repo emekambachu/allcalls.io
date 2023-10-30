@@ -43,7 +43,6 @@ let form = ref({
     aml_course: false,
     omissions_insurance: false
 });
-
 let step = ref(1);
 let contractStep = ref(1);
 
@@ -296,7 +295,6 @@ let submit = (step) => {
             pageTop()
             if (error.response) {
                 if (error.response.status === 400) {
-                    // console.log(error.response.data.step);
                     firstStepErrors.value = error.response.data.errors;
                     isLoading.value = false;
 
@@ -490,8 +488,6 @@ input[type=number] {
                                     @goback="goBack()"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
-                            <!-- <button @click="previewContract">show Contract</button> -->
-                            <!-- <vueSignature /> -->
                         </div>
                     </div>
                 </div>

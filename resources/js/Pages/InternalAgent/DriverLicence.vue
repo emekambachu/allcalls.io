@@ -70,9 +70,6 @@ const handleDrop = (event) => {
 
 const fileErrorMessage = ref("Please select a single file.");
 const emits = defineEmits();
-// watch(selectedFile, (newForm, oldForm) => {
-//     emits("uploadLicense", newForm);
-// });
 let ChangeTab = () => {
     for (const key in props.firstStepErrors) {
         if (props.firstStepErrors.hasOwnProperty(key)) {

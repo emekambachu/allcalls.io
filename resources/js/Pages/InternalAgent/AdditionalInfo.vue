@@ -74,7 +74,6 @@
         Additional Information
     </h1>
     <div>
-
         <div class="grid lg:grid-cols-2 mb-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
             <div>
                 <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 ">Resident
@@ -144,7 +143,6 @@
                     v-text="firstStepErrors.resident_maiden_name[0]"></div>
             </div>
         </div>
-       
         <div class="px-5 pb-6">
             <div class="flex justify-between flex-wrap">
                 <div class="mt-4">
@@ -265,15 +263,6 @@ export default {
                 if (this.page.auth.role === 'internal-agent') {
                     if (!hasErrors) {
                         this.$emit("additionalInfoData", this.form);
-                        // :href="route('internal.agent.docusign.sign','accompanying_sign' )"
-                        // const { isEmpty, data } = this.$refs.signature2Pad.saveSignature();
-                        // if (!isEmpty || this.userData.internal_agent_contract.get_question_sign) {
-                        //     this.sigError = null
-                        //     this.$emit("additionalInfoData", { form: this.form, accompanying_sign: data });
-                        //     // this.firstStepErrors = {}; // Clear the errors by assigning a new empty object
-                        // } else {
-                        //     this.sigError = 'Please provide a signature.';
-                        // }
                     } else {
                         var element = document.getElementById("modal_main_id");
                         element.scrollIntoView();
