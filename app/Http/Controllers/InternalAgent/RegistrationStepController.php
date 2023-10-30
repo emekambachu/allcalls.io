@@ -11,6 +11,7 @@ use App\Models\InternalAgentAddress;
 use App\Models\InternalAgentAmlCourse;
 use App\Models\InternalAgentBankingInfo;
 use App\Models\InternalAgentContractSigned;
+use App\Models\InternalAgentDriverLicense;
 use App\Models\InternalAgentErrorAndEmission;
 use App\Models\InternalAgentLegalQuestion;
 use App\Models\InternalAgentQuestionSigned;
@@ -107,7 +108,7 @@ class RegistrationStepController extends Controller
                     'sign_url' => asset('internal-agents/contract/' . $contractedPdf),
                 ]);
                 $user->legacy_key = true;
-                $user->contract_step = 10;
+                $user->contract_step = 12;
                 $user->is_locked = 1;
                 $user->save();
 
@@ -128,6 +129,7 @@ class RegistrationStepController extends Controller
             ->with('internalAgentContract.additionalInfo.getState')
             ->with('internalAgentContract.addresses.getState')
             ->with('internalAgentContract.legalQuestion')
+            ->with('internalAgentContract.driverLicense')
             ->with('internalAgentContract.amlCourse')
             ->with('internalAgentContract.bankingInfo')
             ->with('internalAgentContract.errorAndEmission')
@@ -335,6 +337,8 @@ class RegistrationStepController extends Controller
                         'business_move_in_date' => isset($request->business_move_in_date) ? date('m/d/Y', strtotime($request->business_move_in_date)) : null,
                     ]);
                 }
+                $user->contract_step = 2;
+                $user->save();
                 DB::commit();
                 return response()->json([
                     'success' => true,
@@ -1363,6 +1367,53 @@ class RegistrationStepController extends Controller
         }
 
         if ($request->step == 6) {
+
+            DB::beginTransaction();
+            try {
+                if ($request->file('driverLicenseFile') && $request->file('driverLicenseFile')->isValid()) {
+                    $step3Validation = Validator::make($request->all(), [
+                        'driverLicenseFile' => 'required',
+                    ]);
+                    if ($step3Validation->fails()) {
+                        return response()->json([
+                            'success' => false,
+                            'errors' => $step3Validation->errors(),
+                        ], 400);
+                    }
+                    $driverLicense = InternalAgentDriverLicense::where('reg_info_id', $basicInfo->id)->first();
+
+                    if ($driverLicense) {
+                        if (file_exists(asset('internal-agents/driver-license/' . $driverLicense->name))) {
+                            unlink(asset('internal-agents/driver-license/' . $driverLicense->name));
+                        }
+                        $driverLicense->delete();
+                    }
+
+                    $name = $request->file('driverLicenseFile')->getClientOriginalName();
+                    $request->file('driverLicenseFile')->move(public_path('internal-agents/driver-license'), $user->id . $name);
+                    $path = asset('internal-agents/driver-license/' . $user->id . $name);
+
+                    InternalAgentDriverLicense::updateOrCreate(['reg_info_id' => $basicInfo->id], [
+                        'name' => $user->id . $name,
+                        'url' => $path,
+                    ]);
+                }
+                $user->contract_step = 7;
+                $user->save();
+                DB::commit();
+                return response()->json([
+                    'success' => true,
+                ], 200);
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'errors' => $e->getMessage(),
+                ], 400);
+            }
+        }
+
+        if ($request->step == 7) {
             DB::beginTransaction();
             try {
                 $amlCoursePdf = InternalAgentAmlCourse::where('reg_info_id', $basicInfo->id)->first();
@@ -1375,7 +1426,7 @@ class RegistrationStepController extends Controller
                     if ($step2Validation->fails()) {
                         return response()->json([
                             'success' => false,
-                            'step' => 5,
+                            'step' => 7,
                             'errors' => $step2Validation->errors(),
                         ], 400);
                     }
@@ -1398,7 +1449,7 @@ class RegistrationStepController extends Controller
                         'url' => $path,
                     ]);
                 }
-                $user->contract_step = 7;
+                $user->contract_step = 8;
                 $user->save();
 
                 DB::commit();
@@ -1414,7 +1465,7 @@ class RegistrationStepController extends Controller
             }
         }
 
-        if ($request->step == 7) {
+        if ($request->step == 8) {
 
             DB::beginTransaction();
             try {
@@ -1427,7 +1478,6 @@ class RegistrationStepController extends Controller
                     if ($step3Validation->fails()) {
                         return response()->json([
                             'success' => false,
-                            'step' => 6,
                             'errors' => $step3Validation->errors(),
                         ], 400);
                     }
@@ -1450,7 +1500,7 @@ class RegistrationStepController extends Controller
                         'url' => $path,
                     ]);
                 }
-                $user->contract_step = 8;
+                $user->contract_step = 9;
                 $user->save();
                 DB::commit();
                 return response()->json([
@@ -1465,7 +1515,7 @@ class RegistrationStepController extends Controller
             }
         }
 
-        if ($request->step == 8) {
+        if ($request->step == 9) {
             DB::beginTransaction();
             try {
                 $residentPDf = InternalAgentResidentLicense::where('reg_info_id', $basicInfo->id)->first();
@@ -1476,7 +1526,6 @@ class RegistrationStepController extends Controller
                     if ($step4Validation->fails()) {
                         return response()->json([
                             'success' => false,
-                            'step' => 7,
                             'errors' => $step4Validation->errors(),
                         ], 400);
                     }
@@ -1496,7 +1545,7 @@ class RegistrationStepController extends Controller
                         'url' => $path,
                     ]);
                 }
-                $user->contract_step = 9;
+                $user->contract_step = 10;
                 $user->save();
                 DB::commit();
                 return response()->json([
@@ -1511,7 +1560,7 @@ class RegistrationStepController extends Controller
             }
         }
 
-        if ($request->step == 9) {
+        if ($request->step == 10) {
             DB::beginTransaction();
             try {
                 $bankingInfoPdf = InternalAgentBankingInfo::where('reg_info_id', $basicInfo->id)->first();
@@ -1522,7 +1571,6 @@ class RegistrationStepController extends Controller
                     if ($step5Validation->fails()) {
                         return response()->json([
                             'success' => false,
-                            'step' => 8,
                             'errors' => $step5Validation->errors(),
                         ], 400);
                     }
@@ -1570,7 +1618,7 @@ class RegistrationStepController extends Controller
                 //End deleted PDF without sign for Accompanying Sign
                 $pdf->save($directory . $fileName);
                 //End Generate Contract PDF
-                $user->contract_step = 10;
+                $user->contract_step = 11;
                 $user->save();
                 DB::commit();
                 return response()->json([

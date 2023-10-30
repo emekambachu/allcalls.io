@@ -112,12 +112,6 @@ let submit = () => {
     isLoading.value = false
   }
 };
-let StepChange = (val) => {
-  step.value = val
-}
-// let goBack = () => {
-//   step.value = 0;
-// };
 </script>
 <style scoped>
 .active\:bg-gray-900:active {

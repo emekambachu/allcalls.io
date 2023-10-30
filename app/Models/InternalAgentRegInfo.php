@@ -18,6 +18,10 @@ class InternalAgentRegInfo extends Model
         return $this->hasMany(InternalAgentAddress::class, 'reg_info_id', 'id');
     }
 
+    public function driverLicense() {
+        return $this->hasOne(InternalAgentDriverLicense::class, 'reg_info_id', 'id');
+    }
+
     public function amlCourse() {
         return $this->hasOne(InternalAgentAmlCourse::class, 'reg_info_id', 'id');
     }

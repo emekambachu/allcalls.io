@@ -29,25 +29,11 @@ let omissionsInsurance = ref(true)
 const selectedFile = ref(null)
 
 let ChangeTab = () => {
-    // for (const key in props.firstStepErrors) {
-    //     if (props.firstStepErrors.hasOwnProperty(key)) {
-    //         props.firstStepErrors[key] = [];
-    //     }
-    // }
     if (page.props.auth.role === 'internal-agent') {
         emits("uploadPdfOmmision", { selectedFile: selectedFile.value, omissions_insurance: form.value.omissions_insurance });
     } else {
         emits("changeTab");
     }
-    // if (!selectedFile.value && page.props.auth.role === 'internal-agent' && !props.userData.internal_agent_contract.error_and_emission) {
-    //     props.firstStepErrors.uploadOmmisionPdf = [`The Omissions Insurances certificate is required.`];
-    // } else {
-    //     if (page.props.auth.role === 'internal-agent') {
-    //         emits("uploadPdfOmmision", { selectedFile: selectedFile.value, omissions_insurance: form.value.omissions_insurance });
-    //     } else {
-    //         emits("changeTab");
-    //     }
-    // }
 }
 
 const fileError = ref(false);
@@ -114,14 +100,30 @@ let goBack = () => {
     <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
         Errors and Omissions Insurances
     </h1>
-    <div v-show="page.props.auth.role === 'internal-agent'" class="bg-blue-50 py-10 px-6 rounded-lg shadow-md">
-        <div class="text-gray-600 mb-4">
+    <div v-show="page.props.auth.role === 'internal-agent'" class="flex items-center p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-700 dark:text-blue-400"
+        role="alert">
+        <svg class="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor" viewBox="0 0 20 20">
+            <path
+                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+        </svg>
+        <span class="sr-only">Info</span>
+        <div class="dark:text-gray-100 ">
+            <span class="font-medium "></span> Errors and Omissions Insurance is required by many our carriers and is a good
+            thing to have as a 1099 agent.
+
+            If you do not have e&o insurance you won't be able to partner with all of our available carriers.
+        </div>
+    </div>
+    <div v-show="page.props.auth.role === 'internal-agent'"
+        class="bg-gray-50 dark:bg-gray-700 dark:text-gray-100 py-10 px-6 rounded-lg shadow-md">
+        <div class="text-gray-600 dark:text-gray-100 mb-4">
             Complete the sign-up process and apply for Errors and Omissions Insurance.
         </div>
         <div class="mb-4">
             <a target="_blank"
                 href="https://mga-eo.com/apply/nd/lh-eo?_ga=2.22742075.1083085069.1638818057-1601577075.1638818057">
-                <strong class="text-blue-600 mr-1 hover:underline">MGA E&O Insurance Application
+                <strong class="text-blue-600 mr-1 dark:text-blue-400 hover:underline">MGA E&O Insurance Application
                 </strong>
             </a>for registration and application.
         </div>
@@ -149,7 +151,7 @@ let goBack = () => {
                         <span class="font-semibold">Click to upload</span> or drag and drop
                     </p>
                 </div>
-                <input id="dropzone-file-ommision" type="file" class="hidden" @change="handleFileChange"/>
+                <input id="dropzone-file-ommision" type="file" class="hidden" @change="handleFileChange" />
             </label>
         </div>
         <div v-if="firstStepErrors.uploadOmmisionPdf" class="text-red-500 mt-1"
@@ -188,9 +190,8 @@ let goBack = () => {
                 </button>
             </div>
             <div class="mt-4">
-                <button type="button" :class="{ 'opacity-25':  isLoading }"
-                    :disabled=" isLoading" @click.prevent="ChangeTab"
-                    class="button-custom px-3 py-2 rounded-md">
+                <button type="button" :class="{ 'opacity-25': isLoading }" :disabled="isLoading"
+                    @click.prevent="ChangeTab" class="button-custom px-3 py-2 rounded-md">
                     <global-spinner :spinner="isLoading" /> Next Step
                 </button>
 
