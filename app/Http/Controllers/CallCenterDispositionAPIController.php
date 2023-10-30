@@ -115,7 +115,8 @@ class CallCenterDispositionAPIController extends Controller
         Log::debug('api-logs:call-center-disposition: Initiating API call to update disposition.', ['contactId' => $contactId, 'url' => $url, 'data' => $data]);
 
         // Make a PATCH request using the Http facade
-        $response = Http::withBasicAuth($username, $password)->patch($url, $data);
+        $response = Http::withBasicAuth($username, $password)->withHeaders(['Content-Type' => 'application/json'])
+            ->patch($url, $data);
 
         // Check if the request was successful
         if ($response->status() == 202) {
