@@ -119,10 +119,10 @@ let additionalInformation = (val) => {
     additionalInfoD.value = val
     submit(5)
 }
-let driverLicensefile = ref(null)
+let driverLicenseFile = ref(null)
 let driverLicense = (license) => {
     isLoading.value = true
-    driverLicensefile.value = license
+    driverLicenseFile.value = license
     submit(6)
 }
 let uploadAmlPdf = ref(null)
@@ -250,7 +250,7 @@ let submit = (step) => {
         Object.assign(requestData, additionalInfoD.value);
         requestData.step = step;
     }else if (step === 6) {
-        requestData.driverLicensefile = driverLicensefile.value
+        requestData.driverLicenseFile = driverLicenseFile.value
         requestData.step = step;
     }
      else if (step === 7) {
@@ -280,7 +280,7 @@ let submit = (step) => {
             requestData[key] = null
         }
     }
- 
+
     return axios
         .post("/internal-agent/registration-steps", requestData, {
             headers: {
