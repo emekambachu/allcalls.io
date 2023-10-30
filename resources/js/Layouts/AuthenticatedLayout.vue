@@ -1005,12 +1005,6 @@ let appDownloadModal = ref(false);
 
               Support
             </NavLink>
-            <NavLink class="mb-10 gap-2" :href="route('profile.view')" :active="route().current('profile.edit') ||
-              route().current('profile.view')
-              ">
-              <img src="/img/profile.png" alt="" />
-              Profile
-            </NavLink>
           </div>
           <!-- Page Content -->
           <main class="col-span-4 bg-white rounded-xl mt-14 mb-10">
