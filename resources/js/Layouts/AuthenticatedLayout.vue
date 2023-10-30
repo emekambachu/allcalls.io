@@ -700,7 +700,10 @@ let appDownloadModal = ref(false);
                     </svg>
                   </div>
                 </div>
-                <div class="pl-14 text-white text-xs mb-5">
+                <div v-if="route().current('activities.index') ||
+                      route().current('transactions.index') ||
+                      route().current('profile.view') ||
+                      route().current('profile.edit')" class="pl-14 text-white text-xs mb-5">
                   <ul>
                     <li class="mb-3">
                       <Link href="/usage-activities" class="inline-flex items-center rounded-t-lg hover:text-custom-green"
