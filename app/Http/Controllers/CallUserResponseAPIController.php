@@ -33,7 +33,7 @@ class CallUserResponseAPIController extends Controller
         $call->save();
         Log::debug('CallUserResponseAPIController::update - call updated successfully');
 
-        if (!$request->device) {
+        if ($request->device && $request->device === 'phone') {
             Log::debug('CallUserResponseAPIController::update - device request field not found, dispatching event');
             CallAcceptedOrRejected::dispatch($request->user());
         }
