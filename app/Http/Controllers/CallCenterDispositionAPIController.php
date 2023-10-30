@@ -100,7 +100,7 @@ class CallCenterDispositionAPIController extends Controller
      * @param  string $disposition
      * @return bool
      */
-    public function updateDialerDisposition(int $contactId, string $disposition): bool
+    public function updateDialerDisposition(int $contactId, int $disposition): bool
     {
         // API details
         $username = env('DIALER_AI_USERNAME');
@@ -110,7 +110,7 @@ class CallCenterDispositionAPIController extends Controller
         $url = "https://{$hostname}/rest-api/contact/{$contactId}/";
 
         $data = [
-            'disposition' => $disposition
+            'disposition' => (int) $disposition
         ];
 
         Log::debug('api-logs:call-center-disposition: Initiating API call to update disposition.', ['contactId' => $contactId, 'url' => $url, 'data' => $data]);
