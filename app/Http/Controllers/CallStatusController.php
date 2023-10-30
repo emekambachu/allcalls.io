@@ -14,6 +14,7 @@ use App\Events\CallStatusUpdated;
 use App\Events\CompletedCallEvent;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use App\Events\CallAcceptedOrRejected;
 
 class CallStatusController extends Controller
 {
@@ -71,6 +72,7 @@ class CallStatusController extends Controller
 
             case 'no-answer':
                 Log::debug('no-answer event for user ' . $request->user_id);
+                CallAcceptedOrRejected::dispatch(User::find($request->user_id));
                 
                 $call = Call::where('unique_call_id', $request->unique_call_id)->first();
                 if (!$call) {
