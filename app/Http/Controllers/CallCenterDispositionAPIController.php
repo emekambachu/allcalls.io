@@ -63,7 +63,7 @@ class CallCenterDispositionAPIController extends Controller
         $password = env('DIALER_AI_PASSWORD');
         $hostname = env('DIALER_AI_BASE_DOMAIN');
 
-        $url = "http://{$hostname}/rest-api/contact/?contact={$callerId}";
+        $url = "https://{$hostname}/rest-api/contact/?contact={$callerId}";
     
         Log::debug('api-logs:call-center-disposition: Initiating API call.', ['callerId' => $callerId, 'url' => $url]);
     
