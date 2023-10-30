@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
@@ -39,7 +40,7 @@ class CallCenterDispositionAPIController extends Controller
         }
 
         // Update the disposition in the dialer
-        $updateResult = $this->updateDialerDisposition($contactId, $data['disposition']);
+        $updateResult = $this->updateDialerDisposition($contactId, $this->getDispositionId($data['disposition']));
 
         // Check if the update was successful
         if ($updateResult) {
@@ -146,5 +147,57 @@ class CallCenterDispositionAPIController extends Controller
             'TIP-Below 40K 56-64 Yrs Old', 'Transfer Connected- Auto Insurance', 'Transfer Declined- Auto Insurance',
             'Transfer in Progress- Auto Insurance', 'Voicemail', 'Wrong number'
         ];
+    }
+
+    public function getDispositionId(string $status): int
+    {
+        $mapping = [
+            "CONNECTED" => 0,
+            "NOT_CONNECTED" => 1,
+            "CALLBACK_LATER" => 2,
+            "WRONG_NUMBER" => 3,
+            "EARLY_HANGUP" => 4,
+            "HUNGUP_PITCHED" => 5,
+            "Call back requested" => 6,
+            "Do not call" => 7,
+            "Do not call escalate" => 8,
+            "Early Hang Up" => 9,
+            "Hung up" => 10,
+            "Hung Up Pitched" => 11,
+            "IVR removal" => 12,
+            "Language Barrier" => 13,
+            "No Disposition" => 14,
+            "NO RESPONSE" => 15,
+            "Not available" => 16,
+            "Not interested" => 17,
+            "NQ NI Auto Insurance" => 18,
+            "NQ no income" => 19,
+            "NQ no Insurance" => 20,
+            "NQ No vehicle" => 21,
+            "ST-Above 40K 19-64 Yrs Old" => 22,
+            "ST-Below 40K 19-55 Yrs Old" => 23,
+            "ST-Below 40K 56-64 Yrs Old" => 24,
+            "Successful Transfer- Auto Insurance" => 25,
+            "TC-Above 40K 19-64 Yrs Old" => 26,
+            "TC-Below 40K 19-55 Yrs Old" => 27,
+            "TC-Below 40K 56-64 Yrs Old" => 28,
+            "TD-Above 40K 19-64 Yrs Old" => 29,
+            "TD-Below 40K 19-55 Yrs Old" => 30,
+            "TD-Below 40K 56-64 Yrs Old" => 31,
+            "TIP-Above 40K 19-64 Yrs Old" => 32,
+            "TIP-Below 40K 19-55 Yrs Old" => 33,
+            "TIP-Below 40K 56-64 Yrs Old" => 34,
+            "Transfer Connected- Auto Insurance" => 35,
+            "Transfer Declined- Auto Insurance" => 36,
+            "Transfer in Progress- Auto Insurance" => 37,
+            "Voicemail" => 38,
+            "Wrong number" => 39
+        ];
+
+        if (!isset($mapping[$status])) {
+            throw new Exception("Status string not found: {$status}");
+        }
+
+        return $mapping[$status];
     }
 }
