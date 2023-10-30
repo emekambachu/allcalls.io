@@ -271,7 +271,7 @@ let updateProgress = (data) => {
                       </svg>
                     </button>
                     <button class="mr-2" title="Onboarding info"
-                      v-show="agent.internal_agent_contract && agent.legacy_key === 1 && agent.contract_step === 10"
+                      v-show="agent.internal_agent_contract && agent.legacy_key === 1 && agent.contract_step === 12"
                       @click="openContractModal(agent)"> <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -280,7 +280,7 @@ let updateProgress = (data) => {
                     </button>
 
                     <button class="ml-2" @click="viewPdfData(agent)"
-                      v-show="agent.internal_agent_contract && agent.legacy_key === 1 && agent.contract_step === 10"
+                      v-show="agent.internal_agent_contract && agent.legacy_key === 1 && agent.contract_step === 12"
                       title="Contracting">
                       <svg fill="#000000" class="w-4 h-4 " version="1.1" xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 237.783 237.783" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -302,7 +302,7 @@ let updateProgress = (data) => {
                       </svg>
                     </button>
                     <button class="ml-2" @click="agent.is_locked !== 0 ? ApproveAgent(agent) : null"
-                      v-show="agent.internal_agent_contract && agent.legacy_key === 1 && agent.contract_step === 10"
+                      v-show="agent.internal_agent_contract && agent.legacy_key === 1 && agent.contract_step === 12"
                       :title="agent.is_locked === 0 ? 'Approved' : 'Approve Agent'">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" :class="{ 'text-green-400': agent.is_locked === 0 }" class="w-5 h-5 ">

@@ -10,6 +10,7 @@ import LegalInformation2 from '@/Pages/InternalAgent/LegalInformation2.vue'
 import AddressHistory from '@/Pages/InternalAgent/AddressHistory.vue'
 import AdditionalInfo from '@/Pages/InternalAgent/AdditionalInfo.vue'
 import UploadLicence from '@/Pages/InternalAgent/UploadLicence.vue'
+import DriverLicence from '@/Pages/InternalAgent/DriverLicence.vue'
 import BankInformationUpload from '@/Pages/InternalAgent/BankInformationUpload.vue'
 import AmLCourse from '@/Pages/InternalAgent/AmLCourse.vue'
 import ErrorsAndEmissions from '@/Pages/InternalAgent/ErrorsAndEmissions.vue'
@@ -118,13 +119,18 @@ let additionalInformation = (val) => {
     additionalInfoD.value = val
     submit(5)
 }
-
+let driverLicenseFile = ref(null)
+let driverLicense = (license) => {
+    isLoading.value = true
+    driverLicenseFile.value = license
+    submit(6)
+}
 let uploadAmlPdf = ref(null)
 let uploadPdfAml = (val) => {
     isLoading.value = true
     uploadAmlPdf.value = val.selectedFile
     form.value.aml_course = val.aml_course
-    submit(6)
+    submit(7)
 }
 
 let uploadOmmisionPdf = ref(null)
@@ -132,21 +138,21 @@ let uploadPdfOmmision = (val) => {
     isLoading.value = true
     uploadOmmisionPdf.value = val.selectedFile
     form.value.omissions_insurance = val.omissions_insurance
-    submit(7)
+    submit(8)
 }
 
 let uploadLicensePdf = ref(null)
 let uploadLicense = (val) => {
     isLoading.value = true
     uploadLicensePdf.value = val
-    submit(8)
+    submit(9)
 }
 
 let uploadBankingInfoPdf = ref(null)
 let uploadBankingInfo = (val) => {
     isLoading.value = true
     uploadBankingInfoPdf.value = val
-    submit(9)
+    submit(10)
 }
 let previewContract = () => {
     StepsModal.value = false
@@ -157,7 +163,7 @@ let additional_info_saved = ref(false)
 let errorHandle = (data, response) => {
     if (data < 5) {
         ChangeTab(response.route)
-    } else if (data < 9) {
+    } else if (data < 10) {
         if (data === 5) {
             step.value = 2
             contractStep.value = 0
@@ -171,8 +177,12 @@ let errorHandle = (data, response) => {
             step.value = 5
             contractStep.value = 0
         }
+        else if (data === 9) {
+            step.value = 6
+            contractStep.value = 0
+        }
         pageTop()
-    } else if (data === 9) {
+    } else if (data === 10) {
         slidingLoader.value = true
         StepsModal.value = false
         contractModal.value = true
@@ -183,7 +193,7 @@ if (props.userData?.internal_agent_contract) {
     if (props.userData.contract_step <= 5) {
         step.value = 1
         contractStep.value = props.userData.contract_step
-    } else if (props.userData.contract_step <= 9) {
+    } else if (props.userData.contract_step <= 10) {
         contractStep.value = 0
         if (props.userData.contract_step === 6) {
             step.value = 2
@@ -194,7 +204,11 @@ if (props.userData?.internal_agent_contract) {
         } else if (props.userData.contract_step === 9) {
             step.value = 5
         }
-    } else if (props.userData.contract_step === 10) {
+        else if (props.userData.contract_step === 10) {
+            console.log('here');
+            step.value = 6
+        }
+    } else if (props.userData.contract_step === 11) {
         StepsModal.value = false
         contractModal.value = true
     }
@@ -204,7 +218,7 @@ let signature_authorization = ref(null)
 let signaturePreview = (val) => {
     isLoading.value = true
     // signature_authorization.value = val
-    submit(10)
+    submit(11)
 }
 let submit = (step) => {
 
@@ -216,7 +230,7 @@ let submit = (step) => {
             individual_business: individual_business.value ? 1 : null, // Send 1 if true, 0 if false
         });
 
-    } else if (step === 2) {
+    }else if (step === 2) {
         Object.assign(requestData, legalFormData1.value);
         requestData.step = step;
     } else if (step === 3) {
@@ -235,25 +249,29 @@ let submit = (step) => {
         // requestData.accompanying_sign = accompanying_sign.value
         Object.assign(requestData, additionalInfoD.value);
         requestData.step = step;
-    } else if (step === 6) {
+    }else if (step === 6) {
+        requestData.driverLicenseFile = driverLicenseFile.value
+        requestData.step = step;
+    }
+     else if (step === 7) {
         Object.assign(requestData, {
             aml_course: form.value.aml_course ? 1 : null, // Send 1 if true, 0 if false
         });
         requestData.uploadAmlPdf = uploadAmlPdf.value
         requestData.step = step;
-    } else if (step === 7) {
+    } else if (step === 8) {
         Object.assign(requestData, {
             omissions_insurance: form.value.omissions_insurance ? 1 : null, // Send 1 if true, 0 if false
         });
         requestData.uploadOmmisionPdf = uploadOmmisionPdf.value
         requestData.step = step;
-    } else if (step === 8) {
+    } else if (step === 9) {
         requestData.residentLicensePdf = uploadLicensePdf.value;
         requestData.step = step;
-    } else if (step === 9) {
+    } else if (step === 10) {
         requestData.bankingInfoPdf = uploadBankingInfoPdf.value;
         requestData.step = step;
-    } else if (step === 10) {
+    } else if (step === 11) {
         requestData.signature_authorization = signature_authorization.value
         requestData.step = step;
     }
@@ -262,7 +280,7 @@ let submit = (step) => {
             requestData[key] = null
         }
     }
- 
+
     return axios
         .post("/internal-agent/registration-steps", requestData, {
             headers: {
@@ -445,23 +463,28 @@ input[type=number] {
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
                             <div v-show="step === 2" class="pt-6">
+                                <DriverLicence @driverLicense="driverLicense" :isLoading="isLoading"
+                                    :firstStepErrors="firstStepErrors" @changeTab="NextStep()" @goback="goBack()"
+                                    :userData="$page.props.auth.role === 'admin' ? userData.value : userData"  />
+                            </div>
+                            <div v-show="step === 3" class="pt-6">
                                 <AmLCourse :firstStepErrors="firstStepErrors" :amlCouseGuide="amlCouseGuide" :isLoading="isLoading"
                                     @uploadPdfAml="uploadPdfAml" @changeTab="NextStep()" @goback="goBack()"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
 
-                            <div v-show="step === 3" class="pt-6">
+                            <div v-show="step === 4" class="pt-6">
                                 <ErrorsAndEmissions :firstStepErrors="firstStepErrors" :isLoading="isLoading"
                                     @uploadPdfOmmision="uploadPdfOmmision" @changeTab="NextStep()" @goback="goBack()"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
 
-                            <div v-show="step === 4">
+                            <div v-show="step === 5">
                                 <UploadLicence @uploadLicense="uploadLicense" :isLoading="isLoading"
                                     :firstStepErrors="firstStepErrors" @changeTab="NextStep()" @goback="goBack()"
                                     :userData="$page.props.auth.role === 'admin' ? userData.value : userData" />
                             </div>
-                            <div v-show="step === 5">
+                            <div v-show="step === 6">
                                 <BankInformationUpload @uploadBankingInfo="uploadBankingInfo"
                                     :firstStepErrors="firstStepErrors" @submit="previewContract" :isLoading="isLoading"
                                     @goback="goBack()"
