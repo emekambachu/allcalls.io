@@ -13,6 +13,7 @@ class CallUserResponseAPIController extends Controller
     public function update(Request $request, $uniqueCallId)
     {
         Log::debug('CallUserResponseAPIController::update - endpoint hit');
+        Log::debug('All Requests:', $request->all());
 
         $request->validate([
             'user_response_time' => 'required',
