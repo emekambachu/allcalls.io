@@ -110,6 +110,7 @@ class CallStatusController extends Controller
 
             case 'completed':
                 Log::debug('completed event for user ' . $request->user_id);
+                CallAcceptedOrRejected::dispatch(User::find($request->user_id));
                 $callDuration = (int) $request->input('CallDuration');
 
 
