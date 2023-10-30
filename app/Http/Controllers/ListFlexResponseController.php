@@ -15,7 +15,6 @@ class ListFlexResponseController extends Controller
         $lastname  = $request->input('lastname');
         $mobile    = $request->input('mobile');
         $email     = $request->input('email');
-        // If there are more parameters, you can fetch them similarly.
 
         // 2. Set up the payload.
         $payload = [
