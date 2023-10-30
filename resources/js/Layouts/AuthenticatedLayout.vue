@@ -782,7 +782,7 @@ let appDownloadModal = ref(false);
                     </li>
 
                     <li class="mb-3">
-                      <Link href="/transactions" class="inline-flex items-center rounded-t-lg hover:text-custom-green"
+                      <Link href="/profile/view" class="inline-flex items-center rounded-t-lg hover:text-custom-green"
                         :class="{
                           'text-custom-green': route().current(
                             'profile.view'
