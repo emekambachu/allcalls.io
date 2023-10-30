@@ -68,8 +68,6 @@
                 any information changes, I will notify my agency office within 5 days of such change. Further, I understand
                 that my agency may contact me when I need to answer carrier-specific questions.</strong></p>
     </div>
-
-
     <div class="px-5 pb-6">
         <div class="flex justify-between flex-wrap">
             <div class="mt-4">
@@ -279,11 +277,9 @@ export default {
     methods: {
         dateFormat(dateString) {
             const dateObj = new Date(dateString);
-
             const day = dateObj.getDate().toString().padStart(2, "0");
             const month = dateObj.toLocaleString("en-US", { month: "short" }).toLowerCase();
             const year = dateObj.getFullYear();
-
             return `${day}-${month}-${year}`;
         },
 
@@ -320,7 +316,6 @@ export default {
                 if (!hasErrors) {
                     if (this.page.auth.role === 'internal-agent') {
                         this.$emit("legalFormDataStep2", this.form);
-                        // emits("legalFormDataStep2", this.form);
                         this.firstStepErrors = {}; // Clear the errors by assigning a new empty object
 
                     } else {

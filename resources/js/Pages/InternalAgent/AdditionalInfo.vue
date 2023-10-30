@@ -74,17 +74,14 @@
         Additional Information
     </h1>
     <div>
-
         <div class="grid lg:grid-cols-2 mb-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
             <div>
                 <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 ">Resident
-                    Country<span class="text-red-500 ">*</span></label>
+                    Country {{ form.resident_country }}<span class="text-red-500 ">*</span></label>
                 <select :disabled="page.auth.role === 'admin'" v-model="form.resident_country" id="countries"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                     <option v-for="country in countries" :value="country.code">{{ country.name }} </option>
                 </select>
-                <!-- <input type="text" v-model="form.resident_country" id="default-input"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white"> -->
                 <div v-if="firstStepErrors.resident_country" class="text-red-500"
                     v-text="firstStepErrors.resident_country[0]"></div>
             </div>
@@ -146,20 +143,6 @@
                     v-text="firstStepErrors.resident_maiden_name[0]"></div>
             </div>
         </div>
-        <!-- <div class="mx-auto mb-5 instructions-main">
-            <hr class="w-100 h-1 my-4 bg-gray-600 border-0 rounded dark:bg-gray-700">
-            <p class="text-center">
-                By signing below, l hereby authorize the Company to initiate credit entries and, if
-                necessary, adjustments for credit entries in error to the checking and/or savings account
-                indicated on this form. This authority is to remain in full effect until the Company has
-                received written notice from me for its termination. I understand that this authorization
-                is subject to the terms of any agent or representative contract, commission agreement,
-                or loan agreement that I may have now, or in the future, with the Company.
-
-            </p>
-        </div> -->
-
-        
         <div class="px-5 pb-6">
             <div class="flex justify-between flex-wrap">
                 <div class="mt-4">
@@ -174,12 +157,12 @@
                     </button>
                 </div>
                 <div class="mt-4">
-                    <button  type="button" :class="{ 'opacity-25': isLoading }"
-                        :disabled="isLoading" @click="ChangeTab" class="button-custom px-3 py-2 rounded-md">
+                    <button type="button" :class="{ 'opacity-25': isLoading }" :disabled="isLoading" @click="ChangeTab"
+                        class="button-custom px-3 py-2 rounded-md">
                         <global-spinner :spinner="isLoading" /> Next Step
                     </button>
                 </div>
-                
+
             </div>
         </div>
     </div>
@@ -213,10 +196,9 @@ export default {
                 resident_state: 'Choose',
                 resident_maiden_name: null,
             },
-            countries: [{
-                'name': 'United States of America',
-                'code': "USA"
-            }],
+            countries: [
+                { "name": "United States of Amrecia", "code": "USA" },
+            ],
             sigError: null,
             signAture: null,
             isFormValid: false
@@ -235,12 +217,6 @@ export default {
             this.form = this.userData.internal_agent_contract.additional_info
             this.signAture = this.userData.internal_agent_contract.get_question_sign
         }
-        // if (this.page.auth.role === 'internal-agent') {
-        //     const canvasElement = this.$refs.signature2Pad.$el.querySelector('canvas');
-        //     canvasElement.width = 390; // Set the width you desire
-        //     canvasElement.height = 100; // Set the height you desire
-        // }
-        // console.log('docuSignAuthCode', this.docuSignAuthCode);
     },
 
     methods: {
@@ -252,7 +228,7 @@ export default {
                 this.form.resident_state !== 'Choose'
             );
         },
-      
+
         dateFormat(dateString) {
             const dateObj = new Date(dateString);
 
@@ -287,15 +263,6 @@ export default {
                 if (this.page.auth.role === 'internal-agent') {
                     if (!hasErrors) {
                         this.$emit("additionalInfoData", this.form);
-                        // :href="route('internal.agent.docusign.sign','accompanying_sign' )"
-                        // const { isEmpty, data } = this.$refs.signature2Pad.saveSignature();
-                        // if (!isEmpty || this.userData.internal_agent_contract.get_question_sign) {
-                        //     this.sigError = null
-                        //     this.$emit("additionalInfoData", { form: this.form, accompanying_sign: data });
-                        //     // this.firstStepErrors = {}; // Clear the errors by assigning a new empty object
-                        // } else {
-                        //     this.sigError = 'Please provide a signature.';
-                        // }
                     } else {
                         var element = document.getElementById("modal_main_id");
                         element.scrollIntoView();

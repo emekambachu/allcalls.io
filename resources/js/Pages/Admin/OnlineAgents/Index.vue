@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { onMounted } from "vue";
-import { Head, router } from "@inertiajs/vue3";
+import { Head, router, usePage } from "@inertiajs/vue3";
 
 const props = defineProps({
   onlineUsers: {
@@ -10,7 +10,9 @@ const props = defineProps({
 });
 
 const refreshPage = () => {
-  router.visit("/admin/online-agents");
+  if (usePage().url === '/admin/online-agents') {
+    router.visit("/admin/online-agents");
+  }
 };
 
 onMounted(() => {

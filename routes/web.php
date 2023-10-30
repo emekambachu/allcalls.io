@@ -25,6 +25,7 @@ use App\Http\Controllers\CallClientInfoController;
 use App\Http\Controllers\AdditionalFilesController;
 use App\Http\Controllers\AgentStatusDocsController;
 use App\Http\Controllers\TwilioDeviceTokenController;
+use App\Http\Controllers\TwilioDialerTokenController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CallUserResponseAPIController;
 use App\Http\Controllers\AgentStatusPriceDocsController;
@@ -120,6 +121,7 @@ Route::post('/billing/autopay', [AutoPayController::class, 'storeWithStripe'])->
 Route::get('/usage-activities', [UsageActivityController::class, 'index'])->middleware(['auth', 'verified'])->name('activities.index');
 
 Route::get('/device/token', [TwilioTokenController::class, 'show'])->middleware('auth');
+Route::get('/device/token/dialer', [TwilioDialerTokenController::class, 'show'])->middleware('auth');
 
 Route::get('/device/incoming', function () {
     return view('incoming');

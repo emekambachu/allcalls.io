@@ -201,10 +201,6 @@ let enforceFiveDigitInput = (fieldName, val) => {
     <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
         Please Provide Your Address History for the Past 7 Years
     </h1>
-    <!-- <div v-if="yearError" class="bg-red-100 mb-4 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-        role="alert">
-        <span class="block sm:inline">The cumulative period of all addresses should be greater than 7 years.</span>
-    </div> -->
     <div v-if="yearError">
         <div 
             class="bg-red-100 mb-4  border border-red-400 text-red-700 px-4 py-2 rounded relative" role="alert">
@@ -215,7 +211,6 @@ let enforceFiveDigitInput = (fieldName, val) => {
 
 
     <div v-for="(history, index) in addres_history" :key="history.id">
-
         <div class="grid lg:grid-cols-3 mb-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
             <div>
                 <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 ">Home
@@ -280,8 +275,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
                 </div>
             </div>
             <div>
-                <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 ">Move-Out
-                    Date</label>
+                <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 " v-text="index == 0 ? 'Currently Address' : 'Move-Out-Date'">  </label>
                 <VueDatePicker :disabled="page.props.auth.role === 'admin'" v-model="form[history.address].move_out_date"
                     format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply>
                 </VueDatePicker>

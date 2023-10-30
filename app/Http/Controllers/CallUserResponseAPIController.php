@@ -6,12 +6,14 @@ use Carbon\Carbon;
 use App\Models\Call;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\Events\CallAcceptedOrRejected;
 
 class CallUserResponseAPIController extends Controller
 {
     public function update(Request $request, $uniqueCallId)
     {
         Log::debug('CallUserResponseAPIController::update - endpoint hit');
+        Log::debug('All Requests:', $request->all());
 
         $request->validate([
             'user_response_time' => 'required',
@@ -30,6 +32,11 @@ class CallUserResponseAPIController extends Controller
         $call->user_response_time = Carbon::parse($request->user_response_time);
         $call->save();
         Log::debug('CallUserResponseAPIController::update - call updated successfully');
+
+        if ($request->device && $request->device === 'phone') {
+            Log::debug('CallUserResponseAPIController::update - device request field not found, dispatching event');
+            CallAcceptedOrRejected::dispatch($request->user());
+        }
 
         return response()->json([
             'message' => 'Call updated successfully.',

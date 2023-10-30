@@ -26,6 +26,7 @@ use App\Http\Controllers\CallTypesSelectedAPIController;
 use App\Http\Controllers\TwilioIOSAccessTokenController;
 use App\Http\Controllers\CustomBroadcastingAuthController;
 use App\Http\Controllers\ActiveUsersPusherWebhookController;
+use App\Http\Controllers\CallCenterDispositionAPIController;
 use App\Http\Controllers\TwilioAndroidAccessTokenController;
 use App\Http\Controllers\TwilioIOSAccessTokenGuestController;
 use App\Http\Controllers\TwilioIOSSandboxAccessTokenController;
@@ -141,6 +142,7 @@ Route::middleware('auth:sanctum')->get('/twilio-android-access-token-guest', [Tw
 
 Route::match(['get', 'post'], '/agent-status-price', [AgentStatusAPIController::class, 'show']);
 Route::match(['get', 'post'], '/agent-status', [AgentStatusAPIController::class, 'showWithoutPrice']);
+Route::match(['get', 'post'], '/call-center/disposition', [CallCenterDispositionAPIController::class, 'update']);
 
 Route::middleware('auth:sanctum')->post('/app-events', [AppEventsController::class, 'store']);
 
