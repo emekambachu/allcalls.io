@@ -57,19 +57,20 @@ class CallCenterDispositionAPIController extends Controller
      * @param  string $callerId
      * @return int|null
      */
-    public function getContactIdByCallerId($callerId) {
+    public function getContactIdByCallerId($callerId)
+    {
         // API details
         $username = env('DIALER_AI_USERNAME');
         $password = env('DIALER_AI_PASSWORD');
         $hostname = env('DIALER_AI_BASE_DOMAIN');
 
         $url = "https://{$hostname}/rest-api/contact/?contact={$callerId}";
-    
+
         Log::debug('api-logs:call-center-disposition: Initiating API call.', ['callerId' => $callerId, 'url' => $url]);
-    
+
         // Make a GET request using the Http facade
         $response = Http::withBasicAuth($username, $password)->get($url);
-    
+
         // Check if the request was successful
         if ($response->successful()) {
             $data = $response->json();
@@ -77,7 +78,7 @@ class CallCenterDispositionAPIController extends Controller
                 // Extract contact ID from the URL
                 preg_match('#/contact/(\d+)/#', $data['results'][0]['url'], $matches);
                 $contactId = $matches[1] ?? null;
-    
+
                 Log::debug('api-logs:call-center-disposition: Contact ID retrieved successfully.', ['contactId' => $contactId]);
                 return $contactId;
             } else {
@@ -86,23 +87,44 @@ class CallCenterDispositionAPIController extends Controller
         } else {
             Log::debug('api-logs:call-center-disposition: API request failed.', ['response' => $response->body()]);
         }
-    
+
         return null;
     }
-    
+
 
     /**
-     * Dummy method to update disposition in the dialer.
+     * Update disposition in the dialer.
      * 
      * @param  int    $contactId
      * @param  string $disposition
      * @return bool
      */
-    protected function updateDialerDisposition(int $contactId, string $disposition): bool
+    public function updateDialerDisposition(int $contactId, string $disposition): bool
     {
-        // Here, you would make the API call to the dialer to update the disposition for the given contactId
-        // For the sake of this example, we'll return a dummy result
-        return true; // This is a dummy value; replace with the actual logic
+        // API details
+        $username = env('DIALER_AI_USERNAME');
+        $password = env('DIALER_AI_PASSWORD');
+        $hostname = env('DIALER_AI_BASE_DOMAIN');
+
+        $url = "http://{$hostname}/rest-api/contact/{$contactId}/";
+
+        $data = [
+            'disposition' => $disposition
+        ];
+
+        Log::debug('api-logs:call-center-disposition: Initiating API call to update disposition.', ['contactId' => $contactId, 'url' => $url, 'data' => $data]);
+
+        // Make a PATCH request using the Http facade
+        $response = Http::withBasicAuth($username, $password)->patch($url, $data);
+
+        // Check if the request was successful
+        if ($response->status() == 202) {
+            Log::debug('api-logs:call-center-disposition: Disposition updated successfully.', ['contactId' => $contactId, 'disposition' => $disposition]);
+            return true;
+        }
+
+        Log::debug('api-logs:call-center-disposition: Failed to update disposition.', ['response' => $response->body(), 'contactId' => $contactId, 'disposition' => $disposition]);
+        return false;
     }
 
     /**
