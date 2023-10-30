@@ -949,7 +949,7 @@ let appDownloadModal = ref(false);
               route().current('profile.edit')" class="pl-14 text-white text-xs mb-5">
               <ul>
                 <li class="mb-3">
-                  <Link href="/usage-activities" class="inline-flex items-center rounded-t-lg hover:text-custom-green"
+                  <Link :href="route('activities.index')" class="inline-flex items-center rounded-t-lg hover:text-custom-green"
                     :class="{
                       'text-custom-green': route().current(
                         'activities.index'
@@ -968,16 +968,28 @@ let appDownloadModal = ref(false);
                 <li class="mb-3">
                   <Link aria-current="page" class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
                     :class="{
-                      'text-custom-green': route().current(
-                        'transactions.index'
-                      ),
-                    }" href="">
+                      'text-custom-green': route().current('transactions.index'),
+                    }" :href="route('transactions.index')">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-4 h-4 mr-2">
                     <path stroke-linecap="round" stroke-linejoin="round"
                       d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
                   </svg>
                   <span>Transactions</span>
+                  </Link>
+                </li>
+
+                <li class="mb-3">
+                  <Link aria-current="page" class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
+                    :class="{
+                      'text-custom-green': route().current('profile.view') || route().current('profile.edit'),
+                    }" :href="route('profile.view')">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-4 h-4 mr-2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                  </svg>
+                  <span>Profile</span>
                   </Link>
                 </li>
               </ul>
