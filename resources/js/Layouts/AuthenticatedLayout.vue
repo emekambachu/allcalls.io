@@ -701,9 +701,9 @@ let appDownloadModal = ref(false);
                   </div>
                 </div>
                 <div v-if="route().current('activities.index') ||
-                      route().current('transactions.index') ||
-                      route().current('profile.view') ||
-                      route().current('profile.edit')" class="pl-14 text-white text-xs mb-5">
+                  route().current('transactions.index') ||
+                  route().current('profile.view') ||
+                  route().current('profile.edit')" class="pl-14 text-white text-xs mb-5">
                   <ul>
                     <li class="mb-3">
                       <Link href="/usage-activities" class="inline-flex items-center rounded-t-lg hover:text-custom-green"
@@ -913,6 +913,80 @@ let appDownloadModal = ref(false);
                 </li>
               </ul>
             </div>
+
+
+
+
+
+
+
+            <NavLink class="mb-10 gap-2" id="billing-nav-link" :href="route('activities.index')" :active="route().current('activities.index') ||
+              route().current('transactions.index') ||
+              route().current('profile.view') ||
+              route().current('profile.edit')
+              " :class="{
+    'mb-5':
+      route().current('activities.index') ||
+      route().current('transactions.index') ||
+      route().current('profile.view') ||
+      route().current('profile.edit')
+  }">
+              <img src="/img/billing.png" alt="" />
+              Settings
+
+              <svg v-if="route().current('activities.index') ||
+                route().current('transactions.index') ||
+                route().current('profile.view') ||
+                route().current('profile.edit')" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+              </svg>
+            </NavLink>
+
+            <div v-if="route().current('activities.index') ||
+              route().current('transactions.index') ||
+              route().current('profile.view') ||
+              route().current('profile.edit')" class="pl-14 text-white text-xs mb-5">
+              <ul>
+                <li class="mb-3">
+                  <Link href="/usage-activities" class="inline-flex items-center rounded-t-lg hover:text-custom-green"
+                    :class="{
+                      'text-custom-green': route().current(
+                        'activities.index'
+                      ),
+                    }">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-4 h-4 mr-2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
+                  </svg>
+
+                  <span>Activities</span>
+                  </Link>
+                </li>
+
+                <li class="mb-3">
+                  <Link aria-current="page" class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
+                    :class="{
+                      'text-custom-green': route().current(
+                        'transactions.index'
+                      ),
+                    }" href="">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-4 h-4 mr-2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                  </svg>
+                  <span>Transactions</span>
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+
+
+
+
 
             <NavLink class="mb-10 gap-2" :href="route('support.index')" :active="route().current('support.index')">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
