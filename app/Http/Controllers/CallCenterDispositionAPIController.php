@@ -106,7 +106,7 @@ class CallCenterDispositionAPIController extends Controller
         $password = env('DIALER_AI_PASSWORD');
         $hostname = env('DIALER_AI_BASE_DOMAIN');
 
-        $url = "http://{$hostname}/rest-api/contact/{$contactId}/";
+        $url = "https://{$hostname}/rest-api/contact/{$contactId}/";
 
         $data = [
             'disposition' => $disposition
