@@ -810,17 +810,6 @@ let appDownloadModal = ref(false);
               Reporting
             </NavLink>
 
-            <NavLink class="mb-10 gap-2" :href="route('activities.index')" :active="route().current('activities.index')">
-              <img src="/img/activity.png" alt="" />
-              Activities
-            </NavLink>
-
-            <NavLink class="mb-10 gap-2" :href="route('transactions.index')"
-              :active="route().current('transactions.index')">
-              <img src="/img/transactions.png" alt="" />
-              Transactions
-            </NavLink>
-
             <NavLink v-if="$page.props.auth.role === 'internal-agent'" class="mb-10 gap-2"
               :href="route('additional-files.index')" :active="route().current('additional-files.index')">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
