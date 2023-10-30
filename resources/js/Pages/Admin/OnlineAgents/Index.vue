@@ -10,8 +10,6 @@ const props = defineProps({
 });
 
 const refreshPage = () => {
-  console.log('PAGE URL IS: ');
-  console.log(usePage().url);
   if (usePage().url === '/admin/online-agents') {
     router.visit("/admin/online-agents");
   }
