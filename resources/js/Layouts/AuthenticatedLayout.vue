@@ -793,7 +793,7 @@ let appDownloadModal = ref(false);
                 "
               >
                 <div class="row pb-3 flex">
-                  <div class="columns-6 flex">Billing</div>
+                  <div class="columns-6 flex">Add Funds</div>
                   <div class="columns-6 flex pl-20">
                     <svg
                       v-if="
@@ -1034,7 +1034,7 @@ let appDownloadModal = ref(false);
                 />
               </svg>
 
-              Calls
+              Reporting
             </NavLink>
 
             <NavLink
