@@ -234,6 +234,15 @@ let setupTwilioDevice = () => {
       showOngoing.value = false;
     });
 
+    device.addListener('disconnect', device => {
+      console.log('The device is about to disconnect now.')
+    });
+
+    device.on("cancel", function() {
+      console.log("Incoming call was canceled");
+      // Update the UI to hide the incoming call notification
+    });
+
     device.on("incoming", (incomingCall) => {
       console.log("Incoming!");
       call = incomingCall;
