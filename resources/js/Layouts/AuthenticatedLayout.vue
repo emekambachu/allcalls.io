@@ -613,17 +613,7 @@ let appDownloadModal = ref(false);
                 Clients
               </ResponsiveNavLink>
               <ResponsiveNavLink :href="route('calls.index')" :active="route().current('calls.index')">
-                Calls
-              </ResponsiveNavLink>
-
-              <ResponsiveNavLink :href="route('activities.index')" :active="route().current('activities.index') ||
-                route().current('activities.index')
-                ">
-                Activities
-              </ResponsiveNavLink>
-
-              <ResponsiveNavLink :href="route('transactions.index')" :active="route().current('transactions.index')">
-                Transactions
+                Reporting
               </ResponsiveNavLink>
 
               <ResponsiveNavLink :href="route('billing.funds.index')" :active="route().current('billing.funds.index') ||
@@ -683,47 +673,12 @@ let appDownloadModal = ref(false);
                       </div>
                       </Link>
                     </li>
-
-                    <!-- <li>
-                    <Link
-                      href="/billing/cards"
-                      class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
-                      :class="{
-                        'text-custom-green': route().current('billing.cards.index'),
-                      }"
-                      aria-current="page"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke-width="1.5"
-                        stroke="currentColor"
-                        class="w-4 h-4 mr-2"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"
-                        />
-
-                      </svg>
-
-                      <span>Saved Cards</span>
-                      </Link>
-                    </li> -->
                   </ul>
                 </div>
               </ResponsiveNavLink>
 
               <ResponsiveNavLink :href="route('support.index')" :active="route().current('support.index')">
                 Support
-              </ResponsiveNavLink>
-
-              <ResponsiveNavLink :href="route('profile.view')" :active="route().current('profile.view') ||
-                route().current('profile.edit')
-                ">
-                Profile
               </ResponsiveNavLink>
 
 
