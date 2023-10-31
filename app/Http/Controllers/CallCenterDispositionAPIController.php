@@ -87,6 +87,9 @@ class CallCenterDispositionAPIController extends Controller
         // Check if the request was successful
         if ($response->successful()) {
             $data = $response->json();
+
+            Log::debug('getContactIdByCallerId: ', $data);
+
             if (isset($data['results'][0]['url'])) {
                 // Extract contact ID from the URL
                 preg_match('#/contact/(\d+)/#', $data['results'][0]['url'], $matches);
