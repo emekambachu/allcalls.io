@@ -12,22 +12,29 @@ class RingyResponseController extends Controller
     {
         Log::debug('api-logs:ringy-response: Received request.');
 
-        // Get the input parameters from the incoming request.
-        $firstname = $request->input('first_name');
-        $lastname  = $request->input('last_name');
-        $phone     = $request->input('phone_number');
-        $email     = $request->input('email');
-
-        // Set up the payload for the Ringy API.
+        // Mandatory fields
         $payload = [
             'sid'                 => env('RINGY_SID'),
             'authToken'           => env('RINGY_AUTH_TOKEN'),
-            'phone_number'        => $phone,
-            'vendor_reference_id' => uniqid(), // Replace with your actual vendor reference ID
-            'first_name'          => $firstname,
-            'last_name'           => $lastname,
-            'email'               => $email,
+            'phone_number'        => $request->input('phone_number'),
+            'vendor_reference_id' => uniqid(),
+            'first_name'          => $request->input('first_name'),
+            'last_name'           => $request->input('last_name'),
+            'email'               => $request->input('email'),
         ];
+
+        // Optional fields
+        $optionalFields = [
+            'street_address', 'city', 'state', 'zip_code', 'birthday',
+            'height', 'weight', 'household_income', 'medicare',
+            'coverage_type', 'family_size'
+        ];
+
+        foreach ($optionalFields as $field) {
+            if (!is_null($request->input($field))) {
+                $payload[$field] = $request->input($field);
+            }
+        }
 
         Log::debug('api-logs:ringy-response: Prepared payload: ' . json_encode($payload));
 
