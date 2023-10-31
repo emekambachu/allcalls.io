@@ -42,23 +42,23 @@ class RingyResponseController extends Controller
         switch ($statusCode) {
             case 200:
                 Log::debug('api-logs:ringy-response: API request successful. Response: ' . $response->body());
-                return response()->json(['message' => 'Success', 'vendorResponseId' => $response->json('vendorResponseId')]);
+                return response()->json(['message' => 'Success']);
 
             case 400:
                 Log::debug('api-logs:ringy-response: Bad Request. Response: ' . $response->body());
-                return response()->json(['message' => 'Bad Request'], 400);
+                return response()->json(['message' => 'Failure'], 400);
 
             case 401:
                 Log::debug('api-logs:ringy-response: Unauthorized. Response: ' . $response->body());
-                return response()->json(['message' => 'Unauthorized'], 401);
+                return response()->json(['message' => 'Failure'], 400);
 
             case 508:
                 Log::debug('api-logs:ringy-response: Resource Limit Reached. Response: ' . $response->body());
-                return response()->json(['message' => 'Resource Limit Reached'], 508);
+                return response()->json(['message' => 'Failure'], 400);
 
             default:
                 Log::debug('api-logs:ringy-response: Unexpected status code. Response: ' . $response->body());
-                return response()->json(['message' => 'Unexpected Error'], 500);
+                return response()->json(['message' => 'Failure'], 400);
         }
     }
 }
