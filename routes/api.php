@@ -145,6 +145,7 @@ Route::match(['get', 'post'], '/agent-status-price', [AgentStatusAPIController::
 Route::match(['get', 'post'], '/agent-status', [AgentStatusAPIController::class, 'showWithoutPrice']);
 Route::match(['get', 'post'], '/call-center/disposition', [CallCenterDispositionAPIController::class, 'update']);
 Route::match(['get', 'post'], '/listflex/api-mme-bpo', [ListFlexResponseController::class, 'store']);
+Route::match(['get', 'post'], '/ringy', [RingyResponseController::class, 'store']);
 
 Route::middleware('auth:sanctum')->post('/app-events', [AppEventsController::class, 'store']);
 
