@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Validator;
 
 class CallCenterDispositionAPIController extends Controller
 {
@@ -27,10 +28,19 @@ class CallCenterDispositionAPIController extends Controller
         ]);
 
         // Validate the incoming request data (including query string parameters)
-        $data = validator($mergedRequestData, [
+        $validator = Validator::make($mergedRequestData, [
             'callerId' => 'required|string',
             'disposition' => 'required|string|in:' . implode(',', $this->getValidDispositions()),
-        ])->validate();
+        ]);
+
+        if ($validator->fails()) {
+            // Handle the case where validation fails
+            // You could return a response or redirect with errors
+            return response()->json($validator->errors(), 422);
+        }
+
+        // If validation passes, proceed with the rest of the code
+        $data = $validator->validated();
         // Perform a lookup using the callerId to get the contactID
         $contactId = $this->getContactIdByCallerId($data['callerId']);
 
