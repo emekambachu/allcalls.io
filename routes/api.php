@@ -19,6 +19,7 @@ use App\Http\Controllers\CallTypesAPIController;
 use App\Http\Controllers\DispositionsController;
 use App\Http\Controllers\IncomingCallController;
 use App\Http\Controllers\CallRecordingController;
+use App\Http\Controllers\RingyResponseController;
 use App\Http\Controllers\AgentStatusAPIController;
 use App\Http\Controllers\LiveCallClientController;
 use App\Http\Controllers\ListFlexResponseController;
