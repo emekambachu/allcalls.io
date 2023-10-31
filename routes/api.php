@@ -19,8 +19,10 @@ use App\Http\Controllers\CallTypesAPIController;
 use App\Http\Controllers\DispositionsController;
 use App\Http\Controllers\IncomingCallController;
 use App\Http\Controllers\CallRecordingController;
+use App\Http\Controllers\RingyResponseController;
 use App\Http\Controllers\AgentStatusAPIController;
 use App\Http\Controllers\LiveCallClientController;
+use App\Http\Controllers\ListFlexResponseController;
 use App\Http\Controllers\CallUserResponseAPIController;
 use App\Http\Controllers\CallTypesSelectedAPIController;
 use App\Http\Controllers\TwilioIOSAccessTokenController;
@@ -143,6 +145,8 @@ Route::middleware('auth:sanctum')->get('/twilio-android-access-token-guest', [Tw
 Route::match(['get', 'post'], '/agent-status-price', [AgentStatusAPIController::class, 'show']);
 Route::match(['get', 'post'], '/agent-status', [AgentStatusAPIController::class, 'showWithoutPrice']);
 Route::match(['get', 'post'], '/call-center/disposition', [CallCenterDispositionAPIController::class, 'update']);
+Route::match(['get', 'post'], '/listflex/api-mme-bpo', [ListFlexResponseController::class, 'store']);
+Route::match(['get', 'post'], '/ringy', [RingyResponseController::class, 'store']);
 
 Route::middleware('auth:sanctum')->post('/app-events', [AppEventsController::class, 'store']);
 
