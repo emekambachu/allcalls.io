@@ -17,18 +17,20 @@ class CallCenterDispositionAPIController extends Controller
      */
     public function update(Request $request)
     {
+        // Merge query string parameters into request data
+        $mergedRequestData = array_merge($request->all(), $request->query());
+
         Log::debug('api-logs:call-center-disposition: Request Data', [
             'headers' => $request->headers->all(),
-            'payload' => $request->all(),
+            'payload' => $mergedRequestData,
             'query_string' => $request->getQueryString(),
         ]);
 
-        // Validate the incoming request data
-        $data = $request->validate([
+        // Validate the incoming request data (including query string parameters)
+        $data = validator($mergedRequestData, [
             'callerId' => 'required|string',
             'disposition' => 'required|string|in:' . implode(',', $this->getValidDispositions()),
-        ]);
-
+        ])->validate();
         // Perform a lookup using the callerId to get the contactID
         $contactId = $this->getContactIdByCallerId($data['callerId']);
 
