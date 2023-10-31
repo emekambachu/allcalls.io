@@ -120,7 +120,7 @@ class CallCenterDispositionAPIController extends Controller
             ->patch($url, $data);
 
         // Check if the request was successful
-        if ($response->status() == 202) {
+        if ($response->status() == 200 || $response->status() == 201 || $response->status() == 202) {
             Log::debug('api-logs:call-center-disposition: Disposition updated successfully.', ['contactId' => $contactId, 'disposition' => $disposition]);
             return true;
         }
