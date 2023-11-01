@@ -160,7 +160,6 @@ class RegistrationStepController extends Controller
     {
         $user = auth()->user();
         $basicInfo = InternalAgentRegInfo::where('user_id', $user->id)->first();
-
         if ($request->step == 1) {
             $step1Validation = Validator::make($request->all(), [
                 'first_name' => 'required',

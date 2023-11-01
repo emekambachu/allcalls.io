@@ -185,16 +185,15 @@ let ChangeTabBack = () => {
 
 let enforceFiveDigitInput = (fieldName, val) => {
     addres_history.value.forEach((history) => {
-        let field = form.value[history.address][fieldName];
+        let field = form.value[history.address][val];
         if (field) {
-            field = field.toString().replace(/[^0-9]/g, '');
-            form.value[history.address][fieldName] = field
-            if (field.length > 5) {
-                field = field.slice(0, 5);
-                form.value[history.address][fieldName] = field
+            form.value[history.address][val] = fieldName.replace(/[^0-9]/g, '');
+            if (fieldName.length > 5) {
+                form.value[history.address][val] = fieldName.slice(0, 5);
             }
         }
     })
+    
 }
 </script>
 <template>
@@ -254,7 +253,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
 
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">Zip Code</label>
-                <input :disabled="page.props.auth.role === 'admin'" type="number" @input="enforceFiveDigitInput('zip_code')"
+                <input :disabled="page.props.auth.role === 'admin'" type="text" @input="enforceFiveDigitInput(form[history.address].zip_code, 'zip_code')" 
                     v-model="form[history.address].zip_code" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                 <div v-if="hasValidationErrors[history.address]">
