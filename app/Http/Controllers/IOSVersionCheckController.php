@@ -10,7 +10,7 @@ class IOSVersionCheckController extends Controller
     public function checkVersion()
     {
         return response()->json([
-            'latest_version' => '1.0.3'
+            'latest_version' => '1.0.2'
         ]);
     }
 }
