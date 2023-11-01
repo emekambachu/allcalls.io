@@ -302,7 +302,7 @@ let updateProgress = (data) => {
                       </svg>
                     </button>
                     <button class="ml-2" @click="agent.is_locked !== 0 ? ApproveAgent(agent) : null"
-                      v-show="agent.internal_agent_contract && agent.legacy_key === 1 && agent.contract_step === 12"
+                      v-show="agent.internal_agent_contract && agent.legacy_key === 1"
                       :title="agent.is_locked === 0 ? 'Approved' : 'Approve Agent'">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" :class="{ 'text-green-400': agent.is_locked === 0 }" class="w-5 h-5 ">
