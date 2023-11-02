@@ -43,8 +43,12 @@ class OverseerResponseController extends Controller
         switch ($statusCode) {
             case 200:
                 Log::debug('api-logs:overseer-response: API request successful. Response: ' . $response->body());
-                return response()->json(['message' => 'Success']);
+                if ($response->body() === 'Success') {
+                    return response()->json(['message' => 'Success']);
+                }
 
+                Log::debug('api-logs:overseer-response: Bad Request. Response: ' . $response->body());
+                return response()->json(['message' => 'Failure'], 400);
             case 400:
                 Log::debug('api-logs:overseer-response: Bad Request. Response: ' . $response->body());
                 return response()->json(['message' => 'Failure'], 400);
