@@ -110,7 +110,7 @@ let mapCallType = (callTypeId) => {
   callTypeId = Number(callTypeId);
 
   // Return the corresponding value from the map
-  return callTypeMap[callTypeId] || 'Unknown Call Type'; // Default to 'Unknown Call Type' if id is not found
+  return callTypeMap[callTypeId] || ''; // Default to '' if id is not found
 };
 
 </script>
