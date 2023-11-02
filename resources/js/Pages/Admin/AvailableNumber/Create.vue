@@ -69,7 +69,7 @@ let saveChanges = () => {
     .post(`/admin/available-number/store`, form)
     .then((response) => {
       toaster("success", response.data.message);
-      router.visit(`/admin/available-number?page=${props.currentPage}`);
+      router.visit(`/admin/available-numbers?page=${props.currentPage}`);
       isLoading.value = false;
     })
     .catch((error) => {
