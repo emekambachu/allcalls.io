@@ -4,6 +4,7 @@ import Multiselect from "@vueform/multiselect";
 import InputError from "@/Components/InputError.vue";
 import { router, usePage } from "@inertiajs/vue3";
 import GuestTextInput from "@/Components/GuestTextInput.vue";
+import TextInput from "@/Components/TextInput.vue";
 import GuestInputLabel from "@/Components/GuestInputLabel.vue";
 import SelectInput from "@/Components/SelectInput.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
@@ -160,23 +161,6 @@ let goBack = () => {
 </style>
 <template>
   <div>
-    <!-- <Transition
-        name="modal"
-        enter-active-class="transition ease-out duration-300 transform"
-        enter-from-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-        enter-to-class="opacity-100 translate-y-0 sm:scale-100"
-        leave-active-class="transition ease-in duration-200 transform"
-        leave-from-class="opacity-100 translate-y-0 sm:scale-100"
-        leave-to-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-      >
-        <div
-          id="defaultModal"
-          tabindex="-1"
-          class="flex items-center justify-center fixed inset-0 z-50 w-full h-full overflow-x-hidden overflow-y-auto max-h-full mx-4 sm:mx-0"
-        >
-          <div class="fixed inset-0 bg-black opacity-60"></div> -->
-    <!-- This is the overlay -->
-
     <div class="relative w-full max-w-4xl max-h-full mx-auto">
       <div class="relative bg-white border border-gray-300 rounded-lg shadow-lg">
         <div class="flex items-start justify-between p-4 border-b border-gray-300 rounded-t">
@@ -197,9 +181,9 @@ let goBack = () => {
             <div>
               <GuestInputLabel for="phone" value="Enter Phone Number" />
 
-              <input type="number" id="phone"
-                class="bg-custom-blue text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 text-black outline-none border-none mt-1 block"
-                v-model="form.phone" minlength="2" required>
+              <input >
+
+              <TextInput type="number" id="phone" v-model="form.phone" minlength="2" required />
 
               <div v-if="firstStepErrors.phone" class="text-red-500" v-text="firstStepErrors.phone[0]"></div>
             </div>
@@ -218,7 +202,5 @@ let goBack = () => {
         </div>
       </div>
     </div>
-    <!-- </div>
-      </Transition> -->
   </div>
 </template>
