@@ -181,8 +181,6 @@ let goBack = () => {
             <div>
               <GuestInputLabel for="phone" value="Enter Phone Number" />
 
-              <input >
-
               <TextInput type="number" id="phone" v-model="form.phone" minlength="2" required />
 
               <div v-if="firstStepErrors.phone" class="text-red-500" v-text="firstStepErrors.phone[0]"></div>
