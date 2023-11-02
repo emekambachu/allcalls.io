@@ -74,7 +74,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::post('/progress-internal-agent', [InternalAgentController::class, 'internalAgentProgress'])->name('admin.internal.agent.update.progress');
 
     // Available Number
-    Route::get('/available-numbers',[AvailableNumberController::class,'index']);
+    Route::get('/available-numbers',[AvailableNumberController::class,'index'])->name('admin.available-number.index');
     Route::post('/available-number/store',[AvailableNumberController::class,'store']);
     Route::post('/available-number/release-all', [AvailableNumberReleaseController::class, 'store']);
     Route::post('/available-number/{id}', [AvailableNumberController::class, 'update']);

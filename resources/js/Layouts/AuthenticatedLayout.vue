@@ -496,6 +496,11 @@ let appDownloadModal = ref(false);
               <img src="/img/clients.png" alt="" />
               Agent Invites
             </NavLink>
+            <NavLink class="mb-10 gap-2" :href="route('admin.available-number.index')"
+              :active="route().current('admin.available-number.index')">
+              <img src="/img/clients.png" alt="" />
+              Available Numbers
+            </NavLink>
           </div>
           <!-- Page Content -->
           <main class="col-span-4 bg-white rounded-xl mt-14 mb-10">
