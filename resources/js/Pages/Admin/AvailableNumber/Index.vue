@@ -156,7 +156,7 @@ let mapCallType = (callTypeId) => {
                   <th scope="col" class="px-4 py-3">ID</th>
                   <th scope="col" class="px-4 py-3">Phone Number</th>
                   <th scope="col" class="px-4 py-3">User</th>
-                  <th scope="col" class="px-4 py-3">Last Caller ID</th>
+                  <th scope="col" class="px-4 py-3">Last Client</th>
                   <th scope="col" class="px-4 py-3">Call Type</th>
                 </tr>
               </thead>
