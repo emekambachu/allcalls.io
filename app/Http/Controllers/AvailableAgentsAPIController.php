@@ -12,7 +12,7 @@ class AvailableAgentsAPIController extends Controller
     {
         $response = Http::get('https://www.winning.today/posting/purpose-health-availability-ping');
 
-        Log::debug('api-logs:available-agents:response-body', $response->body());
+        Log::debug('api-logs:available-agents:response-body', ['responseBody' => $response->body()]);
 
         return $response->body();
     }
