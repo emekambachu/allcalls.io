@@ -26,29 +26,29 @@ class AvailableNumberController extends Controller
 {
     public function index(Request $request)
     {
-        if(isset($request->phone)){
-            $availableNumber=AvailableNumber::where('phone','LIKE','%'.$request->phone.'%')->with('callType')->with('user')->paginate(10);
-        }else{
-            $availableNumber=AvailableNumber::with('callType')->with('user')->paginate(10);
-
+        if (isset($request->phone)) {
+            $availableNumber = AvailableNumber::where('phone', 'LIKE', '%' . $request->phone . '%')->with('callType')->with('user')->paginate(10);
+        } else {
+            $availableNumber = AvailableNumber::with('callType')->with('user')->paginate(10);
         }
 
 
-        $user=User::whereHas(
-            'roles', function($q){
+        $user = User::whereHas(
+            'roles',
+            function ($q) {
                 $q->where('name', 'user');
             }
-            )->get();
+        )->get();
 
-            // dd($user);
+        // dd($user);
         $callTypes = CallType::get();
         $states = State::get();
         return Inertia::render('Admin/AvailableNumber/Index', [
-            'requestData'=>$request->all(),
-            'availableNumber'=>$availableNumber,
+            'requestData' => $request->all(),
+            'availableNumber' => $availableNumber,
             'callTypes' => $callTypes,
             'states' => $states,
-            'user'=>$user
+            'user' => $user
         ]);
     }
 
@@ -69,14 +69,10 @@ class AvailableNumberController extends Controller
     }
 
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         $validator = Validator::make($request->all(), [
-
-            'user_id' => '',
-            'from' => 'required',
             'phone' => ['required', 'string', 'max:255', 'unique:' . AvailableNumber::class, 'regex:/^\+?1?[-.\s]?(\([2-9]\d{2}\)|[2-9]\d{2})[-.\s]?\d{3}[-.\s]?\d{4}$/'],
-            'call_type_id' => ['required'],
-
         ]);
 
         if ($validator->fails()) {
@@ -85,20 +81,14 @@ class AvailableNumberController extends Controller
                 'errors' => $validator->errors(),
             ], 400);
         }
-         AvailableNumber::create([
+        AvailableNumber::create([
             'phone' => $request->phone,
-            'user_id' => $request->user_id,
-            'from' => $request->from,
-            'call_type_id' => $request->call_type_id,
         ]);
-
-
 
         return response()->json([
             'success' => true,
             'message' => 'Agent added successfully',
         ], 200);
-
     }
 
 
@@ -131,15 +121,15 @@ class AvailableNumberController extends Controller
             ], 400);
         }
 
-        try{
-            $user= User::find($id);
-            if($user->balance!=$request->balance){
+        try {
+            $user = User::find($id);
+            if ($user->balance != $request->balance) {
                 Transaction::create([
-                    'amount'=>$request->balance-$user->balance,
-                    'sign'=> 1,
-                    'bonus'=>0,
-                    'user_id'=>$id,
-                    'comment'=>$request->comment
+                    'amount' => $request->balance - $user->balance,
+                    'sign' => 1,
+                    'bonus' => 0,
+                    'user_id' => $id,
+                    'comment' => $request->comment
                 ]);
             }
             //Call Types And State
@@ -167,17 +157,16 @@ class AvailableNumberController extends Controller
             //Call Types And State
             $user->update([
                 'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'phone' => $request->phone,
-            'balance' => isset($request->balance)?$request->balance:0,
-        ]);
-        return response()->json([
-            'success' => true,
-            'message' => 'Agent updated successfully.',
-        ], 200);
-    }catch(Exception $e){
-        return response()->json(['error'=>$e], 500);
-    }
-
+                'last_name' => $request->last_name,
+                'phone' => $request->phone,
+                'balance' => isset($request->balance) ? $request->balance : 0,
+            ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Agent updated successfully.',
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e], 500);
+        }
     }
 }
