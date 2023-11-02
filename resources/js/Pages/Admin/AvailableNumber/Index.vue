@@ -96,6 +96,23 @@ let capitalizeAndReplaceUnderscore = (str) => {
 
   return result;
 };
+
+let mapCallType = (callTypeId) => {
+  const callTypeMap = {
+    1: 'Auto Insurance',
+    2: 'Final Expense',
+    3: 'U65 Health',
+    4: 'ACA',
+    5: 'Medicare/Medicaid'
+  };
+
+  // Convert callTypeId to Number in case it's passed as a string
+  callTypeId = Number(callTypeId);
+
+  // Return the corresponding value from the map
+  return callTypeMap[callTypeId] || 'Unknown Call Type'; // Default to 'Unknown Call Type' if id is not found
+};
+
 </script>
 
 <template>
@@ -139,9 +156,8 @@ let capitalizeAndReplaceUnderscore = (str) => {
                   <th scope="col" class="px-4 py-3">ID</th>
                   <th scope="col" class="px-4 py-3">Phone Number</th>
                   <th scope="col" class="px-4 py-3">User</th>
-                  <th scope="col" class="px-4 py-3">From</th>
+                  <th scope="col" class="px-4 py-3">Last Caller ID</th>
                   <th scope="col" class="px-4 py-3">Call Type</th>
-                  <th scope="col" class="px-4 py-3 text-end">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -161,30 +177,12 @@ let capitalizeAndReplaceUnderscore = (str) => {
                     >
                       {{ availableNumber.user.first_name }}
                     </a>
-                    <span v-else> no user selected yet </span>
                   </td>
                   <th class="text-gray-600 px-4 py-3">
                     {{ availableNumber.from }}
                   </th>
                   <td class="text-gray-600 px-4 py-3">
-                    {{ availableNumber.call_type_id }}
-                  </td>
-                  <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
-                    <!-- <a :href="route('admin.availableNumber.detail', availableNumber.id)"
-                      >View Detail</a
-                    > -->
-                    <button
-                      @click="
-                        openAvailableNumberModal(
-                          availableNumber,
-                          availableNumber.current_page
-                        )
-                      "
-                      class="inline-flex items-center mx-2 p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
-                      type="button"
-                    >
-                      Edit
-                    </button>
+                    {{ mapCallType(availableNumber.call_type_id) }}
                   </td>
                 </tr>
               </tbody>
@@ -269,7 +267,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
       <p class="text-center text-gray-600">No available number yet.</p>
     </section>
 
-    <Modal :show="showModal" @close="showModal = false">
+    <!-- <Modal :show="showModal" @close="showModal = false">
       <Edit
         :showModal="showModal"
         :user="user"
@@ -279,7 +277,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
         :availableNumber="availableNumber"
         :route="'/admin/available-numbers'"
       ></Edit>
-    </Modal>
+    </Modal> -->
 
     <Modal :show="availableNumberModal" @close="availableNumberModal = false">
       <Create
