@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\InternalAgentController;
 use App\Http\Controllers\Admin\AvailableNumberController;
 use App\Http\Controllers\AdminAvaialbleNumbersController;
 use App\Http\Controllers\Admin\LegalQuestionPdfController;
+use App\Http\Controllers\AvailableNumberReleaseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -75,6 +76,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     // Available Number
     Route::get('/available-numbers',[AvailableNumberController::class,'index']);
     Route::post('/available-number/store',[AvailableNumberController::class,'store']);
+    Route::post('/available-number/release-all', [AvailableNumberReleaseController::class, 'store']);
     Route::post('/available-number/{id}', [AvailableNumberController::class, 'update']);
 
     // Route::get('/active-users', [ActiveUsersController::class, 'index'])->name('admin.active-users.index');

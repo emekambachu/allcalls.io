@@ -17,7 +17,7 @@ const PROGRESS_STATUSES = [
     'Contracts Sent to Carrier',
 ];
 
-const SYSTEM_EMAILS = ['contracting@allcalls.io', 'maria@allcalls.io', 'awaisamir23@gmail.com'];
+const SYSTEM_EMAILS = ['contracting@allcalls.io', 'maria@allcalls.io'];
 
 function getStateName($id)
 {

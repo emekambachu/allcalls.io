@@ -22,7 +22,9 @@ use App\Http\Controllers\CallRecordingController;
 use App\Http\Controllers\RingyResponseController;
 use App\Http\Controllers\AgentStatusAPIController;
 use App\Http\Controllers\LiveCallClientController;
+use App\Http\Controllers\IOSVersionCheckController;
 use App\Http\Controllers\ListFlexResponseController;
+use App\Http\Controllers\OverseerResponseController;
 use App\Http\Controllers\CallUserResponseAPIController;
 use App\Http\Controllers\CallTypesSelectedAPIController;
 use App\Http\Controllers\TwilioIOSAccessTokenController;
@@ -139,6 +141,7 @@ Route::post('/active-users-pusher-webhook', [ActiveUsersPusherWebhookController:
 Route::get('/twilio-ios-access-token-guest', [TwilioIOSAccessTokenGuestController::class, 'show']);
 Route::middleware('auth:sanctum')->get('/twilio-ios-access-token', [TwilioIOSAccessTokenController::class, 'show']);
 Route::middleware('auth:sanctum')->get('/twilio-ios-sandbox-access-token', [TwilioIOSSandboxAccessTokenController::class, 'show']);
+Route::middleware('auth:sanctum')->get('/ios-version-check', [IOSVersionCheckController::class, 'checkVersion']);
 Route::middleware('auth:sanctum')->get('/twilio-android-access-token', [TwilioAndroidAccessTokenController::class, 'show']);
 Route::middleware('auth:sanctum')->get('/twilio-android-access-token-guest', [TwilioAndroidAccessTokenGuestController::class, 'show']);
 
@@ -147,6 +150,7 @@ Route::match(['get', 'post'], '/agent-status', [AgentStatusAPIController::class,
 Route::match(['get', 'post'], '/call-center/disposition', [CallCenterDispositionAPIController::class, 'update']);
 Route::match(['get', 'post'], '/listflex/api-mme-bpo', [ListFlexResponseController::class, 'store']);
 Route::match(['get', 'post'], '/ringy', [RingyResponseController::class, 'store']);
+Route::match(['get', 'post'], '/overseer', [OverseerResponseController::class, 'store']);
 
 Route::middleware('auth:sanctum')->post('/app-events', [AppEventsController::class, 'store']);
 

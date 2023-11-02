@@ -113,6 +113,12 @@ let mapCallType = (callTypeId) => {
   return callTypeMap[callTypeId] || ''; // Default to '' if id is not found
 };
 
+
+let releaseAllNumbers = () => {
+  router.visit('/admin/available-number/release-all', {
+    method: 'POST'
+  });
+}
 </script>
 
 <template>
@@ -134,7 +140,8 @@ let mapCallType = (callTypeId) => {
       <div>
         <div class="text-4xl text-custom-sky font-bold mb-6">Available Number</div>
       </div>
-      <div>
+      <div class="flex items-center">
+        <button @click.prevent="releaseAllNumbers" class="button-custom-back px-3 py-2 rounded-md mr-2">Release All Numbers</button>
         <PrimaryButton @click="addAvailableNumberModal(availableNumber.current_page)"
           >Add New</PrimaryButton
         >
