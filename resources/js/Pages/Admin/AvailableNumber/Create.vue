@@ -192,9 +192,7 @@ let goBack = () => {
                 <global-spinner :spinner="isLoading" /> Submit
               </PrimaryButton>
 
-              <PrimaryButton @click.prevent="close" type="button" class="ml-3">
-                Close
-              </PrimaryButton>
+              <button class="button-custom-back  px-3 py-2 rounded-md" @click.prevent="close">Cancel</button>
             </div>
           </div>
         </div>
