@@ -167,7 +167,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
                     {{ availableNumber.from }}
                   </th>
                   <td class="text-gray-600 px-4 py-3">
-                    {{ availableNumber.call_type.type }}
+                    {{ availableNumber.call_type_id }}
                   </td>
                   <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
                     <!-- <a :href="route('admin.availableNumber.detail', availableNumber.id)"
