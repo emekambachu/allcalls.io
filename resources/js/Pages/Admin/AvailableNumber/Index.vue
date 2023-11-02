@@ -113,6 +113,12 @@ let mapCallType = (callTypeId) => {
   return callTypeMap[callTypeId] || ''; // Default to '' if id is not found
 };
 
+
+let releaseAllNumbers = () => {
+  router.visit('/admin/available-number/release-all', {
+    method: 'POST'
+  });
+}
 </script>
 
 <template>
