@@ -29,10 +29,10 @@ class ReleaseAvailableNumbers extends Command
     {
         Log::debug('Running allcalls:release-available-numbers');
 
-        // AvailableNumber::query()->update([
-        //     'user_id' => null,
-        //     'from' => null,
-        //     'call_type_id' => null,
-        // ]);
+        AvailableNumber::query()->update([
+            'user_id' => null,
+            'from' => null,
+            'call_type_id' => null,
+        ]);
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Log;
+
 class Kernel extends ConsoleKernel
 {
     /**
@@ -14,7 +15,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('allcalls:release-available-numbers')->everyMinute();
+        $schedule->command('allcalls:release-available-numbers')
+            ->timezone('America/New_York')
+            ->dailyAt('00:00');
     }
 
     /**
@@ -22,7 +25,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands(): void
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
         require base_path('routes/console.php');
     }
 }
