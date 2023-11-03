@@ -35,7 +35,7 @@ use App\Http\Controllers\TwilioAndroidAccessTokenController;
 use App\Http\Controllers\TwilioIOSAccessTokenGuestController;
 use App\Http\Controllers\TwilioIOSSandboxAccessTokenController;
 use App\Http\Controllers\TwilioAndroidAccessTokenGuestController;
-
+use App\Http\Controllers\LaravelTokenController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
