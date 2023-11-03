@@ -801,3 +801,15 @@ pre, code {
     font-family: "Fira Code", "Menlo", monospace;
     font-size: 14px;
 }
+
+.button-custom-back {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 600;
+    border-width: 1px;
+    align-items: center;
+    display: inline-flex;
+    border-color: rgb(107 114 128 / var(--tw-border-opacity));
+  }

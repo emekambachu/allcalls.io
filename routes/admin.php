@@ -2,14 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ActiveUsersController;
+use App\Http\Controllers\Admin\CallsController;
 use App\Http\Controllers\AgentInvitesController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\ActiveUserChannelController;
 use App\Http\Controllers\Admin\OnlineAgentsController;
 use App\Http\Controllers\Admin\InternalAgentController;
 use App\Http\Controllers\Admin\AvailableNumberController;
-use App\Http\Controllers\Admin\CallsController;
+use App\Http\Controllers\AdminAvaialbleNumbersController;
 use App\Http\Controllers\Admin\LegalQuestionPdfController;
+use App\Http\Controllers\AvailableNumberReleaseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -72,8 +74,9 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::post('/progress-internal-agent', [InternalAgentController::class, 'internalAgentProgress'])->name('admin.internal.agent.update.progress');
 
     // Available Number
-    Route::get('/available-numbers',[AvailableNumberController::class,'index']);
+    Route::get('/available-numbers',[AvailableNumberController::class,'index'])->name('admin.available-number.index');
     Route::post('/available-number/store',[AvailableNumberController::class,'store']);
+    Route::post('/available-number/release-all', [AvailableNumberReleaseController::class, 'store']);
     Route::post('/available-number/{id}', [AvailableNumberController::class, 'update']);
 
     // Route::get('/active-users', [ActiveUsersController::class, 'index'])->name('admin.active-users.index');
@@ -89,4 +92,6 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
     //Calls
     Route::get('/calls', [CallsController::class, 'index'])->name('admin.calls.index');
+
+    // Route::get('/available-numbers', [AdminAvaialbleNumbersController::class, 'index'])->name('admin.available-numbers.index');
 });
