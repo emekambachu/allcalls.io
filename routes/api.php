@@ -138,6 +138,7 @@ Route::middleware('auth:sanctum')->get('/call-types/selected', [CallTypesSelecte
 Route::post('/active-users-pusher-webhook', [ActiveUsersPusherWebhookController::class, 'store']);
 
 Route::get('/twilio-ios-access-token-guest', [TwilioIOSAccessTokenGuestController::class, 'show']);
+Route::middleware('auth:sanctum')->post('/laravel-token-verification', [LaravelTokenController::class, 'validateToken']);
 Route::middleware('auth:sanctum')->get('/twilio-ios-access-token', [TwilioIOSAccessTokenController::class, 'show']);
 Route::middleware('auth:sanctum')->get('/twilio-ios-sandbox-access-token', [TwilioIOSSandboxAccessTokenController::class, 'show']);
 Route::middleware('auth:sanctum')->get('/ios-version-check', [IOSVersionCheckController::class, 'checkVersion']);
