@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, defineEmits, computed, onMounted, watch } from "vue";
+import { ref, reactive, defineEmits, computed, onMounted, onUnmounted, watch, inject } from "vue";
 import TextInput from "@/Components/TextInput.vue";
 import { router, usePage } from "@inertiajs/vue3";
 import GuestTextInput from "@/Components/GuestTextInput.vue";
@@ -14,6 +14,7 @@ let page = usePage();
 if (page.props.flash.message) {
   toaster("success", page.props.flash.message);
 }
+const countryList = inject('countryList');
 let props = defineProps({
   showModal: {
     type: Boolean,
@@ -102,6 +103,46 @@ let saveChanges = () => {
     uiEmailValidation.value.isValid = true;
     isLoading.value = false;
   }
+};
+const selectedCountry = ref('USA');
+
+const search = ref('');
+const isOpen = ref(false);
+
+const toggleDropdown = () => {
+  isOpen.value = !isOpen.value;
+  search.value = ''
+};
+const filteredCountries = computed(() => {
+  return countryList.filter(
+    (country) =>
+      country.name.toLowerCase().includes(search.value.toLowerCase()) ||
+      country.codeName.toLowerCase().includes(search.value.toLowerCase())
+  );
+});
+
+const selectCountry = (country) => {
+  // search.value = country.codeName;
+  selectedCountry.value = country.codeName
+  form.country_code = '+' + country.code
+  isOpen.value = false;
+};
+onMounted(() => {
+  document.addEventListener('click', handleOutsideClick);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleOutsideClick);
+});
+const handleOutsideClick = (event) => {
+  const dropdownElement = document.getElementById('dropdown_main_id');
+  if (!dropdownElement.contains(event.target)) {
+    // Call your desired function here
+    closeDropDown();
+  }
+};
+const closeDropDown = () => {
+  isOpen.value = false
 };
 </script>
 

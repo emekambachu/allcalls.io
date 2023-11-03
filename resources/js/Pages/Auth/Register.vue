@@ -9,14 +9,16 @@ import NewGuestLayout from "@/Layouts/NewGuestLayout.vue";
 import Footer from "@/Components/Footer.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import Multiselect from "@vueform/multiselect";
-import { ref, reactive, computed } from "vue";
+import { ref, reactive, computed, watchEffect, onUnmounted , onMounted, inject  } from "vue";
 // import { useVeeValidate } from '@vee-validate/vue3';
 import axios from "axios";
 // If you are using PurgeCSS, make sure to whitelist the carousel CSS classes
 import "vue3-carousel/dist/carousel.css";
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
 import { router } from "@inertiajs/vue3"
-
+const countryList = inject('countryList');
+// let countryList = ref(countries)
+// console.log('countries',countryList.value);
 let step = ref(0);
 let firstStepErrors = ref({});
 let uiEmailValidation = ref({
@@ -88,9 +90,9 @@ let form = useForm({
   password: "",
   password_confirmation: "",
   phone: "",
+  phone_code:'+1',
+  phone_country:'USA',
 });
-
-
 let text = ref([]);
 
 let check = () => {
@@ -103,7 +105,61 @@ let validateEmail = (email) => {
   return /\S+@\S+\.\S+/.test(email); // Simple regex for email validation
 }
 const isLoading = ref(false);
+
+
+// let goBack = () => {
+//   step.value = 0;
+// };
+
+
+
+
+
+
+
+
+
+
+const search = ref('');
+const isOpen = ref(false);
+
+const toggleDropdown = () => {
+  isOpen.value = !isOpen.value;
+  search.value = ''
+};
+const filteredCountries = computed(() => {
+  return countryList.filter(
+    (country) =>
+      country.name.toLowerCase().includes(search.value.toLowerCase()) ||
+      country.codeName.toLowerCase().includes(search.value.toLowerCase())
+  );
+});
+
+const selectCountry = (country) => {
+  form.phone_country = country.codeName
+  form.phone_code = '+' + country.code
+  isOpen.value = false;
+};
+onMounted(() => {
+  document.addEventListener('click', handleOutsideClick);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleOutsideClick);
+});
+const handleOutsideClick = (event) => {
+  const dropdownElement = document.getElementById('dropdown_main_id');
+  if (!dropdownElement.contains(event.target)) {
+    // Call your desired function here
+    closeDropDown();
+  }
+};
+const closeDropDown = () => {
+  isOpen.value = false
+};
+
 let submit = () => {
+ 
   isLoading.value = true
   if (validateEmail(form.email)) {
 
@@ -141,6 +197,7 @@ let submit = () => {
           } else {
             // Handle other types of errors.
             console.log("Other errors", error.response.data);
+            isLoading.value = false
           }
         } else if (error.request) {
           // The request was made but no response was received
@@ -149,6 +206,9 @@ let submit = () => {
           // Something happened in setting up the request that triggered an Error
           console.log("Error", error.message);
         }
+        if(error){
+          isLoading.value = false
+        }
       });
   }
   else {
@@ -156,10 +216,6 @@ let submit = () => {
     isLoading.value = false
   }
 };
-
-// let goBack = () => {
-//   step.value = 0;
-// };
 </script>
 
 <template>
@@ -209,14 +265,64 @@ let submit = () => {
           <div v-if="firstStepErrors.email" class="text-red-500" v-text="firstStepErrors.email[0]"></div>
         </div>
 
-        <div class="mt-4">
+        <!-- <div class="mt-4">
           <GuestInputLabel for="phone" value="Phone" />
 
-          <GuestTextInput id="phone" type="text" placeholder="+1 (000) 000-0000" class="mt-1 block w-full" v-model="form.phone" minlength="10" />
+          <GuestTextInput id="phone" type="text" placeholder="+1 (000) 000-0000" class="mt-1 block w-full"
+            v-model="form.phone" minlength="10" />
 
-          <!-- <InputError class="mt-2" :message="form.errors.phone" /> -->
           <div v-if="firstStepErrors.phone" class="text-red-500" v-text="firstStepErrors.phone[0]"></div>
+        </div> -->
+
+
+
+
+        <div id="dropdown_main_id" class="mt-4">
+          <GuestInputLabel for="phone" value="Phone" />
+          <div class="flex">
+            <button @click="toggleDropdown" class="drop_down_main mr-1" id="states-button"
+              data-dropdown-toggle="dropdown-states" type="button">
+              <span class="ml-1">{{ form.phone_country }}</span> <span class="mx-1">{{ form.phone_code }}</span> <span><svg
+                  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="currentColor" class="w-4 ml-1 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg></span>
+            </button>
+            
+            <GuestTextInput style="border-radius: 0px 5px 5px 0px;" @focus="closeDropDown" id="phone" type="text"
+              placeholder="0000000000" class="mt-1  block w-full" v-model="form.phone" maxlength="15" minlength="10" />
+              
+
+          </div>
+          <div v-if="isOpen" class="items-center justify-center ">
+            <div class="relative">
+              <input v-model="search"  type="text"
+                class=" px-4 w-full mt-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
+                placeholder="Search" />
+
+              <ul style="width: 100%; height:250px;"
+                class="absolute z-10 py-2 mt-1 overflow-auto bg-white rounded-md shadow-md">
+                <li v-for="(country, index) in filteredCountries" :key="index" @click="selectCountry(country)"
+                  class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                  {{ country.name }}
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div v-if="firstStepErrors.phone" class="text-red-500" v-text="firstStepErrors.phone[0]"></div>
+          <div v-if="firstStepErrors.phone_code" class="text-red-500" v-text="firstStepErrors.phone_code[0]"></div>
         </div>
+
+
+
+
+
+
+
+
+
+
+
 
         <div class="mt-4">
           <GuestInputLabel for="password" value="Password" />
@@ -240,7 +346,11 @@ let submit = () => {
           <input id="checked-checkbox" type="checkbox" v-model="form.consent"
             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
           <label for="checked-checkbox" class="ml-2 text-xs font-medium text-gray-900 dark:text-gray-400">
-            By checking this box, I verify that this is my mobile number and that I would like to sign up to receive messages from “AllCalls.io” program by AllCalls LLC. I understand that I am not required to provide my consent as a condition of purchasing any products or services. Msg freq may vary. Msg data rates may apply. Reply HELP for help or STOP to optout. Read <a href="https://allcalls.io/terms.php">Terms and Conditions</a>. Read <a href="https://allcalls.io/privacy.php">Privacy Policy</a>.
+            By checking this box, I verify that this is my mobile number and that I would like to sign up to receive
+            messages from “AllCalls.io” program by AllCalls LLC. I understand that I am not required to provide my consent
+            as a condition of purchasing any products or services. Msg freq may vary. Msg data rates may apply. Reply HELP
+            for help or STOP to optout. Read <a href="https://allcalls.io/terms.php">Terms and Conditions</a>. Read <a
+              href="https://allcalls.io/privacy.php">Privacy Policy</a>.
           </label>
         </div>
         <div v-if="firstStepErrors.consent" class="text-red-500 ml-5" v-text="firstStepErrors.consent[0]"></div>
@@ -299,6 +409,41 @@ input[type="number"] {
   background-color: #d7d7d7;
   border-radius: 5px;
 }
+
+.drop_down_main {
+  background: #d7d7d7;
+  height: 39.5px;
+  margin-top: 5px;
+  border-radius: 5px 0px 0px 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0px 5px;
+}
+
+
+
+.country-select-container {
+  display: flex;
+}
+
+.country-code,
+.country-dropdown {
+  margin-right: 10px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*
 .carousel__item {

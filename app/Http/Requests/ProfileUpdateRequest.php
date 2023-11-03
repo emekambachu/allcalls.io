@@ -19,12 +19,14 @@ class ProfileUpdateRequest extends FormRequest
             'first_name' => ['string', 'max:255'],
             'last_name' => ['string', 'max:255'],
             'email' => ['email', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
-            'phone' => ['required', 'string', 'max:255', 'regex:/^\+?1?[-.\s]?(\([2-9]\d{2}\)|[2-9]\d{2})[-.\s]?\d{3}[-.\s]?\d{4}$/'],
+            'phone' => ['required', 'string', 'min:10', 'max:15',  Rule::unique('users', 'phone')->ignore($this->user()->id), 'regex:/^[0-9]*$/'],
+            'phone_code' => ['required', 'regex:/^\+(?:[0-9]){1,4}$/'],
+            'phone_country' => ['required'],
             'call_types' => ['required'],
             'selected_states' => ['required', 'array'],
             'selected_states.*.typeId' => ['required', 'exists:call_types,id'],
             'selected_states.*.selectedStateIds.*' => ['nullable', 'exists:states,id'],
-            'timezone' => ['string']
+            'timezone' => ['nullable','string']
         ];
     }
 }

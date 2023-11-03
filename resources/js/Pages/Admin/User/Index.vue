@@ -148,6 +148,7 @@ let actionToDeleteUser = () => {
               </thead>
               <tbody>
                 <tr v-for="user in users.data" :key="user.id" class="border-b border-gray-500">
+            
                   <td class="text-gray-600 px-4 py-3">{{ user.id }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ user.first_name }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ user.last_name }}</td>

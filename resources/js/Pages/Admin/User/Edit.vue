@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, defineEmits, onMounted, watch, computed, onBeforeMount } from "vue";
+import { ref, reactive, defineEmits, onMounted, watch, computed, onBeforeMount, onUnmounted, inject } from "vue";
 import TextInput from "@/Components/TextInput.vue";
 import Multiselect from "@vueform/multiselect";
 import InputError from "@/Components/InputError.vue";
@@ -14,6 +14,7 @@ let page = usePage();
 if (page.props.flash.message) {
   toaster("success", page.props.flash.message);
 }
+const countryList = inject('countryList');
 let props = defineProps({
   showModal: {
     type: Boolean,
@@ -46,6 +47,8 @@ let form = useForm({
   email: props.userDetail.email,
   phone: props.userDetail.phone,
   balance: props.userDetail.balance,
+  phone_code:props.userDetail.phone_code ?? "+1",
+  phone_country:props.userDetail.phone_country ?? 'USA',
   comment: "",
   call_types: props.callTypes,
   roles: props.userDetail.role_id,
@@ -74,13 +77,13 @@ const onTypeUpdate = (typeId, event) => {
     selectedTypeIds.value.push(Number(event.target.value));
   } else {
     selectedTypeIds.value.splice(
-      selectedTypeIds.value.indexOf(Number(event.target.value)),1
+      selectedTypeIds.value.indexOf(Number(event.target.value)), 1
     );
     const formItemIndex = form.selected_states.findIndex(item => item.typeId === Number(typeId));
     if (formItemIndex !== -1) {
       form.selected_states.splice(formItemIndex, 1, { typeId: typeId, selectedStateIds: [] });
     }
-    
+
   }
 };
 
@@ -106,7 +109,7 @@ let saveChanges = () => {
   isLoading.value = true;
   if (typeof form.roles !== 'object') {
     form.roles = form.roles;
-  }else{
+  } else {
     form.roles = "";
   }
   if (validateEmail(form.email)) {
@@ -159,6 +162,44 @@ let ChangeTab = (val) => {
   tab.value = val
 }
 
+const search = ref('');
+const isOpen = ref(false);
+
+const toggleDropdown = () => {
+  isOpen.value = !isOpen.value;
+  search.value = ''
+};
+const filteredCountries = computed(() => {
+  return countryList.filter(
+    (country) =>
+      country.name.toLowerCase().includes(search.value.toLowerCase()) ||
+      country.codeName.toLowerCase().includes(search.value.toLowerCase())
+  );
+});
+
+const selectCountry = (country) => {
+  // search.value = country.codeName;
+  form.phone_country = country.codeName
+  form.phone_code = '+' + country.code
+  isOpen.value = false;
+};
+onMounted(() => {
+  document.addEventListener('click', handleOutsideClick);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleOutsideClick);
+});
+const handleOutsideClick = (event) => {
+  const dropdownElement = document.getElementById('dropdown_main_id');
+  if (!dropdownElement.contains(event.target)) {
+    // Call your desired function here
+    closeDropDown();
+  }
+};
+const closeDropDown = () => {
+  isOpen.value = false
+};
 </script>
 <style>
 .chemical-formula {
@@ -189,6 +230,27 @@ let ChangeTab = (val) => {
 .slide-leave-to {
   opacity: 0;
   transform: translateX(-20px);
+}
+.drop_down_main {
+  background: #d7d7d7;
+  height: 39.5px;
+  margin-top: 5px;
+  border-radius: 5px 0px 0px 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0px 5px;
+}
+
+
+
+.country-select-container {
+  display: flex;
+}
+
+.country-code,
+.country-dropdown {
+  margin-right: 10px;
 }
 </style>
 <template>
@@ -268,13 +330,59 @@ let ChangeTab = (val) => {
             <div v-if="firstStepErrors.email" class="text-red-500" v-text="firstStepErrors.email[0]"></div>
           </div>
 
-          <div class="mt-4">
+          <!-- <div class="mt-4">
             <GuestInputLabel for="phone" value="Phone" />
 
             <GuestTextInput id="phone" type="text" class="mt-1 block w-full" v-model="form.phone" minlength="10"
               maxlength="10" onkeyup="this.value=this.value.replace(/[^\d]/,&#39;&#39;)" />
             <div v-if="firstStepErrors.phone" class="text-red-500" v-text="firstStepErrors.phone[0]"></div>
+          </div> -->
+
+      
+
+          <div id="dropdown_main_id" class="mt-4">
+            <GuestInputLabel for="phone" value="Phone" />
+            <div class="flex">
+              <button @click="toggleDropdown" class="drop_down_main mr-1" id="states-button"
+                data-dropdown-toggle="dropdown-states" type="button">
+                <span class="ml-1">{{ form.phone_country }}</span> <span class="mx-1">{{ form.phone_code }}</span>
+                <span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-4 ml-1 h-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                  </svg></span>
+              </button>
+
+              <GuestTextInput style="border-radius: 0px 5px 5px 0px;" @focus="closeDropDown" id="phone" type="text"
+                placeholder="0000000000" class="mt-1  block w-full" v-model="form.phone" maxlength="15" minlength="10" />
+
+
+            </div>
+            <div v-if="isOpen" class="items-center justify-center ">
+              <div class="relative">
+                <input v-model="search" type="text"
+                  class=" px-4 w-full mt-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  placeholder="Search" />
+
+                <ul style="width: 100%; height:250px;"
+                  class="absolute z-10 py-2 mt-1 overflow-auto bg-white rounded-md shadow-md">
+                  <li v-for="(country, index) in filteredCountries" :key="index" @click="selectCountry(country)"
+                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                    {{ country.name }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div v-if="firstStepErrors.phone" class="text-red-500" v-text="firstStepErrors.phone[0]"></div>
+            <div v-if="firstStepErrors.phone_code" class="text-red-500" v-text="firstStepErrors.phone_code[0]"></div>
+            <div v-if="firstStepErrors.phone_country" class="text-red-500" v-text="firstStepErrors.phone_country[0]"></div>
           </div>
+
+
+
+
+
+
+
           <div class="mt-4">
             <GuestInputLabel for="balance" value="balance" />
 
@@ -316,14 +424,13 @@ let ChangeTab = (val) => {
         <div v-if="tab == 2">
           <div>
             <div class="mb-4">
-              <label for="roles"
-                  class="block mb-2 text-sm font-medium text-gray-700">Select Role</label>
+              <label for="roles" class="block mb-2 text-sm font-medium text-gray-700">Select Role</label>
               <!-- <select v-model="role" id='role' name="role"  class="select-custom" required>
                   <option v-for="roles in form.roles" :key="roles" :value="roles" selected="">Select Role</option>
               </select> -->
-               <select v-model="form.roles" id='roles' name="roles"  class="select-custom" required>
-                  <option selected="" disabled="" value="">Select Role</option>
-                  <option v-for="role in roles" :value="role.id">{{role.name}}</option>
+              <select v-model="form.roles" id='roles' name="roles" class="select-custom" required>
+                <option selected="" disabled="" value="">Select Role</option>
+                <option v-for="role in roles" :value="role.id">{{ role.name }}</option>
               </select>
             </div>
             <div v-if="firstStepErrors">
