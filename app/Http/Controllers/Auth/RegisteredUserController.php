@@ -74,11 +74,14 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request)
     {
+        
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:' . User::class,
-            'phone' => ['required', 'string', 'max:255', 'unique:' . User::class, 'regex:/^\+?1?[-.\s]?(\([2-9]\d{2}\)|[2-9]\d{2})[-.\s]?\d{3}[-.\s]?\d{4}$/'],
+            'phone' => ['required', 'string', 'min:10', 'max:15', 'unique:' . User::class, 'regex:/^[0-9]*$/'],
+            'phone_code' => ['required', 'regex:/^\+(?:[0-9]){1,4}$/'],
+            'phone_country' => ['required'],
             'password' => ['required', 'confirmed', Password::defaults()],
             'consent' => ['required', 'accepted'],
         ], [
@@ -96,6 +99,8 @@ class RegisteredUserController extends Controller
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
+            'phone_country' => $request->phone_country,
+            'phone_code' => $request->phone_code,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
         ]);
@@ -213,7 +218,7 @@ class RegisteredUserController extends Controller
         Log::debug('Types with states: ', [
             'typesWithStates' => $request->typesWithStates
         ]);
-        
+
         foreach ($request->bids as $bid) {
             // Check if the call type is selected by the user in typesWithStates
             if (isset($request->typesWithStates[$bid['call_type_id']]) && sizeof($request->typesWithStates[$bid['call_type_id']]) >= 1) {

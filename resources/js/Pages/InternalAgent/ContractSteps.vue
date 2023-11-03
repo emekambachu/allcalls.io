@@ -163,6 +163,7 @@ let errorHandle = (data, response) => {
     if (data < 5) {
         ChangeTab(response.route)
     } else if (data < 10) {
+        console.log(' under10');
         if (data === 5) {
             step.value = 2
             contractStep.value = 0
@@ -182,6 +183,7 @@ let errorHandle = (data, response) => {
         }
         pageTop()
     } else if (data === 10) {
+        // console.log('10');
         slidingLoader.value = true
         StepsModal.value = false
         contractModal.value = true
@@ -192,7 +194,7 @@ if (props.userData?.internal_agent_contract) {
     if (props.userData.contract_step <= 5) {
         step.value = 1
         contractStep.value = props.userData.contract_step
-    } else if (props.userData.contract_step <= 10) {
+    } else if (props.userData.contract_step < 11) {
         contractStep.value = 0
         if (props.userData.contract_step === 6) {
             step.value = 2
@@ -204,7 +206,6 @@ if (props.userData?.internal_agent_contract) {
             step.value = 5
         }
         else if (props.userData.contract_step === 10) {
-            console.log('here');
             step.value = 6
         }
     } else if (props.userData.contract_step === 11) {
@@ -220,7 +221,6 @@ let signaturePreview = (val) => {
     submit(11)
 }
 let submit = (step) => {
-
     const requestData = {};
     if (step === 1) {
         Object.assign(requestData, contactDetailData.value);

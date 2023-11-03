@@ -26,6 +26,15 @@
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
+                    </p>
+                @endif
             </div>
         @endif
 
@@ -48,6 +57,15 @@
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
+                    </p>
+                @endif
             </div>
         @endif
 
@@ -68,6 +86,15 @@
                 @if ($question->value == 'YES')
                     <p style="overflow-wrap: break-word;">
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
+                    </p>
+                @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
                     </p>
                 @endif
             </div>
@@ -95,6 +122,15 @@
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
+                    </p>
+                @endif
             </div>
         @endif
 
@@ -117,6 +153,15 @@
                 @if ($question->value == 'YES')
                     <p style="overflow-wrap: break-word;">
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
+                    </p>
+                @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
                     </p>
                 @endif
             </div>
@@ -144,6 +189,15 @@
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
+                    </p>
+                @endif
             </div>
         @endif
 
@@ -164,6 +218,15 @@
                 @if ($question->value == 'YES')
                     <p style="overflow-wrap: break-word;">
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
+                    </p>
+                @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
                     </p>
                 @endif
             </div>
@@ -188,6 +251,15 @@
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
+                    </p>
+                @endif
             </div>
         @endif
 
@@ -208,6 +280,15 @@
                 @if ($question->value == 'YES')
                     <p style="overflow-wrap: break-word;">
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
+                    </p>
+                @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
                     </p>
                 @endif
             </div>
@@ -235,6 +316,15 @@
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
+                    </p>
+                @endif
             </div>
         @endif
 
@@ -255,6 +345,15 @@
                 @if ($question->value == 'YES')
                     <p style="overflow-wrap: break-word;">
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
+                    </p>
+                @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
                     </p>
                 @endif
             </div>
@@ -279,6 +378,15 @@
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
+                    </p>
+                @endif
             </div>
         @endif
 
@@ -301,6 +409,15 @@
                 @if ($question->value == 'YES')
                     <p style="overflow-wrap: break-word;">
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
+                    </p>
+                @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
                     </p>
                 @endif
             </div>
@@ -328,6 +445,15 @@
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
+                    </p>
+                @endif
             </div>
         @endif
 
@@ -350,6 +476,15 @@
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
+                    </p>
+                @endif
             </div>
         @endif
 
@@ -370,6 +505,15 @@
                 @if ($question->value == 'YES')
                     <p style="overflow-wrap: break-word;">
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
+                    </p>
+                @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
                     </p>
                 @endif
             </div>
@@ -396,6 +540,15 @@
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
+                    </p>
+                @endif
             </div>
         @endif
 
@@ -420,6 +573,15 @@
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
+                    </p>
+                @endif
             </div>
         @endif
 
@@ -440,6 +602,15 @@
                 @if ($question->value == 'YES')
                     <p style="overflow-wrap: break-word;">
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
+                    </p>
+                @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
                     </p>
                 @endif
             </div>
@@ -466,6 +637,15 @@
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
+                    </p>
+                @endif
             </div>
         @endif
 
@@ -489,6 +669,15 @@
                 @if ($question->value == 'YES')
                     <p style="overflow-wrap: break-word;">
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
+                    </p>
+                @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
                     </p>
                 @endif
             </div>
@@ -517,6 +706,15 @@
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
+                    </p>
+                @endif
             </div>
         @endif
 
@@ -539,6 +737,15 @@
                 @if ($question->value == 'YES')
                     <p style="overflow-wrap: break-word;">
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
+                    </p>
+                @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
                     </p>
                 @endif
             </div>
@@ -566,6 +773,15 @@
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
+                    </p>
+                @endif
             </div>
         @endif
 
@@ -588,6 +804,15 @@
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
+                    </p>
+                @endif
             </div>
         @endif
 
@@ -608,6 +833,15 @@
                 @if ($question->value == 'YES')
                     <p style="overflow-wrap: break-word;">
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
+                    </p>
+                @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
                     </p>
                 @endif
             </div>
@@ -634,6 +868,15 @@
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
+                    </p>
+                @endif
             </div>
         @endif
 
@@ -656,6 +899,15 @@
                 @if ($question->value == 'YES')
                     <p style="overflow-wrap: break-word;">
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
+                    </p>
+                @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
                     </p>
                 @endif
             </div>
@@ -682,6 +934,15 @@
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
+                    </p>
+                @endif
             </div>
         @endif
 
@@ -702,6 +963,15 @@
                 @if ($question->value == 'YES')
                     <p style="overflow-wrap: break-word;">
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
+                    </p>
+                @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
                     </p>
                 @endif
             </div>
@@ -729,6 +999,15 @@
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
+                    </p>
+                @endif
             </div>
         @endif
 
@@ -749,6 +1028,15 @@
                 @if ($question->value == 'YES')
                     <p style="overflow-wrap: break-word;">
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
+                    </p>
+                @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
                     </p>
                 @endif
             </div>
@@ -774,6 +1062,15 @@
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
+                    </p>
+                @endif
             </div>
         @endif
 
@@ -794,6 +1091,15 @@
                 @if ($question->value == 'YES')
                     <p style="overflow-wrap: break-word;">
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
+                    </p>
+                @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
                     </p>
                 @endif
             </div>
@@ -823,6 +1129,15 @@
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
+                    </p>
+                @endif
             </div>
         @endif
 
@@ -848,6 +1163,15 @@
                 @if ($question->value == 'YES')
                     <p style="overflow-wrap: break-word;">
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
+                    </p>
+                @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
                     </p>
                 @endif
             </div>
@@ -878,6 +1202,15 @@
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
+                    </p>
+                @endif
             </div>
         @endif
 
@@ -900,6 +1233,15 @@
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
+                    </p>
+                @endif
             </div>
         @endif
 
@@ -920,6 +1262,15 @@
                 @if ($question->value == 'YES')
                     <p style="overflow-wrap: break-word;">
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
+                    </p>
+                @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
                     </p>
                 @endif
             </div>
@@ -945,6 +1296,15 @@
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
                     </p>
                 @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
+                    </p>
+                @endif
             </div>
         @endif
 
@@ -965,6 +1325,15 @@
                 @if ($question->value == 'YES')
                     <p style="overflow-wrap: break-word;">
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
+                    </p>
+                @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
                     </p>
                 @endif
             </div>
@@ -988,6 +1357,15 @@
                 @if ($question->value == 'YES')
                     <p style="overflow-wrap: break-word;">
                         <strong>Explanation: &nbsp;</strong> <br> {{ $question->description }}
+                    </p>
+                @endif
+
+                @if ($question->occuring_date)
+                    <p>
+                        <span>
+                            <strong style="margin-right:10px">Occurring Date: &nbsp;</strong>
+                            {{ date('d-M-Y', strtotime($question->occuring_date)) }}
+                        </span>
                     </p>
                 @endif
             </div>
