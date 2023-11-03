@@ -47,7 +47,8 @@ let form = useForm({
   password_confirmation: "",
   phone: "",
   consent: false,
-  country_code:'+1',
+  phone_code:'+1',
+  phone_country:'USA',
 });
 let isFormValid = ref(true);
 
@@ -116,7 +117,6 @@ let submit = () => {
   }
 };
 
-const selectedCountry = ref('USA');
 
 const search = ref('');
 const isOpen = ref(false);
@@ -135,8 +135,8 @@ const filteredCountries = computed(() => {
 
 const selectCountry = (country) => {
   // search.value = country.codeName;
-  selectedCountry.value = country.codeName
-  form.country_code = '+' + country.code
+  form.phone_country = country.codeName
+  form.phone_code = '+' + country.code
   isOpen.value = false;
 };
 onMounted(() => {
@@ -293,7 +293,7 @@ const closeDropDown = () => {
           <div class="flex">
             <button @click="toggleDropdown" class="drop_down_main mr-1" id="states-button"
               data-dropdown-toggle="dropdown-states" type="button">
-              <span class="ml-1">{{ selectedCountry }}</span> <span class="mx-1">{{ form.country_code }}</span> <span><svg
+              <span class="ml-1">{{ form.phone_country }}</span> <span class="mx-1">{{ form.phone_code }}</span> <span><svg
                   xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                   stroke="currentColor" class="w-4 ml-1 h-4">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
@@ -322,7 +322,7 @@ const closeDropDown = () => {
             </div>
           </div>
           <div v-if="firstStepErrors.phone" class="text-red-500" v-text="firstStepErrors.phone[0]"></div>
-          <div v-if="firstStepErrors.country_code" class="text-red-500" v-text="firstStepErrors.country_code[0]"></div>
+          <div v-if="firstStepErrors.phone_code" class="text-red-500" v-text="firstStepErrors.phone_code[0]"></div>
         </div>
 
 
