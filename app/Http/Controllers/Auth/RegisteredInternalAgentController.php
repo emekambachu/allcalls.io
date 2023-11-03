@@ -31,11 +31,13 @@ class RegisteredInternalAgentController extends Controller
     }
     public function store(Request $request)
     {
+        // dd($request->all);
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:' . User::class,
-            'phone' => ['required', 'string', 'max:255', 'unique:' . User::class, 'regex:/^\+?1?[-.\s]?(\([2-9]\d{2}\)|[2-9]\d{2})[-.\s]?\d{3}[-.\s]?\d{4}$/'],
+            'phone' => ['required', 'string', 'min:10', 'max:15', 'unique:' . User::class, 'regex:/^[0-9]*$/'],
+            'country_code' => ['required', 'regex:/^\+(?:[0-9]){1,4}$/'],
             'password' => ['required', 'confirmed', Password::defaults()],
         ]);
         if ($validator->fails()) {
@@ -51,7 +53,7 @@ class RegisteredInternalAgentController extends Controller
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
-                'phone' => $request->phone,
+                'phone' => $request->country_code.$request->phone,
                 'password' => Hash::make($request->password),
                 'legacy_key' => false,
             ]);

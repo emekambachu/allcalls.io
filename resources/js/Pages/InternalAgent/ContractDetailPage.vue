@@ -356,6 +356,7 @@ if (props.userData.internal_agent_contract && props.userData.internal_agent_cont
         if (matchingLegalInfo && question.name != 'contract_commission_checkbox_20') {
             form.value[matchingLegalInfo.name] = question.value;
             form.value[matchingLegalInfo.name + '_text'] = question.description;
+            form.value[matchingLegalInfo.name + '_date'] = question.occuring_date
         } else if (question.name === 'contract_commission_checkbox_20') {
             form.value[matchingLegalInfo.name] = question.value;
             if (question.value === "YES") {
@@ -519,6 +520,14 @@ if (props.userData.internal_agent_contract && props.userData.internal_agent_cont
                             v-show="form[information.name] === 'YES' && information.name != 'contract_commission_checkbox_20'"
                             v-model="form[information.name + '_text']"
                             class="bg-gray-50 mt-5 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                           
+                        <div class="mt-3" v-show="form[information.name] === 'YES' && information.name !== 'contract_commission_checkbox_20'">
+                            <VueDatePicker 
+                                v-model="form[information.name + '_date']"  placeholder="Occurrence Date"
+                                format="dd-MMM-yyyy" :disabled="true" auto-apply>
+                            </VueDatePicker>
+                            
+                        </div>
 
                         <div class="mt-5">
                             <Multiselect
@@ -535,7 +544,7 @@ if (props.userData.internal_agent_contract && props.userData.internal_agent_cont
             </div>
 
         </div>
- 
+
         <hr class="mb-5">
 
         <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
