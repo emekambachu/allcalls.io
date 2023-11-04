@@ -41,6 +41,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'legacy_key',
         'timezone',
         'progress',
+        'phone_country',
+        'phone_code',
     ];
 
     /**
