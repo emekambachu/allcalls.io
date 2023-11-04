@@ -24,28 +24,6 @@ class IncomingCallController extends Controller
             'To' => 'required',
         ]);
 
-        // // Check for X-Twilio-Signature header
-        // $twilioSignature = $request->header('X-Twilio-Signature');
-        // if ($twilioSignature) {
-        //     Log::debug('X-Twilio-Signature header exists: ' . $twilioSignature);
-        //     $validator = new RequestValidator(env('TWILIO_AUTH_TOKEN'));
-        //     $url = url()->full() . '?' . http_build_query($request->all());
-        //     $variables = $request->all();
-
-        //     Log::debug('URL: ' . $url);
-        //     Log::debug($variables);
-
-        //     // Check if the incoming signature is valid for your application URL and the incoming parameters
-        //     if ($validator->validate($twilioSignature, $url, $variables)) {
-        //         Log::debug('Confirmed to have come from Twilio.');
-        //     } else {
-        //         Log::debug('NOT VALID. It might have been spoofed!');
-        //     }
-        // } else {
-        //     Log::debug('X-Twilio-Signature header not found.');
-        // }
-
-
         $twiml = '<?xml version="1.0" encoding="UTF-8"?>';
 
         $to = $request->input('To');
@@ -53,24 +31,6 @@ class IncomingCallController extends Controller
 
         // Remove the "+1" from the beginning of the "To" number
         $to = substr($to, 2);
-
-/*      hardcode call from dialler 
-        $isFromClient = strpos($request->input('From'), 'client:') === 0;
-
-        Log::debug('Professional: This is a professional log right before checking dialler call');
-        Log::debug('Professional:' . $request->input('From'));
-        Log::debug('asdasdasdasdadas');
-        if ( $isFromClient ) {
-            Log::debug('Omega: call coming from client:');
-            $uniqueCallId = '64e92bac620d5';
-            $twiml .= '<Response><Dial answerOnBridge="true"><Client callerId="+15736523170">alice';
-            $twiml .= '<Parameter name="unique_call_id" value="' . $uniqueCallId . '"/>';
-            $twiml .= '</Client></Dial></Response>';
-            Log::debug($twiml);
-
-            return response($twiml, 200)->header('Content-Type', 'text/xml');
-        }
-*/
 
         // getting from number from request
         $requestFromNumber = $request->input('From');
@@ -86,15 +46,6 @@ class IncomingCallController extends Controller
             Log::debug('Number found in AvailableNumber model: ' . $to);
             $twiml .= $this->handleAvailableNumberCall($to, $requestFromNumber);
 
-  
-
-            // if ($user->device_token) {
-            //     $response = Http::post(route('call.pushNotification'), [
-            //         'deviceToken' => $user->device_token, // Replace with the actual field name
-            //     ]);
-            //     Log::debug('Notification attempt:' . $response->body());
-            // }
-
             return response($twiml, 200)->header('Content-Type', 'text/xml');
         }
 
@@ -105,23 +56,6 @@ class IncomingCallController extends Controller
             $fromAttribute = $this->getFromAttribute($request->input('From'));
 
             Log::debug($request->input('From'));
-
-            // $isFromClient = strpos($request->input('From'), 'client:') === 0;
-
-            // if ( $isFromClient ) {
-            //     Log::debug('Omega: call coming from client:');
-            //     // $clientTwiml = "";
-            //     // $numberToDial = '+15736523170';
-
-            //     // Manually construct the TwiML
-            /*    $clientTwiml = '<?xml version="1.0" encoding="UTF-8"?>'; */ 
-            //     $clientTwiml .= '<Response><Dial answerOnBridge="true"><Client callerId="+15736523170">alice</Client></Dial></Response>';
-
-            //     return response($clientTwiml, 200)->header('Content-Type', 'text/xml');
-            // }
-
-
-        
 
             $twiml .= $this->handleCallTypeNumberCall($to, $fromAttribute);
             return response($twiml, 200)->header('Content-Type', 'text/xml');
