@@ -23,22 +23,26 @@
 
                 <div class="flex mt-4">
                     <div class="flex items-center mr-4">
-                        <input :disabled="page.auth.role === 'admin'" :id="'default-radio-' + information.id + '-yes'" v-model="form[information.name]" value="YES"
-                            type="radio" :name="'question-' + information.id" :checked="form[information.name] === 'YES'"
+                        <input :disabled="page.auth.role === 'admin'" :id="'default-radio-' + information.id + '-yes'"
+                            v-model="form[information.name]" value="YES" type="radio" :name="'question-' + information.id"
+                            :checked="form[information.name] === 'YES'"
                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
                         <label :for="'default-radio-' + information.id + '-yes'"
                             class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">YES</label>
                     </div>
                     <div class="flex items-center">
-                        <input :disabled="page.auth.role === 'admin'" :id="'default-radio-' + information.id + '-no'" v-model="form[information.name]" value="NO"
-                            type="radio" :name="'question-' + information.id" :checked="form[information.name] === 'NO'"
+                        <input :disabled="page.auth.role === 'admin'" :id="'default-radio-' + information.id + '-no'"
+                            v-model="form[information.name]" value="NO" type="radio" :name="'question-' + information.id"
+                            :checked="form[information.name] === 'NO'"
                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
                         <label :for="'default-radio-' + information.id + '-no'"
                             class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">NO</label>
                     </div>
-                    <a  :href="route('admin.agent.legal.question.pdf', [form[information.id],userData.id,information.question])" claass="text-blue-600  cursor-pointer" v-if="form[information.name] === 'YES' && page.auth.role === 'admin'&& userData.internal_agent_contract.legal_question" class="ml-5"><svg
-                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="w-5 h-5 text-blue-600">
+                    <a :href="route('admin.agent.legal.question.pdf', [form[information.id], userData.id, information.question])"
+                        claass="text-blue-600  cursor-pointer"
+                        v-if="form[information.name] === 'YES' && page.auth.role === 'admin' && userData.internal_agent_contract.legal_question"
+                        class="ml-5"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-blue-600">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
                         </svg>
@@ -49,8 +53,7 @@
                     v-model="form[information.name + '_text']"
                     class="bg-gray-50 mt-5 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <div class="mt-5">
-                    <Multiselect
-                        :disabled="page.auth.role === 'admin'"
+                    <Multiselect :disabled="page.auth.role === 'admin'"
                         v-show="form[information.name] === 'YES' && information.name === 'contract_commission_checkbox_20'"
                         v-model="form[information.name + '_text']" :options="contract_commissions" track-by="value"
                         label="label" mode="tags" :close-on-select="false" placeholder="Choose">
@@ -58,6 +61,14 @@
                 </div>
                 <div v-if="firstStepErrors[information.name]" class="text-red-500 mt-3"
                     v-text="firstStepErrors[information.name][0]"></div>
+                
+                <div class="mt-3" v-show="form[information.name] === 'YES' && information.name !== 'contract_commission_checkbox_20'">
+                    <VueDatePicker :disabled="page.auth.role === 'admin'" v-model="form[information.name + '_date']"
+                        placeholder="Select Occurrence Date" format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply>
+                    </VueDatePicker>
+                    <div v-if="firstStepErrors[information.name + '_date']" class="text-red-500 mt-3"
+                        v-text="firstStepErrors[information.name + '_date'][0]"></div>
+                </div>
             </div>
         </div>
         <hr class="w-100 h-1 my-4 bg-gray-600 border-0 rounded dark:bg-gray-700">
@@ -229,6 +240,7 @@ export default {
         form: {
             contract_commission_checkbox_20_text: [],
         },
+         maxDate : new Date,
         accompanying_sign: null,
         contract_commissions: [
             'Aetna/Accendo',
@@ -257,6 +269,7 @@ export default {
 
     }),
     mounted() {
+        this.maxDate.setHours(23, 59, 59, 999);
         if (this.userData.internal_agent_contract && this.userData.internal_agent_contract.legal_question) {
             this.userData.internal_agent_contract.legal_question.forEach((question) => {
                 const matchingLegalInfo = this.LegalInformation.find((info) => info.name === question.name);
@@ -264,6 +277,7 @@ export default {
                     this.form[matchingLegalInfo.id] = question.id;
                     this.form[matchingLegalInfo.name] = question.value;
                     this.form[matchingLegalInfo.name + '_text'] = question.description
+                    this.form[matchingLegalInfo.name + '_date'] = question.occuring_date
                 } else if (question.name === 'contract_commission_checkbox_20') {
                     this.form[matchingLegalInfo.id] = question.id;
                     this.form[matchingLegalInfo.name] = question.value;
