@@ -15,6 +15,10 @@ import { usePage } from "@inertiajs/vue3";
 
 let page = usePage();
 
+
+console.log('PAGE ON AUTH LAYOUT:');
+console.log(page);
+
 let connectedClient = ref(null);
 let callDuration = ref("00:00");
 let callConnectionTime = reactive(null);
