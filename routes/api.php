@@ -2,6 +2,7 @@
 
 use Pusher\Pusher;
 use App\Models\User;
+use App\Models\Device;
 use App\Models\ActiveUser;
 use App\Events\ExampleTest;
 use Illuminate\Http\Request;
@@ -66,6 +67,13 @@ Route::post('/sanctum/token', function (Request $request) {
             'email' => ['The provided credentials are incorrect.'],
         ]);
     }
+
+    $device = Device::create([
+        'user_id' => $user->id,
+        'device_type' => 'android',
+    ]);
+
+    Log::debug('devices-log:sign-in', $device->toArray());
  
     return $user->createToken($request->device_name)->plainTextToken;
 });
