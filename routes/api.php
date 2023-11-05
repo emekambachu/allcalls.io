@@ -78,6 +78,24 @@ Route::post('/sanctum/token', function (Request $request) {
     return $user->createToken($request->device_name)->plainTextToken;
 });
 
+Route::middleware('auth:sanctum')->delete('/sanctum/token', function(Request $request) {
+
+    Log::debug('devices-log:sign-out', [
+        'user' => $request->user()->toArray(),
+    ]);
+
+    $devices = Device::whereUserId($request->user()->id)->get();
+
+    foreach($devices as $device) {
+        Log::debug('devices-log:deleting', [
+            'device' => $device->toArray()
+        ]);
+        $device->delete();
+    }
+
+    return ['message' => 'done'];
+});
+
 Route::post('/twiml', function (Request $request) {
     // The incoming phone number is stored in the "From" field
     $caller = $request->input('From');
