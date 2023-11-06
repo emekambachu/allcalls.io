@@ -249,6 +249,7 @@ const closeDropDown = () => {
         Receive Competitive Top-Level Commissions - Fully Vested.
       </div>
     </template>
+    
 
     <form @submit.prevent="submit">
       <div v-show="step === 0">
@@ -370,7 +371,7 @@ const closeDropDown = () => {
 
     <template v-slot:titles>
       <div class="text-4xl lg:text-5xl xl:text-8xl text-white mb-10">
-        Welcome to AllCalls and <br><span class="text-custom-green">Congratulation on Your New Career.</span>
+        Welcome to AllCalls and <br><span class="text-custom-green">Congratulations on Your New Career</span>
       </div>
     </template>
 
@@ -383,7 +384,7 @@ const closeDropDown = () => {
         With AllCalls leading-edge technology we make selling
         life insurance easier than ever before. Developed from
         scratch by industry veterans - we know exactly what
-        you need to have a success career in life insurance and
+        you need to have a successful  career in life insurance and
         we've built our business around just that. Helping agents
         succeed is our job.
       </div>
