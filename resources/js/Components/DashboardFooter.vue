@@ -21,7 +21,7 @@ import ApplicationLogo from "@/Components/ApplicationLogo.vue";
       <div class="flex flex-col items-center text-xs">
         <p class="mt-1 uppercase tracking-wider">AllCalls.io</p>
         <p>1309 COFFEEN AVE STE 11246<br>SHERIDAN, WY 82801, USA</p>
-        <p>(855) 815-0382</p>
+        <!-- <p>(855) 815-0382</p> -->
         <p>support@allcalls.io</p>
       </div>
     </div>
