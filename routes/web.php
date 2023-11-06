@@ -159,7 +159,7 @@ Route::get('/send-push-notification-test', function(Request $request) {
     $data = $request->json()->all();
 
     // $deviceToken = env('PUSH_TEST_DEVICE_TOKEN');
-    $deviceToken = "e3f13a770c9ea52831d1f48d1d1e4395f7ed149ecc342b5d50533456140cbee9";
+    $deviceToken = "d59667696136c19d1fd85dd5fab0beee46dbb13b0c0defdd61ab2e65b7bcafd4";
     $title = $request->input('title') ?? 'Example title';
     $message = $request->input('message') ?? 'Example message';
 
