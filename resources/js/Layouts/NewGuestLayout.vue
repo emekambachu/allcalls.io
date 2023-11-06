@@ -5,14 +5,28 @@ import { Link } from "@inertiajs/vue3";
 
 <template>
   <div class="min-h-screen flex flex-col items-center lg:block">
-    <div class="lg:hidden block py-4 flex flex-col items-center gap-1 w-full bg-custom-blue mb-6">
+    <div class="lg:hidden block py-4 flex flex-col items-center gap-1 w-full bg-custom-blue mb-0">
       <Link href="/" class="mb-2">
         <ApplicationLogo :black="true" class="w-fit" />
       </Link>
     </div>
+    <div
+      class="bg-custom-blue sm:block lg:hidden  w-full px-6 py-6 md:px-20 md:pb-20  md:mt-0 relative"
+    >
+      <div class="hidden lg:block pt-4 pb-14 xl:py-20">
+        <Link href="/">
+          <ApplicationLogo class="w-fit" />
+        </Link>
+      </div>
 
-    <div class="lg:hidden flex flex-col items-center gap-1">
       <div
+        class="w-full  text-center lg:text-left lg:max-w-sm xl:max-w-xl mt-10 lg:mt-0"
+      >
+        <slot name="titles" />
+      </div>
+    </div>
+    <div class="lg:hidden mt-5 flex flex-col items-center gap-1">
+      <!-- <div
         class="px-10 text-center text-4xl font-black text-sky-900 tracking-tighter font-extrabold"
       >
         Start Receiving Live Calls Now!
@@ -22,7 +36,8 @@ import { Link } from "@inertiajs/vue3";
       >
         No risk, no contracts, and no long-term commitment. Cancel anytime,
         hassle-free.
-      </div>
+      </div> -->
+      <slot name="smallStepRegister"  />
       <slot name="smallStepOneLoading" />
     </div>
 
@@ -42,7 +57,7 @@ import { Link } from "@inertiajs/vue3";
     </div>
 
     <div
-      class="bg-custom-blue w-full px-6 py-6 md:px-20 md:pb-20 mt-6 md:mt-0 relative"
+      class="bg-custom-blue hidden lg:block w-full px-6 py-6 md:px-20 md:pb-20 mt-6 md:mt-0 relative"
     >
       <div class="hidden lg:block pt-4 pb-14 xl:py-20">
         <Link href="/">
@@ -51,7 +66,7 @@ import { Link } from "@inertiajs/vue3";
       </div>
 
       <div
-        class="w-full text-center lg:text-left lg:max-w-sm xl:max-w-xl mt-10 lg:mt-0"
+        class="w-full  text-center lg:text-left lg:max-w-sm xl:max-w-xl mt-10 lg:mt-0"
       >
         <slot name="titles" />
       </div>

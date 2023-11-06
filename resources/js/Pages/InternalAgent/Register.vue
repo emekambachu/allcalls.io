@@ -240,7 +240,18 @@ const closeDropDown = () => {
   <NewGuestLayout>
 
     <Head title="Register" />
-
+    <template v-slot:smallStepRegister>
+      <div
+        class="px-10 text-center  text-4xl font-black text-sky-900 tracking-tighter font-extrabold"
+      >
+      Start Earning High Commissions Today!
+      </div>
+      <div
+        class="text-md text-custom-blue font-semibold text-center px-10 mb-6"
+      >
+      Receive Competitive Top-Level Commissions - Fully Vested.
+      </div>
+    </template>
     <template v-slot:loadingText>
       <div class="px-10 text-center text-4xl xl:text-5xl text-custom-white font-extrabold tracking-tighter">
         Start Earning High Commissions Today!
