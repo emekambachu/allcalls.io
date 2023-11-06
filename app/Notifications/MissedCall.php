@@ -63,9 +63,12 @@ class MissedCall extends Notification
     public function toPushNotification(object $notifiable)
     {
         // Assuming $notifiable->device_token is where the device token is stored
-        $deviceToken = $notifiable->device_token;
+        // $deviceToken = $notifiable->device_token;
+        $deviceToken = "c3pDWZR-KEsClVz99I0nQT:APA91bHfk8aqXs-hgNSExoXde_Nd037FSKvrhv7A4Wb8lUrHAGj2N7SzS4PO1wHa3a_guC_BWf2k0F5zn6AgVVjZLHTNzFxIXvSZpoyNpgWyLxBDYQYFl10fDJVwO8aC3ATBCcp5c5d0";
         
         $notificationData = $this->toArray($notifiable);
+
+        Log::debug("Notification sent for missed call");
         
         $serverKey = env('PUSH_TEST_SERVER_KEY');
 
