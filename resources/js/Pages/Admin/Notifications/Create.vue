@@ -5,6 +5,7 @@ import InputError from "@/Components/InputError.vue";
 import { router, usePage } from "@inertiajs/vue3";
 import GuestTextInput from "@/Components/GuestTextInput.vue";
 import TextInput from "@/Components/TextInput.vue";
+import InputLabel from "@/Components/InputLabel.vue";
 import GuestInputLabel from "@/Components/GuestInputLabel.vue";
 import SelectInput from "@/Components/SelectInput.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
@@ -66,17 +67,20 @@ if (page.props.flash.message) {
         <div>
           <form @submit.prevent="sendPushNotification">
             <div>
-              <label for="title">Title:</label>
-              <input id="title" type="text" v-model="form.title" required>
+              <InputLabel for="title" value="Push Title:" />
+              <!-- <input id="title" type="text" v-model="" required> -->
+              <TextInput id="title" type="text" class="mt-1 block w-full" v-model="form.title" required autofocus />
             </div>
 
             <div>
-              <label for="message">Message:</label>
-              <textarea id="message" v-model="form.message" required></textarea>
+              <InputLabel for="message" value="Push Description" />
+              <!-- <textarea id="message" v-model="form.message" required></textarea> -->
+              <TextInput id="message" type="text" class="mt-1 block w-full" v-model="form.message" required autofocus />
             </div>
 
             <div>
-              <button type="submit" :disabled="form.processing">Send Notification</button>
+              <!-- <button >Send Notification</button> -->
+              <PrimaryButton type="submit" :disabled="form.processing">Send Notification</PrimaryButton>
             </div>
           </form>
         </div>
