@@ -41,7 +41,7 @@ class FundsAdded extends Notification
     {
         return [
             'title' => 'Funds Added',
-            'body' => $this->amount . ' added to your funds.',
+            'body' => '$' . $this->amount . ' added to your funds.',
         ];
     }
 
