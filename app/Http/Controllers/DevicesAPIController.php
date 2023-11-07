@@ -20,6 +20,8 @@ class DevicesAPIController extends Controller
             'user_id' => $request->user()->id,
         ]);
 
+        $device->refresh();
+
         return response()->json([
             'device' => $device->toArray(),
         ]);
