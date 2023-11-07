@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PingAPIController;
 use App\Http\Controllers\CallStatusController;
 use App\Http\Controllers\ClientsAPIController;
+use App\Http\Controllers\DevicesAPIController;
 use Illuminate\Validation\ValidationException;
 use App\Http\Controllers\ActiveUsersController;
 use App\Http\Controllers\OnlineUsersController;
@@ -19,6 +20,7 @@ use App\Http\Controllers\TwilioTokenController;
 use App\Http\Controllers\CallTypesAPIController;
 use App\Http\Controllers\DispositionsController;
 use App\Http\Controllers\IncomingCallController;
+use App\Http\Controllers\LaravelTokenController;
 use App\Http\Controllers\CallRecordingController;
 use App\Http\Controllers\RingyResponseController;
 use App\Http\Controllers\AgentStatusAPIController;
@@ -37,7 +39,6 @@ use App\Http\Controllers\TwilioAndroidAccessTokenController;
 use App\Http\Controllers\TwilioIOSAccessTokenGuestController;
 use App\Http\Controllers\TwilioIOSSandboxAccessTokenController;
 use App\Http\Controllers\TwilioAndroidAccessTokenGuestController;
-use App\Http\Controllers\LaravelTokenController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -209,3 +210,7 @@ Route::get('/custom-broadcasting-auth', [CustomBroadcastingAuthController::class
 Route::post('/custom-broadcasting-auth', [CustomBroadcastingAuthController::class, 'store']);
 
 Route::middleware('auth:sanctum')->patch('/calls/{uniqueCallId}/user-response', [CallUserResponseAPIController::class, 'update']);
+
+Route::middleware('auth:sanctum')->post('/devices', [DevicesAPIController::class, 'store']);
+Route::middleware('auth:sanctum')->patch('/devices/{device}', [DevicesAPIController::class, 'update']);
+Route::middleware('auth:sanctum')->delete('/devices/{device}', [DevicesAPIController::class, 'destroy']);
