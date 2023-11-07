@@ -66,8 +66,7 @@ class MissedCall extends Notification
         $notificationData = $this->toArray($notifiable);
 
         return [
-            'title' => $notificationData['title'],
-            'body' => $notificationData['message'],
+            'data' => $notificationData
         ];
 
         // Assuming $notifiable->device_token is where the device token is stored
