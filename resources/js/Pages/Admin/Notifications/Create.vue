@@ -70,7 +70,7 @@ if (page.props.flash.message) {
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
           <ul>
             <li v-for="device in devices" :key="device.id">
-              {{ device.name }} - {{ device.fcm_token }}
+              {{ device.user_id }} - {{ device.device_type }}
             </li>
           </ul>
         </div>
