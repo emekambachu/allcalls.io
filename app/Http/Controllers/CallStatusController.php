@@ -196,7 +196,6 @@ class CallStatusController extends Controller
                 if ($callDuration && $callDuration > 60) {
                     // Dispatch CompletedCallEvent
                     CompletedCallEvent::dispatch($user, CallType::find($callTypeId), $request->unique_call_id);
-                    $user->notify();
                 }
 
 
