@@ -14,14 +14,14 @@ class DevicesAPIController extends Controller
             'fcm_token' => 'required'
         ]);
 
-        Device::create([
+        $device = Device::create([
             'device_type' => $request->device_type,
             'fcm_token' => $request->fcm_token,
             'user_id' => $request->user()->id,
         ]);
 
         return response()->json([
-            'message' => 'Device stored successfully.'
+            'device' => $device->toArray(),
         ]);
     }
 
