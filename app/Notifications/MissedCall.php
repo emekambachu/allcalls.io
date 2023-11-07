@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use App\Notifications\PushChannel;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -27,7 +28,7 @@ class MissedCall extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database'];
+        return ['database', PushChannel::class];
     }
 
     /**
@@ -60,12 +61,17 @@ class MissedCall extends Notification
      * @param object $notifiable
      * @return void
      */
-    public function toPushNotification(object $notifiable)
+    public function toPush(object $notifiable)
     {
+        $notificationData = $this->toArray($notifiable);
+
+        return [
+            'title' => $notificationData['title'],
+            'body' => $notificationData['message'],
+        ];
+
         // Assuming $notifiable->device_token is where the device token is stored
         $deviceToken = $notifiable->device_token;
-        
-        $notificationData = $this->toArray($notifiable);
         
         $serverKey = env('PUSH_TEST_SERVER_KEY');
 
