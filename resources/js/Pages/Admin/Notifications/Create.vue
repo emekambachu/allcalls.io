@@ -13,6 +13,31 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import axios from "axios";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 
+// Create a reactive form object
+const form = useForm({
+  title: '',
+  message: ''
+});
+
+function sendPushNotification() {
+  // Disable the button to prevent multiple submissions
+  form.processing = true;
+
+  // Post the form data
+  form.post('/send-push-notification-test', {
+    onSuccess: () => {
+      toaster("success", "Notification sent successfully!");
+      form.reset(); // Reset the form after successful submission
+    },
+    onError: () => {
+      toaster("error", "Failed to send notification.");
+    },
+    onFinish: () => {
+      form.processing = false; // Re-enable the button after the request
+    }
+  });
+}
+
 let page = usePage();
 if (page.props.flash.message) {
   toaster("success", page.props.flash.message);
@@ -37,6 +62,24 @@ if (page.props.flash.message) {
     </div>
     <section class="p-3">
         Send Notifications To Any Device Here
+
+        <div>
+          <form @submit.prevent="sendPushNotification">
+            <div>
+              <label for="title">Title:</label>
+              <input id="title" type="text" v-model="form.title" required>
+            </div>
+
+            <div>
+              <label for="message">Message:</label>
+              <textarea id="message" v-model="form.message" required></textarea>
+            </div>
+
+            <div>
+              <button type="submit" :disabled="form.processing">Send Notification</button>
+            </div>
+          </form>
+        </div>
     </section>
   </AuthenticatedLayout>
 </template>
