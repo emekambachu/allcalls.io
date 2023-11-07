@@ -7,6 +7,7 @@ use App\Models\Bid;
 use App\Events\FundsTooLow;
 use App\Models\Transaction;
 use App\Events\CompletedCallEvent;
+use App\Notifications\FundsDeducted;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\InteractsWithQueue;
@@ -112,6 +113,7 @@ class ChargeUserForCompletedCall
                 }
             });
             Log::debug("Deducted $$chargeAmount from user balance after completed call");
+            $event->user->notify(new FundsDeducted($chargeAmount));
         } else {
             FundsTooLow::dispatch($event->user);
             Log::warning('Insufficient balance to charge for completed call');

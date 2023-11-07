@@ -28,8 +28,8 @@ class PushChannel
             $notification = [
                 'to' => $token,
                 'notification' => [
-                    'title' => 'MissedCall',
-                    'body' => $data['message'],
+                    'title' => $data['title'],
+                    'body' => $data['body'],
                 ],
                 'android' => [
                     'direct_boot_ok' => true,
