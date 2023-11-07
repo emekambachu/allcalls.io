@@ -14,7 +14,15 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import axios from "axios";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 
-const { devices } = usePage().props;
+const { users } = usePage().props;
+const selectedUserId = ref('');
+
+// Computed property to get devices for the selected user
+const selectedUserDevices = computed(() => {
+  const user = users.find(user => user.id === selectedUserId.value);
+  return user ? user.devices : [];
+});
+
 
 // Create a reactive form object
 const form = useForm({
@@ -28,6 +36,12 @@ function sendPushNotification() {
 
   // Post the form data
   form.get('/send-push-notification-test', {
+    data: {
+      user_id: selectedUserId.value,
+      devices: selectedDevices.value.map(device => device.fcm_token),
+      title: form.title,
+      message: form.message
+    },
     onSuccess: () => {
       toaster("success", "Notification sent successfully!");
       form.reset(); // Reset the form after successful submission
@@ -68,11 +82,30 @@ if (page.props.flash.message) {
         Send Notifications To Any Device Here
 
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-          <ul>
+          <!-- <ul>
             <li v-for="device in devices" :key="device.id">
               {{ device.user_id }} - {{ device.device_type }}
             </li>
-          </ul>
+          </ul> -->
+
+          <!-- User Selection -->
+          <select v-model="selectedUserId">
+            <option value="">Select a user</option>
+            <option v-for="user in users" :key="user.id" :value="user.id">
+              {{ user.name }}
+            </option>
+          </select>
+          
+          <!-- Devices List -->
+          <div v-if="selectedUserId">
+            <h3>Select a Device</h3>
+            <ul>
+              <li v-for="device in selectedUserDevices" :key="device.id">
+                {{ device.name }} - {{ device.fcm_token }}
+              </li>
+            </ul>
+          </div>
+
         </div>
 
         <div class="max-w-xl">
