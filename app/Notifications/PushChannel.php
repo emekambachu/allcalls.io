@@ -28,7 +28,7 @@ class PushChannel
             $notification = [
                 'to' => $token,
                 'notification' => [
-                    'title' => 'MissedCall',
+                    'title' => 'Funds Added',
                     'body' => $data['message'],
                 ],
                 'android' => [
