@@ -18,6 +18,7 @@ class AdminNotificationsController extends Controller
         return Inertia::render('Admin/Notifications/Create', [
             'users' => $users,
         ]);
+        
     }
     
 }

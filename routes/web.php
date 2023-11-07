@@ -204,4 +204,6 @@ Route::post('/send-push-notification-test', function(Request $request) {
         'message' => 'Notifications sent',
         'responses' => $responses
     ]);
+
+    return redirect()->back()->with('message', 'Notifications sent');
 });
