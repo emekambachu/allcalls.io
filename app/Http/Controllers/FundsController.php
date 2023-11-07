@@ -119,7 +119,7 @@ class FundsController extends Controller
 
         FundsAdded::dispatch($request->user(), $subtotal, $processingFee, $finalAmount, $totalWithBonus ? $subtotal : 0, $card);
         FundsAddedNotification::dispatch($request->user()->id, $finalAmount);
-        $request->user()->notify( new FundsAddedUserNotification($finalAmount) );
+        $request->user()->notify( new FundsAddedUserNotification($subtotal) );
         Log::debug('FundsAddedNotification dispatched');
 
         // Prepare the flash message
