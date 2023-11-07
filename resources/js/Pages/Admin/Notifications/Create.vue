@@ -24,7 +24,7 @@ function sendPushNotification() {
   form.processing = true;
 
   // Post the form data
-  form.post('/send-push-notification-test', {
+  form.get('/send-push-notification-test', {
     onSuccess: () => {
       toaster("success", "Notification sent successfully!");
       form.reset(); // Reset the form after successful submission
