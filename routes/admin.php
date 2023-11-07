@@ -94,5 +94,5 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     //Calls
     Route::get('/calls', [CallsController::class, 'index'])->name('admin.calls.index');
 
-    Route::get('/notifications', [AdminNotificationsController::class, 'create']);
+    Route::get('/notifications', [AdminNotificationsController::class, 'create'])->name('admin.notifications.create');
 });
