@@ -160,7 +160,7 @@ Route::post('/send-push-notification-test', function(Request $request) {
     $title = $request->input('title', 'Default title');
     $message = $request->input('message', 'Default message');
     
-    $serverKey = env('PUSH_SERVER_KEY');
+    $serverKey = env('PUSH_TEST_SERVER_KEY');
     $responses = [];
 
     foreach ($deviceTokens as $token) {
