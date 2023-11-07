@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class UserOffline extends Notification
+class MissedCall extends Notification
 {
     use Queueable;
 
@@ -50,8 +50,8 @@ class UserOffline extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'title' => 'Missed Call',
-            'body' => 'You missed a call from a client.'
+            'title' => 'Status Turned Offline',
+            'body' => 'You are now set to offline and will not receive any calls.'
         ];
     }
 

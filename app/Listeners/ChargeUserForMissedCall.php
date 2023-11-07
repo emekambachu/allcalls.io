@@ -30,8 +30,8 @@ class ChargeUserForMissedCall
         // Log the handling of the event
         Log::debug('Handling ChargeUserForMissedCall');
 
-        Log::debug('Tempoarily charging for missed calls are paused until are bugs are worked out.');
-        return;
+        // Log::debug('Tempoarily charging for missed calls are paused until are bugs are worked out.');
+        // return;
 
         try {
             // Retrieve user_id from the event data
