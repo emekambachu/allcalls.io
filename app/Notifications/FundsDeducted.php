@@ -3,9 +3,10 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use App\Notifications\PushChannel;
+use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
 
 class FundsDeducted extends Notification
 {
@@ -32,6 +33,16 @@ class FundsDeducted extends Notification
             'title' => 'Funds Deducted',
             'body' => '$' . $this->amount . ' deducted from your funds.'
         ];
+    }
+
+     /**
+     * Get the notification's delivery channels.
+     *
+     * @return array<int, string>
+     */
+    public function via(object $notifiable): array
+    {
+        return ['database', PushChannel::class];
     }
 
 
