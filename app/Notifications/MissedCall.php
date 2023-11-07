@@ -50,7 +50,8 @@ class MissedCall extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'message' => 'You missed a call from a client.'
+            'title' => 'Missed Call',
+            'body' => 'You missed a call from a client.'
         ];
     }
 

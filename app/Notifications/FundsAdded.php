@@ -40,8 +40,8 @@ class FundsAdded extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'message' => $this->amount . ' added to your funds.',
-            'amount' => $this->amount,
+            'title' => 'Funds Added',
+            'body' => $this->amount . ' added to your funds.',
         ];
     }
 
