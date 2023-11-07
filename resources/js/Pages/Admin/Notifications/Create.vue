@@ -14,6 +14,8 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import axios from "axios";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 
+const { devices } = usePage().props;
+
 // Create a reactive form object
 const form = useForm({
   title: '',
@@ -40,6 +42,7 @@ function sendPushNotification() {
 }
 
 let page = usePage();
+
 if (page.props.flash.message) {
   toaster("success", page.props.flash.message);
 }
@@ -61,25 +64,30 @@ if (page.props.flash.message) {
         </div>
       </div>
     </div>
-    <section class="p-3">
+    <section class="px-16">
         Send Notifications To Any Device Here
 
-        <div>
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+          <ul>
+            <li v-for="device in devices" :key="device.id">
+              {{ device.name }} - {{ device.fcm_token }}
+            </li>
+          </ul>
+        </div>
+
+        <div class="max-w-xl">
           <form @submit.prevent="sendPushNotification">
-            <div>
+            <div class="mt-4">
               <InputLabel for="title" value="Push Title:" />
-              <!-- <input id="title" type="text" v-model="" required> -->
-              <TextInput id="title" type="text" class="mt-1 block w-full" v-model="form.title" required autofocus />
+              <TextInput id="title" type="text" class="mt-1" v-model="form.title" required autofocus />
             </div>
 
-            <div>
+            <div class="mt-4">
               <InputLabel for="message" value="Push Description" />
-              <!-- <textarea id="message" v-model="form.message" required></textarea> -->
-              <TextInput id="message" type="text" class="mt-1 block w-full" v-model="form.message" required autofocus />
+              <TextInput id="message" type="text" class="mt-1" v-model="form.message" required autofocus />
             </div>
 
-            <div>
-              <!-- <button >Send Notification</button> -->
+            <div class="mt-6">
               <PrimaryButton type="submit" :disabled="form.processing">Send Notification</PrimaryButton>
             </div>
           </form>
