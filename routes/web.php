@@ -200,10 +200,5 @@ Route::post('/send-push-notification-test', function(Request $request) {
         curl_close($ch);
     }
 
-    return response()->json([
-        'message' => 'Notifications sent',
-        'responses' => $responses
-    ]);
-
     return redirect()->back()->with('message', 'Notifications sent');
 });
