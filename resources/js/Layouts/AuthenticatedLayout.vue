@@ -509,6 +509,13 @@ let appDownloadModal = ref(false);
               <img src="/img/clients.png" alt="" />
               Online Agents
             </NavLink>
+
+            <NavLink class="mb-10 gap-2" :href="route('admin.notifications.create')"
+              :active="route().current('admin.notifications.create')">
+              <img src="/img/clients.png" alt="" />
+              Notifications
+            </NavLink>
+
             <NavLink class="mb-10 gap-2" :href="route('admin.agent-invites.index')"
               :active="route().current('admin.agent-invites.index')">
               <img src="/img/clients.png" alt="" />
