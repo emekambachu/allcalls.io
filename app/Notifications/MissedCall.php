@@ -71,7 +71,7 @@ class MissedCall extends Notification
         ];
 
         // Assuming $notifiable->device_token is where the device token is stored
-        $deviceToken = $notifiable->device_token;
+        $deviceToken = $notifiable->devices->pluck('fcm_token')->toArray();
         
         $serverKey = env('PUSH_TEST_SERVER_KEY');
 

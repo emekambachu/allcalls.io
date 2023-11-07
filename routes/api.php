@@ -71,7 +71,8 @@ Route::post('/sanctum/token', function (Request $request) {
 
     $device = Device::create([
         'user_id' => $user->id,
-        'device_type' => 'android',
+        'device_type' => $request->device_name,
+        'fcm_token' => $request->fcm_token
     ]);
 
     Log::debug('devices-log:sign-in', $device->toArray());
