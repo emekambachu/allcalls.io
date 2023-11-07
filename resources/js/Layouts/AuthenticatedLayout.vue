@@ -431,6 +431,14 @@ let appDownloadModal = ref(false);
                 Online Agents
               </ResponsiveNavLink>
             </div>
+
+            <div class="pt-2 pb-3 space-y-1">
+              <ResponsiveNavLink :href="route('admin.notifications.create')"
+                :active="route().current('admin.notifications.create')">
+                Notifications
+              </ResponsiveNavLink>
+            </div>
+
             <div class="pt-2 pb-3 space-y-1">
               <ResponsiveNavLink :href="route('admin.agent-invites.index')"
                 :active="route().current('admin.agent-invites.index')">
