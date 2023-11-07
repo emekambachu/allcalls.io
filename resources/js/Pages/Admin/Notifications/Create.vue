@@ -35,7 +35,7 @@ function sendPushNotification() {
   form.processing = true;
 
   // Post the form data
-  form.get('/send-push-notification-test', {
+  form.post('/send-push-notification-test', {
     data: {
       user_id: selectedUserId.value,
       devices: selectedDevices.value.map(device => device.fcm_token),

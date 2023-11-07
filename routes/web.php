@@ -155,51 +155,53 @@ Route::get('/docs/ping', [PingDocsController::class, 'show'])->name('docs.ping.s
 Route::get('/docs/agent-status', [AgentStatusDocsController::class, 'show'])->name('docs.agent-status.show');
 Route::get('/docs/agent-status-price', [AgentStatusPriceDocsController::class, 'show'])->name('docs.agent-status-price.show');
 
-Route::get('/send-push-notification-test', function(Request $request) {
-    $data = $request->json()->all();
-
-    // $deviceToken = env('PUSH_TEST_DEVICE_TOKEN');
-    // $deviceToken = "c3pDWZR-KEsClVz99I0nQT:APA91bHfk8aqXs-hgNSExoXde_Nd037FSKvrhv7A4Wb8lUrHAGj2N7SzS4PO1wHa3a_guC_BWf2k0F5zn6AgVVjZLHTNzFxIXvSZpoyNpgWyLxBDYQYFl10fDJVwO8aC3ATBCcp5c5d0";
+Route::post('/send-push-notification', function(Request $request) {
     $deviceTokens = $request->input('devices', []); // Expecting an array of device tokens
+    $title = $request->input('title', 'Default title');
+    $message = $request->input('message', 'Default message');
+    
+    $serverKey = env('PUSH_SERVER_KEY');
+    $responses = [];
 
-    $title = $request->input('title') ?? 'Example title';
-    $message = $request->input('message') ?? 'Example message';
+    foreach ($deviceTokens as $token) {
+        $notification = [
+            'to' => $token,
+            'notification' => [
+                'title' => $title,
+                'body' => $message,
+            ],
+            'android' => [
+                'priority' => 'high',
+                'notification' => [
+                    'title' => $title,
+                    'body' => $message,
+                    'sound' => 'default'
+                ],
+            ],
+        ];
 
-    $serverKey = env('PUSH_TEST_SERVER_KEY');
+        $headers = [
+            'Authorization: key=' . $serverKey,
+            'Content-Type: application/json',
+        ];
 
-    $notification = [
-        'to' => $deviceToken,
-        'notification' => [
-            'title' => $title,
-            'body' => $message,
-        ],
-        'android' => [
-            'direct_boot_ok' => true,
-        ],
-    ];
+        $ch = curl_init('https://fcm.googleapis.com/fcm/send');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($notification));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-    $headers = [
-        'Authorization: key=' . $serverKey,
-        'Content-Type: application/json',
-    ];
-
-    $ch = curl_init('https://fcm.googleapis.com/fcm/send');
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($notification));
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-    $response = curl_exec($ch);
-
-    if ($response === false) {
-        echo 'Error sending push notification: ' . curl_error($ch);
-    } else {
-        echo 'Push notification sent: ' . $response;
+        $response = curl_exec($ch);
+        if ($response === false) {
+            $responses[] = 'Error sending push notification: ' . curl_error($ch);
+        } else {
+            $responses[] = 'Push notification sent to token ' . $token . ': ' . $response;
+        }
+        curl_close($ch);
     }
 
-    curl_close($ch);
-
     return response()->json([
-        'message' => 'Notification sent'
+        'message' => 'Notifications sent',
+        'responses' => $responses
     ]);
 });
