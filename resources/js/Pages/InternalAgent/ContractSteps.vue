@@ -74,9 +74,15 @@ let accompanying_sign = ref(null);
 let firstStepErrors = ref({});
 
 
-
+let slidingLoader = ref(false)
 let ChangeTab = (route) => {
-    contractStep.value += 1
+    if(contractStep.value === 3 && page.props.auth.role !== 'admin'){
+        slidingLoader.value = true
+        router.visit('contract-steps')
+    }else{
+        contractStep.value += 1
+    }
+    
     pageTop()
 }
 let ChangeTabBack = () => {
@@ -157,13 +163,12 @@ let previewContract = () => {
     StepsModal.value = false
     contractModal.value = true
 }
-let slidingLoader = ref(false)
+
 let additional_info_saved = ref(false)
 let errorHandle = (data, response) => {
     if (data < 5) {
         ChangeTab(response.route)
     } else if (data < 10) {
-        console.log(' under10');
         if (data === 5) {
             step.value = 2
             contractStep.value = 0

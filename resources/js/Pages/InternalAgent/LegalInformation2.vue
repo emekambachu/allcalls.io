@@ -330,7 +330,7 @@ export default {
                 if (!hasErrors) {
                     if (this.page.auth.role === 'internal-agent') {
                         this.$emit("legalFormDataStep2", this.form);
-                        this.firstStepErrors = {}; // Clear the errors by assigning a new empty object
+                        // this.firstStepErrors = {}; // Clear the errors by assigning a new empty object
 
                     } else {
                         this.$emit("changeTab");

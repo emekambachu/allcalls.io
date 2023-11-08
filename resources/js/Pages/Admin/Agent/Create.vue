@@ -350,8 +350,8 @@ const closeDropDown = () => {
                     </svg></span>
                 </button>
 
-                <GuestTextInput style="border-radius: 0px 5px 5px 0px;" @focus="closeDropDown" id="phone" type="text"
-                  placeholder="0000000000" class="mt-1  block w-full" v-model="form.phone" maxlength="15"
+                <GuestTextInput onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" style="border-radius: 0px 5px 5px 0px;" @focus="closeDropDown" id="phone" type="text"
+                  placeholder="0000000000" class="mt-1  block w-full" v-model="form.phone" maxlength="10"
                   minlength="10" />
 
 
