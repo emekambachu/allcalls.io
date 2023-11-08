@@ -232,8 +232,7 @@ let enforceFiveDigitInput = (fieldName, key) => {
     <div v-for="(history, index) in addres_history" :key="history.id">
         <div class="grid lg:grid-cols-3 mb-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
             <div>
-                <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 ">Home
-                    Address</label>
+                <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 " v-text="index === 0 ? 'Current Address' : 'Home Address' " ></label>
                 <div>
                     <input :disabled="page.props.auth.role === 'admin'" type="text" v-model="form[history.address].address"
                         id="default-input"
