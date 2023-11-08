@@ -79,7 +79,7 @@ class RegisteredUserController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:' . User::class,
-            'phone' => ['required', 'string', 'min:10', 'max:15', 'unique:' . User::class, 'regex:/^[0-9]*$/'],
+            'phone' => ['required', 'string', 'min:10', 'max:10', 'unique:' . User::class, 'regex:/^[0-9]*$/'],
             'phone_code' => ['required', 'regex:/^\+(?:[0-9]){1,4}$/'],
             'phone_country' => ['required'],
             'password' => ['required', 'confirmed', Password::defaults()],
