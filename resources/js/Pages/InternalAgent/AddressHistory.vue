@@ -10,6 +10,7 @@ let props = defineProps({
     isLoading: Boolean,
     Current_address_data:Object
 });
+console.log('userData', props.userData);
 let page = usePage();
 let addres_history = ref([
     {

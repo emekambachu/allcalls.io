@@ -315,7 +315,7 @@ let validateMobileNumber = (event) => {
                 class=" px-4 w-full mt-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
                 placeholder="Search" />
 
-              <ul style="width: 100%; height:250px;"
+              <ul style="width: 100%; max-height:250px;"
                 class="absolute z-10 py-2 mt-1 overflow-auto bg-white rounded-md shadow-md">
                 <li v-for="(country, index) in filteredCountries" :key="index" @click="selectCountry(country)"
                   class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
