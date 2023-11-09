@@ -8,6 +8,7 @@ let props = defineProps({
     states: Array,
     userData: Object,
     isLoading: Boolean,
+    Current_address_data:Object
 });
 let page = usePage();
 let addres_history = ref([
@@ -43,19 +44,34 @@ let form = ref({
     history_address6: { id: 6, state: "Choose", zip_code: '', address: '', city: '', move_in_date: '', move_out_date: '', },
     history_address7: { id: 7, state: "Choose", zip_code: '', address: '', city: '', move_in_date: '', move_out_date: '', },
 })
+    if(props.userData.internal_agent_contracts){
+        form.value.history_address1.address = props.userData.internal_agent_contract.address
+        form.value.history_address1.city = props.userData.internal_agent_contract.city
+        form.value.history_address1.state = props.userData.internal_agent_contract.state
+        form.value.history_address1.zip_code = props.userData.internal_agent_contract.zip
+        form.value.history_address1.move_in_date = props.userData.internal_agent_contract.move_in_date
+        form.value.history_address1.move_out_date = new Date()
+    }
+    console.log('Current_address_data', props.Current_address_data);
+
 if (props.userData.internal_agent_contract && props.userData.internal_agent_contract.addresses) {
     props.userData.internal_agent_contract.addresses.forEach((address, index) => {
         // Check if the index is within the range of your form addresses
+        // console.log('address',address);
         if (index < addres_history.value.length) {
             const formKey = `history_address${index + 1}`;
-            form.value[formKey].address = address.address;
-            // Set other properties such as city, state, zip_code as needed
-            form.value[formKey].city = address.city;
-            form.value[formKey].state = address.state;
-            form.value[formKey].zip_code = address.zip;
-            form.value[formKey].state = address.state;
-            form.value[formKey].move_in_date = address.move_in_date;
-            form.value[formKey].move_out_date = address.move_out_date;
+            console.log('formKey',formKey);
+            if(formKey !== 'history_address1'){
+                form.value[formKey].address = address.address;
+                // Set other properties such as city, state, zip_code as needed
+                form.value[formKey].city = address.city;
+                form.value[formKey].state = address.state;
+                form.value[formKey].zip_code = address.zip;
+                form.value[formKey].state = address.state;
+                form.value[formKey].move_in_date = address.move_in_date;
+                form.value[formKey].move_out_date = address.move_out_date;
+            }
+            
             // Add more properties as needed
         }
     });
@@ -183,16 +199,20 @@ let ChangeTabBack = () => {
     emits("goback");
 }
 
-let enforceFiveDigitInput = (fieldName, val) => {
-    addres_history.value.forEach((history) => {
-        let field = form.value[history.address][val];
-        if (field) {
-            form.value[history.address][val] = fieldName.replace(/[^0-9]/g, '');
-            if (fieldName.length > 5) {
-                form.value[history.address][val] = fieldName.slice(0, 5);
-            }
-        }
-    })
+let enforceFiveDigitInput = (fieldName, key) => {
+    // addres_history.value.forEach((history) => {
+    //     let field = form.value[history.address][val];
+    //     if (field) {
+    //         form.value[history.address][val] = fieldName.replace(/[^0-9]/g, '');
+    //         if (fieldName.length > 5) {
+    //             form.value[history.address][val] = fieldName.slice(0, 5);
+    //         }
+    //     }
+    // })
+    let field = form.value[key].zip_code;
+    if (field) {
+        form.value[key].zip_code = field.replace(/[^0-9]/g, '').slice(0, 5);
+    }
     
 }
 </script>
@@ -212,8 +232,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
     <div v-for="(history, index) in addres_history" :key="history.id">
         <div class="grid lg:grid-cols-3 mb-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
             <div>
-                <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 ">Home
-                    Address</label>
+                <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 " v-text="index === 0 ? 'Current Address' : 'Home Address' " ></label>
                 <div>
                     <input :disabled="page.props.auth.role === 'admin'" type="text" v-model="form[history.address].address"
                         id="default-input"
@@ -253,7 +272,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
 
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">Zip Code</label>
-                <input :disabled="page.props.auth.role === 'admin'" type="text" @input="enforceFiveDigitInput(form[history.address].zip_code, 'zip_code')" 
+                <input :disabled="page.props.auth.role === 'admin'" type="text" @input="enforceFiveDigitInput(form[history.address].zip_code, history.address)" 
                     v-model="form[history.address].zip_code" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                 <div v-if="hasValidationErrors[history.address]">
@@ -274,7 +293,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
                 </div>
             </div>
             <div>
-                <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 " v-text="index == 0 ? 'Currently Address' : 'Move-Out-Date'">  </label>
+                <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 " v-text="'Move-Out-Date'">  </label>
                 <VueDatePicker :disabled="page.props.auth.role === 'admin'" v-model="form[history.address].move_out_date"
                     format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply>
                 </VueDatePicker>

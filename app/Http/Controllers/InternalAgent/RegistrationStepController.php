@@ -142,10 +142,12 @@ class RegistrationStepController extends Controller
         $amlCourseGuide = asset('guid-links/aml-setup.pdf');
 
         //Docusign Auth Token
-        $apiClient = new ApiClient();
-        $apiClient->getOAuth()->setOAuthBasePath($this->DOCUSIGN_ACCOUNT_BASE_URI);
-        $docuSignAuthCode = $this->getToken($apiClient);
-        session()->put('docusign_auth_code', $docuSignAuthCode);
+        if(!session()->has('docusign_auth_code')) {
+            $apiClient = new ApiClient();
+            $apiClient->getOAuth()->setOAuthBasePath($this->DOCUSIGN_ACCOUNT_BASE_URI);
+            $docuSignAuthCode = $this->getToken($apiClient);
+            session()->put('docusign_auth_code', $docuSignAuthCode);   
+        }
         //End Docusign Auth Token
 
         return Inertia::render('InternalAgent/ContractSteps', [
