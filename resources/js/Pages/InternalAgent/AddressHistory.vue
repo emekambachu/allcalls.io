@@ -44,7 +44,7 @@ let form = ref({
     history_address6: { id: 6, state: "Choose", zip_code: '', address: '', city: '', move_in_date: '', move_out_date: '', },
     history_address7: { id: 7, state: "Choose", zip_code: '', address: '', city: '', move_in_date: '', move_out_date: '', },
 })
-    if(props.userData.internal_agent_contract.address){
+    if(props.userData.internal_agent_contracts){
         form.value.history_address1.address = props.userData.internal_agent_contract.address
         form.value.history_address1.city = props.userData.internal_agent_contract.city
         form.value.history_address1.state = props.userData.internal_agent_contract.state
