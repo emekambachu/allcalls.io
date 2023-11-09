@@ -98,7 +98,7 @@ let removeAgent = userId => {
                 <td class="text-gray-600 px-4 py-3">
                   <div v-for="(state, index) in onlineUser.user.states" :key="state.id"
                     class="bg-blue-100 hover:bg-blue-200 mb-2 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400 inline-flex items-center justify-center">
-                    {{ state.full_name }}</div>
+                    {{ state.name }}</div>
                 </td>
                 <td class="text-gray-600 px-4 py-3">
                   <span :class="`${getStatusBadge(
