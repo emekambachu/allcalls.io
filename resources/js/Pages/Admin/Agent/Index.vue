@@ -172,6 +172,17 @@ let updateProgress = (data) => {
   })
 
 }
+let dateFormat = (data) => {
+    if (data) {
+        let date = new Date(data)
+        const day = date.getDate().toString().padStart(2, "0"); // Add leading zero if needed
+        const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Month is zero-based, so add 1
+        const year = date.getFullYear();
+        // Create the formatted date string
+        return `${day}/${month}/${year}`;
+    }
+
+}
 </script>
 <style scoped>
 .modal {
@@ -236,6 +247,7 @@ let updateProgress = (data) => {
                   <th scope="col" class="px-4 py-3">Email</th>
                   <th scope="col" class="px-4 py-3">Balance</th>
                   <th scope="col" class="px-4 py-3">Phone</th>
+                  <th scope="col" class="px-4 py-3">Sign Up Date</th>
                   <th scope="col" class="px-4 py-3">Progress</th>
                   <th scope="col" class="px-4 py-3 text-end">Actions</th>
                 </tr>
