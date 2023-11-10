@@ -35,7 +35,7 @@ class ChargeUserForCompletedCall
         // Determine if the user is an internal agent
         $isInternalAgent = $event->user->roles->contains('name', 'internal-agent');
 
-        $chargeAmount = 35; // default value for internal agents
+        $chargeAmount = 40; // default value for internal agents
 
         // If the user is not an internal agent, find their bid for the call type
         if (!$isInternalAgent) {
