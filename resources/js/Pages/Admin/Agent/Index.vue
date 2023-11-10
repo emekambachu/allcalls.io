@@ -172,6 +172,17 @@ let updateProgress = (data) => {
   })
 
 }
+let dateFormat = (data) => {
+    if (data) {
+        let date = new Date(data)
+        const day = date.getDate().toString().padStart(2, "0"); // Add leading zero if needed
+        const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Month is zero-based, so add 1
+        const year = date.getFullYear();
+        // Create the formatted date string
+        return `${day}/${month}/${year}`;
+    }
+
+}
 </script>
 <style scoped>
 .modal {
@@ -236,6 +247,7 @@ let updateProgress = (data) => {
                   <th scope="col" class="px-4 py-3">Email</th>
                   <th scope="col" class="px-4 py-3">Balance</th>
                   <th scope="col" class="px-4 py-3">Phone</th>
+                  <th scope="col" class="px-4 py-3">Sign Up Date</th>
                   <th scope="col" class="px-4 py-3">Progress</th>
                   <th scope="col" class="px-4 py-3 text-end">Actions</th>
                 </tr>
@@ -249,7 +261,9 @@ let updateProgress = (data) => {
                   <td class="text-gray-600 px-4 py-3">
                     ${{ formatMoney(agent.balance) }}
                   </td>
-                  <td class="text-gray-600 px-4 py-3">{{ agent.phone }}</td>
+                  <td class="text-gray-600 px-4 py-3"><span v-if="agent.phone_code">{{ agent.phone_code}}</span> {{ agent.phone }}</td>
+                  <th class="text-gray-600 px-4 py-3">{{ dateFormat(agent.created_at)  }}</th>
+
                   <td class="text-gray-600 px-4 py-3">{{ agent.progress ? agent.progress : "-" }}</td>
                   <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
                     <a title="View Agent" :href="route('admin.agent.detail', agent.id)"><svg
