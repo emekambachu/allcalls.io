@@ -643,10 +643,16 @@ let appDownloadModal = ref(false);
             </NavLink>
 
 
+            <NavLink
+              class="mb-10 gap-2"
+              :href="route('profile.view')"
+              :active="route().current('profile.view') || route().current('profile.edit')"
+            >
+              <img src="/img/clients.png" alt="" />
+              Settings
+            </NavLink>
             <div
               v-if="
-                route().current('activities.index') ||
-                route().current('transactions.index') ||
                 route().current('profile.view') ||
                 route().current('profile.edit')
               "
