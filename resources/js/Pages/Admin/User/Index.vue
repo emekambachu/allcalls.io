@@ -156,7 +156,8 @@ let actionToDeleteUser = () => {
                   <td class="text-gray-600 px-4 py-3">
                     ${{ formatMoney(user.balance) }}
                   </td>
-                  <td class="text-gray-600 px-4 py-3">{{ user.phone }}</td>
+            
+                  <td class="text-gray-600 px-4 py-3"> <div class="flex"><span class="mr-1" v-if="user.phone_code">{{ user.phone_code}}</span> <span>{{ user.phone }}</span> </div> </td>
                   <td class="text-gray-600 px-4 py-3 text-center">
                     <div v-if="user.roles && user.roles.length > 0">
                       <span v-for="role in user.roles" :key="role.id">{{ role.name }}</span>

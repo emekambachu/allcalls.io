@@ -249,7 +249,9 @@ let updateProgress = (data) => {
                   <td class="text-gray-600 px-4 py-3">
                     ${{ formatMoney(agent.balance) }}
                   </td>
-                  <td class="text-gray-600 px-4 py-3">{{ agent.phone }}</td>
+                  <td class="text-gray-600 px-4 py-3"> <div class="flex"><span class="mr-1" v-if="agent.phone_code">{{ agent.phone_code}}</span> <span>{{ agent.phone }}</span> </div> </td>
+                  <th class="text-gray-600 px-4 py-3">{{ dateFormat(agent.created_at)  }}</th>
+
                   <td class="text-gray-600 px-4 py-3">{{ agent.progress ? agent.progress : "-" }}</td>
                   <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
                     <a title="View Agent" :href="route('admin.agent.detail', agent.id)"><svg
