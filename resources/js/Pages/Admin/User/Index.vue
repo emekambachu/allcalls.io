@@ -110,6 +110,17 @@ let actionToDeleteUser = () => {
       toaster("error", error.message)
     })
 }
+let dateFormat = (data) => {
+    if (data) {
+        let date = new Date(data)
+        const day = date.getDate().toString().padStart(2, "0"); // Add leading zero if needed
+        const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Month is zero-based, so add 1
+        const year = date.getFullYear();
+        // Create the formatted date string
+        return `${day}/${month}/${year}`;
+    }
+
+}
 </script>
 
 <template>
@@ -144,6 +155,7 @@ let actionToDeleteUser = () => {
                   <th scope="col" class="px-4 py-3">Balance</th>
                   <th scope="col" class="px-4 py-3">Phone</th>
                   <th scope="col" class="px-4 py-3">Role</th>
+                  <th scope="col" class="px-4 py-3">Sign Up Date</th>
                   <th scope="col" class="px-4 py-3 text-end">Actions</th>
                 </tr>
               </thead>
@@ -156,7 +168,8 @@ let actionToDeleteUser = () => {
                   <td class="text-gray-600 px-4 py-3">
                     ${{ formatMoney(user.balance) }}
                   </td>
-                  <td class="text-gray-600 px-4 py-3">{{ user.phone }}</td>
+            
+                  <td class="text-gray-600 px-4 py-3"> <span v-if="user.phone_code">{{ user.phone_code}}</span>  {{ user.phone }}</td>
                   <td class="text-gray-600 px-4 py-3 text-center">
                     <div v-if="user.roles && user.roles.length > 0">
                       <span v-for="role in user.roles" :key="role.id">{{ role.name }}</span>
@@ -165,6 +178,8 @@ let actionToDeleteUser = () => {
                         User
                     </div>
                   </td>
+                  <th class="text-gray-600 px-4 py-3">{{ dateFormat(user.created_at)  }}</th>
+                  
                   <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
                     <a :href="route('admin.customer.detail', user.id)">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
