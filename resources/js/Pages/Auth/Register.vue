@@ -9,7 +9,7 @@ import NewGuestLayout from "@/Layouts/NewGuestLayout.vue";
 import Footer from "@/Components/Footer.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import Multiselect from "@vueform/multiselect";
-import { ref, reactive, computed, watchEffect, onUnmounted , onMounted, inject  } from "vue";
+import { ref, reactive, computed, watchEffect, onUnmounted, onMounted, inject, watch } from "vue";
 // import { useVeeValidate } from '@vee-validate/vue3';
 import axios from "axios";
 // If you are using PurgeCSS, make sure to whitelist the carousel CSS classes
@@ -90,8 +90,8 @@ let form = useForm({
   password: "",
   password_confirmation: "",
   phone: "",
-  phone_code:'+1',
-  phone_country:'USA',
+  phone_code: '+1',
+  phone_country: 'USA',
 });
 let text = ref([]);
 
@@ -110,16 +110,6 @@ const isLoading = ref(false);
 // let goBack = () => {
 //   step.value = 0;
 // };
-
-
-
-
-
-
-
-
-
-
 const search = ref('');
 const isOpen = ref(false);
 
@@ -156,66 +146,83 @@ const handleOutsideClick = (event) => {
 };
 const closeDropDown = () => {
   isOpen.value = false
-};
+}
+let validateMobileNumber = (event) => {
+  
+  const phone = event.target.value;
+  let newPhone = phone; // Create a new variable to store the modified value
+  if (phone.length > 10) {
+    form.phone = phone.slice(0, 10);
+    newPhone = form.phone; // Update the newPhone variable with the truncated value
+    event.target.value = form.phone;
+  }
+  if (event.data === 'e') {
+    console.log('form', form.phone);
+    // form.phone = form.phone.slice(0, -1); // Remove last occurrences of 'e' from the input
+    // event.target.value = form.phone;
+  }
+}
 
-let submit = () => {
- 
-  isLoading.value = true
-  if (validateEmail(form.email)) {
 
-    let registerUrl = "/register";
+  let submit = () => {
 
-    if (props.agentToken) {
-      registerUrl += `?agentToken=${props.agentToken}`;
-    }
+    isLoading.value = true
+    if (validateEmail(form.email)) {
 
-    return axios
-      .post(registerUrl, form)
-      .then((response) => {
+      let registerUrl = "/register";
 
-        let postRegistrationUrl = '/login';
-        if (props.agentToken) {
-          postRegistrationUrl = '/registration-steps?agentToken=' + props.agentToken
-        }
+      if (props.agentToken) {
+        registerUrl += `?agentToken=${props.agentToken}`;
+      }
 
-        router.visit(postRegistrationUrl)
-        isLoading.value = false
-      })
-      .catch((error) => {
-        if (error.response) {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
-          errors.value = error.response.data.errors;
+      return axios
+        .post(registerUrl, form)
+        .then((response) => {
+
+          let postRegistrationUrl = '/login';
+          if (props.agentToken) {
+            postRegistrationUrl = '/registration-steps?agentToken=' + props.agentToken
+          }
+
+          router.visit(postRegistrationUrl)
           isLoading.value = false
-
-          firstStepErrors.value = error.response.data.errors;
-          if (error.response.status === 400) {
-            uiEmailValidation.value.isValid = false;
-            // Handle validation errors here.
-            firstStepErrors.value = error.response.data.errors;
+        })
+        .catch((error) => {
+          if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            errors.value = error.response.data.errors;
             isLoading.value = false
+
+            firstStepErrors.value = error.response.data.errors;
+            if (error.response.status === 400) {
+              uiEmailValidation.value.isValid = false;
+              // Handle validation errors here.
+              firstStepErrors.value = error.response.data.errors;
+              isLoading.value = false
+            } else {
+              // Handle other types of errors.
+              console.log("Other errors", error.response.data);
+              isLoading.value = false
+            }
+          } else if (error.request) {
+            // The request was made but no response was received
+            console.log("No response received", error.request);
           } else {
-            // Handle other types of errors.
-            console.log("Other errors", error.response.data);
+            // Something happened in setting up the request that triggered an Error
+            console.log("Error", error.message);
+          }
+          if (error) {
             isLoading.value = false
           }
-        } else if (error.request) {
-          // The request was made but no response was received
-          console.log("No response received", error.request);
-        } else {
-          // Something happened in setting up the request that triggered an Error
-          console.log("Error", error.message);
-        }
-        if(error){
-          isLoading.value = false
-        }
-      });
-  }
-  else {
-    uiEmailValidation.value.isValid = true;
-    isLoading.value = false
-  }
-};
+        });
+    }
+    else {
+      uiEmailValidation.value.isValid = true;
+      isLoading.value = false
+    }
+  };
+
 </script>
 
 <template>
@@ -224,14 +231,10 @@ let submit = () => {
 
     <Head title="Register" />
     <template v-slot:smallStepRegister>
-      <div
-        class="px-10  text-center text-4xl font-black text-sky-900 tracking-tighter font-extrabold"
-      >
+      <div class="px-10  text-center text-4xl font-black text-sky-900 tracking-tighter font-extrabold">
         Start Receiving Live Calls Now!
       </div>
-      <div
-        class="text-md text-custom-blue font-semibold text-center px-10 mb-6"
-      >
+      <div class="text-md text-custom-blue font-semibold text-center px-10 mb-6">
         No risk, no contracts, and no long-term commitment. Cancel anytime,
         hassle-free.
       </div>
@@ -294,25 +297,25 @@ let submit = () => {
           <div class="flex">
             <button @click="toggleDropdown" class="drop_down_main mr-1" id="states-button"
               data-dropdown-toggle="dropdown-states" type="button">
-              <span class="ml-1">{{ form.phone_country }}</span> <span class="mx-1">{{ form.phone_code }}</span> <span><svg
-                  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              <span class="ml-1">{{ form.phone_country }}</span> <span class="mx-1">{{ form.phone_code }}</span>
+              <span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                   stroke="currentColor" class="w-4 ml-1 h-4">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                 </svg></span>
             </button>
-            
-            <GuestTextInput style="border-radius: 0px 5px 5px 0px;" @focus="closeDropDown" id="phone" type="text"
-              placeholder="0000000000" class="mt-1  block w-full" v-model="form.phone" maxlength="15" minlength="10" />
-              
+
+            <GuestTextInput  onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" style="border-radius: 0px 5px 5px 0px;" @focus="closeDropDown"
+              id="phone" maxlength="10" type="text" placeholder="0000000000" class="mt-1  block w-full" v-model="form.phone"
+               />
 
           </div>
           <div v-if="isOpen" class="items-center justify-center ">
             <div class="relative">
-              <input v-model="search"  type="text"
+              <input v-model="search" type="text"
                 class=" px-4 w-full mt-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
                 placeholder="Search" />
 
-              <ul style="width: 100%; height:250px;"
+              <ul style="width: 100%; max-height:250px;"
                 class="absolute z-10 py-2 mt-1 overflow-auto bg-white rounded-md shadow-md">
                 <li v-for="(country, index) in filteredCountries" :key="index" @click="selectCountry(country)"
                   class="px-4 py-2 hover:bg-gray-100 cursor-pointer">

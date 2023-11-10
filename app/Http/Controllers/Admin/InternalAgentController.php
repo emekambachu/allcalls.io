@@ -93,7 +93,7 @@ class InternalAgentController extends Controller
 
     public function show($id)
     {
-        $user = User::findOrFail($id);
+        $user = User::with('states')->findOrFail($id);
         $callsCount = Call::whereUserId($id)->count();
         $transactionsCount = Transaction::whereUserId($id)->count();
         $activitiesCount = Activity::whereUserId($id)->count();
@@ -116,7 +116,7 @@ class InternalAgentController extends Controller
             'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:' . User::class,
             // 'phone' => ['required', 'string', 'max:255', 'unique:' . User::class, 'regex:/^\+?1?[-.\s]?(\([2-9]\d{2}\)|[2-9]\d{2})[-.\s]?\d{3}[-.\s]?\d{4}$/'],
-            'phone' => ['required', 'string', 'min:10', 'max:15',  'unique:' . User::class, 'regex:/^[0-9]*$/'],
+            'phone' => ['required', 'string', 'min:10', 'max:10',  'unique:' . User::class, 'regex:/^[0-9]*$/'],
             'phone_code' => ['required', 'regex:/^\+(?:[0-9]){1,4}$/'],
             'phone_country' => ['required'],
             'password' => ['required', 'confirmed', Password::defaults()],

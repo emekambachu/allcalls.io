@@ -251,6 +251,7 @@ const closeDropDown = () => {
             type="text"
             class="mt-1 block w-full"
             v-model="form.phone"
+            onkeyup="this.value=this.value.replace(/[^0-9]/g,'')"
           />
 
             <div
