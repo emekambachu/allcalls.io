@@ -43,6 +43,7 @@ use App\Http\Controllers\TakeCallsOnlineUsersController;
 |
 */
 Route::get('/', function () {
+    dd(systemEmails());
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
@@ -159,7 +160,7 @@ Route::post('/send-push-notification-test', function(Request $request) {
     $deviceTokens = $request->input('devices', []); // Expecting an array of device tokens
     $title = $request->input('title', 'Default title');
     $message = $request->input('message', 'Default message');
-    
+
     $serverKey = env('PUSH_TEST_SERVER_KEY');
     $responses = [];
 
