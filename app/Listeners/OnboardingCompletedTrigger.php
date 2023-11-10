@@ -19,6 +19,6 @@ class OnboardingCompletedTrigger
      */
     public function handle(OnboardingCompleted $event): void
     {
-        Mail::to(SYSTEM_EMAILS)->send(new \App\Mail\OnboardingCompleted($event->user));
+        Mail::to(systemEmails())->send(new \App\Mail\OnboardingCompleted($event->user));
     }
 }

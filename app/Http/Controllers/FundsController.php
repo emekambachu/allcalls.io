@@ -10,6 +10,7 @@ use App\Models\Card;
 use Inertia\Inertia;
 use App\Events\FundsAdded;
 use App\Models\Transaction;
+use App\Notifications\FundsAdded as FundsAddedUserNotification;
 use App\Services\NMIGateway;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -118,6 +119,7 @@ class FundsController extends Controller
 
         FundsAdded::dispatch($request->user(), $subtotal, $processingFee, $finalAmount, $totalWithBonus ? $subtotal : 0, $card);
         FundsAddedNotification::dispatch($request->user()->id, $finalAmount);
+        $request->user()->notify( new FundsAddedUserNotification($subtotal) );
         Log::debug('FundsAddedNotification dispatched');
 
         // Prepare the flash message

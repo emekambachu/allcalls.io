@@ -90,7 +90,7 @@ let formatMoney = (amount) => {
 let confirmMessage = ref(null)
 let isLoading = ref(false)
 let deleteUser = (user_id) => {
-   confirmMessage.value = {
+ confirmMessage.value = {
     heading: 'Delete User',
     confirm: 'Are you sure you want to delete this user?',
     user_id: user_id
@@ -143,12 +143,12 @@ let actionToDeleteUser = () => {
                   <th scope="col" class="px-4 py-3">Email</th>
                   <th scope="col" class="px-4 py-3">Balance</th>
                   <th scope="col" class="px-4 py-3">Phone</th>
+                  <th scope="col" class="px-4 py-3">Role</th>
                   <th scope="col" class="px-4 py-3 text-end">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="user in users.data" :key="user.id" class="border-b border-gray-500">
-            
                   <td class="text-gray-600 px-4 py-3">{{ user.id }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ user.first_name }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ user.last_name }}</td>
@@ -157,6 +157,14 @@ let actionToDeleteUser = () => {
                     ${{ formatMoney(user.balance) }}
                   </td>
                   <td class="text-gray-600 px-4 py-3">{{ user.phone }}</td>
+                  <td class="text-gray-600 px-4 py-3 text-center">
+                    <div v-if="user.roles && user.roles.length > 0">
+                      <span v-for="role in user.roles" :key="role.id">{{ role.name }}</span>
+                    </div>
+                    <div v-else>
+                        User
+                    </div>
+                  </td>
                   <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
                     <a :href="route('admin.customer.detail', user.id)">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -232,7 +240,7 @@ let actionToDeleteUser = () => {
                           clip-rule="evenodd" />
                       </svg>
                     </a>
-                  </li>
+                  </li> 
                 </ul>
               </nav>
             </div>
@@ -248,7 +256,8 @@ let actionToDeleteUser = () => {
       <Edit :showModal="showModal" :userDetail="userDetail" :currentPage="currentPage" @close="showModal = false"
         :callTypes="callTypes" :states="states" :roles="roles" :route="'/admin/customer'"></Edit>
     </Modal>
-    <DeleteModal :isLoading="isLoading" @actionToDeleteUser="actionToDeleteUser" :deleteUserModal="deleteUserModal" @close="deleteUserModal = false" :confirmMessage="confirmMessage" />
+    <DeleteModal :isLoading="isLoading" @actionToDeleteUser="actionToDeleteUser" :deleteUserModal="deleteUserModal"
+      @close="deleteUserModal = false" :confirmMessage="confirmMessage" />
   </AuthenticatedLayout>
 </template>
 

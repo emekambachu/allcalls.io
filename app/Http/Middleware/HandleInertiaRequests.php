@@ -44,10 +44,20 @@ class HandleInertiaRequests extends Middleware
             $role = 'internal-agent';
         }
 
+
+
+
+        $notifications = null;
+
+        if (auth()->user()) {
+            $notifications = auth()->user()->notifications;
+        }
+
         return array_merge(parent::share($request), [
             'auth' => [
                 'user' => $request->user(),
                 'role' => $role,
+                'notifications' => $notifications,
             ],
             'ziggy' => function () use ($request) {
                 return array_merge((new Ziggy)->toArray(), [

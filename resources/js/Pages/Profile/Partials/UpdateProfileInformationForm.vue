@@ -183,8 +183,8 @@ const closeDropDown = () => {
               </svg></span>
           </button>
 
-          <TextInput style="border-radius: 0px 5px 5px 0px;" @focus="closeDropDown" id="phone" type="text"
-            placeholder="0000000000" class="mt-1  block w-full" v-model="form.phone" maxlength="15" minlength="10" />
+          <TextInput style="border-radius: 0px 5px 5px 0px;" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" @focus="closeDropDown" id="phone" type="text"
+            placeholder="0000000000" class="mt-1  block w-full" v-model="form.phone" maxlength="10" minlength="10" />
 
 
         </div>
@@ -194,7 +194,7 @@ const closeDropDown = () => {
               class=" px-4 w-full mt-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
               placeholder="Search" />
 
-            <ul style="width: 100%; height:250px;"
+            <ul style="width: 100%; max-height:250px;"
               class="absolute z-10 py-2 mt-1 overflow-auto bg-white rounded-md shadow-md">
               <li v-for="(country, index) in filteredCountries" :key="index" @click="selectCountry(country)"
                 class="px-4 py-2 hover:bg-gray-100 cursor-pointer">

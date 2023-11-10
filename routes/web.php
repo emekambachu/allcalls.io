@@ -1,6 +1,7 @@
 <?php
 
 use Inertia\Inertia;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\BidsController;
@@ -153,3 +154,51 @@ Route::get('/docs', function() {
 Route::get('/docs/ping', [PingDocsController::class, 'show'])->name('docs.ping.show');
 Route::get('/docs/agent-status', [AgentStatusDocsController::class, 'show'])->name('docs.agent-status.show');
 Route::get('/docs/agent-status-price', [AgentStatusPriceDocsController::class, 'show'])->name('docs.agent-status-price.show');
+
+Route::post('/send-push-notification-test', function(Request $request) {
+    $deviceTokens = $request->input('devices', []); // Expecting an array of device tokens
+    $title = $request->input('title', 'Default title');
+    $message = $request->input('message', 'Default message');
+
+    $serverKey = env('PUSH_TEST_SERVER_KEY');
+    $responses = [];
+
+    foreach ($deviceTokens as $token) {
+        $notification = [
+            'to' => $token,
+            'notification' => [
+                'title' => $title,
+                'body' => $message,
+            ],
+            'android' => [
+                'priority' => 'high',
+                'notification' => [
+                    'title' => $title,
+                    'body' => $message,
+                    'sound' => 'default'
+                ],
+            ],
+        ];
+
+        $headers = [
+            'Authorization: key=' . $serverKey,
+            'Content-Type: application/json',
+        ];
+
+        $ch = curl_init('https://fcm.googleapis.com/fcm/send');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($notification));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        if ($response === false) {
+            $responses[] = 'Error sending push notification: ' . curl_error($ch);
+        } else {
+            $responses[] = 'Push notification sent to token ' . $token . ': ' . $response;
+        }
+        curl_close($ch);
+    }
+
+    return redirect()->back()->with('message', 'Notifications sent');
+});

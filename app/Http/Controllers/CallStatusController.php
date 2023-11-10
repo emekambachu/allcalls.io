@@ -11,8 +11,11 @@ use Illuminate\Http\Request;
 use App\Events\MissedCallEvent;
 use App\Events\RingingCallEvent;
 use App\Events\CallStatusUpdated;
+use App\Notifications\MissedCall;
 use App\Events\CompletedCallEvent;
+use App\Notifications\UserOffline;
 use Illuminate\Support\Facades\Log;
+use App\Notifications\FundsDeducted;
 use Illuminate\Support\Facades\Http;
 use App\Events\CallAcceptedOrRejected;
 
@@ -68,6 +71,8 @@ class CallStatusController extends Controller
                 Log::debug('busy event for user ' . $request->user_id);
                 // Dispatch MissedCallEvent
                 MissedCallEvent::dispatch($user);
+                $user->notify(new UserOffline());
+                $user->notify(new FundsDeducted(5));
                 break;
 
             case 'no-answer':
@@ -101,6 +106,8 @@ class CallStatusController extends Controller
                     // Dispatch MissedCallEvent if the elapsed time is 20 seconds or more
                     Log::debug("Ringing duration is EQUAL to or MORE than 20 seconds, dispatching MissedCallEvent...");
                     MissedCallEvent::dispatch($user);
+                    $user->notify(new MissedCall());
+                    $user->notify(new FundsDeducted(5));
                 } else {
                     Log::debug("Ringing duration is LESS than 20 seconds, NOT dispatching MissedCallEvent, Break");
                 }

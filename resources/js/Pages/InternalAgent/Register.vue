@@ -240,7 +240,18 @@ const closeDropDown = () => {
   <NewGuestLayout>
 
     <Head title="Register" />
-
+    <template v-slot:smallStepRegister>
+      <div
+        class="px-10 text-center  text-4xl font-black text-sky-900 tracking-tighter font-extrabold"
+      >
+      Start Earning High Commissions Today!
+      </div>
+      <div
+        class="text-md text-custom-blue font-semibold text-center px-10 mb-6"
+      >
+      Receive Competitive Top-Level Commissions - Fully Vested.
+      </div>
+    </template>
     <template v-slot:loadingText>
       <div class="px-10 text-center text-4xl xl:text-5xl text-custom-white font-extrabold tracking-tighter">
         Start Earning High Commissions Today!
@@ -249,6 +260,7 @@ const closeDropDown = () => {
         Receive Competitive Top-Level Commissions - Fully Vested.
       </div>
     </template>
+    
 
     <form @submit.prevent="submit">
       <div v-show="step === 0">
@@ -300,8 +312,8 @@ const closeDropDown = () => {
                 </svg></span>
             </button>
 
-            <GuestTextInput style="border-radius: 0px 5px 5px 0px;" @focus="closeDropDown" id="phone" type="text"
-              placeholder="0000000000" class="mt-1  block w-full" v-model="form.phone" maxlength="15"
+            <GuestTextInput onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" style="border-radius: 0px 5px 5px 0px;" @focus="closeDropDown" id="phone" type="text"
+              placeholder="0000000000" class="mt-1  block w-full" v-model="form.phone" maxlength="10"
               minlength="10" />
 
 
@@ -312,7 +324,7 @@ const closeDropDown = () => {
                 class=" px-4 w-full mt-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
                 placeholder="Search" />
 
-              <ul style="width: 100%; height:250px;"
+              <ul style="width: 100%; max-height:250px;"
                 class="absolute z-10 py-2 mt-1 overflow-auto bg-white rounded-md shadow-md">
                 <li v-for="(country, index) in filteredCountries" :key="index" @click="selectCountry(country)"
                   class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
@@ -370,7 +382,7 @@ const closeDropDown = () => {
 
     <template v-slot:titles>
       <div class="text-4xl lg:text-5xl xl:text-8xl text-white mb-10">
-        Welcome to AllCalls and <br><span class="text-custom-green">Congratulation on Your New Career.</span>
+        Welcome to AllCalls and <br><span class="text-custom-green">Congratulations on Your New Career</span>
       </div>
     </template>
 
@@ -383,7 +395,7 @@ const closeDropDown = () => {
         With AllCalls leading-edge technology we make selling
         life insurance easier than ever before. Developed from
         scratch by industry veterans - we know exactly what
-        you need to have a success career in life insurance and
+        you need to have a successful  career in life insurance and
         we've built our business around just that. Helping agents
         succeed is our job.
       </div>

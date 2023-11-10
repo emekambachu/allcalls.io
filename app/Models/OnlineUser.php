@@ -60,7 +60,7 @@ class OnlineUser extends Model
                 $query->whereHas('roles', function ($subQuery) {
                     Log::debug('Filtering by roles for internal-agent');
                     $subQuery->where('name', 'internal-agent');
-                })->where('balance', '>=', 35);
+                })->where('balance', '>=', 40);
             })->orWhere(function ($query) use ($callType) {
                 Log::debug('Checking for normal users');
     

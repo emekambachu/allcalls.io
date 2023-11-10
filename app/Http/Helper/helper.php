@@ -20,7 +20,15 @@ const PROGRESS_STATUSES = [
     'Contracts Sent to Carrier',
 ];
 
-const SYSTEM_EMAILS = ['contracting@allcalls.io', 'maria@allcalls.io'];
+function systemEmails() {
+    $currentUrl = trim(url()->current());
+
+    if (str_contains($currentUrl, 'staging.allcalls.io')) {
+        return ['awaisamir23@gmail.com'];
+    } else {
+        return ['contracting@allcalls.io', 'maria@allcalls.io', 'kat@allcalls.io'];
+    }
+}
 
 function getStateName($id)
 {

@@ -7,6 +7,7 @@ use App\Http\Controllers\AgentInvitesController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\ActiveUserChannelController;
 use App\Http\Controllers\Admin\OnlineAgentsController;
+use App\Http\Controllers\AdminNotificationsController;
 use App\Http\Controllers\Admin\InternalAgentController;
 use App\Http\Controllers\Admin\AvailableNumberController;
 use App\Http\Controllers\AdminAvaialbleNumbersController;
@@ -93,5 +94,5 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     //Calls
     Route::get('/calls', [CallsController::class, 'index'])->name('admin.calls.index');
 
-    // Route::get('/available-numbers', [AdminAvaialbleNumbersController::class, 'index'])->name('admin.available-numbers.index');
+    Route::get('/notifications', [AdminNotificationsController::class, 'create'])->name('admin.notifications.create');
 });
