@@ -93,7 +93,7 @@ class InternalAgentController extends Controller
 
     public function show($id)
     {
-        $user = User::findOrFail($id);
+        $user = User::with('states')->findOrFail($id);
         $callsCount = Call::whereUserId($id)->count();
         $transactionsCount = Transaction::whereUserId($id)->count();
         $activitiesCount = Activity::whereUserId($id)->count();
