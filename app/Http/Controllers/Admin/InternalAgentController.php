@@ -231,6 +231,7 @@ class InternalAgentController extends Controller
     public function update(Request $request, $id)
     {
         // echo $request->all();
+        // dd($request->all());
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -241,7 +242,7 @@ class InternalAgentController extends Controller
                 'max:255',
                 Rule::unique('users', 'email')->ignore($id),
             ],
-            'phone' => ['required', 'string', 'min:10', 'max:15',  Rule::unique('users', 'phone')->ignore($id), 'regex:/^[0-9]*$/'],
+            'phone' => ['required', 'string', 'min:10', 'max:10',  Rule::unique('users', 'phone')->ignore($id), 'regex:/^[0-9]*$/'],
             'phone_code' => ['required', 'regex:/^\+(?:[0-9]){1,4}$/'],
             'phone_country' => ['required'],
         ]);
