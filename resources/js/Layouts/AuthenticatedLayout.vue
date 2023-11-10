@@ -641,6 +641,50 @@ let appDownloadModal = ref(false);
               <img src="/img/clients.png" alt="" />
               Available Numbers
             </NavLink>
+
+
+            <div
+              v-if="
+                route().current('activities.index') ||
+                route().current('transactions.index') ||
+                route().current('profile.view') ||
+                route().current('profile.edit')
+              "
+              class="pl-14 text-white text-xs mb-5"
+            >
+              <ul>
+
+                <li class="mb-3">
+                  <Link
+                    aria-current="page"
+                    class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
+                    :class="{
+                      'text-custom-green':
+                        route().current('profile.view') ||
+                        route().current('profile.edit'),
+                    }"
+                    :href="route('profile.view')"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-4 h-4 mr-2"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                    </svg>
+
+                    <span>Profile</span>
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </div>
           <!-- Page Content -->
           <main class="col-span-4 bg-white rounded-xl mt-14 mb-10">
