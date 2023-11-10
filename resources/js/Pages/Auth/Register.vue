@@ -254,7 +254,7 @@ let submit = () => {
           <GuestTextInput id="first_name" type="text" class="mt-1 block w-full" v-model="form.first_name" minlength="2"
             required pattern="[A-Za-z]{1,32}" onkeyup="this.value=this.value.replace(/[0-9]/g,'');" />
           <!-- <InputError class="mt-2" :message="form.errors.first_name" /> -->
-          <div v-if="firstStepErrors.first_name" class="text-red-500" v-text="firstStepErrors.first_name[0]"></div>
+          <div v-if="firstStepErrors && firstStepErrors.first_name" class="text-red-500" v-text="firstStepErrors.first_name[0]"></div>
         </div>
 
         <div class="mt-4">
@@ -264,7 +264,7 @@ let submit = () => {
             pattern="[A-Za-z]{1,32}" onkeyup="this.value=this.value.replace(/[0-9]/g,'');" />
 
           <!-- <InputError class="mt-2" :message="form.errors.last_name" /> -->
-          <div v-if="firstStepErrors.last_name" class="text-red-500" v-text="firstStepErrors.last_name[0]"></div>
+          <div v-if="firstStepErrors && firstStepErrors.last_name" class="text-red-500" v-text="firstStepErrors.last_name[0]"></div>
         </div>
 
         <div class="mt-4">
@@ -274,7 +274,7 @@ let submit = () => {
             pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}" />
           <div v-if="uiEmailValidation.isValid" class="text-red-500">Please enter valid email address.</div>
           <!-- <InputError class="mt-2" :message="form.errors.email" /> -->
-          <div v-if="firstStepErrors.email" class="text-red-500" v-text="firstStepErrors.email[0]"></div>
+          <div v-if="firstStepErrors && firstStepErrors.email" class="text-red-500" v-text="firstStepErrors.email[0]"></div>
         </div>
 
         <!-- <div class="mt-4">
