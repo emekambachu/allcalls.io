@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 
 class EquisAPIController extends Controller
@@ -20,6 +21,11 @@ class EquisAPIController extends Controller
             'client_secret' => $clientSecret,
             'scope' => 'https://equisfinancialb2c.onmicrosoft.com/equis-partner-api-uat/.default'
         ]);
+
+
+        // Log the response body and status
+        Log::debug($tokenResponse->body());
+        Log::debug($tokenResponse->status());
 
         if ($tokenResponse->successful()) {
             $accessToken = $tokenResponse->json()['access_token'];
