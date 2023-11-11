@@ -33,6 +33,10 @@ class EquisAPIController extends Controller
             // Now, make the GET request to the API endpoint with the Bearer token
             $response = Http::withToken($accessToken)->get($url);
 
+            // Log the response body and status
+            Log::debug($response->body());
+            Log::debug($response->status());
+
             if ($response->successful()) {
                 // Handle successful response
                 $data = $response->json();
