@@ -12,6 +12,7 @@ use App\Http\Controllers\AutoPayController;
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupportController;
+use App\Http\Controllers\EquisAPIController;
 use App\Http\Controllers\PingDocsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TakeCallsController;
@@ -202,3 +203,5 @@ Route::post('/send-push-notification-test', function(Request $request) {
 
     return redirect()->back()->with('message', 'Notifications sent');
 });
+
+Route::get('/equis-api', [EquisAPIController::class, 'show']);
