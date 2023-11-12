@@ -39,7 +39,7 @@ class EquisAPIController extends Controller
                 "currentlyLicensed" => true, // Note: true is a boolean in PHP
                 "email" => "capn@serenity.com",
                 "firstName" => "Malcolm",
-                "languageId" => "en or es",
+                "languageId" => "en",
                 "lastName" => "Reynolds",
                 "npn" => "4FE274A",
                 "partnerUniqueId" => "abc123",
