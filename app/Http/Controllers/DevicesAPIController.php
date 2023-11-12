@@ -14,6 +14,12 @@ class DevicesAPIController extends Controller
             'fcm_token' => 'required'
         ]);
 
+        if ( $request->user()->devices()->where('fcm_token', $request->fcm_token)->exists() ) {
+            return response()->json([
+                'message' => 'Device already exists.'
+            ], 422);
+        }
+
         $device = Device::create([
             'device_type' => $request->device_type,
             'fcm_token' => $request->fcm_token,
