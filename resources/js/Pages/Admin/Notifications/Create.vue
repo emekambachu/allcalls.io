@@ -16,13 +16,21 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 import '@vueform/multiselect/themes/default.css';
 
 const { users } = usePage().props;
-const selectedUserId = ref('');
+const selectedUserId = ref(null);
 const selectedDevices = ref([]);
 
 // Computed property to get devices for the selected user
 const selectedUserDevices = computed(() => {
   const user = users.find(u => u.id === selectedUserId.value);
   return user ? user.devices : [];
+});
+
+// Computed property to format users for the Multiselect dropdown
+const formattedUsers = computed(() => {
+  return users.map(user => ({
+    ...user,
+    fullNameWithEmail: `${user.first_name} ${user.last_name} (${user.email})`
+  }));
 });
 
 // Reactive form object
@@ -86,9 +94,9 @@ if (page.props.flash.message) {
 
           <Multiselect 
             v-model="selectedUser" 
-            :options="users"
-            label="first_name"
-            track-by="first_name" 
+            :options="formattedUsers"
+            label="fullNameWithEmail"
+            track-by="id" 
             :searchable="true"
             :allow-empty="false"
           />
