@@ -21,9 +21,21 @@ const selectedDevices = ref([]);
 
 // Computed property to get devices for the selected user
 const selectedUserDevices = computed(() => {
-  const user = users.find(u => u.id === selectedUserId.value);
-  return user ? user.devices : [];
+  if (!selectedUserId.value) {
+    return [];
+  }
+
+  let devices = [];
+  selectedUserId.value.forEach(userId => {
+    const user = users.find(u => u.id === userId);
+    if (user && Array.isArray(user.devices)) {
+      devices.push(...user.devices);
+    }
+  });
+  return devices;
 });
+
+
 
 // Computed property to format users for the Multiselect dropdown
 const formattedUsers = computed(() => {
@@ -42,7 +54,7 @@ const form = useForm({
 });
 
 function sendPushNotification() {
-  form.user_id = selectedUserId.value;
+  form.user_id = selectedUserId.value.join(','); // Or handle as an array, depending on your backend
   form.devices = selectedDevices.value.map(device => device.fcm_token);
 
   form.post('/send-push-notification-test', {
@@ -59,8 +71,8 @@ function sendPushNotification() {
 
 // Watch the selectedUserId to update the devices array
 watch(selectedUserId, (newVal, oldVal) => {
-  if (newVal !== oldVal) {
-    selectedDevices.value = []; // Clear the selected devices when a new user is selected
+  if (newVal.length !== oldVal.length || newVal.some((val, index) => val !== oldVal[index])) {
+    selectedDevices.value = []; // Clear the selected devices when new users are selected
   }
 });
 
@@ -96,10 +108,12 @@ if (page.props.flash.message) {
             v-model="selectedUserId" 
             :options="formattedUsers"
             label="fullNameWithEmail"
-            track-by="fullNameWithEmail"
+            track-by="id" 
             :searchable="true"
             :allow-empty="false"
+            :multiple="true"
           />
+
         </div>
         
         <!-- Devices List -->
