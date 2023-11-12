@@ -19,8 +19,12 @@ const { users } = usePage().props;
 const selectedUserId = ref([]);
 const selectedDevices = ref([]);
 
+console.log("Initial users:", users); // Log initial users
+
 // Computed property to get devices for the selected user
 const selectedUserDevices = computed(() => {
+  console.log("Computing devices for selected user IDs:", selectedUserId.value);
+
   if (!selectedUserId.value) {
     return [];
   }
@@ -28,10 +32,14 @@ const selectedUserDevices = computed(() => {
   let devices = [];
   selectedUserId.value.forEach(userId => {
     const user = users.find(u => u.id === userId);
+    console.log("User found for ID", userId, user);
+
     if (user && Array.isArray(user.devices)) {
       devices.push(...user.devices);
     }
   });
+
+  console.log("Computed devices:", devices);
   return devices;
 });
 
@@ -39,11 +47,15 @@ const selectedUserDevices = computed(() => {
 
 // Computed property to format users for the Multiselect dropdown
 const formattedUsers = computed(() => {
-  return users.map(user => ({
+  const result = users.map(user => ({
     ...user,
     fullNameWithEmail: `${user.first_name} ${user.last_name} (${user.email})`
   }));
+
+  console.log("Formatted users for Multiselect:", result);
+  return result;
 });
+
 
 // Reactive form object
 const form = useForm({
@@ -74,6 +86,7 @@ watch(selectedUserId, (newVal, oldVal) => {
   if (newVal.length !== oldVal.length || newVal.some((val, index) => val !== oldVal[index])) {
     selectedDevices.value = []; // Clear the selected devices when new users are selected
   }
+  console.log("selectedUserId changed from", oldVal, "to", newVal);
 });
 
 let page = usePage();
