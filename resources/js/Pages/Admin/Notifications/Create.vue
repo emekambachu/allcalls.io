@@ -21,15 +21,20 @@ const selectedDevices = ref([]);
 
 // Computed property to get devices for the selected user
 const selectedUserDevices = computed(() => {
+  if (!selectedUserId.value) {
+    return [];
+  }
+
   let devices = [];
   selectedUserId.value.forEach(userId => {
     const user = users.find(u => u.id === userId);
-    if (user && user.devices) {
+    if (user && Array.isArray(user.devices)) {
       devices.push(...user.devices);
     }
   });
   return devices;
 });
+
 
 
 // Computed property to format users for the Multiselect dropdown
