@@ -95,8 +95,8 @@ if (page.props.flash.message) {
           <Multiselect 
             v-model="selectedUser" 
             :options="formattedUsers"
-            label="formattedUsers.fullNameWithEmail"
-            track-by="formattedUsers.fullNameWithEmail" 
+            label="fullNameWithEmail"
+            track-by="fullNameWithEmail" 
             :searchable="true"
             :allow-empty="false"
           />
