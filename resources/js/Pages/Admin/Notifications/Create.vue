@@ -13,6 +13,7 @@ import { toaster } from "@/helper.js";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import axios from "axios";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
+import '@vueform/multiselect/themes/default.css';
 
 const { users } = usePage().props;
 const selectedUserId = ref('');
@@ -76,12 +77,21 @@ if (page.props.flash.message) {
         <!-- User Selection -->
         <div class="mb-4">
           <InputLabel for="user" value="Select User:" />
-          <select v-model="selectedUserId" class="w-full p-2 border rounded">
+          <!-- <select v-model="selectedUserId" class="w-full p-2 border rounded">
             <option disabled value="">Select a user</option>
             <option v-for="user in users" :key="user.id" :value="user.id">
               {{ user.email }}
             </option>
-          </select>
+          </select> -->
+
+          <Multiselect 
+            v-model="selectedUser" 
+            :options="users"
+            label="first_name"
+            track-by="first_name" 
+            :searchable="true"
+            :allow-empty="false"
+          />
         </div>
         
         <!-- Devices List -->
