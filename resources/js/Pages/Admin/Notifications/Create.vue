@@ -82,6 +82,16 @@ if (page.props.flash.message) {
               {{ user.email }}
             </option>
           </select>
+
+          <Multiselect 
+            v-model="selectedUser" 
+            :options="users"
+            label="email" 
+            track-by="id" 
+            placeholder="Select a user"
+            :searchable="true"
+            :allow-empty="false"
+          />
         </div>
         
         <!-- Devices List -->
