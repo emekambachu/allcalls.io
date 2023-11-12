@@ -16,7 +16,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 import '@vueform/multiselect/themes/default.css';
 
 const { users } = usePage().props;
-const selectedUserId = ref('');
+const selectedUserId = ref([]);
 const selectedDevices = ref([]);
 
 // Computed property to get devices for the selected user
@@ -96,7 +96,7 @@ if (page.props.flash.message) {
             v-model="selectedUserId" 
             :options="formattedUsers"
             label="fullNameWithEmail"
-            track-by="id"
+            track-by="fullNameWithEmail"
             :searchable="true"
             :allow-empty="false"
           />
