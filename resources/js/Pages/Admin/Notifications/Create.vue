@@ -96,7 +96,7 @@ if (page.props.flash.message) {
             v-model="selectedUser" 
             :options="formattedUsers"
             label="fullNameWithEmail"
-            track-by="id" 
+            track-by="formattedUsers" 
             :searchable="true"
             :allow-empty="false"
           />
