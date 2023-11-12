@@ -11,8 +11,35 @@ class DevicesAPIController extends Controller
     {
         $request->validate([
             'device_type' => 'required',
-            'fcm_token' => 'required'
+            'fcm_token' => 'required',
         ]);
+
+
+        if ($request->device_id) {
+            $device = Device::find($request->device_id);
+
+
+            if (!$device) {
+                return response()->json([
+                    'message' => 'Device not found.'
+                ], 404);
+            }
+
+            $device->update([
+                'fcm_token' => $request->fcm_token,
+            ]);
+
+            return response()->json([
+                'device' => $device->toArray(),
+            ]);
+        }
+
+
+        if ($request->user()->devices()->where('fcm_token', $request->fcm_token)->exists()) {
+            return response()->json([
+                'message' => 'Device already exists.'
+            ], 422);
+        }
 
         $device = Device::create([
             'device_type' => $request->device_type,
@@ -34,9 +61,9 @@ class DevicesAPIController extends Controller
             'fcm_token' => 'required'
         ]);
 
-        if ( $device->user_id !== $request->user()->id ) {
+        if ($device->user_id !== $request->user()->id) {
             return abort(401);
-        } 
+        }
 
         $device->update([
             'device_type' => $request->device_type,
@@ -50,7 +77,7 @@ class DevicesAPIController extends Controller
 
     public function destroy(Device $device, Request $request)
     {
-        if ( $device->user_id !== $request->user()->id ) {
+        if ($device->user_id !== $request->user()->id) {
             return abort(401);
         }
 
