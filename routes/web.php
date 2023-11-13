@@ -20,6 +20,7 @@ use App\Http\Controllers\StripeTestController;
 use App\Http\Controllers\DefaultCardController;
 use App\Http\Controllers\TwilioTokenController;
 use App\Http\Controllers\CallTypeBidsController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\UsageActivityController;
 use App\Http\Controllers\WebAPIClientsController;
@@ -204,4 +205,6 @@ Route::post('/send-push-notification-test', function(Request $request) {
     return redirect()->back()->with('message', 'Notifications sent');
 });
 
+Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->middleware(['auth', 'verified', 'registration-step-check'])->name('notifications.mark-all-as-read');
+Route::post('/notifications/clear-all', [NotificationController::class, 'clearAll'])->middleware(['auth', 'verified', 'registration-step-check'])->name('notifications.clear-all');
 Route::get('/equis-api', [EquisAPIController::class, 'show']);

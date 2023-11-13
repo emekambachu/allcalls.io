@@ -2,9 +2,10 @@
 
 namespace App\Http\Middleware;
 
-use Illuminate\Http\Request;
+use Carbon\Carbon;
 use Inertia\Middleware;
 use Tightenco\Ziggy\Ziggy;
+use Illuminate\Http\Request;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -50,7 +51,10 @@ class HandleInertiaRequests extends Middleware
         $notifications = null;
 
         if (auth()->user()) {
-            $notifications = auth()->user()->notifications;
+            $notifications = auth()->user()->notifications->map(function ($notification) {
+                $notification->created_at_diff = Carbon::parse($notification->created_at)->diffForHumans();
+                return $notification;
+            });
         }
 
         return array_merge(parent::share($request), [
