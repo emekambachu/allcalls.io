@@ -46,4 +46,26 @@ class NotificationsAPIController extends Controller
 
         return response()->json(['success' => true]);
     }
+
+    public function destroy($notificationId, Request $request)
+    {
+        if ($request->user()->notifications->filter(function ($notification) use ($notificationId) {
+            return $notification->id == $notificationId;
+        })->count() == 0) {
+            return response()->json(['error' => 'Notification not found'], 404);
+        }
+
+        $notification = $request->user()->notifications->find($notificationId);
+
+        $notification->delete();
+
+        return response()->json(['success' => true]);
+    }
+
+    public function destroyAll(Request $request)
+    {
+        $request->user()->notifications()->delete();
+
+        return response()->json(['success' => true]);
+    }
 }

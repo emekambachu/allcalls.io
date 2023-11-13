@@ -219,3 +219,5 @@ Route::middleware('auth:sanctum')->delete('/devices/{device}', [DevicesAPIContro
 Route::middleware('auth:sanctum')->get('/notifications', [NotificationsAPIController::class, 'index']);
 Route::middleware('auth:sanctum')->patch('/notifications/{notificationId}/mark-as-read', [NotificationsAPIController::class, 'markNotificationAsRead']);
 Route::middleware('auth:sanctum')->patch('/notifications/mark-all-as-read', [NotificationsAPIController::class, 'markAllNotificationsAsRead']);
+Route::middleware('auth:sanctum')->delete('/notifications/{notificationId}', [NotificationsAPIController::class, 'destroy']);
+Route::middleware('auth:sanctum')->delete('/notifications/clear-all', [NotificationsAPIController::class, 'destroyAll']);
