@@ -109,7 +109,7 @@ if (page.props.flash.message) {
       <div class="container mx-auto px-4">
         <!-- User Selection -->
         <div class="mb-4">
-          <InputLabel for="user" value="Select User:" />
+          <InputLabel for="fullNameWithEmail" value="Select User:" />
           <!-- <select v-model="selectedUserId" class="w-full p-2 border rounded">
             <option disabled value="">Select a user</option>
             <option v-for="user in users" :key="user.id" :value="user.id">
@@ -121,7 +121,7 @@ if (page.props.flash.message) {
             v-model="selectedUserId" 
             :options="formattedUsers"
             label="fullNameWithEmail"
-            track-by="id" 
+            track-by="fullNameWithEmail"
             :searchable="true"
             :allow-empty="false"
             :multiple="true"
