@@ -100,7 +100,7 @@ if (page.props.flash.message) {
             mode="tags"
             track-by="fullNameWithEmail" -->
           <Multiselect 
-            v-model="multiselectSelection" 
+            v-model="selectedUserId" 
             :options="users"
             label="email"
             :searchable="true"
