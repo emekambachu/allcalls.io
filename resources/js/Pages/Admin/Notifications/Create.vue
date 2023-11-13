@@ -94,22 +94,21 @@ if (page.props.flash.message) {
               {{ user.email }}
             </option>
           </select> -->
-
+<!-- 
+            label="fullNameWithEmail"
+            track-by="fullNameWithEmail" -->
           <Multiselect 
             v-model="multiselectSelection" 
-            :options="formattedUsers"
-            label="fullNameWithEmail"
-            track-by="fullNameWithEmail"
+            :options="users"
             :searchable="true"
             :allow-empty="false"
             :multiple="true"
-            :close-on-select="false"
             mode="tags">
             <template v-slot:singlelabel="{ option }">
-              <div>{{ option.fullNameWithEmail }}</div>
+              <div>{{ option.first_name }}</div>
             </template>
             <template v-slot:option="{ option }">
-              <div>{{ option.fullNameWithEmail }}</div>
+              <div>{{ option.last_name }}</div>
             </template>
           </Multiselect>
 
