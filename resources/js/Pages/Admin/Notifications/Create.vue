@@ -18,6 +18,7 @@ import '@vueform/multiselect/themes/default.css';
 const { users } = usePage().props;
 const selectedUserId = ref([]);
 const selectedDevices = ref([]);
+const multiselectSelection = ref([]); // New reactive property for handling Multiselect selection
 
 console.log("Initial users:", users); // Log initial users
 
@@ -82,12 +83,12 @@ function sendPushNotification() {
 }
 
 // Watch the selectedUserId to update the devices array
-watch(selectedUserId, (newVal, oldVal) => {
-  if (newVal.length !== oldVal.length || newVal.some((val, index) => val !== oldVal[index])) {
-    selectedDevices.value = []; // Clear the selected devices when new users are selected
-  }
-  console.log("selectedUserId changed from", oldVal, "to", newVal);
+watch(multiselectSelection, (newSelection) => {
+  selectedUserId.value = newSelection.map(item => item.id);
+  console.log("Updated selectedUserId based on Multiselect selection:", selectedUserId.value);
 });
+
+
 
 let page = usePage();
 
@@ -118,7 +119,7 @@ if (page.props.flash.message) {
           </select> -->
 
           <Multiselect 
-            v-model="selectedUserId" 
+            v-model="multiselectSelection" 
             :options="formattedUsers"
             label="fullNameWithEmail"
             track-by="id"
