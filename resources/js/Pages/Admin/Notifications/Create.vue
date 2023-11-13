@@ -94,7 +94,7 @@ if (page.props.flash.message) {
     <section class="py-8">
       <div class="container mx-auto px-4">
         <!-- User Selection -->
-        <div class="mb-4">
+        <!-- <div class="mb-4">
           <InputLabel for="user" value="Select User:" />
           <select v-model="selectedUserId" class="w-full p-2 border rounded">
             <option disabled value="">Select a user</option>
@@ -103,7 +103,7 @@ if (page.props.flash.message) {
             </option>
           </select>
 
-        </div>
+        </div> -->
 
         <div class="mb-4">
           <!-- Search Input -->
