@@ -17,7 +17,7 @@ import '@vueform/multiselect/themes/default.css';
 
 const { users } = usePage().props;
 const selectedUserId = ref('');
-
+const searchQuery = ref('');
 const selectedDevices = ref([]);
 
 // Computed property to get devices for the selected user
@@ -25,7 +25,6 @@ const selectedUserDevices = computed(() => {
   const user = users.find(u => u.id === selectedUserId.value);
   return user ? user.devices : [];
 });
-
 
 // Reactive form object
 const form = useForm({
@@ -49,6 +48,24 @@ function sendPushNotification() {
       // Handle form errors if needed
     }
   });
+}
+
+const filteredUsers = computed(() => {
+  if (!searchQuery.value) {
+    return []; // No dropdown if there's no query
+  }
+
+  return users.filter(user => {
+    const fullName = `${user.first_name} ${user.last_name}`.toLowerCase();
+    const query = searchQuery.value.toLowerCase();
+    return fullName.includes(query) || user.email.toLowerCase().includes(query);
+  });
+});
+
+function selectUser(user) {
+  selectedUserId.value = user.id;
+  searchQuery.value = ''; // Clear the search query after selection
+  // You might also want to clear the filtered list
 }
 
 // Watch the selectedUserId to update the devices array
@@ -86,6 +103,18 @@ if (page.props.flash.message) {
             </option>
           </select>
 
+        </div>
+
+        <div class="mb-4">
+          <!-- Search Input -->
+          <TextInput type="text" v-model="searchQuery" placeholder="Search by name or email" class="w-full p-2 border rounded mb-2" />
+
+          <!-- Dropdown for Filtered User List -->
+          <div v-if="filteredUsers.length > 0" class="border rounded">
+            <div v-for="user in filteredUsers" :key="user.id" class="p-2 hover:bg-gray-100 cursor-pointer" @click="selectUser(user)">
+              {{ user.first_name }} {{ user.last_name }} ({{ user.email }})
+            </div>
+          </div>
         </div>
         
         <!-- Devices List -->
