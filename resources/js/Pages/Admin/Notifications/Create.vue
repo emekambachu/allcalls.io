@@ -106,11 +106,12 @@ if (page.props.flash.message) {
         </div> -->
 
         <div class="mb-4">
+          <InputLabel for="user" value="Select User:" />
           <!-- Search Input -->
           <TextInput type="text" v-model="searchQuery" placeholder="Search by name or email" class="w-full p-2 border rounded mb-2" />
 
           <!-- Dropdown for Filtered User List -->
-          <div v-if="filteredUsers.length > 0" class="border rounded">
+          <div v-if="filteredUsers.length > 0" class="border rounded max-h-60 overflow-y-auto">
             <div v-for="user in filteredUsers" :key="user.id" class="p-2 hover:bg-gray-100 cursor-pointer" @click="selectUser(user)">
               {{ user.first_name }} {{ user.last_name }} ({{ user.email }})
             </div>
