@@ -17,13 +17,23 @@ import '@vueform/multiselect/themes/default.css';
 
 const { users } = usePage().props;
 const selectedUserId = ref('');
+const selectedUserIds = ref([]);
+
 const selectedDevices = ref([]);
 
 // Computed property to get devices for the selected user
+// const selectedUserDevices = computed(() => {
+//   const user = users.find(u => u.id === selectedUserId.value);
+//   return user ? user.devices : [];
+// });
+
 const selectedUserDevices = computed(() => {
-  const user = users.find(u => u.id === selectedUserId.value);
-  return user ? user.devices : [];
+  return selectedUserIds.value.map(userId => {
+    const user = users.find(u => u.id === userId);
+    return user ? user.devices : [];
+  }).flat();
 });
+
 
 // Reactive form object
 const form = useForm({
@@ -85,7 +95,7 @@ if (page.props.flash.message) {
           </select>
 
           <Multiselect 
-            v-model="selectedUserId" 
+            v-model="selectedUserIds" 
             :options="users"
             label="email" 
             track-by="id"
