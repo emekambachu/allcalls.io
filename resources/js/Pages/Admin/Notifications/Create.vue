@@ -84,6 +84,8 @@ function sendPushNotification() {
 
 // Watch the selectedUserId to update the devices array
 watch(multiselectSelection, (newSelection) => {
+  console.log("multiselectSelection changed:", newSelection);
+
   // Extract user IDs from the full name and email selection
   selectedUserId.value = newSelection.map(selection => {
     const user = users.find(u => `${u.first_name} ${u.last_name} (${u.email})` === selection);
