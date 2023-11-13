@@ -64,14 +64,9 @@ class NotificationsAPIController extends Controller
 
     public function destroyAll(Request $request)
     {
-        // $request->user()->notifications()->delete();
-        $user = $request->user();
-
-        $notifications = $user->notifications;
-        $notifications->delete();
+        $request->user()->notifications()->delete();
 
         Log::debug('NotificationsAPIController::destryAll: ');
-        Log::debug($user, $notifications);
         return response()->json(['success' => true]);
     }
 }
