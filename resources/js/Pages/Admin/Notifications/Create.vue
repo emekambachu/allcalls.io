@@ -16,43 +16,24 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 import '@vueform/multiselect/themes/default.css';
 
 const { users } = usePage().props;
-const selectedUserId = ref([]);
-const selectedDevices = ref([]);
-const multiselectSelection = ref([]); // New reactive property for handling Multiselect selection
-
-console.log("Initial users:", users); // Log initial users
-
-// Computed property to get devices for the selected user
-const selectedUserDevices = computed(() => {
-  if (!selectedUserId.value) {
-    return [];
-  }
-
-  let devices = [];
-  selectedUserId.value.forEach(userId => {
-    const user = users.find(u => `${u.first_name} ${u.last_name} (${u.email})` === userId);
-    if (user && Array.isArray(user.devices)) {
-      devices.push(...user.devices);
-    }
-  });
-
-  console.log("Computed devices:", devices);
-  return devices;
-});
-
-
+const multiselectSelection = ref([]);
 
 // Computed property to format users for the Multiselect dropdown
-const formattedUsers = computed(() => {
-  const result = users.map(user => ({
-    ...user,
-    fullNameWithEmail: `${user.first_name} ${user.last_name} (${user.email})`
-  }));
+const formattedUsers = computed(() => users.map(user => ({
+  ...user,
+  fullNameWithEmail: `${user.first_name} ${user.last_name} (${user.email})`
+})));
 
-  console.log("Formatted users for Multiselect:", result);
-  return result;
+// Computed property to get devices for the selected users
+const selectedUserDevices = computed(() => {
+  let devices = [];
+  multiselectSelection.value.forEach(selection => {
+    if (selection && Array.isArray(selection.devices)) {
+      devices.push(...selection.devices);
+    }
+  });
+  return devices;
 });
-
 
 // Reactive form object
 const form = useForm({
@@ -63,8 +44,8 @@ const form = useForm({
 });
 
 function sendPushNotification() {
-  form.user_id = selectedUserId.value.join(','); // Or handle as an array, depending on your backend
-  form.devices = selectedDevices.value.map(device => device.fcm_token);
+  form.user_id = multiselectSelection.value.map(user => user.id).join(',');
+  form.devices = selectedUserDevices.value.map(device => device.fcm_token);
 
   form.post('/send-push-notification-test', {
     onSuccess: () => {
@@ -78,19 +59,10 @@ function sendPushNotification() {
   });
 }
 
-// Watch the selectedUserId to update the devices array
+// Watch the Multiselect selection
 watch(multiselectSelection, (newSelection) => {
-  console.log("multiselectSelection changed:", newSelection);
-
-  newSelection.forEach(item => console.log("Selection item:", item));
-
-  // Extract user IDs from the full name and email selection
-  selectedUserId.value = newSelection.map(selection => {
-    const user = users.find(u => `${u.first_name} ${u.last_name} (${u.email})` === selection);
-    return user ? user.id : null;
-  }).filter(id => id !== null);
-
-  console.log("Updated selectedUserId based on Multiselect selection:", selectedUserId.value);
+  console.log("Selected users:", newSelection);
+  console.log("Selected devices:", selectedUserDevices.value);
 });
 
 let page = usePage();
@@ -128,10 +100,17 @@ if (page.props.flash.message) {
             track-by="fullNameWithEmail"
             :searchable="true"
             :allow-empty="false"
+            :multiple="true"
             :close-on-select="false"
-            mode="multiple"
-            :groups="true"
-          />
+            mode="tags">
+            <template v-slot:singlelabel="{ option }">
+              <div>{{ option.fullNameWithEmail }}</div>
+            </template>
+            <template v-slot:option="{ option }">
+              <div>{{ option.fullNameWithEmail }}</div>
+            </template>
+          </Multiselect>
+
 
 
         </div>
