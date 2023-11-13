@@ -129,7 +129,8 @@ if (page.props.flash.message) {
             :searchable="true"
             :allow-empty="false"
             :close-on-select="false"
-            mode="tags"
+            mode="multiple"
+            :groups="true"
           />
 
 
