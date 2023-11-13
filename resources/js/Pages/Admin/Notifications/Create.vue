@@ -128,10 +128,25 @@ if (page.props.flash.message) {
             track-by="fullNameWithEmail"
             :searchable="true"
             :allow-empty="false"
+            :multiple="true"
             :close-on-select="false"
-            mode="multiple"
-            :groups="true"
-          />
+            mode="tags"
+          >
+            <!-- Custom slot for displaying selected values -->
+            <template v-slot:singlelabel="{ option }">
+              <div class="multiselect-single-label">
+                {{ option.fullNameWithEmail }}
+              </div>
+            </template>
+
+            <!-- Custom slot for displaying dropdown options -->
+            <template v-slot:option="{ option }">
+              <div class="multiselect-option">
+                {{ option.fullNameWithEmail }}
+              </div>
+            </template>
+          </Multiselect>
+
 
 
         </div>
