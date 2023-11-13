@@ -51,7 +51,7 @@ class EquisAPIController extends Controller
                 "role" => "Agent",
                 "state" => "NC",
                 "suffix" => "Jr",
-                "uplineAgentEFNumber" => "222171",
+                "uplineAgentEFNumber" => "EF222171",
                 "zipCode" => "28801"
             ]);
 
