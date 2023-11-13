@@ -18,6 +18,8 @@ import '@vueform/multiselect/themes/default.css';
 const { users } = usePage().props;
 const multiselectSelection = ref([]);
 
+console.log(users);
+
 // Computed property to format users for the Multiselect dropdown
 const formattedUsers = computed(() => users.map(user => ({
   ...user,
