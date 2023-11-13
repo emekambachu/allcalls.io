@@ -30,8 +30,8 @@ const formattedUsers = computed(() => users.map(user => ({
 const selectedUserDevices = computed(() => {
   let devices = [];
   multiselectSelection.value.forEach(selection => {
-    if (selection && Array.isArray(selection.devices)) {
-      devices.push(...selection.devices);
+    if (selection && Array.isArray(selection.data.devices)) {
+      devices.push(...selection.data.devices);
     }
   });
   return devices;
@@ -95,21 +95,22 @@ if (page.props.flash.message) {
             </option>
           </select> -->
 <!-- 
-            label="fullNameWithEmail"
+            
             track-by="fullNameWithEmail" -->
           <Multiselect 
             v-model="multiselectSelection" 
-            :options="users"
+            :options="formattedUsers"
+            label="fullNameWithEmail"
             :searchable="true"
             :allow-empty="false"
             :multiple="true"
             mode="tags">
-            <template v-slot:singlelabel="{ option }">
+            <!-- <template v-slot:singlelabel="{ option }">
               <div>{{ option.first_name }}</div>
             </template>
             <template v-slot:option="{ option }">
               <div>{{ option.last_name }}</div>
-            </template>
+            </template> -->
           </Multiselect>
 
 
