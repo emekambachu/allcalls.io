@@ -16,23 +16,14 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 import '@vueform/multiselect/themes/default.css';
 
 const { users } = usePage().props;
-const multiselectSelection = ref([]);
+const selectedUserId = ref('');
+const searchQuery = ref('');
+const selectedDevices = ref([]);
 
-// Computed property to format users for the Multiselect dropdown
-const formattedUsers = computed(() => users.map(user => ({
-  ...user,
-  fullNameWithEmail: `${user.first_name} ${user.last_name} (${user.email})`
-})));
-
-// Computed property to get devices for the selected users
+// Computed property to get devices for the selected user
 const selectedUserDevices = computed(() => {
-  let devices = [];
-  multiselectSelection.value.forEach(selection => {
-    if (selection && Array.isArray(selection.devices)) {
-      devices.push(...selection.devices);
-    }
-  });
-  return devices;
+  const user = users.find(u => u.id === selectedUserId.value);
+  return user ? user.devices : [];
 });
 
 // Reactive form object
@@ -44,8 +35,8 @@ const form = useForm({
 });
 
 function sendPushNotification() {
-  form.user_id = multiselectSelection.value.map(user => user.id).join(',');
-  form.devices = selectedUserDevices.value.map(device => device.fcm_token);
+  form.user_id = selectedUserId.value;
+  form.devices = selectedDevices.value.map(device => device.fcm_token);
 
   form.post('/send-push-notification-test', {
     onSuccess: () => {
@@ -59,10 +50,29 @@ function sendPushNotification() {
   });
 }
 
-// Watch the Multiselect selection
-watch(multiselectSelection, (newSelection) => {
-  console.log("Selected users:", newSelection);
-  console.log("Selected devices:", selectedUserDevices.value);
+const filteredUsers = computed(() => {
+  if (!searchQuery.value) {
+    return []; // No dropdown if there's no query
+  }
+
+  return users.filter(user => {
+    const fullName = `${user.first_name} ${user.last_name}`.toLowerCase();
+    const query = searchQuery.value.toLowerCase();
+    return fullName.includes(query) || user.email.toLowerCase().includes(query);
+  });
+});
+
+function selectUser(user) {
+  selectedUserId.value = user.id;
+  searchQuery.value = ''; // Clear the search query after selection
+  // You might also want to clear the filtered list
+}
+
+// Watch the selectedUserId to update the devices array
+watch(selectedUserId, (newVal, oldVal) => {
+  if (newVal !== oldVal) {
+    selectedDevices.value = []; // Clear the selected devices when a new user is selected
+  }
 });
 
 let page = usePage();
@@ -84,35 +94,28 @@ if (page.props.flash.message) {
     <section class="py-8">
       <div class="container mx-auto px-4">
         <!-- User Selection -->
-        <div class="mb-4">
-          <InputLabel for="fullNameWithEmail" value="Select User:" />
-          <!-- <select v-model="selectedUserId" class="w-full p-2 border rounded">
+        <!-- <div class="mb-4">
+          <InputLabel for="user" value="Select User:" />
+          <select v-model="selectedUserId" class="w-full p-2 border rounded">
             <option disabled value="">Select a user</option>
             <option v-for="user in users" :key="user.id" :value="user.id">
               {{ user.email }}
             </option>
-          </select> -->
+          </select>
 
-          <Multiselect 
-            v-model="multiselectSelection" 
-            :options="formattedUsers"
-            label="fullNameWithEmail"
-            track-by="fullNameWithEmail"
-            :searchable="true"
-            :allow-empty="false"
-            :multiple="true"
-            :close-on-select="false"
-            mode="tags">
-            <template v-slot:singlelabel="{ option }">
-              <div>{{ option.fullNameWithEmail }}</div>
-            </template>
-            <template v-slot:option="{ option }">
-              <div>{{ option.fullNameWithEmail }}</div>
-            </template>
-          </Multiselect>
+        </div> -->
 
+        <div class="mb-4">
+          <InputLabel for="user" value="Select User:" />
+          <!-- Search Input -->
+          <TextInput type="text" v-model="searchQuery" placeholder="Search by name or email" class="w-full p-2 border rounded mb-2" />
 
-
+          <!-- Dropdown for Filtered User List -->
+          <div v-if="filteredUsers.length > 0" class="border rounded max-h-60 overflow-y-auto">
+            <div v-for="user in filteredUsers" :key="user.id" class="p-2 hover:bg-gray-100 cursor-pointer" @click="selectUser(user)">
+              {{ user.first_name }} {{ user.last_name }} ({{ user.email }})
+            </div>
+          </div>
         </div>
         
         <!-- Devices List -->
