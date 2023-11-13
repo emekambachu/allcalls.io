@@ -36,10 +36,6 @@ const selectedUserDevices = computed(() => {
     }
   });
 
-  return devices;
-});
-
-
   console.log("Computed devices:", devices);
   return devices;
 });
