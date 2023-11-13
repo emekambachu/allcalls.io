@@ -119,7 +119,7 @@ if (page.props.flash.message) {
           </select> -->
 
           <Multiselect 
-            v-model="multiselectSelection" 
+            v-model="formattedUsers.id" 
             :options="formattedUsers"
             label="fullNameWithEmail"
             track-by="id"
