@@ -92,6 +92,7 @@ if (page.props.flash.message) {
             placeholder="Select a user"
             :searchable="true"
             :allow-empty="false"
+            mode="tags"
           />
         </div>
         
