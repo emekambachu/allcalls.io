@@ -13,29 +13,15 @@ import { toaster } from "@/helper.js";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import axios from "axios";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
-import '@vueform/multiselect/themes/default.css';
 
 const { users } = usePage().props;
-const multiselectSelection = ref([]);
-const selectedUserId = ref(null);
+const selectedUserId = ref('');
+const selectedDevices = ref([]);
 
-console.log(users);
-
-// Computed property to format users for the Multiselect dropdown
-const formattedUsers = computed(() => users.map(user => ({
-  ...user,
-  fullNameWithEmail: `${user.first_name} ${user.last_name} (${user.email})`
-})));
-
-// Computed property to get devices for the selected users
+// Computed property to get devices for the selected user
 const selectedUserDevices = computed(() => {
-  let devices = [];
-  multiselectSelection.value.forEach(selection => {
-    if (selection && Array.isArray(selection.devices)) {
-      devices.push(...selection.devices);
-    }
-  });
-  return devices;
+  const user = users.find(u => u.id === selectedUserId.value);
+  return user ? user.devices : [];
 });
 
 // Reactive form object
@@ -47,8 +33,8 @@ const form = useForm({
 });
 
 function sendPushNotification() {
-  form.user_id = multiselectSelection.value.map(user => user.id).join(',');
-  form.devices = selectedUserDevices.value.map(device => device.fcm_token);
+  form.user_id = selectedUserId.value;
+  form.devices = selectedDevices.value.map(device => device.fcm_token);
 
   form.post('/send-push-notification-test', {
     onSuccess: () => {
@@ -62,10 +48,11 @@ function sendPushNotification() {
   });
 }
 
-// Watch the Multiselect selection
-watch(multiselectSelection, (newSelection) => {
-  console.log("Selected users:", newSelection);
-  console.log("Selected devices:", selectedUserDevices.value);
+// Watch the selectedUserId to update the devices array
+watch(selectedUserId, (newVal, oldVal) => {
+  if (newVal !== oldVal) {
+    selectedDevices.value = []; // Clear the selected devices when a new user is selected
+  }
 });
 
 let page = usePage();
@@ -88,36 +75,23 @@ if (page.props.flash.message) {
       <div class="container mx-auto px-4">
         <!-- User Selection -->
         <div class="mb-4">
-          <InputLabel for="email" value="Select a User:" />
+          <InputLabel for="user" value="Select User:" />
           <select v-model="selectedUserId" class="w-full p-2 border rounded">
             <option disabled value="">Select a user</option>
             <option v-for="user in users" :key="user.id" :value="user.id">
               {{ user.email }}
             </option>
           </select>
-<!-- 
-            :multiple="true"
-            mode="tags"
-            track-by="fullNameWithEmail" -->
+
           <Multiselect 
             v-model="selectedUserId" 
             :options="users"
-            label="email"
+            label="email" 
+            track-by="id"
+            placeholder="Select a user"
             :searchable="true"
             :allow-empty="false"
-            track-by="id"
-            mode="tags"
-          >
-            <!-- <template v-slot:singlelabel="{ option }">
-              <div>{{ option.first_name }}</div>
-            </template>
-            <template v-slot:option="{ option }">
-              <div>{{ option.last_name }}</div>
-            </template> -->
-          </Multiselect>
-
-
-
+          />
         </div>
         
         <!-- Devices List -->
