@@ -85,7 +85,8 @@ function sendPushNotification() {
 // Watch the selectedUserId to update the devices array
 watch(multiselectSelection, (newSelection) => {
   selectedUserId.value = newSelection.map(item => item.id);
-  console.log("Updated selectedUserId based on Multiselect selection:", selectedUserId.value);
+  selectedDevices.value = newSelection.flatMap(item => item.devices || []);
+  console.log("Updated selectedUserId and Devices based on Multiselect selection:", selectedUserId.value, selectedDevices.value);
 });
 
 
@@ -119,14 +120,16 @@ if (page.props.flash.message) {
           </select> -->
 
           <Multiselect 
-            v-model="formattedUsers.id" 
+            v-model="multiselectSelection" 
             :options="formattedUsers"
             label="fullNameWithEmail"
             track-by="id"
             :searchable="true"
             :allow-empty="false"
-            :multiple="true"
+            :close-on-select="false"
+            mode="tags"
           />
+
 
         </div>
         
