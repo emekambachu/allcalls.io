@@ -17,6 +17,7 @@ import '@vueform/multiselect/themes/default.css';
 
 const { users } = usePage().props;
 const multiselectSelection = ref([]);
+const selectedUserId = ref(null);
 
 console.log(users);
 
@@ -88,12 +89,12 @@ if (page.props.flash.message) {
         <!-- User Selection -->
         <div class="mb-4">
           <InputLabel for="email" value="Select a User:" />
-          <!-- <select v-model="selectedUserId" class="w-full p-2 border rounded">
+          <select v-model="selectedUserId" class="w-full p-2 border rounded">
             <option disabled value="">Select a user</option>
             <option v-for="user in users" :key="user.id" :value="user.id">
               {{ user.email }}
             </option>
-          </select> -->
+          </select>
 <!-- 
             :multiple="true"
             mode="tags"
