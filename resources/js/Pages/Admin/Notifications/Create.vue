@@ -13,6 +13,7 @@ import { toaster } from "@/helper.js";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import axios from "axios";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
+import '@vueform/multiselect/themes/default.css';
 
 const { users } = usePage().props;
 const selectedUserId = ref('');
