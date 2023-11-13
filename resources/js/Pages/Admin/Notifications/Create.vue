@@ -24,17 +24,13 @@ console.log("Initial users:", users); // Log initial users
 
 // Computed property to get devices for the selected user
 const selectedUserDevices = computed(() => {
-  console.log("Computing devices for selected user IDs:", selectedUserId.value);
-
   if (!selectedUserId.value) {
     return [];
   }
 
   let devices = [];
   selectedUserId.value.forEach(userId => {
-    const user = users.find(u => u.id === userId);
-    console.log("User found for ID", userId, user);
-
+    const user = users.find(u => `${u.first_name} ${u.last_name} (${u.email})` === userId);
     if (user && Array.isArray(user.devices)) {
       devices.push(...user.devices);
     }
@@ -84,11 +80,18 @@ function sendPushNotification() {
 
 // Watch the selectedUserId to update the devices array
 watch(multiselectSelection, (newSelection) => {
-  selectedUserId.value = newSelection.map(item => item.id);
+  console.log("multiselectSelection changed:", newSelection);
+
+  newSelection.forEach(item => console.log("Selection item:", item));
+
+  // Extract user IDs from the full name and email selection
+  selectedUserId.value = newSelection.map(selection => {
+    const user = users.find(u => `${u.first_name} ${u.last_name} (${u.email})` === selection);
+    return user ? user.id : null;
+  }).filter(id => id !== null);
+
   console.log("Updated selectedUserId based on Multiselect selection:", selectedUserId.value);
 });
-
-
 
 let page = usePage();
 
@@ -119,14 +122,17 @@ if (page.props.flash.message) {
           </select> -->
 
           <Multiselect 
-            v-model="formattedUsers.id" 
+            v-model="multiselectSelection" 
             :options="formattedUsers"
             label="fullNameWithEmail"
-            track-by="id"
+            track-by="fullNameWithEmail"
             :searchable="true"
             :allow-empty="false"
-            :multiple="true"
+            :close-on-select="false"
+            mode="multiple"
+            :groups="true"
           />
+
 
         </div>
         
