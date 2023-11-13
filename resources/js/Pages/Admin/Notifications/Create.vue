@@ -18,9 +18,14 @@ import '@vueform/multiselect/themes/default.css';
 const { users } = usePage().props;
 const selectedUserId = ref([]);
 const selectedDevices = ref([]);
+const multiselectSelection = ref([]); // New reactive property for handling Multiselect selection
+
+console.log("Initial users:", users); // Log initial users
 
 // Computed property to get devices for the selected user
 const selectedUserDevices = computed(() => {
+  console.log("Computing devices for selected user IDs:", selectedUserId.value);
+
   if (!selectedUserId.value) {
     return [];
   }
@@ -28,10 +33,14 @@ const selectedUserDevices = computed(() => {
   let devices = [];
   selectedUserId.value.forEach(userId => {
     const user = users.find(u => u.id === userId);
+    console.log("User found for ID", userId, user);
+
     if (user && Array.isArray(user.devices)) {
       devices.push(...user.devices);
     }
   });
+
+  console.log("Computed devices:", devices);
   return devices;
 });
 
@@ -39,11 +48,15 @@ const selectedUserDevices = computed(() => {
 
 // Computed property to format users for the Multiselect dropdown
 const formattedUsers = computed(() => {
-  return users.map(user => ({
+  const result = users.map(user => ({
     ...user,
     fullNameWithEmail: `${user.first_name} ${user.last_name} (${user.email})`
   }));
+
+  console.log("Formatted users for Multiselect:", result);
+  return result;
 });
+
 
 // Reactive form object
 const form = useForm({
@@ -70,11 +83,12 @@ function sendPushNotification() {
 }
 
 // Watch the selectedUserId to update the devices array
-watch(selectedUserId, (newVal, oldVal) => {
-  if (newVal.length !== oldVal.length || newVal.some((val, index) => val !== oldVal[index])) {
-    selectedDevices.value = []; // Clear the selected devices when new users are selected
-  }
+watch(multiselectSelection, (newSelection) => {
+  selectedUserId.value = newSelection.map(item => item.id);
+  console.log("Updated selectedUserId based on Multiselect selection:", selectedUserId.value);
 });
+
+
 
 let page = usePage();
 
@@ -96,7 +110,7 @@ if (page.props.flash.message) {
       <div class="container mx-auto px-4">
         <!-- User Selection -->
         <div class="mb-4">
-          <InputLabel for="user" value="Select User:" />
+          <InputLabel for="fullNameWithEmail" value="Select User:" />
           <!-- <select v-model="selectedUserId" class="w-full p-2 border rounded">
             <option disabled value="">Select a user</option>
             <option v-for="user in users" :key="user.id" :value="user.id">
@@ -105,10 +119,10 @@ if (page.props.flash.message) {
           </select> -->
 
           <Multiselect 
-            v-model="selectedUserId" 
+            v-model="formattedUsers.id" 
             :options="formattedUsers"
             label="fullNameWithEmail"
-            track-by="id" 
+            track-by="id"
             :searchable="true"
             :allow-empty="false"
             :multiple="true"
