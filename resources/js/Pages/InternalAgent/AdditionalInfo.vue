@@ -197,7 +197,7 @@ export default {
                 resident_maiden_name: null,
             },
             countries: [
-                { "name": "United States of Amrecia", "code": "USA" },
+                { "name": "United States of America", "code": "USA" },
             ],
             sigError: null,
             signAture: null,
