@@ -31,9 +31,7 @@ class EquisAPIController extends Controller
             $accessToken = $tokenResponse->json()['access_token'];
 
             // Now, make the GET request to the API endpoint with the Bearer token
-            $response = Http::withHeaders([
-                'Content-Type' => 'application/json',
-            ])->withToken($accessToken)->post($url, [
+            $response = Http::asForm()->withToken($accessToken)->post($url, [
                 "address" => "123 Main St",
                 "addressTwo" => "Apt. 42",
                 "birthDate" => "1970-01-01",
