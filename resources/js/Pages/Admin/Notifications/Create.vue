@@ -17,21 +17,13 @@ import '@vueform/multiselect/themes/default.css';
 
 const { users } = usePage().props;
 const selectedUserId = ref('');
-const selectedUserIds = ref([]);
 
 const selectedDevices = ref([]);
 
 // Computed property to get devices for the selected user
-// const selectedUserDevices = computed(() => {
-//   const user = users.find(u => u.id === selectedUserId.value);
-//   return user ? user.devices : [];
-// });
-
 const selectedUserDevices = computed(() => {
-  return selectedUserIds.value.map(userId => {
-    const user = users.find(u => u.id === userId);
-    return user ? user.devices : [];
-  }).flat();
+  const user = users.find(u => u.id === selectedUserId.value);
+  return user ? user.devices : [];
 });
 
 
@@ -94,16 +86,6 @@ if (page.props.flash.message) {
             </option>
           </select>
 
-          <Multiselect 
-            v-model="selectedUserIds" 
-            :options="users"
-            label="email" 
-            track-by="id"
-            placeholder="Select a user"
-            :searchable="true"
-            :allow-empty="false"
-            mode="multiple"
-          />
         </div>
         
         <!-- Devices List -->
