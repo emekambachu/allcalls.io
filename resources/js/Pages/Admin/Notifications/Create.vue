@@ -24,21 +24,21 @@ console.log("Initial users:", users); // Log initial users
 
 // Computed property to get devices for the selected user
 const selectedUserDevices = computed(() => {
-  console.log("Computing devices for selected user IDs:", selectedUserId.value);
-
   if (!selectedUserId.value) {
     return [];
   }
 
   let devices = [];
   selectedUserId.value.forEach(userId => {
-    const user = users.find(u => u.id === userId);
-    console.log("User found for ID", userId, user);
-
+    const user = users.find(u => `${u.first_name} ${u.last_name} (${u.email})` === userId);
     if (user && Array.isArray(user.devices)) {
       devices.push(...user.devices);
     }
   });
+
+  return devices;
+});
+
 
   console.log("Computed devices:", devices);
   return devices;
