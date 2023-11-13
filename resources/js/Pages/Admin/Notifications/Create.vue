@@ -84,12 +84,14 @@ function sendPushNotification() {
 
 // Watch the selectedUserId to update the devices array
 watch(multiselectSelection, (newSelection) => {
-  selectedUserId.value = newSelection.map(item => item.id);
-  selectedDevices.value = newSelection.flatMap(item => item.devices || []);
-  console.log("Updated selectedUserId and Devices based on Multiselect selection:", selectedUserId.value, selectedDevices.value);
+  // Extract user IDs from the full name and email selection
+  selectedUserId.value = newSelection.map(selection => {
+    const user = users.find(u => `${u.first_name} ${u.last_name} (${u.email})` === selection);
+    return user ? user.id : null;
+  }).filter(id => id !== null);
+
+  console.log("Updated selectedUserId based on Multiselect selection:", selectedUserId.value);
 });
-
-
 
 let page = usePage();
 
@@ -123,7 +125,7 @@ if (page.props.flash.message) {
             v-model="multiselectSelection" 
             :options="formattedUsers"
             label="fullNameWithEmail"
-            track-by="id"
+            track-by="fullNameWithEmail"
             :searchable="true"
             :allow-empty="false"
             :close-on-select="false"
