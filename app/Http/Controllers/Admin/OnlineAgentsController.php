@@ -14,7 +14,7 @@ class OnlineAgentsController extends Controller
 {
     public function index()
     {
-        $onlineUsers = OnlineUser::with(['user.states', 'callType'])
+        $onlineUsers = OnlineUser::with(['user.states','user.latestActivity', 'callType'])
             ->orderBy("created_at", "DESC")
             ->get();
         return Inertia::render('Admin/OnlineAgents/Index', compact('onlineUsers'));

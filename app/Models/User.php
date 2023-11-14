@@ -109,6 +109,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Activity::class);
     }
 
+    public function latestActivity()
+    {
+        return $this->hasOne(Activity::class)->latest();
+    }
+
     public function roles()
     {
         return $this->belongsToMany(Role::class);
