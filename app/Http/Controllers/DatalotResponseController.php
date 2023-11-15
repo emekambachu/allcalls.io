@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use SimpleXMLElement;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 
 class DatalotResponseController extends Controller
 {
@@ -77,6 +78,14 @@ XML;
             'xml' => $xml,
         ]);
 
+        $xml = new SimpleXMLElement($response->body());
+
+        // Extract the price
+        $price = (string) $xml->quote->price;
+
+        Log::debug('api-logs:agent-status-price: XML Parsed Response', [
+            'xml' => $xml,
+        ]);
 
         if ($response->successful()) {
             return 'TRUE';
