@@ -28,6 +28,7 @@ use App\Http\Controllers\LiveCallClientController;
 use App\Http\Controllers\DatalotResponseController;
 use App\Http\Controllers\IOSVersionCheckController;
 use App\Http\Controllers\ListFlexResponseController;
+use App\Http\Controllers\NotificationsAPIController;
 use App\Http\Controllers\OverseerResponseController;
 use App\Http\Controllers\AvailableAgentsAPIController;
 use App\Http\Controllers\CallUserResponseAPIController;
@@ -216,3 +217,9 @@ Route::middleware('auth:sanctum')->patch('/calls/{uniqueCallId}/user-response', 
 Route::middleware('auth:sanctum')->post('/devices', [DevicesAPIController::class, 'store']);
 Route::middleware('auth:sanctum')->patch('/devices/{device}', [DevicesAPIController::class, 'update']);
 Route::middleware('auth:sanctum')->delete('/devices/{device}', [DevicesAPIController::class, 'destroy']);
+
+Route::middleware('auth:sanctum')->get('/notifications', [NotificationsAPIController::class, 'index']);
+Route::middleware('auth:sanctum')->patch('/notifications/{notificationId}/mark-as-read', [NotificationsAPIController::class, 'markNotificationAsRead']);
+Route::middleware('auth:sanctum')->patch('/notifications/mark-all-as-read', [NotificationsAPIController::class, 'markAllNotificationsAsRead']);
+Route::middleware('auth:sanctum')->delete('/notifications/clear-all', [NotificationsAPIController::class, 'destroyAll']);
+Route::middleware('auth:sanctum')->delete('/notifications/{notificationId}', [NotificationsAPIController::class, 'destroy']);

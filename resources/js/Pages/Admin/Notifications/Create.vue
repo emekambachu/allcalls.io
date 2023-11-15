@@ -13,9 +13,11 @@ import { toaster } from "@/helper.js";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import axios from "axios";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
+import '@vueform/multiselect/themes/default.css';
 
 const { users } = usePage().props;
 const selectedUserId = ref('');
+const searchQuery = ref('');
 const selectedDevices = ref([]);
 
 // Computed property to get devices for the selected user
@@ -48,6 +50,24 @@ function sendPushNotification() {
   });
 }
 
+const filteredUsers = computed(() => {
+  if (!searchQuery.value) {
+    return []; // No dropdown if there's no query
+  }
+
+  return users.filter(user => {
+    const fullName = `${user.first_name} ${user.last_name}`.toLowerCase();
+    const query = searchQuery.value.toLowerCase();
+    return fullName.includes(query) || user.email.toLowerCase().includes(query);
+  });
+});
+
+function selectUser(user) {
+  selectedUserId.value = user.id;
+  searchQuery.value = ''; // Clear the search query after selection
+  // You might also want to clear the filtered list
+}
+
 // Watch the selectedUserId to update the devices array
 watch(selectedUserId, (newVal, oldVal) => {
   if (newVal !== oldVal) {
@@ -74,7 +94,7 @@ if (page.props.flash.message) {
     <section class="py-8">
       <div class="container mx-auto px-4">
         <!-- User Selection -->
-        <div class="mb-4">
+        <!-- <div class="mb-4">
           <InputLabel for="user" value="Select User:" />
           <select v-model="selectedUserId" class="w-full p-2 border rounded">
             <option disabled value="">Select a user</option>
@@ -82,6 +102,20 @@ if (page.props.flash.message) {
               {{ user.email }}
             </option>
           </select>
+
+        </div> -->
+
+        <div class="mb-4">
+          <InputLabel for="user" value="Select User:" />
+          <!-- Search Input -->
+          <TextInput type="text" v-model="searchQuery" placeholder="Search by name or email" class="w-full p-2 border rounded mb-2" />
+
+          <!-- Dropdown for Filtered User List -->
+          <div v-if="filteredUsers.length > 0" class="border rounded max-h-60 overflow-y-auto">
+            <div v-for="user in filteredUsers" :key="user.id" class="p-2 hover:bg-gray-100 cursor-pointer" @click="selectUser(user)">
+              {{ user.first_name }} {{ user.last_name }} ({{ user.email }})
+            </div>
+          </div>
         </div>
         
         <!-- Devices List -->

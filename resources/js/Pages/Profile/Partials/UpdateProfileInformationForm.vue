@@ -10,6 +10,13 @@ import { ref, reactive, computed, onMounted, watch, onBeforeMount, onUnmounted, 
 
 import Multiselect from "@vueform/multiselect";
 const countryList = inject('countryList');
+
+import { toaster } from "@/helper.js";
+let page = usePage();
+if (page.props.flash.message) {
+    toaster("success", page.props.flash.message);
+}
+
 let props = defineProps({
   mustVerifyEmail: {
     type: Boolean,

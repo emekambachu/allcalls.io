@@ -50,9 +50,9 @@ class PushChannel
             $response = curl_exec($ch);
 
             if ($response === false) {
-                Log::error('Error sending push notification: ' . curl_error($ch));
+                Log::debug('Error sending push notification: ' . curl_error($ch));
             } else {
-                Log::info('Push notification sent: ' . $response);
+                Log::debug('Push notification sent: ' . $response);
             }
 
             curl_close($ch);

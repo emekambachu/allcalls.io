@@ -25,6 +25,8 @@ const form = useForm({
 });
 const isLoading = ref(false)
 const submit = () => {
+    const userAgent = window.navigator.userAgent;
+
     isLoading.value = true
     form.post(route('login'), {
         onFinish: () => { 

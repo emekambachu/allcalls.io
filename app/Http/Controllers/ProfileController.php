@@ -146,7 +146,7 @@ class ProfileController extends Controller
 
         UserCallTypeState::updateUserCallTypeState($user, $incomingData);
 
-        return Redirect::route('profile.edit');
+        return Redirect::route('profile.edit')->with('message', 'Profile updated successfully.');
     }
 
     private function buildIncomingData($selectedStates): array

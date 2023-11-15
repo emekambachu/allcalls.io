@@ -11,7 +11,7 @@ import TextInput from "@/Components/TextInput.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { toaster } from "@/helper.js";
 import { Device } from "@twilio/voice-sdk";
-import { usePage } from "@inertiajs/vue3";
+import { usePage, router } from "@inertiajs/vue3";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 
 let page = usePage();
@@ -21,17 +21,28 @@ console.log(page.props.auth);
 
 let userNotifications = ref(page.props.auth.notifications);
 
-// Define the computed property
-const unreadNotifications = computed(() => {
-  // Assuming each notification has an 'isRead' property
-  return userNotifications.value.filter(notification => !notification.isRead).length;
-});
+let unreadNotifications = ref(
+  page.props.auth.notifications.filter((notification) => {
+    return notification.read_at === null;
+  })
+);
 
-console.log('User Notifications Reactive');
-console.log(userNotifications.value);
+let markAllAsRead = () => {
+  axios.post("/notifications/mark-all-as-read").then((response) => {
+    let returnedNotifications = response.data;
+    userNotifications.value = returnedNotifications;
+    unreadNotifications.value = returnedNotifications.filter((notification) => {
+      return notification.read_at === null;
+    });
+  });
+};
 
-// To access the value of the computed property
-console.log('Unread Notifications: ' + unreadNotifications.value);
+let clearAllNotifications = () => {
+  axios.post("/notifications/clear-all").then((response) => {
+    userNotifications.value = response.data;
+    unreadNotifications.value = response.data;
+  });
+};
 
 let connectedClient = ref(null);
 let callDuration = ref("00:00");
@@ -642,19 +653,14 @@ let appDownloadModal = ref(false);
               Available Numbers
             </NavLink>
 
-
             <NavLink
               class="mb-10 gap-2"
               id="billing-nav-link"
               :href="route('profile.view')"
-              :active="
-                route().current('profile.view') ||
-                route().current('profile.edit')
-              "
+              :active="route().current('profile.view') || route().current('profile.edit')"
               :class="{
                 'mb-5':
-                  route().current('profile.view') ||
-                  route().current('profile.edit'),
+                  route().current('profile.view') || route().current('profile.edit'),
               }"
             >
               <svg
@@ -679,10 +685,7 @@ let appDownloadModal = ref(false);
               Settings
 
               <svg
-                v-if="
-                  route().current('profile.view') ||
-                  route().current('profile.edit')
-                "
+                v-if="route().current('profile.view') || route().current('profile.edit')"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -698,14 +701,10 @@ let appDownloadModal = ref(false);
               </svg>
             </NavLink>
             <div
-              v-if="
-                route().current('profile.view') ||
-                route().current('profile.edit')
-              "
+              v-if="route().current('profile.view') || route().current('profile.edit')"
               class="pl-14 text-white text-xs mb-5"
             >
               <ul>
-
                 <li class="mb-3">
                   <Link
                     aria-current="page"
@@ -796,13 +795,21 @@ let appDownloadModal = ref(false);
                 </div>
 
                 <!-- Notifications Dropdown -->
-                <div v-if="false" class="ml-3 relative">
+                <div v-if="true" class="ml-3 relative">
                   <div class="text-right">
                     <Menu as="div" class="relative inline-block text-left">
                       <div>
                         <MenuButton class="text-white">
                           <!-- Bell icon -->
                           <span class="sr-only">Open notifications menu</span>
+
+                          <div v-if="unreadNotifications.length" class="relative">
+                            <div
+                              class="h-4 w-4 flex items-center justify-center absolute -top-2 -left-2 bg-red-500 rounded-full text-xs"
+                              v-text="unreadNotifications.length"
+                            ></div>
+                          </div>
+
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -837,6 +844,7 @@ let appDownloadModal = ref(false);
 
                           <div
                             class="px-3 py-2 text-sm text-gray-600 font-bold flex items-center justify-between"
+                            v-if="unreadNotifications.length"
                           >
                             <div class="flex items-center">
                               <div class="mr-1 font-bold">Unread</div>
@@ -844,99 +852,102 @@ let appDownloadModal = ref(false);
                                 style="font-size: 10px"
                                 class="bg-gray-200 rounded-full text-gray-600 w-4 h-4 flex items-center justify-center"
                               >
-                                2
+                                {{ unreadNotifications.length }}
                               </div>
                             </div>
 
                             <div
                               class="cursor-pointer text-xs py-2 text-gray-800 hover:text-gray-500"
+                              @click.prevent="markAllAsRead"
                             >
-                              Clear All
+                              Mark All As Read
                             </div>
                           </div>
-                          <!-- Notification Items Start -->
-                          <div class="p-1 cursor-pointer">
-                            <MenuItem v-slot="{ active }">
-                              <div
-                                :class="[
-                                  'flex flex-col gap-1 p-2 rounded-md hover:bg-custom-blue hover:text-white',
-                                ]"
-                              >
-                                <!-- Notification Title -->
-                                <p class="text-sm font-semibold">Missed Call</p>
-                                <!-- Notification Body -->
-                                <p class="text-xs">You missed a call from a client.</p>
-                              </div>
-                            </MenuItem>
-                            <MenuItem v-slot="{ active }">
-                              <div
-                                :class="[
-                                  'flex flex-col gap-1 p-2 rounded-md hover:bg-custom-blue hover:text-white',
-                                ]"
-                              >
-                                <!-- Notification Title -->
-                                <p class="text-sm font-semibold">Funds Added</p>
-                                <!-- Notification Body -->
-                                <p class="text-xs">$200 added to your funds.</p>
-                              </div>
-                            </MenuItem>
-                            <!-- More notifications... -->
+                          <!-- Unread Notification Items Start -->
+                          <div style="max-height: 400px; overflow-y: scroll">
+                            <div
+                              v-for="(notification, index) in unreadNotifications"
+                              :key="notification.id"
+                              class="p-1 cursor-pointer"
+                            >
+                              <MenuItem v-slot="{ active }">
+                                <div
+                                  :class="[
+                                    'flex flex-col gap-1 p-2 rounded-md hover:bg-custom-blue hover:text-white',
+                                  ]"
+                                >
+                                  <!-- Notification Title -->
+                                  <p class="text-sm font-semibold">
+                                    {{ notification.data.title }}
+                                  </p>
+                                  <!-- Notification Body -->
+                                  <p class="text-xs">{{ notification.data.body }}</p>
+
+                                  <p style="font-size: 9px">
+                                    {{ notification.created_at_diff }}
+                                  </p>
+                                </div>
+                              </MenuItem>
+                            </div>
                           </div>
-                          <!-- Notification Items End -->
+
+                          <!-- Unread Notification Items End -->
 
                           <div
                             class="px-3 py-2 text-sm text-gray-600 font-bold flex items-center justify-between"
+                            v-if="userNotifications && userNotifications.length"
                           >
                             <div class="flex items-center">
                               <div class="mr-1 font-bold">All</div>
                               <div
                                 style="font-size: 10px"
                                 class="bg-gray-200 rounded-full text-gray-600 w-4 h-4 flex items-center justify-center"
+                                v-if="userNotifications && userNotifications.length"
                               >
-                                2
+                                {{ userNotifications.length }}
                               </div>
                             </div>
 
                             <div
                               class="cursor-pointer text-xs py-2 text-gray-800 hover:text-gray-500"
+                              @click.prevent="clearAllNotifications"
                             >
                               Clear All
                             </div>
                           </div>
                           <!-- Notification Items Start -->
-                          <div class="p-1 cursor-pointer">
-                            <MenuItem v-slot="{ active }">
-                              <div
-                                :class="[
-                                  'flex flex-col gap-1 p-2 rounded-md hover:bg-custom-blue hover:text-white',
-                                ]"
-                              >
-                                <!-- Notification Title -->
-                                <p class="text-sm font-semibold">Missed Call</p>
-                                <!-- Notification Body -->
-                                <p class="text-xs">You missed a call from a client.</p>
-                              </div>
-                            </MenuItem>
-                            <MenuItem v-slot="{ active }">
-                              <div
-                                :class="[
-                                  'flex flex-col gap-1 p-2 rounded-md hover:bg-custom-blue hover:text-white',
-                                ]"
-                              >
-                                <!-- Notification Title -->
-                                <p class="text-sm font-semibold">Funds Added</p>
-                                <!-- Notification Body -->
-                                <p class="text-xs">$200 added to your funds.</p>
-                              </div>
-                            </MenuItem>
-                            <!-- More notifications... -->
+                          <!-- Assuming 'notifications' is an array in your component's data -->
+                          <div style="max-height: 400px; overflow-y: scroll">
+                            <div
+                              v-for="(notification, index) in userNotifications"
+                              :key="notification.id"
+                              class="p-1 cursor-pointer"
+                            >
+                              <MenuItem>
+                                <div
+                                  class="flex flex-col gap-1 p-2 rounded-md hover:bg-custom-blue hover:text-white"
+                                >
+                                  <!-- Notification Title -->
+                                  <p class="text-sm font-semibold">
+                                    {{ notification.data.title }}
+                                  </p>
+                                  <!-- Notification Body -->
+                                  <p class="text-xs">{{ notification.data.body }}</p>
+
+                                  <p style="font-size: 9px">
+                                    {{ notification.created_at_diff }}
+                                  </p>
+                                </div>
+                              </MenuItem>
+                            </div>
                           </div>
                           <!-- Notification Items End -->
 
                           <div
-                            class="flex justify-center text-center cursor-pointer text-xs py-2 text-gray-800 hover:text-gray-500"
+                            v-if="!userNotifications.length"
+                            class="text-center py-3 text-md"
                           >
-                            Load More
+                            You're all caught up!
                           </div>
                         </MenuItems>
                       </transition>
