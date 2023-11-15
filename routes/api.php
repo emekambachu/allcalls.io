@@ -183,7 +183,7 @@ Route::match(['get', 'post'], '/call-center/disposition', [CallCenterDisposition
 Route::match(['get', 'post'], '/listflex/api-mme-bpo', [ListFlexResponseController::class, 'store']);
 Route::match(['get', 'post'], '/ringy', [RingyResponseController::class, 'store']);
 Route::match(['get', 'post'], '/overseer', [OverseerResponseController::class, 'store']);
-Route::match(['get', 'post'], '/datalot', [DatalotResponseController::class, 'store']);
+Route::match(['get', 'post'], '/med', [DatalotResponseController::class, 'store']);
 Route::match(['get', 'post'], '/available-agents', [AvailableAgentsAPIController::class, 'show']);
 
 Route::middleware('auth:sanctum')->post('/app-events', [AppEventsController::class, 'store']);
