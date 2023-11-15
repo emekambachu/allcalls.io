@@ -34,6 +34,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CallUserResponseAPIController;
 use App\Http\Controllers\AgentStatusPriceDocsController;
 use App\Http\Controllers\TakeCallsOnlineUsersController;
+use App\Jobs\SampleJob;
 
 /*
 |--------------------------------------------------------------------------
@@ -211,11 +212,7 @@ Route::post('/notifications/clear-all', [NotificationController::class, 'clearAl
 Route::get('/equis-api', [EquisAPIController::class, 'show']);
 
 Route::get('/queue-test', function() {
-    Bus::dispatch(function () {
-        sleep(10); // Simulate a task that takes 10 seconds to complete
-        // Perform other tasks if needed
-    });
+    SampleJob::dispatch();
 
     return 'Job dispatched to the queue.';
-
 });
