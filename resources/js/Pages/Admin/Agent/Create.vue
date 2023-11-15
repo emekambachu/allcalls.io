@@ -450,7 +450,7 @@ const closeDropDown = () => {
               <div class="flex justify-end my-6">
                 <PrimaryButton type="button" @click="saveChanges"
                   :class="{ 'opacity-25': areAllArraysEmpty || isLoading }" :disabled="areAllArraysEmpty || isLoading">
-                  <global-spinner :spinner="isLoading" /> Submit
+                  <global-spinner :spinner="isLoading" /> Submit 
                 </PrimaryButton>
 
                 <PrimaryButton @click.prevent="close" type="button" class="ml-3">

@@ -1,20 +1,58 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
+import Multiselect from "@vueform/multiselect";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+
 
 const props = defineProps({
   onlineUsers: {
     type: Array,
   },
+  onlineStats: Array,
+  filters:Array
 });
+let isLoading = ref(false)
+let isLoadingReset = ref(false)
+
+let selectedStates = ref([])
+
+if (props.filters && props.filters.state_filteration && props.filters.state_filteration.length > 0) {
+  selectedStates.value = props.filters.state_filteration.map(Number);
+}
+
+let stateOptions = computed(() => {
+  return Object.values(props.onlineStats).map((state) => {
+    return {
+      value: state.id,
+      label: state.name +' - ('+ state.user_count + ') online users',
+    };
+  });
+});
+let customLabel = () =>  {
+      return (option) => {
+        return option.stateCode; // Use the state code instead of the entire label
+      };
+  }
 
 const refreshPage = () => {
   if (usePage().url === '/admin/online-agents') {
     router.visit("/admin/online-agents");
   }
 };
-
+let fetchData = () => {
+  isLoading.value = true
+  router.visit('/admin/online-agents', {
+    data:{
+      state_filteration:selectedStates.value
+    }
+  })
+}
+let ResetPage = () =>  {
+  isLoadingReset.value = true
+  router.visit('/admin/online-agents')
+}
 onMounted(() => {
   console.log("Registering event listener");
   window.Echo.channel("active-users-events")
@@ -52,20 +90,20 @@ let removeAgent = userId => {
 }
 let deviceName = ref(null)
 let getDeviceType = (userAgent) => {
-  if(userAgent){
+  if (userAgent) {
     if (userAgent?.devices_details !== "Desktop") {
-    if (userAgent?.user_agent.includes('iPhone')) {
-      deviceName.value = 'iPhone'
-    } else if (userAgent?.user_agent.includes('Android')) {
-      deviceName.value = 'Android'
+      if (userAgent?.user_agent.includes('iPhone')) {
+        deviceName.value = 'iPhone'
+      } else if (userAgent?.user_agent.includes('Android')) {
+        deviceName.value = 'Android'
+      }
+    } else {
+      deviceName.value = 'Desktop'
     }
-  } else  {
+  } else {
     deviceName.value = 'Desktop'
   }
-  }else{
-    deviceName.value = 'Desktop'
-  }
-  
+
 }
 </script>
 
@@ -73,6 +111,8 @@ let getDeviceType = (userAgent) => {
   <Head title="Online Agents" />
 
   <AuthenticatedLayout>
+
+
     <template #header>
       <h2 class="text-2xl font-semibold">Online Agents</h2>
     </template>
@@ -81,6 +121,20 @@ let getDeviceType = (userAgent) => {
         <div class="p-4 rounded-lg bg-white">
           <h3 class="text-4xl text-custom-sky font-bold mb-6">Online Agents</h3>
           <hr class="mb-4" />
+          <div class="mb-4 grid lg:grid-cols-2 mb-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
+            <Multiselect v-model="selectedStates" :options="stateOptions" track-by="value" label="label" mode="tags"
+              :close-on-select="false" placeholder="Choose States">
+            </Multiselect>
+            <div>
+              <PrimaryButton type="button" class="ml-2" @click.prevent="fetchData">
+                <global-spinner :spinner="isLoading" /> Filter
+              </PrimaryButton>
+              <button @click.prevent="ResetPage()" type="button" class="button-custom-back px-4 py-3 rounded-md ml-2">
+                <global-spinner :spinner="isLoadingReset" /> Reset
+              </button>
+            </div>
+          </div>
+
           <!-- The Table Header -->
           <table class="w-full text-sm text-left text-gray-400">
             <thead class="text-xs text-gray-300 uppercase bg-sky-900">
@@ -174,14 +228,15 @@ let getDeviceType = (userAgent) => {
                         </path>
                       </g>
                     </svg>
-                    <svg v-if="deviceName === 'iPhone'" class="w-12 h-12"  viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg v-if="deviceName === 'iPhone'" class="w-12 h-12" viewBox="0 0 24 24" fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
                       <g id="SVGRepo_bgCarrier" stroke-width="0" />
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
-                        <g id="SVGRepo_iconCarrier">
-                          <path
-                            d="M16.52 12.46C16.508 11.8438 16.6682 11.2365 16.9827 10.7065C17.2972 10.1765 17.7534 9.74476 18.3 9.46C17.9558 8.98143 17.5063 8.5883 16.9862 8.31089C16.466 8.03349 15.8892 7.87923 15.3 7.86C14.03 7.76 12.65 8.6 12.14 8.6C11.63 8.6 10.37 7.9 9.40999 7.9C7.40999 7.9 5.29999 9.49 5.29999 12.66C5.30963 13.6481 5.48194 14.6279 5.80999 15.56C6.24999 16.84 7.89999 20.05 9.61999 20C10.52 20 11.16 19.36 12.33 19.36C13.5 19.36 14.05 20 15.06 20C16.79 20 18.29 17.05 18.72 15.74C18.0689 15.4737 17.5119 15.0195 17.1201 14.4353C16.7282 13.8511 16.5193 13.1634 16.52 12.46ZM14.52 6.59C14.8307 6.23965 15.065 5.82839 15.2079 5.38245C15.3508 4.93651 15.3992 4.46569 15.35 4C14.4163 4.10239 13.5539 4.54785 12.93 5.25C12.6074 5.58991 12.3583 5.99266 12.1983 6.43312C12.0383 6.87358 11.9708 7.34229 12 7.81C12.4842 7.82361 12.9646 7.71974 13.3999 7.50728C13.8353 7.29482 14.2127 6.98009 14.5 6.59H14.52Z"
-                            fill="#909090" />
-                        </g>
+                      <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
+                      <g id="SVGRepo_iconCarrier">
+                        <path
+                          d="M16.52 12.46C16.508 11.8438 16.6682 11.2365 16.9827 10.7065C17.2972 10.1765 17.7534 9.74476 18.3 9.46C17.9558 8.98143 17.5063 8.5883 16.9862 8.31089C16.466 8.03349 15.8892 7.87923 15.3 7.86C14.03 7.76 12.65 8.6 12.14 8.6C11.63 8.6 10.37 7.9 9.40999 7.9C7.40999 7.9 5.29999 9.49 5.29999 12.66C5.30963 13.6481 5.48194 14.6279 5.80999 15.56C6.24999 16.84 7.89999 20.05 9.61999 20C10.52 20 11.16 19.36 12.33 19.36C13.5 19.36 14.05 20 15.06 20C16.79 20 18.29 17.05 18.72 15.74C18.0689 15.4737 17.5119 15.0195 17.1201 14.4353C16.7282 13.8511 16.5193 13.1634 16.52 12.46ZM14.52 6.59C14.8307 6.23965 15.065 5.82839 15.2079 5.38245C15.3508 4.93651 15.3992 4.46569 15.35 4C14.4163 4.10239 13.5539 4.54785 12.93 5.25C12.6074 5.58991 12.3583 5.99266 12.1983 6.43312C12.0383 6.87358 11.9708 7.34229 12 7.81C12.4842 7.82361 12.9646 7.71974 13.3999 7.50728C13.8353 7.29482 14.2127 6.98009 14.5 6.59H14.52Z"
+                          fill="#909090" />
+                      </g>
                     </svg>
                   </div>
                 </td>
@@ -226,4 +281,44 @@ export default {
 };
 </script>
 
-<style scoped>/* Add your custom styles here */</style>
+<style src="@vueform/multiselect/themes/default.css"></style>
+<style>
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.multiselect {
+  color: black !important;
+  border: none;
+  border-radius: 10px;
+}
+
+.multiselect-wrapper {
+  background-color: #d7d7d7;
+  border-radius: 5px;
+}
+
+.button-custom-back {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
+  border-width: 1px;
+  align-items: center;
+  display: inline-flex;
+  border-color: rgb(107 114 128 / var(--tw-border-opacity));
+}
+
+.button-custom-back:hover {
+  background-color: #03243d;
+  color: #3cfa7a;
+  transition-duration: 150ms;
+}
+</style>
