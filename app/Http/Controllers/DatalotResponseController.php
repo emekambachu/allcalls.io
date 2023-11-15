@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class DatalotResponseController extends Controller
 {
@@ -62,6 +63,10 @@ XML;
         ])->send('POST', 'https://api.datalot.com/contact/create/v2/pricequote', [
             'body' => $xmlPayload,
         ]);
+
+        // Log the body and status code
+        Log::debug($response->body());
+        Log::debug($response->status());
 
         return response()->json($response->json(), $response->status());
     }
