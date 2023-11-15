@@ -86,13 +86,15 @@ class EquisAPIController extends Controller
                     return response()->json($data);
                 } else {
                     // Handle error
-                    // Check for specific Duplicate Agent Exception
-                    if (str_contains((string) $response->body(), 'System.DuplicateAgentException')) {
-                        Log::debug("Duplicate Agent Exception occurred. Attempting to create a new user.");
-                    }
                     return response()->json(['error' => 'Failed to retrieve data from Equis API'], 500);
                 }
             } else {
+                $responseBody = (string) $response->body();
+
+                if (str_contains($responseBody, 'System.DuplicateAgentException')) {
+                    Log::debug("Duplicate Agent Exception occurred. Attempting to create a new user.");
+                }
+
                 // Handle error
                 return response()->json(['error' => 'Failed to retrieve data from Equis API'], 500);
             }
