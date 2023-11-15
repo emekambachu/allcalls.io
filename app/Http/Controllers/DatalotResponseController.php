@@ -86,8 +86,12 @@ XML;
 
             if ($xml !== false && isset($xml->quote->price)) {
                 // Extract the price
-                $price = (string) $xml->quote->price;
+                $price = (float) $xml->quote->price;
                 Log::debug('api-logs:datalot: Price extracted', ['price' => $price]);
+
+                if ($price >= 30) {
+                    return 'TRUE';
+                }
             } else {
                 Log::error('Failed to parse XML or price tag not found');
             }
@@ -95,7 +99,6 @@ XML;
             Log::error('No XML content found in the response');
         }
 
-        // Return based on the response success
-        return $response->successful() ? 'TRUE' : 'FALSE';
+        return 'FALSE';
     }
 }
