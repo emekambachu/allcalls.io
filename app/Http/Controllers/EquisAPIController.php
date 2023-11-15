@@ -87,7 +87,7 @@ class EquisAPIController extends Controller
                 } else {
                     // Handle error
                     // Check for specific Duplicate Agent Exception
-                    if (str_contains($response->body(), 'System.DuplicateAgentException')) {
+                    if (str_contains((string) $response->body(), 'System.DuplicateAgentException')) {
                         Log::debug("Duplicate Agent Exception occurred. Attempting to create a new user.");
                     }
                     return response()->json(['error' => 'Failed to retrieve data from Equis API'], 500);
