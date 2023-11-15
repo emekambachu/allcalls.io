@@ -92,7 +92,7 @@ class EquisAPIController extends Controller
                 $responseBody = (string) $response->body();
 
                 if (str_contains($responseBody, 'System.DuplicateAgentException')) {
-                    Log::debug("Duplicate Agent Exception occurred. Attempting to create a new user.");
+                    Log::debug('DuplicateAgent!');
                 }
 
                 // Handle error
