@@ -58,6 +58,7 @@ class DatalotResponseController extends Controller
 </contact_create>
 XML;
 
+        // Make the HTTP request
         $response = Http::withHeaders([
             'Content-Type' => 'application/xml',
             'Accept' => 'application/xml',
@@ -65,32 +66,36 @@ XML;
             'body' => $xmlPayload,
         ]);
 
-        // Log the body and status code
+        // Log the response body and status code
         Log::debug('api-logs:datalot: Response', [
             'body' => $response->body(),
             'status' => $response->status(),
         ]);
 
-        // parse the xml response
-        $xml = simplexml_load_string($response->body());
-        Log::debug($xml);
-        Log::debug('api-logs:datalot: XML Parsed Response', [
-            'xml' => $xml,
-        ]);
-
-        $xml = new SimpleXMLElement($response->body());
-
-        // Extract the price
-        $price = (string) $xml->quote->price;
-
-        Log::debug('api-logs:datalot: XML Parsed Response', [
-            'xml' => $xml,
-        ]);
-
-        if ($response->successful()) {
-            return 'TRUE';
-        }  else {
-            return 'FALSE';
+        // Extract the XML content from the response
+        $responseBody = $response->body();
+        $xmlStartPos = strpos($responseBody, '<?xml');
+        $xmlString = false;
+        if ($xmlStartPos !== false) {
+            $xmlString = substr($responseBody, $xmlStartPos);
         }
+
+        if ($xmlString) {
+            // Parse the XML string
+            $xml = simplexml_load_string($xmlString);
+
+            if ($xml !== false && isset($xml->quote->price)) {
+                // Extract the price
+                $price = (string) $xml->quote->price;
+                Log::debug('api-logs:datalot: Price extracted', ['price' => $price]);
+            } else {
+                Log::error('Failed to parse XML or price tag not found');
+            }
+        } else {
+            Log::error('No XML content found in the response');
+        }
+
+        // Return based on the response success
+        return $response->successful() ? 'TRUE' : 'FALSE';
     }
 }
