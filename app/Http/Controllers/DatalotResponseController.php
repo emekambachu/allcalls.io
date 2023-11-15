@@ -65,9 +65,23 @@ XML;
         ]);
 
         // Log the body and status code
-        Log::debug($response->body());
-        Log::debug($response->status());
+        Log::debug('api-logs:agent-status-price: Response', [
+            'body' => $response->body(),
+            'status' => $response->status(),
+        ]);
 
-        return response()->json($response->json(), $response->status());
+        // parse the xml response
+        $xml = simplexml_load_string($response->body());
+        Log::debug($xml);
+        Log::debug('api-logs:agent-status-price: XML Parsed Response', [
+            'xml' => $xml,
+        ]);
+
+
+        if ($response->successful()) {
+            return 'TRUE';
+        }  else {
+            return 'FALSE';
+        }
     }
 }
