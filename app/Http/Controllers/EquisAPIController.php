@@ -35,25 +35,25 @@ class EquisAPIController extends Controller
             $response = Http::withHeaders([
                 'Content-Type' => 'application/json',
             ])->withToken($accessToken)->post($url, [
-                "address" => "123 Main St",
-                "addressTwo" => "Apt. 42",
-                "birthDate" => "1970-06-02",
-                "city" => "Asheville",
-                "currentlyLicensed" => true,
-                "email" => "capn2@serityy.com",
-                "firstName" => "Malcolm",
+                "address" => "83708 Robert Forge",
+                "addressTwo" => "Suite 886",
+                "birthDate" => "1966-06-05",
+                "city" => "Landrymouth",
+                "currentlyLicensed" => false,
+                "email" => "christopher49@yahoo.com",
+                "firstName" => "Anthony",
                 "languageId" => "en",
-                "lastName" => "Reynolds",
-                "npn" => "4FE274A",
-                "partnerUniqueId" => "abc12378",
-                "preferredFirstName" => "Mal",
-                "preferredLastName" => "Reynolds",
-                "preferredSuffix" => "II",
+                "lastName" => "Bishop",
+                "npn" => "F4CSXL3",
+                "partnerUniqueId" => "6cd946ae-fe3e-42f5-9a43-a00afd261c6b",
+                "preferredFirstName" => "Emily",
+                "preferredLastName" => "Anderson",
+                "preferredSuffix" => "III",
                 "role" => "Agent",
-                "state" => "NC",
-                "suffix" => "Jr",
+                "state" => "AL",
+                "suffix" => "II",
                 "uplineAgentEFNumber" => "EF222171",
-                "zipCode" => "28801"
+                "zipCode" => "65523"
             ]);
 
             // Log the response body and status
