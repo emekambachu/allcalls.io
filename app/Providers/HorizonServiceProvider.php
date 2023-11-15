@@ -32,6 +32,7 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
                 'john@example.com',
                 'jane@example.com',
                 'ryan@pinnaclesyn.com',
+                'kat@allcalls.io',
             ]);
         });
     }
