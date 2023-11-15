@@ -232,6 +232,8 @@ class InternalAgentController extends Controller
     {
         // echo $request->all();
         // dd($request->all());
+        // dd($request->all());
+        $user = User::find($id);
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -242,9 +244,6 @@ class InternalAgentController extends Controller
                 'max:255',
                 Rule::unique('users', 'email')->ignore($id),
             ],
-            'phone' => ['required', 'string', 'min:10', 'max:10',  Rule::unique('users', 'phone')->ignore($id), 'regex:/^[0-9]*$/'],
-            'phone_code' => ['required', 'regex:/^\+(?:[0-9]){1,4}$/'],
-            'phone_country' => ['required'],
         ]);
 
         if ($validator->fails()) {
@@ -253,9 +252,28 @@ class InternalAgentController extends Controller
                 'errors' => $validator->errors(),
             ], 400);
         }
+        if($user->phone !== $request->phone){
+            $phoneValidator = Validator::make($request->all(), [
+                'phone_code' => ['required', 'regex:/^\+(?:[0-9]){1,4}$/'],
+                'phone_country' => ['required'],
+                'phone' => ['required', 'string', 'min:10', 'max:10',  Rule::unique('users', 'phone')->ignore($id), 'regex:/^[0-9]*$/'],
+            ]);
+            if ($phoneValidator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $phoneValidator->errors(),
+                ], 400);
+            }
 
+            $user->update([
+                'phone_country' => $request->phone_country,
+                'phone_code' => $request->phone_code,
+                'phone' => $request->phone,
+            ]);
+        }
+        
         try {
-            $user = User::find($id);
+           
             if ($user->balance != $request->balance) {
                 Transaction::create([
                     'amount' => $request->balance - $user->balance,
@@ -291,9 +309,6 @@ class InternalAgentController extends Controller
             $user->update([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
-                'phone_country' => $request->phone_country,
-                'phone_code' => $request->phone_code,
-                'phone' => $request->phone,
                 'balance' => isset($request->balance) ? $request->balance : 0,
             ]);
             return response()->json([
