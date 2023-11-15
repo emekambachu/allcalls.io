@@ -66,7 +66,7 @@ XML;
         ]);
 
         // Log the body and status code
-        Log::debug('api-logs:agent-status-price: Response', [
+        Log::debug('api-logs:datalot: Response', [
             'body' => $response->body(),
             'status' => $response->status(),
         ]);
@@ -74,7 +74,7 @@ XML;
         // parse the xml response
         $xml = simplexml_load_string($response->body());
         Log::debug($xml);
-        Log::debug('api-logs:agent-status-price: XML Parsed Response', [
+        Log::debug('api-logs:datalot: XML Parsed Response', [
             'xml' => $xml,
         ]);
 
@@ -83,7 +83,7 @@ XML;
         // Extract the price
         $price = (string) $xml->quote->price;
 
-        Log::debug('api-logs:agent-status-price: XML Parsed Response', [
+        Log::debug('api-logs:datalot: XML Parsed Response', [
             'xml' => $xml,
         ]);
 
