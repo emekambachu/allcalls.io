@@ -302,6 +302,7 @@ input[type="number"] {
 .multiselect-wrapper {
   background-color: #d7d7d7;
   border-radius: 5px;
+  height: 49px !important;
 }
 
 .button-custom-back {
