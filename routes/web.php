@@ -2,6 +2,7 @@
 
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\BidsController;
@@ -208,3 +209,13 @@ Route::post('/send-push-notification-test', function(Request $request) {
 Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->middleware(['auth', 'verified', 'registration-step-check'])->name('notifications.mark-all-as-read');
 Route::post('/notifications/clear-all', [NotificationController::class, 'clearAll'])->middleware(['auth', 'verified', 'registration-step-check'])->name('notifications.clear-all');
 Route::get('/equis-api', [EquisAPIController::class, 'show']);
+
+Route::get('/queue-test', function() {
+    Bus::dispatch(function () {
+        sleep(10); // Simulate a task that takes 10 seconds to complete
+        // Perform other tasks if needed
+    });
+
+    return 'Job dispatched to the queue.';
+
+});
