@@ -295,7 +295,7 @@ input[type="number"] {
 
 .multiselect {
   color: black !important;
-  border: none;
+  border: none !important;
   border-radius: 10px;
 }
 
