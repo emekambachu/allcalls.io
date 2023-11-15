@@ -152,4 +152,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Device::class);
     }
 
+    public function onlineUser()
+    {
+        return $this->hasMany(OnlineUser::class);
+    }
+
 }
