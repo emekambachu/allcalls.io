@@ -37,15 +37,15 @@ class EquisAPIController extends Controller
             ])->withToken($accessToken)->post($url, [
                 "address" => "123 Main St",
                 "addressTwo" => "Apt. 42",
-                "birthDate" => "1970-01-01",
+                "birthDate" => "1970-06-02",
                 "city" => "Asheville",
                 "currentlyLicensed" => true,
-                "email" => "capn@serenityy.com",
+                "email" => "capn2@serityy.com",
                 "firstName" => "Malcolm",
                 "languageId" => "en",
                 "lastName" => "Reynolds",
                 "npn" => "4FE274A",
-                "partnerUniqueId" => "abc123",
+                "partnerUniqueId" => "abc12378",
                 "preferredFirstName" => "Mal",
                 "preferredLastName" => "Reynolds",
                 "preferredSuffix" => "II",
@@ -72,9 +72,9 @@ class EquisAPIController extends Controller
                     'Content-Type' => 'application/json',
                 ])->withToken($accessToken)->post($url2, [
                     "userName" => "EF222171",
-                    "partnerUniqueId" => "abc123",
+                    "partnerUniqueId" => "abc12378",
                 ]);
-    
+
                 // Log the response body and status
                 Log::debug($response->body());
                 Log::debug($response->status());
@@ -86,9 +86,12 @@ class EquisAPIController extends Controller
                     return response()->json($data);
                 } else {
                     // Handle error
+                    // Check for specific Duplicate Agent Exception
+                    if (str_contains($response->body(), 'System.DuplicateAgentException')) {
+                        Log::debug("Duplicate Agent Exception occurred. Attempting to create a new user.");
+                    }
                     return response()->json(['error' => 'Failed to retrieve data from Equis API'], 500);
                 }
-
             } else {
                 // Handle error
                 return response()->json(['error' => 'Failed to retrieve data from Equis API'], 500);
