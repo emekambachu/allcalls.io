@@ -25,6 +25,7 @@ use App\Http\Controllers\CallRecordingController;
 use App\Http\Controllers\RingyResponseController;
 use App\Http\Controllers\AgentStatusAPIController;
 use App\Http\Controllers\LiveCallClientController;
+use App\Http\Controllers\DatalotResponseController;
 use App\Http\Controllers\IOSVersionCheckController;
 use App\Http\Controllers\ListFlexResponseController;
 use App\Http\Controllers\NotificationsAPIController;
@@ -182,6 +183,7 @@ Route::match(['get', 'post'], '/call-center/disposition', [CallCenterDisposition
 Route::match(['get', 'post'], '/listflex/api-mme-bpo', [ListFlexResponseController::class, 'store']);
 Route::match(['get', 'post'], '/ringy', [RingyResponseController::class, 'store']);
 Route::match(['get', 'post'], '/overseer', [OverseerResponseController::class, 'store']);
+Route::match(['get', 'post'], '/med', [DatalotResponseController::class, 'store']);
 Route::match(['get', 'post'], '/available-agents', [AvailableAgentsAPIController::class, 'show']);
 
 Route::middleware('auth:sanctum')->post('/app-events', [AppEventsController::class, 'store']);

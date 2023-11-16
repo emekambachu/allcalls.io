@@ -2,6 +2,7 @@
 
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\BidsController;
@@ -33,6 +34,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CallUserResponseAPIController;
 use App\Http\Controllers\AgentStatusPriceDocsController;
 use App\Http\Controllers\TakeCallsOnlineUsersController;
+use App\Jobs\SampleJob;
 
 /*
 |--------------------------------------------------------------------------
@@ -213,3 +215,9 @@ Route::post('/send-push-notification-test', function(Request $request) {
 Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->middleware(['auth', 'verified', 'registration-step-check'])->name('notifications.mark-all-as-read');
 Route::post('/notifications/clear-all', [NotificationController::class, 'clearAll'])->middleware(['auth', 'verified', 'registration-step-check'])->name('notifications.clear-all');
 Route::get('/equis-api', [EquisAPIController::class, 'show']);
+
+Route::get('/queue-test', function() {
+    SampleJob::dispatch();
+
+    return 'Job dispatched to the queue.';
+});
