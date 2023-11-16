@@ -39,27 +39,50 @@ const form = useForm({
   zoomLink: ''
 });
 
+// function sendPushNotification() {
+//   form.user_id = selectedUserId.value;
+//   form.devices = selectedDevices.value.map(device => device.fcm_token);
+
+//   // Conditionally add the Zoom meeting URL to the form data
+//   if (attachZoomLink.value && zoomMeetingUrl.value) {
+//     form.zoomLink = zoomMeetingUrl.value; // Add zoomLink to the form if the checkbox is checked and the URL is provided
+//   }
+
+//   form.post('/send-push-notification-test', {
+//     onSuccess: () => {
+//       toaster("success", "Notification sent successfully!");
+//       form.reset(); // Reset the form fields
+//       attachZoomLink.value = false; // Reset the checkbox
+//       zoomMeetingUrl.value = ''; // Reset the Zoom meeting URL
+//     },
+//     onError: (errors) => {
+//       toaster("error", "Failed to send notification.");
+//       // Handle form errors if needed
+//     }
+//   });
+// }
+
 function sendPushNotification() {
-  form.user_id = selectedUserId.value;
-  form.devices = selectedDevices.value.map(device => device.fcm_token);
+  let payload = {
+    user_id: selectedUserId.value,
+    title: form.title,
+    message: form.message,
+    zoomLink: attachZoomLink.value ? zoomMeetingUrl.value : null,
+  };
 
-  // Conditionally add the Zoom meeting URL to the form data
-  if (attachZoomLink.value && zoomMeetingUrl.value) {
-    form.zoomLink = zoomMeetingUrl.value; // Add zoomLink to the form if the checkbox is checked and the URL is provided
-  }
-
-  form.post('/send-push-notification-test', {
-    onSuccess: () => {
+  axios.post('/api/send-zoom-meeting-notification', payload)
+    .then(response => {
       toaster("success", "Notification sent successfully!");
-      form.reset(); // Reset the form fields
-      attachZoomLink.value = false; // Reset the checkbox
-      zoomMeetingUrl.value = ''; // Reset the Zoom meeting URL
-    },
-    onError: (errors) => {
+      // Reset form and states
+      form.reset();
+      attachZoomLink.value = false;
+      zoomMeetingUrl.value = '';
+    })
+    .catch(error => {
       toaster("error", "Failed to send notification.");
-      // Handle form errors if needed
-    }
-  });
+      // Handle errors (show error messages)
+      console.error(error);
+    });
 }
 
 
