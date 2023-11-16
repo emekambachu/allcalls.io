@@ -85,6 +85,17 @@ function sendPushNotification() {
     });
 }
 
+const getUserDetails = (userId) => {
+  return users.find(user => user.id === userId) || {};
+};
+
+function removeUser(userId) {
+  const index = selectedUserIds.value.indexOf(userId);
+  if (index > -1) {
+    selectedUserIds.value.splice(index, 1);
+  }
+}
+
 
 const filteredUsers = computed(() => {
   if (!searchQuery.value) {
@@ -143,6 +154,20 @@ if (page.props.flash.message) {
           </select>
 
         </div> -->
+        
+        <div class="mb-4">
+          <!-- Display Selected Users -->
+          <div class="mt-4 flex flex-wrap">
+            <div v-for="userId in selectedUserIds" :key="userId" class="flex items-center bg-blue-100 text-blue-800 text-sm font-semibold mr-2 mb-2 px-4 py-2 rounded-full">
+              {{ getUserDetails(userId).first_name }} {{ getUserDetails(userId).last_name }}
+              <button @click="removeUser(userId)" class="ml-2">
+                <svg class="h-4 w-4 fill-current text-blue-500 cursor-pointer" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M10 8.586l2.293-2.293 1.414 1.414L11.414 10l2.293 2.293-1.414 1.414L10 11.414l-2.293 2.293-1.414-1.414L8.586 10 6.293 7.707l1.414-1.414L10 8.586z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
 
         <div class="mb-4">
           <InputLabel for="user" value="Select User:" />
