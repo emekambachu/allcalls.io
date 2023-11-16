@@ -17,18 +17,20 @@ import '@vueform/multiselect/themes/default.css';
 
 const { users } = usePage().props;
 const selectedUserId = ref('');
+const selectedUsers = ref([]);
+
 const searchQuery = ref('');
-const selectedDevices = ref([]);
+// const selectedDevices = ref([]);
 const attachZoomLink = ref(false); // State to track if Zoom link should be attached
 const zoomMeetingUrl = ref(''); // The actual Zoom meeting URL
 // Computed property to conditionally show the input for the Zoom link
 const shouldShowZoomLinkInput = computed(() => attachZoomLink.value);
 
 // Computed property to get devices for the selected user
-const selectedUserDevices = computed(() => {
-  const user = users.find(u => u.id === selectedUserId.value);
-  return user ? user.devices : [];
-});
+// const selectedUserDevices = computed(() => {
+//   const user = users.find(u => u.id === selectedUserId.value);
+//   return user ? user.devices : [];
+// });
 
 // Reactive form object
 const form = useForm({
@@ -64,10 +66,10 @@ const form = useForm({
 
 function sendPushNotification() {
   let payload = {
-    user_id: selectedUserId.value,
+    user_ids: selectedUsers.value.map(user => user.id),
     title: form.title,
     message: form.message,
-    zoomLink: attachZoomLink.value ? zoomMeetingUrl.value : '',
+    zoomLink: attachZoomLink.value ? zoomMeetingUrl.value : null,
   };
 
   axios.post('/send-zoom-meeting-notification', payload)
@@ -153,9 +155,22 @@ if (page.props.flash.message) {
             </div>
           </div>
         </div>
+
+        <div class="mb-4">
+          <Multiselect 
+            v-model="selectedUsers"
+            :options="users" 
+            label="name" 
+            track-by="id" 
+            placeholder="Select users"
+            :multiple="true" 
+            :searchable="true"
+            :close-on-select="false"
+          />
+        </div>
         
         <!-- Devices List -->
-        <div v-if="selectedUserDevices.length > 0" class="mb-4">
+        <!-- <div v-if="selectedUserDevices.length > 0" class="mb-4">
           <h3 class="font-semibold mb-2">Select Devices:</h3>
           <ul>
             <li v-for="device in selectedUserDevices" :key="device.id" class="mb-2">
@@ -163,12 +178,12 @@ if (page.props.flash.message) {
                 <input type="checkbox" :value="device" v-model="selectedDevices" class="form-checkbox">
                 <span class="ml-2">
                   {{ device.device_type }} 
-                  <!-- ({{ device.fcm_token }}) -->
-                </span>
+                   ({{ device.fcm_token }}) 
+                   </span>
               </label>
             </li>
           </ul>
-        </div>
+        </div> -->
         
         <!-- Notification Form -->
         <div class="mt-4">
