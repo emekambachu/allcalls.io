@@ -96,6 +96,11 @@ function removeGroup(groupId) {
   // Optionally, make an API call to remove the group from the backend
 }
 
+function removeUserFromGroup(userId, group) {
+  group.user_ids = group.user_ids.filter(id => id !== userId);
+  // Optionally, update this change on the backend as well
+}
+
 function toggleGroup(group) {
   group.isExpanded = !group.isExpanded;
 }
@@ -275,7 +280,11 @@ if (page.props.flash.message) {
               <ul v-if="group.isExpanded" class="mt-2 pl-4">
                 <li v-for="userId in group.user_ids" :key="userId" class="flex items-center bg-blue-100 text-blue-800 text-sm font-semibold mr-2 mb-2 px-4 py-2 rounded-full">
                   {{ getUserDetails(userId).first_name }} {{ getUserDetails(userId).last_name }}
-                  <!-- Optional: Add remove user from group button if needed -->
+                  <button @click="removeUserFromGroup(userId, group)" class="ml-2">
+                    <svg class="h-4 w-4 fill-current text-blue-500 cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                      <path d="M10 8.586l2.293-2.293 1.414 1.414L11.414 10l2.293 2.293-1.414 1.414L10 11.414l-2.293 2.293-1.414-1.414L8.586 10 6.293 7.707l1.414-1.414L10 8.586z"/>
+                    </svg>
+                  </button>
                 </li>
               </ul>
             </li>
