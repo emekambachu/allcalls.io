@@ -55,13 +55,13 @@ class ZoomMeeting extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         $mailMessage = (new MailMessage)
-            ->line($this->emailData['description'] ?? 'The introduction to the notification.');
+            ->line($this->emailData['title'] ?? 'The introduction to the notification.');
     
         if (isset($this->emailData['buttonText']) && isset($this->emailData['buttonUrl'])) {
             $mailMessage->action($this->emailData['buttonText'], $this->emailData['buttonUrl']);
         }
     
-        $mailMessage->line('Thank you for using our application!');
+        $mailMessage->line($this->emailData['description'] ?? 'Thank you for using our application!');
     
         return $mailMessage;
     }
