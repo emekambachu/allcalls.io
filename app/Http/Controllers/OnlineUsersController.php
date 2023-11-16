@@ -60,6 +60,7 @@ class OnlineUsersController extends Controller
         Log::debug('online-user-logs:online', [
             'user_id' => $userId,
             'call_type_id' => $callTypeId,
+            'platform' => 'mobile',
         ]);
 
         // Return a response
@@ -86,6 +87,7 @@ class OnlineUsersController extends Controller
             Log::debug('online-user-logs:offline', [
                 'user_id' => $userId,
                 'call_type_id' => $callTypeId,
+                'platform' => 'mobile',
             ]);
 
             return response()->json(['status' => 'success'], 200);
@@ -114,6 +116,7 @@ class OnlineUsersController extends Controller
             Log::debug('online-user-logs:offline', [
                 'user_id' => $userId,
                 'call_type_id' => $record->call_type_id,
+                'platform' => 'mobile',
             ]);
 
             return response()->json(['status' => 'success'], 200);
