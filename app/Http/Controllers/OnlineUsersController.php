@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CallType;
 use App\Models\OnlineUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -85,8 +86,8 @@ class OnlineUsersController extends Controller
             OnlineUserListUpdated::dispatch();
 
             Log::debug('online-user-logs:offline', [
-                'user_id' => $userId,
-                'call_type_id' => $callTypeId,
+                'user_id' => $request->user()->first_name . ' ' . $request->user()->last_name,
+                'call_type' => CallType::find($callTypeId)->type,
                 'platform' => 'mobile',
             ]);
 
@@ -114,8 +115,8 @@ class OnlineUsersController extends Controller
             OnlineUserListUpdated::dispatch();
 
             Log::debug('online-user-logs:offline', [
-                'user_id' => $userId,
-                'call_type_id' => $record->call_type_id,
+                'user_id' => $request->user()->first_name . ' ' . $request->user()->last_name,
+                'call_type' => CallType::find($record->call_type_id)->type,
                 'platform' => 'mobile',
             ]);
 

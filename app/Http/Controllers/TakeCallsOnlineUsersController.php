@@ -38,7 +38,7 @@ class TakeCallsOnlineUsersController extends Controller
 
         Log::debug('online-user-logs:online', [
             'user_id' => $userId,
-            'full_name' => $request->user()->first_name + ' ' + $request->user()->last_name,
+            'full_name' => $request->user()->first_name . ' ' . $request->user()->last_name,
             'call_type' => $callType->type,
             'platform' => 'web',
         ]);
@@ -68,7 +68,7 @@ class TakeCallsOnlineUsersController extends Controller
             OnlineUserListUpdated::dispatch();
 
             Log::debug('online-user-logs:offline', [
-                'full_name' => $request->user()->first_name + ' ' + $request->user()->last_name,
+                'full_name' => $request->user()->first_name . ' ' . $request->user()->last_name,
                 'call_type' => CallType::find($callTypeId)->type,
                 'platform' => 'web',
             ]);
