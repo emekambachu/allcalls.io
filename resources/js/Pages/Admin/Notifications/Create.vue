@@ -17,13 +17,10 @@ import '@vueform/multiselect/themes/default.css';
 
 const { users } = usePage().props;
 const selectedUserId = ref('');
-const selectedUsers = ref([]);
-
 const searchQuery = ref('');
 // const selectedDevices = ref([]);
 const attachZoomLink = ref(false); // State to track if Zoom link should be attached
 const zoomMeetingUrl = ref(''); // The actual Zoom meeting URL
-// Computed property to conditionally show the input for the Zoom link
 const shouldShowZoomLinkInput = computed(() => attachZoomLink.value);
 
 // Computed property to get devices for the selected user
@@ -66,10 +63,10 @@ const form = useForm({
 
 function sendPushNotification() {
   let payload = {
-    user_ids: selectedUsers.value.map(user => user.id),
+    user_ids: selectedUserIds.value, // Send array of user IDs
     title: form.title,
     message: form.message,
-    zoomLink: attachZoomLink.value ? zoomMeetingUrl.value : null,
+    zoomLink: attachZoomLink.value ? zoomMeetingUrl.value : '',
   };
 
   axios.post('/send-zoom-meeting-notification', payload)
@@ -101,9 +98,12 @@ const filteredUsers = computed(() => {
 });
 
 function selectUser(user) {
-  selectedUserId.value = user.id;
-  searchQuery.value = ''; // Clear the search query after selection
-  // You might also want to clear the filtered list
+  const index = selectedUserIds.value.indexOf(user.id);
+  if (index > -1) {
+    selectedUserIds.value.splice(index, 1); // Remove if already selected
+  } else {
+    selectedUserIds.value.push(user.id); // Add if not selected
+  }
 }
 
 // Watch the selectedUserId to update the devices array
@@ -150,23 +150,16 @@ if (page.props.flash.message) {
 
           <!-- Dropdown for Filtered User List -->
           <div v-if="filteredUsers.length > 0" class="border rounded max-h-60 overflow-y-auto">
-            <div v-for="user in filteredUsers" :key="user.id" class="p-2 hover:bg-gray-100 cursor-pointer" @click="selectUser(user)">
+            <div 
+              v-for="user in filteredUsers" 
+              :key="user.id" 
+              class="p-2 hover:bg-gray-100 cursor-pointer"
+              :class="{'bg-blue-200': selectedUserIds.includes(user.id)}"
+              @click="selectUser(user)"
+            >
               {{ user.first_name }} {{ user.last_name }} ({{ user.email }})
             </div>
           </div>
-        </div>
-
-        <div class="mb-4">
-          <Multiselect 
-            v-model="selectedUsers"
-            :options="users" 
-            label="first_name" 
-            track-by="id" 
-            placeholder="Select users"
-            :multiple="true" 
-            :searchable="true"
-            :close-on-select="false"
-          />
         </div>
         
         <!-- Devices List -->
