@@ -39,7 +39,7 @@ class ZoomMeeting extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database', PushChannel::class];
+        return ['database', 'mail', PushChannel::class];
     }
 
      /**
