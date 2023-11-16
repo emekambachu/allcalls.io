@@ -81,6 +81,7 @@ function createGroup() {
     id: Date.now().toString(), // Simple unique ID generation
     name: groupName.value,
     user_ids: [...selectedUserIds.value],
+    isExpanded: false, // Add this property
   });
 
   // Reset group name and selected users
@@ -252,13 +253,23 @@ if (page.props.flash.message) {
           
           <div v-if="groups.length > 0">
             <ul>
-              <li v-for="group in groups" :key="group.id" class="mt-2 flex items-center">
-                <div class="p-2 border rounded flex-grow">
-                  <strong>{{ group.name }}</strong> ({{ group.user_ids.length }} users)
+              <li v-for="group in groups" :key="group.id" class="mt-2">
+                <div class="flex items-center justify-between p-2 border rounded">
+                  <div>
+                    <strong>{{ group.name }}</strong> ({{ group.user_ids.length }} users)
+                  </div>
+                  <div>
+                    <button @click="toggleGroup(group)" class="mr-2">Toggle</button>
+                    <button @click="removeGroup(group.id)" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                      Delete
+                    </button>
+                  </div>
                 </div>
-                <button @click="removeGroup(group.id)" class="ml-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-                  Delete
-                </button>
+                <ul v-if="group.isExpanded">
+                  <li v-for="userId in group.user_ids" :key="userId" class="ml-6 mt-1">
+                    {{ getUserDetails(userId).first_name }} {{ getUserDetails(userId).last_name }}
+                  </li>
+                </ul>
               </li>
             </ul>
           </div>
