@@ -16,19 +16,22 @@ class ZoomMeeting extends Notification
     protected $title;
     protected $message;
     protected $zoomLink;
+    protected $emailData;
 
     /**
-     * Zoom Meeting Notifiction instance.
+     * Zoom Meeting Notification instance.
      *
      * @param string $title
      * @param string $message
-     * @param string $zoomLink
+     * @param string|null $zoomLink
+     * @param array|null $emailData
      */
-    public function __construct(string $title, string $message, ?string $zoomLink = null)
+    public function __construct(string $title, string $message, ?string $zoomLink = null, ?array $emailData = null)
     {
         $this->title = $title;
         $this->message = $message;
         $this->zoomLink = $zoomLink;
+        $this->emailData = $emailData;
     }
 
     /**
@@ -39,18 +42,28 @@ class ZoomMeeting extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database', 'mail', PushChannel::class];
+        $channels = ['database', PushChannel::class];
+        if ($this->emailData) {
+            $channels[] = 'mail';
+        }
+        return $channels;
     }
 
-     /**
+    /**
      * Get the mail representation of the notification.
      */
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)
-            ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
+        $mailMessage = (new MailMessage)
+            ->line($this->emailData['description'] ?? 'The introduction to the notification.');
+    
+        if (isset($this->emailData['buttonText']) && isset($this->emailData['buttonUrl'])) {
+            $mailMessage->action($this->emailData['buttonText'], $this->emailData['buttonUrl']);
+        }
+    
+        $mailMessage->line('Thank you for using our application!');
+    
+        return $mailMessage;
     }
 
     /**
@@ -76,8 +89,7 @@ class ZoomMeeting extends Notification
      */
     public function toPush(object $notifiable)
     {
-        // Here you will need to implement the logic to send the notification
-        // via your PushChannel, using the data provided.
+        // Implement the logic to send the notification via your PushChannel, using the data provided.
         return $this->toArray($notifiable);
     }
 }

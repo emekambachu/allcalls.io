@@ -19,6 +19,11 @@ const { users } = usePage().props;
 const selectedUserId = ref('');
 const selectedUserIds = ref([]);
 const searchQuery = ref('');
+const sendEmail = ref(false);
+const emailTitle = ref('');
+const emailButtonText = ref('');
+const emailButtonUrl = ref('');
+const emailDescription = ref('');
 // const selectedDevices = ref([]);
 const attachZoomLink = ref(false); // State to track if Zoom link should be attached
 const zoomMeetingUrl = ref(''); // The actual Zoom meeting URL
@@ -68,6 +73,13 @@ function sendPushNotification() {
     title: form.title,
     message: form.message,
     zoomLink: attachZoomLink.value ? zoomMeetingUrl.value : '',
+    sendEmail: sendEmail.value,
+    emailData: sendEmail.value ? {
+      title: emailTitle.value,
+      buttonText: emailButtonText.value,
+      buttonUrl: emailButtonUrl.value,
+      description: emailDescription.value
+    } : null
   };
 
   axios.post('/send-zoom-meeting-notification', payload)
@@ -228,6 +240,20 @@ if (page.props.flash.message) {
             placeholder="Enter Zoom Meeting URL" 
             class="w-full p-2 border rounded mt-2"
           />
+        </div>
+
+        <div class="mt-4">
+          <label class="flex items-center">
+            <input type="checkbox" v-model="sendEmail" class="form-checkbox">
+            <span class="ml-2">Attach Email</span>
+          </label>
+        </div>
+
+        <div v-if="sendEmail" class="mt-4">
+          <TextInput v-model="emailTitle" placeholder="Email Title" class="mb-4" />
+          <TextInput v-model="emailButtonText" placeholder="Action Button Text" class="mb-4" />
+          <TextInput v-model="emailButtonUrl" placeholder="Action Button URL" class="mb-4" />
+          <TextInput v-model="emailDescription" placeholder="Email Description" class="mb-4" />
         </div>
         
         <div class="mt-6">
