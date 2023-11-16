@@ -24,7 +24,7 @@ class ZoomMeeting extends Notification
      * @param string $message
      * @param string $zoomLink
      */
-    public function __construct(string $title, string $message, string $zoomLink)
+    public function __construct(string $title, string $message, ?string $zoomLink = null)
     {
         $this->title = $title;
         $this->message = $message;
