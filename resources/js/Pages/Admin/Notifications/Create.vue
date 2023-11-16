@@ -19,6 +19,10 @@ const { users } = usePage().props;
 const selectedUserId = ref('');
 const searchQuery = ref('');
 const selectedDevices = ref([]);
+const attachZoomLink = ref(false); // State to track if Zoom link should be attached
+const zoomMeetingUrl = ref(''); // The actual Zoom meeting URL
+// Computed property to conditionally show the input for the Zoom link
+const shouldShowZoomLinkInput = computed(() => attachZoomLink.value);
 
 // Computed property to get devices for the selected user
 const selectedUserDevices = computed(() => {
@@ -31,17 +35,25 @@ const form = useForm({
   title: '',
   message: '',
   user_id: '',
-  devices: []
+  devices: [],
+  zoomLink: ''
 });
 
 function sendPushNotification() {
   form.user_id = selectedUserId.value;
   form.devices = selectedDevices.value.map(device => device.fcm_token);
 
+  // Conditionally add the Zoom meeting URL to the form data
+  if (attachZoomLink.value && zoomMeetingUrl.value) {
+    form.zoomLink = zoomMeetingUrl.value; // Add zoomLink to the form if the checkbox is checked and the URL is provided
+  }
+
   form.post('/send-push-notification-test', {
     onSuccess: () => {
       toaster("success", "Notification sent successfully!");
       form.reset(); // Reset the form fields
+      attachZoomLink.value = false; // Reset the checkbox
+      zoomMeetingUrl.value = ''; // Reset the Zoom meeting URL
     },
     onError: (errors) => {
       toaster("error", "Failed to send notification.");
@@ -49,6 +61,7 @@ function sendPushNotification() {
     }
   });
 }
+
 
 const filteredUsers = computed(() => {
   if (!searchQuery.value) {
@@ -143,6 +156,21 @@ if (page.props.flash.message) {
         <div class="mt-4">
           <InputLabel for="message" value="Notification Message:" />
           <TextInput id="message" type="text" v-model="form.message" required class="w-full p-2 border rounded" />
+        </div>
+
+        <div class="mt-4">
+          <label class="inline-flex items-center">
+            <input type="checkbox" v-model="attachZoomLink" class="form-checkbox">
+            <span class="ml-2">Attach Zoom Meeting Link</span>
+          </label>
+
+          <!-- Conditional TextInput for Zoom Meeting URL -->
+          <TextInput 
+            v-if="shouldShowZoomLinkInput" 
+            v-model="zoomMeetingUrl" 
+            placeholder="Enter Zoom Meeting URL" 
+            class="w-full p-2 border rounded mt-2"
+          />
         </div>
         
         <div class="mt-6">
