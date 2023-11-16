@@ -89,6 +89,12 @@ function createGroup() {
   toaster("success", "Group created successfully!");
 }
 
+// Function to remove a group
+function removeGroup(groupId) {
+  groups.value = groups.value.filter(group => group.id !== groupId);
+  // Optionally, make an API call to remove the group from the backend
+}
+
 // ... rest of the script ...
 
 
@@ -230,7 +236,7 @@ if (page.props.flash.message) {
           </div>
         </div>
         
-        <div class="mt-6">
+        <div class="mt-1">
           <div class="mb-4">
             <InputLabel for="groupName" value="Create a Group:" />
             <TextInput id="groupName" type="text" v-model="groupName" placeholder="Enter Group Name" class="w-full p-2 border rounded" />
@@ -244,18 +250,19 @@ if (page.props.flash.message) {
         <div class="mt-4">
           <h3 class="text-lg font-semibold">Created Groups</h3>
           
-          <!-- Check if there are any groups -->
           <div v-if="groups.length > 0">
             <ul>
-              <li v-for="group in groups" :key="group.id" class="mt-2">
-                <div class="p-2 border rounded">
+              <li v-for="group in groups" :key="group.id" class="mt-2 flex items-center">
+                <div class="p-2 border rounded flex-grow">
                   <strong>{{ group.name }}</strong> ({{ group.user_ids.length }} users)
                 </div>
+                <button @click="removeGroup(group.id)" class="ml-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                  Delete
+                </button>
               </li>
             </ul>
           </div>
           
-          <!-- Displayed when there are no groups -->
           <div v-else class="text-gray-600">
             No groups found.
           </div>
