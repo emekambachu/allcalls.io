@@ -127,6 +127,11 @@ let ChangeTab = () => {
                 if (form.value[fieldName] === null || form.value[fieldName] === "" || form.value[fieldName] === "Choose") {
                     props.firstStepErrors[fieldName] = [`This  field is required.`];
                 }
+                if(fieldName === 'ssn'){
+                    if(String(form.value.ssn).length < 9){
+                        props.firstStepErrors[fieldName] = [`SSN should be 9 digit.`];
+                    } 
+                }
             }
 
         });
@@ -201,7 +206,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
             <div>
                 <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 ">Social
                     Security Number (SSN)<span class="text-red-500">*</span></label>
-                <input type="number" v-model="form.ssn" id="default-input" :disabled="page.props.auth.role === 'admin'"
+                <input type="text" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')"  v-model="form.ssn" id="default-input" :disabled="page.props.auth.role === 'admin'"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                 <div v-if="firstStepErrors.ssn" class="text-red-500" v-text="firstStepErrors.ssn[0]"></div>
             </div>
@@ -482,7 +487,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
                 <div>
                     <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">Tax
                         ID<span class="text-red-500">*</span></label>
-                    <input type="number" v-model="form.business_tax_id" id="default-input"
+                    <input type="text" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" v-model="form.business_tax_id" id="default-input"
                         :disabled="page.props.auth.role === 'admin'"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                     <div v-if="firstStepErrors.business_tax_id" class="text-red-500"
