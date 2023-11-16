@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CallType;
 use App\Models\OnlineUser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Events\OnlineUserListUpdated;
 
 class TakeCallsOnlineUsersController extends Controller
@@ -35,6 +36,13 @@ class TakeCallsOnlineUsersController extends Controller
             ['call_type_id' => $callTypeId]
         );
 
+        Log::debug('online-user-logs:online', [
+            'user_id' => $userId,
+            'full_name' => $request->user()->first_name . ' ' . $request->user()->last_name,
+            'call_type' => $callType->type,
+            'platform' => 'web',
+        ]);
+
         // Dispatch the event
         OnlineUserListUpdated::dispatch();
 
@@ -58,6 +66,12 @@ class TakeCallsOnlineUsersController extends Controller
 
             // Dispatch the event
             OnlineUserListUpdated::dispatch();
+
+            Log::debug('online-user-logs:offline', [
+                'full_name' => $request->user()->first_name . ' ' . $request->user()->last_name,
+                'call_type' => CallType::find($callTypeId)->type,
+                'platform' => 'web',
+            ]);
         }
 
         return redirect()->back()->with(['message' => 'Stopped listening for calls.']);

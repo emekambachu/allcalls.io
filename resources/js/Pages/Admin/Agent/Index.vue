@@ -179,7 +179,7 @@ let dateFormat = (data) => {
         const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Month is zero-based, so add 1
         const year = date.getFullYear();
         // Create the formatted date string
-        return `${day}/${month}/${year}`;
+        return `${month}/${day}/${year}`;
     }
 
 }
