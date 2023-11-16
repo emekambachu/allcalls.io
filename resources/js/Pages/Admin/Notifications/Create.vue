@@ -243,13 +243,22 @@ if (page.props.flash.message) {
 
         <div class="mt-4">
           <h3 class="text-lg font-semibold">Created Groups</h3>
-          <ul>
-            <li v-for="group in groups" :key="group.id" class="mt-2">
-              <div class="p-2 border rounded">
-                <strong>{{ group.name }}</strong> ({{ group.user_ids.length }} users)
-              </div>
-            </li>
-          </ul>
+          
+          <!-- Check if there are any groups -->
+          <div v-if="groups.length > 0">
+            <ul>
+              <li v-for="group in groups" :key="group.id" class="mt-2">
+                <div class="p-2 border rounded">
+                  <strong>{{ group.name }}</strong> ({{ group.user_ids.length }} users)
+                </div>
+              </li>
+            </ul>
+          </div>
+          
+          <!-- Displayed when there are no groups -->
+          <div v-else class="text-gray-600">
+            No groups found.
+          </div>
         </div>
 
         <!-- Group Selection -->
