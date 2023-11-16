@@ -127,10 +127,10 @@ let ChangeTab = () => {
                 if (form.value[fieldName] === null || form.value[fieldName] === "" || form.value[fieldName] === "Choose") {
                     props.firstStepErrors[fieldName] = [`This  field is required.`];
                 }
-                if(fieldName === 'ssn'){
-                    if(String(form.value.ssn).length < 9){
+                if (fieldName === 'ssn') {
+                    if (String(form.value.ssn).length < 11) {
                         props.firstStepErrors[fieldName] = [`SSN should be 9 digit.`];
-                    } 
+                    }
                 }
             }
 
@@ -167,6 +167,13 @@ let enforceFiveDigitInput = (fieldName, val) => {
     if (fieldName.length > 5) {
         form.value[val] = fieldName.slice(0, 5);
     }
+}
+let formatSSN = (event) => {
+    var val = event.target.value.replace(/\D/g, '');
+    val = val.replace(/^(\d{3})/, '$1-');
+    val = val.replace(/-(\d{2})/, '-$1-');
+    val = val.replace(/(\d)-(\d{4}).*/, '$1-$2');
+    event.target.value = val
 }
 </script>
 <style scoped></style>
@@ -206,7 +213,8 @@ let enforceFiveDigitInput = (fieldName, val) => {
             <div>
                 <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 ">Social
                     Security Number (SSN)<span class="text-red-500">*</span></label>
-                <input type="text" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')"  v-model="form.ssn" id="default-input" :disabled="page.props.auth.role === 'admin'"
+                <input type="text" @input="formatSSN" v-model="form.ssn" id="default-input"
+                    :disabled="page.props.auth.role === 'admin'"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                 <div v-if="firstStepErrors.ssn" class="text-red-500" v-text="firstStepErrors.ssn[0]"></div>
             </div>
@@ -381,8 +389,8 @@ let enforceFiveDigitInput = (fieldName, val) => {
             </div>
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">Zip Code</label>
-                <input type="text" @input="enforceFiveDigitInput(form.move_in_zip, 'move_in_zip')"  v-model="form.move_in_zip" maxLength="5"
-                    id="default-input" :disabled="page.props.auth.role === 'admin'"
+                <input type="text" @input="enforceFiveDigitInput(form.move_in_zip, 'move_in_zip')"
+                    v-model="form.move_in_zip" maxLength="5" id="default-input" :disabled="page.props.auth.role === 'admin'"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                 <div v-if="firstStepErrors.move_in_zip" class="text-red-500" v-text="firstStepErrors.move_in_zip[0]"></div>
             </div>
@@ -487,8 +495,8 @@ let enforceFiveDigitInput = (fieldName, val) => {
                 <div>
                     <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">Tax
                         ID<span class="text-red-500">*</span></label>
-                    <input type="text" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" v-model="form.business_tax_id" id="default-input"
-                        :disabled="page.props.auth.role === 'admin'"
+                    <input type="text" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" v-model="form.business_tax_id"
+                        id="default-input" :disabled="page.props.auth.role === 'admin'"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                     <div v-if="firstStepErrors.business_tax_id" class="text-red-500"
                         v-text="firstStepErrors.business_tax_id[0]"></div>
@@ -603,8 +611,8 @@ let enforceFiveDigitInput = (fieldName, val) => {
                 <div>
                     <label for="first_name" class="block mb-0 text-sm font-black text-gray-900 ">Zip
                         Code<span class="text-red-500">*</span></label>
-                    <input type="text" @input="enforceFiveDigitInput(form.business_zip, 'business_zip')"  v-model="form.business_zip"
-                        id="default-input" :disabled="page.props.auth.role === 'admin'"
+                    <input type="text" @input="enforceFiveDigitInput(form.business_zip, 'business_zip')"
+                        v-model="form.business_zip" id="default-input" :disabled="page.props.auth.role === 'admin'"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                     <div v-if="firstStepErrors.business_zip" class="text-red-500" v-text="firstStepErrors.business_zip[0]">
                     </div>
