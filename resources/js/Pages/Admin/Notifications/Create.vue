@@ -251,36 +251,42 @@ if (page.props.flash.message) {
           </PrimaryButton>
         </div>
 
-        <div class="mt-4">
-          <h3 class="text-lg font-semibold">Created Groups</h3>
-          
-          <div v-if="groups.length > 0">
-            <ul>
-              <li v-for="group in groups" :key="group.id" class="mt-2">
-                <div class="flex items-center justify-between p-2 border rounded">
-                  <div>
-                    <strong>{{ group.name }}</strong> ({{ group.user_ids.length }} users)
-                  </div>
-                  <div>
-                    <button @click="toggleGroup(group)" class="mr-2">Toggle</button>
-                    <button @click="removeGroup(group.id)" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-                      Delete
-                    </button>
-                  </div>
+        
+      <div class="mt-4">
+        <h3 class="text-lg font-semibold">Created Groups</h3>
+        
+        <div v-if="groups.length > 0">
+          <ul>
+            <li v-for="group in groups" :key="group.id" class="mt-2">
+              <div class="flex items-center justify-between p-2 border rounded bg-gray-100">
+                <div>
+                  <strong>{{ group.name }}</strong> ({{ group.user_ids.length }} users)
                 </div>
-                <ul v-if="group.isExpanded">
-                  <li v-for="userId in group.user_ids" :key="userId" class="ml-6 mt-1">
-                    {{ getUserDetails(userId).first_name }} {{ getUserDetails(userId).last_name }}
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </div>
-          
-          <div v-else class="text-gray-600">
-            No groups found.
-          </div>
+                <div class="flex items-center">
+                  <button @click="toggleGroup(group)" class="mr-2">
+                    <svg v-if="!group.isExpanded" class="h-6 w-6 fill-current text-gray-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M5 6l7 7 7-7"/></svg>
+                    <svg v-else class="h-6 w-6 fill-current text-gray-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M5 14l7-7 7 7"/></svg>
+                  </button>
+                  <button @click="removeGroup(group.id)" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded">
+                    Delete
+                  </button>
+                </div>
+              </div>
+              <ul v-if="group.isExpanded" class="mt-2 pl-4">
+                <li v-for="userId in group.user_ids" :key="userId" class="flex items-center bg-blue-100 text-blue-800 text-sm font-semibold mr-2 mb-2 px-4 py-2 rounded-full">
+                  {{ getUserDetails(userId).first_name }} {{ getUserDetails(userId).last_name }}
+                  <!-- Optional: Add remove user from group button if needed -->
+                </li>
+              </ul>
+            </li>
+          </ul>
         </div>
+        
+        <div v-else class="text-gray-600">
+          No groups found.
+        </div>
+      </div>
+
 
         <!-- Group Selection -->
         <div class="mt-4">
