@@ -28,12 +28,10 @@ const emailDescription = ref('');
 const attachZoomLink = ref(false); // State to track if Zoom link should be attached
 const zoomMeetingUrl = ref(''); // The actual Zoom meeting URL
 const shouldShowZoomLinkInput = computed(() => attachZoomLink.value);
+const groupName = ref('');
+const groups = ref([]);
+// const selectedUsersForGroup = ref([]);
 
-// Computed property to get devices for the selected user
-// const selectedUserDevices = computed(() => {
-//   const user = users.find(u => u.id === selectedUserId.value);
-//   return user ? user.devices : [];
-// });
 
 // Reactive form object
 const form = useForm({
@@ -44,28 +42,55 @@ const form = useForm({
   zoomLink: ''
 });
 
-// function sendPushNotification() {
-//   form.user_id = selectedUserId.value;
-//   form.devices = selectedDevices.value.map(device => device.fcm_token);
+// ... existing script ...
 
-//   // Conditionally add the Zoom meeting URL to the form data
-//   if (attachZoomLink.value && zoomMeetingUrl.value) {
-//     form.zoomLink = zoomMeetingUrl.value; // Add zoomLink to the form if the checkbox is checked and the URL is provided
+// function createGroup() {
+//   if (groupName.value.trim() === '' || selectedUserIds.value.length === 0) {
+//     toaster("error", "Please provide a group name and select at least one user.");
+//     return;
 //   }
 
-//   form.post('/send-push-notification-test', {
-//     onSuccess: () => {
-//       toaster("success", "Notification sent successfully!");
-//       form.reset(); // Reset the form fields
-//       attachZoomLink.value = false; // Reset the checkbox
-//       zoomMeetingUrl.value = ''; // Reset the Zoom meeting URL
-//     },
-//     onError: (errors) => {
-//       toaster("error", "Failed to send notification.");
-//       // Handle form errors if needed
-//     }
-//   });
+//   // API call to create the group
+//   const groupData = {
+//     name: groupName.value,
+//     user_ids: selectedUserIds.value
+//   };
+
+//   // Replace with your actual API call
+//   // axios.post('/create-group', groupData)
+//   //   .then(response => {
+//   //     toaster("success", "Group created successfully!");
+//   //     // Reset group name and selected users
+//   //     groupName.value = '';
+//   //     selectedUserIds.value = [];
+//   //   })
+//   //   .catch(error => {
+//   //     toaster("error", "Failed to create group.");
+//   //     console.error(error);
+//   //   });
 // }
+
+function createGroup() {
+  if (groupName.value.trim() === '' || selectedUserIds.value.length === 0) {
+    toaster("error", "Please provide a group name and select at least one user.");
+    return;
+  }
+
+  // Create group locally
+  groups.value.push({
+    id: Date.now().toString(), // Simple unique ID generation
+    name: groupName.value,
+    user_ids: [...selectedUserIds.value],
+  });
+
+  // Reset group name and selected users
+  groupName.value = '';
+  selectedUserIds.value = [];
+  toaster("success", "Group created successfully!");
+}
+
+// ... rest of the script ...
+
 
 function sendPushNotification() {
   let payload = {
@@ -166,7 +191,29 @@ if (page.props.flash.message) {
           </select>
 
         </div> -->
-        
+        <div class="mt-6">
+          <div class="mb-4">
+            <InputLabel for="groupName" value="Create a Group:" />
+            <TextInput id="groupName" type="text" v-model="groupName" placeholder="Enter Group Name" class="w-full p-2 border rounded" />
+          </div>
+
+          <PrimaryButton @click="createGroup" :disabled="selectedUserIds.length === 0" class="px-4 py-2 bg-green-500 hover:bg-green-700 text-white font-bold rounded">
+            Create Group
+          </PrimaryButton>
+        </div>
+
+        <div class="mt-4">
+          <h3 class="text-lg font-semibold">Created Groups</h3>
+          <ul>
+            <li v-for="group in groups" :key="group.id" class="mt-2">
+              <div class="p-2 border rounded">
+                <strong>{{ group.name }}</strong> ({{ group.user_ids.length }} users)
+              </div>
+            </li>
+          </ul>
+        </div>
+
+
         <div class="mb-4">
           <!-- Display Selected Users -->
           <div class="mt-4 flex flex-wrap">
