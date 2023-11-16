@@ -160,7 +160,7 @@ if (page.props.flash.message) {
           <Multiselect 
             v-model="selectedUsers"
             :options="users" 
-            label="name" 
+            label="first_name" 
             track-by="id" 
             placeholder="Select users"
             :multiple="true" 
