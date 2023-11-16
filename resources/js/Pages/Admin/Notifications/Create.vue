@@ -17,6 +17,7 @@ import '@vueform/multiselect/themes/default.css';
 
 const { users } = usePage().props;
 const selectedUserId = ref('');
+const selectedUserIds = ref([]);
 const searchQuery = ref('');
 // const selectedDevices = ref([]);
 const attachZoomLink = ref(false); // State to track if Zoom link should be attached
