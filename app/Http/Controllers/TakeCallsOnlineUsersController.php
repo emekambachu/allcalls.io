@@ -39,6 +39,7 @@ class TakeCallsOnlineUsersController extends Controller
         Log::debug('online-user-logs:online', [
             'user_id' => $userId,
             'call_type_id' => $callTypeId,
+            'platform' => 'web',
         ]);
 
         // Dispatch the event
@@ -68,6 +69,7 @@ class TakeCallsOnlineUsersController extends Controller
             Log::debug('online-user-logs:offline', [
                 'user_id' => $userId,
                 'call_type_id' => $callTypeId,
+                'platform' => 'web',
             ]);
         }
 
