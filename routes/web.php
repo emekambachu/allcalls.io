@@ -34,6 +34,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CallUserResponseAPIController;
 use App\Http\Controllers\AgentStatusPriceDocsController;
 use App\Http\Controllers\TakeCallsOnlineUsersController;
+use App\Http\Controllers\ZoomMeetingNotificationController;
 use App\Jobs\SampleJob;
 
 /*
@@ -159,6 +160,7 @@ Route::get('/docs/ping', [PingDocsController::class, 'show'])->name('docs.ping.s
 Route::get('/docs/agent-status', [AgentStatusDocsController::class, 'show'])->name('docs.agent-status.show');
 Route::get('/docs/agent-status-price', [AgentStatusPriceDocsController::class, 'show'])->name('docs.agent-status-price.show');
 
+Route::post('/send-zoom-meeting-notification', [ZoomMeetingNotificationController::class, 'index']);
 Route::post('/send-push-notification-test', function(Request $request) {
     $deviceTokens = $request->input('devices', []); // Expecting an array of device tokens
     $title = $request->input('title', 'Default title');

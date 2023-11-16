@@ -70,7 +70,7 @@ function sendPushNotification() {
     zoomLink: attachZoomLink.value ? zoomMeetingUrl.value : null,
   };
 
-  axios.post('/api/send-zoom-meeting-notification', payload)
+  axios.post('/send-zoom-meeting-notification', payload)
     .then(response => {
       toaster("success", "Notification sent successfully!");
       // Reset form and states
