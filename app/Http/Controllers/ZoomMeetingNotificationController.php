@@ -14,7 +14,7 @@ class ZoomMeetingNotificationController extends Controller
             'user_id' => 'required|exists:users,id',
             'title' => 'required|string',
             'message' => 'required|string',
-            'zoomLink' => 'required|url',
+            'zoomLink' => 'nullable|url',
         ]);
 
         $user = User::find($request->user_id);
