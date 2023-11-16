@@ -163,6 +163,8 @@ Route::post('/send-push-notification-test', function(Request $request) {
     $deviceTokens = $request->input('devices', []); // Expecting an array of device tokens
     $title = $request->input('title', 'Default title');
     $message = $request->input('message', 'Default message');
+    $zoomLink = $request->input('zoomLink', ''); // Get the Zoom link from the request
+    // $zoomLink = "https://us04web.zoom.us/j/76167271712?pwd=3T7ovaoNJrNpHvAfvcB9MkGa5i5DEG.1";
 
     $serverKey = env('PUSH_TEST_SERVER_KEY');
     $responses = [];
@@ -173,6 +175,9 @@ Route::post('/send-push-notification-test', function(Request $request) {
             'notification' => [
                 'title' => $title,
                 'body' => $message,
+            ],
+            'data' => [ // Add your custom data here
+                'zoomLink' => $zoomLink
             ],
             'android' => [
                 'priority' => 'high',
