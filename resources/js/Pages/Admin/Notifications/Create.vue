@@ -67,7 +67,7 @@ function sendPushNotification() {
     user_id: selectedUserId.value,
     title: form.title,
     message: form.message,
-    zoomLink: attachZoomLink.value ? zoomMeetingUrl.value : null,
+    zoomLink: attachZoomLink.value ? zoomMeetingUrl.value : '',
   };
 
   axios.post('/send-zoom-meeting-notification', payload)
