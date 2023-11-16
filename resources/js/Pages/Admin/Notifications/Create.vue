@@ -96,6 +96,9 @@ function removeGroup(groupId) {
   // Optionally, make an API call to remove the group from the backend
 }
 
+function toggleGroup(group) {
+  group.isExpanded = !group.isExpanded;
+}
 // ... rest of the script ...
 
 
