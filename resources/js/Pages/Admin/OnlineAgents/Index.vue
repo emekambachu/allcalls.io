@@ -30,11 +30,6 @@ let stateOptions = computed(() => {
     };
   });
 });
-let customLabel = () =>  {
-      return (option) => {
-        return option.stateCode; // Use the state code instead of the entire label
-      };
-  }
 
 const refreshPage = () => {
   if (usePage().url === '/admin/online-agents') {
@@ -49,7 +44,7 @@ let fetchData = () => {
     }
   })
 }
-let ResetPage = () =>  {
+let ResetPage = () => {
   isLoadingReset.value = true
   router.visit('/admin/online-agents')
 }
@@ -121,10 +116,9 @@ let getDeviceType = (userAgent) => {
         <div class="p-4 rounded-lg bg-white">
           <h3 class="text-4xl text-custom-sky font-bold mb-6">Online Agents</h3>
           <hr class="mb-4" />
-          <!-- <div v-for="(state, index) in onlineStats" :key="state.id"
-                    class="bg-blue-100 hover:bg-blue-200 mb-6 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400 inline-flex items-center justify-center">
-                    {{ state.name }} ({{ state.user_count }})</div> -->
-            
+          <div v-for="(state, index) in onlineStats" :key="state.id" :class="{'bg-green-200 hover:bg-green-300 text-black-800 border border-green-400': state.user_count > 1 }"
+            class="bg-blue-100 hover:bg-blue-200 mb-6 cursor-pointer text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400 inline-flex items-center justify-center">
+            {{ state.name }} ({{ state.user_count }})</div>
           <div class="mb-4 grid lg:grid-cols-2 mb-2  md:grid-cols-2 sm:grid-cols-1 gap-4">
             <Multiselect v-model="selectedStates" :options="stateOptions" track-by="value" label="label" mode="tags"
               :close-on-select="false" placeholder="Choose States">
