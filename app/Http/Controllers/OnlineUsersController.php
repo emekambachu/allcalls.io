@@ -57,6 +57,10 @@ class OnlineUsersController extends Controller
         // Dispatch the event
         OnlineUserListUpdated::dispatch();
 
+        Log::debug('online-user-logs:online', [
+            'user_id' => $userId,
+            'call_type_id' => $callTypeId,
+        ]);
 
         // Return a response
         return response()->json(['status' => 'success'], 200);
@@ -78,6 +82,11 @@ class OnlineUsersController extends Controller
 
             // Dispatch the event
             OnlineUserListUpdated::dispatch();
+
+            Log::debug('online-user-logs:offline', [
+                'user_id' => $userId,
+                'call_type_id' => $callTypeId,
+            ]);
 
             return response()->json(['status' => 'success'], 200);
         }
@@ -101,6 +110,11 @@ class OnlineUsersController extends Controller
 
             // Dispatch the event
             OnlineUserListUpdated::dispatch();
+
+            Log::debug('online-user-logs:offline', [
+                'user_id' => $userId,
+                'call_type_id' => $record->call_type_id,
+            ]);
 
             return response()->json(['status' => 'success'], 200);
         }
