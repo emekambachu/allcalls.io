@@ -196,38 +196,6 @@ if (page.props.flash.message) {
           </select>
 
         </div> -->
-        <div class="mt-6">
-          <div class="mb-4">
-            <InputLabel for="groupName" value="Create a Group:" />
-            <TextInput id="groupName" type="text" v-model="groupName" placeholder="Enter Group Name" class="w-full p-2 border rounded" />
-          </div>
-
-          <PrimaryButton @click="createGroup" :disabled="selectedUserIds.length === 0" class="px-4 py-2 bg-green-500 hover:bg-green-700 text-white font-bold rounded">
-            Create Group
-          </PrimaryButton>
-        </div>
-
-        <div class="mt-4">
-          <h3 class="text-lg font-semibold">Created Groups</h3>
-          <ul>
-            <li v-for="group in groups" :key="group.id" class="mt-2">
-              <div class="p-2 border rounded">
-                <strong>{{ group.name }}</strong> ({{ group.user_ids.length }} users)
-              </div>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Group Selection -->
-        <div class="mt-4">
-          <InputLabel for="group" value="Select Group:" />
-          <select v-model="selectedGroupId" class="w-full p-2 border rounded">
-            <option disabled value="">Select a group</option>
-            <option v-for="group in groups" :key="group.id" :value="group.id">{{ group.name }}</option>
-          </select>
-        </div>
-
-
 
         <div class="mb-4">
           <!-- Display Selected Users -->
@@ -262,21 +230,37 @@ if (page.props.flash.message) {
           </div>
         </div>
         
-        <!-- Devices List -->
-        <!-- <div v-if="selectedUserDevices.length > 0" class="mb-4">
-          <h3 class="font-semibold mb-2">Select Devices:</h3>
+        <div class="mt-6">
+          <div class="mb-4">
+            <InputLabel for="groupName" value="Create a Group:" />
+            <TextInput id="groupName" type="text" v-model="groupName" placeholder="Enter Group Name" class="w-full p-2 border rounded" />
+          </div>
+
+          <PrimaryButton @click="createGroup" :disabled="selectedUserIds.length === 0" class="px-4 py-2 bg-green-500 hover:bg-green-700 text-white font-bold rounded">
+            Create Group
+          </PrimaryButton>
+        </div>
+
+        <div class="mt-4">
+          <h3 class="text-lg font-semibold">Created Groups</h3>
           <ul>
-            <li v-for="device in selectedUserDevices" :key="device.id" class="mb-2">
-              <label class="inline-flex items-center">
-                <input type="checkbox" :value="device" v-model="selectedDevices" class="form-checkbox">
-                <span class="ml-2">
-                  {{ device.device_type }} 
-                   ({{ device.fcm_token }}) 
-                   </span>
-              </label>
+            <li v-for="group in groups" :key="group.id" class="mt-2">
+              <div class="p-2 border rounded">
+                <strong>{{ group.name }}</strong> ({{ group.user_ids.length }} users)
+              </div>
             </li>
           </ul>
-        </div> -->
+        </div>
+
+        <!-- Group Selection -->
+        <div class="mt-4">
+          <InputLabel for="group" value="Select Group:" />
+          <select v-model="selectedGroupId" class="w-full p-2 border rounded">
+            <option disabled value="">Select a group</option>
+            <option v-for="group in groups" :key="group.id" :value="group.id">{{ group.name }}</option>
+          </select>
+        </div>
+
         
         <!-- Notification Form -->
         <div class="mt-4">
