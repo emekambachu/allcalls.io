@@ -173,7 +173,7 @@ let formatSSN = (event) => {
     val = val.replace(/^(\d{3})/, '$1-');
     val = val.replace(/-(\d{2})/, '-$1-');
     val = val.replace(/(\d)-(\d{4}).*/, '$1-$2');
-    event.target.value = val
+    form.value.ssn = val
 }
 </script>
 <style scoped></style>
