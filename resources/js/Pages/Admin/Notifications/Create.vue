@@ -30,7 +30,7 @@ const zoomMeetingUrl = ref(''); // The actual Zoom meeting URL
 const shouldShowZoomLinkInput = computed(() => attachZoomLink.value);
 const groupName = ref('');
 const groups = ref([]);
-// const selectedUsersForGroup = ref([]);
+const selectedGroupId = ref('');
 
 
 // Reactive form object
@@ -93,8 +93,13 @@ function createGroup() {
 
 
 function sendPushNotification() {
+// If a group is selected, use its user IDs; otherwise, use selectedUserIds
+  let userIdsToSend = selectedGroupId.value
+    ? groups.value.find(group => group.id === selectedGroupId.value).user_ids
+    : selectedUserIds.value;
+
   let payload = {
-    user_ids: selectedUserIds.value, // Send array of user IDs
+    user_ids: userIdsToSend, // Send array of user IDs
     title: form.title,
     message: form.message,
     zoomLink: attachZoomLink.value ? zoomMeetingUrl.value : '',
@@ -212,6 +217,16 @@ if (page.props.flash.message) {
             </li>
           </ul>
         </div>
+
+        <!-- Group Selection -->
+        <div class="mt-4">
+          <InputLabel for="group" value="Select Group:" />
+          <select v-model="selectedGroupId" class="w-full p-2 border rounded">
+            <option disabled value="">Select a group</option>
+            <option v-for="group in groups" :key="group.id" :value="group.id">{{ group.name }}</option>
+          </select>
+        </div>
+
 
 
         <div class="mb-4">
