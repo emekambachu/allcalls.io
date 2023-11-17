@@ -55,9 +55,12 @@ class Call extends Model
 
     public function getCallTakenAttribute($value)
     {
-        $user = User::find($this->user_id);
-        $timezone = $user->timezone;
-        return Carbon::parse($value)->timezone($timezone)->format('F jS Y, g:i:s a');
+        if (auth()->user()) {
+            $timezone = auth()->user()->timezone;
+            return Carbon::parse($value)->timezone($timezone)->format('F jS Y, g:i:s a');
+        }
+
+        return Carbon::parse($value)->format('F jS Y, g:i:s a');
     }
 
     /**
