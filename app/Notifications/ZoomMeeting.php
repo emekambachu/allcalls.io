@@ -55,6 +55,7 @@ class ZoomMeeting extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         $mailMessage = (new MailMessage)
+            ->from('notifications@allcalls.io', 'AllCalls Notifications')
             ->line($this->emailData['title'] ?? 'The introduction to the notification.');
     
         if (isset($this->emailData['buttonText']) && isset($this->emailData['buttonUrl'])) {
