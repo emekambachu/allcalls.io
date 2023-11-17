@@ -3,13 +3,16 @@
 namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
+use App\Mail\EquisDuplicateMail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Notifications\Messages\MailMessage;
 
 class EquisAPIJob implements ShouldQueue
 {
@@ -109,6 +112,9 @@ class EquisAPIJob implements ShouldQueue
                 $responseBody = (string) $response->body();
 
                 if (str_contains($responseBody, 'System.DuplicateAgentException')) {
+                    // send a mail to iamfaizahmed123@gmail.com App\Mail\EquisDuplicateMail
+                    Mail::to(['iamfaizahmed123@gmail.com'])->send(new EquisDuplicateMail('Example Agent Name', 'EF123123123', 'agentemail@example.com'));
+
                     Log::debug('equis-api-job:Agent already exists in Equis API');
                 }
 

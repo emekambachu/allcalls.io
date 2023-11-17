@@ -27,6 +27,9 @@ let page = usePage();
 if (page.props.flash.message) {
     toaster("success", page.props.flash.message);
 }
+if (page.props.flash.error) {
+    toaster("error", page.props.flash.error);
+}
 let props = defineProps({
     userData: Object,
     states: Array,
