@@ -53,15 +53,11 @@ class Call extends Model
         return $this->created_at->diffInSeconds($this->user_response_time);
     }
 
-    /**
-     * Get the call_taken attribute in the desired format.
-     *
-     * @param  string  $value
-     * @return string
-     */
     public function getCallTakenAttribute($value)
     {
-        return Carbon::parse($value)->format('F jS Y, g:i:s a');
+        $user = User::find($this->user_id);
+        $timezone = $user->timezone;
+        return Carbon::parse($value)->timezone($timezone)->format('F jS Y, g:i:s a');
     }
 
     /**
@@ -77,5 +73,7 @@ class Call extends Model
 
         return 'Regular User';
     }
+
+
 
 }
