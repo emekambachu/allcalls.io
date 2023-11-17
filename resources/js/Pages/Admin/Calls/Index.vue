@@ -22,6 +22,9 @@ let props = defineProps({
 console.log("calls:");
 console.log(props.calls);
 
+console.log('Timezone:');
+console.log(page.props.auth.user.timezone);
+
 let slidingLoader = ref(false);
 
 let fetchCalls = (page) => {
