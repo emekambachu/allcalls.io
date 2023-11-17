@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use App\Models\Bid;
 use App\Models\Card;
 use App\Models\State;
@@ -155,6 +156,18 @@ class User extends Authenticatable implements MustVerifyEmail
     public function onlineUser()
     {
         return $this->hasMany(OnlineUser::class);
+    }
+
+
+    // get created at attribute:
+    public function getCreatedAtAttribute($value)
+    {
+        if (auth()->user()) {
+            $timezone = auth()->user()->timezone;
+            return Carbon::parse($value)->timezone($timezone)->format('F jS Y, g:i:s a');
+        }
+
+        return Carbon::parse($value)->format('F jS Y, g:i:s a');
     }
 
 }
