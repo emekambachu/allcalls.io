@@ -4,13 +4,13 @@
         <button @click="editContract()" class="button-custom-back px-3 py-2 rounded-md">
             Edit
         </button>
-        <a @click="isLoading = true" v-if="docuSignAuthCode"
+        <a @click="isLoading = true" 
             :href="route('internal.agent.docusign.sign', 'contract')" type="button"
-            :class="{ 'opacity-25': !docuSignAuthCode || isLoading }" :disabled="!docuSignAuthCode || isLoading"
+            :class="{ 'opacity-25':  isLoading }" :disabled=" isLoading"
             class="button-custom  px-3 py-2 rounded-md">
             <global-spinner :spinner="isLoading" /> Sign Document
         </a>
-        <button v-else :class="{ 'opacity-25':isLoading2 }" :disabled="isLoading2"  @click="ReloadPage" class="button-custom  px-3 py-2 rounded-md"><global-spinner :spinner="isLoading2" />Rload</button>
+        <!-- <button v-else :class="{ 'opacity-25':isLoading2 }" :disabled="isLoading2"  @click="ReloadPage" class="button-custom  px-3 py-2 rounded-md"><global-spinner :spinner="isLoading2" />Rload</button> -->
 
     </div>
 </template>
