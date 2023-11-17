@@ -9,6 +9,7 @@ use DocuSign\eSign\Configuration;
 use DocuSign\eSign\Model\InitialHere;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Session;
 
 class DocusignController extends Controller
@@ -29,12 +30,30 @@ class DocusignController extends Controller
     private $baseUrl;
     private $dsReturnUrl;
 
+    private $DOCUSIGN_USER_ID;
+    private $DOCUSIGN_API_ACCOUNT_ID;
+    private $DOCUSIGN_ACCOUNT_BASE_URI;
+    private $DOCUSIGN_APP_NAME;
+    private $DOCUSIGN_INTEGRATION_KEY;
+    private $DOCUSIGN_SECRET_KEY;
+    private $DOCUSIGN_ACCOUNT_BASE_URI_API;
+    private $DOCUSIGN_SCOPE;
+
     public function __construct()
     {
         $this->clientId = env('DOCUSIGN_INTEGRATION_KEY');
         $this->clinetSceret = env('DOCUSIGN_SECRET_KEY');
         $this->accountId = env('DOCUSIGN_API_ACCOUNT_ID');
         $this->baseUrl = "https://".env('DOCUSIGN_ACCOUNT_BASE_URI_API');
+
+        $this->DOCUSIGN_USER_ID = env('DOCUSIGN_USER_ID');
+        $this->DOCUSIGN_API_ACCOUNT_ID = env('DOCUSIGN_API_ACCOUNT_ID');
+        $this->DOCUSIGN_ACCOUNT_BASE_URI = env('DOCUSIGN_ACCOUNT_BASE_URI');
+        $this->DOCUSIGN_APP_NAME = env('DOCUSIGN_APP_NAME');
+        $this->DOCUSIGN_INTEGRATION_KEY = env('DOCUSIGN_INTEGRATION_KEY');
+        $this->DOCUSIGN_SECRET_KEY = env('DOCUSIGN_SECRET_KEY');
+        $this->DOCUSIGN_ACCOUNT_BASE_URI_API = env('DOCUSIGN_ACCOUNT_BASE_URI_API');
+        $this->DOCUSIGN_SCOPE = env('DOCUSIGN_SCOPE');
     }
 
     public function signDocument($position)
@@ -48,13 +67,6 @@ class DocusignController extends Controller
                 $docuSignAuthCode = $this->getToken($apiClient);
                 session()->put('docusign_auth_code', $docuSignAuthCode);
 //            }
-
-//
-            $userInfo = $apiClient->getUserInfo($docuSignAuthCode);
-            dd($userInfo);
-
-            $accountInfo = $userInfo[0]->getAccounts();
-            $apiClient->getConfig()->setHost($accountInfo[0]->getBaseUri() . '/restapi');
             //End DocuSign Auth Token
 
             $this->dsReturnUrl = route('contract.steps', ['position' => $position]);
@@ -94,10 +106,12 @@ class DocusignController extends Controller
 
             return redirect()->to($results['url']);
         } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 404);
+            Log::error($e->getMessage());
+            return redirect()->route('contract.steps')->with('error','Something went wrong.');
+            // return response()->json([
+            //     'success' => false,
+            //     'message' => $e->getMessage(),
+            // ], 404);
         }
     }
 
