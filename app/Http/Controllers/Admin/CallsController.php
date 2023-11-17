@@ -28,8 +28,6 @@ class CallsController extends Controller
     {
         $calls = Call::with('user.roles','getClient','callType')->orderBy("created_at","DESC")->paginate(10);
 
-        dd($calls->toArray());
-
         return Inertia::render('Admin/Calls/Index', [
             'requestData' => $request->all(),
             'calls' => $calls
