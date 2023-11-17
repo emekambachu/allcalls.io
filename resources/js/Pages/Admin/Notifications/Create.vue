@@ -100,10 +100,9 @@ function toggleGroup(group) {
 
 function sendPushNotification() {
 // If a group is selected, use its user IDs; otherwise, use selectedUserIds
-  let userIdsToSend = selectedGroupId.value
-    ? groups.value.find(group => group.id === selectedGroupId.value).user_ids
-    : selectedUserIds.value;
-
+let userIdsToSend = selectedGroupId.value
+  ? groups.value.find(group => group.id === selectedGroupId.value).members.map(member => member.user_id)
+  : selectedUserIds.value;
   let payload = {
     user_ids: userIdsToSend, // Send array of user IDs
     title: form.title,
@@ -258,9 +257,9 @@ if (page.props.flash.message) {
           <!-- Dropdown for Filtered User List -->
           <div v-if="showDropdown" class="border rounded max-h-60 overflow-y-auto">
             <div 
-              v-for="user in filteredUsers" 
+              v-for="user in filteredUsers"
               :key="user.id" 
-              class="p-2 hover:bg-gray-100 cursor-pointer"
+              class="p-2 hover:bg-gray-100 cursor-pointer dropdown-container"
               :class="{'bg-blue-200': selectedUserIds.includes(user.id)}"
               @click="selectUser(user)"
             >
