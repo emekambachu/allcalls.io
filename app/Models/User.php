@@ -164,10 +164,10 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         if (auth()->user()) {
             $timezone = auth()->user()->timezone;
-            return Carbon::parse($value)->timezone($timezone)->format('F jS Y, g:i:s a');
+            return Carbon::parse($value)->timezone($timezone);
         }
 
-        return Carbon::parse($value)->format('F jS Y, g:i:s a');
+        return Carbon::parse($value);
     }
 
 }
