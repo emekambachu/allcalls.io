@@ -100,10 +100,9 @@ function toggleGroup(group) {
 
 function sendPushNotification() {
 // If a group is selected, use its user IDs; otherwise, use selectedUserIds
-  let userIdsToSend = selectedGroupId.value
-    ? groups.value.find(group => group.id === selectedGroupId.value).user_ids
-    : selectedUserIds.value;
-
+let userIdsToSend = selectedGroupId.value
+  ? groups.value.find(group => group.id === selectedGroupId.value).members.map(member => member.user_id)
+  : selectedUserIds.value;
   let payload = {
     user_ids: userIdsToSend, // Send array of user IDs
     title: form.title,
