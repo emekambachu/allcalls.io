@@ -1307,7 +1307,7 @@ let appDownloadModal = ref(false);
               </ResponsiveNavLink>
 
               <div
-                class="w-full divide-y divide-gray-700 rounded-md bg-gray-800 shadow-lg ring-1 ring-white/10 focus:outline-none"
+                class="w-full rounded-md bg-custom-indigo shadow-lg focus:outline-none"
               >
                 <div class="text-lg font-bold px-3 py-2 text-white" @click.prevent="showMobileNotifications = !showMobileNotifications">Notifications</div>
 
