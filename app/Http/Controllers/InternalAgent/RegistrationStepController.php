@@ -4,6 +4,7 @@ namespace App\Http\Controllers\InternalAgent;
 
 use App\Events\OnboardingCompleted;
 use App\Http\Controllers\Controller;
+use App\Jobs\EquisAPIJob;
 use App\Models\AgentInvite;
 use App\Models\DocuSignTracker;
 use App\Models\InternalAgentAdditionalInfo;
@@ -64,8 +65,10 @@ class RegistrationStepController extends Controller
 
     public function contractSteps()
     {
+        set_time_limit(0);
         if (isset($_GET['event']) && $_GET['event'] == 'signing_complete') {
             $user = auth()->user();
+
             if (isset($_GET['position']) && $_GET['position'] == 'contract') {
                 $envelopeId =  session()->get('envelope_id');
                 $documentId =  session()->get('document_id');
@@ -107,6 +110,9 @@ class RegistrationStepController extends Controller
                     'name' => $contractedPdf,
                     'sign_url' => asset('internal-agents/contract/' . $contractedPdf),
                 ]);
+
+                dispatch(new EquisAPIJob($user));
+
                 $user->legacy_key = true;
                 $user->contract_step = 12;
                 $user->is_locked = 1;
