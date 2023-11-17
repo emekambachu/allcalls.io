@@ -40,6 +40,23 @@ class DocusignController extends Controller
     public function signDocument($position)
     {
         try {
+
+            //DocuSign Auth Token
+//            if(!session()->has('docusign_auth_code')) {
+                $apiClient = new ApiClient();
+                $apiClient->getOAuth()->setOAuthBasePath($this->DOCUSIGN_ACCOUNT_BASE_URI);
+                $docuSignAuthCode = $this->getToken($apiClient);
+                session()->put('docusign_auth_code', $docuSignAuthCode);
+//            }
+
+//
+            $userInfo = $apiClient->getUserInfo($docuSignAuthCode);
+            dd($userInfo);
+
+            $accountInfo = $userInfo[0]->getAccounts();
+            $apiClient->getConfig()->setHost($accountInfo[0]->getBaseUri() . '/restapi');
+            //End DocuSign Auth Token
+
             $this->dsReturnUrl = route('contract.steps', ['position' => $position]);
             $this->args = $this->getTemplateArgs();
             $args = $this->args;
@@ -260,5 +277,22 @@ class DocusignController extends Controller
             'envelope_args' => $envelope_args
         ];
         return $args;
+    }
+
+    private function getToken(ApiClient $apiClient) : string{
+        try {
+            $privateKey = file_get_contents(public_path('private.key'),true);
+            $response = $apiClient->requestJWTUserToken(
+                $ikey = $this->DOCUSIGN_INTEGRATION_KEY,
+                $userId =  $this->DOCUSIGN_USER_ID,
+                $key = $privateKey,
+                $scope = $this->DOCUSIGN_SCOPE
+            );
+            $token = $response[0];
+            $accessToken = $token->getAccessToken();
+        } catch (\Exception $th) {
+            throw $th;
+        }
+        return $accessToken;
     }
 }
