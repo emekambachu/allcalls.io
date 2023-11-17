@@ -167,7 +167,7 @@ class RegistrationStepController extends Controller
             $step1Validation = Validator::make($request->all(), [
                 'first_name' => 'required',
                 'last_name' => 'required',
-                'ssn' => 'required',
+                'ssn' => 'required|min:11|max:11',
                 'gender' => 'required',
                 'dob' => 'required',
                 'marital_status' => 'required',
@@ -205,6 +205,8 @@ class RegistrationStepController extends Controller
                 'first_name.required' => 'This field is required.',
                 'last_name.required' => 'This field is required.',
                 'ssn.required' => 'This field is required.',
+                'ssn.min' => 'SSN should be 9 digit.',
+                'ssn.max' => 'SSN should be 9 digit.',
                 'gender.required' => 'This field is required.',
                 'dob.required' => 'This field is required.',
                 'marital_status.required' => 'This field is required.',
