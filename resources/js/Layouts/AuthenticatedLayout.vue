@@ -19,6 +19,7 @@ let page = usePage();
 console.log("PAGE ON AUTH LAYOUT:");
 console.log(page.props.auth);
 
+let showMobileNotifications = ref(false);
 let userNotifications = ref(page.props.auth.notifications);
 
 let unreadNotifications = ref(
@@ -1304,6 +1305,104 @@ let appDownloadModal = ref(false);
                   </ul>
                 </div>
               </ResponsiveNavLink>
+
+              <div
+                class="w-full divide-y divide-gray-700 rounded-md bg-gray-800 shadow-lg ring-1 ring-white/10 focus:outline-none"
+              >
+                <div class="text-lg font-bold px-3 py-2 text-white" @click.prevent="showMobileNotifications = !showMobileNotifications">Notifications</div>
+
+                <!-- Unread Notifications -->
+                <div v-if="showMobileNotifications && unreadNotifications.length">
+                  <div
+                    class="px-3 py-2 text-sm text-white font-bold flex items-center justify-between"
+                  >
+                    <div class="flex items-center">
+                      <span class="mr-1 font-bold text-white">Unread</span>
+                      <span
+                        style="font-size: 10px"
+                        class="bg-gray-600 rounded-full text-white w-4 h-4 flex items-center justify-center"
+                      >
+                        {{ unreadNotifications.length }}
+                      </span>
+                    </div>
+                    <span
+                      class="cursor-pointer text-xs py-2 text-white hover:text-gray-400"
+                      @click.prevent="markAllAsRead"
+                    >
+                      Mark All As Read
+                    </span>
+                  </div>
+
+                  <!-- Unread Notification Items -->
+                  <div style="max-height: 400px; overflow-y: auto">
+                    <div
+                      v-for="(notification, index) in unreadNotifications"
+                      :key="notification.id"
+                      class="p-1 cursor-pointer hover:bg-custom-blue hover:text-white"
+                    >
+                      <div class="flex flex-col gap-1 p-2 rounded-md">
+                        <p class="text-sm font-semibold text-white">
+                          {{ notification.data.title }}
+                        </p>
+                        <p class="text-xs text-white">{{ notification.data.body }}</p>
+                        <p style="font-size: 9px" class="text-white">
+                          {{ notification.created_at_diff }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- All Notifications -->
+                <div v-if="showMobileNotifications && userNotifications && userNotifications.length">
+                  <div
+                    class="px-3 py-2 text-sm text-white font-bold flex items-center justify-between"
+                  >
+                    <div class="flex items-center">
+                      <span class="mr-1 font-bold text-white">All</span>
+                      <span
+                        style="font-size: 10px"
+                        class="bg-gray-600 rounded-full text-white w-4 h-4 flex items-center justify-center"
+                      >
+                        {{ userNotifications.length }}
+                      </span>
+                    </div>
+                    <span
+                      class="cursor-pointer text-xs py-2 text-white hover:text-gray-400"
+                      @click.prevent="clearAllNotifications"
+                    >
+                      Clear All
+                    </span>
+                  </div>
+
+                  <!-- Notification Items -->
+                  <div style="max-height: 400px; overflow-y: auto">
+                    <div
+                      v-for="(notification, index) in userNotifications"
+                      :key="notification.id"
+                      class="p-1 cursor-pointer hover:bg-custom-blue hover:text-white"
+                    >
+                      <div class="flex flex-col gap-1 p-2 rounded-md">
+                        <p class="text-sm font-semibold text-white">
+                          {{ notification.data.title }}
+                        </p>
+                        <p class="text-xs text-white">{{ notification.data.body }}</p>
+                        <p style="font-size: 9px" class="text-white">
+                          {{ notification.created_at_diff }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- No Notifications Message -->
+                <div
+                  v-if="showMobileNotifications && !userNotifications.length"
+                  class="text-center py-3 text-md text-white"
+                >
+                  You're all caught up!
+                </div>
+              </div>
             </div>
 
             <!-- Responsive Settings Options -->
