@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
+import { ref, reactive, defineEmits, onMounted, watch, computed, nextTick } from "vue";
 import Multiselect from "@vueform/multiselect";
 import InputError from "@/Components/InputError.vue";
 import { router, usePage } from "@inertiajs/vue3";
@@ -31,6 +31,8 @@ const shouldShowZoomLinkInput = computed(() => attachZoomLink.value);
 const groupName = ref('');
 const groups = ref([]);
 const selectedGroupId = ref('');
+const showDropdown = ref(false);
+
 
 
 // Reactive form object
@@ -42,63 +44,52 @@ const form = useForm({
   zoomLink: ''
 });
 
-// ... existing script ...
-
-// function createGroup() {
-//   if (groupName.value.trim() === '' || selectedUserIds.value.length === 0) {
-//     toaster("error", "Please provide a group name and select at least one user.");
-//     return;
-//   }
-
-//   // API call to create the group
-//   const groupData = {
-//     name: groupName.value,
-//     user_ids: selectedUserIds.value
-//   };
-
-//   // Replace with your actual API call
-//   // axios.post('/create-group', groupData)
-//   //   .then(response => {
-//   //     toaster("success", "Group created successfully!");
-//   //     // Reset group name and selected users
-//   //     groupName.value = '';
-//   //     selectedUserIds.value = [];
-//   //   })
-//   //   .catch(error => {
-//   //     toaster("error", "Failed to create group.");
-//   //     console.error(error);
-//   //   });
-// }
-
-function createGroup() {
+async function createGroup() {
   if (groupName.value.trim() === '' || selectedUserIds.value.length === 0) {
     toaster("error", "Please provide a group name and select at least one user.");
     return;
   }
 
-  // Create group locally
-  groups.value.push({
-    id: Date.now().toString(), // Simple unique ID generation
-    name: groupName.value,
-    user_ids: [...selectedUserIds.value],
-    isExpanded: false, // Add this property
-  });
+  try {
+    const response = await axios.post('/notification-groups', {
+      name: groupName.value,
+      user_ids: selectedUserIds.value
+    });
+    groups.value.push(response.data); // Assuming the backend now returns the created group
+    toaster("success", "Group created successfully!");
+  } catch (error) {
+    toaster("error", "Failed to create group.");
+    console.error(error);
+  }
 
-  // Reset group name and selected users
   groupName.value = '';
   selectedUserIds.value = [];
-  toaster("success", "Group created successfully!");
 }
+
+
 
 // Function to remove a group
-function removeGroup(groupId) {
-  groups.value = groups.value.filter(group => group.id !== groupId);
-  // Optionally, make an API call to remove the group from the backend
+async function removeGroup(groupId) {
+  try {
+    await axios.delete(`/notification-groups/${groupId}`);
+    groups.value = groups.value.filter(group => group.id !== groupId);
+    toaster("success", "Group deleted successfully!");
+  } catch (error) {
+    toaster("error", "Failed to delete group.");
+    console.error(error);
+  }
 }
 
-function removeUserFromGroup(userId, group) {
-  group.user_ids = group.user_ids.filter(id => id !== userId);
-  // Optionally, update this change on the backend as well
+
+async function removeUserFromGroup(userId, group) {
+  try {
+    await axios.delete(`/notification-groups/${group.id}/remove-user/${userId}`);
+    group.members = group.members.filter(member => member.user_id !== userId);
+    toaster("success", "User removed from group successfully!");
+  } catch (error) {
+    toaster("error", "Failed to remove user from group.");
+    console.error(error);
+  }
 }
 
 function toggleGroup(group) {
@@ -155,16 +146,13 @@ function removeUser(userId) {
 
 
 const filteredUsers = computed(() => {
-  if (!searchQuery.value) {
-    return []; // No dropdown if there's no query
-  }
-
   return users.filter(user => {
     const fullName = `${user.first_name} ${user.last_name}`.toLowerCase();
     const query = searchQuery.value.toLowerCase();
     return fullName.includes(query) || user.email.toLowerCase().includes(query);
   });
 });
+
 
 function selectUser(user) {
   const index = selectedUserIds.value.indexOf(user.id);
@@ -175,10 +163,51 @@ function selectUser(user) {
   }
 }
 
+const forceUpdate = () => {
+  showDropdown.value = false;
+  // NextTick ensures the update happens in the next cycle
+  nextTick(() => {
+    showDropdown.value = true;
+  });
+};
+
+
+// Toggle dropdown visibility
+const toggleDropdown = (event) => {
+  event.stopPropagation(); // Prevent click from propagating
+  showDropdown.value = !showDropdown.value;
+};
+
+
+// Close the dropdown when clicking outside
+function handleClickOutside(event) {
+  if (!event.target.closest('.dropdown-container')) {
+    showDropdown.value = false;
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('click', handleClickOutside);
+});
+
+// onUnmounted(() => {
+//   window.removeEventListener('click', handleClickOutside);
+// });
+
 // Watch the selectedUserId to update the devices array
 watch(selectedUserId, (newVal, oldVal) => {
   if (newVal !== oldVal) {
     selectedDevices.value = []; // Clear the selected devices when a new user is selected
+  }
+});
+
+onMounted(async () => {
+  try {
+    const response = await axios.get('/notification-groups');
+    groups.value = response.data;
+  } catch (error) {
+    console.error("Failed to fetch groups:", error);
+    toaster("error", "Failed to fetch groups.");
   }
 });
 
@@ -200,17 +229,6 @@ if (page.props.flash.message) {
 
     <section class="py-8">
       <div class="container mx-auto px-4">
-        <!-- User Selection -->
-        <!-- <div class="mb-4">
-          <InputLabel for="user" value="Select User:" />
-          <select v-model="selectedUserId" class="w-full p-2 border rounded">
-            <option disabled value="">Select a user</option>
-            <option v-for="user in users" :key="user.id" :value="user.id">
-              {{ user.email }}
-            </option>
-          </select>
-
-        </div> -->
 
         <div class="mb-4">
           <!-- Display Selected Users -->
@@ -227,12 +245,18 @@ if (page.props.flash.message) {
         </div>
 
         <div class="mb-4">
-          <InputLabel for="user" value="Select User:" />
+          <InputLabel for="user" value="Select a User:" />
           <!-- Search Input -->
-          <TextInput type="text" v-model="searchQuery" placeholder="Search by name or email" class="w-full p-2 border rounded mb-2" />
+          <TextInput
+            type="text"
+            v-model="searchQuery"
+            placeholder="Search by name or email"
+            class="w-full p-2 border rounded mb-2"
+            @click="toggleDropdown"
+          />
 
           <!-- Dropdown for Filtered User List -->
-          <div v-if="filteredUsers.length > 0" class="border rounded max-h-60 overflow-y-auto">
+          <div v-if="showDropdown" class="border rounded max-h-60 overflow-y-auto">
             <div 
               v-for="user in filteredUsers" 
               :key="user.id" 
@@ -260,12 +284,12 @@ if (page.props.flash.message) {
       <div class="mt-4">
         <h3 class="text-lg font-semibold">Created Groups</h3>
         
-        <div v-if="groups.length > 0">
+        <div v-if="groups && groups.length > 0">
           <ul>
             <li v-for="group in groups" :key="group.id" class="mt-2">
               <div class="flex items-center justify-between p-2 border rounded bg-gray-100">
                 <div>
-                  <strong>{{ group.name }}</strong> ({{ group.user_ids.length }} users)
+                  <strong>{{ group.name }}</strong> ({{ group.members.length }} users)
                 </div>
                 <div class="flex items-center">
                   <button @click="toggleGroup(group)" class="mr-2">
@@ -278,9 +302,9 @@ if (page.props.flash.message) {
                 </div>
               </div>
               <ul v-if="group.isExpanded" class="mt-2 pl-4">
-                <li v-for="userId in group.user_ids" :key="userId" class="flex items-center bg-blue-100 text-blue-800 text-sm font-semibold mr-2 mb-2 px-4 py-2 rounded-full">
-                  {{ getUserDetails(userId).first_name }} {{ getUserDetails(userId).last_name }}
-                  <button @click="removeUserFromGroup(userId, group)" class="ml-2">
+                <li v-for="member in group.members" :key="member.id" class="flex items-center bg-blue-100 text-blue-800 text-sm font-semibold mr-2 mb-2 px-4 py-2 rounded-full">
+                  {{ getUserDetails(member.user_id).first_name }} {{ getUserDetails(member.user_id).last_name }}
+                  <button @click="removeUserFromGroup(member.user_id, group)" class="ml-2">
                     <svg class="h-4 w-4 fill-current text-blue-500 cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                       <path d="M10 8.586l2.293-2.293 1.414 1.414L11.414 10l2.293 2.293-1.414 1.414L10 11.414l-2.293 2.293-1.414-1.414L8.586 10 6.293 7.707l1.414-1.414L10 8.586z"/>
                     </svg>
