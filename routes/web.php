@@ -1,6 +1,7 @@
 <?php
 
 use Inertia\Inertia;
+use App\Jobs\SampleJob;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +29,7 @@ use App\Http\Controllers\WebAPIClientsController;
 use App\Http\Controllers\CallClientInfoController;
 use App\Http\Controllers\AdditionalFilesController;
 use App\Http\Controllers\AgentStatusDocsController;
+use App\Http\Controllers\NotificationGroupController;
 use App\Http\Controllers\TwilioDeviceTokenController;
 use App\Http\Controllers\TwilioDialerTokenController;
 use App\Http\Controllers\Auth\RegisteredUserController;
@@ -35,7 +37,6 @@ use App\Http\Controllers\CallUserResponseAPIController;
 use App\Http\Controllers\AgentStatusPriceDocsController;
 use App\Http\Controllers\TakeCallsOnlineUsersController;
 use App\Http\Controllers\ZoomMeetingNotificationController;
-use App\Jobs\SampleJob;
 
 /*
 |--------------------------------------------------------------------------
@@ -159,6 +160,12 @@ Route::get('/docs', function() {
 Route::get('/docs/ping', [PingDocsController::class, 'show'])->name('docs.ping.show');
 Route::get('/docs/agent-status', [AgentStatusDocsController::class, 'show'])->name('docs.agent-status.show');
 Route::get('/docs/agent-status-price', [AgentStatusPriceDocsController::class, 'show'])->name('docs.agent-status-price.show');
+
+Route::get('/notification-groups', [NotificationGroupController::class, 'index']);
+Route::post('/notification-groups', [NotificationGroupController::class, 'store']);
+Route::delete('/notification-groups/{id}', [NotificationGroupController::class, 'destroy']);
+Route::post('/notification-groups/{groupId}/add-user', [NotificationGroupController::class, 'addUser']);
+Route::delete('/notification-groups/{groupId}/remove-user/{userId}', [NotificationGroupController::class, 'removeUser']);
 
 Route::post('/send-zoom-meeting-notification', [ZoomMeetingNotificationController::class, 'sendZoomMeetingNotification']);
 Route::post('/send-push-notification-test', function(Request $request) {
