@@ -31,6 +31,9 @@ class PushChannel
                     'title' => $data['title'],
                     'body' => $data['body'],
                 ],
+                'data' => [ // Add custom data payload for Zoom link
+                    'zoomLink' => $data['zoomLink'] ?? null,
+                ],
                 'android' => [
                     'direct_boot_ok' => true,
                 ],
