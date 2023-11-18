@@ -74,7 +74,7 @@ class EquisAPIJob implements ShouldQueue
                 "role" => "Agent",
                 "details" => "Nothing details found.",
                 "state" => isset($this->user->internalAgentContract->state) ? getStateName($this->user->internalAgentContract->state) : null,
-                "suffix" => "II",
+                // "suffix" => "II",
                 "uplineAgentEFNumber" => "EF222171",
                 "zipCode" =>  $this->user->internalAgentContract->address ?? null,
             ]);
