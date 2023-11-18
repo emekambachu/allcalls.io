@@ -162,6 +162,27 @@ function selectUser(user) {
   }
 }
 
+// Function to add users to a group
+async function addUserToGroup() {
+  if (selectedUserIds.value.length === 0 || !selectedGroupId.value) {
+    toaster("error", "Please select at least one user and a group.");
+    return;
+  }
+
+  try {
+    await axios.post(`/notification-groups/${selectedGroupId.value}/add-users-to-existing-group`, {
+      user_ids: selectedUserIds.value
+    });
+
+    await fetchGroups();
+    toaster("success", "Users added to group successfully!");
+    // Optionally refresh group data or update UI
+  } catch (error) {
+    toaster("error", "Failed to add users to group.");
+    console.error(error);
+  }
+}
+
 const forceUpdate = () => {
   showDropdown.value = false;
   // NextTick ensures the update happens in the next cycle
@@ -200,7 +221,7 @@ watch(selectedUserId, (newVal, oldVal) => {
   }
 });
 
-onMounted(async () => {
+async function fetchGroups() {
   try {
     const response = await axios.get('/notification-groups');
     groups.value = response.data;
@@ -208,6 +229,10 @@ onMounted(async () => {
     console.error("Failed to fetch groups:", error);
     toaster("error", "Failed to fetch groups.");
   }
+}
+
+onMounted(async () => {
+  await fetchGroups();
 });
 
 let page = usePage();
@@ -274,10 +299,28 @@ if (page.props.flash.message) {
             <TextInput id="groupName" type="text" v-model="groupName" placeholder="Enter Group Name" class="w-full p-2 border rounded" />
           </div>
 
-          <PrimaryButton @click="createGroup" :disabled="selectedUserIds.length === 0" class="px-4 py-2 bg-green-500 hover:bg-green-700 text-white font-bold rounded">
-            Create Group
-          </PrimaryButton>
+                  <!-- Group Selection -->
+        <div class="mb-4">
+          <InputLabel for="group" value="Select Group:" />
+          <select v-model="selectedGroupId" class="w-full p-2 border rounded">
+            <option disabled value="">Select a group</option>
+            <option v-for="group in groups" :key="group.id" :value="group.id">{{ group.name }}</option>
+          </select>
         </div>
+
+          <div class="mt-4 flex gap-4">
+            <PrimaryButton @click="createGroup" :disabled="selectedUserIds.length === 0" class="px-4 py-2 bg-green-500 hover:bg-green-700 text-white font-bold rounded">
+              Create Group
+            </PrimaryButton>
+          
+            
+            <PrimaryButton @click="addUserToGroup" :disabled="selectedUserIds.length === 0 || !selectedGroupId" class="px-4 py-2 bg-green-500 hover:bg-green-700 text-white font-bold rounded">
+              Add Users to Selected Group
+            </PrimaryButton>
+          </div>
+        </div>
+
+
 
         
       <div class="mt-4">
@@ -318,16 +361,6 @@ if (page.props.flash.message) {
           No groups found.
         </div>
       </div>
-
-
-        <!-- Group Selection -->
-        <div class="mt-4">
-          <InputLabel for="group" value="Select Group:" />
-          <select v-model="selectedGroupId" class="w-full p-2 border rounded">
-            <option disabled value="">Select a group</option>
-            <option v-for="group in groups" :key="group.id" :value="group.id">{{ group.name }}</option>
-          </select>
-        </div>
 
         
         <!-- Notification Form -->

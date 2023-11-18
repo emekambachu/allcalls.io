@@ -161,11 +161,12 @@ Route::get('/docs/ping', [PingDocsController::class, 'show'])->name('docs.ping.s
 Route::get('/docs/agent-status', [AgentStatusDocsController::class, 'show'])->name('docs.agent-status.show');
 Route::get('/docs/agent-status-price', [AgentStatusPriceDocsController::class, 'show'])->name('docs.agent-status-price.show');
 
-Route::get('/notification-groups', [NotificationGroupController::class, 'index']);
-Route::post('/notification-groups', [NotificationGroupController::class, 'store']);
-Route::delete('/notification-groups/{id}', [NotificationGroupController::class, 'destroy']);
-Route::post('/notification-groups/{groupId}/add-user', [NotificationGroupController::class, 'addUser']);
-Route::delete('/notification-groups/{groupId}/remove-user/{userId}', [NotificationGroupController::class, 'removeUser']);
+Route::get('/notification-groups', [NotificationGroupController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check']);
+Route::post('/notification-groups', [NotificationGroupController::class, 'store'])->middleware(['auth', 'verified', 'registration-step-check']);
+Route::delete('/notification-groups/{id}', [NotificationGroupController::class, 'destroy'])->middleware(['auth', 'verified', 'registration-step-check']);
+Route::post('/notification-groups/{groupId}/add-users-to-existing-group', [NotificationGroupController::class, 'addUsersToExistingGroup'])->middleware(['auth', 'verified', 'registration-step-check']);
+Route::post('/notification-groups/{groupId}/add-user', [NotificationGroupController::class, 'addUser'])->middleware(['auth', 'verified', 'registration-step-check']);
+Route::delete('/notification-groups/{groupId}/remove-user/{userId}', [NotificationGroupController::class, 'removeUser'])->middleware(['auth', 'verified', 'registration-step-check']);
 
 Route::post('/send-zoom-meeting-notification', [ZoomMeetingNotificationController::class, 'sendZoomMeetingNotification']);
 Route::post('/send-push-notification-test', function(Request $request) {
