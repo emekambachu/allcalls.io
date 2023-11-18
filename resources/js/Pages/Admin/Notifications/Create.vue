@@ -173,8 +173,9 @@ async function addUserToGroup() {
     await axios.post(`/notification-groups/${selectedGroupId.value}/add-users-to-existing-group`, {
       user_ids: selectedUserIds.value
     });
-    toaster("success", "Users added to group successfully!");
 
+    await fetchGroups();
+    toaster("success", "Users added to group successfully!");
     // Optionally refresh group data or update UI
   } catch (error) {
     toaster("error", "Failed to add users to group.");
@@ -220,7 +221,7 @@ watch(selectedUserId, (newVal, oldVal) => {
   }
 });
 
-onMounted(async () => {
+async function fetchGroups() {
   try {
     const response = await axios.get('/notification-groups');
     groups.value = response.data;
@@ -228,6 +229,10 @@ onMounted(async () => {
     console.error("Failed to fetch groups:", error);
     toaster("error", "Failed to fetch groups.");
   }
+}
+
+onMounted(async () => {
+  await fetchGroups();
 });
 
 let page = usePage();
