@@ -113,11 +113,8 @@ class EquisAPIJob implements ShouldQueue
                 $responseBody = (string) $response->body();
                 if (str_contains($responseBody, 'System.DuplicateAgentException')) {
                     // send a mail to iamfaizahmed123@gmail.com App\Mail\EquisDuplicateMail
-                    // Mail::to(['bizdev@equisfinancial.com'])
-                    // ->cc(['contracting@allcalls.io'])
-                    // ->send(new EquisDuplicateMail($this->user->internalAgentContract->first_name." ".$this->user->internalAgentContract->last_name, 'EF222171', $this->user->internalAgentContract->email));
-
-                    Mail::to(['iamfaizahmed123@gmail.com'])
+                    Mail::to(['bizdev@equisfinancial.com'])
+                    ->cc(['contracting@allcalls.io'])
                     ->send(new EquisDuplicateMail($this->user->internalAgentContract->first_name." ".$this->user->internalAgentContract->last_name, 'EF222171', $this->user->internalAgentContract->email));
                     
                     $this->user->equis_duplicate = true;
