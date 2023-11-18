@@ -1,6 +1,4 @@
 <x-mail::message>
-Subject: AllCalls Free Agent Request for {{ $agentName }} ({{ $efNumber }})
-
 Hi,
 
 We are reaching out to inquire about the current status of the following individual as a free agent within our network.
