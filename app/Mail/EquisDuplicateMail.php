@@ -48,7 +48,7 @@ class EquisDuplicateMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.equis-duplicate',
+            markdown: 'emails.equis-duplicate',
             with: [
                 'agentName' => $this->agentName,
                 'efNumber' => $this->efNumber,

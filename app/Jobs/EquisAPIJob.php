@@ -67,7 +67,7 @@ class EquisAPIJob implements ShouldQueue
                 "languageId" => "en",
                 "lastName" =>  $this->user->internalAgentContract->last_name ?? null,
                 "npn" => "F4CSXL3",
-                "partnerUniqueId" => "6cd946ae-fe3e-42f5-9a43-a00afd261c6b",
+                "partnerUniqueId" => "AC".$this->user->id,
                 "preferredFirstName" => "Emily",
                 "preferredLastName" => "Anderson",
                 "preferredSuffix" => "III",
