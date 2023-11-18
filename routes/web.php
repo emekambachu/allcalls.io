@@ -164,6 +164,7 @@ Route::get('/docs/agent-status-price', [AgentStatusPriceDocsController::class, '
 Route::get('/notification-groups', [NotificationGroupController::class, 'index']);
 Route::post('/notification-groups', [NotificationGroupController::class, 'store']);
 Route::delete('/notification-groups/{id}', [NotificationGroupController::class, 'destroy']);
+Route::post('/notification-groups/{groupId}/add-users-to-existing-group', [NotificationGroupController::class, 'addUsersToExistingGroup']);
 Route::post('/notification-groups/{groupId}/add-user', [NotificationGroupController::class, 'addUser']);
 Route::delete('/notification-groups/{groupId}/remove-user/{userId}', [NotificationGroupController::class, 'removeUser']);
 
