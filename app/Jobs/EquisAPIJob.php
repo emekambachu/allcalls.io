@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
 use App\Mail\EquisDuplicateMail;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
@@ -21,9 +22,10 @@ class EquisAPIJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct()
+    public $user;
+    public function __construct($user)
     {
-        //
+        $this->user = $user;
     }
 
     /**
@@ -51,32 +53,31 @@ class EquisAPIJob implements ShouldQueue
 
         if ($tokenResponse->successful()) {
             $accessToken = $tokenResponse->json()['access_token'];
-
             // Now, make the POST request to the API endpoint with the Bearer token
             $response = Http::withHeaders([
                 'Content-Type' => 'application/json',
             ])->withToken($accessToken)->post($url, [
-                "address" => "83708 Robert Forge",
-                "addressTwo" => "Suite 886",
-                "birthDate" => "1966-06-05",
-                "city" => "Landrymouth",
+                "address" => $this->user->internalAgentContract->address ?? null,
+                "addressTwo" =>  $this->user->internalAgentContract->address ?? null,
+                "birthDate" =>  isset($this->user->internalAgentContract->dob) ? Carbon::parse($this->user->internalAgentContract->dob)->format('Y-m-d') : '-',
+                "city" =>  $this->user->internalAgentContract->city ?? null,
                 "currentlyLicensed" => false,
-                "email" => "christopher49@yahoo.com",
-                "firstName" => "Anthony",
+                "email" =>  $this->user->internalAgentContract->email ?? null,
+                "firstName" =>  $this->user->internalAgentContract->first_name ?? null,
                 "languageId" => "en",
-                "lastName" => "Bishop",
+                "lastName" =>  $this->user->internalAgentContract->last_name ?? null,
                 "npn" => "F4CSXL3",
                 "partnerUniqueId" => "6cd946ae-fe3e-42f5-9a43-a00afd261c6b",
                 "preferredFirstName" => "Emily",
                 "preferredLastName" => "Anderson",
                 "preferredSuffix" => "III",
                 "role" => "Agent",
-                "state" => "AL",
+                "details" => "Nothing details found.",
+                "state" => isset($this->user->internalAgentContract->state) ? getStateName($this->user->internalAgentContract->state) : null,
                 "suffix" => "II",
                 "uplineAgentEFNumber" => "EF222171",
-                "zipCode" => "65523"
+                "zipCode" =>  $this->user->internalAgentContract->address ?? null,
             ]);
-
             // Log the response body and status
             Log::debug($response->body());
             Log::debug($response->status());
@@ -90,7 +91,7 @@ class EquisAPIJob implements ShouldQueue
                     'Content-Type' => 'application/json',
                 ])->withToken($accessToken)->post($url2, [
                     "userName" => "EF222171",
-                    "partnerUniqueId" => "abc12378",
+                    "partnerUniqueId" =>"AC".$this->user->id,
                 ]);
 
                 // Log the response body and status
@@ -110,10 +111,14 @@ class EquisAPIJob implements ShouldQueue
                 }
             } else {
                 $responseBody = (string) $response->body();
-
                 if (str_contains($responseBody, 'System.DuplicateAgentException')) {
                     // send a mail to iamfaizahmed123@gmail.com App\Mail\EquisDuplicateMail
-                    Mail::to(['iamfaizahmed123@gmail.com'])->send(new EquisDuplicateMail('Example Agent Name', 'EF123123123', 'agentemail@example.com'));
+                    Mail::to(['bizdev@equisfinancial.com'])
+                    ->cc(['contracting@allcalls.io'])
+                    ->send(new EquisDuplicateMail($this->user->internalAgentContract->first_name." ".$this->user->internalAgentContract->last_name, 'EF222171', $this->user->internalAgentContract->email));
+                    
+                    $this->user->equis_duplicate = true;
+                    $this->user->save();
 
                     Log::debug('equis-api-job:Agent already exists in Equis API');
                 }

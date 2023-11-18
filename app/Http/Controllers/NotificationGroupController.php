@@ -75,4 +75,27 @@ class NotificationGroupController extends Controller
 
         return response()->json(['message' => 'Member not found'], 404);
     }
+
+    public function addUsersToExistingGroup(Request $request, $groupId)
+    {
+        $request->validate([
+            'user_ids' => 'required|array',
+        ]);
+
+        $group = NotificationGroup::find($groupId);
+        if (!$group) {
+            return response()->json(['message' => 'Group not found'], 404);
+        }
+
+        foreach ($request->user_ids as $userId) {
+            // Ensure not to duplicate users in the group
+            NotificationGroupMember::firstOrCreate([
+                'notification_group_id' => $groupId,
+                'user_id' => $userId
+            ]);
+        }
+
+        return response()->json(['message' => 'Users added to group successfully']);
+    }
+
 }
