@@ -136,29 +136,27 @@ class EquisAPIJob implements ShouldQueue
 
     protected function getRequestData()
     {
-        // This is the sample data that we need to send to Equis API
-        return [
-            "address" => "787 Pine Rd",
-            "birthDate" => "1990-04-22",
-            "city" => "Raleigh",
-            "currentlyLicensed" => false,
-            "email" => "emily.smitch@webmail.com",
-            "firstName" => "Emily",
-            "languageId" => "es",
-            "lastName" => "Smitch",
-            "npn" => "9JL456C",
-            "partnerUniqueId" => "b3n4k8",
-            "role" => "Agent",
-            "state" => "NY",
-            "uplineAgentEFNumber" => "EF222171",
-            "zipCode" => "10001"
-        ];
-
+        // This is the sample REQUIRED data that we need to send to Equis API
+        // return [
+        //     "address" => "787 Pine Rd",
+        //     "birthDate" => "1990-04-22",
+        //     "city" => "Raleigh",
+        //     "currentlyLicensed" => false,
+        //     "email" => "emily.smitch@webmail.com",
+        //     "firstName" => "Emily",
+        //     "languageId" => "es",
+        //     "lastName" => "Smitch",
+        //     "npn" => "9JL456C",
+        //     "partnerUniqueId" => "b3n4k8",
+        //     "role" => "Agent",
+        //     "state" => "NY",
+        //     "uplineAgentEFNumber" => "EF222171",
+        //     "zipCode" => "10001"
+        // ];
 
 
         return [
             "address" => $this->user->internalAgentContract->address ?? null,
-            "addressTwo" =>  $this->user->internalAgentContract->address ?? null,
             "birthDate" =>  isset($this->user->internalAgentContract->dob) ? Carbon::parse($this->user->internalAgentContract->dob)->format('Y-m-d') : '-',
             "city" =>  $this->user->internalAgentContract->city ?? null,
             "currentlyLicensed" => false,
@@ -168,13 +166,8 @@ class EquisAPIJob implements ShouldQueue
             "lastName" =>  $this->user->internalAgentContract->last_name ?? null,
             "npn" => "F4CSXL3",
             "partnerUniqueId" => "AC" . $this->user->id,
-            "preferredFirstName" => "Emily",
-            "preferredLastName" => "Anderson",
-            "preferredSuffix" => "III",
             "role" => "Agent",
-            "details" => "Nothing details found.",
             "state" => isset($this->user->internalAgentContract->state) ? getStateName($this->user->internalAgentContract->state) : null,
-            "suffix" => "II",
             "uplineAgentEFNumber" => "EF222171",
             "zipCode" =>  $this->user->internalAgentContract->address ?? null,
         ];
