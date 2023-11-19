@@ -17,6 +17,7 @@ class ZoomMeetingNotificationController extends Controller
             'message' => 'required|string',
             'zoomLink' => 'nullable|url',
             'sendEmail' => 'required|boolean',
+            'emailData.subject' => 'nullable|string',    // Optional subject
             'emailData.title' => 'required_if:sendEmail,true|string',
             'emailData.buttonText' => 'nullable|string', // Optional
             'emailData.buttonUrl' => 'nullable|url',     // Optional
