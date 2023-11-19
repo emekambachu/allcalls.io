@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CallType;
 use App\Models\OnlineUser;
+use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Events\OnlineUserListUpdated;
@@ -43,6 +44,12 @@ class TakeCallsOnlineUsersController extends Controller
             'platform' => 'web',
         ]);
 
+        UserActivity::create([
+            'action' => 'online',
+            'data' => json_encode(['call_type_id' => $callTypeId]),
+            'platform' => 'web',
+        ]);
+
         // Dispatch the event
         OnlineUserListUpdated::dispatch();
 
@@ -70,6 +77,12 @@ class TakeCallsOnlineUsersController extends Controller
             Log::debug('online-user-logs:offline', [
                 'full_name' => $request->user()->first_name . ' ' . $request->user()->last_name,
                 'call_type' => CallType::find($callTypeId)->type,
+                'platform' => 'web',
+            ]);
+
+            UserActivity::create([
+                'action' => 'offline',
+                'data' => json_encode(['call_type_id' => $callTypeId]),
                 'platform' => 'web',
             ]);
         }

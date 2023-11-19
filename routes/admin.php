@@ -9,6 +9,7 @@ use App\Http\Controllers\ActiveUserChannelController;
 use App\Http\Controllers\Admin\OnlineAgentsController;
 use App\Http\Controllers\AdminNotificationsController;
 use App\Http\Controllers\Admin\InternalAgentController;
+use App\Http\Controllers\AdminUserActivitiesController;
 use App\Http\Controllers\Admin\AvailableNumberController;
 use App\Http\Controllers\AdminAvaialbleNumbersController;
 use App\Http\Controllers\Admin\LegalQuestionPdfController;
@@ -95,4 +96,6 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::get('/calls', [CallsController::class, 'index'])->name('admin.calls.index');
 
     Route::get('/notifications', [AdminNotificationsController::class, 'create'])->name('admin.notifications.create');
+
+    Route::get('/user-activities', [AdminUserActivitiesController::class, 'index'])->name('admin.user-activities.index');
 });
