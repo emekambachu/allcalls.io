@@ -46,7 +46,7 @@ console.log(props);
                 >
                   <td class="text-gray-600 px-4 py-3">{{ activity.id }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ activity.action }}</td>
-                  <td class="text-gray-600 px-4 py-3">{{ activity.name }}</td>
+                  <td class="text-gray-600 px-4 py-3">{{ activity.user.first_name + ' ' + activity.user.last_name }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ activity.platform }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ activity.created_at }}</td>
                 </tr>

@@ -10,7 +10,7 @@ class AdminUserActivitiesController extends Controller
 {
     public function index(Request $request)
     {
-        $userActivities = UserActivity::all();
+        $userActivities = UserActivity::with('user')->get();
 
         return Inertia::render('Admin/UserActivities/Index', compact('userActivities'));
     }
