@@ -2,9 +2,10 @@
 
 namespace App\Jobs;
 
+use Carbon\Carbon;
+use App\Models\State;
 use Illuminate\Bus\Queueable;
 use App\Mail\EquisDuplicateMail;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
@@ -100,10 +101,10 @@ class EquisAPIJob implements ShouldQueue
 
     protected function sendEmailsToPeople()
     {
-        // Log::debug('equis-api-job:Sending email to people');
-        // Mail::to(['bizdev@equisfinancial.com'])
-        //     ->cc(['contracting@allcalls.io'])
-        //     ->send(new EquisDuplicateMail($this->user->internalAgentContract->first_name . " " . $this->user->internalAgentContract->last_name, 'EF222171', $this->user->internalAgentContract->email));
+        Log::debug('equis-api-job:Sending email to people');
+        Mail::to(['bizdev@equisfinancial.com'])
+            ->cc(['contracting@allcalls.io'])
+            ->send(new EquisDuplicateMail($this->user->internalAgentContract->first_name . " " . $this->user->internalAgentContract->last_name, 'EF222171', $this->user->internalAgentContract->email));
 
         Mail::to(['iamfaizahmed123@gmail.com'])
             ->send(new EquisDuplicateMail($this->user->internalAgentContract->first_name . " " . $this->user->internalAgentContract->last_name, 'EF222171', $this->user->internalAgentContract->email));
@@ -167,9 +168,14 @@ class EquisAPIJob implements ShouldQueue
             "npn" => "F4CSXL3",
             "partnerUniqueId" => "AC" . $this->user->id,
             "role" => "Agent",
-            "state" => isset($this->user->internalAgentContract->state) ? getStateName($this->user->internalAgentContract->state) : null,
+            "state" => isset($this->user->internalAgentContract->state) ? $this->getStateAbbrev($this->user->internalAgentContract->state) : null,
             "uplineAgentEFNumber" => "EF222171",
             "zipCode" =>  $this->user->internalAgentContract->address ?? null,
         ];
+    }
+
+    protected function getStateAbbrev($stateId)
+    {
+        return State::find($stateId)->name;
     }
 }
