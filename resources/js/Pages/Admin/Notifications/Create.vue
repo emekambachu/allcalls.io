@@ -114,7 +114,7 @@ let userIdsToSend = selectedGroupId.value
       title: emailTitle.value,
       subject: emailSubject.value, 
       buttonText: emailButtonText.value,
-      buttonUrl: emailButtonUrl.value,
+      buttonUrl: processedEmailButtonUrl.value,
       description: emailDescription.value
     } : null
   };
@@ -122,6 +122,7 @@ let userIdsToSend = selectedGroupId.value
   console.log("Selected Group ID:", selectedGroupId.value);
   const foundGroup = groups.value.find(group => group.id === selectedGroupId.value);
   console.log("Found Group:", foundGroup);
+  // console.log("Payload ready to send out for push notification is: ", payload);
 
   if (foundGroup) {
       const extractedUserIds = foundGroup.members.map(member => member.user_id);
@@ -164,6 +165,19 @@ const filteredUsers = computed(() => {
     const query = searchQuery.value.toLowerCase();
     return fullName.includes(query) || user.email.toLowerCase().includes(query);
   });
+});
+
+const processedEmailButtonUrl = computed(() => {
+  let url = emailButtonUrl.value.trim();
+  if (!url) return '';
+
+  // Remove any existing http://, https://, or malformed variants
+  url = url.replace(/^(https?:\\+|http:\\+|htpts:\\+|https?:\/\/)/, '');
+
+  // Prepend with 'https://'
+  url = 'https://' + url;
+
+  return url;
 });
 
 
