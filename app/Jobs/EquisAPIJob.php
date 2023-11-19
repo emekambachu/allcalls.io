@@ -138,25 +138,21 @@ class EquisAPIJob implements ShouldQueue
     {
         // This is the sample data that we need to send to Equis API
         return [
-            "address" => "789 Pine Rd",
-            "addressTwo" => "Apt. 305",
-            "birthDate" => "1990-03-22",
+            "address" => "787 Pine Rd",
+            "birthDate" => "1990-04-22",
             "city" => "Raleigh",
             "currentlyLicensed" => false,
-            "email" => "emily.smith@webmail.com",
+            "email" => "emily.smitch@webmail.com",
             "firstName" => "Emily",
             "languageId" => "es",
-            "lastName" => "Smith",
+            "lastName" => "Smitch",
             "npn" => "9JL456C",
-            "partnerUniqueId" => "b3n4k5",
-            "preferredFirstName" => "Em",
-            "preferredLastName" => "Smith",
+            "partnerUniqueId" => "b3n4k8",
             "preferredSuffix" => "",
             "role" => "Agent",
-            "state" => "NC",
-            "suffix" => "",
+            "state" => "NY",
             "uplineAgentEFNumber" => "EF222171",
-            "zipCode" => "27601"        
+            "zipCode" => "10001"
         ];
 
 
