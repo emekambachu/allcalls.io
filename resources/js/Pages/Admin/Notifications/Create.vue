@@ -21,6 +21,7 @@ const selectedUserIds = ref([]);
 const searchQuery = ref('');
 const sendEmail = ref(false);
 const emailTitle = ref('');
+const emailSubject = ref('');
 const emailButtonText = ref('');
 const emailButtonUrl = ref('');
 const emailDescription = ref('');
@@ -111,11 +112,24 @@ let userIdsToSend = selectedGroupId.value
     sendEmail: sendEmail.value,
     emailData: sendEmail.value ? {
       title: emailTitle.value,
+      subject: emailSubject.value, 
       buttonText: emailButtonText.value,
       buttonUrl: emailButtonUrl.value,
       description: emailDescription.value
     } : null
   };
+
+  console.log("Selected Group ID:", selectedGroupId.value);
+  const foundGroup = groups.value.find(group => group.id === selectedGroupId.value);
+  console.log("Found Group:", foundGroup);
+
+  if (foundGroup) {
+      const extractedUserIds = foundGroup.members.map(member => member.user_id);
+      console.log("Extracted User IDs:", extractedUserIds);
+      userIdsToSend = extractedUserIds;
+  } else {
+      userIdsToSend = selectedUserIds.value;
+  }
 
   axios.post('/send-zoom-meeting-notification', payload)
     .then(response => {
@@ -397,6 +411,7 @@ if (page.props.flash.message) {
         </div>
 
         <div v-if="sendEmail" class="mt-4">
+          <TextInput v-model="emailSubject" placeholder="Email Subject" class="mb-4" />
           <TextInput v-model="emailTitle" placeholder="Email Title" class="mb-4" />
           <TextInput v-model="emailButtonText" placeholder="Action Button Text" class="mb-4" />
           <TextInput v-model="emailButtonUrl" placeholder="Action Button URL" class="mb-4" />
