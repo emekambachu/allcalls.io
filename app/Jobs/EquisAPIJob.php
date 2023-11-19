@@ -82,50 +82,57 @@ class EquisAPIJob implements ShouldQueue
             Log::debug($response->body());
             Log::debug($response->status());
 
-            if ($response->successful()) {
-                // Handle successful response
-                $data = $response->json();
-                // return response()->json($data);
+            if (!$response->successful()) {
+                $responseBody = (string) $response->body();
 
-                $response = Http::withHeaders([
-                    'Content-Type' => 'application/json',
-                ])->withToken($accessToken)->post($url2, [
-                    "userName" => "EF222171",
-                    "partnerUniqueId" =>"AC".$this->user->id,
+                Log::debug('equis-api-job:Failed to create an agent in Equis API');
+                Log::debug('equis-api-job:Response body: ', [
+                    'responseBody' => $responseBody,
                 ]);
 
-                // Log the response body and status
-                Log::debug($response->body());
-                Log::debug($response->status());
-
-
-                if ($response->successful()) {
-                    // Handle successful response
-                    $data = $response->json();
-                    Log::debug('equis-api-job:Data retrieved from Equis API', [
-                        'data' => $data
-                    ]);
-                } else {
-                    // Handle error
-                    Log::debug('equis-api-job:Failed to retrieve data from Equis API');
-                }
-            } else {
-                $responseBody = (string) $response->body();
                 if (str_contains($responseBody, 'System.DuplicateAgentException')) {
-                    // send a mail to iamfaizahmed123@gmail.com App\Mail\EquisDuplicateMail
+                    Log::debug('equis-api-job:Duplicate agent found in Equis API while creating an agent');
+
+                    Log::debug('equis-api-job:Sending email to people');
                     Mail::to(['bizdev@equisfinancial.com'])
                     ->cc(['contracting@allcalls.io'])
                     ->send(new EquisDuplicateMail($this->user->internalAgentContract->first_name." ".$this->user->internalAgentContract->last_name, 'EF222171', $this->user->internalAgentContract->email));
                     
+                    Log::debug('equis-api-job:tagging user as equis_duplicate');
                     $this->user->equis_duplicate = true;
                     $this->user->save();
 
-                    Log::debug('equis-api-job:Agent already exists in Equis API');
+
+
+                    $response = Http::withHeaders([
+                        'Content-Type' => 'application/json',
+                    ])->withToken($accessToken)->post($url2, [
+                        "userName" => "EF222171",
+                        "partnerUniqueId" =>"AC".$this->user->id,
+                    ]);
+    
+                    // Log the response body and status
+                    Log::debug('equis-api-job:map agent response:', [
+                        'responseBody' => $response->body(),
+                        'responseStatus' => $response->status(),
+                    ]);
+
+                    Log::debug($response->body());
+                    Log::debug($response->status());
+    
+                    if ($response->successful()) {
+                        // Handle successful response
+                        $data = $response->json();
+                        Log::debug('equis-api-job:Data retrieved from Equis API', [
+                            'data' => $data
+                        ]);
+                    } else {
+                        // Handle error
+                        Log::debug('equis-api-job:Failed to retrieve data from Equis API');
+                    }
                 }
 
-                // log it:
-                Log::debug('equis-api-job:Failed to retrieve data from Equis API on the request to map an agent');
-                // Handle error
+                return;
             }
         } else {
             // Handle error in token retrieval
