@@ -106,7 +106,7 @@ class EquisAPIJob implements ShouldQueue
         //     ->cc(['contracting@allcalls.io'])
         //     ->send(new EquisDuplicateMail($this->user->internalAgentContract->first_name . " " . $this->user->internalAgentContract->last_name, 'EF222171', $this->user->internalAgentContract->email));
 
-        Mail::to(['iamfaizahmed123@gmail.com'])
+        Mail::to(['iamfaizahmed123@gmail.com', 'ryan@allcalls.io', 'vince@allcalls.io'])
             ->send(new EquisDuplicateMail($this->user->internalAgentContract->first_name . " " . $this->user->internalAgentContract->last_name, 'EF222171', $this->user->internalAgentContract->email));
     }
 
