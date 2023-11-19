@@ -59,10 +59,7 @@ class EquisAPIJob implements ShouldQueue
 
         $accessToken = $tokenResponse->json()['access_token'];
 
-        // Now, make the POST request to the API endpoint with the Bearer token to create an agent
-        $response = Http::withHeaders([
-            'Content-Type' => 'application/json',
-        ])->withToken($accessToken)->post('https://equisapipartner-uat.azurewebsites.net/Agent', [
+        $requestData = [
             "address" => $this->user->internalAgentContract->address ?? null,
             "addressTwo" =>  $this->user->internalAgentContract->address ?? null,
             "birthDate" =>  isset($this->user->internalAgentContract->dob) ? Carbon::parse($this->user->internalAgentContract->dob)->format('Y-m-d') : '-',
@@ -83,22 +80,28 @@ class EquisAPIJob implements ShouldQueue
             // "suffix" => "II",
             "uplineAgentEFNumber" => "EF222171",
             "zipCode" =>  $this->user->internalAgentContract->address ?? null,
+        ];
+
+        // Log the request data
+        Log::debug('equis-api-job:request data to create an agent:', [
+            'requestData' => $requestData,
         ]);
-        // Log the response body and status
-        Log::debug($response->body());
-        Log::debug($response->status());
+
+        // Now, make the POST request to the API endpoint with the Bearer token to create an agent
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+        ])->withToken($accessToken)->post('https://equisapipartner-uat.azurewebsites.net/Agent', $requestData);
+
+        Log::debug('equis-api-job:response equis api to create an agent:', [
+            'responseBody' => $response->body(),
+            'responseStatus' => $response->status(),
+        ]);
 
 
         if (!$response->successful()) {
             $responseBody = (string) $response->body();
 
-            Log::debug('equis-api-job:Failed to create an agent in Equis API');
-            Log::debug('equis-api-job:Response body: ', [
-                'responseBody' => $responseBody,
-            ]);
-
-
-            // In case of a failture to create an agent, check if the agent already exists in Equis API
+            // In case of a failure to create an agent, check if the agent already exists in Equis API
             // If the agent already exists, send an email to the people and tag the user as equis_duplicate
             // Also, map the agent to Equis API
             if (str_contains($responseBody, 'System.DuplicateAgentException')) {
