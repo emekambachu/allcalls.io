@@ -48,6 +48,7 @@ class TakeCallsOnlineUsersController extends Controller
             'action' => 'online',
             'data' => json_encode(['call_type_id' => $callTypeId]),
             'platform' => 'web',
+            'user_id' => $request->user()->id,
         ]);
 
         // Dispatch the event
@@ -77,6 +78,7 @@ class TakeCallsOnlineUsersController extends Controller
             Log::debug('online-user-logs:offline', [
                 'full_name' => $request->user()->first_name . ' ' . $request->user()->last_name,
                 'call_type' => CallType::find($callTypeId)->type,
+                'user_id' => $request->user()->id,
                 'platform' => 'web',
             ]);
 
@@ -84,6 +86,7 @@ class TakeCallsOnlineUsersController extends Controller
                 'action' => 'offline',
                 'data' => json_encode(['call_type_id' => $callTypeId]),
                 'platform' => 'web',
+                'user_id' => $request->user()->id,
             ]);
         }
 
