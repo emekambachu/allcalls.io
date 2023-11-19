@@ -1,11 +1,15 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head } from "@inertiajs/vue3";
+import { Head, router } from "@inertiajs/vue3";
 
 let props = defineProps(["userActivities"]);
 
 console.log(props);
+
+let paginate = (url) => {
+  router.visit(url);
+};
 </script>
 
 <style scoped>
@@ -58,63 +62,41 @@ console.log(props);
           </div>
         </div>
 
-        <nav class="flex justify-end my-4">
-        <ul class="inline-flex -space-x-px text-base h-10">
-          <li>
-            <a
-              href="#"
-              class="flex items-center justify-center px-4 h-10 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700"
-              >Previous</a
+        <nav class="flex justify-between my-4" v-if="userActivities.links">
+          <div v-if="userActivities">
+            <span class="text-sm text-gray-700">
+              Showing
+              <span class="font-semibold text-gray-900">{{ userActivities.from }}</span>
+              to
+              <span class="font-semibold text-gray-900">{{ userActivities.to }}</span> of
+              <span class="font-semibold text-gray-900">{{ userActivities.total }}</span>
+              Entries
+            </span>
+          </div>
+
+          <ul class="inline-flex -space-x-px text-base h-10">
+            <li
+              v-for="(link, index) in userActivities.links"
+              :key="link.label"
+              :class="{ disabled: link.url === null }"
             >
-          </li>
-          <li>
-            <a
-              href="#"
-              class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
-              >1</a
-            >
-          </li>
-          <li>
-            <a
-              href="#"
-              class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
-              >2</a
-            >
-          </li>
-          <li>
-            <a
-              href="#"
-              aria-current="page"
-              class="flex items-center justify-center px-4 h-10 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700"
-              >3</a
-            >
-          </li>
-          <li>
-            <a
-              href="#"
-              class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
-              >4</a
-            >
-          </li>
-          <li>
-            <a
-              href="#"
-              class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
-              >5</a
-            >
-          </li>
-          <li>
-            <a
-              href="#"
-              class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700"
-              >Next</a
-            >
-          </li>
-        </ul>
-      </nav>
+              <a
+                href="#"
+                @click.prevent="paginate(link.url)"
+                :class="[
+                  'flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700',
+                  {
+                    'rounded-l-lg': index === 0,
+                    'rounded-r-lg': index === userActivities.links.length - 1,
+                    'bg-blue-500 text-blue-600': link.active,
+                  },
+                ]"
+                v-html="link.label"
+              ></a>
+            </li>
+          </ul>
+        </nav>
       </div>
-
-
     </section>
   </AuthenticatedLayout>
 </template>
