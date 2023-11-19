@@ -152,7 +152,7 @@ class EquisAPIJob implements ShouldQueue
             "preferredFirstName" => "Em",
             "preferredLastName" => "Smith",
             "preferredSuffix" => "",
-            "role" => "Consultant",
+            "role" => "Agent",
             "state" => "NC",
             "suffix" => "",
             "uplineAgentEFNumber" => "EF222171",
