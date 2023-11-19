@@ -100,7 +100,7 @@ class EquisAPIJob implements ShouldQueue
 
     protected function sendEmailsToPeople()
     {
-        Log::debug('equis-api-job:Sending email to people');
+        // Log::debug('equis-api-job:Sending email to people');
         // Mail::to(['bizdev@equisfinancial.com'])
         //     ->cc(['contracting@allcalls.io'])
         //     ->send(new EquisDuplicateMail($this->user->internalAgentContract->first_name . " " . $this->user->internalAgentContract->last_name, 'EF222171', $this->user->internalAgentContract->email));
