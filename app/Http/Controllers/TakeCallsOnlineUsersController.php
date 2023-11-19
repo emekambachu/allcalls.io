@@ -45,7 +45,7 @@ class TakeCallsOnlineUsersController extends Controller
         ]);
 
         UserActivity::create([
-            'action' => 'online',
+            'action' => 'Online for vertical ' . $callType->type . '.',
             'data' => json_encode(['call_type_id' => $callTypeId]),
             'platform' => 'web',
             'user_id' => $request->user()->id,
@@ -83,7 +83,7 @@ class TakeCallsOnlineUsersController extends Controller
             ]);
 
             UserActivity::create([
-                'action' => 'offline',
+                'action' => 'Offline for vertical ' . CallType::find($callTypeId)->type . '.',
                 'data' => json_encode(['call_type_id' => $callTypeId]),
                 'platform' => 'web',
                 'user_id' => $request->user()->id,
