@@ -21,6 +21,7 @@ const selectedUserIds = ref([]);
 const searchQuery = ref('');
 const sendEmail = ref(false);
 const emailTitle = ref('');
+const emailSubject = ref('');
 const emailButtonText = ref('');
 const emailButtonUrl = ref('');
 const emailDescription = ref('');
@@ -111,6 +112,7 @@ let userIdsToSend = selectedGroupId.value
     sendEmail: sendEmail.value,
     emailData: sendEmail.value ? {
       title: emailTitle.value,
+      subject: emailSubject.value, 
       buttonText: emailButtonText.value,
       buttonUrl: emailButtonUrl.value,
       description: emailDescription.value
@@ -409,6 +411,7 @@ if (page.props.flash.message) {
         </div>
 
         <div v-if="sendEmail" class="mt-4">
+          <TextInput v-model="emailSubject" placeholder="Email Subject" class="mb-4" />
           <TextInput v-model="emailTitle" placeholder="Email Title" class="mb-4" />
           <TextInput v-model="emailButtonText" placeholder="Action Button Text" class="mb-4" />
           <TextInput v-model="emailButtonUrl" placeholder="Action Button URL" class="mb-4" />
