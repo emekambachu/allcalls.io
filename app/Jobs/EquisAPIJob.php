@@ -63,28 +63,7 @@ class EquisAPIJob implements ShouldQueue
 
         $accessToken = $tokenResponse->json()['access_token'];
 
-        $requestData = [
-            "address" => $this->user->internalAgentContract->address ?? null,
-            "addressTwo" =>  $this->user->internalAgentContract->address ?? null,
-            "birthDate" =>  isset($this->user->internalAgentContract->dob) ? Carbon::parse($this->user->internalAgentContract->dob)->format('Y-m-d') : '-',
-            "city" =>  $this->user->internalAgentContract->city ?? null,
-            "currentlyLicensed" => false,
-            "email" =>  $this->user->internalAgentContract->email ?? null,
-            "firstName" =>  $this->user->internalAgentContract->first_name ?? null,
-            "languageId" => "en",
-            "lastName" =>  $this->user->internalAgentContract->last_name ?? null,
-            "npn" => "F4CSXL3",
-            "partnerUniqueId" => "AC" . $this->user->id,
-            "preferredFirstName" => "Emily",
-            "preferredLastName" => "Anderson",
-            "preferredSuffix" => "III",
-            "role" => "Agent",
-            "details" => "Nothing details found.",
-            "state" => isset($this->user->internalAgentContract->state) ? getStateName($this->user->internalAgentContract->state) : null,
-            "suffix" => "II",
-            "uplineAgentEFNumber" => "EF222171",
-            "zipCode" =>  $this->user->internalAgentContract->address ?? null,
-        ];
+        $requestData = $this->getRequestData();
 
         // Log the request data
         Log::debug('equis-api-job:request data to create an agent:', [
@@ -153,5 +132,56 @@ class EquisAPIJob implements ShouldQueue
         ]);
 
         return;
+    }
+
+    protected function getRequestData()
+    {
+        // This is the sample data that we need to send to Equis API
+        return [
+            "address" => "789 Pine Rd",
+            "addressTwo" => "Apt. 305",
+            "birthDate" => "1990-03-22",
+            "city" => "Raleigh",
+            "currentlyLicensed" => false,
+            "email" => "emily.smith@webmail.com",
+            "firstName" => "Emily",
+            "languageId" => "es",
+            "lastName" => "Smith",
+            "npn" => "9JL456C",
+            "partnerUniqueId" => "b3n4k5",
+            "preferredFirstName" => "Em",
+            "preferredLastName" => "Smith",
+            "preferredSuffix" => "",
+            "role" => "Consultant",
+            "state" => "NC",
+            "suffix" => "",
+            "uplineAgentEFNumber" => "EF222171",
+            "zipCode" => "27601"        
+        ];
+
+
+
+        return [
+            "address" => $this->user->internalAgentContract->address ?? null,
+            "addressTwo" =>  $this->user->internalAgentContract->address ?? null,
+            "birthDate" =>  isset($this->user->internalAgentContract->dob) ? Carbon::parse($this->user->internalAgentContract->dob)->format('Y-m-d') : '-',
+            "city" =>  $this->user->internalAgentContract->city ?? null,
+            "currentlyLicensed" => false,
+            "email" =>  $this->user->internalAgentContract->email ?? null,
+            "firstName" =>  $this->user->internalAgentContract->first_name ?? null,
+            "languageId" => "en",
+            "lastName" =>  $this->user->internalAgentContract->last_name ?? null,
+            "npn" => "F4CSXL3",
+            "partnerUniqueId" => "AC" . $this->user->id,
+            "preferredFirstName" => "Emily",
+            "preferredLastName" => "Anderson",
+            "preferredSuffix" => "III",
+            "role" => "Agent",
+            "details" => "Nothing details found.",
+            "state" => isset($this->user->internalAgentContract->state) ? getStateName($this->user->internalAgentContract->state) : null,
+            "suffix" => "II",
+            "uplineAgentEFNumber" => "EF222171",
+            "zipCode" =>  $this->user->internalAgentContract->address ?? null,
+        ];
     }
 }
