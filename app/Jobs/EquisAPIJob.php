@@ -25,6 +25,10 @@ class EquisAPIJob implements ShouldQueue
     public $user;
     public function __construct($user)
     {
+        Log::debug('equis-api-job:constructing equis api job', [
+            'user' => $user,
+        ]);
+
         $this->user = $user;
     }
 
