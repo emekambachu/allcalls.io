@@ -117,6 +117,18 @@ let userIdsToSend = selectedGroupId.value
     } : null
   };
 
+  console.log("Selected Group ID:", selectedGroupId.value);
+  const foundGroup = groups.value.find(group => group.id === selectedGroupId.value);
+  console.log("Found Group:", foundGroup);
+
+  if (foundGroup) {
+      const extractedUserIds = foundGroup.members.map(member => member.user_id);
+      console.log("Extracted User IDs:", extractedUserIds);
+      userIdsToSend = extractedUserIds;
+  } else {
+      userIdsToSend = selectedUserIds.value;
+  }
+
   axios.post('/send-zoom-meeting-notification', payload)
     .then(response => {
       toaster("success", "Notification sent successfully!");
