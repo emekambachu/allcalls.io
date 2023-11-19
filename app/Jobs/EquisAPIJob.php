@@ -148,7 +148,6 @@ class EquisAPIJob implements ShouldQueue
             "lastName" => "Smitch",
             "npn" => "9JL456C",
             "partnerUniqueId" => "b3n4k8",
-            "preferredSuffix" => "",
             "role" => "Agent",
             "state" => "NY",
             "uplineAgentEFNumber" => "EF222171",
