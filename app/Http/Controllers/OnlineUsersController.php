@@ -65,6 +65,13 @@ class OnlineUsersController extends Controller
             'platform' => 'mobile',
         ]);
 
+        UserActivity::create([
+            'action' => 'Online for vertical ' . CallType::find($callTypeId)->type . '.',
+            'data' => json_encode(['call_type_id' => $callTypeId]),
+            'platform' => 'web',
+            'user_id' => $request->user()->id,
+        ]);
+
         // Return a response
         return response()->json(['status' => 'success'], 200);
     }
