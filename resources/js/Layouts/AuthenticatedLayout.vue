@@ -691,7 +691,7 @@ let appDownloadModal = ref(false);
                 />
               </svg>
 
-              User Activity
+              User Activities
             </NavLink>
 
             <NavLink
