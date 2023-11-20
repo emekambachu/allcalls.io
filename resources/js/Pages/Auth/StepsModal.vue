@@ -25,6 +25,13 @@ let stateOptions = computed(() => {
     };
   });
 });
+const filteredStateOptions = computed(() => {
+  // Filter out the option with label 'New York' and mark it as disabled
+  return stateOptions.value.map((option) => ({
+    ...option,
+    disabled: option.label === 'New York',
+  }));
+});
 let form = useForm({
   typesWithStates: props.callTypes.reduce((acc, obj) => {
     acc[obj.id] = [];
@@ -302,7 +309,8 @@ let submit = () => {
             </div>
           </div>
         </div>
-        <div v-else-if="$page.props.auth.role === 'internal-agent'" class="relative bg-white rounded-lg shadow-lg transition-all">
+        <div v-else-if="$page.props.auth.role === 'internal-agent'"
+          class="relative bg-white rounded-lg shadow-lg transition-all">
           <div class="px-12 py-2">
             <h1 class="mt-8 text-gray-800 text-3xl font-bold">Welcome to AllCalls.io!</h1>
           </div>
@@ -311,7 +319,9 @@ let submit = () => {
             <div v-if="step === 0">
               <div class="px-12">
                 <p class="text-gray-700 text-sm text-left leading-relaxed">
-                  Hello, <strong class="text-lg">{{ $page.props.auth.user.first_name }} {{ $page.props.auth.user.last_name }}</strong> Let's customize your call system. Begin by indicating which states you are licensed in and want to receive calls from.
+                  Hello, <strong class="text-lg">{{ $page.props.auth.user.first_name }} {{ $page.props.auth.user.last_name
+                  }}</strong> Let's customize your call system. Begin by indicating which states you are licensed in and
+                  want to receive calls from.
                 </p>
               </div>
             </div>
@@ -319,11 +329,14 @@ let submit = () => {
             <div v-if="step === 1">
               <div class="px-12">
                 <p class="text-gray-700 text-sm text-left leading-relaxed">
-                  Special note for you, <strong class="text-lg">{{ $page.props.auth.user.first_name }} {{ $page.props.auth.user.last_name }}</strong>  As an esteemed AllCalls Insurance Agent, you hold priority over our entire user base. When you login and take calls, our system will prioritize you over normal users so that you can receive calls as fast as possible without having to wait.
+                  Special note for you, <strong class="text-lg">{{ $page.props.auth.user.first_name }} {{
+                    $page.props.auth.user.last_name }}</strong> As an esteemed AllCalls Insurance Agent, you hold priority
+                  over our entire user base. When you login and take calls, our system will prioritize you over normal
+                  users so that you can receive calls as fast as possible without having to wait.
                 </p>
               </div>
             </div>
-           
+
 
             <!-- Step 2 -->
             <div v-else-if="step === 2">
@@ -345,8 +358,9 @@ let submit = () => {
 
                       <div class="pt-2 mb-8">
                         <label class="ml-2 text-xs font-medium">States you're licensed in:</label>
-                        <Multiselect :options="stateOptions" v-model="form.typesWithStates[callType.id]" track-by="value"
-                          label="label" mode="tags" :close-on-select="false" placeholder="Select a state">
+                        <Multiselect :options="filteredStateOptions" v-model="form.typesWithStates[callType.id]"
+                          track-by="value" label="label" mode="tags" :close-on-select="false"
+                          placeholder="Select a state">
                         </Multiselect>
                       </div>
                     </div>
@@ -392,6 +406,5 @@ let submit = () => {
           </div>
         </div>
       </div>
-    </div>
-  </Transition>
-</template>
+  </div>
+</Transition></template>

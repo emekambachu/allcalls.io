@@ -58,6 +58,13 @@ let stateOptions = computed(() => {
     };
   });
 });
+const filteredStateOptions = computed(() => {
+  // Filter out the option with label 'New York' and mark it as disabled
+  return stateOptions.value.map((option) => ({
+    ...option,
+    disabled: option.label === 'New York',
+  }));
+});
 watch(
   () => [
     form.first_name,
@@ -426,7 +433,7 @@ const closeDropDown = () => {
 
                 <div v-if="selectedTypes.includes(callType.id)" class="pt-2 mb-8">
                   <label class="ml-2 text-xs font-medium">States you're licensed in:</label>
-                  <Multiselect :options="stateOptions" v-model="form.typesWithStates[callType.id]" track-by="value"
+                  <Multiselect :options="filteredStateOptions" v-model="form.typesWithStates[callType.id]" track-by="value"
                     label="label" mode="tags" :close-on-select="false" placeholder="Select a state">
                   </Multiselect>
                 </div>
