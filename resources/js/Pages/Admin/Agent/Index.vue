@@ -456,7 +456,7 @@ let dateFormat = (data) => {
                     </button>
 
                     <!-- Export button -->
-                    <button class="ml-2" title="Export CSV">
+                    <button class="ml-3" title="Export CSV">
                       <svg
                         class="w-5 h-5 text-gray-800"
                         aria-hidden="true"
