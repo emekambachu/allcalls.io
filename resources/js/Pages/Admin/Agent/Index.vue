@@ -184,6 +184,50 @@ let dateFormat = (data) => {
     return `${month}/${day}/${year}`;
   }
 };
+
+let jsonToCSV = jsonObject => {
+    // Extract keys (column headers) and values (row)
+    const keys = Object.keys(jsonObject);
+    const values = keys.map(key => `"${jsonObject[key]}"`);
+
+    // Combine keys and values
+    return `${keys.join(',')}\n${values.join(',')}`;
+};
+
+let downloadCSV = (jsonData, fileName) => {
+    // Convert JSON to CSV
+    const csvString = jsonToCSV(jsonData);
+
+    // Create a Blob from the CSV String
+    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+
+    // Create a link and trigger download
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.href = url;
+    link.download = fileName;
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+
+let exportCSV = agent => {
+    let includeColumns = ['id', 'first_name', 'last_name', 'email', 'phone'];
+
+    // Create a new object with only the included columns
+    let filteredAgent = {};
+    includeColumns.forEach(key => {
+        if(agent[key] !== undefined) {
+            filteredAgent[key] = agent[key];
+        }
+    });
+
+    console.log('EXPORT CSV', jsonToCSV(filteredAgent));
+    downloadCSV(filteredAgent, 'agent.csv');
+};
+
 </script>
 <style scoped>
 .modal {
@@ -456,7 +500,7 @@ let dateFormat = (data) => {
                     </button>
 
                     <!-- Export button -->
-                    <button class="ml-3" title="Export CSV">
+                    <button class="ml-3" title="Export CSV" @click.prevent="exportCSV(agent)">
                       <svg
                         class="w-5 h-5 text-gray-800"
                         aria-hidden="true"

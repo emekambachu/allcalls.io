@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\OnlineAgentsController;
 use App\Http\Controllers\AdminNotificationsController;
 use App\Http\Controllers\Admin\InternalAgentController;
 use App\Http\Controllers\AdminUserActivitiesController;
+use App\Http\Controllers\InternalAgentExportController;
 use App\Http\Controllers\Admin\AvailableNumberController;
 use App\Http\Controllers\AdminAvaialbleNumbersController;
 use App\Http\Controllers\Admin\LegalQuestionPdfController;
@@ -50,6 +51,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
     //Agents
     Route::get('/agents', [InternalAgentController::class, 'index'])->name('admin.agent.index');
+    Route::post('/agents/export/{user}', [InternalAgentExportController::class, 'export'])->name('admin.agent.export');
 
     Route::post('/agent', [InternalAgentController::class, 'store'])->name('admin.agent.store');
 
