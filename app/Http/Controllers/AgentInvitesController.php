@@ -6,6 +6,7 @@ use App\Events\InviteAgent;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use App\Models\AgentInvite;
+use App\Models\InternalAgentLevel;
 use Illuminate\Http\Request;
 
 class AgentInvitesController extends Controller
@@ -13,7 +14,8 @@ class AgentInvitesController extends Controller
     public function index()
     {
         $agentInvites = AgentInvite::orderBy('created_at', 'desc')->paginate(10);
-        return Inertia::render('Admin/AgentInvites/Index', compact('agentInvites'));
+        $agentLevels = InternalAgentLevel::get();
+        return Inertia::render('Admin/AgentInvites/Index', compact('agentInvites', 'agentLevels'));
     }
 
     public function store(Request $request)

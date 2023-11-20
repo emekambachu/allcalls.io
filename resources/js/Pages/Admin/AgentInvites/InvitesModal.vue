@@ -6,25 +6,28 @@ let emits = defineEmits()
 let props = defineProps({
     invitesModal: Boolean,
     isLoading: Boolean,
-    firstStepErrors:Object,
-    reIniteAgent:Boolean,
+    firstStepErrors: Object,
+    reIniteAgent: Boolean,
+    agentLevels: Array,
 });
 let form = ref({
-  email: "",
+    email: "",
+    level: "Choose",
 });
 let validateEmail = (email) => {
-  return /\S+@\S+\.\S+/.test(email); // Simple regex for email validation
+    return /\S+@\S+\.\S+/.test(email); // Simple regex for email validation
 };
 let uiEmailValidation = ref({
-  isValid: false,
+    isValid: false,
 });
 let inviteAgent = () => {
-    if(validateEmail(form.value.email)){
+    if (validateEmail(form.value.email)) {
         uiEmailValidation.value.isValid = false;
-        emits('inviteAgent', form.value.email)
-    }else{
-        uiEmailValidation.value.isValid = true;
-    }  
+        emits('inviteAgent', form.value)
+    } else {
+        // uiEmailValidation.value.isValid = true;
+        props.firstStepErrors.email = [`Please enter valid email address.`];
+    }
 }
 let ReinviteAgent = () => {
     emits('ReinviteAgent')
@@ -117,7 +120,8 @@ let close = () => {
                     </div>
                     <div v-if="!reIniteAgent" class="px-12 py-2">
                         <h1 class="text-gray-800 text-2xl font-bold">Invite Agent</h1>
-                        <div class="mt-4">
+                        <br>
+                        <!-- <div class="mt-4">
                             <GuestInputLabel for="email" value="Email" />
 
                             <GuestTextInput id="email" type="email" class="mt-1 block w-full" v-model="form.email" required
@@ -125,10 +129,37 @@ let close = () => {
                             <div v-if="uiEmailValidation.isValid" class="text-red-500">
                                 Please enter valid email address.
                             </div>
-                            <!-- <InputError class="mt-2" :message="form.errors.email" /> -->
                             <div v-if="firstStepErrors.email" class="text-red-500" v-text="firstStepErrors.email[0]"></div>
                         </div>
-                        <div class=" mb-3">
+
+                        <br> -->
+
+
+                        <div class="mb-3">
+                            <label for="Email" class="block mb-2 text-sm font-black text-gray-900 ">Email<span
+                                    class="text-red-500">*</span></label>
+                            <input type="email" v-model="form.email" id="default-input"
+                                
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
+                            <div v-if="firstStepErrors.email" class="text-red-500" v-text="firstStepErrors.email[0]"></div>
+                            <div v-if="uiEmailValidation.isValid" class="text-red-500">
+                                Please enter valid email address.
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 ">Agent Level<span
+                                    class="text-red-500">*</span></label>
+                            <select v-model="form.level" id="countries"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
+                                <option>Choose </option>
+                                <option v-for="level in agentLevels" :value="level.id">{{ level.name }} </option>
+                            </select>
+                            <div v-if="firstStepErrors.gender" class="text-red-500" v-text="firstStepErrors.gender[0]">
+                            </div>
+                        </div>
+
+                        <div class=" mb-3 mt-2">
                             <div class="flex justify-end">
 
                                 <div class="mt-4">

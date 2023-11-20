@@ -12,6 +12,7 @@ let { agentInvites, baseUrl } = defineProps({
     required: true,
     type: Array,
   },
+  agentLevels:Array,
   baseUrl: {
     required: true,
     type: String,
@@ -48,9 +49,9 @@ let generateInvite = () => {
 };
 let isLoading = ref(false)
 let firstStepErrors = ref({})
-let inviteAgent = (email) => {
+let inviteAgent = (data) => {
   isLoading.value = true
-  axios.post("/admin/agent-invites", { email: email }).then((res) => {
+  axios.post("/admin/agent-invites", data).then((res) => {
     invitesModal.value = false
     toaster("success", res.data.message)
     router.visit("/admin/agent-invites")
@@ -242,6 +243,6 @@ let ReInviteAgentFun = () => {
       </div>
     </div>
     <InvitesModal @close="invitesModal = false" :isLoading="isLoading" @inviteAgent="inviteAgent"
-      :firstStepErrors="firstStepErrors" :invitesModal="invitesModal" @ReinviteAgent="ReInviteAgentFun"
+      :firstStepErrors="firstStepErrors" :agentLevels="agentLevels" :invitesModal="invitesModal" @ReinviteAgent="ReInviteAgentFun"
       :reIniteAgent="reIniteAgent" />
   </AuthenticatedLayout></template>

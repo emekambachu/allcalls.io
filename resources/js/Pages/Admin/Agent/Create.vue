@@ -148,14 +148,14 @@ let saveChanges = () => {
     step.value = 0;
   }
 };
-let emit = defineEmits(["close"]);
-let close = () => {
-  form.reset();
-  step.value = 0;
-  emit("close");
-  firstStepErrors.value = {};
-  isLoading.value = false;
-};
+  let emit = defineEmits(["close"]);
+  let close = () => {
+    form.reset();
+    step.value = 0;
+    emit("close");
+    firstStepErrors.value = {};
+    isLoading.value = false;
+  };
 let goBack = () => {
   step.value -= 1;
 };
