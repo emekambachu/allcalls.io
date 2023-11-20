@@ -1,8 +1,12 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, router } from "@inertiajs/vue3";
+import { Head, router, usePage } from "@inertiajs/vue3";
 
+let page = usePage();
+if (page.props.flash.message) {
+  toaster("success", page.props.flash.message);
+}
 let props = defineProps(["userActivities"]);
 
 console.log(props);
@@ -10,6 +14,10 @@ console.log(props);
 let paginate = (url) => {
   router.visit(url);
 };
+
+let clearAll = () => {
+  router.visit('/admin/user-activities/clear-all', { method: 'DELETE' });
+}
 </script>
 
 <style scoped>
@@ -24,7 +32,7 @@ let paginate = (url) => {
         <div class="text-4xl text-custom-sky font-bold mb-6">User Activities</div>
       </div>
       <div class="flex items-center">
-        <button class="button-custom-back px-3 py-2 rounded-md mr-2">Clear All</button>
+        <button @click.prevent="clearAll" class="button-custom-back px-3 py-2 rounded-md mr-2">Clear All</button>
       </div>
     </div>
 
