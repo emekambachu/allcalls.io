@@ -68,7 +68,7 @@ class OnlineUsersController extends Controller
         UserActivity::create([
             'action' => 'Online for vertical ' . CallType::find($callTypeId)->type . '.',
             'data' => json_encode(['call_type_id' => $callTypeId]),
-            'platform' => 'web',
+            'platform' => 'mobile',
             'user_id' => $request->user()->id,
         ]);
 
@@ -102,7 +102,7 @@ class OnlineUsersController extends Controller
             UserActivity::create([
                 'action' => 'Offline for vertical ' . CallType::find($callTypeId)->type . '.',
                 'data' => json_encode(['call_type_id' => $callTypeId]),
-                'platform' => 'web',
+                'platform' => 'mobile',
                 'user_id' => $request->user()->id,
             ]);
 
@@ -138,7 +138,7 @@ class OnlineUsersController extends Controller
             UserActivity::create([
                 'action' => 'Offline for vertical ' . CallType::find($record->call_type_id)->type . '.',
                 'data' => json_encode(['call_type_id' => $record->call_type_id]),
-                'platform' => 'web',
+                'platform' => 'mobile',
                 'user_id' => $request->user()->id,
             ]);
 
