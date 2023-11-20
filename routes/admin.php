@@ -51,7 +51,6 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
     //Agents
     Route::get('/agents', [InternalAgentController::class, 'index'])->name('admin.agent.index');
-    Route::post('/agents/export/{user}', [InternalAgentExportController::class, 'export'])->name('admin.agent.export');
 
     Route::post('/agent', [InternalAgentController::class, 'store'])->name('admin.agent.store');
 
