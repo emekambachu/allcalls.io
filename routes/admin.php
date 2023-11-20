@@ -99,5 +99,5 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::get('/notifications', [AdminNotificationsController::class, 'create'])->name('admin.notifications.create');
 
     Route::get('/user-activities', [AdminUserActivitiesController::class, 'index'])->name('admin.user-activities.index');
-    Route::delete('/user-activities/clearAll', [AdminUserActivitiesController::class, 'clearAll'])->name('admin.user-activities.clearAll');
+    Route::delete('/user-activities/clear-all', [AdminUserActivitiesController::class, 'clearAll'])->name('admin.user-activities.clearAll');
 });

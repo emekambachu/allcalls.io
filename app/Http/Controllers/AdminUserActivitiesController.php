@@ -19,6 +19,6 @@ class AdminUserActivitiesController extends Controller
     {
         UserActivity::truncate();
 
-        return redirect()->back()->with('success', 'All user activities has been cleared.');
+        return redirect()->back()->with('message', 'All user activities has been cleared.');
     }
 }

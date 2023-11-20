@@ -2,6 +2,7 @@
 import { ref, onMounted } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
+import { toaster } from "@/helper.js";
 
 let page = usePage();
 if (page.props.flash.message) {
@@ -31,8 +32,15 @@ let clearAll = () => {
       <div>
         <div class="text-4xl text-custom-sky font-bold mb-6">User Activities</div>
       </div>
+
       <div class="flex items-center">
         <button @click.prevent="clearAll" class="button-custom-back px-3 py-2 rounded-md mr-2">Clear All</button>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+      <div class="px-4 sm:px-8 sm:rounded-lg">
+        <hr class="mb-4" />
       </div>
     </div>
 
