@@ -26,8 +26,35 @@ class CallsController extends Controller
 {
     public function index(Request $request)
     {
-        $calls = Call::with('user.roles','getClient','callType')->orderBy("created_at","DESC")->paginate(10);
+        $orderColumn = "created_at";
+        $orderBy = "DESC";
 
+        if((isset($request->sortColumn) && $request->sortColumn != '') || (isset($request->sortOrder) && $request->sortOrder != '')) {
+            $orderColumn = $request->sortColumn;
+            $orderBy = $request->sortOrder;
+        }
+      
+        $calls = Call::with('user.roles','getClient','callType')
+        ->where(function($query) use ($request) {
+            if(isset($request->from) && $request->from != '' && isset($request->to) && $request->to != '') {
+                $fromDate = Carbon::parse($request->from)->startOfDay();
+                $toDate = Carbon::parse($request->to)->endOfDay();
+                $query->whereBetween('created_at', [$fromDate, $toDate]);
+            }
+        })
+        ->where(function($query) use ($request) {
+            if(isset($request->status) && $request->status != '') {
+                if($request->status == 'paid') {
+                    $query->where('call_duration_in_seconds', '>' ,60);
+                }
+                else if($request->status == 'unpaid') {
+                    $query->where('call_duration_in_seconds', '<=' ,60);
+                }
+            }
+
+        })
+        ->orderBy($orderColumn, $orderBy)
+        ->paginate(50);
         return Inertia::render('Admin/Calls/Index', [
             'requestData' => $request->all(),
             'calls' => $calls
