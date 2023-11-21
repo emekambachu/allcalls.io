@@ -28,8 +28,8 @@ let uiEmailValidation = ref({
 let props = defineProps({
   callTypes: Array,
   states: Array,
+  tokenData:Object,
 });
-
 let stateOptions = computed(() => {
   return props.states.map((state) => {
     return {
@@ -49,6 +49,8 @@ let form = useForm({
   consent: false,
   phone_code:'+1',
   phone_country:'USA',
+  level_id:props.tokenData.level_id,
+  upline_id:props.tokenData.upline_id,
 });
 let isFormValid = ref(true);
 
