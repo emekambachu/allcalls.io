@@ -26,8 +26,25 @@ class CallsController extends Controller
 {
     public function index(Request $request)
     {
-        $calls = Call::with('user.roles','getClient','callType')->orderBy("created_at","DESC")->paginate(10);
-
+        // dd($request->all());
+        $calls = Call::with('user.roles','getClient','callType')
+        ->where(function($query) use ($request) {
+            if(isset($request->from) && $request->from != '' && isset($request->to) && $request->to != '') {
+                $fromDate = Carbon::parse($request->from)->startOfDay();
+                $toDate = Carbon::parse($request->to)->endOfDay();
+                $query->whereBetween('created_at', [$fromDate, $toDate]);
+            }
+        })
+        ->where(function($query) use ($request) {
+            if((isset($request->sortColumn) && $request->sortColumn != '') || (isset($request->sortOrder) && $request->sortOrder != '')) {
+                $query->orderBy($request->sortColumn, $request->sortOrder);
+            }
+            else {
+                $query->orderBy("created_at","DESC");
+            }
+        })
+        ->paginate(50);
+        dd($calls);
         return Inertia::render('Admin/Calls/Index', [
             'requestData' => $request->all(),
             'calls' => $calls
