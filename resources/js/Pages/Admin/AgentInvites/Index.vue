@@ -58,10 +58,13 @@ let inviteAgent = (data) => {
     isLoading.value = false
   }).catch((error) => {
     console.log('error', error);
-    if (error.response) {
-      firstStepErrors.value = error.response.data.errors;
-    }
     isLoading.value = false
+    if (error.response.status === 400) {
+      firstStepErrors.value = error.response.data.errors;
+    }else{
+      firstStepErrors.value = error
+    }
+    
   })
 }
 let deleteInvite = (agentInvite) => {
@@ -137,7 +140,9 @@ let ReInviteAgentFun = () => {
               <thead class="text-xs text-gray-300 uppercase bg-sky-900">
                 <tr>
                   <th scope="col" class="px-4 py-3">ID</th>
+                  <th scope="col" class="px-4 py-3">Upline ID</th>
                   <th scope="col" class="px-4 py-3">Email</th>
+                  <th scope="col" class="px-4 py-3">Level</th>
                   <th scope="col" class="px-4 py-3">URL</th>
                   <th scope="col" class="px-4 py-3">Status</th>
                   <th scope="col" class="px-4 py-3 text-center">Actions</th>
@@ -147,7 +152,9 @@ let ReInviteAgentFun = () => {
                 <tr class="border-b border-gray-500" v-for="(agentInvite, index) in agentInvites.data"
                   :key="agentInvite.id">
                   <td class="text-gray-600 px-4 py-3" v-text="index + 1"></td>
+                  <td class="text-gray-600 px-4 py-3" v-text="agentInvite.upline_id"></td>
                   <td class="text-gray-600 px-4 py-3" v-text="agentInvite.email"></td>
+                  <td class="text-gray-600 px-4 py-3" v-text="agentInvite.get_agent_level.name"></td>
                   <td class="text-gray-600 px-4 py-3">
                     <a class="text-blue-500 hover:text-blue-700 hover:underline" target="_blank" :href="agentInvite.url"
                       v-text="agentInvite.url

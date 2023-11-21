@@ -84,6 +84,25 @@ class InternalAgentLevel extends Controller
     public function destroy(string $id)
     {
         $exist = AgentLevel::findOrFail($id);
-        dd($exist);
+
+        if(count($exist->getAgentInvites)) {
+            return response()->json([
+                'success' => false,
+                'message' => "Sorry! you can't delete this. Some of the agents pending invites belongs to this level.",
+            ], 400);
+        }
+
+        // if(count($exist->getRegisteredAgentInvites)) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => "Sorry! you can't delete this. Some of the registered agents belongs to this level.",
+        //     ], 400);
+        // }
+
+        $exist->delete();
+        return response()->json([
+            'success' => false,
+            'message' => "Level deleted successfully.",
+        ], 200);
     }
 }

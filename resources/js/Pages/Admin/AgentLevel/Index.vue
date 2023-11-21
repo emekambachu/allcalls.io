@@ -58,10 +58,15 @@ let actionToDeleteUser = () => {
     .then((res) => {
       deleteUserModal.value = false
       toaster("success", res.data.message)
-      router.visit('/admin/customers')
+      router.visit('/admin/internal-agent-levels')
     }).catch((error) => {
-      isLoading.value = false
-      toaster("error", error.message)
+      if (error.response.status === 400) {
+        toaster("error", error.response.data.message);
+        deleteUserModal.value = false
+        isLoading.value = false
+       }else{
+        toaster("error", error.message);
+       }
     })
 }
 </script>

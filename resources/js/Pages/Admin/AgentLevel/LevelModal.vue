@@ -37,7 +37,7 @@ let AddLevel = () => {
         close()
         router.visit('/admin/internal-agent-levels')
     }).catch((error)=>{
-       if(error.response){
+      if (error.response.status === 400) {
         firstStepErrors.value = error.response.data.errors
 
        }else{

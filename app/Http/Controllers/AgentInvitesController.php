@@ -13,7 +13,7 @@ class AgentInvitesController extends Controller
 {
     public function index()
     {
-        $agentInvites = AgentInvite::orderBy('created_at', 'desc')->paginate(10);
+        $agentInvites = AgentInvite::with('getAgentLevel')->orderBy('created_at', 'desc')->paginate(10);
         $agentLevels = InternalAgentLevel::get();
         return Inertia::render('Admin/AgentInvites/Index', compact('agentInvites', 'agentLevels'));
     }
@@ -22,6 +22,8 @@ class AgentInvitesController extends Controller
     {
         $valdiation = Validator::make($request->all(), [
             'email' => 'required|unique:agent_invites',
+            'level' => 'required',
+            'upline_id' => 'required',
         ]);
         if ($valdiation->fails()) {
             return response()->json([
@@ -34,7 +36,9 @@ class AgentInvitesController extends Controller
         $inviteSent = AgentInvite::create(
             [
                 'token' => $uuId,
+                'level_id' => $request->level,
                 'email' => $request->email,
+                'upline_id' => $request->upline_id,
                 'url' => url('/internal-agent/register?agentToken=' . $uuId)
             ]
         );
@@ -66,7 +70,6 @@ class AgentInvitesController extends Controller
     public function destroy($id)
     {
         $invite = AgentInvite::findOrFail($id);
-
         $invite->delete();
         return response()->json([
             'success' =>  true,
