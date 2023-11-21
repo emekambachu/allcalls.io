@@ -24,7 +24,7 @@ let props = defineProps({
   },
   requestData:Array,
 });
-console.log('calls', props.calls);
+
 const presetDates = ref([
   { label: 'Today', value: [new Date(), new Date()] },
   {
@@ -62,8 +62,10 @@ const presetDates = ref([
 let dateRange = ref([])
 let form = ref({
   status: props.requestData.status || 'Select an status',
-  sortColumn:props.requestData.sortColumn || 'Sort Column',
-  sortOrder:props.requestData.sortOrder || 'Sort Order',
+  // sortOptions:props.requestData.sortColumn+'-'+props.requestData.sortOrder  || 'Sort By',
+  sortOptions: (props.requestData.sortColumn && props.requestData.sortOrder)
+    ? `${props.requestData.sortColumn}-${props.requestData.sortOrder}`
+    : 'Sort By',
 })
 const formatDate = (date) => {
   return date.toLocaleString('en-US', {
@@ -133,20 +135,24 @@ let dateFormat = () => {
    formattedFrom.value = `${fromMonth}/${fromDate}/${fromYear}`;
    formattedTo.value = `${toMonth}/${toDate}/${toYear}`;
 }
+
 let fetchData = () => {
   isLoading.value = true
   if(dateRange.value.length > 0){
     dateFormat()
   }
+  const [sortColumn, sortOrder] = form.value.sortOptions.split('-');
+  const normalizedSortColumn = sortColumn === 'Sort By' || typeof sortColumn === 'undefined' ? null : sortColumn;
+  const normalizedSortOrder = typeof sortOrder === 'undefined' ? null : sortOrder;
+
   const queryParams = {
     from: formattedFrom.value,
     to: formattedTo.value,
     status: form.value.status === 'Select an status'  ? '' :  form.value.status,
-    sortColumn: form.value.sortColumn === 'Sort Column'  ? '' :  form.value.sortColumn,
-    sortOrder: form.value.sortOrder === 'Sort Order'  ? '' :  form.value.sortOrder,
+    sortColumn: normalizedSortColumn,
+    sortOrder: normalizedSortOrder,
   };
-  console.log('queryParams', queryParams);
-  return
+
   router.visit('/admin/calls', {
     data: queryParams
   })
@@ -194,11 +200,11 @@ maxDate.value.setHours(23, 59, 59, 999);
           <div v-if="firstStepErrors.status" class="text-red-500" v-text="firstStepErrors.status[0]"></div>
         </div>
         <div>
-          <select v-model="form.sortColumn" id="countries"
+          <select v-model="form.sortOptions" id="countries"
             class="bg-white-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
-            <option selected disabled>Sort Column </option>
-            <option value="call_duration_in_seconds">Call Duration (Hire to lower)</option>
-            <option value="call_duration_in_seconds">Call Duration (Lower to Hire)</option>
+            <option selected disabled>Sort By </option>
+            <option value="call_duration_in_seconds-asc">Call Duration (Higher to Lower)</option>
+            <option value="call_duration_in_seconds-desc">Call Duration (Lower to Higher)</option>
           </select>
           <div v-if="firstStepErrors.sortColumn" class="text-red-500" v-text="firstStepErrors.sortColumn[0]"></div>
         </div>

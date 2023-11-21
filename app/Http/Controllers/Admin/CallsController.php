@@ -37,7 +37,7 @@ class CallsController extends Controller
         })
         ->where(function($query) use ($request) {
             if((isset($request->sortColumn) && $request->sortColumn != '') || (isset($request->sortOrder) && $request->sortOrder != '')) {
-                $query->orderBy($request->sortColumn, $request->sortOrder);
+                $query->orderBy('call_duration_in_seconds', 'ASC');
             }
             else {
                 $query->orderBy("created_at","DESC");
