@@ -3,7 +3,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Edit from "@//Pages/Admin/User/Edit.vue";
 import { Head, router, usePage, useForm } from "@inertiajs/vue3";
 import ClientDetailsModal from "@/Components/ClientDetailsModal.vue";
-import { ref ,onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import { toaster } from "@/helper.js";
 import Modal from "@/Components/Modal.vue";
 import SearchFilter from "@/Components/SearchFilter.vue";
@@ -22,7 +22,7 @@ let props = defineProps({
   calls: {
     type: Object,
   },
-  requestData:Array,
+  requestData: Array,
 });
 
 const presetDates = ref([
@@ -84,7 +84,7 @@ const watchFromTo = () => {
     const fromDate = new Date(props.requestData.from);
     const toDate = new Date(props.requestData.to);
     dateRange.value.push(formatDate(fromDate), formatDate(toDate));
-  } 
+  }
 };
 
 onMounted(() => {
@@ -117,7 +117,7 @@ let openClientModal = (call) => {
 };
 let isLoading = ref(false)
 const formattedFrom = ref(null);
-  const formattedTo = ref(null);
+const formattedTo = ref(null);
 let dateFormat = () => {
   const from = new Date(dateRange.value[0]);
   const to = new Date(dateRange.value[1]);
@@ -132,13 +132,13 @@ let dateFormat = () => {
   const toYear = to.getFullYear();
 
   // Format the components as desired (e.g., as "MM-DD-YYYY")
-   formattedFrom.value = `${fromMonth}/${fromDate}/${fromYear}`;
-   formattedTo.value = `${toMonth}/${toDate}/${toYear}`;
+  formattedFrom.value = `${fromMonth}/${fromDate}/${fromYear}`;
+  formattedTo.value = `${toMonth}/${toDate}/${toYear}`;
 }
 
 let fetchData = () => {
   isLoading.value = true
-  if(dateRange.value.length > 0){
+  if (dateRange.value.length > 0) {
     dateFormat()
   }
   const [sortColumn, sortOrder] = form.value.sortOptions.split('-');
@@ -148,7 +148,7 @@ let fetchData = () => {
   const queryParams = {
     from: formattedFrom.value,
     to: formattedTo.value,
-    status: form.value.status === 'Select an status'  ? '' :  form.value.status,
+    status: form.value.status === 'Select an status' ? '' : form.value.status,
     sortColumn: normalizedSortColumn,
     sortOrder: normalizedSortOrder,
   };
@@ -195,7 +195,7 @@ maxDate.value.setHours(23, 59, 59, 999);
             class="bg-white-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
             <option selected disabled>Select an status </option>
             <option value="paid">Paid</option>
-            <option value="not_paid">Not Paid</option>
+            <option value="unpaid">Not Paid</option>
           </select>
           <div v-if="firstStepErrors.status" class="text-red-500" v-text="firstStepErrors.status[0]"></div>
         </div>
@@ -203,8 +203,8 @@ maxDate.value.setHours(23, 59, 59, 999);
           <select v-model="form.sortOptions" id="countries"
             class="bg-white-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
             <option selected disabled>Sort By </option>
-            <option value="call_duration_in_seconds-asc">Call Duration (Higher to Lower)</option>
-            <option value="call_duration_in_seconds-desc">Call Duration (Lower to Higher)</option>
+            <option value="call_duration_in_seconds-desc">Call Duration (Higher to Lower)</option>
+            <option value="call_duration_in_seconds-asc">Call Duration (Lower to Higher)</option>
           </select>
           <div v-if="firstStepErrors.sortColumn" class="text-red-500" v-text="firstStepErrors.sortColumn[0]"></div>
         </div>
@@ -227,6 +227,9 @@ maxDate.value.setHours(23, 59, 59, 999);
               <thead class="text-xs text-gray-300 uppercase bg-sky-900">
                 <tr>
                   <th scope="col" class="px-4 py-2 whitespace-no-wrap">ID</th>
+                  <th scope="col" class="px-4 py-2 whitespace-no-wrap" style="min-width: 250px">
+                    CALL Date
+                  </th>
                   <th scope="col" class="px-4 py-2 whitespace-no-wrap" style="min-width: 150px">
                     Name
                   </th>
@@ -242,11 +245,9 @@ maxDate.value.setHours(23, 59, 59, 999);
                   <th scope="col" class="px-4 py-2 whitespace-no-wrap">
                     Hang Up By
                   </th>
-                  <th scope="col" class="px-4 py-2 whitespace-no-wrap" style="min-width: 250px">
-                    CALL TAKEN
-                  </th>
+
                   <th scope="col" class="px-4 py-2 whitespace-no-wrap">
-                    AMOUNT SPENT
+                    Revenue
                   </th>
                   <th scope="col" class="px-4 py-2 whitespace-no-wrap" style="min-width: 130px">
                     VERTICAL
@@ -262,10 +263,12 @@ maxDate.value.setHours(23, 59, 59, 999);
                   </th>
                 </tr>
               </thead>
-              <tbody>
+
+              <tbody v-if="calls.data.length">
                 <tr v-for="call in calls.data" :key="call.id" class="border-b border-gray-500">
 
                   <td class="text-gray-600 ">{{ call.id }}</td>
+                  <th class="text-gray-600 ">{{ call.call_taken }}</th>
                   <td class="text-gray-600 ">
                     {{ call.user.first_name }} {{ call.user.last_name }}
                   </td>
@@ -302,7 +305,6 @@ maxDate.value.setHours(23, 59, 59, 999);
                   </td>
 
                   <th class="text-gray-600 ">{{ call.hung_up_by }}</th>
-                  <th class="text-gray-600 ">{{ call.call_taken }}</th>
                   <td class="text-gray-600 ">
                     ${{ call.amount_spent }}
                   </td>
@@ -385,8 +387,14 @@ maxDate.value.setHours(23, 59, 59, 999);
                   </td>
                 </tr>
               </tbody>
+              <tbody v-else>
+                <tr>
+                  <td class="text-center py-4 text-gray-600" colspan="12">No data found.</td>
+                </tr>
+              </tbody>
             </table>
-            <div class="p-4">
+
+            <div v-if="calls.data.length" class="p-4">
               <nav
                 class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
                 aria-label="Table navigation">
