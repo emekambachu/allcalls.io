@@ -368,7 +368,6 @@ class InternalAgentController extends Controller
     }
 
     public function internalAgentProgress(Request $request) {
-
         try {
             $user = User::findOrFail($request->id);
             $user->progress = $request->progress;

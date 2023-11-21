@@ -72,7 +72,7 @@ let fetchAgents = (page) => {
 
 let showModal = ref(false);
 let userDetail = ref(null);
-let currentPage = ref(null);
+let currentPage = ref(null);  
 
 let openAgentModal = (user, page) => {
   userDetail.value = user;

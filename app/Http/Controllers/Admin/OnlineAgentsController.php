@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\State;
 use App\Models\User;
+use App\Models\Role;
+use App\Models\CallType;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
