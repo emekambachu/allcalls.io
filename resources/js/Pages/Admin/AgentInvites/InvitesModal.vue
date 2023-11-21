@@ -12,7 +12,7 @@ let props = defineProps({
 });
 let form = ref({
     email: "",
-    level: "Choose",
+    level: "-- Select an option --",
 });
 let validateEmail = (email) => {
     return /\S+@\S+\.\S+/.test(email); // Simple regex for email validation
@@ -152,7 +152,7 @@ let close = () => {
                                     class="text-red-500">*</span></label>
                             <select v-model="form.level" id="countries"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
-                                <option>Choose </option>
+                                <option disabled selected>-- Select an option -- </option>
                                 <option v-for="level in agentLevels" :value="level.id">{{ level.name }} </option>
                             </select>
                             <div v-if="firstStepErrors.gender" class="text-red-500" v-text="firstStepErrors.gender[0]">
