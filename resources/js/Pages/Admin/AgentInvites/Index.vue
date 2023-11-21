@@ -152,9 +152,9 @@ let ReInviteAgentFun = () => {
                 <tr class="border-b border-gray-500" v-for="(agentInvite, index) in agentInvites.data"
                   :key="agentInvite.id">
                   <td class="text-gray-600 px-4 py-3" v-text="index + 1"></td>
-                  <td class="text-gray-600 px-4 py-3" v-text="agentInvite.upline_id"></td>
+                  <td class="text-gray-600 px-4 py-3" v-text="agentInvite?.upline_id"></td>
                   <td class="text-gray-600 px-4 py-3" v-text="agentInvite.email"></td>
-                  <td class="text-gray-600 px-4 py-3" v-text="agentInvite.get_agent_level.name"></td>
+                  <td class="text-gray-600 px-4 py-3" v-text="agentInvite?.get_agent_level?.name"></td>
                   <td class="text-gray-600 px-4 py-3">
                     <a class="text-blue-500 hover:text-blue-700 hover:underline" target="_blank" :href="agentInvite.url"
                       v-text="agentInvite.url
