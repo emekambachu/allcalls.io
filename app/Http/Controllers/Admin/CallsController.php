@@ -44,7 +44,7 @@ class CallsController extends Controller
             }
         })
         ->paginate(50);
-        dd($calls);
+        // dd($calls);
         return Inertia::render('Admin/Calls/Index', [
             'requestData' => $request->all(),
             'calls' => $calls
