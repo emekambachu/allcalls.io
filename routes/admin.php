@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\OnlineAgentsController;
 use App\Http\Controllers\AdminNotificationsController;
 use App\Http\Controllers\Admin\InternalAgentController;
 use App\Http\Controllers\AdminUserActivitiesController;
+use App\Http\Controllers\InternalAgentExportController;
 use App\Http\Controllers\Admin\AvailableNumberController;
 use App\Http\Controllers\AdminAvaialbleNumbersController;
 use App\Http\Controllers\Admin\LegalQuestionPdfController;
@@ -104,4 +105,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::get('/internal-agent-levels', [InternalAgentLevel::class, 'index'])->name('admin.internal.agent.level.index');
     Route::post('/internal-agent-level/store', [InternalAgentLevel::class, 'store'])->name('admin.internal.agent.level.store');
     Route::delete('/internal-agent-level/destroy/{id}', [InternalAgentLevel::class, 'destroy'])->name('admin.internal.agent.level.destroy');
+
+    Route::delete('/user-activities/clear-all', [AdminUserActivitiesController::class, 'clearAll'])->name('admin.user-activities.clearAll');
+
 });

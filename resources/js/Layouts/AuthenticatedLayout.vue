@@ -559,12 +559,25 @@ let appDownloadModal = ref(false);
               Online Agents
             </NavLink>
 
+
             <NavLink class="mb-10 gap-2" :href="route('admin.internal.agent.level.index')"
               :active="route().current('admin.internal.agent.level.index')">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 13.5V3.75m0 9.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 3.75V16.5m12-3V3.75m0 9.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 3.75V16.5m-6-9V3.75m0 3.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 9.75V10.5" />
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M6 13.5V3.75m0 9.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 3.75V16.5m12-3V3.75m0 9.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 3.75V16.5m-6-9V3.75m0 3.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 9.75V10.5" />
               </svg>
               Agents Levels
+            </NavLink>
+            <NavLink class="mb-10 gap-2" :href="route('admin.user-activities.index')"
+              :active="route().current('admin.user-activities.index')">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="w-8 h-8 mr-2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
+              </svg>
+
+              User Activities
             </NavLink>
 
             <NavLink class="mb-10 gap-2" :href="route('admin.notifications.create')"
@@ -577,6 +590,7 @@ let appDownloadModal = ref(false);
 
               Notifications
             </NavLink>
+
 
             <NavLink class="mb-10 gap-2" :href="route('admin.agent-invites.index')"
               :active="route().current('admin.agent-invites.index')">
@@ -1540,7 +1554,8 @@ let appDownloadModal = ref(false);
           <button @click.prevent="disconnectCall()" class="bg-red-500 hover:bg-red-400 text-white rounded-full py-2 px-6">
             Hang Up
           </button>
+        </div>
       </div>
-    </div>
-  </Modal>
-</div></template>
+    </Modal>
+  </div>
+</template>

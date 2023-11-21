@@ -42,6 +42,8 @@ class TakeCallsOnlineUsersController extends Controller
             'full_name' => $request->user()->first_name . ' ' . $request->user()->last_name,
             'call_type' => $callType->type,
             'platform' => 'web',
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->header('User-Agent'),
         ]);
 
         UserActivity::create([
@@ -49,6 +51,8 @@ class TakeCallsOnlineUsersController extends Controller
             'data' => json_encode(['call_type_id' => $callTypeId]),
             'platform' => 'web',
             'user_id' => $request->user()->id,
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->header('User-Agent'),
         ]);
 
         // Dispatch the event
@@ -80,6 +84,8 @@ class TakeCallsOnlineUsersController extends Controller
                 'call_type' => CallType::find($callTypeId)->type,
                 'user_id' => $request->user()->id,
                 'platform' => 'web',
+                'ip_address' => $request->ip(),
+                'user_agent' => $request->header('User-Agent'),
             ]);
 
             UserActivity::create([
@@ -87,6 +93,8 @@ class TakeCallsOnlineUsersController extends Controller
                 'data' => json_encode(['call_type_id' => $callTypeId]),
                 'platform' => 'web',
                 'user_id' => $request->user()->id,
+                'ip_address' => $request->ip(),
+                'user_agent' => $request->header('User-Agent'),
             ]);
         }
 

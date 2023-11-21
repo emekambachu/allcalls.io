@@ -14,4 +14,11 @@ class AdminUserActivitiesController extends Controller
 
         return Inertia::render('Admin/UserActivities/Index', compact('userActivities'));
     }
+
+    public function clearAll()
+    {
+        UserActivity::truncate();
+
+        return redirect()->back()->with('message', 'All user activities has been cleared.');
+    }
 }
