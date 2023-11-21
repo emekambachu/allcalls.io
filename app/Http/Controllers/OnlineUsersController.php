@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CallType;
 use App\Models\OnlineUser;
+use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Events\OnlineUserListUpdated;
@@ -62,6 +63,17 @@ class OnlineUsersController extends Controller
             'user_id' => $userId,
             'call_type_id' => $callTypeId,
             'platform' => 'mobile',
+            'ip_address' => $request->ip() ?? null,
+            'user_agent' => $request->header('User-Agent') ?? null,
+        ]);
+
+        UserActivity::create([
+            'action' => 'Online for vertical ' . CallType::find($callTypeId)->type . '.',
+            'data' => json_encode(['call_type_id' => $callTypeId]),
+            'platform' => 'mobile',
+            'user_id' => $request->user()->id,
+            'ip_address' => $request->ip() ?? null,
+            'user_agent' => $request->header('User-Agent') ?? null,
         ]);
 
         // Return a response
@@ -89,6 +101,17 @@ class OnlineUsersController extends Controller
                 'user_id' => $request->user()->first_name . ' ' . $request->user()->last_name,
                 'call_type' => CallType::find($callTypeId)->type,
                 'platform' => 'mobile',
+                'ip_address' => $request->ip() ?? null,
+                'user_agent' => $request->header('User-Agent') ?? null,
+            ]);
+
+            UserActivity::create([
+                'action' => 'Offline for vertical ' . CallType::find($callTypeId)->type . '.',
+                'data' => json_encode(['call_type_id' => $callTypeId]),
+                'platform' => 'mobile',
+                'user_id' => $request->user()->id,
+                'ip_address' => $request->ip() ?? null,
+                'user_agent' => $request->header('User-Agent') ?? null,
             ]);
 
             return response()->json(['status' => 'success'], 200);
@@ -118,6 +141,17 @@ class OnlineUsersController extends Controller
                 'user_id' => $request->user()->first_name . ' ' . $request->user()->last_name,
                 'call_type' => CallType::find($record->call_type_id)->type,
                 'platform' => 'mobile',
+                'ip_address' => $request->ip() ?? null,
+                'user_agent' => $request->header('User-Agent') ?? null,
+            ]);
+
+            UserActivity::create([
+                'action' => 'Offline for vertical ' . CallType::find($record->call_type_id)->type . '.',
+                'data' => json_encode(['call_type_id' => $record->call_type_id]),
+                'platform' => 'mobile',
+                'user_id' => $request->user()->id,
+                'ip_address' => $request->ip() ?? null,
+                'user_agent' => $request->header('User-Agent') ?? null,
             ]);
 
             return response()->json(['status' => 'success'], 200);

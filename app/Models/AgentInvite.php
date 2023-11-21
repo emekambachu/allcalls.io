@@ -56,4 +56,9 @@ class AgentInvite extends Model
 
     }
 
+    public function getAgentLevel(){
+        return $this->belongsTo(InternalAgentLevel::class, 'level_id', 'id');
+    }
+    
+
 }
