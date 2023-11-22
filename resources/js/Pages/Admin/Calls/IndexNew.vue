@@ -131,6 +131,7 @@ let paginate = (url) => {
                   <th scope="col" class="px-4 py-3">Agent Name</th>
                   <th scope="col" class="px-4 py-3">Role</th>
                   <th scope="col" class="px-4 py-3">Connected Duration</th>
+                  <th scope="col" class="px-4 py-3">Revenue</th>
                 </tr>
               </thead>
               <tbody>
@@ -166,16 +167,19 @@ let paginate = (url) => {
                   <td
                     class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                   >
-                  {{
-                      String(
-                        Math.floor(call.call_duration_in_seconds / 60)
-                      ).padStart(2, "0") +
-                      ":" +
-                      String(call.call_duration_in_seconds % 60).padStart(
+                    {{
+                      String(Math.floor(call.call_duration_in_seconds / 60)).padStart(
                         2,
                         "0"
-                      )
+                      ) +
+                      ":" +
+                      String(call.call_duration_in_seconds % 60).padStart(2, "0")
                     }}
+                  </td>
+                  <td
+                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    ${{ call.amount_spent }}
                   </td>
                 </tr>
               </tbody>
