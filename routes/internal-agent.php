@@ -4,6 +4,7 @@ use App\Http\Controllers\InternalAgent\DocusignController;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\InternalAgent\RegistrationStepController;
 use Inertia\Inertia;
+use App\Http\Controllers\InternalAgent\MyAgencyController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -31,6 +32,12 @@ Route::prefix('internal-agent')->middleware(['auth', 'verified', 'internal-agent
         }
         return Inertia::render('Auth/InternalAgentLocked', []);
     })->name('internal.agent.locked');
+
+    Route::get('/agent-agency', [MyAgencyController::class, 'index'])->name('internal-agent.agent-agency.index');
+    Route::post('/agent-invites', [MyAgencyController::class, 'store'])->name('admin.agent-invites.store');
+    Route::delete('/agent-invites/{id}', [MyAgencyController::class, 'destroy'])->name('internal-agent.agent-invites.destroy');
+    Route::get('/reinvite-agent/{id}', [MyAgencyController::class, 'reInvite'])->name('internal-agent.agent.reinvite');
+
 });
 
 Route::middleware(['auth', 'verified', 'internal-agent'])->group(function () {
