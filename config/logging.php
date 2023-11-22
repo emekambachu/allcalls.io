@@ -105,12 +105,12 @@ return [
             ],
             'processors' => [
                 PsrLogMessageProcessor::class,
-                function ($record) {
-                    if (isset($record['context']['subsystem'])) {
-                        $record['extra']['subsystem'] = $record['context']['subsystem'];
-                    }
-                    return $record;
-                },
+                // function ($record) {
+                //     if (isset($record['context']['subsystem'])) {
+                //         $record['extra']['subsystem'] = $record['context']['subsystem'];
+                //     }
+                //     return $record;
+                // },
             ],
         ],
 
