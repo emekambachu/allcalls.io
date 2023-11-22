@@ -156,7 +156,7 @@ let paginate = (url) => {
 
                   <td class="px-4 py-2">
                     <span
-                      class="bg-primary-100 text-primary-800 text-xs font-medium px-2 py-0.5 rounded dark:bg-primary-900 dark:text-primary-300"
+                      class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-0.5 rounded"
                     >
                       <span v-if="call.role === 'Internal Agent'">Internal Agent</span>
                       <span v-else>Regular User</span>
