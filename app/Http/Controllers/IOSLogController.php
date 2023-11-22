@@ -12,7 +12,7 @@ class IOSLogController extends Controller
         $message = $request->input('message');
         $level = $request->input('level', 'info');
 
-        Log::channel('papertrail')->$level($message);
+        Log::channel('ios_papertrail')->$level($message);
 
         return response()->json(['status' => 'success']);
     }
