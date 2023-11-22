@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, defineEmits, onMounted, watch, computed,  onUnmounted, inject } from "vue";
+import { ref, reactive, defineEmits, onMounted, watch, computed, onUnmounted, inject } from "vue";
 import Multiselect from "@vueform/multiselect";
 import InputError from "@/Components/InputError.vue";
 import { router, usePage } from "@inertiajs/vue3";
@@ -22,6 +22,7 @@ let props = defineProps({
   currentPage: Number,
   callTypes: Array,
   states: Array,
+  levels: Array,
 });
 
 let firstStepErrors = ref({});
@@ -38,6 +39,8 @@ let form = useForm({
   phone_code: "+1",
   phone_country: 'USA',
   balance: 0,
+  level: "-- Select an option --",
+  upline_id:"",
   typesWithStates: props.callTypes.reduce((acc, obj) => {
     acc[obj.id] = [];
     return acc;
@@ -58,6 +61,13 @@ let stateOptions = computed(() => {
     };
   });
 });
+const filteredStateOptions = computed(() => {
+  // Filter out the option with label 'New York' and mark it as disabled
+  return stateOptions.value.map((option) => ({
+    ...option,
+    disabled: option.label === 'New York',
+  }));
+});
 watch(
   () => [
     form.first_name,
@@ -66,8 +76,10 @@ watch(
     form.password,
     form.password_confirmation,
     form.phone,
+    form.upline_id,
+    form.level,
   ],
-  async ([firstName, lastName, email, password, passwordConfirmation, phone]) => {
+  async ([firstName, lastName, email, password, passwordConfirmation, phone, upline_id, level]) => {
     if (
       firstName === "" ||
       lastName === "" ||
@@ -75,7 +87,10 @@ watch(
       password === "" ||
       passwordConfirmation === "" ||
       password !== passwordConfirmation || // Check for password mismatch
-      phone === ""
+      phone === "" ||
+      upline_id === "" ||
+      level === ""  ||
+      level === "-- Select an option --"  
     ) {
       isFormValid.value = true;
     } else {
@@ -148,14 +163,14 @@ let saveChanges = () => {
     step.value = 0;
   }
 };
-  let emit = defineEmits(["close"]);
-  let close = () => {
-    form.reset();
-    step.value = 0;
-    emit("close");
-    firstStepErrors.value = {};
-    isLoading.value = false;
-  };
+let emit = defineEmits(["close"]);
+let close = () => {
+  form.reset();
+  step.value = 0;
+  emit("close");
+  firstStepErrors.value = {};
+  isLoading.value = false;
+};
 let goBack = () => {
   step.value -= 1;
 };
@@ -350,7 +365,8 @@ const closeDropDown = () => {
                     </svg></span>
                 </button>
 
-                <GuestTextInput onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" style="border-radius: 0px 5px 5px 0px;" @focus="closeDropDown" id="phone" type="text"
+                <GuestTextInput onkeyup="this.value=this.value.replace(/[^0-9]/g,'')"
+                  style="border-radius: 0px 5px 5px 0px;" @focus="closeDropDown" id="phone" type="text"
                   placeholder="0000000000" class="mt-1  block w-full" v-model="form.phone" maxlength="10"
                   minlength="10" />
 
@@ -398,6 +414,23 @@ const closeDropDown = () => {
               <InputError class="mt-2" :message="form.errors.password_confirmation" />
             </div>
 
+            <div class="mt-4">
+              <GuestInputLabel for="Upline ID" value="Upline ID" />
+              <GuestTextInput id="upline_id" type="text" class="mt-1 block w-full" v-model="form.upline_id" />
+              <InputError class="mt-2" :message="form.errors.upline_id" />
+            </div>
+
+            <div class="mt-4">
+              <GuestInputLabel for="Agent Level" value="Agent Level" />
+              <select style="background: #d7d7d7;" v-model="form.level" id="countries"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
+                <option disabled selected>-- Select an option -- </option>
+                <option v-for="level in levels" :value="level.id">{{ level.name }} </option>
+              </select>
+              <div v-if="firstStepErrors.gender" class="text-red-500" v-text="firstStepErrors.gender[0]">
+              </div>
+            </div>
+
             <div class="flex justify-end mt-6">
               <PrimaryButton type="button" @click="NextTab(1)" :class="{ 'opacity-25': isFormValid || isLoading }"
                 :disabled="isFormValid || isLoading">
@@ -426,8 +459,8 @@ const closeDropDown = () => {
 
                 <div v-if="selectedTypes.includes(callType.id)" class="pt-2 mb-8">
                   <label class="ml-2 text-xs font-medium">States you're licensed in:</label>
-                  <Multiselect :options="stateOptions" v-model="form.typesWithStates[callType.id]" track-by="value"
-                    label="label" mode="tags" :close-on-select="false" placeholder="Select a state">
+                  <Multiselect :options="filteredStateOptions" v-model="form.typesWithStates[callType.id]"
+                    track-by="value" label="label" mode="tags" :close-on-select="false" placeholder="Select a state">
                   </Multiselect>
                 </div>
               </div>
@@ -450,7 +483,7 @@ const closeDropDown = () => {
               <div class="flex justify-end my-6">
                 <PrimaryButton type="button" @click="saveChanges"
                   :class="{ 'opacity-25': areAllArraysEmpty || isLoading }" :disabled="areAllArraysEmpty || isLoading">
-                  <global-spinner :spinner="isLoading" /> Submit 
+                  <global-spinner :spinner="isLoading" /> Submit
                 </PrimaryButton>
 
                 <PrimaryButton @click.prevent="close" type="button" class="ml-3">

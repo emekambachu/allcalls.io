@@ -41,6 +41,7 @@ use App\Http\Controllers\TwilioAndroidAccessTokenController;
 use App\Http\Controllers\TwilioIOSAccessTokenGuestController;
 use App\Http\Controllers\TwilioIOSSandboxAccessTokenController;
 use App\Http\Controllers\TwilioAndroidAccessTokenGuestController;
+use App\Http\Controllers\IOSLogController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -223,3 +224,5 @@ Route::middleware('auth:sanctum')->patch('/notifications/{notificationId}/mark-a
 Route::middleware('auth:sanctum')->patch('/notifications/mark-all-as-read', [NotificationsAPIController::class, 'markAllNotificationsAsRead']);
 Route::middleware('auth:sanctum')->delete('/notifications/clear-all', [NotificationsAPIController::class, 'destroyAll']);
 Route::middleware('auth:sanctum')->delete('/notifications/{notificationId}', [NotificationsAPIController::class, 'destroy']);
+
+Route::middleware('auth:sanctum')->post('/ios-logs', [IOSLogController::class, 'log']);
