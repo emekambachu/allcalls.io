@@ -137,7 +137,7 @@ let paginate = (url) => {
               <tbody>
                 <tr
                   class="border-b hover:bg-gray-100"
-                  v-for="call in calls"
+                  v-for="call in calls.data"
                   :key="call.id"
                 >
                   <td
