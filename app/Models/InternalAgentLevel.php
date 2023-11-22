@@ -15,7 +15,7 @@ class InternalAgentLevel extends Model
         return $this->hasMany(AgentInvite::class, 'level_id', 'id')->where('used', false);
     }
 
-    // public function getRegisteredAgentInvites() {
-
-    // }
+    public function getRegisteredAgentInvites() {
+        return $this->hasMany(User::class, 'level_id', 'id');
+    }
 }

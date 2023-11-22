@@ -24,13 +24,14 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Http\Client\Response;
 use Inertia\Inertia;
+use App\Models\InternalAgentLevel as AgentLevel;
 
 class InternalAgentController extends Controller
 {
     public function index(Request $request)
     {
         $agent = Role::whereName('internal-agent')->first();
-
+        $levels = AgentLevel::orderBy('created_at', 'desc')->get();
         $agents = User::whereHas('roles', function ($query) use ($agent) {
             $query->where('role_id', $agent->id);
         })
@@ -76,6 +77,7 @@ class InternalAgentController extends Controller
             ->with('internalAgentContract.getContractSign')
             ->with('states')
             ->with('callTypes')
+            ->with('getAgentLevel')
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
@@ -85,6 +87,7 @@ class InternalAgentController extends Controller
         return Inertia::render('Admin/Agent/Index', [
             'requestData' => $request->all(),
             'agents' => $agents,
+            'levels' => $levels,
             'callTypes' => $callTypes,
             'states' => $states,
             'statuses' => PROGRESS_STATUSES
@@ -119,6 +122,8 @@ class InternalAgentController extends Controller
             'phone' => ['required', 'string', 'min:10', 'max:10',  'unique:' . User::class, 'regex:/^[0-9]*$/'],
             'phone_code' => ['required', 'regex:/^\+(?:[0-9]){1,4}$/'],
             'phone_country' => ['required'],
+            'level' => 'required|max:255',
+            'upline_id' => 'required|string|max:255',
             'password' => ['required', 'confirmed', Password::defaults()],
             'typesWithStates' => [
                 'required',
@@ -149,6 +154,8 @@ class InternalAgentController extends Controller
             'phone_country' => $request->phone_country,
             'phone_code' => $request->phone_code,
             'phone' => $request->phone,
+            'level_id' => $request->level,
+            'upline_id' => $request->upline_id,
             'password' => Hash::make($request->password),
             'balance' => isset($request->balance) ? $request->balance : 0,
         ]);
@@ -230,9 +237,6 @@ class InternalAgentController extends Controller
 
     public function update(Request $request, $id)
     {
-        // echo $request->all();
-        // dd($request->all());
-        // dd($request->all());
         $user = User::find($id);
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
@@ -310,6 +314,8 @@ class InternalAgentController extends Controller
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'balance' => isset($request->balance) ? $request->balance : 0,
+                'level_id' => $request->level,
+                'upline_id' => $request->upline_id,
             ]);
             return response()->json([
                 'success' => true,
