@@ -132,6 +132,8 @@ let paginate = (url) => {
                   <th scope="col" class="px-4 py-3">Role</th>
                   <th scope="col" class="px-4 py-3">Connected Duration</th>
                   <th scope="col" class="px-4 py-3">Revenue</th>
+                  <th scope="col" class="px-4 py-3">Vertical</th>
+                  <th scope="col" class="px-4 py-3">Caller ID</th>
                 </tr>
               </thead>
               <tbody>
@@ -180,6 +182,16 @@ let paginate = (url) => {
                     class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                   >
                     ${{ call.amount_spent }}
+                  </td>
+                  <td
+                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    {{ call.call_type.type }}
+                  </td>
+                  <td
+                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    {{ call.from }}
                   </td>
                 </tr>
               </tbody>
