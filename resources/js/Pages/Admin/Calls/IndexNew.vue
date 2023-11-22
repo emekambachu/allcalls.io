@@ -153,19 +153,14 @@ let paginate = (url) => {
                   >
                     {{ call.user.first_name }} {{ call.user.last_name }}
                   </td>
-                  <td
-                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
+
+                  <td class="px-4 py-2">
                     <span
-                      v-if="call.role === 'Internal Agent'"
-                      class="bg-indigo-100 text-indigo-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded"
-                      >Internal Agent</span
+                      class="bg-primary-100 text-primary-800 text-xs font-medium px-2 py-0.5 rounded dark:bg-primary-900 dark:text-primary-300"
                     >
-                    <span
-                      v-else
-                      class="bg-purple-100 text-purple-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded"
-                      >Regular User</span
-                    >
+                      <span v-if="call.role === 'Internal Agent'">Internal Agent</span>
+                      <span v-else>Regular User</span>
+                    </span>
                   </td>
                 </tr>
               </tbody>
