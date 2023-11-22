@@ -129,6 +129,7 @@ let paginate = (url) => {
                   <th scope="col" class="px-4 py-3">ID</th>
                   <th scope="col" class="px-4 py-3">Call Date</th>
                   <th scope="col" class="px-4 py-3">Agent Name</th>
+                  <th scope="col" class="px-4 py-3">Role</th>
                 </tr>
               </thead>
               <tbody>
@@ -151,6 +152,20 @@ let paginate = (url) => {
                     class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                   >
                     {{ call.user.first_name }} {{ call.user.last_name }}
+                  </td>
+                  <td
+                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    <span
+                      v-if="call.role === 'Internal Agent'"
+                      class="bg-indigo-100 text-indigo-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded"
+                      >Internal Agent</span
+                    >
+                    <span
+                      v-else
+                      class="bg-purple-100 text-purple-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded"
+                      >Regular User</span
+                    >
                   </td>
                 </tr>
               </tbody>
