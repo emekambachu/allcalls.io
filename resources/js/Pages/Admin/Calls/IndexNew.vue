@@ -42,9 +42,7 @@ let paginate = (url) => {
 
     <section class="py-3 sm:py-5">
       <div class="px-4 mx-auto max-w-screen-2xl lg:px-12">
-        <div
-          class="relative overflow-hidden bg-white sm:rounded-lg"
-        >
+        <div class="relative overflow-hidden bg-white sm:rounded-lg">
           <div
             class="flex flex-col px-4 py-3 space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-4"
           >
@@ -126,13 +124,12 @@ let paginate = (url) => {
           </div>
           <div v-if="calls.data.length" class="overflow-x-auto">
             <table class="w-full text-sm text-left text-gray-500">
-              <thead
-                class="text-xs text-gray-700 uppercase bg-gray-50"
-              >
+              <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                 <tr>
                   <th scope="col" class="px-4 py-3">ID</th>
                   <th scope="col" class="px-4 py-3">Call Date</th>
                   <th scope="col" class="px-4 py-3">Call Taken</th>
+                  <th scope="col" class="px-4 py-3">Agent Name</th>
                 </tr>
               </thead>
               <tbody>
@@ -156,14 +153,17 @@ let paginate = (url) => {
                   >
                     {{ call.call_taken }}
                   </td>
+                  <td
+                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    {{ call.user.first_name }} {{ call.user.last_name }}
+                  </td>
                 </tr>
               </tbody>
             </table>
           </div>
 
           <div v-else class="text-sm text-center">No calls found.</div>
-
-
         </div>
       </div>
     </section>
