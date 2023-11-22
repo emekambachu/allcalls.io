@@ -132,6 +132,7 @@ let paginate = (url) => {
                 <tr>
                   <th scope="col" class="px-4 py-3">ID</th>
                   <th scope="col" class="px-4 py-3">Call Date</th>
+                  <th scope="col" class="px-4 py-3">Call Taken</th>
                 </tr>
               </thead>
               <tbody>
