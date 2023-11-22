@@ -269,7 +269,7 @@ let dateFormat = (data) => {
     </section>
     <Modal :show="showModal" @close="showModal = false">
       <Edit :showModal="showModal" :userDetail="userDetail" :currentPage="currentPage" @close="showModal = false"
-        :callTypes="callTypes" :states="states" :roles="roles" :route="'/admin/customer'"></Edit>
+        :callTypes="callTypes" :states="states" :user_type="'Customer'" :roles="roles" :route="'/admin/customer'"></Edit>
     </Modal>
     <DeleteModal :isLoading="isLoading" @actionToDeleteUser="actionToDeleteUser" :deleteUserModal="deleteUserModal"
       @close="deleteUserModal = false" :confirmMessage="confirmMessage" />

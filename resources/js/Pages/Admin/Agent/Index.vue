@@ -74,7 +74,7 @@ let showModal = ref(false);
 let userDetail = ref(null);
 let currentPage = ref(null);  
 
-let openAgentModal = (user, page) => {
+let editAgentModal = (user, page) => {
   userDetail.value = user;
   currentPage.value = page;
   showModal.value = true;
@@ -345,9 +345,7 @@ let exportCSV = agent => {
                       </svg>
                     </a>
 
-                    <button
-                      title="Edit Agent"
-                      @click="openAgentModal(agent, agents.current_page)"
+                    <button title="Edit Agent" @click="editAgentModal(agent, agents.current_page)"
                       class="inline-flex items-center mx-2 p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
                       type="button"
                     >
@@ -623,15 +621,8 @@ let exportCSV = agent => {
     </Modal>
 
     <Modal :show="showModal" @close="showModal = false">
-      <Edit
-        :showModal="showModal"
-        :userDetail="userDetail"
-        :currentPage="currentPage"
-        @close="showModal = false"
-        :callTypes="callTypes"
-        :states="states"
-        :route="'/admin/agent'"
-      ></Edit>
+      <Edit :showModal="showModal" :userDetail="userDetail" :user_type="'Internal Agent'" :currentPage="currentPage" @close="showModal = false"
+        :callTypes="callTypes" :states="states" :route="'/admin/agent'"></Edit>
     </Modal>
 
     <Modal :show="agentModal" @close="agentModal = false">

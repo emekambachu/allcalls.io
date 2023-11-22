@@ -30,6 +30,7 @@ let props = defineProps({
   },
   states: Array,
   route: String,
+  user_type:String,
 });
 let emit = defineEmits(["close"]);
 let originalClient = props.userDetail;
@@ -95,6 +96,13 @@ let stateOptions = computed(() => {
       label: state.full_name,
     };
   });
+});
+const filteredStateOptions = computed(() => {
+  // Filter out the option with label 'New York' and mark it as disabled
+  return stateOptions.value.map((option) => ({
+    ...option,
+    disabled: option.label === 'New York',
+  }));
 });
 // Check if balance change
 let changeBalance = (newBalance) => {
@@ -407,9 +415,16 @@ const closeDropDown = () => {
               <label class="ml-2 text-md font-medium text-custom-indigo" :for="`insurance_type_${callType.id}`"
                 v-text="callType.type"></label>
 
-              <div v-if="selectedTypeIds.includes(callType.id)" class="pt-2 mb-8">
+              <div v-if="selectedTypeIds.includes(callType.id) && user_type === 'Customer'" class="pt-2 mb-8">
                 <label class="ml-2 text-xs font-medium">States you're licensed in:</label>
                 <Multiselect :options="stateOptions" v-model="form.selected_states[form.call_types.indexOf(callType)]
+                  .selectedStateIds
+                  " track-by="value" label="label" mode="tags" :close-on-select="false" placeholder="Select a state">
+                </Multiselect>
+              </div>
+              <div v-if="selectedTypeIds.includes(callType.id) && user_type === 'Internal Agent'" class="pt-2 mb-8">
+                <label class="ml-2 text-xs font-medium">States you're licensed in:</label>
+                <Multiselect :options="filteredStateOptions" v-model="form.selected_states[form.call_types.indexOf(callType)]
                   .selectedStateIds
                   " track-by="value" label="label" mode="tags" :close-on-select="false" placeholder="Select a state">
                 </Multiselect>
