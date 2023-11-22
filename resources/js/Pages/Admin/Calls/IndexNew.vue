@@ -131,7 +131,7 @@ let paginate = (url) => {
               >
                 <tr>
                   <th scope="col" class="px-4 py-3">ID</th>
-                  <th scope="col" class="px-4 py-3">User ID</th>
+                  <th scope="col" class="px-4 py-3">Call Date</th>
                 </tr>
               </thead>
               <tbody>
@@ -148,7 +148,12 @@ let paginate = (url) => {
                   <td
                     class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                   >
-                    {{ call.user_id }}
+                    {{ call.created_at }}
+                  </td>
+                  <td
+                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    {{ call.call_taken }}
                   </td>
                 </tr>
               </tbody>
