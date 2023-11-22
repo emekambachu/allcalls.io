@@ -154,6 +154,11 @@ let paginate = (url) => {
               </tbody>
             </table>
           </div>
+
+          <div
+            v-else
+            class="flex items-center justify-center px-4 py-3 text-gray-500 bg-gray-50 sm:px-6">
+            No calls found.
         </div>
       </div>
     </section>
