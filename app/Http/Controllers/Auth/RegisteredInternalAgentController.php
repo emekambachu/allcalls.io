@@ -27,7 +27,12 @@ class RegisteredInternalAgentController extends Controller
     {
         $callTypes = CallType::all();
         $states = State::all();
-        return Inertia::render('InternalAgent/Register', compact('callTypes', 'states'));
+        $tokenData = '';
+        if(session('agent-token')){ 
+            $tokenData = AgentInvite::where('token', session('agent-token'))->first();
+        }
+
+        return Inertia::render('InternalAgent/Register', compact('callTypes', 'states', 'tokenData'));
     }
     public function store(Request $request)
     {
@@ -59,6 +64,8 @@ class RegisteredInternalAgentController extends Controller
                 'phone' => $request->phone,
                 'password' => Hash::make($request->password),
                 'legacy_key' => false,
+                'upline_id' => $request->upline_id,
+                'level_id' => $request->level_id,
             ]);
 
             $agentRole = Role::whereName('internal-agent')->first();

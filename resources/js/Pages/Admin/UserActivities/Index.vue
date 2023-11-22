@@ -1,14 +1,23 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, router } from "@inertiajs/vue3";
+import { Head, router, usePage } from "@inertiajs/vue3";
+import { toaster } from "@/helper.js";
 
+let page = usePage();
+if (page.props.flash.message) {
+  toaster("success", page.props.flash.message);
+}
 let props = defineProps(["userActivities"]);
 
 console.log(props);
 
 let paginate = (url) => {
   router.visit(url);
+};
+
+let clearAll = () => {
+  router.visit("/admin/user-activities/clear-all", { method: "DELETE" });
 };
 </script>
 
@@ -23,8 +32,20 @@ let paginate = (url) => {
       <div>
         <div class="text-4xl text-custom-sky font-bold mb-6">User Activities</div>
       </div>
+
       <div class="flex items-center">
-        <button class="button-custom-back px-3 py-2 rounded-md mr-2">Clear All</button>
+        <button
+          @click.prevent="clearAll"
+          class="button-custom-back px-3 py-2 rounded-md mr-2"
+        >
+          Clear All
+        </button>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+      <div class="px-4 sm:px-8 sm:rounded-lg">
+        <hr class="mb-4" />
       </div>
     </div>
 
@@ -39,6 +60,8 @@ let paginate = (url) => {
                   <th scope="col" class="px-4 py-3">Action</th>
                   <th scope="col" class="px-4 py-3">Name</th>
                   <th scope="col" class="px-4 py-3">Platform</th>
+                  <th scope="col" class="px-4 py-3">IP Address</th>
+                  <th scope="col" class="px-4 py-3">User Agent</th>
                   <th scope="col" class="px-4 py-3">Created At</th>
                 </tr>
               </thead>
@@ -54,6 +77,8 @@ let paginate = (url) => {
                     {{ activity.user.first_name + " " + activity.user.last_name }}
                   </td>
                   <td class="text-gray-600 px-4 py-3">{{ activity.platform }}</td>
+                  <td class="text-gray-600 px-4 py-3">{{ activity.ip_address }}</td>
+                  <td class="text-gray-600 px-4 py-3">{{ activity.user_agent }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ activity.created_at }}</td>
                 </tr>
               </tbody>
@@ -84,11 +109,13 @@ let paginate = (url) => {
                 href="#"
                 @click.prevent="paginate(link.url)"
                 :class="[
-                  'flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700',
+                  'flex items-center justify-center px-4 h-10 border border-gray-300',
+                  link.active
+                    ? 'text-blue-600 bg-blue-50 hover:bg-blue-100 hover:text-blue-700'
+                    : 'leading-tight text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700',
                   {
                     'rounded-l-lg': index === 0,
                     'rounded-r-lg': index === userActivities.links.length - 1,
-                    'bg-blue-500 text-blue-600': link.active,
                   },
                 ]"
                 v-html="link.label"

@@ -44,6 +44,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'progress',
         'phone_country',
         'phone_code',
+        'upline_id',
+        'level_id',
     ];
 
     /**
