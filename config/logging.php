@@ -94,6 +94,24 @@ return [
             'processors' => [PsrLogMessageProcessor::class],
         ],
 
+        'ios_papertrail' => [
+            'driver' => 'monolog',
+            'level' => env('LOG_LEVEL', 'debug'),
+            'handler' => env('LOG_PAPERTRAIL_HANDLER', SyslogUdpHandler::class),
+            'handler_with' => [
+                'host' => env('PAPERTRAIL_URL'),
+                'port' => env('PAPERTRAIL_PORT'),
+                'connectionString' => 'tls://'.env('PAPERTRAIL_URL').':'.env('PAPERTRAIL_PORT'),
+            ],
+            'processors' => [
+                PsrLogMessageProcessor::class,
+                function ($record) {
+                    $record['extra']['subsystem'] = 'ios';
+                    return $record;
+                },
+            ],
+        ],
+
         'stderr' => [
             'driver' => 'monolog',
             'level' => env('LOG_LEVEL', 'debug'),
