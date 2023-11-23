@@ -169,6 +169,8 @@ let performSorting = () => {
 
 
 let sortByColumn = (column) => {
+  console.log('Sort by column called')');
+
   if (!column.sortable) return; // If the column is not sortable, do nothing
 
   // Check if the same column is clicked again, then toggle the sort direction
