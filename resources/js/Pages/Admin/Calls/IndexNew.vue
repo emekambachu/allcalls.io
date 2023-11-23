@@ -17,7 +17,21 @@ let page = usePage();
 if (page.props.flash.message) {
   toaster("success", page.props.flash.message);
 }
-let props = defineProps(["calls", "totalCalls", "totalRevenue"]);
+let props = defineProps({
+  calls: {
+    type: Object,
+    required: true,
+  },
+  totalCalls: {
+    type: Number,
+    required: true,
+  },
+  totalRevenue: {
+    type: Number,
+    required: true,
+  },
+});
+});
 
 let loadedCalls = ref(props.calls.data);
 

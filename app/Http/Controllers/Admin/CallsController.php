@@ -96,7 +96,7 @@ class CallsController extends Controller
             'requestData' => $request->all(),
             'calls' => $calls,
             'totalCalls' => Call::count(),
-            'totalRevenue' => round((float) Call::sum('amount_spent'), 2) ,
+            'totalRevenue' => round((float) Call::sum('amount_spent'), 2),
         ]);
     }
 }
