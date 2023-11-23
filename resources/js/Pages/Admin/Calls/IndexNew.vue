@@ -21,6 +21,10 @@ let props = defineProps(["calls"]);
 
 let loadedCalls = ref(props.calls.data);
 
+watch(() => props.calls, () => {
+  loadedCalls.value = [...loadedCalls.value, ...props.calls.data];
+})
+
 let paginate = (url) => {
   router.visit(url);
 };
