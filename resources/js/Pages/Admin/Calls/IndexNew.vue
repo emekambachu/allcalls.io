@@ -183,7 +183,7 @@ onMounted(() => {
               </h5>
               <h5>
                 <span class="text-gray-500">Total Revenue: </span>
-                <span class="">&nbsp;${{ totalRevenue }}</span>
+                <span class="">&nbsp;${{ totalRevenue.toFixed(2) }}</span>
               </h5>
             </div>
             <div
