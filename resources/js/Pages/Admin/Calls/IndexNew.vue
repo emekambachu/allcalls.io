@@ -58,11 +58,7 @@ let getConnectedDurationColumn = (call) => {
     ":" +
     String(call.call_duration_in_seconds % 60).padStart(2, "0")
   ))
-  return (
-    String(Math.floor(call.call_duration_in_seconds / 60)).padStart(2, "0") +
-    ":" +
-    String(call.call_duration_in_seconds % 60).padStart(2, "0")
-  );
+  return String(Math.floor(call.call_duration_in_seconds / 60)).padStart(2, "0") + ":" + String(call.call_duration_in_seconds % 60).padStart(2, "0");
 };
 
 let getRevenueColumn = (call) => {
