@@ -217,7 +217,7 @@ let getCallerIdColumn = (call) => {
                     :key="colIndex"
                     class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     v-show="column.visible"
-                    v-text="call[column.columnMethod](call)"
+                    v-text="columns[colIndex](call)"
                   >
                   </td>
                   <td
