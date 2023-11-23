@@ -170,7 +170,6 @@ let columns = ref([
                   class="border-b hover:bg-gray-100"
                   v-for="(call, index) in calls.data"
                   :key="call.id"
-                  v-if="columns[index].visible"
                 >
                   <td
                     class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
