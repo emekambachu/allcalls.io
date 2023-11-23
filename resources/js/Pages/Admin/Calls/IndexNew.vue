@@ -290,7 +290,7 @@ let renderColumn = (column, call) => {
                 <tr class="cursor-pointer">
                   <th
                     scope="col"
-                    class="px-4 py-3 whitespace-nowrap"
+                    class="px-4 py-3 whitespace-nowrap user-select-none"
                     v-for="(column, index) in columns"
                     :key="index"
                     v-show="column.visible"
