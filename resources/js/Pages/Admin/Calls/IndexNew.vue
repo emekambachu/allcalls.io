@@ -30,7 +30,7 @@ let columns = ref([
   { label: "Call Date", columnMethod: "getCallTakenColumn", visible: true },
   { label: "Agent Name", columnMethod: "getAgentNameColumn", visible: true },
   { label: "Role", columnMethod: "getRoleColumn", visible: true },
-  { label: "Connected Duration", columnMethod: "getConnectedDuration", visible: true },
+  { label: "Connected Duration", columnMethod: "getConnectedDurationColumn", visible: true },
   { label: "Revenue", columnMethod: "getRevenueColumn", visible: true },
   { label: "Vertical", columnMethod: "getVerticalColumn", visible: true },
   { label: "CallerID", columnMethod: "getCallerIdColumn", visible: true },
