@@ -24,6 +24,10 @@ console.log(props);
 let paginate = (url) => {
   router.visit(url);
 };
+
+
+
+let visibleColumns = ref(['id', 'call_taken']);
 </script>
 
 <style scoped>
@@ -117,7 +121,6 @@ let paginate = (url) => {
                     <div class="border border-gray-100 p-2 shadow bg-white mt-2">
                       <div class="flex items-center mb-4">
                         <input
-                          checked
                           type="checkbox"
                           value=""
                           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
@@ -129,7 +132,6 @@ let paginate = (url) => {
                       </div>
                       <div class="flex items-center">
                         <input
-                          checked
                           type="checkbox"
                           value=""
                           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
