@@ -53,11 +53,6 @@ let getRoleColumn = (call) => {
 };
 
 let getConnectedDurationColumn = (call) => {
-  console.log('connected duration should be ', (
-    String(Math.floor(call.call_duration_in_seconds / 60)).padStart(2, "0") +
-    ":" +
-    String(call.call_duration_in_seconds % 60).padStart(2, "0")
-  ))
   return String(Math.floor(call.call_duration_in_seconds / 60)).padStart(2, "0") + ":" + String(call.call_duration_in_seconds % 60).padStart(2, "0");
 };
 
