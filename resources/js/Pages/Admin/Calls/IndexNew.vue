@@ -195,10 +195,10 @@ let performSorting = () => {
 const sortByColumn = (column) => {
   if (!column.sortable) return;
 
-  if (sortColumn.value === column) {
+  if (sortColumn.value === column.label) {
     sortDirection.value = sortDirection.value === "asc" ? "desc" : "asc";
   } else {
-    sortColumn.value = column;
+    sortColumn.value = column.label;
     sortDirection.value = "asc";
   }
 
@@ -206,8 +206,6 @@ const sortByColumn = (column) => {
 };
 
 const performSorting = () => {
-  if (!sortColumn.value) return;
-
   loadedCalls.value.sort(sortColumn.value.sortingMethod);
 };
 </script>
