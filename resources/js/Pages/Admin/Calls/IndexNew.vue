@@ -158,6 +158,7 @@ let columns = ref([
                     class="px-4 py-3 whitespace-nowrap"
                     v-for="(column, index) in columns"
                     :key="index"
+                    v-if="column.visible"
                   >
                     {{ column.label }}
                   </th>
@@ -167,8 +168,9 @@ let columns = ref([
               <tbody>
                 <tr
                   class="border-b hover:bg-gray-100"
-                  v-for="call in calls.data"
+                  v-for="(call, index) in calls.data"
                   :key="call.id"
+                  v-if="columns[index].visible"
                 >
                   <td
                     class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
