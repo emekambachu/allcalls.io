@@ -306,7 +306,7 @@ const sortByColumn = (column) => {
                     <div class="flex items-center">
                       <span>{{ column.label }}</span>
 
-                      <span v-if="sortColumn === column.columnMethod">
+                      <span v-if="sortColumn === column.label">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
