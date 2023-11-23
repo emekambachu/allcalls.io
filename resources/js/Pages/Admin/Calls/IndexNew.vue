@@ -27,13 +27,13 @@ let paginate = (url) => {
 
 let columns = ref([
   { label: "ID", columnMethod: "getIdColumn", visible: true },
-  { label: "Call Date", columnMethod: "getCallTakenColumn", visible: false },
-  { label: "Agent Name", columnMethod: "getAgentNameColumn", visible: false },
-  { label: "Role", columnMethod: "getRoleColumn", visible: false },
-  { label: "Connected Duration", columnMethod: "getRoleColumn", visible: false },
-  { label: "Revenue", columnMethod: "getRevenueColumn", visible: false },
-  { label: "Vertical", columnMethod: "getVerticalColumn", visible: false },
-  { label: "CallerID", columnMethod: "getCallerIdColumn", visible: false },
+  { label: "Call Date", columnMethod: "getCallTakenColumn", visible: true },
+  { label: "Agent Name", columnMethod: "getAgentNameColumn", visible: true },
+  { label: "Role", columnMethod: "getRoleColumn", visible: true },
+  { label: "Connected Duration", columnMethod: "getRoleColumn", visible: true },
+  { label: "Revenue", columnMethod: "getRevenueColumn", visible: true },
+  { label: "Vertical", columnMethod: "getVerticalColumn", visible: true },
+  { label: "CallerID", columnMethod: "getCallerIdColumn", visible: true },
 ]);
 
 
