@@ -55,12 +55,20 @@ class Call extends Model
 
     public function getCallTakenAttribute($value)
     {
+        // Parse the timestamp
+        $timestamp = Carbon::parse($value);
+
+        // Check if there's an authenticated user
         if (auth()->user()) {
+            // Get the user's timezone
             $timezone = auth()->user()->timezone;
-            return Carbon::parse($value)->timezone($timezone)->format('F jS Y, g:i:s a');
+
+            // Apply the timezone to the timestamp
+            $timestamp->timezone($timezone);
         }
 
-        return Carbon::parse($value)->format('F jS Y, g:i:s a');
+
+        return $timestamp->diffForHumans() . ' (' . $timestamp->format('H:i d/m/Y') . ')';
     }
 
     /**
