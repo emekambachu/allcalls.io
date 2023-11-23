@@ -134,7 +134,7 @@ let paginate = (url) => {
                   leave-to-class="transform scale-95 opacity-0"
                 >
                   <MenuItems
-                    class="absolute mt-2 w-56 origin-top-right rounded-md bg-white shadow"
+                    class="absolute mt-2 w-56 origin-top-right rounded-md bg-white shadow border border-gray-100"
                   >
                     <div class="px-1 py-1">
                       <MenuItem>
