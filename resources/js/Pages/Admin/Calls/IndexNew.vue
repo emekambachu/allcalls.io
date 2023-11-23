@@ -95,7 +95,15 @@ let columns = ref([
       return call.user.first_name + " " + call.user.last_name;
     },
   },
-  { label: "Role", columnMethod: "getRoleColumn", visible: false, sortable: false },
+  {
+    label: "Role",
+    columnMethod: "getRoleColumn",
+    visible: false,
+    sortable: false,
+    render(call) {
+      return call.user.role;
+    },
+  },
   {
     label: "Connected Duration",
     columnMethod: "getConnectedDurationColumn",
