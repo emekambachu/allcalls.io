@@ -63,7 +63,7 @@ let columns = ref([
     columnMethod: "getIdColumn",
     visible: true,
     sortable: true,
-    sortingMethod: (a, b) => {
+    sortingMethod(a, b) {
       let valueA = a.id; // Assuming 'id' is the property name in your call object
       let valueB = b.id;
 
@@ -73,18 +73,27 @@ let columns = ref([
         return valueB - valueA;
       }
     },
+    render(call) {
+      return call.id;
+    },
   },
   {
     label: "Call Date",
     columnMethod: "getCallTakenColumn",
     visible: true,
     sortable: false,
+    render(call) {
+      return call.call_taken;
+    },
   },
   {
     label: "Agent Name",
     columnMethod: "getAgentNameColumn",
     visible: true,
     sortable: false,
+    render(call) {
+      return call.user.first_name + " " + call.user.last_name;
+    },
   },
   { label: "Role", columnMethod: "getRoleColumn", visible: false, sortable: false },
   {
@@ -92,74 +101,46 @@ let columns = ref([
     columnMethod: "getConnectedDurationColumn",
     visible: false,
     sortable: false,
+    render(call) {
+      return (
+        String(Math.floor(call.call_duration_in_seconds / 60)).padStart(2, "0") +
+        ":" +
+        String(call.call_duration_in_seconds % 60).padStart(2, "0")
+      );
+    },
   },
-  { label: "Revenue", columnMethod: "getRevenueColumn", visible: true, sortable: false },
-  { label: "Vertical", columnMethod: "getVerticalColumn", visible: true, sortable: false },
-  { label: "CallerID", columnMethod: "getCallerIdColumn", visible: true, sortable: false },
+  {
+    label: "Revenue",
+    columnMethod: "getRevenueColumn",
+    visible: true,
+    sortable: false,
+    render(call) {
+      return "$" + call.amount_spent;
+    },
+  },
+  {
+    label: "Vertical",
+    columnMethod: "getVerticalColumn",
+    visible: true,
+    sortable: false,
+    render(call) {
+      return call.call_type.type;
+    },
+  },
+  {
+    label: "CallerID",
+    columnMethod: "getCallerIdColumn",
+    visible: true,
+    sortable: false,
+    render(call) {
+      return call.from;
+    },
+  },
 ]);
 
 let sortColumn = ref(null);
 let sortDirection = ref("asc");
 let sortingMethod = ref(null);
-
-let getIdColumn = (call) => {
-  return call.id;
-};
-
-let getCallTakenColumn = (call) => {
-  return call.call_taken;
-};
-
-let getAgentNameColumn = (call) => {
-  return call.user.first_name + " " + call.user.last_name;
-};
-
-let getRoleColumn = (call) => {
-  return call.role;
-};
-
-let getConnectedDurationColumn = (call) => {
-  return (
-    String(Math.floor(call.call_duration_in_seconds / 60)).padStart(2, "0") +
-    ":" +
-    String(call.call_duration_in_seconds % 60).padStart(2, "0")
-  );
-};
-
-let getRevenueColumn = (call) => {
-  return "$" + call.amount_spent;
-};
-
-let getVerticalColumn = (call) => {
-  return call.call_type.type;
-};
-
-let getCallerIdColumn = (call) => {
-  return call.from;
-};
-
-let callColumnMethod = (call, column) => {
-  switch (column.columnMethod) {
-    case "getIdColumn":
-      return getIdColumn(call);
-    case "getCallTakenColumn":
-      return getCallTakenColumn(call);
-    case "getAgentNameColumn":
-      return getAgentNameColumn(call);
-    case "getRoleColumn":
-      return getRoleColumn(call);
-    case "getConnectedDurationColumn":
-      return getConnectedDurationColumn(call);
-    case "getRevenueColumn":
-      return getRevenueColumn(call);
-    case "getVerticalColumn":
-      return getVerticalColumn(call);
-    case "getCallerIdColumn":
-      return getCallerIdColumn(call);
-    default:
-      return "";
-  }
-};
 
 let landmark = ref(null);
 
@@ -180,20 +161,7 @@ let performSorting = () => {
   console.log("Sort Column: ", sortColumn.value);
   console.log("Sort Direction", sortDirection.value);
 
-
   loadedCalls.value.sort(sortingMethod.value);
-  // if (!sortColumn.value) return;
-
-  // loadedCalls.value.sort((a, b) => {
-  //   let valueA = callColumnMethod(a, { columnMethod: sortColumn.value });
-  //   let valueB = callColumnMethod(b, { columnMethod: sortColumn.value });
-
-  //   if (sortDirection.value === 'asc') {
-  //     return valueA < valueB ? -1 : 1;
-  //   } else {
-  //     return valueA > valueB ? -1 : 1;
-  //   }
-  // });
 };
 
 const sortByColumn = (column) => {
@@ -210,7 +178,6 @@ const sortByColumn = (column) => {
 
   performSorting();
 };
-
 </script>
 
 <style scoped>
@@ -355,7 +322,7 @@ const sortByColumn = (column) => {
                     :key="colIndex"
                     class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     v-show="column.visible"
-                    v-text="callColumnMethod(call, column)"
+                    v-text="column.render(call)"
                   ></td>
                   <td
                     class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
