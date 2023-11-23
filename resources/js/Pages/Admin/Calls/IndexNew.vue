@@ -72,6 +72,9 @@ let columns = ref([
   { label: "CallerID", columnMethod: "getCallerIdColumn", visible: true },
 ]);
 
+let sortColumn = ref(null);
+let sortDirection = ref("asc");
+
 let getIdColumn = (call) => {
   return call.id;
 };
@@ -144,6 +147,44 @@ let observer = new IntersectionObserver((entries) => {
 onMounted(() => {
   observer.observe(landmark.value);
 });
+
+
+let performSorting = () => {
+  console.log('Perform sorting now!!')
+  console.log('Sort Column: ', sortColumn.value);
+  console.log('Sort Direction', sortDirection.value);
+  // if (!sortColumn.value) return;
+
+  // loadedCalls.value.sort((a, b) => {
+  //   let valueA = callColumnMethod(a, { columnMethod: sortColumn.value });
+  //   let valueB = callColumnMethod(b, { columnMethod: sortColumn.value });
+
+  //   if (sortDirection.value === 'asc') {
+  //     return valueA < valueB ? -1 : 1;
+  //   } else {
+  //     return valueA > valueB ? -1 : 1;
+  //   }
+  // });
+};
+
+
+let sortByColumn = (column) => {
+  if (!column.sortable) return; // If the column is not sortable, do nothing
+
+  // Check if the same column is clicked again, then toggle the sort direction
+  if (sortColumn.value === column.columnMethod) {
+    sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
+  } else {
+    sortColumn.value = column.columnMethod;
+    sortDirection.value = 'asc';
+  }
+
+  // Perform the sorting
+  performSorting();
+};
+
+
+
 </script>
 
 <style scoped>
@@ -234,8 +275,13 @@ onMounted(() => {
                     v-for="(column, index) in columns"
                     :key="index"
                     v-show="column.visible"
+                    @click="sortByColumn(column)"
                   >
                     {{ column.label }}
+
+                    <span v-if="sortColumn === column.columnMethod">
+                      {{ sortDirection === "asc" ? "🔼" : "🔽" }}
+                    </span>
                   </th>
                   <th scope="col" class="px-4 py-3 whitespace-nowrap">Actions</th>
                 </tr>
