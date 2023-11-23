@@ -34,7 +34,7 @@ let columns = ref([
   { label: "Revenue", columnMethod: "getRevenueColumn", visible: false },
   { label: "Vertical", columnMethod: "getVerticalColumn", visible: false },
   { label: "CallerID", columnMethod: "getCallerIdColumn", visible: false },
-])
+]);
 </script>
 
 <style scoped>
@@ -126,7 +126,11 @@ let columns = ref([
 
                   <PopoverPanel class="absolute z-10 w-40 -left-20">
                     <div class="border border-gray-100 p-2 shadow bg-white mt-2">
-                      <div class="flex items-center mb-4" v-for="(column, index) in columns" :key="index">
+                      <div
+                        class="flex items-center mb-4"
+                        v-for="(column, index) in columns"
+                        :key="index"
+                      >
                         <input
                           :id="`column-${index}`"
                           type="checkbox"
@@ -149,7 +153,15 @@ let columns = ref([
             <table class="w-full text-sm text-left text-gray-500">
               <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                 <tr>
-                  <th scope="col" class="px-4 py-3 whitespace-nowrap" v-for="(column, index) in columns" v-if="column.visible">{{ column.label }}</th>
+                  <th
+                    scope="col"
+                    class="px-4 py-3 whitespace-nowrap"
+                    v-for="(column, index) in columns"
+                    v-if="column.visible"
+                    :key="index"
+                  >
+                    {{ column.label }}
+                  </th>
                   <th scope="col" class="px-4 py-3 whitespace-nowrap">Actions</th>
                 </tr>
               </thead>
@@ -290,7 +302,9 @@ let columns = ref([
             </table>
           </div>
 
-          <div v-else class="text-sm text-center py-20 text-gray-200">No calls found.</div>
+          <div v-else class="text-sm text-center py-20 text-gray-200">
+            No calls found.
+          </div>
         </div>
       </div>
     </section>
