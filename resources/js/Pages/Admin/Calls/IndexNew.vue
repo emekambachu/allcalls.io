@@ -26,7 +26,14 @@ let paginate = (url) => {
 };
 
 let columns = ref([
-  { label: "ID", columnMethod: "getIdColumn", visible: false }
+  { label: "ID", columnMethod: "getIdColumn", visible: true },
+  { label: "Call Date", columnMethod: "getCallTakenColumn", visible: false },
+  { label: "Agent Name", columnMethod: "getAgentNameColumn", visible: false },
+  { label: "Role", columnMethod: "getRoleColumn", visible: false },
+  { label: "Connected Duration", columnMethod: "getRoleColumn", visible: false },
+  { label: "Revenue", columnMethod: "getRevenueColumn", visible: false },
+  { label: "Vertical", columnMethod: "getVerticalColumn", visible: false },
+  { label: "CallerID", columnMethod: "getCallerIdColumn", visible: false },
 ])
 </script>
 
@@ -121,12 +128,14 @@ let columns = ref([
                     <div class="border border-gray-100 p-2 shadow bg-white mt-2">
                       <div class="flex items-center mb-4" v-for="(column, index) in columns" :key="index">
                         <input
+                          :id="`column-${index}`"
                           type="checkbox"
-                          value=""
+                          v-model="column.visible"
                           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                         />
                         <label
-                          class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                          :for="`column-${index}`"
+                          class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 select-none"
                           >{{ column.label }}</label
                         >
                       </div>
