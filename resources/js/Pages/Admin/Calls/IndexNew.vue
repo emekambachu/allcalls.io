@@ -81,7 +81,7 @@ let columns = ref([
     label: "Call Date",
     columnMethod: "getCallTakenColumn",
     visible: true,
-    sortable: false,
+    sortable: true,
     render(call) {
       return call.call_taken;
     },
