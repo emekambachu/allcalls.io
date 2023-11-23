@@ -25,9 +25,9 @@ let paginate = (url) => {
   router.visit(url);
 };
 
-
-
-let visibleColumns = ref(['id', 'call_taken']);
+let columns = ref([
+  { label: "ID", columnMethod: "getIdColumn", visible: false }
+])
 </script>
 
 <style scoped>
@@ -119,7 +119,7 @@ let visibleColumns = ref(['id', 'call_taken']);
 
                   <PopoverPanel class="absolute z-10 w-40 -left-20">
                     <div class="border border-gray-100 p-2 shadow bg-white mt-2">
-                      <div class="flex items-center mb-4">
+                      <div class="flex items-center mb-4" v-for="(column, index) in columns" :key="index">
                         <input
                           type="checkbox"
                           value=""
@@ -127,19 +127,7 @@ let visibleColumns = ref(['id', 'call_taken']);
                         />
                         <label
                           class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                          >ID</label
-                        >
-                      </div>
-                      <div class="flex items-center">
-                        <input
-                          type="checkbox"
-                          value=""
-                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                        />
-                        <label
-                          for="checked-checkbox"
-                          class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                          >Call Taken</label
+                          >{{ column.label }}</label
                         >
                       </div>
                     </div>
@@ -302,7 +290,7 @@ let visibleColumns = ref(['id', 'call_taken']);
             </table>
           </div>
 
-          <div v-else class="text-sm text-center">No calls found.</div>
+          <div v-else class="text-sm text-center py-20 text-gray-200">No calls found.</div>
         </div>
       </div>
     </section>
