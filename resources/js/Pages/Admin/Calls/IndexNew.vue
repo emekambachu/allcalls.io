@@ -58,7 +58,7 @@ let getConnectedDurationColumn = (call) => {
 };
 
 let getRevenueColumn = (call) => {
-  return call.revenue;
+  return '$' + call.amount_spent;
 };
 
 let getVerticalColumn = (call) => {
