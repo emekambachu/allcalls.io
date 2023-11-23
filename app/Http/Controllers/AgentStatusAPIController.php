@@ -25,6 +25,18 @@ class AgentStatusAPIController extends Controller
         '8' => ['api_key' => 'kPQJ7xSkD8s9Mdx7KsJd8Ks7Jd82', 'affiliate_percentage' => 10],
         '9' => ['api_key' => '82JDks8KjMnDx7LsKd8S2LmXj82K', 'affiliate_percentage' => 10],
         '10' => ['api_key' => '82jKdS7Mx8Ks92LkDs8xM7kDj82N', 'affiliate_percentage' => 10],
+
+        '11' => ['api_key' => '4sJd82KxMnD7LsK8PQJx9Mdx7KsJ', 'affiliate_percentage' => 10],
+        '12' => ['api_key' => '7xSkD8sJd82KjMnDx9LsKd8S2LmX', 'affiliate_percentage' => 10],
+        '13' => ['api_key' => '82jKsMx8Ks92LkDs8xM7kDj82N8J', 'affiliate_percentage' => 10],
+        '14' => ['api_key' => 'x8Ks92Jx82kMx7kOsJ7kPQJ7xSkD', 'affiliate_percentage' => 10],
+        '15' => ['api_key' => '9Mdx7KsJd8Ks7Jd82JDks8KjMnDx', 'affiliate_percentage' => 10],
+        '16' => ['api_key' => '7LsKd8S2LmXj82K82jKdS7Mx8Ks9', 'affiliate_percentage' => 10],
+        '17' => ['api_key' => '2LkDs8xM7kDj82N0Jdj2Ks98sKdj', 'affiliate_percentage' => 10],
+        '18' => ['api_key' => '28xS82jsXo92Hs7x8Ksk29MnD8Ks', 'affiliate_percentage' => 10],
+        '19' => ['api_key' => '92Jx82kMx7kOsJ73jNdo82JD8sK2', 'affiliate_percentage' => 10],
+        '20' => ['api_key' => 'Mx8s2kMnD8sMx9j8sKkX82jKS93K', 'affiliate_percentage' => 10],
+        
     ];
 
     /**
