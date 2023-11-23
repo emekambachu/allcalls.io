@@ -178,6 +178,9 @@ let performSorting = () => {
   console.log("Perform sorting now!!");
   console.log("Sort Column: ", sortColumn.value);
   console.log("Sort Direction", sortDirection.value);
+
+
+  loadedCalls.value.sort(sortColumn.value.sortingMethod);
   // if (!sortColumn.value) return;
 
   // loadedCalls.value.sort((a, b) => {
@@ -205,9 +208,6 @@ const sortByColumn = (column) => {
   performSorting();
 };
 
-const performSorting = () => {
-  loadedCalls.value.sort(sortColumn.value.sortingMethod);
-};
 </script>
 
 <style scoped>
