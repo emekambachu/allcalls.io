@@ -85,6 +85,24 @@ let columns = ref([
     render(call) {
       return call.call_taken;
     },
+    sortingMethod: (a, b) => {
+      const extractDateTime = (call) => {
+        const dateTimePattern = /\((.*?)\)/; // Regex to extract string in parentheses
+        const match = call.call_taken.match(dateTimePattern);
+        return match
+          ? new Date(match[1].replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$2/$1/$3"))
+          : new Date(0); // Convert to MM/DD/YYYY format for Date parsing
+      };
+
+      let dateA = extractDateTime(a);
+      let dateB = extractDateTime(b);
+
+      if (sortDirection.value === "asc") {
+        return dateA - dateB;
+      } else {
+        return dateB - dateA;
+      }
+    },
   },
   {
     label: "Agent Name",
