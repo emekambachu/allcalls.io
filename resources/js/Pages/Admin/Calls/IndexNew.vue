@@ -19,7 +19,7 @@ if (page.props.flash.message) {
 }
 let props = defineProps(["calls"]);
 
-console.log(props);
+let loadedCalls = ref(props.calls.data);
 
 let paginate = (url) => {
   router.visit(url);
@@ -30,7 +30,11 @@ let columns = ref([
   { label: "Call Date", columnMethod: "getCallTakenColumn", visible: true },
   { label: "Agent Name", columnMethod: "getAgentNameColumn", visible: true },
   { label: "Role", columnMethod: "getRoleColumn", visible: false },
-  { label: "Connected Duration", columnMethod: "getConnectedDurationColumn", visible: false },
+  {
+    label: "Connected Duration",
+    columnMethod: "getConnectedDurationColumn",
+    visible: false,
+  },
   { label: "Revenue", columnMethod: "getRevenueColumn", visible: true },
   { label: "Vertical", columnMethod: "getVerticalColumn", visible: true },
   { label: "CallerID", columnMethod: "getCallerIdColumn", visible: true },
@@ -53,7 +57,11 @@ let getRoleColumn = (call) => {
 };
 
 let getConnectedDurationColumn = (call) => {
-  return String(Math.floor(call.call_duration_in_seconds / 60)).padStart(2, "0") + ":" + String(call.call_duration_in_seconds % 60).padStart(2, "0");
+  return (
+    String(Math.floor(call.call_duration_in_seconds / 60)).padStart(2, "0") +
+    ":" +
+    String(call.call_duration_in_seconds % 60).padStart(2, "0")
+  );
 };
 
 let getRevenueColumn = (call) => {
@@ -170,7 +178,7 @@ let callColumnMethod = (call, column) => {
               </div>
             </div>
           </div>
-          <div v-if="calls.data.length" class="overflow-x-auto">
+          <div v-if="loadedCalls.length" class="overflow-x-auto">
             <table class="w-full text-sm text-left text-gray-500">
               <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                 <tr class="cursor-pointer">
@@ -189,7 +197,7 @@ let callColumnMethod = (call, column) => {
               <tbody>
                 <tr
                   class="border-b hover:bg-gray-100"
-                  v-for="(call, index) in calls.data"
+                  v-for="(call, index) in loadedCalls"
                   :key="call.id"
                 >
                   <td
@@ -207,6 +215,15 @@ let callColumnMethod = (call, column) => {
                 </tr>
               </tbody>
             </table>
+          </div>
+
+          <div v-if="loadedCalls.length" class="flex justify-center">
+            <button
+              type="button"
+              class="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200"
+            >
+              Load More
+            </button>
           </div>
 
           <div v-else class="text-sm text-center py-20 text-gray-200">
