@@ -17,7 +17,7 @@ let page = usePage();
 if (page.props.flash.message) {
   toaster("success", page.props.flash.message);
 }
-let props = defineProps(["calls"]);
+let props = defineProps(["calls", "totalCalls", "totalRevenue"]);
 
 let loadedCalls = ref(props.calls.data);
 
@@ -164,12 +164,12 @@ onMounted(() => {
           >
             <div class="flex items-center flex-1 space-x-4">
               <h5>
-                <span class="text-gray-500">All Calls:</span>
-                <span class="">123456</span>
+                <span class="text-gray-500">Total Calls:</span>
+                <span class="">{{ totalCalls }}</span>
               </h5>
               <h5>
                 <span class="text-gray-500">Total Revenue:</span>
-                <span class="">$88.4k</span>
+                <span class="">${{ totalRevenue }}</span>
               </h5>
             </div>
             <div

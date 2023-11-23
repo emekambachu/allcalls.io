@@ -94,7 +94,9 @@ class CallsController extends Controller
         ->paginate(50);
         return Inertia::render('Admin/Calls/IndexNew', [
             'requestData' => $request->all(),
-            'calls' => $calls
+            'calls' => $calls,
+            'totalCalls' => Call::count(),
+            'totalRevenue' => round((float) Call::sum('amount_spent'), 2) ,
         ]);
     }
 }
