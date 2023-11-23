@@ -101,7 +101,7 @@ let paginate = (url) => {
                 Update stocks 1/250
               </button>
 
-              <div class="fixed top-16 w-full max-w-sm px-4">
+              <div class="px-4">
                 <Popover v-slot="{ open }" class="relative">
                   <PopoverButton
                     :class="open ? 'text-white' : 'text-white/90'"
@@ -162,6 +162,7 @@ let paginate = (url) => {
                       </div>
                     </PopoverPanel>
                   </transition>
+                  </PopoverButton>
                 </Popover>
               </div>
             </div>
