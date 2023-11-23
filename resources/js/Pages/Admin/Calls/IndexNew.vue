@@ -59,8 +59,18 @@ let loadMore = (url) => {
 
 let columns = ref([
   { label: "ID", columnMethod: "getIdColumn", visible: true, sortable: true },
-  { label: "Call Date", columnMethod: "getCallTakenColumn", visible: true, sortable: true },
-  { label: "Agent Name", columnMethod: "getAgentNameColumn", visible: true, sortable: true },
+  {
+    label: "Call Date",
+    columnMethod: "getCallTakenColumn",
+    visible: true,
+    sortable: true,
+  },
+  {
+    label: "Agent Name",
+    columnMethod: "getAgentNameColumn",
+    visible: true,
+    sortable: true,
+  },
   { label: "Role", columnMethod: "getRoleColumn", visible: false, sortable: true },
   {
     label: "Connected Duration",
@@ -149,11 +159,10 @@ onMounted(() => {
   observer.observe(landmark.value);
 });
 
-
 let performSorting = () => {
-  console.log('Perform sorting now!!')
-  console.log('Sort Column: ', sortColumn.value);
-  console.log('Sort Direction', sortDirection.value);
+  console.log("Perform sorting now!!");
+  console.log("Sort Column: ", sortColumn.value);
+  console.log("Sort Direction", sortDirection.value);
   // if (!sortColumn.value) return;
 
   // loadedCalls.value.sort((a, b) => {
@@ -168,26 +177,22 @@ let performSorting = () => {
   // });
 };
 
-
 let sortByColumn = (column) => {
-  console.log('Sort by column called');
+  console.log("Sort by column called");
 
   if (!column.sortable) return; // If the column is not sortable, do nothing
 
   // Check if the same column is clicked again, then toggle the sort direction
   if (sortColumn.value === column.columnMethod) {
-    sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
+    sortDirection.value = sortDirection.value === "asc" ? "desc" : "asc";
   } else {
     sortColumn.value = column.columnMethod;
-    sortDirection.value = 'asc';
+    sortDirection.value = "asc";
   }
 
   // Perform the sorting
   performSorting();
 };
-
-
-
 </script>
 
 <style scoped>
@@ -283,7 +288,37 @@ let sortByColumn = (column) => {
                     {{ column.label }}
 
                     <span v-if="sortColumn === column.columnMethod">
-                      {{ sortDirection === "asc" ? "🔼" : "🔽" }}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        class="w-6 h-6"
+                        v-if="sortDirection === 'asc'"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M4.5 15.75l7.5-7.5 7.5 7.5"
+                        />
+                      </svg>
+
+                      <svg
+                        v-if="sortDirection === 'desc'"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        class="w-6 h-6"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                        />
+                      </svg>
                     </span>
                   </th>
                   <th scope="col" class="px-4 py-3 whitespace-nowrap">Actions</th>
