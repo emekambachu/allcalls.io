@@ -58,18 +58,19 @@ let loadMore = (url) => {
 };
 
 let columns = ref([
-  { label: "ID", columnMethod: "getIdColumn", visible: true },
-  { label: "Call Date", columnMethod: "getCallTakenColumn", visible: true },
-  { label: "Agent Name", columnMethod: "getAgentNameColumn", visible: true },
-  { label: "Role", columnMethod: "getRoleColumn", visible: false },
+  { label: "ID", columnMethod: "getIdColumn", visible: true, sortable: true },
+  { label: "Call Date", columnMethod: "getCallTakenColumn", visible: true, sortable: true },
+  { label: "Agent Name", columnMethod: "getAgentNameColumn", visible: true, sortable: true },
+  { label: "Role", columnMethod: "getRoleColumn", visible: false, sortable: true },
   {
     label: "Connected Duration",
     columnMethod: "getConnectedDurationColumn",
     visible: false,
+    sortable: true,
   },
-  { label: "Revenue", columnMethod: "getRevenueColumn", visible: true },
-  { label: "Vertical", columnMethod: "getVerticalColumn", visible: true },
-  { label: "CallerID", columnMethod: "getCallerIdColumn", visible: true },
+  { label: "Revenue", columnMethod: "getRevenueColumn", visible: true, sortable: true },
+  { label: "Vertical", columnMethod: "getVerticalColumn", visible: true, sortable: true },
+  { label: "CallerID", columnMethod: "getCallerIdColumn", visible: true, sortable: true },
 ]);
 
 let sortColumn = ref(null);
