@@ -35,6 +35,40 @@ let columns = ref([
   { label: "Vertical", columnMethod: "getVerticalColumn", visible: false },
   { label: "CallerID", columnMethod: "getCallerIdColumn", visible: false },
 ]);
+
+
+let getIdColumn = (call) => {
+  return call.id;
+};
+
+let getCallTakenColumn = (call) => {
+  return call.call_taken;
+};
+
+let getAgentNameColumn = (call) => {
+  return call.agent_name;
+};
+
+let getRoleColumn = (call) => {
+  return call.role;
+};
+
+let getConnectedDurationColumn = (call) => {
+  return call.connected_duration;
+};
+
+let getRevenueColumn = (call) => {
+  return call.revenue;
+};
+
+let getVerticalColumn = (call) => {
+  return call.vertical;
+};
+
+let getCallerIdColumn = (call) => {
+  return call.caller_id;
+}
+
 </script>
 
 <style scoped>
@@ -185,7 +219,7 @@ let columns = ref([
                     v-show="column.visible"
                   >
                     <!-- Display data based on column method -->
-                    {{ call[column.columnMethod]() }}
+                    {{ call[column.columnMethod](call) }}
                   </td>
                   <td
                     class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
