@@ -100,6 +100,7 @@ let columns = ref([
 
 let sortColumn = ref(null);
 let sortDirection = ref("asc");
+let sortingMethod = ref(null);
 
 let getIdColumn = (call) => {
   return call.id;
@@ -180,7 +181,7 @@ let performSorting = () => {
   console.log("Sort Direction", sortDirection.value);
 
 
-  loadedCalls.value.sort(sortColumn.value.sortingMethod);
+  loadedCalls.value.sort(sortingMethod.value);
   // if (!sortColumn.value) return;
 
   // loadedCalls.value.sort((a, b) => {
@@ -200,9 +201,11 @@ const sortByColumn = (column) => {
 
   if (sortColumn.value === column.label) {
     sortDirection.value = sortDirection.value === "asc" ? "desc" : "asc";
+    sortingMethod.value = column.sortingMethod;
   } else {
     sortColumn.value = column.label;
     sortDirection.value = "asc";
+    sortingMethod.value = column.sortingMethod;
   }
 
   performSorting();
