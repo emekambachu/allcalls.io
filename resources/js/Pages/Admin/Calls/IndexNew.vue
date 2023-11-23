@@ -58,29 +58,44 @@ let loadMore = (url) => {
 };
 
 let columns = ref([
-  { label: "ID", columnMethod: "getIdColumn", visible: true, sortable: true },
+  {
+    label: "ID",
+    columnMethod: "getIdColumn",
+    visible: true,
+    sortable: true,
+    sortingMethod: (a, b) => {
+      let valueA = a.id; // Assuming 'id' is the property name in your call object
+      let valueB = b.id;
+
+      if (sortDirection.value === "asc") {
+        return valueA - valueB;
+      } else {
+        return valueB - valueA;
+      }
+    },
+  },
   {
     label: "Call Date",
     columnMethod: "getCallTakenColumn",
     visible: true,
-    sortable: true,
+    sortable: false,
   },
   {
     label: "Agent Name",
     columnMethod: "getAgentNameColumn",
     visible: true,
-    sortable: true,
+    sortable: false,
   },
-  { label: "Role", columnMethod: "getRoleColumn", visible: false, sortable: true },
+  { label: "Role", columnMethod: "getRoleColumn", visible: false, sortable: false },
   {
     label: "Connected Duration",
     columnMethod: "getConnectedDurationColumn",
     visible: false,
-    sortable: true,
+    sortable: false,
   },
-  { label: "Revenue", columnMethod: "getRevenueColumn", visible: true, sortable: true },
-  { label: "Vertical", columnMethod: "getVerticalColumn", visible: true, sortable: true },
-  { label: "CallerID", columnMethod: "getCallerIdColumn", visible: true, sortable: true },
+  { label: "Revenue", columnMethod: "getRevenueColumn", visible: true, sortable: false },
+  { label: "Vertical", columnMethod: "getVerticalColumn", visible: true, sortable: false },
+  { label: "CallerID", columnMethod: "getCallerIdColumn", visible: true, sortable: false },
 ]);
 
 let sortColumn = ref(null);
@@ -177,21 +192,23 @@ let performSorting = () => {
   // });
 };
 
-let sortByColumn = (column) => {
-  console.log("Sort by column called");
+const sortByColumn = (column) => {
+  if (!column.sortable) return;
 
-  if (!column.sortable) return; // If the column is not sortable, do nothing
-
-  // Check if the same column is clicked again, then toggle the sort direction
-  if (sortColumn.value === column.columnMethod) {
+  if (sortColumn.value === column) {
     sortDirection.value = sortDirection.value === "asc" ? "desc" : "asc";
   } else {
-    sortColumn.value = column.columnMethod;
+    sortColumn.value = column;
     sortDirection.value = "asc";
   }
 
-  // Perform the sorting
   performSorting();
+};
+
+const performSorting = () => {
+  if (!sortColumn.value) return;
+
+  loadedCalls.value.sort(sortColumn.value.sortingMethod);
 };
 </script>
 
