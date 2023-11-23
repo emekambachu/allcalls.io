@@ -34,6 +34,7 @@ Route::prefix('internal-agent')->middleware(['auth', 'verified', 'internal-agent
     })->name('internal.agent.locked');
 
     Route::get('/agent-agency', [MyAgencyController::class, 'index'])->name('internal-agent.agent-agency.index');
+    Route::get('/my-agent', [MyAgencyController::class, 'myAgent'])->name('internal-agent.my-agent.index');
     Route::post('/agent-invites', [MyAgencyController::class, 'store'])->name('admin.agent-invites.store');
     Route::delete('/agent-invites/{id}', [MyAgencyController::class, 'destroy'])->name('internal-agent.agent-invites.destroy');
     Route::get('/reinvite-agent/{id}', [MyAgencyController::class, 'reInvite'])->name('internal-agent.agent.reinvite');

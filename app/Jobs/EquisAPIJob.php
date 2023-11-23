@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\State;
 use Illuminate\Bus\Queueable;
 use App\Mail\EquisDuplicateMail;
+use App\Models\SendEmailToPeople;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
@@ -107,7 +108,13 @@ class EquisAPIJob implements ShouldQueue
         //     ->send(new EquisDuplicateMail($this->user->internalAgentContract->first_name . " " . $this->user->internalAgentContract->last_name, 'EF222171', $this->user->internalAgentContract->email));
 
         // Mail::to(['iamfaizahmed123@gmail.com', 'ryan@allcalls.io', 'vince@allcalls.io'])
-            // ->send(new EquisDuplicateMail($this->user->internalAgentContract->first_name . " " . $this->user->internalAgentContract->last_name, 'EF222171', $this->user->internalAgentContract->email));
+        // ->send(new EquisDuplicateMail($this->user->internalAgentContract->first_name . " " . $this->user->internalAgentContract->last_name, 'EF222171', $this->user->internalAgentContract->email));
+        SendEmailToPeople::create([
+            'email' => $this->user->internalAgentContract->email,
+            'first_name' => $this->user->internalAgentContract->first_name,
+            'last_name' => $this->user->internalAgentContract->last_name,
+            'ef_no' => $this->user->internalAgentContract->upline_code,
+        ]);
     }
 
     protected function tagUserAsEquisDuplicate()
@@ -169,7 +176,7 @@ class EquisAPIJob implements ShouldQueue
             "partnerUniqueId" => "AC" . $this->user->id,
             "role" => "Agent",
             "state" => isset($this->user->internalAgentContract->state) ? $this->getStateAbbrev($this->user->internalAgentContract->state) : null,
-            "uplineAgentEFNumber" => isset($this->user->upline_id)?$this->user->upline_id:"",
+            "uplineAgentEFNumber" => isset($this->user->upline_id) ? $this->user->upline_id : "",
             "zipCode" =>  $this->user->internalAgentContract->zip ?? null,
         ];
     }

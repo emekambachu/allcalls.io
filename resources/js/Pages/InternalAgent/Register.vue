@@ -30,6 +30,7 @@ let props = defineProps({
   states: Array,
   tokenData:Object,
 });
+console.log('tokenData', props.tokenData);
 let stateOptions = computed(() => {
   return props.states.map((state) => {
     return {
@@ -51,7 +52,9 @@ let form = useForm({
   phone_country:'USA',
   level_id:props.tokenData.level_id,
   upline_id:props.tokenData.upline_id,
+  invited_by :props.tokenData.invited_by,
 });
+
 let isFormValid = ref(true);
 
 watch(

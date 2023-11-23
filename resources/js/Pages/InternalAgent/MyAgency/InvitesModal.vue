@@ -21,11 +21,15 @@ let uiEmailValidation = ref({
     isValid: false,
 });
 let inviteAgent = () => {
+    props.firstStepErrors.email = [``];
+    props.firstStepErrors.level = [``];
     if (validateEmail(form.value.email)) {
-        uiEmailValidation.value.isValid = false;
-        emits('inviteAgent', form.value)
+        if(form.value.level && form.value.level !== "-- Select an option --"){
+            emits('inviteAgent', form.value)
+        }else{
+            props.firstStepErrors.level = [`Please select the level.`];
+        }
     } else {
-        // uiEmailValidation.value.isValid = true;
         props.firstStepErrors.email = [`Please enter valid email address.`];
     }
 }
@@ -142,9 +146,9 @@ let close = () => {
                                 
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                             <div v-if="firstStepErrors.email" class="text-red-500" v-text="firstStepErrors.email[0]"></div>
-                            <div v-if="uiEmailValidation.isValid" class="text-red-500">
+                            <!-- <div v-if="uiEmailValidation.isValid" class="text-red-500">
                                 Please enter valid email address.
-                            </div>
+                            </div> -->
                         </div>
                         <!-- <div class="mb-3">
                             <label for="Upline ID" class="block mb-2 text-sm font-black text-gray-900 ">Upline ID<span
@@ -164,7 +168,7 @@ let close = () => {
                                 <option disabled selected>-- Select an option -- </option>
                                 <option v-for="level in agentLevels" :value="level.id">{{ level.name }} </option>
                             </select>
-                            <div v-if="firstStepErrors.gender" class="text-red-500" v-text="firstStepErrors.gender[0]">
+                            <div v-if="firstStepErrors.level" class="text-red-500" v-text="firstStepErrors.level[0]">
                             </div>
                         </div>
 

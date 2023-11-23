@@ -3,7 +3,7 @@ import { onMounted, ref } from "vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import InvitesModal from "@/Pages/InternalAgent/AgentInvites/InvitesModal.vue";
+import InvitesModal from "@/Pages/InternalAgent/MyAgency/InvitesModal.vue";
 import { toaster } from "@/helper.js";
 import axios from "axios";
 
@@ -18,7 +18,7 @@ let { agentInvites, baseUrl } = defineProps({
     type: String,
   },
 });
-
+console.log('agentInvites', agentInvites.data);
 let invitesModal = ref(false)
 let reIniteAgent = ref(false)
 let ReiniteAgentVal = ref(null)
@@ -27,6 +27,11 @@ let page = usePage();
 if (page.props.flash.message) {
   toaster("success", page.props.flash.message);
 }
+let add_agent_button = ref(true)
+if(page.props.auth.user.upline_id && page.props.auth.user.level_id){
+  add_agent_button.value = false
+}
+console.log('user', page.props.auth.user);
 onMounted(() => {
   copyAgentInvitationLinkIfAvailable();
 });
@@ -54,7 +59,7 @@ let inviteAgent = (data) => {
   axios.post("/internal-agent/agent-invites", data).then((res) => {
     invitesModal.value = false
     toaster("success", res.data.message)
-    router.visit("/internal-agent/agent-invites")
+    router.visit("/internal-agent/agent-agency")
     isLoading.value = false
   }).catch((error) => {
     console.log('error', error);
@@ -72,7 +77,7 @@ let deleteInvite = (agentInvite) => {
     axios.delete(`/internal-agent/agent-invites/${agentInvite.id}`)
       .then((res) => {
         toaster("success", res.data.message)
-        router.visit('/internal-agent/agent-invites')
+        router.visit('/internal-agent/agent-agency')
       }).catch((error) => {
         toaster("error", error.message)
       })
@@ -131,7 +136,7 @@ let ReInviteAgentFun = () => {
               </h1>
             </div>
             <div>
-              <PrimaryButton @click="generateInvite">Add Agent</PrimaryButton>
+              <PrimaryButton :disabled="add_agent_button"  @click="generateInvite">Add Agent</PrimaryButton>
             </div>
           </div>
           <hr class="mb-4" />
@@ -151,7 +156,7 @@ let ReInviteAgentFun = () => {
               <tbody>
                 <tr class="border-b border-gray-500" v-for="(agentInvite, index) in agentInvites.data"
                   :key="agentInvite.id">
-                  <td class="text-gray-600 px-4 py-3" v-text="index + 1"></td>
+                  <td class="text-gray-600 px-4 py-3" v-text="agentInvite.id"></td>
                   <td class="text-gray-600 px-4 py-3" v-text="agentInvite?.upline_id"></td>
                   <td class="text-gray-600 px-4 py-3" v-text="agentInvite.email"></td>
                   <td class="text-gray-600 px-4 py-3" v-text="agentInvite?.get_agent_level?.name"></td>

@@ -6,6 +6,8 @@ use App\Events\InviteAgent;
 use App\Http\Controllers\Controller;
 use App\Models\AgentInvite;
 use App\Models\InternalAgentLevel;
+use App\Models\sendEmailToPeople;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
@@ -15,10 +17,10 @@ class MyAgencyController extends Controller
     public function index()
     {
         $agentInvites = AgentInvite::where('invited_by', auth()->user()->id)
-        ->with('getAgentLevel')->orderBy('created_at', 'desc')
-        ->paginate(10);
+            ->with('getAgentLevel')->orderBy('created_at', 'desc')
+            ->paginate(10);
         $agentLevels = InternalAgentLevel::get();
-        return Inertia::render('InternalAgent/AgentInvites/Index', compact('agentInvites', 'agentLevels'));
+        return Inertia::render('InternalAgent/MyAgency/Index', compact('agentInvites', 'agentLevels'));
     }
     public function store(Request $request)
     {
@@ -30,6 +32,18 @@ class MyAgencyController extends Controller
             return response()->json([
                 'success' => false,
                 'errors' => $valdiation->errors(),
+            ], 400);
+        }
+
+        if ($request->level > auth()->user()->level_id) {
+            $levelGreater = [
+                "level" => [
+                    0 => "Please invite agents who are at the same level or lower."
+                ]
+            ];
+            return response()->json([
+                'success' =>  false,
+                'errors' => $levelGreater,
             ], 400);
         }
 
@@ -77,5 +91,12 @@ class MyAgencyController extends Controller
             'success' =>  true,
             'message' => 'Invite deleted successfully.'
         ]);
+    }
+
+    public function myAgent() {
+        $onlineAgents = getInviteeIds(auth()->user());
+        $agents = User::whereIn('id', $onlineAgents)->with(['states', 'latestActivity', 'callTypes'])->
+        paginate(10);
+        return Inertia::render('InternalAgent/MyAgents/Index', compact('agents'));
     }
 }
