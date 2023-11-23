@@ -111,10 +111,10 @@ let paginate = (url) => {
 
               <div class="px-4">
                 <Popover class="relative">
-                  <PopoverButton>Solutions</PopoverButton>
+                  <PopoverButton>Visisble Columns</PopoverButton>
 
                   <PopoverPanel class="absolute z-10 w-40 -left-20">
-                    <div class="border border-gray-100 p-2 shadow">
+                    <div class="border border-gray-100 p-2 shadow bg-white">
                       Hello, world!
                     </div>
                   </PopoverPanel>
