@@ -36,7 +36,6 @@ let columns = ref([
   { label: "CallerID", columnMethod: "getCallerIdColumn", visible: true },
 ]);
 
-
 let getIdColumn = (call) => {
   return call.id;
 };
@@ -46,7 +45,7 @@ let getCallTakenColumn = (call) => {
 };
 
 let getAgentNameColumn = (call) => {
-  return call.user.first_name + ' ' + call.user.last_name;
+  return call.user.first_name + " " + call.user.last_name;
 };
 
 let getRoleColumn = (call) => {
@@ -54,11 +53,15 @@ let getRoleColumn = (call) => {
 };
 
 let getConnectedDurationColumn = (call) => {
-  return call.connected_duration;
+  return (
+    String(Math.floor(call.call_duration_in_seconds / 60)).padStart(2, "0") +
+    ":" +
+    String(call.call_duration_in_seconds % 60).padStart(2, "0")
+  );
 };
 
 let getRevenueColumn = (call) => {
-  return '$' + call.amount_spent;
+  return "$" + call.amount_spent;
 };
 
 let getVerticalColumn = (call) => {
@@ -67,32 +70,30 @@ let getVerticalColumn = (call) => {
 
 let getCallerIdColumn = (call) => {
   return call.from;
-}
+};
 
 let callColumnMethod = (call, column) => {
   switch (column.columnMethod) {
-    case 'getIdColumn':
+    case "getIdColumn":
       return getIdColumn(call);
-    case 'getCallTakenColumn':
+    case "getCallTakenColumn":
       return getCallTakenColumn(call);
-    case 'getAgentNameColumn':
+    case "getAgentNameColumn":
       return getAgentNameColumn(call);
-    case 'getRoleColumn':
+    case "getRoleColumn":
       return getRoleColumn(call);
-    case 'getConnectedDurationColumn':
+    case "getConnectedDurationColumn":
       return getConnectedDurationColumn(call);
-    case 'getRevenueColumn':
+    case "getRevenueColumn":
       return getRevenueColumn(call);
-    case 'getVerticalColumn':
+    case "getVerticalColumn":
       return getVerticalColumn(call);
-    case 'getCallerIdColumn':
+    case "getCallerIdColumn":
       return getCallerIdColumn(call);
     default:
-      return '';
+      return "";
   }
 };
-
-
 </script>
 
 <style scoped>
@@ -242,8 +243,7 @@ let callColumnMethod = (call, column) => {
                     class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     v-show="column.visible"
                     v-text="callColumnMethod(call, column)"
-                  >
-                  </td>
+                  ></td>
                   <td
                     class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                   >
