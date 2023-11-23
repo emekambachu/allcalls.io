@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\InternalAgent;
 
+use App\Events\InviteAgent;
 use App\Http\Controllers\Controller;
 use App\Models\AgentInvite;
 use App\Models\InternalAgentLevel;
@@ -13,17 +14,17 @@ class MyAgencyController extends Controller
 {
     public function index()
     {
-        $agentInvites = AgentInvite::with('getAgentLevel')->orderBy('created_at', 'desc')->paginate(10);
+        $agentInvites = AgentInvite::where('invited_by', auth()->user()->id)
+        ->with('getAgentLevel')->orderBy('created_at', 'desc')
+        ->paginate(10);
         $agentLevels = InternalAgentLevel::get();
         return Inertia::render('InternalAgent/AgentInvites/Index', compact('agentInvites', 'agentLevels'));
     }
     public function store(Request $request)
     {
-        dd($request->all());
         $valdiation = Validator::make($request->all(), [
             'email' => 'required|unique:agent_invites',
             'level' => 'required',
-            'upline_id' => 'required',
         ]);
         if ($valdiation->fails()) {
             return response()->json([
@@ -38,7 +39,8 @@ class MyAgencyController extends Controller
                 'token' => $uuId,
                 'level_id' => $request->level,
                 'email' => $request->email,
-                'upline_id' => $request->upline_id,
+                'upline_id' => auth()->user()->upline_id,
+                'invited_by' => auth()->user()->id,
                 'url' => url('/internal-agent/register?agentToken=' . $uuId)
             ]
         );
@@ -51,7 +53,6 @@ class MyAgencyController extends Controller
 
     public function reInvite($id)
     {
-        dd($id);
         $agentreInvite = AgentInvite::findOrFail($id);
         $uuId = uniqid();
         $agentreInvite->token = $uuId;
@@ -70,13 +71,11 @@ class MyAgencyController extends Controller
 
     public function destroy($id)
     {
-        dd($id);
         $invite = AgentInvite::findOrFail($id);
         $invite->delete();
         return response()->json([
             'success' =>  true,
             'message' => 'Invite deleted successfully.'
         ]);
-        // return redirect()->back()->with(['message' => 'Invite deleted successfully.']);
     }
 }

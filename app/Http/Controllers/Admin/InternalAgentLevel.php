@@ -92,12 +92,12 @@ class InternalAgentLevel extends Controller
             ], 400);
         }
 
-        // if(count($exist->getRegisteredAgentInvites)) {
-        //     return response()->json([
-        //         'success' => false,
-        //         'message' => "Sorry! you can't delete this. Some of the registered agents belongs to this level.",
-        //     ], 400);
-        // }
+        if(count($exist->getRegisteredAgentInvites)) {
+            return response()->json([
+                'success' => false,
+                'message' => "Sorry! you can't delete this. Some of the registered agents belongs to this level.",
+            ], 400);
+        }
 
         $exist->delete();
         return response()->json([
