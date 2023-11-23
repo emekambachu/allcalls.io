@@ -69,6 +69,30 @@ let getCallerIdColumn = (call) => {
   return call.caller_id;
 }
 
+let callColumnMethod = (call, column) => {
+  switch (column.columnMethod) {
+    case 'getIdColumn':
+      return getIdColumn(call);
+    case 'getCallTakenColumn':
+      return getCallTakenColumn(call);
+    case 'getAgentNameColumn':
+      return getAgentNameColumn(call);
+    case 'getRoleColumn':
+      return getRoleColumn(call);
+    case 'getConnectedDurationColumn':
+      return getConnectedDurationColumn(call);
+    case 'getRevenueColumn':
+      return getRevenueColumn(call);
+    case 'getVerticalColumn':
+      return getVerticalColumn(call);
+    case 'getCallerIdColumn':
+      return getCallerIdColumn(call);
+    default:
+      return '';
+  }
+};
+
+
 </script>
 
 <style scoped>
@@ -217,7 +241,7 @@ let getCallerIdColumn = (call) => {
                     :key="colIndex"
                     class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     v-show="column.visible"
-                    v-text="columns[colIndex](call)"
+                    v-text="callColumnMethod(call, column)"
                   >
                   </td>
                   <td
