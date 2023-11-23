@@ -217,7 +217,7 @@ let callColumnMethod = (call, column) => {
             </table>
           </div>
 
-          <div v-if="loadedCalls.length" class="flex justify-center">
+          <div v-if="loadedCalls.length" class="flex justify-center my-4">
             <button
               type="button"
               class="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200"
