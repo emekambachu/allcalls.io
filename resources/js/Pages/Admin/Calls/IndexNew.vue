@@ -178,6 +178,10 @@ const sortByColumn = (column) => {
 
   performSorting();
 };
+
+let renderColumn = (column, call) => {
+  return column.render(call);
+};
 </script>
 
 <style scoped>
@@ -322,7 +326,7 @@ const sortByColumn = (column) => {
                     :key="colIndex"
                     class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     v-show="column.visible"
-                    v-text="column.render(call)"
+                    v-text="renderColumn(column, call)"
                   ></td>
                   <td
                     class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
