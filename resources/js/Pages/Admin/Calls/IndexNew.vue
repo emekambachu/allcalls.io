@@ -217,7 +217,7 @@ let callColumnMethod = (call, column) => {
           <div v-if="calls.data.length" class="overflow-x-auto">
             <table class="w-full text-sm text-left text-gray-500">
               <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                <tr>
+                <tr class="cursor-pointer">
                   <th
                     scope="col"
                     class="px-4 py-3 whitespace-nowrap"
