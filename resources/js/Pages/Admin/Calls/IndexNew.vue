@@ -31,7 +31,6 @@ let props = defineProps({
     required: true,
   },
 });
-});
 
 let loadedCalls = ref(props.calls.data);
 
