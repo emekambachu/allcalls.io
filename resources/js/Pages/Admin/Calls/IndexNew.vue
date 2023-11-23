@@ -25,8 +25,17 @@ watch(() => props.calls, () => {
   loadedCalls.value = [...loadedCalls.value, ...props.calls.data];
 })
 
-let paginate = (url) => {
-  router.visit(url);
+
+let initialUrl = usePage().url;
+
+let loadMore = (url) => {
+  router.get(props.calls.next_page_url, {}, {
+    preserveState: true,
+    preserveScroll: true,
+    onSuccess: () => {
+      window.history.replaceState({}, "", initialUrl)
+    }
+  })
 };
 
 let columns = ref([
@@ -225,6 +234,7 @@ let callColumnMethod = (call, column) => {
             <button
               type="button"
               class="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200"
+              @click.prevent="loadMore"
             >
               Load More
             </button>
