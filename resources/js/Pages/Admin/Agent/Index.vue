@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import Edit from "@//Pages/Admin/User/Edit.vue";
+import Edit from "@//Pages/Admin/Agent/Edit.vue";
 import Create from "@//Pages/Admin/Agent/Create.vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import { ref } from "vue";
@@ -32,6 +32,7 @@ let props = defineProps({
   callTypes: Array,
   states: Array,
   statuses: Array,
+  levels:Array,
 });
 let contractModal = ref(false);
 let formData = ref({
@@ -284,12 +285,14 @@ let exportCSV = agent => {
               <thead class="text-xs text-gray-300 uppercase bg-sky-900">
                 <tr>
                   <th scope="col" class="px-4 py-3">ID</th>
-                  <th scope="col" class="px-4 py-3">First Name</th>
-                  <th scope="col" class="px-4 py-3">Last Name</th>
+                  <th scope="col" style="min-width: 110px;" class="px-4 py-3">First Name</th>
+                  <th scope="col" style="min-width: 110px;" class="px-4 py-3">Last Name</th>
+                  <th scope="col" style="min-width: 110px;" class="px-4 py-3">Level</th>
+                  <th scope="col" style="min-width: 110px;" class="px-4 py-3">Upline</th>
                   <th scope="col" class="px-4 py-3">Email</th>
                   <th scope="col" class="px-4 py-3">Balance</th>
                   <th scope="col" class="px-4 py-3">Phone</th>
-                  <th scope="col" class="px-4 py-3">Sign Up Date</th>
+                  <th scope="col" style="min-width: 115px;" class="px-4 py-3">Sign Up Date</th>
                   <th scope="col" class="px-4 py-3">Progress</th>
                   <th scope="col" class="px-4 py-3 text-end">Actions</th>
                 </tr>
@@ -303,6 +306,8 @@ let exportCSV = agent => {
                   <td class="text-gray-600 px-4 py-3">{{ agent.id }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ agent.first_name }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ agent.last_name }}</td>
+                  <th class="text-gray-600 px-4 py-3">{{ agent.get_agent_level?.name }}</th>
+                  <th class="text-gray-600 px-4 py-3">{{ agent.upline_id }}</th>
                   <th class="text-gray-600 px-4 py-3">{{ agent.email }}</th>
                   <td class="text-gray-600 px-4 py-3">
                     ${{ formatMoney(agent.balance) }}
@@ -621,12 +626,13 @@ let exportCSV = agent => {
     </Modal>
 
     <Modal :show="showModal" @close="showModal = false">
-      <Edit :showModal="showModal" :userDetail="userDetail" :user_type="'Internal Agent'" :currentPage="currentPage" @close="showModal = false"
+      <Edit :showModal="showModal" :userDetail="userDetail" :levels="levels" :user_type="'Internal Agent'" :currentPage="currentPage" @close="showModal = false"
         :callTypes="callTypes" :states="states" :route="'/admin/agent'"></Edit>
     </Modal>
 
     <Modal :show="agentModal" @close="agentModal = false">
       <Create
+        :levels="levels"
         :agentModal="agentModal"
         :currentPage="currentPage"
         :callTypes="callTypes"

@@ -171,5 +171,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
         return Carbon::parse($value);
     }
+    public function getAgentLevel(){
+        return $this->belongsTo(InternalAgentLevel::class, 'level_id', 'id');
+    }
 
 }

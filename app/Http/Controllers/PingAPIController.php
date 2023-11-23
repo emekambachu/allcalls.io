@@ -44,14 +44,19 @@ class PingAPIController extends Controller
 
     public function formatPhoneNumber($callerid)
     {
+        // Remove all non-numeric characters
         $callerid = preg_replace('/[^0-9]/', '', $callerid);
 
+        // Check if the number is 10 digits long, which is the expected format
         if (strlen($callerid) == 10) {
             return $callerid;
-        } elseif (strlen($callerid) == 11 && $callerid[0] == '1') {
+        }
+        // If the number is 11 digits and starts with '1', remove the first digit
+        elseif (strlen($callerid) == 11 && $callerid[0] == '1') {
             return substr($callerid, 1);
         }
 
+        // If none of the above conditions are met, the format is invalid
         return false;
     }
 }

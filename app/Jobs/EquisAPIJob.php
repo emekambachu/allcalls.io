@@ -169,7 +169,7 @@ class EquisAPIJob implements ShouldQueue
             "partnerUniqueId" => "AC" . $this->user->id,
             "role" => "Agent",
             "state" => isset($this->user->internalAgentContract->state) ? $this->getStateAbbrev($this->user->internalAgentContract->state) : null,
-            "uplineAgentEFNumber" => "EF222171",
+            "uplineAgentEFNumber" => isset($this->user->upline_id)?$this->user->upline_id:"",
             "zipCode" =>  $this->user->internalAgentContract->zip ?? null,
         ];
     }

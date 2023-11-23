@@ -9,7 +9,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\IOSLogController;
 use App\Http\Controllers\PingAPIController;
+use App\Http\Controllers\CallRejectedByAgent;
 use App\Http\Controllers\CallStatusController;
 use App\Http\Controllers\ClientsAPIController;
 use App\Http\Controllers\DevicesAPIController;
@@ -37,11 +39,11 @@ use App\Http\Controllers\TwilioIOSAccessTokenController;
 use App\Http\Controllers\CustomBroadcastingAuthController;
 use App\Http\Controllers\ActiveUsersPusherWebhookController;
 use App\Http\Controllers\CallCenterDispositionAPIController;
+use App\Http\Controllers\CallHungUpController;
 use App\Http\Controllers\TwilioAndroidAccessTokenController;
 use App\Http\Controllers\TwilioIOSAccessTokenGuestController;
 use App\Http\Controllers\TwilioIOSSandboxAccessTokenController;
 use App\Http\Controllers\TwilioAndroidAccessTokenGuestController;
-use App\Http\Controllers\IOSLogController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -226,3 +228,5 @@ Route::middleware('auth:sanctum')->delete('/notifications/clear-all', [Notificat
 Route::middleware('auth:sanctum')->delete('/notifications/{notificationId}', [NotificationsAPIController::class, 'destroy']);
 
 Route::middleware('auth:sanctum')->post('/ios-logs', [IOSLogController::class, 'log']);
+
+Route::middleware('auth:sanctum')->post('/calls/{uniqueCallId}/reject', [CallHungUpController::class, 'reject']);
