@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import { toaster } from "@/helper.js";
@@ -17,20 +17,57 @@ let page = usePage();
 if (page.props.flash.message) {
   toaster("success", page.props.flash.message);
 }
-let props = defineProps(["calls"]);
+let props = defineProps({
+  calls: {
+    type: Object,
+    required: true,
+  },
+  totalCalls: {
+    type: Number,
+    required: true,
+  },
+  totalRevenue: {
+    type: Number,
+    required: true,
+  },
+});
+});
 
-console.log(props);
+let loadedCalls = ref(props.calls.data);
 
-let paginate = (url) => {
-  router.visit(url);
+watch(
+  () => props.calls,
+  () => {
+    loadedCalls.value = [...loadedCalls.value, ...props.calls.data];
+  }
+);
+
+let initialUrl = usePage().url;
+
+let loadMore = (url) => {
+  router.get(
+    props.calls.next_page_url,
+    {},
+    {
+      preserveState: true,
+      preserveScroll: true,
+      onSuccess: () => {
+        window.history.replaceState({}, "", initialUrl);
+      },
+    }
+  );
 };
 
 let columns = ref([
   { label: "ID", columnMethod: "getIdColumn", visible: true },
   { label: "Call Date", columnMethod: "getCallTakenColumn", visible: true },
   { label: "Agent Name", columnMethod: "getAgentNameColumn", visible: true },
-  { label: "Role", columnMethod: "getRoleColumn", visible: true },
-  { label: "Connected Duration", columnMethod: "getConnectedDurationColumn", visible: true },
+  { label: "Role", columnMethod: "getRoleColumn", visible: false },
+  {
+    label: "Connected Duration",
+    columnMethod: "getConnectedDurationColumn",
+    visible: false,
+  },
   { label: "Revenue", columnMethod: "getRevenueColumn", visible: true },
   { label: "Vertical", columnMethod: "getVerticalColumn", visible: true },
   { label: "CallerID", columnMethod: "getCallerIdColumn", visible: true },
@@ -53,7 +90,11 @@ let getRoleColumn = (call) => {
 };
 
 let getConnectedDurationColumn = (call) => {
-  return String(Math.floor(call.call_duration_in_seconds / 60)).padStart(2, "0") + ":" + String(call.call_duration_in_seconds % 60).padStart(2, "0");
+  return (
+    String(Math.floor(call.call_duration_in_seconds / 60)).padStart(2, "0") +
+    ":" +
+    String(call.call_duration_in_seconds % 60).padStart(2, "0")
+  );
 };
 
 let getRevenueColumn = (call) => {
@@ -90,6 +131,20 @@ let callColumnMethod = (call, column) => {
       return "";
   }
 };
+
+let landmark = ref(null);
+
+let observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      loadMore();
+    }
+  });
+});
+
+onMounted(() => {
+  observer.observe(landmark.value);
+});
 </script>
 
 <style scoped>
@@ -123,37 +178,17 @@ let callColumnMethod = (call, column) => {
           >
             <div class="flex items-center flex-1 space-x-4">
               <h5>
-                <span class="text-gray-500">All Calls:</span>
-                <span class="">123456</span>
+                <span class="text-gray-500">Total Calls: </span>
+                <span class="">&nbsp;{{ totalCalls }}</span>
               </h5>
               <h5>
-                <span class="text-gray-500">Total Revenue:</span>
-                <span class="">$88.4k</span>
+                <span class="text-gray-500">Total Revenue: </span>
+                <span class="">&nbsp;${{ totalRevenue.toFixed(2) }}</span>
               </h5>
             </div>
             <div
               class="flex flex-col flex-shrink-0 space-y-3 md:flex-row md:items-center lg:justify-end md:space-y-0 md:space-x-3"
             >
-              <button
-                type="button"
-                class="flex items-center justify-center px-4 py-2 text-sm font-medium text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 focus:outline-none"
-              >
-                <svg
-                  class="h-3.5 w-3.5 mr-2"
-                  fill="currentColor"
-                  viewbox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden="true"
-                >
-                  <path
-                    clip-rule="evenodd"
-                    fill-rule="evenodd"
-                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                  />
-                </svg>
-                Add new product
-              </button>
-
               <div class="px-4">
                 <Popover class="relative">
                   <PopoverButton>
@@ -190,7 +225,7 @@ let callColumnMethod = (call, column) => {
               </div>
             </div>
           </div>
-          <div v-if="calls.data.length" class="overflow-x-auto">
+          <div v-if="loadedCalls.length" class="overflow-x-auto">
             <table class="w-full text-sm text-left text-gray-500">
               <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                 <tr class="cursor-pointer">
@@ -209,7 +244,7 @@ let callColumnMethod = (call, column) => {
               <tbody>
                 <tr
                   class="border-b hover:bg-gray-100"
-                  v-for="(call, index) in calls.data"
+                  v-for="(call, index) in loadedCalls"
                   :key="call.id"
                 >
                   <td
@@ -227,6 +262,18 @@ let callColumnMethod = (call, column) => {
                 </tr>
               </tbody>
             </table>
+          </div>
+
+          <div v-if="loadedCalls.length" class="flex justify-center my-4">
+            <!-- <button
+              type="button"
+              class="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200"
+              @click.prevent="loadMore"
+            >
+              Load More
+            </button> -->
+
+            <div ref="landmark"></div>
           </div>
 
           <div v-else class="text-sm text-center py-20 text-gray-200">
