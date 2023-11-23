@@ -184,10 +184,6 @@ let renderColumn = (column, call) => {
 };
 </script>
 
-<style scoped>
-/* Keep existing styles or adjust as needed for the User Activities page. */
-</style>
-
 <template>
   <Head title="Calls" />
   <AuthenticatedLayout>
