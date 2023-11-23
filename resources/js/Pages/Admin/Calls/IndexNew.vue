@@ -46,7 +46,7 @@ let getCallTakenColumn = (call) => {
 };
 
 let getAgentNameColumn = (call) => {
-  return call.agent_name;
+  return call.user.first_name + ' ' + call.user.last_name;
 };
 
 let getRoleColumn = (call) => {
@@ -62,11 +62,11 @@ let getRevenueColumn = (call) => {
 };
 
 let getVerticalColumn = (call) => {
-  return call.vertical;
+  return call.call_type.type;
 };
 
 let getCallerIdColumn = (call) => {
-  return call.caller_id;
+  return call.from;
 }
 
 let callColumnMethod = (call, column) => {
