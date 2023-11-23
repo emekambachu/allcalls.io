@@ -127,15 +127,15 @@ let paginate = (url) => {
             <table class="w-full text-sm text-left text-gray-500">
               <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                 <tr>
-                  <th scope="col" class="px-4 py-3">ID</th>
-                  <th scope="col" class="px-4 py-3">Call Date</th>
-                  <th scope="col" class="px-4 py-3">Agent Name</th>
-                  <th scope="col" class="px-4 py-3">Role</th>
-                  <th scope="col" class="px-4 py-3">Connected Duration</th>
-                  <th scope="col" class="px-4 py-3">Revenue</th>
-                  <th scope="col" class="px-4 py-3">Vertical</th>
-                  <th scope="col" class="px-4 py-3">Caller ID</th>
-                  <th scope="col" class="px-4 py-3">Actions</th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">ID</th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Call Date</th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Agent Name</th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Role</th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Connected Duration</th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Revenue</th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Vertical</th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Caller ID</th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Actions</th>
                 </tr>
               </thead>
               <tbody>
