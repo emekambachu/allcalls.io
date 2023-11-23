@@ -115,7 +115,14 @@ let paginate = (url) => {
 
                   <PopoverPanel class="absolute z-10 w-40 -left-20">
                     <div class="border border-gray-100 p-2 shadow bg-white mt-2">
-                      Hello, world!
+                      <div class="flex">
+                        <div><input type="checkbox"></div>
+                        <div>ID</div>
+                      </div>
+                      <div class="flex">
+                        <div><input type="checkbox"></div>
+                        <div>Call Taken</div>
+                      </div>
                     </div>
                   </PopoverPanel>
                 </Popover>
