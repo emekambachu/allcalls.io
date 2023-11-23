@@ -179,11 +179,11 @@ onMounted(() => {
             <div class="flex items-center flex-1 space-x-4">
               <h5>
                 <span class="text-gray-500">Total Calls: </span>
-                <span class="">{{ totalCalls }}</span>
+                <span class="">&nbsp;{{ totalCalls }}</span>
               </h5>
               <h5>
                 <span class="text-gray-500">Total Revenue: </span>
-                <span class="">${{ totalRevenue }}</span>
+                <span class="">&nbsp;${{ totalRevenue }}</span>
               </h5>
             </div>
             <div
