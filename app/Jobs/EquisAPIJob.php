@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use App\Models\State;
 use Illuminate\Bus\Queueable;
 use App\Mail\EquisDuplicateMail;
-use App\Models\SendEmailToPeople;
+use App\Models\EquisDuplicate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
@@ -102,18 +102,18 @@ class EquisAPIJob implements ShouldQueue
 
     protected function sendEmailsToPeople()
     {
-        Log::debug('equis-api-job:Sending email to people');
+        Log::debug('equis-api-job:EquisDuplicate');
         // Mail::to(['bizdev@equisfinancial.com'])
         //     ->cc(['contracting@allcalls.io'])
         //     ->send(new EquisDuplicateMail($this->user->internalAgentContract->first_name . " " . $this->user->internalAgentContract->last_name, 'EF222171', $this->user->internalAgentContract->email));
 
         // Mail::to(['iamfaizahmed123@gmail.com', 'ryan@allcalls.io', 'vince@allcalls.io'])
         // ->send(new EquisDuplicateMail($this->user->internalAgentContract->first_name . " " . $this->user->internalAgentContract->last_name, 'EF222171', $this->user->internalAgentContract->email));
-        SendEmailToPeople::create([
-            'email' => $this->user->internalAgentContract->email,
-            'first_name' => $this->user->internalAgentContract->first_name,
-            'last_name' => $this->user->internalAgentContract->last_name,
-            'ef_no' => $this->user->internalAgentContract->upline_code,
+        EquisDuplicate::create([
+            'email' => $this->user->email,
+            'first_name' => $this->user->first_name,
+            'last_name' => $this->user->last_name,
+            'upline_code' => $this->user->upline_id,
         ]);
     }
 

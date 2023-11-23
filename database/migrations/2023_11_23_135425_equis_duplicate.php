@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('send_email_to_peoples', function (Blueprint $table) {
+        Schema::create('equis_duplicate', function (Blueprint $table) {
             $table->id();
-            $table->string('email');
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('ef_no');
+            $table->string('email')->nullable();
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->string('upline_code')->nullable();
             $table->timestamps();
         });
     }
@@ -26,8 +26,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('send_email_to_peoples', function (Blueprint $table) {
-            Schema::dropIfExists('send_email_to_peoples');
+        Schema::table('equis_duplicate', function (Blueprint $table) {
+            Schema::dropIfExists('equis_duplicate');
         });
     }
 };
