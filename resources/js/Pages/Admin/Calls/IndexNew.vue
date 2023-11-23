@@ -157,7 +157,6 @@ let columns = ref([
                     scope="col"
                     class="px-4 py-3 whitespace-nowrap"
                     v-for="(column, index) in columns"
-                    v-if="column.visible"
                     :key="index"
                   >
                     {{ column.label }}
