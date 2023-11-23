@@ -169,7 +169,7 @@ let performSorting = () => {
 
 
 let sortByColumn = (column) => {
-  console.log('Sort by column called')');
+  console.log('Sort by column called');
 
   if (!column.sortable) return; // If the column is not sortable, do nothing
 
