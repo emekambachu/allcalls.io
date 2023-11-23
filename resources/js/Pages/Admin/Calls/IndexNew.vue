@@ -139,9 +139,19 @@ let paginate = (url) => {
                   >
                     <div class="px-1 py-1">
                       <MenuItem>
-                        <span class="text-gray-900 block px-4 py-2 text-sm">
-                          Hello, world
-                        </span>
+                      <div>
+                        <div class="flex">
+                          <div><input type="checkbox"></div>
+                          <div>ID</div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <div class="flex">
+                          <div><input type="checkbox"></div>
+                          <div>Call Taken</div>
+                        </div>
+                      </div>
                       </MenuItem>
                     </div>
                   </MenuItems>
