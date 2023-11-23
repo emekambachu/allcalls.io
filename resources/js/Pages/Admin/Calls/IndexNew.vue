@@ -135,23 +135,25 @@ let paginate = (url) => {
                 >
                   <MenuItems
                     class="absolute mt-2 w-36 origin-top-right rounded-md bg-white shadow border border-gray-100"
-                    style="width: 150px;"
+                    style="width: 150px"
                   >
                     <div class="px-1 py-1">
                       <MenuItem>
-                      <div>
-                        <div class="flex">
-                          <div><input type="checkbox"></div>
-                          <div>ID</div>
-                        </div>
-                      </div>
+                        <div>
+                          <div>
+                            <div class="flex">
+                              <div><input type="checkbox" /></div>
+                              <div>ID</div>
+                            </div>
+                          </div>
 
-                      <div>
-                        <div class="flex">
-                          <div><input type="checkbox"></div>
-                          <div>Call Taken</div>
+                          <div>
+                            <div class="flex">
+                              <div><input type="checkbox" /></div>
+                              <div>Call Taken</div>
+                            </div>
+                          </div>
                         </div>
-                      </div>
                       </MenuItem>
                     </div>
                   </MenuItems>
