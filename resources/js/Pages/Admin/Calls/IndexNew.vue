@@ -113,15 +113,10 @@ let paginate = (url) => {
                 <Popover class="relative">
                   <PopoverButton>Solutions</PopoverButton>
 
-                  <PopoverPanel class="absolute z-10">
-                    <div class="grid grid-cols-2">
-                      <a href="/analytics">Analytics</a>
-                      <a href="/engagement">Engagement</a>
-                      <a href="/security">Security</a>
-                      <a href="/integrations">Integrations</a>
+                  <PopoverPanel class="absolute z-10 w-40 -left-20">
+                    <div class="border border-gray-100 p-2 shadow">
+                      Hello, world!
                     </div>
-
-                    <img src="/solutions.jpg" alt="" />
                   </PopoverPanel>
                 </Popover>
               </div>
