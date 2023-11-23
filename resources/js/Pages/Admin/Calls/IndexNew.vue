@@ -279,13 +279,13 @@ let sortByColumn = (column) => {
                 <tr class="cursor-pointer">
                   <th
                     scope="col"
-                    class="px-4 py-3 whitespace-nowrap"
+                    class="px-4 py-3 whitespace-nowrap flex items-center"
                     v-for="(column, index) in columns"
                     :key="index"
                     v-show="column.visible"
                     @click="sortByColumn(column)"
                   >
-                    {{ column.label }}
+                    <span>{{ column.label }}</span>
 
                     <span v-if="sortColumn === column.columnMethod">
                       <svg
@@ -294,7 +294,7 @@ let sortByColumn = (column) => {
                         viewBox="0 0 24 24"
                         stroke-width="1.5"
                         stroke="currentColor"
-                        class="w-6 h-6"
+                        class="w-6 h-6 ml-1"
                         v-if="sortDirection === 'asc'"
                       >
                         <path
@@ -311,7 +311,7 @@ let sortByColumn = (column) => {
                         viewBox="0 0 24 24"
                         stroke-width="1.5"
                         stroke="currentColor"
-                        class="w-6 h-6"
+                        class="w-6 h-6 ml-1"
                       >
                         <path
                           stroke-linecap="round"
