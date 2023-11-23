@@ -117,7 +117,7 @@ let paginate = (url) => {
                     leave-to-class="translate-y-1 opacity-0"
                   >
                     <PopoverPanel
-                      class="absolute left-1/2 z-10 mt-3 w-screen max-w-sm -translate-x-1/2 transform px-4 sm:px-0 lg:max-w-3xl"
+                      class="absolute left-1/2 z-90 mt-3 w-screen max-w-sm -translate-x-1/2 transform px-4 sm:px-0 lg:max-w-3xl"
                     >
                       <div
                         class="overflow-hidden rounded-lg shadow-lg ring-1 ring-black/5"
