@@ -3,6 +3,7 @@ import { ref, onMounted } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import { toaster } from "@/helper.js";
+import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 
 let page = usePage();
 if (page.props.flash.message) {
@@ -134,6 +135,7 @@ let paginate = (url) => {
                   <th scope="col" class="px-4 py-3">Revenue</th>
                   <th scope="col" class="px-4 py-3">Vertical</th>
                   <th scope="col" class="px-4 py-3">Caller ID</th>
+                  <th scope="col" class="px-4 py-3">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -192,6 +194,80 @@ let paginate = (url) => {
                     class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                   >
                     {{ call.from }}
+                  </td>
+                  <td
+                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    <Menu as="div" class="relative inline-block text-left">
+                      <div>
+                        <MenuButton
+                          class="inline-flex justify-center rounded-md px-4 py-2 relative"
+                          style="z-index: 1"
+                        >
+                          <svg
+                            class="w-4 h-4 text-gray-800 dark:text-white"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 17 4"
+                          >
+                            <path
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-width="2"
+                              d="M2.49 2h.01m6 0h.01m5.99 0h.01"
+                            />
+                          </svg>
+                        </MenuButton>
+                      </div>
+
+                      <transition
+                        enter-active-class="transition duration-100 ease-out"
+                        enter-from-class="transform scale-95 opacity-0"
+                        enter-to-class="transform scale-100 opacity-100"
+                        leave-active-class="transition duration-75 ease-in"
+                        leave-from-class="transform scale-100 opacity-100"
+                        leave-to-class="transform scale-95 opacity-0"
+                      >
+                        <MenuItems
+                          class="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                          style="z-index: 10"
+                        >
+                          <div class="px-1 py-1">
+                            <MenuItem v-slot="{ active }">
+                              <button
+                                :class="[
+                                  active ? 'bg-sky-900 text-white' : 'text-gray-900',
+                                  'group flex w-full items-center rounded-md py-2 px-2 text-xs',
+                                ]"
+                              >
+                                Open Client Details
+                              </button>
+                            </MenuItem>
+                            <MenuItem v-slot="{ active }">
+                              <button
+                                :class="[
+                                  active ? 'bg-sky-900 text-white' : 'text-gray-900',
+                                  'group flex w-full items-center rounded-md py-2 px-2 text-xs',
+                                ]"
+                              >
+                                Open User Details
+                              </button>
+                            </MenuItem>
+                            <MenuItem v-slot="{ active }">
+                              <button
+                                :class="[
+                                  active ? 'bg-sky-900 text-white' : 'text-gray-900',
+                                  'group flex w-full items-center rounded-md py-2 px-2 text-xs',
+                                ]"
+                              >
+                                Open Call Details
+                              </button>
+                            </MenuItem>
+                          </div>
+                        </MenuItems>
+                      </transition>
+                    </Menu>
                   </td>
                 </tr>
               </tbody>
