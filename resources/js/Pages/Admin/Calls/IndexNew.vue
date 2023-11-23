@@ -3,7 +3,7 @@ import { ref, onMounted } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import { toaster } from "@/helper.js";
-import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
+import { Menu, MenuButton, MenuItems, MenuItem, Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
 
 let page = usePage();
 if (page.props.flash.message) {
@@ -108,13 +108,6 @@ let paginate = (url) => {
                     class="group inline-flex items-center rounded-md bg-orange-700 px-3 py-2 text-base font-medium hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
                   >
                     <span>Solutions</span>
-                    <ChevronDownIcon
-                      :class="open ? 'text-orange-300' : 'text-orange-300/70'"
-                      class="ml-2 h-5 w-5 transition duration-150 ease-in-out group-hover:text-orange-300/80"
-                      aria-hidden="true"
-                    />
-                  </PopoverButton>
-
                   <transition
                     enter-active-class="transition duration-200 ease-out"
                     enter-from-class="translate-y-1 opacity-0"
