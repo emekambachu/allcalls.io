@@ -63,7 +63,7 @@ class CallsController extends Controller
 
     public function indexNew(Request $request)
     {
-        $orderColumn = "created_at";
+        $orderColumn = "id";
         $orderBy = "DESC";
 
         if((isset($request->sortColumn) && $request->sortColumn != '') || (isset($request->sortOrder) && $request->sortOrder != '')) {
