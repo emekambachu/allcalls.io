@@ -225,7 +225,6 @@ let renderColumn = (column, call) => {
 
 let filters = ref([
   {
-    id: 1,
     label: "Paid Calls",
     checked: false,
     filter(calls) {
@@ -233,7 +232,6 @@ let filters = ref([
     },
   },
   {
-    id: 2,
     label: "Unpaid Calls",
     checked: false,
     filter(calls) {
