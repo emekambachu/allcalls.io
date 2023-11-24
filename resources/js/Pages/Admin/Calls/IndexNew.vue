@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, computed } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import { toaster } from "@/helper.js";
@@ -221,6 +221,40 @@ const sortByColumn = (column) => {
 let renderColumn = (column, call) => {
   return column.render(call);
 };
+
+
+let filters = ref([
+  {
+    id: 1,
+    label: "Paid Calls",
+    checked: false,
+    filter(calls) {
+      return calls.filter((call) => call.amount_spent > 0);
+    },
+  },
+  {
+    id: 2,
+    label: "Unpaid Calls",
+    checked: false,
+    filter(calls) {
+      return calls.filter((call) => call.amount_spent === 0);
+    },
+  },
+]);
+
+
+let filteredCalls = computed(() => {
+  let filteredCalls = loadedCalls.value;
+
+  filters.value.forEach((filter) => {
+    if (filter.checked) {
+      filteredCalls = filter.filter(filteredCalls);
+    }
+  });
+
+  return filteredCalls;
+});
+
 </script>
 
 <template>
@@ -309,14 +343,18 @@ let renderColumn = (column, call) => {
                     <div class="border border-gray-100 p-2 shadow bg-white mt-2">
                       <div class="flex items-center mb-4">
                         <input
-                          :id="`filter-1`"
+                          v-for="(filter, index) in filters"
+                          :key="index"
+                          :id="`filter-${index}`"
                           type="checkbox"
                           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                          v-model="filter.checked"
                         />
                         <label
-                          :for="`filter-1`"
+                          :for="`filter-${index}`"
                           class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 select-none"
-                          >Paid Calls</label
+                          v-text="filter.label"
+                          ></label
                         >
                       </div>
 
@@ -394,7 +432,7 @@ let renderColumn = (column, call) => {
               <tbody>
                 <tr
                   class="border-b hover:bg-gray-100"
-                  v-for="(call, index) in loadedCalls"
+                  v-for="(call, index) in filteredCalls"
                   :key="call.id"
                 >
                   <td
