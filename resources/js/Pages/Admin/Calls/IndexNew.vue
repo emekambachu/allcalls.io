@@ -36,8 +36,7 @@ let props = defineProps({
   },
 });
 
-
-console.log('Calls grouped by user:', props.callsGroupedByUser)
+console.log("Calls grouped by user:", props.callsGroupedByUser);
 
 let loadedCalls = ref(props.calls.data);
 
@@ -133,7 +132,17 @@ let columns = ref([
     label: "Connected Duration",
     columnMethod: "getConnectedDurationColumn",
     visible: false,
-    sortable: false,
+    sortable: true,
+    sortingMethod: (a, b) => {
+      let durationA = a.call_duration_in_seconds;
+      let durationB = b.call_duration_in_seconds;
+
+      if (sortDirection.value === "asc") {
+        return durationA - durationB;
+      } else {
+        return durationB - durationA;
+      }
+    },
     render(call) {
       return (
         String(Math.floor(call.call_duration_in_seconds / 60)).padStart(2, "0") +
@@ -241,10 +250,8 @@ let filters = ref([
     label: "Unpaid Calls",
     checked: false,
     filter(calls) {
-
-      console.log('Unpaid Calls Filter');
+      console.log("Unpaid Calls Filter");
       console.log(calls.filter((call) => Number(call.amount_spent) === 0));
-
 
       return calls.filter((call) => Number(call.amount_spent) == 0);
     },
@@ -437,9 +444,7 @@ let filteredCalls = computed(() => {
                     v-show="column.visible"
                     v-text="renderColumn(column, call)"
                   ></td>
-                  <td
-                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
-                  >
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
                     <!-- Actions column content -->
                   </td>
                 </tr>
