@@ -240,15 +240,15 @@ let filters = ref([
 ]);
 
 let filteredCalls = computed(() => {
-  let filteredCalls = loadedCalls.value;
+  let calls = loadedCalls.value;
 
   filters.value.forEach((filter) => {
     if (filter.checked) {
-      filteredCalls = filter.filter(filteredCalls);
+      calls = filter.filter(calls);
     }
   });
 
-  return filteredCalls;
+  return calls;
 });
 </script>
 
