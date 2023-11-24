@@ -236,7 +236,7 @@ let filters = ref([
     filter(calls) {
 
       console.log('Unpaid Calls Filter');
-      console.log(calls.filter((call) => call.amount_spent === 0)));
+      console.log(calls.filter((call) => call.amount_spent === 0));
 
 
       return calls.filter((call) => call.amount_spent === 0);
