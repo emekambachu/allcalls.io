@@ -15,7 +15,7 @@ class InternalAgentLevel extends Controller
      */
     public function index()
     {
-        $levels = AgentLevel::orderBy('created_at', 'desc')->paginate(10);
+        $levels = AgentLevel::orderBy('created_at', 'asc')->paginate(10);
         return Inertia::render('Admin/AgentLevel/Index', [
             'levels' => $levels,
         ]);
@@ -33,25 +33,25 @@ class InternalAgentLevel extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255|unique:'.AgentLevel::class.',name',
-        ]);
+        // $validator = Validator::make($request->all(), [
+        //     'name' => 'required|string|max:255|unique:'.AgentLevel::class.',name',
+        // ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'errors' => $validator->errors(),
-            ], 400);
-        }
+        // if ($validator->fails()) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'errors' => $validator->errors(),
+        //     ], 400);
+        // }
 
-        AgentLevel::create([
-            'name' => $request->name,
-        ]);
+        // AgentLevel::create([
+        //     'name' => $request->name,
+        // ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Internal Agent Level Added Successfully.',
-        ], 200);
+        // return response()->json([
+        //     'success' => true,
+        //     'message' => 'Internal Agent Level Added Successfully.',
+        // ], 200);
     }
 
     /**
@@ -83,14 +83,14 @@ class InternalAgentLevel extends Controller
      */
     public function destroy(string $id)
     {
-        $exist = AgentLevel::findOrFail($id);
+        // $exist = AgentLevel::findOrFail($id);
 
-        if(count($exist->getAgentInvites)) {
-            return response()->json([
-                'success' => false,
-                'message' => "Sorry! you can't delete this. Some of the agents pending invites belongs to this level.",
-            ], 400);
-        }
+        // if(count($exist->getAgentInvites)) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => "Sorry! you can't delete this. Some of the agents pending invites belongs to this level.",
+        //     ], 400);
+        // }
 
         // if(count($exist->getRegisteredAgentInvites)) {
         //     return response()->json([
@@ -99,10 +99,10 @@ class InternalAgentLevel extends Controller
         //     ], 400);
         // }
 
-        $exist->delete();
-        return response()->json([
-            'success' => false,
-            'message' => "Level deleted successfully.",
-        ], 200);
+        // $exist->delete();
+        // return response()->json([
+        //     'success' => false,
+        //     'message' => "Level deleted successfully.",
+        // ], 200);
     }
 }
