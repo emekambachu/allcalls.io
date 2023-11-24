@@ -239,7 +239,7 @@ let filters = ref([
       console.log(calls.filter((call) => Number(call.amount_spent) === 0));
 
 
-      return calls.filter((call) => Number(call.amount_spent) === 0);
+      return calls.filter((call) => Number(call.amount_spent) == 0);
     },
   },
 ]);
