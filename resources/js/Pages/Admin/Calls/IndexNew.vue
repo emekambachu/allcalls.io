@@ -294,6 +294,47 @@ let renderColumn = (column, call) => {
                     </div>
                   </PopoverPanel>
                 </Popover>
+
+                <Popover class="relative">
+                  <PopoverButton>
+                    <button
+                      type="button"
+                      class="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200"
+                    >
+                      Visible Columns
+                    </button>
+                  </PopoverButton>
+
+                  <PopoverPanel class="absolute z-10 w-40 -left-20">
+                    <div class="border border-gray-100 p-2 shadow bg-white mt-2">
+                      <div class="flex items-center mb-4">
+                        <input
+                          :id="`filter-1`"
+                          type="checkbox"
+                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                        />
+                        <label
+                          :for="`filter-1`"
+                          class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 select-none"
+                          >Paid Calls</label
+                        >
+                      </div>
+
+                      <div class="flex items-center mb-4">
+                        <input
+                          :id="`filter-2`"
+                          type="checkbox"
+                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                        />
+                        <label
+                          :for="`filter-2`"
+                          class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 select-none"
+                          >Unpaid Calls</label
+                        >
+                      </div>
+                    </div>
+                  </PopoverPanel>
+                </Popover>
               </div>
             </div>
           </div>
