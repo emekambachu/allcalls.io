@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, computed } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import { toaster } from "@/helper.js";
@@ -221,6 +221,40 @@ const sortByColumn = (column) => {
 let renderColumn = (column, call) => {
   return column.render(call);
 };
+
+let filters = ref([
+  {
+    label: "Paid Calls",
+    checked: false,
+    filter(calls) {
+      return calls.filter((call) => call.amount_spent > 0);
+    },
+  },
+  {
+    label: "Unpaid Calls",
+    checked: false,
+    filter(calls) {
+
+      console.log('Unpaid Calls Filter');
+      console.log(calls.filter((call) => Number(call.amount_spent) === 0));
+
+
+      return calls.filter((call) => Number(call.amount_spent) == 0);
+    },
+  },
+]);
+
+let filteredCalls = computed(() => {
+  let calls = loadedCalls.value;
+
+  filters.value.forEach((filter) => {
+    if (filter.checked) {
+      calls = filter.filter(calls);
+    }
+  });
+
+  return calls;
+});
 </script>
 
 <template>
@@ -261,8 +295,8 @@ let renderColumn = (column, call) => {
             <div
               class="flex flex-col flex-shrink-0 space-y-3 md:flex-row md:items-center lg:justify-end md:space-y-0 md:space-x-3"
             >
-              <div class="px-4">
-                <Popover class="relative">
+              <div class="px-4 flex items-center">
+                <Popover class="relative mr-2">
                   <PopoverButton>
                     <button
                       type="button"
@@ -290,6 +324,39 @@ let renderColumn = (column, call) => {
                           class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 select-none"
                           >{{ column.label }}</label
                         >
+                      </div>
+                    </div>
+                  </PopoverPanel>
+                </Popover>
+
+                <Popover class="relative">
+                  <PopoverButton>
+                    <button
+                      type="button"
+                      class="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200"
+                    >
+                      Filters
+                    </button>
+                  </PopoverButton>
+
+                  <PopoverPanel class="absolute z-10 w-40 -left-20">
+                    <div class="border border-gray-100 p-2 shadow bg-white mt-2">
+                      <div
+                        v-for="(filter, index) in filters"
+                        :key="index"
+                        class="flex items-center mb-4"
+                      >
+                        <input
+                          v-model="filter.checked"
+                          :id="`filter-${index}`"
+                          type="checkbox"
+                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                        />
+                        <label
+                          :for="`filter-${index}`"
+                          class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 select-none"
+                          v-text="filter.label"
+                        ></label>
                       </div>
                     </div>
                   </PopoverPanel>
@@ -353,7 +420,7 @@ let renderColumn = (column, call) => {
               <tbody>
                 <tr
                   class="border-b hover:bg-gray-100"
-                  v-for="(call, index) in loadedCalls"
+                  v-for="(call, index) in filteredCalls"
                   :key="call.id"
                 >
                   <td
