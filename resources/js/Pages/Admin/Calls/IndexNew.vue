@@ -234,6 +234,11 @@ let filters = ref([
     label: "Unpaid Calls",
     checked: false,
     filter(calls) {
+
+      console.log('Unpaid Calls Filter');
+      console.log(calls.filter((call) => call.amount_spent === 0)));
+
+
       return calls.filter((call) => call.amount_spent === 0);
     },
   },
