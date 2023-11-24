@@ -90,11 +90,10 @@ class CallsController extends Controller
             ->paginate(50);
 
 
-
-        $callsGroupedByUser = $calls->getCollection()
-            ->groupBy(function ($call) {
-                return $call->user_id;
-            });
+        $allCalls = Call::all();
+        $callsGroupedByUser = $allCalls->groupBy(function ($call) {
+            return $call->user_id;
+        });
 
 
         return Inertia::render('Admin/Calls/IndexNew', [
