@@ -5,7 +5,6 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import InvitesModal from "@/Pages/InternalAgent/MyAgency/InvitesModal.vue";
 import { toaster } from "@/helper.js";
-import axios from "axios";
 
 let { agentInvites, baseUrl } = defineProps({
   agentInvites: {
@@ -27,11 +26,6 @@ let page = usePage();
 if (page.props.flash.message) {
   toaster("success", page.props.flash.message);
 }
-let add_agent_button = ref(true)
-if(page.props.auth.user.upline_id && page.props.auth.user.level_id){
-  add_agent_button.value = false
-}
-console.log('user', page.props.auth.user);
 onMounted(() => {
   copyAgentInvitationLinkIfAvailable();
 });
@@ -136,7 +130,7 @@ let ReInviteAgentFun = () => {
               </h1>
             </div>
             <div>
-              <PrimaryButton :disabled="add_agent_button"  @click="generateInvite">Add Agent</PrimaryButton>
+              <PrimaryButton :disabled="!$page.props.auth.user.upline_id && !$page.props.auth.user.level_id"  @click="generateInvite">Add Agent</PrimaryButton>
             </div>
           </div>
           <hr class="mb-4" />
