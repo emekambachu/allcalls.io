@@ -139,7 +139,7 @@ let columns = ref([
     label: "Revenue",
     columnMethod: "getRevenueColumn",
     visible: true,
-    sortable: false,
+    sortable: true,
     render(call) {
       return "$" + call.amount_spent;
     },
