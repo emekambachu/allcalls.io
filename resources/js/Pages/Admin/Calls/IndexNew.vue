@@ -30,7 +30,14 @@ let props = defineProps({
     type: Number,
     required: true,
   },
+  callsGroupedByUser: {
+    type: Array,
+    required: true,
+  },
 });
+
+
+console.log('Calls grouped by user:', props.callsGroupedByUser)
 
 let loadedCalls = ref(props.calls.data);
 
