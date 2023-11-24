@@ -30,7 +30,13 @@ let props = defineProps({
     type: Number,
     required: true,
   },
+  callsGroupedByUser: {
+    type: Array,
+    required: true,
+  },
 });
+
+console.log("Calls grouped by user:", props.callsGroupedByUser);
 
 let loadedCalls = ref(props.calls.data);
 
@@ -126,7 +132,17 @@ let columns = ref([
     label: "Connected Duration",
     columnMethod: "getConnectedDurationColumn",
     visible: false,
-    sortable: false,
+    sortable: true,
+    sortingMethod: (a, b) => {
+      let durationA = a.call_duration_in_seconds;
+      let durationB = b.call_duration_in_seconds;
+
+      if (sortDirection.value === "asc") {
+        return durationA - durationB;
+      } else {
+        return durationB - durationA;
+      }
+    },
     render(call) {
       return (
         String(Math.floor(call.call_duration_in_seconds / 60)).padStart(2, "0") +
@@ -234,10 +250,8 @@ let filters = ref([
     label: "Unpaid Calls",
     checked: false,
     filter(calls) {
-
-      console.log('Unpaid Calls Filter');
+      console.log("Unpaid Calls Filter");
       console.log(calls.filter((call) => Number(call.amount_spent) === 0));
-
 
       return calls.filter((call) => Number(call.amount_spent) == 0);
     },
@@ -317,11 +331,11 @@ let filteredCalls = computed(() => {
                           :id="`column-${index}`"
                           type="checkbox"
                           v-model="column.visible"
-                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                         />
                         <label
                           :for="`column-${index}`"
-                          class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 select-none"
+                          class="ms-2 text-sm font-medium text-gray-900 select-none"
                           >{{ column.label }}</label
                         >
                       </div>
@@ -350,11 +364,11 @@ let filteredCalls = computed(() => {
                           v-model="filter.checked"
                           :id="`filter-${index}`"
                           type="checkbox"
-                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                         />
                         <label
                           :for="`filter-${index}`"
-                          class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 select-none"
+                          class="ms-2 text-sm font-medium text-gray-900 select-none"
                           v-text="filter.label"
                         ></label>
                       </div>
@@ -426,13 +440,11 @@ let filteredCalls = computed(() => {
                   <td
                     v-for="(column, colIndex) in columns"
                     :key="colIndex"
-                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
                     v-show="column.visible"
                     v-text="renderColumn(column, call)"
                   ></td>
-                  <td
-                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
                     <!-- Actions column content -->
                   </td>
                 </tr>
