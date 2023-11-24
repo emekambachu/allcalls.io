@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, computed } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import { toaster } from "@/helper.js";
@@ -30,7 +30,14 @@ let props = defineProps({
     type: Number,
     required: true,
   },
+  callsGroupedByUser: {
+    type: Array,
+    required: true,
+  },
 });
+
+
+console.log('Calls grouped by user:', props.callsGroupedByUser)
 
 let loadedCalls = ref(props.calls.data);
 
@@ -58,78 +65,128 @@ let loadMore = (url) => {
 };
 
 let columns = ref([
-  { label: "ID", columnMethod: "getIdColumn", visible: true },
-  { label: "Call Date", columnMethod: "getCallTakenColumn", visible: true },
-  { label: "Agent Name", columnMethod: "getAgentNameColumn", visible: true },
-  { label: "Role", columnMethod: "getRoleColumn", visible: false },
+  {
+    label: "ID",
+    columnMethod: "getIdColumn",
+    visible: true,
+    sortable: true,
+    sortingMethod(a, b) {
+      let valueA = a.id; // Assuming 'id' is the property name in your call object
+      let valueB = b.id;
+
+      if (sortDirection.value === "asc") {
+        return valueA - valueB;
+      } else {
+        return valueB - valueA;
+      }
+    },
+    render(call) {
+      return call.id;
+    },
+  },
+  {
+    label: "Call Date",
+    columnMethod: "getCallTakenColumn",
+    visible: true,
+    sortable: true,
+    render(call) {
+      return call.call_taken;
+    },
+    sortingMethod: (a, b) => {
+      const extractDateTime = (call) => {
+        const dateTimePattern = /\((.*?)\)/; // Regex to extract string in parentheses
+        const match = call.call_taken.match(dateTimePattern);
+        return match
+          ? new Date(match[1].replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$2/$1/$3"))
+          : new Date(0); // Convert to MM/DD/YYYY format for Date parsing
+      };
+
+      let dateA = extractDateTime(a);
+      let dateB = extractDateTime(b);
+
+      if (sortDirection.value === "asc") {
+        return dateA - dateB;
+      } else {
+        return dateB - dateA;
+      }
+    },
+  },
+  {
+    label: "Agent Name",
+    columnMethod: "getAgentNameColumn",
+    visible: true,
+    sortable: false,
+    render(call) {
+      return call.user.first_name + " " + call.user.last_name;
+    },
+  },
+  {
+    label: "Role",
+    columnMethod: "getRoleColumn",
+    visible: false,
+    sortable: false,
+    render(call) {
+      return call.user.role;
+    },
+  },
   {
     label: "Connected Duration",
     columnMethod: "getConnectedDurationColumn",
     visible: false,
+    sortable: false,
+    render(call) {
+      return (
+        String(Math.floor(call.call_duration_in_seconds / 60)).padStart(2, "0") +
+        ":" +
+        String(call.call_duration_in_seconds % 60).padStart(2, "0")
+      );
+    },
   },
-  { label: "Revenue", columnMethod: "getRevenueColumn", visible: true },
-  { label: "Vertical", columnMethod: "getVerticalColumn", visible: true },
-  { label: "CallerID", columnMethod: "getCallerIdColumn", visible: true },
+  {
+    label: "Revenue",
+    columnMethod: "getRevenueColumn",
+    visible: true,
+    sortable: true,
+    render(call) {
+      return "$" + call.amount_spent;
+    },
+    sortingMethod: (a, b) => {
+      // Convert the string with dollar sign to a float number
+      const getNumericValue = (call) => parseFloat(call.amount_spent);
+
+      let valueA = getNumericValue(a);
+      let valueB = getNumericValue(b);
+
+      if (sortDirection.value === "asc") {
+        return valueA - valueB;
+      } else {
+        return valueB - valueA;
+      }
+    },
+  },
+  {
+    label: "Vertical",
+    columnMethod: "getVerticalColumn",
+    visible: true,
+    sortable: false,
+    render(call) {
+      return call.call_type.type;
+    },
+  },
+  {
+    label: "CallerID",
+    columnMethod: "getCallerIdColumn",
+    visible: true,
+    sortable: false,
+    render(call) {
+      return call.from;
+    },
+  },
 ]);
 
-let getIdColumn = (call) => {
-  return call.id;
-};
-
-let getCallTakenColumn = (call) => {
-  return call.call_taken;
-};
-
-let getAgentNameColumn = (call) => {
-  return call.user.first_name + " " + call.user.last_name;
-};
-
-let getRoleColumn = (call) => {
-  return call.role;
-};
-
-let getConnectedDurationColumn = (call) => {
-  return (
-    String(Math.floor(call.call_duration_in_seconds / 60)).padStart(2, "0") +
-    ":" +
-    String(call.call_duration_in_seconds % 60).padStart(2, "0")
-  );
-};
-
-let getRevenueColumn = (call) => {
-  return "$" + call.amount_spent;
-};
-
-let getVerticalColumn = (call) => {
-  return call.call_type.type;
-};
-
-let getCallerIdColumn = (call) => {
-  return call.from;
-};
-
-let callColumnMethod = (call, column) => {
-  switch (column.columnMethod) {
-    case "getIdColumn":
-      return getIdColumn(call);
-    case "getCallTakenColumn":
-      return getCallTakenColumn(call);
-    case "getAgentNameColumn":
-      return getAgentNameColumn(call);
-    case "getRoleColumn":
-      return getRoleColumn(call);
-    case "getConnectedDurationColumn":
-      return getConnectedDurationColumn(call);
-    case "getRevenueColumn":
-      return getRevenueColumn(call);
-    case "getVerticalColumn":
-      return getVerticalColumn(call);
-    case "getCallerIdColumn":
-      return getCallerIdColumn(call);
-    default:
-      return "";
-  }
-};
+let sortColumn = ref(null);
+let sortDirection = ref("asc");
+let sortingMethod = ref(null);
 
 let landmark = ref(null);
 
@@ -144,11 +201,68 @@ let observer = new IntersectionObserver((entries) => {
 onMounted(() => {
   observer.observe(landmark.value);
 });
-</script>
 
-<style scoped>
-/* Keep existing styles or adjust as needed for the User Activities page. */
-</style>
+let performSorting = () => {
+  console.log("Perform sorting now!!");
+  console.log("Sort Column: ", sortColumn.value);
+  console.log("Sort Direction", sortDirection.value);
+
+  loadedCalls.value.sort(sortingMethod.value);
+};
+
+const sortByColumn = (column) => {
+  if (!column.sortable) return;
+
+  if (sortColumn.value === column.label) {
+    sortDirection.value = sortDirection.value === "asc" ? "desc" : "asc";
+    sortingMethod.value = column.sortingMethod;
+  } else {
+    sortColumn.value = column.label;
+    sortDirection.value = "asc";
+    sortingMethod.value = column.sortingMethod;
+  }
+
+  performSorting();
+};
+
+let renderColumn = (column, call) => {
+  return column.render(call);
+};
+
+let filters = ref([
+  {
+    label: "Paid Calls",
+    checked: false,
+    filter(calls) {
+      return calls.filter((call) => call.amount_spent > 0);
+    },
+  },
+  {
+    label: "Unpaid Calls",
+    checked: false,
+    filter(calls) {
+
+      console.log('Unpaid Calls Filter');
+      console.log(calls.filter((call) => Number(call.amount_spent) === 0));
+
+
+      return calls.filter((call) => Number(call.amount_spent) == 0);
+    },
+  },
+]);
+
+let filteredCalls = computed(() => {
+  let calls = loadedCalls.value;
+
+  filters.value.forEach((filter) => {
+    if (filter.checked) {
+      calls = filter.filter(calls);
+    }
+  });
+
+  return calls;
+});
+</script>
 
 <template>
   <Head title="Calls" />
@@ -188,8 +302,8 @@ onMounted(() => {
             <div
               class="flex flex-col flex-shrink-0 space-y-3 md:flex-row md:items-center lg:justify-end md:space-y-0 md:space-x-3"
             >
-              <div class="px-4">
-                <Popover class="relative">
+              <div class="px-4 flex items-center">
+                <Popover class="relative mr-2">
                   <PopoverButton>
                     <button
                       type="button"
@@ -210,13 +324,46 @@ onMounted(() => {
                           :id="`column-${index}`"
                           type="checkbox"
                           v-model="column.visible"
-                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                         />
                         <label
                           :for="`column-${index}`"
-                          class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 select-none"
+                          class="ms-2 text-sm font-medium text-gray-900 select-none"
                           >{{ column.label }}</label
                         >
+                      </div>
+                    </div>
+                  </PopoverPanel>
+                </Popover>
+
+                <Popover class="relative">
+                  <PopoverButton>
+                    <button
+                      type="button"
+                      class="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200"
+                    >
+                      Filters
+                    </button>
+                  </PopoverButton>
+
+                  <PopoverPanel class="absolute z-10 w-40 -left-20">
+                    <div class="border border-gray-100 p-2 shadow bg-white mt-2">
+                      <div
+                        v-for="(filter, index) in filters"
+                        :key="index"
+                        class="flex items-center mb-4"
+                      >
+                        <input
+                          v-model="filter.checked"
+                          :id="`filter-${index}`"
+                          type="checkbox"
+                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                        />
+                        <label
+                          :for="`filter-${index}`"
+                          class="ms-2 text-sm font-medium text-gray-900 select-none"
+                          v-text="filter.label"
+                        ></label>
                       </div>
                     </div>
                   </PopoverPanel>
@@ -230,12 +377,49 @@ onMounted(() => {
                 <tr class="cursor-pointer">
                   <th
                     scope="col"
-                    class="px-4 py-3 whitespace-nowrap"
+                    class="px-4 py-3 whitespace-nowrap select-none"
                     v-for="(column, index) in columns"
                     :key="index"
                     v-show="column.visible"
+                    @click="sortByColumn(column)"
                   >
-                    {{ column.label }}
+                    <div class="flex items-center">
+                      <span>{{ column.label }}</span>
+
+                      <span v-if="sortColumn === column.label">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          class="w-3 h-3 ml-1"
+                          v-if="sortDirection === 'asc'"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M4.5 15.75l7.5-7.5 7.5 7.5"
+                          />
+                        </svg>
+
+                        <svg
+                          v-if="sortDirection === 'desc'"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          class="w-3 h-3 ml-1"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                          />
+                        </svg>
+                      </span>
+                    </div>
                   </th>
                   <th scope="col" class="px-4 py-3 whitespace-nowrap">Actions</th>
                 </tr>
@@ -243,18 +427,18 @@ onMounted(() => {
               <tbody>
                 <tr
                   class="border-b hover:bg-gray-100"
-                  v-for="(call, index) in loadedCalls"
+                  v-for="(call, index) in filteredCalls"
                   :key="call.id"
                 >
                   <td
                     v-for="(column, colIndex) in columns"
                     :key="colIndex"
-                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
                     v-show="column.visible"
-                    v-text="callColumnMethod(call, column)"
+                    v-text="renderColumn(column, call)"
                   ></td>
                   <td
-                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
                   >
                     <!-- Actions column content -->
                   </td>
