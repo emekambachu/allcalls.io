@@ -261,8 +261,8 @@ let renderColumn = (column, call) => {
             <div
               class="flex flex-col flex-shrink-0 space-y-3 md:flex-row md:items-center lg:justify-end md:space-y-0 md:space-x-3"
             >
-              <div class="px-4">
-                <Popover class="relative">
+              <div class="px-4 flex items-center">
+                <Popover class="relative mr-2">
                   <PopoverButton>
                     <button
                       type="button"
@@ -301,7 +301,7 @@ let renderColumn = (column, call) => {
                       type="button"
                       class="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200"
                     >
-                      Visible Columns
+                      Filters
                     </button>
                   </PopoverButton>
 
