@@ -143,6 +143,19 @@ let columns = ref([
     render(call) {
       return "$" + call.amount_spent;
     },
+    sortingMethod: (a, b) => {
+      // Convert the string with dollar sign to a float number
+      const getNumericValue = (call) => parseFloat(call.amount_spent);
+
+      let valueA = getNumericValue(a);
+      let valueB = getNumericValue(b);
+
+      if (sortDirection.value === "asc") {
+        return valueA - valueB;
+      } else {
+        return valueB - valueA;
+      }
+    },
   },
   {
     label: "Vertical",
