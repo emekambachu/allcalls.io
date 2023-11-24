@@ -317,11 +317,11 @@ let filteredCalls = computed(() => {
                           :id="`column-${index}`"
                           type="checkbox"
                           v-model="column.visible"
-                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                         />
                         <label
                           :for="`column-${index}`"
-                          class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 select-none"
+                          class="ms-2 text-sm font-medium text-gray-900 select-none"
                           >{{ column.label }}</label
                         >
                       </div>
@@ -350,11 +350,11 @@ let filteredCalls = computed(() => {
                           v-model="filter.checked"
                           :id="`filter-${index}`"
                           type="checkbox"
-                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                         />
                         <label
                           :for="`filter-${index}`"
-                          class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 select-none"
+                          class="ms-2 text-sm font-medium text-gray-900 select-none"
                           v-text="filter.label"
                         ></label>
                       </div>
@@ -426,12 +426,12 @@ let filteredCalls = computed(() => {
                   <td
                     v-for="(column, colIndex) in columns"
                     :key="colIndex"
-                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
                     v-show="column.visible"
                     v-text="renderColumn(column, call)"
                   ></td>
                   <td
-                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
                   >
                     <!-- Actions column content -->
                   </td>
