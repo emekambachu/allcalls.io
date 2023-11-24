@@ -14,9 +14,10 @@ class IOSLogController extends Controller
         $level = $request->input('level', 'info');
 
         // Get the authenticated user's email if available
-        $userEmail = Auth::check() ? Auth::user()->email : 'guest';
+        // $userEmail = Auth::check() ? Auth::user()->email : 'guest';
+        $userID = Auth::check() ? Auth::user()->id : 'guest';
         // Append the user's email to the log message
-        $fullMessage = "User: {$userEmail}, Message: {$message}";
+        $fullMessage = "User: {$userID}, Message: {$message}";
         Log::channel('ios_papertrail')->$level($fullMessage);
 
         return response()->json(['status' => 'success']);
