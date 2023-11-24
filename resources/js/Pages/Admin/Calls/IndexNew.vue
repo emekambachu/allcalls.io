@@ -227,7 +227,7 @@ let filters = ref([
     label: "Paid Calls",
     checked: false,
     filter(calls) {
-      return calls.filter((call) => Number(call.amount_spent) > 0);
+      return calls.filter((call) => call.amount_spent > 0);
     },
   },
   {
