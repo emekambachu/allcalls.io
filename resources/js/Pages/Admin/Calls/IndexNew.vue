@@ -222,7 +222,6 @@ let renderColumn = (column, call) => {
   return column.render(call);
 };
 
-
 let filters = ref([
   {
     label: "Paid Calls",
@@ -240,7 +239,6 @@ let filters = ref([
   },
 ]);
 
-
 let filteredCalls = computed(() => {
   let filteredCalls = loadedCalls.value;
 
@@ -252,7 +250,6 @@ let filteredCalls = computed(() => {
 
   return filteredCalls;
 });
-
 </script>
 
 <template>
@@ -339,21 +336,22 @@ let filteredCalls = computed(() => {
 
                   <PopoverPanel class="absolute z-10 w-40 -left-20">
                     <div class="border border-gray-100 p-2 shadow bg-white mt-2">
-                      <div class="flex items-center mb-4">
+                      <div
+                        v-for="(filter, index) in filters"
+                        :key="index"
+                        class="flex items-center mb-4"
+                      >
                         <input
-                          v-for="(filter, index) in filters"
-                          :key="index"
+                          v-model="filter.checked"
                           :id="`filter-${index}`"
                           type="checkbox"
                           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                          v-model="filter.checked"
                         />
                         <label
                           :for="`filter-${index}`"
                           class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 select-none"
                           v-text="filter.label"
-                          ></label
-                        >
+                        ></label>
                       </div>
 
                       <div class="flex items-center mb-4">
