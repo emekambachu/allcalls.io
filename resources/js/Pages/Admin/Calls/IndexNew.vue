@@ -297,43 +297,56 @@ let filteredCalls = computed(() => {
     </div>
 
     <section class="py-3 sm:py-5">
-    <div class="px-4 mx-auto max-w-screen-2xl lg:px-12">
-      <div class="relative overflow-hidden bg-white sm:rounded-lg">
-        <!-- ... other parts of the section ... -->
+      <div class="px-4 mx-auto max-w-screen-2xl lg:px-12">
+        <div class="relative overflow-hidden bg-white sm:rounded-lg">
+          <!-- ... other parts of the section ... -->
 
-        <div class="overflow-x-auto">
-          <table class="w-full text-sm text-left text-gray-500">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-              <tr class="cursor-pointer">
-                <!-- Headers for your columns -->
-                <th scope="col" class="px-4 py-3 whitespace-nowrap" v-for="(column, index) in columns" :key="index" v-show="column.visible">
-                  <div class="flex items-center">
-                    {{ column.label }}
-                    <!-- Sorting icons here -->
-                  </div>
-                </th>
-                <th scope="col" class="px-4 py-3 whitespace-nowrap">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <template v-for="[userId, calls] in groupedCallsArray" :key="userId">
-                <tr v-for="call in calls" :key="call.id" class="border-b hover:bg-gray-100">
-                  <td v-for="(column, colIndex) in columns" :key="colIndex" class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap" v-show="column.visible" v-text="renderColumn(column, call)">
-                  </td>
-                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                    <!-- Actions column content -->
-                  </td>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-500">
+              <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                <tr class="cursor-pointer">
+                  <!-- Define static headers for your columns -->
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Agent Name</th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Total Calls</th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Paid Calls</th>
+                  <!-- ... other columns ... -->
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Actions</th>
                 </tr>
-              </template>
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                <template v-for="[userId, calls] in groupedCallsArray" :key="userId">
+                  <tr
+                    v-for="call in calls"
+                    :key="call.id"
+                    class="border-b hover:bg-gray-100"
+                  >
+                    <!-- Define static columns for each call -->
+                    <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                      <!-- Agent Name, for example -->
+                      John Doe
+                    </td>
+                    <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                      <!-- Total Calls -->
+                      50
+                    </td>
+                    <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                      <!-- Paid Calls -->
+                      30
+                    </td>
+                    <!-- ... other columns ... -->
+                    <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                      <!-- Actions column content -->
+                    </td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- ... other parts of the section ... -->
         </div>
-
-        <!-- ... other parts of the section ... -->
       </div>
-    </div>
-  </section>
-
+    </section>
 
     <section class="py-3 sm:py-5">
       <div class="px-4 mx-auto max-w-screen-2xl lg:px-12">
