@@ -35,6 +35,11 @@ let props = defineProps({
         type: Function,
         required: true,
     },
+
+    renderColumn: {
+        type: Function,
+        required: true,
+    },
 });
 
 let landmark = ref(null);
@@ -192,15 +197,15 @@ onMounted(() => {
               <tbody>
                 <tr
                   class="border-b hover:bg-gray-100"
-                  v-for="(call, index) in filteredCalls"
-                  :key="call.id"
+                  v-for="(item, index) in items"
+                  :key="item.id"
                 >
                   <td
                     v-for="(column, colIndex) in columns"
                     :key="colIndex"
                     class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
                     v-show="column.visible"
-                    v-text="renderColumn(column, call)"
+                    v-text="renderColumn(column, item)"
                   ></td>
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
                     <!-- Actions column content -->

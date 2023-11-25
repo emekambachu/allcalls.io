@@ -306,6 +306,7 @@ let groupedCallsArray = computed(() => {
         :items="filteredCalls"
         :totalItems="props.totalCalls"
         :loadMore="loadMore"
+        :renderColumn="renderColumn"
      />
   </AuthenticatedLayout>
 </template>
