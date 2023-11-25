@@ -1,4 +1,9 @@
 <script setup>
+import {
+  Popover,
+  PopoverButton,
+  PopoverPanel,
+} from "@headlessui/vue";
 import { ref, onMounted, watch, computed } from "vue";
 let props = defineProps({
     items: {
