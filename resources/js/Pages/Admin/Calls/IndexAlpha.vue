@@ -304,7 +304,7 @@ let groupedCallsArray = computed(() => {
         :sortColumn="sortColumn"
         :sortDirection="sortDirection"
         :items="filteredCalls"
-        :totalItems="props.totalCalls"
+        :totalItems="totalCalls"
         :loadMore="loadMore"
         :renderColumn="renderColumn"
         :sortByColumn="sortByColumn"
