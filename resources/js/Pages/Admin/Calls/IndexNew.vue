@@ -350,9 +350,7 @@ let filteredCalls = computed(() => {
                   </td>
                 </tr>
 
-                <tr
-                  class="border-b hover:bg-gray-100"
-                >
+                <tr class="border-b hover:bg-gray-100">
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"></td>
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
                     Total calls here
