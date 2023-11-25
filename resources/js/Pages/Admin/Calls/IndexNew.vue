@@ -349,6 +349,33 @@ let filteredCalls = computed(() => {
                     <!-- Actions column content -->
                   </td>
                 </tr>
+
+                <tr
+                  class="border-b hover:bg-gray-100"
+                >
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"></td>
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                    Total calls here
+                  </td>
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                    Total paid calls here
+                  </td>
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                    Total
+                  </td>
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                    Total
+                  </td>
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                    Total
+                  </td>
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                    Total
+                  </td>
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                    <!-- Actions column content -->
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
