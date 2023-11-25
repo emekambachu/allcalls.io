@@ -36,6 +36,8 @@ let props = defineProps({
   },
 });
 
+console.log("Calls Grouped By User", props.callsGroupedByUser);
+
 let loadedCalls = ref(props.calls.data);
 let callsGroupedByUser = ref(props.callsGroupedByUser);
 
@@ -292,60 +294,52 @@ let filteredCalls = computed(() => {
     <section class="py-3 sm:py-5">
       <div class="px-4 mx-auto max-w-screen-2xl lg:px-12">
         <div class="relative overflow-hidden bg-white sm:rounded-lg">
-          <!-- Other parts of the section -->
+          <!-- ... other parts of the section ... -->
+
           <div class="overflow-x-auto">
             <table class="w-full text-sm text-left text-gray-500">
               <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                 <tr class="cursor-pointer">
-                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Agent Name</th>
-                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Total Calls</th>
-                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Paid Calls</th>
-                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Revenue Earned</th>
-                  <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                    Revenue Per Call
-                  </th>
-                  <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                    Total Call Length
-                  </th>
-                  <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                    Average Call Length
+                  <!-- Headers for your columns -->
+                  <th
+                    scope="col"
+                    class="px-4 py-3 whitespace-nowrap"
+                    v-for="(column, index) in columns"
+                    :key="index"
+                    v-show="column.visible"
+                  >
+                    <div class="flex items-center">
+                      {{ column.label }}
+                      <!-- Sorting icons here -->
+                    </div>
                   </th>
                   <th scope="col" class="px-4 py-3 whitespace-nowrap">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                <!-- Sample row -->
-                <tr class="border-b hover:bg-gray-100">
-                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                    Sample Agent
-                  </td>
-                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                    123
-                  </td>
-                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                    100
-                  </td>
-                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                    $5000
-                  </td>
-                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                    $50
-                  </td>
-                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                    3600s
-                  </td>
-                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                    60s
-                  </td>
-                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                    <!-- Actions column content -->
-                  </td>
-                </tr>
-                <!-- More rows as needed -->
+                <template v-for="(calls, userId) in callsGroupedByUser">
+                  <tr
+                    v-for="call in calls"
+                    :key="call.id"
+                    class="border-b hover:bg-gray-100"
+                  >
+                    <td
+                      v-for="(column, colIndex) in columns"
+                      :key="colIndex"
+                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                      v-show="column.visible"
+                      v-text="renderColumn(column, call)"
+                    ></td>
+                    <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                      <!-- Actions column content -->
+                    </td>
+                  </tr>
+                </template>
               </tbody>
             </table>
           </div>
-          <!-- Other parts of the section -->
+
+          <!-- ... other parts of the section ... -->
         </div>
       </div>
     </section>
