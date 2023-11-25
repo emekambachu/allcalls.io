@@ -40,6 +40,11 @@ let props = defineProps({
         type: Function,
         required: true,
     },
+
+    sortByColumn: {
+        type: Function,
+        required: true,
+    },
 });
 
 let landmark = ref(null);
