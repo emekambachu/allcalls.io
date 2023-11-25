@@ -66,6 +66,7 @@ class RegisteredInternalAgentController extends Controller
                 'legacy_key' => false,
                 'upline_id' => $request->upline_id,
                 'level_id' => $request->level_id,
+                'invited_by' => $request->invited_by,
             ]);
 
             $agentRole = Role::whereName('internal-agent')->first();

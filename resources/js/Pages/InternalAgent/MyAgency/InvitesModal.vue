@@ -13,7 +13,6 @@ let props = defineProps({
 let form = ref({
     email: "",
     level: "-- Select an option --",
-    upline_id:null,
 });
 let validateEmail = (email) => {
     return /\S+@\S+\.\S+/.test(email); // Simple regex for email validation
@@ -22,11 +21,15 @@ let uiEmailValidation = ref({
     isValid: false,
 });
 let inviteAgent = () => {
+    props.firstStepErrors.email = [``];
+    props.firstStepErrors.level = [``];
     if (validateEmail(form.value.email)) {
-        uiEmailValidation.value.isValid = false;
-        emits('inviteAgent', form.value)
+        if(form.value.level && form.value.level !== "-- Select an option --"){
+            emits('inviteAgent', form.value)
+        }else{
+            props.firstStepErrors.level = [`Please select the level.`];
+        }
     } else {
-        // uiEmailValidation.value.isValid = true;
         props.firstStepErrors.email = [`Please enter valid email address.`];
     }
 }
@@ -147,7 +150,7 @@ let close = () => {
                                 Please enter valid email address.
                             </div> -->
                         </div>
-                        <div class="mb-3">
+                        <!-- <div class="mb-3">
                             <label for="Upline ID" class="block mb-2 text-sm font-black text-gray-900 ">Upline ID<span
                                     class="text-red-500">*</span></label>
                             <input type="text"  v-model="form.upline_id" id="default-input"
@@ -155,7 +158,7 @@ let close = () => {
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                             <div v-if="firstStepErrors.upline_id" class="text-red-500" v-text="firstStepErrors.upline_id[0]"></div>
                             
-                        </div>
+                        </div> -->
 
                         <div>
                             <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 ">Agent Level<span

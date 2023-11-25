@@ -46,6 +46,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'phone_code',
         'upline_id',
         'level_id',
+        'invited_by',
     ];
 
     /**
@@ -173,6 +174,16 @@ class User extends Authenticatable implements MustVerifyEmail
     }
     public function getAgentLevel(){
         return $this->belongsTo(InternalAgentLevel::class, 'level_id', 'id');
+    }
+
+    public function invitee()
+    {
+        return $this->hasMany(User::class, 'invited_by', 'id');
+    }
+
+    public function invitedBy()
+    {
+        return $this->hasOne(User::class, 'id', 'invited_by');
     }
 
 }
