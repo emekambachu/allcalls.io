@@ -35,3 +35,15 @@ function getStateName($id)
     $state = \App\Models\State::find($id);
     return $state->full_name;
 }
+
+
+function getInviteeIds($parent)
+{
+    $ids = [$parent->id];
+
+    foreach ($parent->invitee as $child) {
+        $ids = array_merge($ids, getInviteeIds($child));
+    }
+    
+    return $ids;
+}

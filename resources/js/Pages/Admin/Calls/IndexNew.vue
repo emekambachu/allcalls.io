@@ -31,14 +31,20 @@ let props = defineProps({
     required: true,
   },
   callsGroupedByUser: {
-    type: Array,
+    type: Object,
     required: true,
   },
 });
 
-console.log("Calls grouped by user:", props.callsGroupedByUser);
+console.log("Calls Grouped By User: ", props.callsGroupedByUser);
 
 let loadedCalls = ref(props.calls.data);
+let callsGroupedByUser = ref(props.callsGroupedByUser);
+
+// Convert the object into an array of [userId, calls] pairs
+let groupedCallsArray = computed(() => {
+  return Object.entries(callsGroupedByUser.value);
+});
 
 watch(
   () => props.calls,
@@ -289,6 +295,66 @@ let filteredCalls = computed(() => {
         <hr class="mb-4" />
       </div>
     </div>
+    <section class="py-3 sm:py-5">
+      <div class="px-4 mx-auto max-w-screen-2xl lg:px-12">
+        <div class="relative overflow-hidden bg-white sm:rounded-lg">
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-500">
+              <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                <tr class="cursor-pointer">
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Agent Name</th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Total Calls</th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Paid Calls</th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Revenue Earned</th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">
+                    Revenue Per Call
+                  </th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">
+                    Total Call Length
+                  </th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">
+                    Average Call Length
+                  </th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="(userData, userId) in callsGroupedByUser"
+                  :key="userId"
+                  class="border-b hover:bg-gray-100"
+                >
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                    {{ userData.agentName }}
+                  </td>
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                    {{ userData.totalCalls }}
+                  </td>
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                    {{ userData.paidCalls }}
+                  </td>
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                    ${{ userData.revenueEarned }}
+                  </td>
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                    ${{ userData.revenuePerCall.toFixed(2) }}
+                  </td>
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                    {{ userData.totalCallLength }}
+                  </td>
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                    {{ userData.averageCallLength.toFixed(2) }}
+                  </td>
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                    <!-- Actions column content -->
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <section class="py-3 sm:py-5">
       <div class="px-4 mx-auto max-w-screen-2xl lg:px-12">

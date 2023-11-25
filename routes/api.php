@@ -229,4 +229,4 @@ Route::middleware('auth:sanctum')->delete('/notifications/{notificationId}', [No
 
 Route::middleware('auth:sanctum')->post('/ios-logs', [IOSLogController::class, 'log']);
 
-Route::middleware('auth:sanctum')->post('/calls/{uniqueCallId}/reject', [CallHungUpController::class, 'reject']);
+Route::middleware('auth:sanctum')->post('/calls/{uniqueCallId}/reject', [CallHungUpController::class, 'update']);
