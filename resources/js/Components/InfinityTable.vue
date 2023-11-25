@@ -1,6 +1,11 @@
 <script setup>
 import { ref, onMounted, watch, computed } from "vue";
 let props = defineProps({
+    items: {
+        type: Array,
+        required: true,
+    },
+
     columns: {
         type: Array,
         required: true,
@@ -126,7 +131,7 @@ onMounted(() => {
               </div>
             </div>
           </div>
-          <div v-if="loadedItems.length" class="overflow-x-auto">
+          <div v-if="items.length" class="overflow-x-auto">
             <table class="w-full text-sm text-left text-gray-500">
               <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                 <tr class="cursor-pointer">
@@ -200,7 +205,7 @@ onMounted(() => {
             </table>
           </div>
 
-          <div v-if="loadedItems.length" class="flex justify-center my-4">
+          <div v-if="items.length" class="flex justify-center my-4">
             <div ref="landmark"></div>
           </div>
 
