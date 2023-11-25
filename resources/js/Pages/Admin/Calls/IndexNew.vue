@@ -41,6 +41,11 @@ console.log("Calls Grouped By User", props.callsGroupedByUser);
 let loadedCalls = ref(props.calls.data);
 let callsGroupedByUser = ref(props.callsGroupedByUser);
 
+// Convert the object into an array of [userId, calls] pairs
+let groupedCallsArray = computed(() => {
+  return Object.entries(callsGroupedByUser.value);
+});
+
 watch(
   () => props.calls,
   () => {
