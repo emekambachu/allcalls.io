@@ -343,7 +343,7 @@ let filteredCalls = computed(() => {
                     {{ userData.totalCallLength }}
                   </td>
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                    {{ userData.averageCallLength }}
+                    {{ userData.averageCallLength.toFixed(2) }}
                   </td>
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
                     <!-- Actions column content -->
