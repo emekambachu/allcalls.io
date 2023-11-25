@@ -292,6 +292,67 @@ let filteredCalls = computed(() => {
     <section class="py-3 sm:py-5">
       <div class="px-4 mx-auto max-w-screen-2xl lg:px-12">
         <div class="relative overflow-hidden bg-white sm:rounded-lg">
+          <!-- Other parts of the section -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-500">
+              <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                <tr class="cursor-pointer">
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Agent Name</th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Total Calls</th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Paid Calls</th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Revenue Earned</th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">
+                    Revenue Per Call
+                  </th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">
+                    Total Call Length
+                  </th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">
+                    Average Call Length
+                  </th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Sample row -->
+                <tr class="border-b hover:bg-gray-100">
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                    Sample Agent
+                  </td>
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                    123
+                  </td>
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                    100
+                  </td>
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                    $5000
+                  </td>
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                    $50
+                  </td>
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                    3600s
+                  </td>
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                    60s
+                  </td>
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                    <!-- Actions column content -->
+                  </td>
+                </tr>
+                <!-- More rows as needed -->
+              </tbody>
+            </table>
+          </div>
+          <!-- Other parts of the section -->
+        </div>
+      </div>
+    </section>
+
+    <section class="py-3 sm:py-5">
+      <div class="px-4 mx-auto max-w-screen-2xl lg:px-12">
+        <div class="relative overflow-hidden bg-white sm:rounded-lg">
           <div
             class="flex flex-col px-4 py-3 space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-4"
           >
