@@ -334,10 +334,10 @@ let filteredCalls = computed(() => {
                     {{ userData.paidCalls }}
                   </td>
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                    {{ userData.revenueEarned }}
+                    ${{ userData.revenueEarned }}
                   </td>
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                    {{ userData.revenuePerCall.toFixed(2) }}
+                    ${{ userData.revenuePerCall.toFixed(2) }}
                   </td>
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
                     {{ userData.totalCallLength }}
