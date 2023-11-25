@@ -31,7 +31,7 @@ let props = defineProps({
     required: true,
   },
   callsGroupedByUser: {
-    type: Array,
+    type: Object,
     required: true,
   },
 });

@@ -90,10 +90,26 @@ class CallsController extends Controller
             ->paginate(50);
 
 
-        $allCalls = Call::all();
-        $callsGroupedByUser = $allCalls->groupBy(function ($call) {
-            return $call->user_id;
+        $allCalls = Call::with('user')->get();
+        $callsGroupedByUser = $allCalls->groupBy('user_id')->map(function ($calls, $userId) {
+            $user = $calls->first()->user; // Assuming each call has a 'user' relation loaded
+            $totalCalls = $calls->count();
+            $paidCalls = $calls->where('amount_spent', '>', 0)->count();
+            $totalRevenue = $calls->sum('amount_spent');
+            $totalCallLength = $calls->sum('call_duration_in_seconds');
+            $averageCallLength = $totalCalls > 0 ? $totalCallLength / $totalCalls : 0;
+
+            return [
+                'agentName' => $user->first_name . ' ' . $user->last_name,
+                'totalCalls' => $totalCalls,
+                'paidCalls' => $paidCalls,
+                'revenueEarned' => $totalRevenue,
+                'revenuePerCall' => $totalCalls > 0 ? $totalRevenue / $totalCalls : 0,
+                'totalCallLength' => $totalCallLength,
+                'averageCallLength' => $averageCallLength,
+            ];
         });
+
 
 
         return Inertia::render('Admin/Calls/IndexNew', [
