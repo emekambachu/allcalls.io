@@ -47,6 +47,8 @@ let props = defineProps({
     },
 });
 
+console.log('Props passed to InfinityTable component: ', props);
+
 let landmark = ref(null);
 
 let observer = new IntersectionObserver((entries) => {
