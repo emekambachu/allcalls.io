@@ -184,34 +184,6 @@ let columns = ref([
   },
 ]);
 
-let sortColumn = ref(null);
-let sortDirection = ref("asc");
-let sortingMethod = ref(null);
-
-
-
-let performSorting = () => {
-  console.log("Perform sorting now!!");
-  console.log("Sort Column: ", sortColumn.value);
-  console.log("Sort Direction", sortDirection.value);
-
-  loadedCalls.value.sort(sortingMethod.value);
-};
-
-const sortByColumn = (column) => {
-  if (!column.sortable) return;
-
-  if (sortColumn.value === column.label) {
-    sortDirection.value = sortDirection.value === "asc" ? "desc" : "asc";
-    sortingMethod.value = column.sortingMethod;
-  } else {
-    sortColumn.value = column.label;
-    sortDirection.value = "asc";
-    sortingMethod.value = column.sortingMethod;
-  }
-
-  performSorting();
-};
 
 let renderColumn = (column, call) => {
   return column.render(call);
