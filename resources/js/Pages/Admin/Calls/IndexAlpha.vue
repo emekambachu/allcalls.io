@@ -185,10 +185,6 @@ let columns = ref([
 ]);
 
 
-let renderColumn = (column, call) => {
-  return column.render(call);
-};
-
 let filters = ref([
   {
     label: "Paid Calls",
