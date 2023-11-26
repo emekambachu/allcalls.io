@@ -80,7 +80,7 @@ export function useInfinityTable(initialItems, initialUrl, filters, isLoadMoreEn
         performSorting,
         sortByColumn,
         renderColumn,
-        filteredItems,
+        filteredItems: filters.length ? filteredItems : loadedItems,
         loadMore
     };
 }
