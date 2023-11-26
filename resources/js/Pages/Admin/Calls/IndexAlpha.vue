@@ -4,7 +4,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import InfinityTable from "@/Components/InfinityTable.vue";
 import { toaster } from "@/helper.js";
-import useInfinityTable from "@/Composables/InfinityTable.js";
+import { useInfinityTable } from "@/Composables/InfinityTable.js";
 import {
   Menu,
   MenuButton,
