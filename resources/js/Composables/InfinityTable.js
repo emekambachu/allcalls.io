@@ -1,7 +1,7 @@
 import { ref, computed, watch } from "vue";
 import { router } from "@inertiajs/vue3";
 
-export function useInfinityTable(initialProps, initialUrl, filters) {
+export function useInfinityTable(initialProps, initialUrl, filters, isLoadMoreEnabled = true) {
     const loadedItems = ref(initialProps.calls.data);
     const sortColumn = ref(null);
     const sortDirection = ref("asc");
@@ -15,8 +15,10 @@ export function useInfinityTable(initialProps, initialUrl, filters) {
     );
 
     const loadMore = (url) => {
+        if (!isLoadMoreEnabled) return;
+    
         console.log('Load more called from InfinityTable.js');
-
+    
         router.get(
             initialProps.calls.next_page_url,
             {},
