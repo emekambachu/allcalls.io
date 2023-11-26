@@ -224,9 +224,9 @@ let groupedColumns = ref([
 // Filters for the grouped calls table (if needed)
 let groupedFilters = ref([]);
 
-const groupedCallsItems = {
+const groupedCallsItems = ref({
   data: Object.values(props.callsGroupedByUser)
-};
+});
 
 // Use the modified useInfinityTable composable
 let {
