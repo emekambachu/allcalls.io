@@ -241,7 +241,6 @@ let {
 } = useInfinityTable(
   groupedCallsItems,
   initialUrl,
-  groupedColumns,
   groupedFilters,
   false,
 );
