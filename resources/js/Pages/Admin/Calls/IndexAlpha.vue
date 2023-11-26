@@ -204,17 +204,17 @@ const {
     loadMore
 } = useInfinityTable(props, initialUrl, columns, filters);
 
-let filteredCalls = computed(() => {
-  let calls = loadedItems.value;
+// let filteredCalls = computed(() => {
+//   let calls = loadedItems.value;
 
-  filters.value.forEach((filter) => {
-    if (filter.checked) {
-      calls = filter.filter(calls);
-    }
-  });
+//   filters.value.forEach((filter) => {
+//     if (filter.checked) {
+//       calls = filter.filter(calls);
+//     }
+//   });
 
-  return calls;
-});
+//   return calls;
+// });
 
 
 
@@ -259,7 +259,7 @@ let groupedCallsArray = computed(() => {
         :filters="filters"
         :sortColumn="sortColumn"
         :sortDirection="sortDirection"
-        :items="filteredCalls"
+        :items="filteredItems"
         :totalItems="totalCalls"
         :loadMore="loadMore"
         :renderColumn="renderColumn"
