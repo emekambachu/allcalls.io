@@ -41,19 +41,6 @@ let props = defineProps({
 
 
 
-
-
-const {
-    loadedItems,
-    sortColumn,
-    sortDirection,
-    performSorting,
-    sortByColumn,
-    renderColumn,
-    filteredItems,
-    loadMore
-} = useInfinityTable(props, initialUrl, columns, filters);
-
 let columns = ref([
   {
     label: "ID",
@@ -204,6 +191,18 @@ let filters = ref([
     },
   },
 ]);
+
+
+const {
+    loadedItems,
+    sortColumn,
+    sortDirection,
+    performSorting,
+    sortByColumn,
+    renderColumn,
+    filteredItems,
+    loadMore
+} = useInfinityTable(props, initialUrl, columns, filters);
 
 let filteredCalls = computed(() => {
   let calls = loadedCalls.value;
