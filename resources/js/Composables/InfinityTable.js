@@ -69,6 +69,10 @@ export function useInfinityTable(initialItems, initialUrl, filters, isLoadMoreEn
         return items;
     });
 
+
+    console.log('loadedItems from InfinityTable.js', loadedItems);
+    console.log('Filtered items from InfinityTable.js', filteredItems);
+
     return {
         loadedItems,
         sortColumn,
