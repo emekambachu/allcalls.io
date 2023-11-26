@@ -242,7 +242,8 @@ let {
   groupedCallsItems,
   initialUrl,
   groupedColumns,
-  groupedFilters
+  groupedFilters,
+  false,
 );
 
 console.log({
