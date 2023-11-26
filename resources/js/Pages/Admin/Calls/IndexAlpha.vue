@@ -202,10 +202,6 @@ const {
 
 let callsGroupedByUser = ref(props.callsGroupedByUser);
 
-// Convert the object into an array of [userId, calls] pairs
-let groupedCallsArray = computed(() => {
-  return Object.entries(callsGroupedByUser.value);
-});
 
 // Columns for the grouped calls table
 let groupedColumns = ref([
