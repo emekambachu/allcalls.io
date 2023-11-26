@@ -4,6 +4,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import InfinityTable from "@/Components/InfinityTable.vue";
 import { toaster } from "@/helper.js";
+import useInfinityTable from "@/Composables/useInfinityTable.js";
 import {
   Menu,
   MenuButton,
@@ -42,28 +43,16 @@ let props = defineProps({
 
 
 
-
-let loadedCalls = ref(props.calls.data);
-watch(
-  () => props.calls,
-  () => {
-    loadedCalls.value = [...loadedCalls.value, ...props.calls.data];
-  }
-);
-
-let loadMore = (url) => {
-  router.get(
-    props.calls.next_page_url,
-    {},
-    {
-      preserveState: true,
-      preserveScroll: true,
-      onSuccess: () => {
-        window.history.replaceState({}, "", initialUrl);
-      },
-    }
-  );
-};
+const {
+    loadedItems,
+    sortColumn,
+    sortDirection,
+    performSorting,
+    sortByColumn,
+    renderColumn,
+    filteredItems,
+    loadMore
+} = useInfinityTable(props, initialUrl, columns, filters);
 
 let columns = ref([
   {
