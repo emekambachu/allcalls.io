@@ -204,26 +204,6 @@ const {
     loadMore
 } = useInfinityTable(props, initialUrl, columns, filters);
 
-// let filteredCalls = computed(() => {
-//   let calls = loadedItems.value;
-
-//   filters.value.forEach((filter) => {
-//     if (filter.checked) {
-//       calls = filter.filter(calls);
-//     }
-//   });
-
-//   return calls;
-// });
-
-
-
-
-
-
-
-
-
 
 let callsGroupedByUser = ref(props.callsGroupedByUser);
 
