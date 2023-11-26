@@ -15,6 +15,8 @@ export function useInfinityTable(initialProps, initialUrl, filters) {
     );
 
     const loadMore = (url) => {
+        console.log('Load more called from InfinityTable.js');
+
         router.get(
             initialProps.calls.next_page_url,
             {},
