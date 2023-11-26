@@ -7,6 +7,8 @@ export function useInfinityTable(initialItems, initialUrl, filters, isLoadMoreEn
     const sortDirection = ref("asc");
     const sortingMethod = ref(null);
 
+    console.log('Initial items from InfinityTable.js', initialItems);
+
     watch(
         () => initialItems,
         () => {
