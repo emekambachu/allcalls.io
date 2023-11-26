@@ -244,6 +244,17 @@ let {
   groupedColumns,
   groupedFilters
 );
+
+console.log({
+  loadedItemsGrouped,
+  sortColumnGrouped,
+  sortDirectionGrouped,
+  performSortingGrouped,
+  sortByColumnGrouped,
+  renderColumnGrouped,
+  filteredItemsGrouped,
+  loadMoreGrouped,
+});
 </script>
 
 <template>
