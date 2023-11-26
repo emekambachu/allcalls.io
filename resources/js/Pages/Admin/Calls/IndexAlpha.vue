@@ -39,8 +39,6 @@ let props = defineProps({
   },
 });
 
-
-
 let columns = ref([
   {
     label: "ID",
@@ -171,7 +169,6 @@ let columns = ref([
   },
 ]);
 
-
 let filters = ref([
   {
     label: "Paid Calls",
@@ -192,18 +189,16 @@ let filters = ref([
   },
 ]);
 
-
 const {
-    loadedItems,
-    sortColumn,
-    sortDirection,
-    performSorting,
-    sortByColumn,
-    renderColumn,
-    filteredItems,
-    loadMore
+  loadedItems,
+  sortColumn,
+  sortDirection,
+  performSorting,
+  sortByColumn,
+  renderColumn,
+  filteredItems,
+  loadMore,
 } = useInfinityTable(props, initialUrl, columns, filters);
-
 
 let callsGroupedByUser = ref(props.callsGroupedByUser);
 
@@ -212,7 +207,26 @@ let groupedCallsArray = computed(() => {
   return Object.entries(callsGroupedByUser.value);
 });
 
+// Columns for the grouped calls table
+let groupedColumns = ref([
+  { label: "Agent Name", render: (userData) => userData.agentName },
+  { label: "Total Calls", render: (userData) => userData.totalCalls },
+  { label: "Paid Calls", render: (userData) => userData.paidCalls },
+  { label: "Revenue Earned", render: (userData) => `$${userData.revenueEarned}` },
+  {
+    label: "Revenue Per Call",
+    render: (userData) => `$${userData.revenuePerCall.toFixed(2)}`,
+  },
+  { label: "Total Call Length", render: (userData) => userData.totalCallLength },
+  {
+    label: "Average Call Length",
+    render: (userData) => `${userData.averageCallLength.toFixed(2)} mins`,
+  },
+  // Add more columns as needed
+]);
 
+// Filters for the grouped calls table (if needed)
+let groupedFilters = ref([]);
 </script>
 
 <template>
@@ -234,16 +248,31 @@ let groupedCallsArray = computed(() => {
       </div>
     </div>
 
+    <!-- Grouped Calls Table -->
     <InfinityTable
-        :columns="columns"
-        :filters="filters"
-        :sortColumn="sortColumn"
-        :sortDirection="sortDirection"
-        :items="filteredItems"
-        :totalItems="totalCalls"
-        :loadMore="loadMore"
-        :renderColumn="renderColumn"
-        :sortByColumn="sortByColumn"
-     />
+      :columns="groupedColumns"
+      :items="groupedCallsArray"
+      :renderColumn="(column, userData) => column.render(userData)"
+      :filters="groupedFilters"
+      :totalItems="groupedCallsArray.length"
+    />
+
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+      <div class="px-4 sm:px-8 sm:rounded-lg">
+        <hr class="mb-4" />
+      </div>
+    </div>
+
+    <InfinityTable
+      :columns="columns"
+      :filters="filters"
+      :sortColumn="sortColumn"
+      :sortDirection="sortDirection"
+      :items="filteredItems"
+      :totalItems="totalCalls"
+      :loadMore="loadMore"
+      :renderColumn="renderColumn"
+      :sortByColumn="sortByColumn"
+    />
   </AuthenticatedLayout>
 </template>
