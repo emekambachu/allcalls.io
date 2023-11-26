@@ -215,12 +215,12 @@ let groupedColumns = ref([
   { label: "Revenue Earned", render: (userData) => `$${userData.revenueEarned}` },
   {
     label: "Revenue Per Call",
-    render: (userData) => `$${userData.revenuePerCall.toFixed(2)}`,
+    render: (userData) => `$${userData.revenuePerCall}`,
   },
   { label: "Total Call Length", render: (userData) => userData.totalCallLength },
   {
     label: "Average Call Length",
-    render: (userData) => `${userData.averageCallLength.toFixed(2)} mins`,
+    render: (userData) => `${userData.averageCallLength} mins`,
   },
   // Add more columns as needed
 ]);
