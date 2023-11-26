@@ -270,7 +270,7 @@ let {
       :items="filteredItemsGrouped"
       :renderColumn="(column, userData) => column.render(userData)"
       :filters="groupedFilters"
-      :totalItems="filteredItemsGrouped.length"
+      :totalItems="totalCalls"
     />
 
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
