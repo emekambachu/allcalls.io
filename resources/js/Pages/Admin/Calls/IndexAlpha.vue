@@ -198,7 +198,7 @@ const {
   renderColumn,
   filteredItems,
   loadMore,
-} = useInfinityTable(props, initialUrl, columns, filters);
+} = useInfinityTable(props.calls, initialUrl, columns, filters);
 
 let callsGroupedByUser = ref(props.callsGroupedByUser);
 
@@ -227,6 +227,22 @@ let groupedColumns = ref([
 
 // Filters for the grouped calls table (if needed)
 let groupedFilters = ref([]);
+
+let {
+  loadedItemsGrouped,
+  sortColumnGrouped,
+  sortDirectionGrouped,
+  performSortingGrouped,
+  sortByColumnGrouped,
+  renderColumnGrouped,
+  filteredItemsGrouped,
+  loadMoreGrouped,
+} = useInfinityTable(
+  props.callsGroupedByUser,
+  initialUrl,
+  groupedColumns,
+  groupedFilters
+);
 </script>
 
 <template>
@@ -251,10 +267,10 @@ let groupedFilters = ref([]);
     <!-- Grouped Calls Table -->
     <InfinityTable
       :columns="groupedColumns"
-      :items="groupedCallsArray"
+      :items="filteredItemsGrouped"
       :renderColumn="(column, userData) => column.render(userData)"
       :filters="groupedFilters"
-      :totalItems="groupedCallsArray.length"
+      :totalItems="filteredItemsGrouped.length"
     />
 
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">

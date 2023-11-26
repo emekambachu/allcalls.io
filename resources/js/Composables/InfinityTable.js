@@ -1,8 +1,8 @@
 import { ref, computed, watch } from "vue";
 import { router } from "@inertiajs/vue3";
 
-export function useInfinityTable(initialProps, initialUrl, filters, isLoadMoreEnabled = true) {
-    const loadedItems = ref(initialProps.calls.data);
+export function useInfinityTable(initialItems, initialUrl, filters, isLoadMoreEnabled = true) {
+    const loadedItems = ref(initialItems.data);
     const sortColumn = ref(null);
     const sortDirection = ref("asc");
     const sortingMethod = ref(null);
@@ -10,7 +10,7 @@ export function useInfinityTable(initialProps, initialUrl, filters, isLoadMoreEn
     watch(
         () => initialProps.calls,
         () => {
-            loadedItems.value = [...loadedItems.value, ...initialProps.calls.data];
+            loadedItems.value = [...loadedItems.value, ...initialItems.data];
         }
     );
 
