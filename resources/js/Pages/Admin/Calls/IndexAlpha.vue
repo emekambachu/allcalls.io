@@ -205,7 +205,7 @@ const {
 } = useInfinityTable(props, initialUrl, columns, filters);
 
 let filteredCalls = computed(() => {
-  let calls = loadedCalls.value;
+  let calls = loadedItems.value;
 
   filters.value.forEach((filter) => {
     if (filter.checked) {
