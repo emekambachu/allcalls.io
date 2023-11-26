@@ -8,7 +8,7 @@ export function useInfinityTable(initialItems, initialUrl, filters, isLoadMoreEn
     const sortingMethod = ref(null);
 
     watch(
-        () => initialProps.calls,
+        () => initialItems,
         () => {
             loadedItems.value = [...loadedItems.value, ...initialItems.data];
         }
@@ -20,7 +20,7 @@ export function useInfinityTable(initialItems, initialUrl, filters, isLoadMoreEn
         console.log('Load more called from InfinityTable.js');
     
         router.get(
-            initialProps.calls.next_page_url,
+            initialItems.next_page_url,
             {},
             {
                 preserveState: true,
