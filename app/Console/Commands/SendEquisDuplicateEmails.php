@@ -58,7 +58,7 @@ class SendEquisDuplicateEmails extends Command
 
         // Send the email with the attachment
         Mail::to(['iamfaizahmed123@gmail.com'])
-            ->send(new EquisDuplicateMail('FirstName' . " " . 'LastName', 'EF222171', 'email@example.com', $tmpFilePath));
+            ->send(new EquisDuplicateMail($tmpFilePath));
 
         Log::debug('send-equis-duplicate-emails:emails-sent');
 
