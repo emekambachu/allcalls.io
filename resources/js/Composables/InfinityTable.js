@@ -77,6 +77,10 @@ export function useInfinityTable(initialItems, initialUrl, filters, isLoadMoreEn
     console.log('loadedItems from InfinityTable.js', loadedItems);
     console.log('Filtered items from InfinityTable.js', filteredItems);
 
+
+
+    console.log('Intial items data from InfinityTable.js BEFORE RETURNING OBJECT, why is this empty??', initialItems.data);
+
     return {
         loadedItems,
         sortColumn,
