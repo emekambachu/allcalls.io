@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Mail\EquisDuplicateMail;
+use App\Models\EquisDuplicate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
@@ -30,9 +31,17 @@ class SendEquisDuplicateEmails extends Command
     {
         Log::debug('send-equis-duplicate-emails:start');
 
-        Mail::to(['iamfaizahmed123@gmail.com'])
-        ->send(new EquisDuplicateMail('FirstName' . " " . 'LastName', 'EF222171', 'email@example.com'));
+        // EquisDuplicate all records where created_at is today
+        $duplicates = EquisDuplicate::whereDate('created_at', today())->get();
 
-        Log::debug('send-equis-duplicate-emails:email-sent');
+        // foreach($duplicates as $duplicate) {
+        //     Mail::to(['iamfaizahmed123@gmail.com', 'ryan@allcalls.io', 'vince@allcalls.io'])
+        //         ->send(new EquisDuplicateMail($duplicate->first_name . " " . $duplicate->last_name, $duplicate->upline_code, $duplicate->email));
+        // }
+
+        // Mail::to(['iamfaizahmed123@gmail.com'])
+        // ->send(new EquisDuplicateMail('FirstName' . " " . 'LastName', 'EF222171', 'email@example.com'));
+
+        Log::debug('send-equis-duplicate-emails:emails-sent');
     }
 }
