@@ -58,6 +58,10 @@ export function useInfinityTable(initialItems, initialUrl, filters, isLoadMoreEn
     };
 
     const filteredItems = computed(() => {
+        if (!filters.value.length) {
+            return loadedItems.value;
+        }
+
         let items = loadedItems.value;
 
         filters.value.forEach((filter) => {
