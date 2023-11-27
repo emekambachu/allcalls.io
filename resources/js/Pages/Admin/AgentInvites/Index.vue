@@ -7,7 +7,7 @@ import InvitesModal from "@/Pages/Admin/AgentInvites/InvitesModal.vue";
 import { toaster } from "@/helper.js";
 import axios from "axios";
 
-let { agentInvites, baseUrl } = defineProps({
+let { agentInvites, baseUrl, agents } = defineProps({
   agentInvites: {
     required: true,
     type: Array,
@@ -17,8 +17,8 @@ let { agentInvites, baseUrl } = defineProps({
     required: true,
     type: String,
   },
+  agents:Array,
 });
-
 let invitesModal = ref(false)
 let reIniteAgent = ref(false)
 let ReiniteAgentVal = ref(null)
@@ -250,6 +250,6 @@ let ReInviteAgentFun = () => {
       </div>
     </div>
     <InvitesModal @close="invitesModal = false" :isLoading="isLoading" @inviteAgent="inviteAgent"
-      :firstStepErrors="firstStepErrors" :agentLevels="agentLevels" :invitesModal="invitesModal" @ReinviteAgent="ReInviteAgentFun"
+      :firstStepErrors="firstStepErrors" :agents="agents" :agentLevels="agentLevels" :invitesModal="invitesModal" @ReinviteAgent="ReInviteAgentFun"
       :reIniteAgent="reIniteAgent" />
   </AuthenticatedLayout></template>

@@ -416,7 +416,7 @@ let appDownloadModal = ref(false);
               Manage your business and preferences here.
             </p> -->
             <div class="mb-6"></div>
-          </div>
+          </div>sz
 
           <!-- Responsive Navigation Menu -->
           <div :class="{

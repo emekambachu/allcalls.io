@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
+import { ref, reactive, defineEmits, onMounted, watch, computed, onUnmounted } from "vue";
 import GuestTextInput from "@/Components/GuestTextInput.vue";
 import GuestInputLabel from "@/Components/GuestInputLabel.vue";
 let emits = defineEmits()
@@ -9,12 +9,15 @@ let props = defineProps({
     firstStepErrors: Object,
     reIniteAgent: Boolean,
     agentLevels: Array,
+    agents: Array,
 });
 let form = ref({
     email: "",
     level: "-- Select an option --",
-    upline_id:null,
+    upline_id: '',
+    invited_by:'',
 });
+
 let validateEmail = (email) => {
     return /\S+@\S+\.\S+/.test(email); // Simple regex for email validation
 };
@@ -24,6 +27,9 @@ let uiEmailValidation = ref({
 let inviteAgent = () => {
     if (validateEmail(form.value.email)) {
         uiEmailValidation.value.isValid = false;
+        if(form.value.level == '-- Select an option --'){
+            form.value.level = ''
+        }
         emits('inviteAgent', form.value)
     } else {
         // uiEmailValidation.value.isValid = true;
@@ -35,6 +41,45 @@ let ReinviteAgent = () => {
 }
 let close = () => {
     emits('close')
+}
+const isOpen = ref(false);
+
+const filteredAgens = computed(() => {
+    return props.agents.filter(
+        (agent) =>
+            agent.first_name.toLowerCase().includes(form.value.upline_id.toLowerCase()) ||
+            agent.last_name.toLowerCase().includes(form.value.upline_id.toLowerCase()) ||
+            agent.upline_id.toLowerCase().includes(form.value.upline_id.toLowerCase())
+    );
+});
+
+const OpenUser = () => {
+    form.value.invited_by = ''
+    isOpen.value = true;
+};
+let selectedAgentLevel = ref(null)
+let selectagent = (agent) => {
+    selectedAgentLevel.value = agent.get_agent_level.order
+    form.value.invited_by = agent.id
+    form.value.upline_id = agent.upline_id
+    isOpen.value = false;
+}
+onMounted(() => {
+  document.addEventListener('click', handleOutsideClick);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleOutsideClick);
+});
+const handleOutsideClick = (event) => {
+  const dropdownElement = document.getElementById('dropdown_main_id');
+  if (!dropdownElement.contains(event.target)) {
+    // Call your desired function here
+    closeDropDown();
+  }
+};
+const closeDropDown = () => {
+  isOpen.value = false
 }
 </script>
 <style scoped>
@@ -120,7 +165,7 @@ let close = () => {
                         </button>
                     </div>
                     <div v-if="!reIniteAgent" class="px-12 py-2">
-                        <h1 class="text-gray-800 text-2xl font-bold">Invite Agent</h1>
+                        <h1 class="text-gray-800 text-2xl font-bold">Invite Agent </h1>
                         <br>
                         <!-- <div class="mt-4">
                             <GuestInputLabel for="email" value="Email" />
@@ -139,31 +184,45 @@ let close = () => {
                         <div class="mb-3">
                             <label for="Email" class="block mb-2 text-sm font-black text-gray-900 ">Email<span
                                     class="text-red-500">*</span></label>
-                            <input type="email" v-model="form.email" id="default-input"
-                                
+                            <input type="email" autocomplete="off" v-model="form.email" id="default-input"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                             <div v-if="firstStepErrors.email" class="text-red-500" v-text="firstStepErrors.email[0]"></div>
                             <!-- <div v-if="uiEmailValidation.isValid" class="text-red-500">
                                 Please enter valid email address.
                             </div> -->
                         </div>
-                        <div class="mb-3">
+                        <div id="dropdown_main_id" class="mb-3">
                             <label for="Upline ID" class="block mb-2 text-sm font-black text-gray-900 ">Upline ID<span
                                     class="text-red-500">*</span></label>
-                            <input type="text"  v-model="form.upline_id" id="default-input"
-                            
+                            <input type="text" autocomplete="off" @focus="OpenUser" v-model="form.upline_id"
+                                id="default-input"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
-                            <div v-if="firstStepErrors.upline_id" class="text-red-500" v-text="firstStepErrors.upline_id[0]"></div>
-                            
+                            <div v-if="firstStepErrors.upline_id" class="text-red-500"
+                                v-text="firstStepErrors.upline_id[0]"></div>
+
+                            <div v-if="isOpen && form.upline_id.length > 0" class="items-center justify-center ">
+                                <div class="relative">
+                                    <ul  style="width: 100%; max-height:250px;"
+                                        class="absolute z-10 pb-2 mt-1  overflow-auto bg-white rounded-md shadow-md">
+                                        <li v-for="(agent, index) in filteredAgens" :key="index" @click="selectagent(agent)"
+                                            class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                            {{ agent.first_name }} {{ agent.last_name }} - ( {{ agent.upline_id }} )
+                                             
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
                         </div>
 
+
                         <div>
-                            <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 ">Agent Level<span
+                            <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 ">Agent Level <span
                                     class="text-red-500">*</span></label>
                             <select v-model="form.level" id="countries"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                                 <option disabled selected>-- Select an option -- </option>
-                                <option v-for="level in agentLevels" :value="level.id">{{ level.name }} </option>
+                                <option v-show="selectedAgentLevel >= level.order" v-for="level in agentLevels" :value="level.id">{{ level.name }}  </option>
                             </select>
                             <div v-if="firstStepErrors.level" class="text-red-500" v-text="firstStepErrors.level[0]">
                             </div>

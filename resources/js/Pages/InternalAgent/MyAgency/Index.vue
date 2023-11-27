@@ -130,7 +130,7 @@ let ReInviteAgentFun = () => {
               </h1>
             </div>
             <div>
-              <PrimaryButton :disabled="!$page.props.auth.user.upline_id && !$page.props.auth.user.level_id"  @click="generateInvite">Add Agent</PrimaryButton>
+              <PrimaryButton :disabled="!$page.props.auth.user.upline_id && !$page.props.auth.user.level_id"  @click="generateInvite">Invite Agent</PrimaryButton>
             </div>
           </div>
           <hr class="mb-4" />

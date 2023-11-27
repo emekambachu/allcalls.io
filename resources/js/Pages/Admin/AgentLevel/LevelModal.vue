@@ -20,37 +20,64 @@ let props = defineProps({
         type: Boolean,
     },
     modal_type: String,
-    levelData:Object,
+    levelData: Object,
+    currentPage: Number,
 });
 let form = ref({
-    name:'',
+    name: '',
+    order: '',
 });
-if(props.modal_type === 2){
-form.value.name = props.levelData.name
-
+if (props.modal_type === 2) {
+    form.value.name = props.levelData.name
+    form.value.order = props.levelData.order
 }
 let firstStepErrors = ref({});
 let AddLevel = () => {
-    axios.post('/admin/internal-agent-level/store', form.value).then((res)=>{
+    axios.post('/admin/internal-agent-level/store', form.value).then((res) => {
         console.log('res', res.data);
         toaster("success", res.data.message);
         close()
-        router.visit('/admin/internal-agent-levels')
-    }).catch((error)=>{
-      if (error.response.status === 400) {
-        firstStepErrors.value = error.response.data.errors
+        if (props.currentPage === 1) {
+            router.visit('/admin/internal-agent-levels')
+        } else {
+            router.visit(`/admin/internal-agent-levels?page=${props.currentPage}`);
+        }
+    }).catch((error) => {
+        if (error.response.status === 400) {
+            firstStepErrors.value = error.response.data.errors
 
-       }else{
-        toaster("error", error.message);
-       }
+        } else {
+            toaster("error", error.message);
+        }
     })
 };
 let updateLevel = () => {
-    
+    form.value.lavel_id = props.levelData.id
+    axios.post('/admin/internal-agent-level/update', form.value).then((res) => {
+        console.log('res', res.data);
+        toaster("success", res.data.message);
+        close()
+        if (props.currentPage === 1) {
+            router.visit('/admin/internal-agent-levels')
+        } else {
+            router.visit(`/admin/internal-agent-levels?page=${props.currentPage}`);
+        }
+    }).catch((error) => {
+        if (error.response.status === 400) {
+            firstStepErrors.value = error.response.data.errors
+
+        } else if (error.response.status === 404) {
+            console.log('not data found', error.response);
+            toaster("error", error.response.data.message);
+        }
+        else {
+            toaster("error", error.message);
+        }
+    })
 }
 let emit = defineEmits(["close"]);
 let close = () => {
-  emit("close");
+    emit("close");
 };
 
 
@@ -155,20 +182,27 @@ let close = () => {
                             <div>
                                 <GuestInputLabel for="Name" value="Name" />
                                 <GuestTextInput id="first_name" type="text" class="mt-1 block w-full" v-model="form.name"
-                                    minlength="2" required pattern="[A-Za-z]{1,32}"
-                                    />
+                                    minlength="2" required pattern="[A-Za-z]{1,32}" />
                                 <!-- <InputError class="mt-2" :message="form.errors.first_name" /> -->
-                                <div v-if="firstStepErrors.name" class="text-red-500"
-                                    v-text="firstStepErrors.name[0]"></div>
+                                <div v-if="firstStepErrors.name" class="text-red-500" v-text="firstStepErrors.name[0]">
+                                </div>
+                            </div>
+                            <div class="mt-2">
+                                <GuestInputLabel for="Order" value="Order" />
+                                <GuestTextInput id="first_name" type="text" class="mt-1 block w-full" v-model="form.order"
+                                    minlength="2" required onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" />
+                                <!-- <InputError class="mt-2" :message="form.errors.first_name" /> -->
+                                <div v-if="firstStepErrors.order" class="text-red-500" v-text="firstStepErrors.order[0]">
+                                </div>
                             </div>
 
                             <div class="flex justify-end my-6">
-                                <PrimaryButton v-if="modal_type == 1" type="button" @click="AddLevel" 
+                                <PrimaryButton v-if="modal_type == 1" type="button" @click="AddLevel"
                                     :class="{ 'opacity-25': areAllArraysEmpty || isLoading }"
                                     :disabled="areAllArraysEmpty || isLoading">
                                     <global-spinner :spinner="isLoading" /> Add Level
                                 </PrimaryButton>
-                                <PrimaryButton v-else-if="modal_type == 2" type="button" @click="saveChanges" 
+                                <PrimaryButton v-else-if="modal_type == 2" type="button" @click="updateLevel"
                                     :class="{ 'opacity-25': areAllArraysEmpty || isLoading }"
                                     :disabled="areAllArraysEmpty || isLoading">
                                     <global-spinner :spinner="isLoading" /> Update Level
