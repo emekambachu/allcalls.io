@@ -19,6 +19,22 @@ export function useInfinityTable(props, initialItems, initialUrl, filters, isLoa
 
     console.log('Initial items from InfinityTable.js', initialItems.data);
 
+    const filteredItems = computed(() => {
+        if (!filters.value.length) {
+            return loadedItems.value;
+        }
+
+        let items = loadedItems.value;
+
+        filters.value.forEach((filter) => {
+            if (filter.checked) {
+                items = filter.filter(items);
+            }
+        });
+
+        return items;
+    });
+
     watch(
         () => props.calls,
         () => {
@@ -70,22 +86,6 @@ export function useInfinityTable(props, initialItems, initialUrl, filters, isLoa
     const renderColumn = (column, item) => {
         return column.render(item);
     };
-
-    const filteredItems = computed(() => {
-        if (!filters.value.length) {
-            return loadedItems.value;
-        }
-
-        let items = loadedItems.value;
-
-        filters.value.forEach((filter) => {
-            if (filter.checked) {
-                items = filter.filter(items);
-            }
-        });
-
-        return items;
-    });
 
 
     console.log('loadedItems from InfinityTable.js', loadedItems);
