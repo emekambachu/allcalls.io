@@ -14,9 +14,9 @@ class EquisDuplicateMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $agentName;
-    public $efNumber;
-    public $agentEmail;
+    // public $agentName;
+    // public $efNumber;
+    // public $agentEmail;
     public $csvFilePath;
 
     /**
@@ -26,11 +26,11 @@ class EquisDuplicateMail extends Mailable
      * @param string $efNumber
      * @param string $agentEmail
      */
-    public function __construct(string $agentName, string $efNumber, string $agentEmail, string $csvFilePath)
+    public function __construct(string $csvFilePath)
     {
-        $this->agentName = $agentName;
-        $this->efNumber = $efNumber;
-        $this->agentEmail = $agentEmail;
+        // $this->agentName = $agentName;
+        // $this->efNumber = $efNumber;
+        // $this->agentEmail = $agentEmail;
         $this->csvFilePath = $csvFilePath;
     }
 
@@ -39,7 +39,7 @@ class EquisDuplicateMail extends Mailable
      */
     public function envelope(): Envelope
     {
-        $subject = 'AllCalls Free Agent Request for ' . $this->agentName . ' (' . $this->efNumber . ')';
+        $subject = 'AllCalls Free Agents Request';
         return new Envelope(
             subject: $subject
         );
@@ -53,9 +53,9 @@ class EquisDuplicateMail extends Mailable
         return new Content(
             markdown: 'emails.equis-duplicate',
             with: [
-                'agentName' => $this->agentName,
-                'efNumber' => $this->efNumber,
-                'agentEmail' => $this->agentEmail,
+                // 'agentName' => $this->agentName,
+                // 'efNumber' => $this->efNumber,
+                // 'agentEmail' => $this->agentEmail,
             ]
         );
     }
