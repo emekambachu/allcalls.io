@@ -357,8 +357,8 @@ let filteredItems = computed(() => {
 
 
 let groupedFilteredItems = computed(() => {
-    return groupedTableData.loadedItems.value;
-  }
+  return groupedTableData.loadedItems.value;
+});
 </script>
 
 <template>
