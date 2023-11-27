@@ -210,6 +210,8 @@ let groupedColumns = ref([
     visible: true,
     sortable: true,
     sortingMethod: (a, b) => {
+      console.log('sort agent name called');
+
       if (groupedTableData.sortDirection === "asc") {
         return a.agentName.localeCompare(b.agentName);
       } else {
