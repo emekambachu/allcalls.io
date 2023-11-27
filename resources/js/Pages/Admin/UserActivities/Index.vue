@@ -62,6 +62,7 @@ let clearAll = () => {
                   <th scope="col" class="px-4 py-3">Platform</th>
                   <th scope="col" class="px-4 py-3">IP Address</th>
                   <th scope="col" class="px-4 py-3">User Agent</th>
+                  <th scope="col" class="px-4 py-3">Data</th>
                   <th scope="col" class="px-4 py-3">Created At</th>
                 </tr>
               </thead>
@@ -79,6 +80,7 @@ let clearAll = () => {
                   <td class="text-gray-600 px-4 py-3">{{ activity.platform }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ activity.ip_address }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ activity.user_agent }}</td>
+                  <td class="text-gray-600 px-4 py-3">{{ activity.data }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ activity.created_at }}</td>
                 </tr>
               </tbody>
