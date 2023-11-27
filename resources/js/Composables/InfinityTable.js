@@ -20,10 +20,10 @@ export function useInfinityTable(props, initialItems, initialUrl, filters, isLoa
     console.log('Initial items from InfinityTable.js', initialItems.data);
 
     watch(
-        () => props,
+        () => props.calls,
         () => {
             console.log('intialItems value updated');
-            loadedItems.value = [...loadedItems.value, ...initialItems.data];
+            loadedItems.value = [...loadedItems.value, ...props.calls.data];
         }
     );
 
