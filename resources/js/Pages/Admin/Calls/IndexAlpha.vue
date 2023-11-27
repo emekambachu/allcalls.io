@@ -210,7 +210,7 @@ let groupedColumns = ref([
     visible: true,
     sortable: true,
     sortingMethod: (a, b) => {
-      if (sortDirectionGrouped.value === "asc") {
+      if (groupedTableData.sortDirection === "asc") {
         return a.agentName.localeCompare(b.agentName);
       } else {
         return b.agentName.localeCompare(a.agentName);
@@ -223,7 +223,7 @@ let groupedColumns = ref([
     visible: true,
     sortable: true,
     sortingMethod: (a, b) => {
-      if (sortDirectionGrouped.value === "asc") {
+      if (groupedTableData.sortDirection === "asc") {
         return a.totalCalls - b.totalCalls;
       } else {
         return b.totalCalls - a.totalCalls;
@@ -236,7 +236,7 @@ let groupedColumns = ref([
     visible: true,
     sortable: true,
     sortingMethod: (a, b) => {
-      if (sortDirectionGrouped.value === "asc") {
+      if (groupedTableData.sortDirection === "asc") {
         return a.paidCalls - b.paidCalls;
       } else {
         return b.paidCalls - a.paidCalls;
@@ -249,7 +249,7 @@ let groupedColumns = ref([
     visible: true,
     sortable: true,
     sortingMethod: (a, b) => {
-      if (sortDirectionGrouped.value === "asc") {
+      if (groupedTableData.sortDirection === "asc") {
         return a.unpaidCalls - b.unpaidCalls;
       } else {
         return b.unpaidCalls - a.unpaidCalls;
@@ -264,7 +264,7 @@ let groupedColumns = ref([
     sortingMethod: (a, b) => {
       let valueA = parseFloat(userData.revenueEarned);
       let valueB = parseFloat(userData.revenueEarned);
-      if (sortDirectionGrouped.value === "asc") {
+      if (groupedTableData.sortDirection === "asc") {
         return valueA - valueB;
       } else {
         return valueB - valueA;
@@ -277,7 +277,7 @@ let groupedColumns = ref([
     visible: true,
     sortable: true,
     sortingMethod: (a, b) => {
-      if (sortDirectionGrouped.value === "asc") {
+      if (groupedTableData.sortDirection === "asc") {
         return a.revenuePerCall - b.revenuePerCall;
       } else {
         return b.revenuePerCall - a.revenuePerCall;
@@ -290,7 +290,7 @@ let groupedColumns = ref([
     visible: true,
     sortable: true,
     sortingMethod: (a, b) => {
-      if (sortDirectionGrouped.value === "asc") {
+      if (groupedTableData.sortDirection === "asc") {
         return a.totalCallLength - b.totalCallLength;
       } else {
         return b.totalCallLength - a.totalCallLength;
@@ -303,7 +303,7 @@ let groupedColumns = ref([
     visible: true,
     sortable: true,
     sortingMethod: (a, b) => {
-      if (sortDirectionGrouped.value === "asc") {
+      if (groupedTableData.sortDirection === "asc") {
         return a.averageCallLength - b.averageCallLength;
       } else {
         return b.averageCallLength - a.averageCallLength;
