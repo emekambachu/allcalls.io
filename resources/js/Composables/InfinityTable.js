@@ -55,17 +55,6 @@ export function useInfinityTable(props, initialItems, initialUrl, filters, isLoa
             console.log(props.calls.data);
 
             loadedItems.value = [...loadedItems.value, ...props.calls.data];
-
-
-            // let items = loadedItems.value;
-
-            // filters.forEach((filter) => {
-            //     if (filter.checked) {
-            //         items = filter.filter(items);
-            //     }
-            // });
-    
-            // filteredItems.value = items;
         }
     );
 
