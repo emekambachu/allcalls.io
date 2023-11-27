@@ -351,12 +351,14 @@ let filteredItems = computed(() => {
     }
   });
 
-  let groupedFilteredItems = computed(() => {
-    return groupedTableData.loadedItems.value;
-  }
 
   return items;
 });
+
+
+let groupedFilteredItems = computed(() => {
+    return groupedTableData.loadedItems.value;
+  }
 </script>
 
 <template>
