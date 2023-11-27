@@ -80,7 +80,7 @@ let clearAll = () => {
                   <td class="text-gray-600 px-4 py-3">{{ activity.platform }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ activity.ip_address }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ activity.user_agent }}</td>
-                  <td class="text-gray-600 px-4 py-3"><pre style="width: 200px; overflow-x: scroll;" class="p-2 bg-gray-200 text-gray-50 rounded">{{ activity.data }}</pre></td>
+                  <td class="text-gray-600 px-4 py-3"><pre style="width: 200px; overflow-x: scroll;" class="p-2 bg-gray-200 text-gray-800 rounded">{{ activity.data }}</pre></td>
                   <td class="text-gray-600 px-4 py-3">{{ activity.created_at }}</td>
                 </tr>
               </tbody>
