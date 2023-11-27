@@ -198,7 +198,7 @@ const {
   renderColumn,
   filteredItems,
   loadMore,
-} = useInfinityTable(props.calls, initialUrl, columns, filters, true);
+} = useInfinityTable(props, props.calls, initialUrl, columns, filters, true);
 
 let callsGroupedByUser = ref(props.callsGroupedByUser);
 
@@ -323,6 +323,7 @@ const groupedCallsItems = {
 };
 
 const groupedTableData = useInfinityTable(
+  props,
   groupedCallsItems,
   initialUrl,
   groupedFilters,

@@ -1,7 +1,7 @@
 import { ref, computed, watch } from "vue";
 import { router } from "@inertiajs/vue3";
 
-export function useInfinityTable(initialItems, initialUrl, filters, isLoadMoreEnabled = true) {
+export function useInfinityTable(props, initialItems, initialUrl, filters, isLoadMoreEnabled = true) {
 
     console.log('Args passed to useInfinityTable from InfinityTable.js', {
         initialItems,
@@ -20,7 +20,7 @@ export function useInfinityTable(initialItems, initialUrl, filters, isLoadMoreEn
     console.log('Initial items from InfinityTable.js', initialItems.data);
 
     watch(
-        () => initialItems,
+        () => props,
         () => {
             console.log('intialItems value updated');
             loadedItems.value = [...loadedItems.value, ...initialItems.data];
