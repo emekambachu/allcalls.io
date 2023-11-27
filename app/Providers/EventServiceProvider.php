@@ -30,9 +30,12 @@ use App\Http\Controllers\FundsController;
 use App\Listeners\UpdateActiveUserStatus;
 use App\Listeners\ChargeUserForMissedCall;
 use App\Listeners\AddFundsAddedUserActivity;
+use App\Listeners\AddMissedCallUserActivity;
+use App\Listeners\AddFundsTooLowUserActivity;
 use App\Listeners\ChargeUserForCompletedCall;
 use App\Listeners\OnboardingCompletedTrigger;
 use App\Listeners\NotifyUserForLowFundsViaSMS;
+use App\Listeners\AddCompletedCallUserActivity;
 use App\Listeners\NotifyUserForLowFundsViaEmail;
 use App\Listeners\InviteAgent as ListenersInviteAgent;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -62,11 +65,13 @@ class EventServiceProvider extends ServiceProvider
         MissedCallEvent::class => [
             ChargeUserForMissedCall::class,
             MakeUserOffline::class,
+            AddMissedCallUserActivity::class,
         ],
 
         CompletedCallEvent::class => [
             ChargeUserForCompletedCall::class,
             UnlockClientForUser::class,
+            AddCompletedCallUserActivity::class,
         ],
 
         FundsAdded::class => [
@@ -77,6 +82,7 @@ class EventServiceProvider extends ServiceProvider
         FundsTooLow::class => [
             NotifyUserForLowFundsViaEmail::class,
             NotifyUserForLowFundsViaSMS::class,
+            AddFundsTooLowUserActivity::class,
         ],
 
         CallStatusUpdated::class => [
