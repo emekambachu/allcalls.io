@@ -34,7 +34,7 @@ class AddFundsAddedUserActivity
                 'bonus' => $event->bonus,
                 'card' => $event->card,
             ]),
-            'platform' => 'mobile',
+            'platform' => 'web',
             'user_id' => $event->user->id,
             'ip_address' => request()->ip() ?? null,
             'user_agent' => request()->header('User-Agent') ?? null,
