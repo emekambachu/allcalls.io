@@ -317,9 +317,9 @@ let groupedColumns = ref([
 // Filters for the grouped calls table (if needed)
 let groupedFilters = [];
 
-const groupedCallsItems = {
+const groupedCallsItems = ref({
   data: Object.values(props.callsGroupedByUser),
-};
+});
 
 const groupedTableData = useInfinityTable(
   props,
@@ -375,7 +375,7 @@ let filteredItems = computed(() => {
     <!-- Grouped Calls Table -->
     <InfinityTable
       :columns="groupedColumns"
-      :items="groupedCallsItems.data"
+      :items="groupedTableData.loadedItems"
       :renderColumn="groupedTableData.renderColumn"
       :filters="groupedFilters"
       :totalItems="totalCalls"
