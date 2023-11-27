@@ -212,7 +212,7 @@ let groupedColumns = ref([
       console.log("sort agent name called");
       console.log("sort direction is: ", groupedTableData.sortDirection.value);
 
-      if (groupedTableData.sortDirection === "asc") {
+      if (groupedTableData.sortDirection.value === "asc") {
         return a.agentName.localeCompare(b.agentName);
       } else {
         return b.agentName.localeCompare(a.agentName);
@@ -383,10 +383,11 @@ let groupedFilteredItems = computed(() => {
     <!-- Grouped Calls Table -->
     <InfinityTable
       :columns="groupedColumns"
-      :items="groupedFilteredItems.loadedItems"
+      :items="groupedFilteredItems"
       :renderColumn="groupedTableData.renderColumn"
       :filters="groupedFilters"
       :totalItems="totalCalls"
+      :sortColumn="groupedTableData.sortColumn"
       :sortByColumn="groupedTableData.sortByColumn"
       :sortDirection="groupedTableData.sortDirection"
     />

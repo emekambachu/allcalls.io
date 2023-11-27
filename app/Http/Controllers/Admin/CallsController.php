@@ -112,7 +112,7 @@ class CallsController extends Controller
 
 
 
-        return Inertia::render('Admin/Calls/IndexAlpha', [
+        return Inertia::render('Admin/Calls/IndexNew', [
             'requestData' => $request->all(),
             'calls' => $calls,
             'totalCalls' => Call::count(),
