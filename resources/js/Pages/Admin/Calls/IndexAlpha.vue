@@ -227,30 +227,12 @@ const groupedCallsItems = {
   data: Object.values(props.callsGroupedByUser),
 };
 
-// Use the modified useInfinityTable composable
-// let {
-//   loadedItemsGrouped,
-//   sortColumnGrouped,
-//   sortDirectionGrouped,
-//   performSortingGrouped,
-//   sortByColumnGrouped,
-//   renderColumnGrouped,
-//   filteredItemsGrouped,
-//   loadMoreGrouped,
-// } = useInfinityTable(
-//   groupedCallsItems,
-//   initialUrl,
-//   groupedFilters,
-//   false,
-// );
-
 const groupedTableData = useInfinityTable(
   groupedCallsItems,
   initialUrl,
   groupedFilters,
   false
 );
-
 
 console.log('Grouped Table Data: ', groupedTableData.filteredItems);
 console.log('Grouped Table Data Loaded Data: ', groupedTableData.loadedItems);
