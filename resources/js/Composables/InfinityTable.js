@@ -70,6 +70,8 @@ export function useInfinityTable(props, initialItems, initialUrl, filters, isLoa
             sortingMethod.value = column.sortingMethod;
         }
 
+        console.log('Performing sorting for column', column.label, 'with sorting method', sortingMethod.value, ' and sort direction', sortDirection.value);
+
         performSorting();
     };
 
