@@ -351,6 +351,10 @@ let filteredItems = computed(() => {
     }
   });
 
+  let groupedFilteredItems = computed(() => {
+    return groupedTableData.loadedItems.value;
+  }
+
   return items;
 });
 </script>
@@ -377,7 +381,7 @@ let filteredItems = computed(() => {
     <!-- Grouped Calls Table -->
     <InfinityTable
       :columns="groupedColumns"
-      :items="groupedTableData.loadedItems"
+      :items="groupedFilteredItems"
       :renderColumn="groupedTableData.renderColumn"
       :filters="groupedFilters"
       :totalItems="totalCalls"
