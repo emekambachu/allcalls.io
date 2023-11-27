@@ -2,12 +2,21 @@ import { ref, computed, watch } from "vue";
 import { router } from "@inertiajs/vue3";
 
 export function useInfinityTable(initialItems, initialUrl, filters, isLoadMoreEnabled = true) {
+
+    console.log('Args passed to useInfinityTable from InfinityTable.js', {
+        initialItems,
+        initialUrl,
+        filters,
+        isLoadMoreEnabled
+    });
+
+
     const loadedItems = ref(initialItems.data);
     const sortColumn = ref(null);
     const sortDirection = ref("asc");
     const sortingMethod = ref(null);
 
-    console.log('Initial items from InfinityTable.js', initialItems);
+    console.log('Initial items from InfinityTable.js', initialItems.data);
 
     watch(
         () => initialItems,
