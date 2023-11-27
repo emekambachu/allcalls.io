@@ -4,8 +4,7 @@ namespace App\Providers;
 
 use App\Events\FundsAdded;
 use App\Events\FundsTooLow;
-use App\Events\OnboardingCompleted;
-use App\Listeners\OnboardingCompletedTrigger;
+use App\Events\InviteAgent;
 use App\Models\Transaction;
 use App\Events\MissedCallEvent;
 use App\Listeners\SaveUserCall;
@@ -13,8 +12,8 @@ use App\Events\RingingCallEvent;
 use App\Events\CallStatusUpdated;
 use App\Listeners\AddDefaultBids;
 use App\Events\CompletedCallEvent;
-use App\Events\InviteAgent;
 use App\Listeners\MakeUserOffline;
+use App\Events\OnboardingCompleted;
 use App\Listeners\SendWelcomeEmail;
 use App\Events\OnlineUserListUpdated;
 use App\Listeners\AddTargetsInRingba;
@@ -30,10 +29,12 @@ use App\Listeners\UpdateTargetsInRingba;
 use App\Http\Controllers\FundsController;
 use App\Listeners\UpdateActiveUserStatus;
 use App\Listeners\ChargeUserForMissedCall;
+use App\Listeners\AddFundsAddedUserActivity;
 use App\Listeners\ChargeUserForCompletedCall;
-use App\Listeners\InviteAgent as ListenersInviteAgent;
+use App\Listeners\OnboardingCompletedTrigger;
 use App\Listeners\NotifyUserForLowFundsViaSMS;
 use App\Listeners\NotifyUserForLowFundsViaEmail;
+use App\Listeners\InviteAgent as ListenersInviteAgent;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -70,6 +71,7 @@ class EventServiceProvider extends ServiceProvider
 
         FundsAdded::class => [
             SendFundsReceiptEmail::class,
+            AddFundsAddedUserActivity::class
         ],
 
         FundsTooLow::class => [
