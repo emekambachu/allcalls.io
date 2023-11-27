@@ -208,16 +208,7 @@ let groupedColumns = ref([
     render: (userData) => userData.agentName,
     visible: true,
     sortable: true,
-    sortingMethod: (a, b) => {
-      console.log("sort agent name called");
-      console.log("sort direction is: ", groupedTableData.sortDirection.value);
-
-      if (groupedTableData.sortDirection === "asc") {
-        return a.agentName.localeCompare(b.agentName);
-      } else {
-        return b.agentName.localeCompare(a.agentName);
-      }
-    },
+    sortingMethod: (a, b) => a.localeCompare(b, 'en', { numeric: true }),
   },
   {
     label: "Total Calls",
