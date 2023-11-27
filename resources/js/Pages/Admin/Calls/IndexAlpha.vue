@@ -252,7 +252,7 @@ const groupedTableData = useInfinityTable(
 );
 
 
-console.log('Grouped Table Data: ', groupedTableData);
+console.log('Grouped Table Data: ', groupedTableData.filteredItems);
 
 </script>
 
