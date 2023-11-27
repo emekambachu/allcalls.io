@@ -113,7 +113,7 @@ if (props.loadMore) {
                 </PopoverPanel>
               </Popover>
 
-              <Popover class="relative">
+              <Popover v-if="filters.length" class="relative">
                 <PopoverButton>
                   <button
                     type="button"
