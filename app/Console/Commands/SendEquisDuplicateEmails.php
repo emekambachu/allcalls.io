@@ -36,7 +36,7 @@ class SendEquisDuplicateEmails extends Command
         $duplicates = EquisDuplicate::whereDate('created_at', today())->get(['first_name', 'last_name', 'upline_code', 'email']);
 
         // Create a temporary file
-        $tmpFilePath = Storage::disk('local')->path('temp/users-' . uniqid() . '.csv');
+        $tmpFilePath = Storage::path('temp/users-' . uniqid() . '.csv');
 
         Log::debug('send-equis-duplicate-emails:tmp-file-path', ['tmpFilePath' => $tmpFilePath]);
 
