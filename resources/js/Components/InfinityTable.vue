@@ -29,7 +29,7 @@ let props = defineProps({
 
   loadMore: {
     type: Function,
-    required: true,
+    required: false,
   },
 
   renderColumn: {
@@ -47,19 +47,21 @@ console.log("Props passed to InfinityTable component: ", props);
 
 let landmark = ref(null);
 
-let observer = new IntersectionObserver((entries) => {
-  entries.forEach((entry) => {
-    if (entry.isIntersecting) {
-      props.loadMore();
+if (props.loadMore) {
+  let observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        props.loadMore();
+      }
+    });
+  });
+
+  onMounted(() => {
+    if (landmark.value) {
+      observer.observe(landmark.value);
     }
   });
-});
-
-onMounted(() => {
-  if (landmark.value) {
-    observer.observe(landmark.value);
-  }
-});
+}
 </script>
 <template>
   <section class="py-3 sm:py-5">
