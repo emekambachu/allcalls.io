@@ -211,7 +211,7 @@ let groupedColumns = ref([
     label: "Unpaid Calls",
     render: (userData) => userData.unpaidCalls,
     visible: true,
-  }
+  },
   { label: "Revenue Earned", render: (userData) => `$${userData.revenueEarned}`, visible: true },
   {
     label: "Revenue Per Call",
