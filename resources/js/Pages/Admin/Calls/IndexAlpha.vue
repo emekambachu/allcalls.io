@@ -250,6 +250,10 @@ const groupedTableData = useInfinityTable(
   groupedFilters,
   false
 );
+
+
+console.log('Grouped Table Data: ', groupedTableData);
+
 </script>
 
 <template>
