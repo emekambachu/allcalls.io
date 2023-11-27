@@ -329,7 +329,7 @@ const groupedTableData = useInfinityTable(
   false
 );
 
-console.log(groupedTableData.loadedItems.value);
+console.log('groupedTableData.loadedItems.value:', groupedTableData.loadedItems.value);
 
 watch(
   () => props.calls,
