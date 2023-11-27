@@ -204,27 +204,112 @@ let callsGroupedByUser = ref(props.callsGroupedByUser);
 
 // Columns for the grouped calls table
 let groupedColumns = ref([
-  { label: "Agent Name", render: (userData) => userData.agentName, visible: true },
-  { label: "Total Calls", render: (userData) => userData.totalCalls, visible: true },
-  { label: "Paid Calls", render: (userData) => userData.paidCalls, visible: true },
+  {
+    label: "Agent Name",
+    render: (userData) => userData.agentName,
+    visible: true,
+    sortable: true,
+    sortingMethod: (a, b) => {
+      if (sortDirectionGrouped.value === "asc") {
+        return a.agentName.localeCompare(b.agentName);
+      } else {
+        return b.agentName.localeCompare(a.agentName);
+      }
+    },
+  },
+  {
+    label: "Total Calls",
+    render: (userData) => userData.totalCalls,
+    visible: true,
+    sortable: true,
+    sortingMethod: (a, b) => {
+      if (sortDirectionGrouped.value === "asc") {
+        return a.totalCalls - b.totalCalls;
+      } else {
+        return b.totalCalls - a.totalCalls;
+      }
+    },
+  },
+  {
+    label: "Paid Calls",
+    render: (userData) => userData.paidCalls,
+    visible: true,
+    sortable: true,
+    sortingMethod: (a, b) => {
+      if (sortDirectionGrouped.value === "asc") {
+        return a.paidCalls - b.paidCalls;
+      } else {
+        return b.paidCalls - a.paidCalls;
+      }
+    },
+  },
   {
     label: "Unpaid Calls",
     render: (userData) => userData.unpaidCalls,
     visible: true,
+    sortable: true,
+    sortingMethod: (a, b) => {
+      if (sortDirectionGrouped.value === "asc") {
+        return a.unpaidCalls - b.unpaidCalls;
+      } else {
+        return b.unpaidCalls - a.unpaidCalls;
+      }
+    },
   },
-  { label: "Revenue Earned", render: (userData) => `$${userData.revenueEarned}`, visible: true },
+  {
+    label: "Revenue Earned",
+    render: (userData) => `$${userData.revenueEarned}`,
+    visible: true,
+    sortable: true,
+    sortingMethod: (a, b) => {
+      let valueA = parseFloat(userData.revenueEarned);
+      let valueB = parseFloat(userData.revenueEarned);
+      if (sortDirectionGrouped.value === "asc") {
+        return valueA - valueB;
+      } else {
+        return valueB - valueA;
+      }
+    },
+  },
   {
     label: "Revenue Per Call",
     render: (userData) => `$${userData.revenuePerCall.toFixed(2)}`,
     visible: true,
+    sortable: true,
+    sortingMethod: (a, b) => {
+      if (sortDirectionGrouped.value === "asc") {
+        return a.revenuePerCall - b.revenuePerCall;
+      } else {
+        return b.revenuePerCall - a.revenuePerCall;
+      }
+    },
   },
-  { label: "Total Call Length", render: (userData) => userData.totalCallLength, visible: true },
+  {
+    label: "Total Call Length",
+    render: (userData) => userData.totalCallLength,
+    visible: true,
+    sortable: true,
+    sortingMethod: (a, b) => {
+      if (sortDirectionGrouped.value === "asc") {
+        return a.totalCallLength - b.totalCallLength;
+      } else {
+        return b.totalCallLength - a.totalCallLength;
+      }
+    },
+  },
   {
     label: "Average Call Length",
     render: (userData) => `${userData.averageCallLength.toFixed(2)} mins`,
     visible: true,
+    sortable: true,
+    sortingMethod: (a, b) => {
+      if (sortDirectionGrouped.value === "asc") {
+        return a.averageCallLength - b.averageCallLength;
+      } else {
+        return b.averageCallLength - a.averageCallLength;
+      }
+    },
   },
-  // Add more columns as needed
 ]);
 
 // Filters for the grouped calls table (if needed)
