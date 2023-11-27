@@ -383,7 +383,7 @@ let groupedFilteredItems = computed(() => {
     <!-- Grouped Calls Table -->
     <InfinityTable
       :columns="groupedColumns"
-      :items="groupedFilteredItems.loadedItems"
+      :items="groupedFilteredItems"
       :renderColumn="groupedTableData.renderColumn"
       :filters="groupedFilters"
       :totalItems="totalCalls"
