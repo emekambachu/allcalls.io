@@ -196,7 +196,6 @@ const {
   performSorting,
   sortByColumn,
   renderColumn,
-  filteredItems,
   loadMore,
 } = useInfinityTable(props, props.calls, initialUrl, columns, filters, true);
 
@@ -338,6 +337,22 @@ watch(
     console.log("Calls props were updated!", first, second);
   }
 );
+
+let filteredItems = computed(() => {
+  if (!filters.value.length) {
+    return loadedItems.value;
+  }
+
+  let items = loadedItems.value;
+
+  filters.value.forEach((filter) => {
+    if (filter.checked) {
+      items = filter.filter(items);
+    }
+  });
+
+  return items;
+});
 </script>
 
 <template>

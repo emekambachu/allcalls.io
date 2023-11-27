@@ -32,21 +32,7 @@ export function useInfinityTable(props, initialItems, initialUrl, filters, isLoa
 
     // filteredItems.value = items;
 
-    let filteredItems = computed(() => {
-        if (!filters.value.length) {
-            return loadedItems.value;
-        }
 
-        let items = loadedItems.value;
-
-        filters.value.forEach((filter) => {
-            if (filter.checked) {
-                items = filter.filter(items);
-            }
-        });
-
-        return items;
-    });
 
     const loadMore = (url) => {
         if (!isLoadMoreEnabled) return;
@@ -106,7 +92,6 @@ export function useInfinityTable(props, initialItems, initialUrl, filters, isLoa
         performSorting,
         sortByColumn,
         renderColumn,
-        filteredItems: filters.length ? filteredItems : initialItems.data,
         loadMore
     };
 }
