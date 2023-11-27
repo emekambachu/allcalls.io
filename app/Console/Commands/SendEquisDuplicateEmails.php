@@ -2,11 +2,12 @@
 
 namespace App\Console\Commands;
 
+use App\Models\EquisDuplicate;
 use Illuminate\Console\Command;
 use App\Mail\EquisDuplicateMail;
-use App\Models\EquisDuplicate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 class SendEquisDuplicateEmails extends Command
 {
@@ -32,16 +33,29 @@ class SendEquisDuplicateEmails extends Command
         Log::debug('send-equis-duplicate-emails:start');
 
         // EquisDuplicate all records where created_at is today
-        $duplicates = EquisDuplicate::whereDate('created_at', today())->get();
+        $duplicates = EquisDuplicate::whereDate('created_at', today())->get(['first_name', 'last_name', 'upline_code', 'email']);
 
-        // foreach($duplicates as $duplicate) {
-        //     Mail::to(['iamfaizahmed123@gmail.com', 'ryan@allcalls.io', 'vince@allcalls.io'])
-        //         ->send(new EquisDuplicateMail($duplicate->first_name . " " . $duplicate->last_name, $duplicate->upline_code, $duplicate->email));
-        // }
+        // Create a temporary file
+        $tmpFilePath = Storage::disk('local')->path('temp/users-' . uniqid() . '.csv');
 
-        // Mail::to(['iamfaizahmed123@gmail.com'])
-        // ->send(new EquisDuplicateMail('FirstName' . " " . 'LastName', 'EF222171', 'email@example.com'));
+        Log::debug('send-equis-duplicate-emails:tmp-file-path', ['tmpFilePath' => $tmpFilePath]);
+
+        $file = fopen($tmpFilePath, 'w');
+
+        // Optional: Add CSV headers
+        fputcsv($file, ['First Name', 'Last Name', 'Upline', 'Email']);
+
+        foreach ($duplicates as $duplicate) {
+            fputcsv($file, $duplicate->toArray());
+        }
+
+        fclose($file);
+
+        // Send the email with the attachment
+        Mail::to(['iamfaizahmed123@gmail.com'])
+            ->send(new EquisDuplicateMail('FirstName' . " " . 'LastName', 'EF222171', 'email@example.com', $tmpFilePath));
 
         Log::debug('send-equis-duplicate-emails:emails-sent');
+
     }
 }
