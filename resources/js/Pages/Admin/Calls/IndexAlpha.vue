@@ -317,9 +317,9 @@ let groupedColumns = ref([
 // Filters for the grouped calls table (if needed)
 let groupedFilters = [];
 
-const groupedCallsItems = ref({
+const groupedCallsItems = {
   data: Object.values(props.callsGroupedByUser),
-});
+};
 
 const groupedTableData = useInfinityTable(
   props,
