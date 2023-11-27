@@ -215,13 +215,13 @@ let groupedColumns = ref([
   { label: "Revenue Earned", render: (userData) => `$${userData.revenueEarned}`, visible: true },
   {
     label: "Revenue Per Call",
-    render: (userData) => `$${userData.revenuePerCall}`,
+    render: (userData) => `$${userData.revenuePerCall.toFixed(2)}`,
     visible: true,
   },
   { label: "Total Call Length", render: (userData) => userData.totalCallLength, visible: true },
   {
     label: "Average Call Length",
-    render: (userData) => `${userData.averageCallLength} mins`,
+    render: (userData) => `${userData.averageCallLength.toFixed(2)} mins`,
     visible: true,
   },
   // Add more columns as needed
@@ -240,9 +240,6 @@ const groupedTableData = useInfinityTable(
   groupedFilters,
   false
 );
-
-console.log('Grouped Table Data: ', groupedTableData.filteredItems);
-console.log('Grouped Table Data Loaded Data: ', groupedTableData.loadedItems);
 
 </script>
 
