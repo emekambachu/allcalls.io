@@ -79,7 +79,6 @@ export function useInfinityTable(props, initialItems, initialUrl, filters, isLoa
 
 
     console.log('loadedItems from InfinityTable.js', loadedItems);
-    console.log('Filtered items from InfinityTable.js', filteredItems);
 
 
 
