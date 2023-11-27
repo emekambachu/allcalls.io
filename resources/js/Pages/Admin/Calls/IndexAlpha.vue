@@ -351,7 +351,7 @@ const groupedTableData = useInfinityTable(
     </div>
 
     <!-- Grouped Calls Table -->
-    <InfinityTable
+    <!-- <InfinityTable
       :columns="groupedColumns"
       :items="groupedTableData.filteredItems"
       :renderColumn="groupedTableData.renderColumn"
@@ -359,7 +359,7 @@ const groupedTableData = useInfinityTable(
       :totalItems="totalCalls"
       :sortByColumn="groupedTableData.sortByColumn"
       :sortDirection="groupedTableData.sortDirection"
-    />
+    /> -->
 
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
       <div class="px-4 sm:px-8 sm:rounded-lg">
