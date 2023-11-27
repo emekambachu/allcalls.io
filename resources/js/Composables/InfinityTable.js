@@ -16,11 +16,13 @@ export function useInfinityTable(initialItems, initialUrl, filters, isLoadMoreEn
     const sortDirection = ref("asc");
     const sortingMethod = ref(null);
 
+
     console.log('Initial items from InfinityTable.js', initialItems.data);
 
     watch(
         () => initialItems,
         () => {
+            console.log('intialItems value updated');
             loadedItems.value = [...loadedItems.value, ...initialItems.data];
         }
     );
@@ -29,6 +31,7 @@ export function useInfinityTable(initialItems, initialUrl, filters, isLoadMoreEn
         if (!isLoadMoreEnabled) return;
     
         console.log('Load more called from InfinityTable.js');
+        console.log('Next page url from InfinityTable.js', initialItems.next_page_url);
     
         router.get(
             initialItems.next_page_url,
@@ -37,6 +40,7 @@ export function useInfinityTable(initialItems, initialUrl, filters, isLoadMoreEn
                 preserveState: true,
                 preserveScroll: true,
                 onSuccess: () => {
+                    console.log('Successfully navigated to the next page and ');
                     window.history.replaceState({}, "", initialUrl);
                 },
             }
