@@ -59,7 +59,7 @@ export function useInfinityTable(props, initialItems, initialUrl, filters, isLoa
 
             let items = loadedItems.value;
 
-            filters.value.forEach((filter) => {
+            filters.forEach((filter) => {
                 if (filter.checked) {
                     items = filter.filter(items);
                 }
