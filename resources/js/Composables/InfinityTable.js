@@ -19,28 +19,53 @@ export function useInfinityTable(props, initialItems, initialUrl, filters, isLoa
 
     console.log('Initial items from InfinityTable.js', initialItems.data);
 
-    const filteredItems = computed(() => {
-        if (!filters.value.length) {
-            return loadedItems.value;
+    let filteredItems = ref(initialItems.data);
+
+    // apply filters to the original data:
+    let items = loadedItems.value;
+
+    filters.value.forEach((filter) => {
+        if (filter.checked) {
+            items = filter.filter(items);
         }
-
-        let items = loadedItems.value;
-
-        filters.value.forEach((filter) => {
-            if (filter.checked) {
-                items = filter.filter(items);
-            }
-        });
-
-        return items;
     });
+
+    filteredItems.value = items;
+
+    // let filteredItems = computed(() => {
+    //     if (!filters.value.length) {
+    //         return loadedItems.value;
+    //     }
+
+    //     let items = loadedItems.value;
+
+    //     filters.value.forEach((filter) => {
+    //         if (filter.checked) {
+    //             items = filter.filter(items);
+    //         }
+    //     });
+
+    //     return items;
+    // });
 
     watch(
         () => props.calls,
         () => {
             console.log('intialItems value updated');
             console.log(props.calls.data);
+
             loadedItems.value = [...loadedItems.value, ...props.calls.data];
+
+
+            let items = loadedItems.value;
+
+            filters.value.forEach((filter) => {
+                if (filter.checked) {
+                    items = filter.filter(items);
+                }
+            });
+    
+            filteredItems.value = items;
         }
     );
 
