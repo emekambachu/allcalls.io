@@ -262,7 +262,7 @@ console.log('Grouped Table Data Loaded Data: ', groupedTableData.loadedItems);
     <InfinityTable
       :columns="groupedColumns"
       :items="groupedTableData.filteredItems"
-      :renderColumn="(column, userData) => column.render(userData)"
+      :renderColumn="groupedTableData.renderColumn"
       :filters="groupedFilters"
       :totalItems="totalCalls"
     />
