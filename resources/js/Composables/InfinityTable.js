@@ -22,7 +22,7 @@ export function useInfinityTable(props, initialItems, initialUrl, filters, isLoa
     let filteredItems = ref(initialItems.data);
 
     // apply filters to the original data:
-    let items = loadedItems.value;
+    let items = initialItems.data;
 
     filters.forEach((filter) => {
         if (filter.checked) {
