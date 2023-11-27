@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Carbon\Carbon;
 use App\Models\EquisDuplicate;
 use Illuminate\Console\Command;
 use App\Mail\EquisDuplicateMail;
@@ -32,7 +33,7 @@ class SendEquisDuplicateEmails extends Command
     {
         Log::debug('send-equis-duplicate-emails:start');
 
-        $duplicates = EquisDuplicate::whereDate('created_at', today())->get(['first_name', 'last_name', 'upline_code', 'email']);
+        $duplicates = EquisDuplicate::whereDate('created_at', Carbon::yesterday())->get(['first_name', 'last_name', 'upline_code', 'email']);
 
         // Ensure the temporary directory exists
         $tempDir = storage_path('app/temp');
