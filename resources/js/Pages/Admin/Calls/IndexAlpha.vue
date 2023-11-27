@@ -354,6 +354,7 @@ const groupedTableData = useInfinityTable(
       :renderColumn="groupedTableData.renderColumn"
       :filters="groupedFilters"
       :totalItems="totalCalls"
+      :sortByColumn="groupedTableData.sortByColumn"
     />
 
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
