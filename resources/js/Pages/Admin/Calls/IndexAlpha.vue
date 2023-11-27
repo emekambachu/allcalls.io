@@ -387,6 +387,7 @@ let groupedFilteredItems = computed(() => {
       :renderColumn="groupedTableData.renderColumn"
       :filters="groupedFilters"
       :totalItems="totalCalls"
+      :sortColumn="groupedTableData.sortColumn"
       :sortByColumn="groupedTableData.sortByColumn"
       :sortDirection="groupedTableData.sortDirection"
     />
