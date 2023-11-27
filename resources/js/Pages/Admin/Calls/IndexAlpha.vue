@@ -334,7 +334,7 @@ watch(
   () => props.calls,
   (first, second) => {
     // something like that:
-    // loadedItems.value = [...loadedItems.value, ...props.calls.data];
+    loadedItems.value = [...loadedItems.value, ...props.calls.data];
     console.log("Calls props were updated!", first, second);
   }
 );
