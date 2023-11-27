@@ -210,8 +210,8 @@ let groupedColumns = ref([
     visible: true,
     sortable: true,
     sortingMethod: (a, b) => {
-      console.log('sort agent name called');
-      console.log('sort direction is: ', groupedTableData.sortDirection.value);
+      console.log("sort agent name called");
+      console.log("sort direction is: ", groupedTableData.sortDirection.value);
 
       if (groupedTableData.sortDirection === "asc") {
         return a.agentName.localeCompare(b.agentName);
@@ -330,6 +330,12 @@ const groupedTableData = useInfinityTable(
   false
 );
 
+watch(
+  () => props.calls,
+  (first, second) => {
+    console.log("Calls props were updated!", first, second);
+  }
+);
 </script>
 
 <template>
