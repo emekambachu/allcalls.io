@@ -53,7 +53,7 @@ const filteredAgens = computed(() => {
     );
 });
 
-const OpenUser = () => {
+const SugestAgent = () => {
     form.value.invited_by = ''
     isOpen.value = true;
 };
@@ -193,7 +193,7 @@ const closeDropDown = () => {
                         <div id="dropdown_main_id" class="mb-3">
                             <label for="Upline ID" class="block mb-2 text-sm font-black text-gray-900 ">Upline ID<span
                                     class="text-red-500">*</span></label>
-                            <input type="text" autocomplete="off" @focus="OpenUser" v-model="form.upline_id"
+                            <input type="text" autocomplete="off" @focus="SugestAgent" v-model="form.upline_id"
                                 id="default-input"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                             <div v-if="firstStepErrors.upline_id" class="text-red-500"
@@ -216,9 +216,9 @@ const closeDropDown = () => {
 
 
                         <div>
-                            <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 ">Agent Level <span
+                            <label  class="block mb-2 text-sm font-medium text-gray-900 ">Agent Level <span
                                     class="text-red-500">*</span></label>
-                            <select v-model="form.level" id="countries"
+                            <select v-model="form.level" 
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                                 <option disabled selected>-- Select an option -- </option>
                                 <option v-show="selectedAgentLevel >= level.order" v-for="level in agentLevels" :value="level.id">{{ level.name }}  </option>
