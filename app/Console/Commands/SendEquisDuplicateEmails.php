@@ -32,11 +32,16 @@ class SendEquisDuplicateEmails extends Command
     {
         Log::debug('send-equis-duplicate-emails:start');
 
-        // EquisDuplicate all records where created_at is today
         $duplicates = EquisDuplicate::whereDate('created_at', today())->get(['first_name', 'last_name', 'upline_code', 'email']);
 
+        // Ensure the temporary directory exists
+        $tempDir = storage_path('app/temp');
+        if (!file_exists($tempDir)) {
+            mkdir($tempDir, 0777, true);
+        }
+
         // Create a temporary file
-        $tmpFilePath = Storage::path('temp/users-' . uniqid() . '.csv');
+        $tmpFilePath = tempnam($tempDir, 'users-') . '.csv';
 
         Log::debug('send-equis-duplicate-emails:tmp-file-path', ['tmpFilePath' => $tmpFilePath]);
 
@@ -57,5 +62,7 @@ class SendEquisDuplicateEmails extends Command
 
         Log::debug('send-equis-duplicate-emails:emails-sent');
 
+        // Optionally, delete the temporary file after sending the email
+        unlink($tmpFilePath);
     }
 }
