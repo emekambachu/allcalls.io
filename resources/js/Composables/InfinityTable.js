@@ -19,34 +19,34 @@ export function useInfinityTable(props, initialItems, initialUrl, filters, isLoa
 
     console.log('Initial items from InfinityTable.js', initialItems.data);
 
-    let filteredItems = ref(initialItems.data);
+    // let filteredItems = ref(initialItems.data);
 
     // apply filters to the original data:
-    let items = initialItems.data;
+    // let items = initialItems.data;
 
-    filters.forEach((filter) => {
-        if (filter.checked) {
-            items = filter.filter(items);
-        }
-    });
-
-    filteredItems.value = items;
-
-    // let filteredItems = computed(() => {
-    //     if (!filters.value.length) {
-    //         return loadedItems.value;
+    // filters.forEach((filter) => {
+    //     if (filter.checked) {
+    //         items = filter.filter(items);
     //     }
-
-    //     let items = loadedItems.value;
-
-    //     filters.value.forEach((filter) => {
-    //         if (filter.checked) {
-    //             items = filter.filter(items);
-    //         }
-    //     });
-
-    //     return items;
     // });
+
+    // filteredItems.value = items;
+
+    let filteredItems = computed(() => {
+        if (!filters.value.length) {
+            return loadedItems.value;
+        }
+
+        let items = loadedItems.value;
+
+        filters.value.forEach((filter) => {
+            if (filter.checked) {
+                items = filter.filter(items);
+            }
+        });
+
+        return items;
+    });
 
     watch(
         () => props.calls,
@@ -57,15 +57,15 @@ export function useInfinityTable(props, initialItems, initialUrl, filters, isLoa
             loadedItems.value = [...loadedItems.value, ...props.calls.data];
 
 
-            let items = loadedItems.value;
+            // let items = loadedItems.value;
 
-            filters.forEach((filter) => {
-                if (filter.checked) {
-                    items = filter.filter(items);
-                }
-            });
+            // filters.forEach((filter) => {
+            //     if (filter.checked) {
+            //         items = filter.filter(items);
+            //     }
+            // });
     
-            filteredItems.value = items;
+            // filteredItems.value = items;
         }
     );
 
