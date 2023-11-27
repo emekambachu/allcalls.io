@@ -48,16 +48,6 @@ export function useInfinityTable(props, initialItems, initialUrl, filters, isLoa
         return items;
     });
 
-    watch(
-        () => props.calls,
-        () => {
-            console.log('intialItems value updated');
-            console.log(props.calls.data);
-
-            loadedItems.value = [...loadedItems.value, ...props.calls.data];
-        }
-    );
-
     const loadMore = (url) => {
         if (!isLoadMoreEnabled) return;
     
