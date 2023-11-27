@@ -169,7 +169,6 @@ const closeDropDown = () => {
                         <br>
                         <!-- <div class="mt-4">
                             <GuestInputLabel for="email" value="Email" />
-
                             <GuestTextInput id="email" type="email" class="mt-1 block w-full" v-model="form.email" required
                                 pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}" />
                             <div v-if="uiEmailValidation.isValid" class="text-red-500">
