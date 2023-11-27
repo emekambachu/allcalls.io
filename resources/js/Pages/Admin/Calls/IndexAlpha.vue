@@ -221,7 +221,7 @@ let groupedColumns = ref([
 ]);
 
 // Filters for the grouped calls table (if needed)
-let groupedFilters = ref([]);
+let groupedFilters = [];
 
 const groupedCallsItems = {
   data: Object.values(props.callsGroupedByUser),
