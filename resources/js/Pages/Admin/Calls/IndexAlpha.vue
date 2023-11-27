@@ -204,18 +204,25 @@ let callsGroupedByUser = ref(props.callsGroupedByUser);
 
 // Columns for the grouped calls table
 let groupedColumns = ref([
-  { label: "Agent Name", render: (userData) => userData.agentName },
-  { label: "Total Calls", render: (userData) => userData.totalCalls },
-  { label: "Paid Calls", render: (userData) => userData.paidCalls },
-  { label: "Revenue Earned", render: (userData) => `$${userData.revenueEarned}` },
+  { label: "Agent Name", render: (userData) => userData.agentName, visible: true },
+  { label: "Total Calls", render: (userData) => userData.totalCalls, visible: true },
+  { label: "Paid Calls", render: (userData) => userData.paidCalls, visible: true },
+  {
+    label: "Unpaid Calls",
+    render: (userData) => userData.unpaidCalls,
+    visible: true,
+  }
+  { label: "Revenue Earned", render: (userData) => `$${userData.revenueEarned}`, visible: true },
   {
     label: "Revenue Per Call",
     render: (userData) => `$${userData.revenuePerCall}`,
+    visible: true,
   },
-  { label: "Total Call Length", render: (userData) => userData.totalCallLength },
+  { label: "Total Call Length", render: (userData) => userData.totalCallLength, visible: true },
   {
     label: "Average Call Length",
     render: (userData) => `${userData.averageCallLength} mins`,
+    visible: true,
   },
   // Add more columns as needed
 ]);
