@@ -27,10 +27,10 @@ class PushChannel
 
             $notification = [
                 'to' => $token,
-                'notification' => [
-                    'title' => $data['title'],
-                    'body' => $data['body'],
-                ],
+                // 'notification' => [
+                //     'title' => $data['title'],
+                //     'body' => $data['body'],
+                // ],
                 'data' => [ // Add custom data payload for Zoom link
                     'zoomLink' => $data['zoomLink'] ?? null,
                     'title' => $data['title'],
