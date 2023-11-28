@@ -31,6 +31,7 @@ class InternalAgentLevelSeeder extends Seeder
             'AC Level 10',
             'AC Level 11',
         ];
+        
         // Disable foreign key checks
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
         // Truncate the table

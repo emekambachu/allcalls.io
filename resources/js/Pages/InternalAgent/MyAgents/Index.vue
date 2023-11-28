@@ -137,13 +137,13 @@ let dateFormat = (data) => {
   <AuthenticatedLayout>
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-        My Agent
+        My Agents
       </h2>
     </template>
 
     <div class="pt-14 flex justify-between px-16">
       <div>
-        <div class="text-4xl text-custom-sky font-bold mb-6">My Agent</div>
+        <div class="text-4xl text-custom-sky font-bold mb-6">My Agents</div>
       </div>
      
     </div>
@@ -171,7 +171,7 @@ let dateFormat = (data) => {
                   <th scope="col" class="px-4 py-3">Phone</th>
                   <th scope="col" style="min-width: 115px;" class="px-4 py-3">Sign Up Date</th>
                   <th scope="col"  class="px-4 py-3">Progress</th>
-                  <th scope="col" class="px-4 py-3 text-end">Actions</th>
+                  <!-- <th scope="col" class="px-4 py-3 text-end">Actions</th> -->
                 </tr>
               </thead>
               <tbody>
@@ -204,9 +204,8 @@ let dateFormat = (data) => {
                   <td class="text-gray-600 px-4 py-3">
                     {{ agent.progress ? agent.progress : "-" }}
                   </td>
-                  <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
-                    
-                  </td>
+                  <!-- <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
+                  </td> -->
                 </tr>
               </tbody>
             </table>
@@ -287,7 +286,7 @@ let dateFormat = (data) => {
     </section>
 
     <section v-else class="p-3">
-      <p class="text-center text-gray-600">No clients yet.</p>
+      <p class="text-center text-gray-600">No Agents yet.</p>
     </section>
     <InvitesModal @close="invitesModal = false" :isLoading="isLoading" @inviteAgent="inviteAgent"
       :firstStepErrors="firstStepErrors" :agentLevels="agentLevels" :invitesModal="invitesModal" @ReinviteAgent="ReInviteAgentFun"

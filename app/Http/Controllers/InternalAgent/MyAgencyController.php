@@ -94,8 +94,8 @@ class MyAgencyController extends Controller
     }
 
     public function myAgent() {
-        $onlineAgents = getInviteeIds(auth()->user());
-        $agents = User::whereIn('id', $onlineAgents)->with(['states', 'latestActivity', 'callTypes'])->
+        $inviteAgents = getInviteeIds(auth()->user());
+        $agents = User::whereIn('id', $inviteAgents)->where('id', '!=', auth()->user()->id)->with(['states', 'latestActivity', 'callTypes'])->
         paginate(10);
         return Inertia::render('InternalAgent/MyAgents/Index', compact('agents'));
     }
