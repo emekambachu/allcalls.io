@@ -36,8 +36,10 @@ class PushChannel
                     'title' => $data['title'],
                     'body' => $data['body'],
                 ],
+                'priority' => 'high',  // Set priority to high for urgent notifications
                 'android' => [
                     'direct_boot_ok' => true,
+                    'priority' => 'high', // Also set Android-specific priority
                 ],
             ];
 

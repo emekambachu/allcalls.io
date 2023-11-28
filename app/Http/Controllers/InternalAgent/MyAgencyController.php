@@ -17,6 +17,7 @@ class MyAgencyController extends Controller
     public function index()
     {
         $agentInvites = AgentInvite::where('invited_by', auth()->user()->id)
+            ->with('getAgentLevel')
             ->with('getAgentLevel')->orderBy('created_at', 'desc')
             ->paginate(10);
         $agentLevels = InternalAgentLevel::get();
@@ -95,7 +96,9 @@ class MyAgencyController extends Controller
 
     public function myAgent() {
         $inviteAgents = getInviteeIds(auth()->user());
-        $agents = User::whereIn('id', $inviteAgents)->where('id', '!=', auth()->user()->id)->with(['states', 'latestActivity', 'callTypes'])->
+        $agents = User::whereIn('id', $inviteAgents)
+        ->where('id', '!=', auth()->user()->id)
+        ->with(['getAgentLevel', 'states', 'latestActivity', 'callTypes'])->
         paginate(10);
         return Inertia::render('InternalAgent/MyAgents/Index', compact('agents'));
     }
