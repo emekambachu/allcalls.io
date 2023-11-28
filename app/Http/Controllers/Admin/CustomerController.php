@@ -20,6 +20,7 @@ use App\Models\NotificationGroup;
 use App\Models\UserCallTypeState;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\NotificationGroupMember;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
@@ -148,7 +149,7 @@ class CustomerController extends Controller
         UserCallTypeState::where('user_id', $user->id)->delete();
         Transaction::where('user_id', $user->id)->delete();
         DB::table('role_user')->where('user_id', $user->id)->delete();
-        NotificationGroup::whereUserId($user->id)->delete();
+        NotificationGroupMember::whereUserId($user->id)->delete();
         $user->delete();
 
         return response()->json([
