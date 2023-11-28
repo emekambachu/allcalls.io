@@ -24,6 +24,7 @@
         "@fortawesome/vue-fontawesome": "^3.0.3",
         "@headlessui/vue": "^1.7.16",
         "@meforma/vue-toaster": "^1.3.0",
+        "@ssthouse/vue3-tree-chart": "^0.2.6",
         "@tailwindcss/typography": "^0.5.9",
         "@twilio/voice-sdk": "^2.7.2",
         "@vueform/multiselect": "^2.6.2",

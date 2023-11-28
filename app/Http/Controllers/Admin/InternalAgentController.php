@@ -34,7 +34,7 @@ class InternalAgentController extends Controller
         $levels = AgentLevel::orderBy('created_at', 'desc')->get();
         $agents = User::whereHas('roles', function ($query) use ($agent) {
             $query->where('role_id', $agent->id);
-        })->withCount('invitee')
+        })->withCount('invitees')
             ->where(function ($query) use ($request) {
                 if (isset($request->name) && $request->name != '') {
                     $query->where('first_name', 'LIKE', '%' . $request->name . '%')
@@ -81,7 +81,7 @@ class InternalAgentController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-            // dd($agents);
+        // dd($agents);
 
         $callTypes = CallType::get();
         $states = State::get();
@@ -93,6 +93,16 @@ class InternalAgentController extends Controller
             'states' => $states,
             'statuses' => PROGRESS_STATUSES
         ]);
+    }
+
+    public function getAgentTree($id)
+    {
+        //retrieve the entire hierarchy
+        $agentHierarchy = User::with('allInvitees')->find($id);
+        return response()->json([
+            'success' => true,
+            'agentHierarchy' => $agentHierarchy,
+        ], 200);
     }
 
     public function show($id)

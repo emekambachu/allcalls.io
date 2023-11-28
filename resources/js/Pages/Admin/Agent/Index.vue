@@ -10,6 +10,7 @@ import Modal from "@/Components/Modal.vue";
 import SearchFilter from "@/Components/SearchFilter.vue";
 import ContractSteps from "@/Pages/InternalAgent/ContractSteps.vue";
 import ViewPdfindex from "@/Pages/Admin/Agent/ViewPdfindex.vue";
+import AgentTree from "@/Pages/Admin/Agent/AgentTree.vue";
 import ProgressView from "@/Pages/Admin/Agent/ProgressView.vue";
 import ApproveConfirm from "@/Pages/Admin/Agent/ApproveConfirm.vue";
 import axios from "axios";
@@ -228,8 +229,19 @@ let exportCSV = agent => {
     console.log('EXPORT CSV', jsonToCSV(filteredAgent));
     downloadCSV(filteredAgent, 'agent.csv');
 };
+let agentTreeModal = ref(false)
 let inviteParent = (agent) => {
-  router.visit(`admin.agent.index?parent=${agent.id}`)
+  agentTreeModal.value = true
+  userData.value = agent;
+  // if(props.agents.current_page > 1){
+
+  // }
+  // const queryParams = {
+  //           pare: agent.id,
+  //       };
+  //       router.visit('/admin/agents', {
+  //           data: queryParams
+  //       })
 }
 </script>
 <style scoped>
@@ -291,7 +303,7 @@ let inviteParent = (agent) => {
                   <th scope="col" style="min-width: 110px;" class="px-4 py-3">Last Name</th>
                   <th scope="col" style="min-width: 110px;" class="px-4 py-3">Level</th>
                   <th scope="col" style="min-width: 110px;" class="px-4 py-3">Upline</th>
-                  <th scope="col" style="min-width: 110px;" class="px-4 py-3">Invites</th>
+                  <th scope="col" style="min-width: 110px;" class="px-4 py-3">Invitees</th>
                   <th scope="col" class="px-4 py-3">Email</th>
                   <th scope="col" class="px-4 py-3">Balance</th>
                   <th scope="col" class="px-4 py-3">Phone</th>
@@ -312,12 +324,10 @@ let inviteParent = (agent) => {
                   <th class="text-gray-600 px-4 py-3">{{ agent.get_agent_level?.name }}</th>
                   <th class="text-gray-600 px-4 py-3">{{ agent.upline_id }}</th>
                   <th class="text-gray-600 px-4 py-3">
-                    <a class="text-blue-500" v-if="agent.invitee_count > 0" title="View Invites" @click="inviteParent(agent)">
-                      {{ agent.invitee_count }}
+                    <a class="text-blue-500 cursor-pointer" v-if="agent.invitees_count > 0" title="View Invites" @click="inviteParent(agent)">
+                      View Tree
                     </a>
-
-                  
-                  <span v-else>{{ agent.invitee_count }}</span>
+                  <span v-else>-</span>
                   </th>
                   <th class="text-gray-600 px-4 py-3">{{ agent.email }}</th>
                   <td class="text-gray-600 px-4 py-3">
@@ -626,6 +636,8 @@ let inviteParent = (agent) => {
       <ViewPdfindex @close="viewModalpdf = false" :userData="userData.value" />
     </Modal>
 
+      <AgentTree v-if="agentTreeModal"  :agentTreeModal="agentTreeModal" @close="agentTreeModal = false" :userData="userData.value" />
+
     <Modal :show="progressModal" @close="progressModal = false">
       <ProgressView
         @close="progressModal = false"
@@ -663,7 +675,7 @@ let inviteParent = (agent) => {
 </template>
 
 <style src="@vueform/multiselect/themes/default.css"></style>
-<style>
+<style scoped>
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;

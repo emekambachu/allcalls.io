@@ -19,7 +19,7 @@
         title: (title) => `${title} - ${appName}`,
         resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
         setup({ el, App, props, plugin }) {
-            return createApp({ render: () => h(App, props) })
+            const app =  createApp({ render: () => h(App, props) })
                 .use(plugin)
                 .use(ZiggyVue, Ziggy)
                 .use(GlobalSpinnerPlugin)
@@ -29,7 +29,9 @@
                 // .component('VueSignaturePad', VueSignature)
                 .component('VueDatePicker', VueDatePicker)
                 .component("VueSignaturePad", VueSignaturePad)
-                .mount(el);
+                // .mount(el);
+              
+            app.mount(el)
         },
         progress: {
             color: '#4B5563',
