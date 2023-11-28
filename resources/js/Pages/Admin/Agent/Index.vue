@@ -61,9 +61,9 @@ let fetchAgents = (page) => {
   }
 
   // Ensure the protocol is https
-  if (url.protocol !== "https:") {
-    url.protocol = "https:";
-  }
+  // if (url.protocol !== "https:") {
+  //   url.protocol = "https:";
+  // }
 
   // Get the https URL as a string
   let httpsPage = url.toString();
@@ -74,7 +74,7 @@ let fetchAgents = (page) => {
 let showModal = ref(false);
 let userDetail = ref(null);
 let currentPage = ref(null);  
-
+let nextPage = ref(null);
 let editAgentModal = (user, page) => {
   userDetail.value = user;
   currentPage.value = page;
@@ -228,7 +228,9 @@ let exportCSV = agent => {
     console.log('EXPORT CSV', jsonToCSV(filteredAgent));
     downloadCSV(filteredAgent, 'agent.csv');
 };
-
+let inviteParent = (agent) => {
+  router.visit(`admin.agent.index?parent=${agent.id}`)
+}
 </script>
 <style scoped>
 .modal {
@@ -289,6 +291,7 @@ let exportCSV = agent => {
                   <th scope="col" style="min-width: 110px;" class="px-4 py-3">Last Name</th>
                   <th scope="col" style="min-width: 110px;" class="px-4 py-3">Level</th>
                   <th scope="col" style="min-width: 110px;" class="px-4 py-3">Upline</th>
+                  <th scope="col" style="min-width: 110px;" class="px-4 py-3">Invites</th>
                   <th scope="col" class="px-4 py-3">Email</th>
                   <th scope="col" class="px-4 py-3">Balance</th>
                   <th scope="col" class="px-4 py-3">Phone</th>
@@ -308,6 +311,14 @@ let exportCSV = agent => {
                   <td class="text-gray-600 px-4 py-3">{{ agent.last_name }}</td>
                   <th class="text-gray-600 px-4 py-3">{{ agent.get_agent_level?.name }}</th>
                   <th class="text-gray-600 px-4 py-3">{{ agent.upline_id }}</th>
+                  <th class="text-gray-600 px-4 py-3">
+                    <a class="text-blue-500" v-if="agent.invitee_count > 0" title="View Invites" @click="inviteParent(agent)">
+                      {{ agent.invitee_count }}
+                    </a>
+
+                  
+                  <span v-else>{{ agent.invitee_count }}</span>
+                  </th>
                   <th class="text-gray-600 px-4 py-3">{{ agent.email }}</th>
                   <td class="text-gray-600 px-4 py-3">
                     ${{ formatMoney(agent.balance) }}

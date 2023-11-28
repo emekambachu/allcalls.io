@@ -34,7 +34,7 @@ class InternalAgentController extends Controller
         $levels = AgentLevel::orderBy('created_at', 'desc')->get();
         $agents = User::whereHas('roles', function ($query) use ($agent) {
             $query->where('role_id', $agent->id);
-        })
+        })->withCount('invitee')
             ->where(function ($query) use ($request) {
                 if (isset($request->name) && $request->name != '') {
                     $query->where('first_name', 'LIKE', '%' . $request->name . '%')
@@ -81,6 +81,7 @@ class InternalAgentController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
+            // dd($agents);
 
         $callTypes = CallType::get();
         $states = State::get();
@@ -256,7 +257,7 @@ class InternalAgentController extends Controller
                 'errors' => $validator->errors(),
             ], 400);
         }
-        if($user->phone !== $request->phone){
+        if ($user->phone !== $request->phone) {
             $phoneValidator = Validator::make($request->all(), [
                 'phone_code' => ['required', 'regex:/^\+(?:[0-9]){1,4}$/'],
                 'phone_country' => ['required'],
@@ -275,9 +276,9 @@ class InternalAgentController extends Controller
                 'phone' => $request->phone,
             ]);
         }
-        
+
         try {
-           
+
             if ($user->balance != $request->balance) {
                 Transaction::create([
                     'amount' => $request->balance - $user->balance,
@@ -355,7 +356,8 @@ class InternalAgentController extends Controller
         return $pdf->download($serialNo . '-explaination.pdf');
     }
 
-    public function internalAgentApproved($id) {
+    public function internalAgentApproved($id)
+    {
         try {
             $user = User::findOrFail($id);
             $user->is_locked = false;
@@ -370,10 +372,10 @@ class InternalAgentController extends Controller
                 'errors' => $e->getMessage(),
             ], 400);
         }
-
     }
 
-    public function internalAgentProgress(Request $request) {
+    public function internalAgentProgress(Request $request)
+    {
         try {
             $user = User::findOrFail($request->id);
             $user->progress = $request->progress;
@@ -388,19 +390,18 @@ class InternalAgentController extends Controller
                 'errors' => $e->getMessage(),
             ], 400);
         }
-
     }
 
     public function signatureAuthorizationPdf($id)
     {
-//        set_time_limit(0);
-//
-//        $returnArr['contractData'] = User::where('id', $id)
-//            ->with('internalAgentContract.getContractSign')
-//            ->first();
-//
-//        $pdf = PDF::loadView('pdf.internal-agent-contract.signature-authorization', $returnArr);
-//
-//        return $pdf->download('signature-authorization.pdf');
+        //        set_time_limit(0);
+        //
+        //        $returnArr['contractData'] = User::where('id', $id)
+        //            ->with('internalAgentContract.getContractSign')
+        //            ->first();
+        //
+        //        $pdf = PDF::loadView('pdf.internal-agent-contract.signature-authorization', $returnArr);
+        //
+        //        return $pdf->download('signature-authorization.pdf');
     }
 }
