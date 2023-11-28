@@ -105,6 +105,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     // agent levels
     Route::get('/internal-agent-levels', [InternalAgentLevel::class, 'index'])->name('admin.internal.agent.level.index');
     Route::post('/internal-agent-level/store', [InternalAgentLevel::class, 'store'])->name('admin.internal.agent.level.store');
+    Route::post('/internal-agent-level/update', [InternalAgentLevel::class, 'update'])->name('admin.internal.agent.level.update');
     Route::delete('/internal-agent-level/destroy/{id}', [InternalAgentLevel::class, 'destroy'])->name('admin.internal.agent.level.destroy');
 
     Route::delete('/user-activities/clear-all', [AdminUserActivitiesController::class, 'clearAll'])->name('admin.user-activities.clearAll');

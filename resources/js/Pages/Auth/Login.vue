@@ -116,10 +116,7 @@ const submit = () => {
 
         <template v-slot:subtitles>
             <div class="text-custom-blue text-2xl xl:text-5xl font-bold">
-                Creating New 
-                Opportunities for 
-                Our Customers is 
-                What We Do!
+                Creating New Opportunities for  Our Customers is  What We Do!
             </div>
         </template>
 
