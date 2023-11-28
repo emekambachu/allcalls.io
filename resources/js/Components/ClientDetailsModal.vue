@@ -64,8 +64,8 @@ let openEdit = () => {
       </div>
       <div class="p-6">
         <div v-if="callDetail">
-          <span class="spnClassLocked" v-if="callDetail.get_client.unlocked == 1">Client is locked</span>
-          <div class="flex justify-between items-center" v-if="callDetail.get_client.unlocked != 1">
+          <span class="spnClassLocked" v-if="callDetail.get_client.unlocked == 0">Client is locked</span>
+          <div class="flex justify-between items-center" v-if="callDetail.get_client.unlocked == 1">
             <h4 class="text-2xl font-small text-custom-sky mb-2">Personal Details</h4>
 
             <PrimaryButton @click="openEdit" > Edit Client </PrimaryButton>
