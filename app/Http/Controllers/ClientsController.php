@@ -16,6 +16,7 @@ class ClientsController extends Controller
         $user_id = $request->user()->id;
         
         $Clients = Client::where('user_id', $user_id)
+                        ->where('unlocked', true)
                         ->orderBy('created_at', 'desc')
                         ->paginate(10);
         
