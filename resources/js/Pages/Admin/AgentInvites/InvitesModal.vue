@@ -15,9 +15,12 @@ let form = ref({
     email: "",
     level: "-- Select an option --",
     upline_id: '',
-    invited_by:'',
+    invited_by: '',
 });
-
+const sortedAgentLevels = computed(() => {
+    // Sort agentLevels based on the 'order' property
+    return props.agentLevels.slice().sort((a, b) => a.order - b.order);
+});
 let validateEmail = (email) => {
     return /\S+@\S+\.\S+/.test(email); // Simple regex for email validation
 };
@@ -27,7 +30,7 @@ let uiEmailValidation = ref({
 let inviteAgent = () => {
     if (validateEmail(form.value.email)) {
         uiEmailValidation.value.isValid = false;
-        if(form.value.level == '-- Select an option --'){
+        if (form.value.level == '-- Select an option --') {
             form.value.level = ''
         }
         emits('inviteAgent', form.value)
@@ -52,34 +55,45 @@ const filteredAgens = computed(() => {
             agent.upline_id.toLowerCase().includes(form.value.upline_id.toLowerCase())
     );
 });
-
+let matchUplineId = ref(false)
+watch(() => form.value.upline_id, (newupline_id, oldupline_id) => {
+    if (newupline_id) {
+        if (newupline_id) {
+            matchUplineId.value = props.agents.some((agent) => agent.upline_id === newupline_id);
+        } else {
+            matchUplineId.value = false;
+        }
+    }
+});
 const SugestAgent = () => {
     form.value.invited_by = ''
     isOpen.value = true;
 };
+
 let selectedAgentLevel = ref(null)
 let selectagent = (agent) => {
     selectedAgentLevel.value = agent.get_agent_level.order
     form.value.invited_by = agent.id
     form.value.upline_id = agent.upline_id
     isOpen.value = false;
+
 }
 onMounted(() => {
-  document.addEventListener('click', handleOutsideClick);
+    document.addEventListener('click', handleOutsideClick);
 });
 
 onUnmounted(() => {
-  document.removeEventListener('click', handleOutsideClick);
+    document.removeEventListener('click', handleOutsideClick);
 });
 const handleOutsideClick = (event) => {
-  const dropdownElement = document.getElementById('dropdown_main_id');
-  if (!dropdownElement.contains(event.target)) {
-    // Call your desired function here
-    closeDropDown();
-  }
+    const dropdownElement = document.getElementById('dropdown_main_id');
+    if (!dropdownElement.contains(event.target)) {
+        // Call your desired function here
+        closeDropDown();
+    }
 };
 const closeDropDown = () => {
-  isOpen.value = false
+    isOpen.value = false
 }
 </script>
 <style scoped>
@@ -201,12 +215,12 @@ const closeDropDown = () => {
 
                             <div v-if="isOpen && form.upline_id.length > 0" class="items-center justify-center ">
                                 <div class="relative">
-                                    <ul  style="width: 100%; max-height:250px;"
+                                    <ul style="width: 100%; max-height:250px;"
                                         class="absolute z-10 pb-2 mt-1  overflow-auto bg-white rounded-md shadow-md">
                                         <li v-for="(agent, index) in filteredAgens" :key="index" @click="selectagent(agent)"
                                             class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                                             {{ agent.first_name }} {{ agent.last_name }} - ( {{ agent.upline_id }} )
-                                             
+
                                         </li>
                                     </ul>
                                 </div>
@@ -216,12 +230,15 @@ const closeDropDown = () => {
 
 
                         <div>
-                            <label  class="block mb-2 text-sm font-medium text-gray-900 ">Agent Level <span
+                            <label class="block mb-2 text-sm font-medium text-gray-900 ">Agent Level <span
                                     class="text-red-500">*</span></label>
-                            <select v-model="form.level" 
+                            <select v-model="form.level"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                                 <option disabled selected>-- Select an option -- </option>
-                                <option v-show="selectedAgentLevel >= level.order" v-for="level in agentLevels" :value="level.id">{{ level.name }}  </option>
+                                <option v-if="selectedAgentLevel && form.upline_id.length > 0 && matchUplineId === true"
+                                    v-show="selectedAgentLevel >= level.order" v-for="level in sortedAgentLevels"
+                                    :value="level.id">{{ level.name }} </option>
+                                <option v-else v-for="level in sortedAgentLevels" :value="level.id">{{ level.name }}  </option>
                             </select>
                             <div v-if="firstStepErrors.level" class="text-red-500" v-text="firstStepErrors.level[0]">
                             </div>

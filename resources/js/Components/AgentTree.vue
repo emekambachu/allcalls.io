@@ -26,7 +26,6 @@ const convertToTree = (agentData, parent) => {
         children: [],
         identifier: 'id', // Change this to the unique identifier in your agent data
     };
-
     const buildTree = (agent, parentNode) => {
         const node = {
             name: `${agent.first_name} ${agent.last_name}`,
@@ -68,10 +67,7 @@ const convertToTree = (agentData, parent) => {
 
     return tree;
 };
-let agentHierarchyData = ref(null)
 const vehicules = ref(null);
-
-
 onMounted(() => {
     fetchAgentTree()
 })
@@ -81,21 +77,17 @@ let fetchAgentTree = () => {
     slidingLoader.value = true
     axios.get(`${treeRoute}${userData.id}`)
         .then((res) => {
-            console.log('res.data', res.data);
             const agentData = res.data.agentHierarchy.all_invitees; // Extract the all_invitees array
             vehicules.value = convertToTree(agentData, res.data.agentHierarchy);
-            console.log('vehicules', vehicules.value);
             slidingLoader.value = false
         }).catch((error) => {
             console.log('erro', error);
         })
 }
-// const treeConfig = ref({ nodeWidth: 120, nodeHeight: 80, levelHeight: 200,orientation: 'horizontal', });
 const treeConfig = ref({
     nodeWidth: 120,
     nodeHeight: 80,
     levelHeight: 200,
-    orientation: 'horizontal', // Set the orientation to horizontal
 });
 const zoom = ref(1); // Initial zoom level
 const treeRef = ref(null);
