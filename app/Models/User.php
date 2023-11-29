@@ -176,9 +176,15 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsTo(InternalAgentLevel::class, 'level_id', 'id');
     }
 
-    public function invitee()
+    public function invitees()
     {
         return $this->hasMany(User::class, 'invited_by', 'id');
+    }
+
+    public function allInvitees()
+    {
+        //retrieve the entire hierarchy
+        return $this->invitees()->with('allInvitees');
     }
 
     public function invitedBy()

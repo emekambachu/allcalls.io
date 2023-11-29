@@ -39,6 +39,9 @@ Route::prefix('internal-agent')->middleware(['auth', 'verified', 'internal-agent
     Route::delete('/agent-invites/{id}', [MyAgencyController::class, 'destroy'])->name('internal-agent.agent-invites.destroy');
     Route::get('/reinvite-agent/{id}', [MyAgencyController::class, 'reInvite'])->name('internal-agent.agent.reinvite');
 
+    Route::get('/agent/tree/{id}', [MyAgencyController::class, 'getAgentTree'])->name('agent.tree');
+
+
 });
 
 Route::middleware(['auth', 'verified', 'internal-agent'])->group(function () {

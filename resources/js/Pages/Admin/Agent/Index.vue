@@ -10,6 +10,8 @@ import Modal from "@/Components/Modal.vue";
 import SearchFilter from "@/Components/SearchFilter.vue";
 import ContractSteps from "@/Pages/InternalAgent/ContractSteps.vue";
 import ViewPdfindex from "@/Pages/Admin/Agent/ViewPdfindex.vue";
+// import AgentTree from "@/Pages/Admin/Agent/AgentTree.vue";
+import AgentTree from "@/Components/AgentTree.vue";
 import ProgressView from "@/Pages/Admin/Agent/ProgressView.vue";
 import ApproveConfirm from "@/Pages/Admin/Agent/ApproveConfirm.vue";
 import axios from "axios";
@@ -61,9 +63,9 @@ let fetchAgents = (page) => {
   }
 
   // Ensure the protocol is https
-  if (url.protocol !== "https:") {
-    url.protocol = "https:";
-  }
+  // if (url.protocol !== "https:") {
+  //   url.protocol = "https:";
+  // }
 
   // Get the https URL as a string
   let httpsPage = url.toString();
@@ -74,13 +76,13 @@ let fetchAgents = (page) => {
 let showModal = ref(false);
 let userDetail = ref(null);
 let currentPage = ref(null);  
-
+let nextPage = ref(null);
 let editAgentModal = (user, page) => {
   userDetail.value = user;
   currentPage.value = page;
   showModal.value = true;
 };
-let userData = {};
+let userData = ref({});
 let openContractModal = (agent) => {
   // console.log('agent',agent);
   userData.value = agent;
@@ -228,7 +230,11 @@ let exportCSV = agent => {
     console.log('EXPORT CSV', jsonToCSV(filteredAgent));
     downloadCSV(filteredAgent, 'agent.csv');
 };
-
+let agentTreeModal = ref(false)
+let inviteParent = (agent) => {
+  agentTreeModal.value = true
+  userData.value = agent;
+}
 </script>
 <style scoped>
 .modal {
@@ -289,6 +295,7 @@ let exportCSV = agent => {
                   <th scope="col" style="min-width: 110px;" class="px-4 py-3">Last Name</th>
                   <th scope="col" style="min-width: 110px;" class="px-4 py-3">Level</th>
                   <th scope="col" style="min-width: 110px;" class="px-4 py-3">Upline</th>
+                  <th scope="col" style="min-width: 110px;" class="px-4 py-3">Invitees</th>
                   <th scope="col" class="px-4 py-3">Email</th>
                   <th scope="col" class="px-4 py-3">Balance</th>
                   <th scope="col" class="px-4 py-3">Phone</th>
@@ -308,6 +315,12 @@ let exportCSV = agent => {
                   <td class="text-gray-600 px-4 py-3">{{ agent.last_name }}</td>
                   <th class="text-gray-600 px-4 py-3">{{ agent.get_agent_level?.name }}</th>
                   <th class="text-gray-600 px-4 py-3">{{ agent.upline_id }}</th>
+                  <th class="text-gray-600 px-4 py-3">
+                    <a class="text-blue-500 cursor-pointer" v-if="agent.invitees_count > 0" title="View Invites" @click="inviteParent(agent)">
+                      View Tree
+                    </a>
+                  <span v-else>-</span>
+                  </th>
                   <th class="text-gray-600 px-4 py-3">{{ agent.email }}</th>
                   <td class="text-gray-600 px-4 py-3">
                     ${{ formatMoney(agent.balance) }}
@@ -615,6 +628,8 @@ let exportCSV = agent => {
       <ViewPdfindex @close="viewModalpdf = false" :userData="userData.value" />
     </Modal>
 
+      <AgentTree v-if="agentTreeModal" :treeRoute="'/admin/internal-agent/tree/'"  :agentTreeModal="agentTreeModal" @close="agentTreeModal = false" :userData="userData" />
+
     <Modal :show="progressModal" @close="progressModal = false">
       <ProgressView
         @close="progressModal = false"
@@ -652,7 +667,7 @@ let exportCSV = agent => {
 </template>
 
 <style src="@vueform/multiselect/themes/default.css"></style>
-<style>
+<style scoped>
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;

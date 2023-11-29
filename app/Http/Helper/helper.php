@@ -41,7 +41,7 @@ function getInviteeIds($parent)
 {
     $ids = [$parent->id];
 
-    foreach ($parent->invitee as $child) {
+    foreach ($parent->invitees as $child) {
         $ids = array_merge($ids, getInviteeIds($child));
     }
     

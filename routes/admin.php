@@ -52,6 +52,8 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
     //Agents
     Route::get('/agents', [InternalAgentController::class, 'index'])->name('admin.agent.index');
+    
+    Route::get('/internal-agent/tree/{id}', [InternalAgentController::class, 'getAgentTree'])->name('admin.get.agent.tree');
 
     Route::post('/agent', [InternalAgentController::class, 'store'])->name('admin.agent.store');
 
