@@ -3,7 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Models\User;
+use App\Mail\WeeklyReportEmail;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Mail;
 
 class SendWeeklyReportEmails extends Command
 {
@@ -26,9 +28,15 @@ class SendWeeklyReportEmails extends Command
      */
     public function handle()
     {
-        $internalAgents = User::whereHas('roles', function ($query) {
+        $totalAgentsCount = User::whereHas('roles', function ($query) {
             $query->where('name', 'internal-agent');
-        })->where('created_at', '>=', now()->subDays(6)) // Adjust the number of days as needed
-          ->get();
+        })->where('created_at', '>=', now()->subDays(7))->count();
+        $approvedAgentsCount = User::whereHas('roles', function ($query) {
+            $query->where('name', 'internal-agent');
+        })->where('created_at', '>=', now()->subDays(7))
+            ->where('is_locked', false)
+            ->count();
+
+        Mail::to(['iamfaizahmed123@gmail.com'])->send(new WeeklyReportEmail($totalAgentsCount, $approvedAgentsCount));
     }
 }
