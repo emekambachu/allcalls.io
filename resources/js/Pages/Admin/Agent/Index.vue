@@ -32,7 +32,7 @@ let props = defineProps({
   callTypes: Array,
   states: Array,
   statuses: Array,
-  levels:Array,
+  levels: Array,
 });
 let contractModal = ref(false);
 let formData = ref({
@@ -73,7 +73,7 @@ let fetchAgents = (page) => {
 
 let showModal = ref(false);
 let userDetail = ref(null);
-let currentPage = ref(null);  
+let currentPage = ref(null);
 
 let editAgentModal = (user, page) => {
   userDetail.value = user;
@@ -186,49 +186,47 @@ let dateFormat = (data) => {
   }
 };
 
-let jsonToCSV = jsonObject => {
-    // Extract keys (column headers) and values (row)
-    const keys = Object.keys(jsonObject);
-    const values = keys.map(key => `"${jsonObject[key]}"`);
+let jsonToCSV = (jsonObject) => {
+  // Extract keys (column headers) and values (row)
+  const keys = Object.keys(jsonObject);
+  const values = keys.map((key) => `"${jsonObject[key]}"`);
 
-    // Combine keys and values
-    return `${keys.join(',')}\n${values.join(',')}`;
+  // Combine keys and values
+  return `${keys.join(",")}\n${values.join(",")}`;
 };
 
 let downloadCSV = (jsonData, fileName) => {
-    // Convert JSON to CSV
-    const csvString = jsonToCSV(jsonData);
+  // Convert JSON to CSV
+  const csvString = jsonToCSV(jsonData);
 
-    // Create a Blob from the CSV String
-    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+  // Create a Blob from the CSV String
+  const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
 
-    // Create a link and trigger download
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.href = url;
-    link.download = fileName;
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-}
-
-
-let exportCSV = agent => {
-    let includeColumns = ['id', 'first_name', 'last_name', 'email', 'phone'];
-
-    // Create a new object with only the included columns
-    let filteredAgent = {};
-    includeColumns.forEach(key => {
-        if(agent[key] !== undefined) {
-            filteredAgent[key] = agent[key];
-        }
-    });
-
-    console.log('EXPORT CSV', jsonToCSV(filteredAgent));
-    downloadCSV(filteredAgent, 'agent.csv');
+  // Create a link and trigger download
+  const link = document.createElement("a");
+  const url = URL.createObjectURL(blob);
+  link.href = url;
+  link.download = fileName;
+  link.style.visibility = "hidden";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 };
 
+let exportCSV = (agent) => {
+  let includeColumns = ["id", "first_name", "last_name", "email", "phone"];
+
+  // Create a new object with only the included columns
+  let filteredAgent = {};
+  includeColumns.forEach((key) => {
+    if (agent[key] !== undefined) {
+      filteredAgent[key] = agent[key];
+    }
+  });
+
+  console.log("EXPORT CSV", jsonToCSV(filteredAgent));
+  downloadCSV(filteredAgent, "agent.csv");
+};
 </script>
 <style scoped>
 .modal {
@@ -285,16 +283,22 @@ let exportCSV = agent => {
               <thead class="text-xs text-gray-300 uppercase bg-sky-900">
                 <tr>
                   <th scope="col" class="px-4 py-3">ID</th>
-                  <th scope="col" style="min-width: 110px;" class="px-4 py-3">First Name</th>
-                  <th scope="col" style="min-width: 110px;" class="px-4 py-3">Last Name</th>
-                  <th scope="col" style="min-width: 110px;" class="px-4 py-3">Level</th>
-                  <th scope="col" style="min-width: 110px;" class="px-4 py-3">Upline</th>
+                  <th scope="col" style="min-width: 110px" class="px-4 py-3">
+                    First Name
+                  </th>
+                  <th scope="col" style="min-width: 110px" class="px-4 py-3">
+                    Last Name
+                  </th>
+                  <th scope="col" class="px-4 py-3">Progress</th>
+                  <th scope="col" class="px-4 py-3 text-end">Actions</th>
+                  <th scope="col" style="min-width: 110px" class="px-4 py-3">Level</th>
+                  <th scope="col" style="min-width: 110px" class="px-4 py-3">Upline</th>
                   <th scope="col" class="px-4 py-3">Email</th>
                   <th scope="col" class="px-4 py-3">Balance</th>
                   <th scope="col" class="px-4 py-3">Phone</th>
-                  <th scope="col" style="min-width: 115px;" class="px-4 py-3">Sign Up Date</th>
-                  <th scope="col" class="px-4 py-3">Progress</th>
-                  <th scope="col" class="px-4 py-3 text-end">Actions</th>
+                  <th scope="col" style="min-width: 115px" class="px-4 py-3">
+                    Sign Up Date
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -306,23 +310,6 @@ let exportCSV = agent => {
                   <td class="text-gray-600 px-4 py-3">{{ agent.id }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ agent.first_name }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ agent.last_name }}</td>
-                  <th class="text-gray-600 px-4 py-3">{{ agent.get_agent_level?.name }}</th>
-                  <th class="text-gray-600 px-4 py-3">{{ agent.upline_id }}</th>
-                  <th class="text-gray-600 px-4 py-3">{{ agent.email }}</th>
-                  <td class="text-gray-600 px-4 py-3">
-                    ${{ formatMoney(agent.balance) }}
-                  </td>
-                  <td class="text-gray-600 px-4 py-3">
-                    <div class="flex">
-                      <span class="mr-1" v-if="agent.phone_code">{{
-                        agent.phone_code
-                      }}</span>
-                      <span>{{ agent.phone }}</span>
-                    </div>
-                  </td>
-                  <th class="text-gray-600 px-4 py-3">
-                    {{ dateFormat(agent.created_at) }}
-                  </th>
 
                   <td class="text-gray-600 px-4 py-3">
                     {{ agent.progress ? agent.progress : "-" }}
@@ -350,7 +337,9 @@ let exportCSV = agent => {
                       </svg>
                     </a>
 
-                    <button title="Edit Agent" @click="editAgentModal(agent, agents.current_page)"
+                    <button
+                      title="Edit Agent"
+                      @click="editAgentModal(agent, agents.current_page)"
                       class="inline-flex items-center mx-2 p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
                       type="button"
                     >
@@ -503,7 +492,11 @@ let exportCSV = agent => {
                     </button>
 
                     <!-- Export button -->
-                    <button class="ml-3" title="Export CSV" @click.prevent="exportCSV(agent)">
+                    <button
+                      class="ml-3"
+                      title="Export CSV"
+                      @click.prevent="exportCSV(agent)"
+                    >
                       <svg
                         class="w-5 h-5 text-gray-800"
                         aria-hidden="true"
@@ -521,6 +514,25 @@ let exportCSV = agent => {
                       </svg>
                     </button>
                   </td>
+                  <th class="text-gray-600 px-4 py-3">
+                    {{ agent.get_agent_level?.name }}
+                  </th>
+                  <th class="text-gray-600 px-4 py-3">{{ agent.upline_id }}</th>
+                  <th class="text-gray-600 px-4 py-3">{{ agent.email }}</th>
+                  <td class="text-gray-600 px-4 py-3">
+                    ${{ formatMoney(agent.balance) }}
+                  </td>
+                  <td class="text-gray-600 px-4 py-3">
+                    <div class="flex">
+                      <span class="mr-1" v-if="agent.phone_code">{{
+                        agent.phone_code
+                      }}</span>
+                      <span>{{ agent.phone }}</span>
+                    </div>
+                  </td>
+                  <th class="text-gray-600 px-4 py-3">
+                    {{ dateFormat(agent.created_at) }}
+                  </th>
                 </tr>
               </tbody>
             </table>
@@ -626,8 +638,17 @@ let exportCSV = agent => {
     </Modal>
 
     <Modal :show="showModal" @close="showModal = false">
-      <Edit :showModal="showModal" :userDetail="userDetail" :levels="levels" :user_type="'Internal Agent'" :currentPage="currentPage" @close="showModal = false"
-        :callTypes="callTypes" :states="states" :route="'/admin/agent'"></Edit>
+      <Edit
+        :showModal="showModal"
+        :userDetail="userDetail"
+        :levels="levels"
+        :user_type="'Internal Agent'"
+        :currentPage="currentPage"
+        @close="showModal = false"
+        :callTypes="callTypes"
+        :states="states"
+        :route="'/admin/agent'"
+      ></Edit>
     </Modal>
 
     <Modal :show="agentModal" @close="agentModal = false">
