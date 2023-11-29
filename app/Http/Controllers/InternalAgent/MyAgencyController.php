@@ -107,6 +107,7 @@ class MyAgencyController extends Controller
     {
         //retrieve the entire hierarchy
         $agentHierarchy = User::with('allInvitees')->find($id);
+        
         return response()->json([
             'success' => true,
             'agentHierarchy' => $agentHierarchy,
