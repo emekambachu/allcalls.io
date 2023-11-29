@@ -15,6 +15,9 @@
     import '@vuepic/vue-datepicker/dist/main.css'
     import VueCreditCardValidation from 'vue-credit-card-validation';
     import moment from 'moment-timezone'
+    import VueLoader from "@/Components/VueLoader.vue";
+    import 'vue-loaders/dist/vue-loaders.css';
+    import VueLoaders from 'vue-loaders';
     createInertiaApp({
         title: (title) => `${title} - ${appName}`,
         resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
@@ -24,11 +27,13 @@
                 .use(ZiggyVue, Ziggy)
                 .use(GlobalSpinnerPlugin)
                 .use(VueCreditCardValidation)
+                .use(VueLoaders)
                 .provide('countryList', countryList)
                 // .use(VueSignature)
                 // .component('VueSignaturePad', VueSignature)
                 .component('VueDatePicker', VueDatePicker)
                 .component("VueSignaturePad", VueSignaturePad)
+                .component('VueLoader', VueLoader)
                 // .mount(el);
               
             app.mount(el)

@@ -10,7 +10,8 @@ import Modal from "@/Components/Modal.vue";
 import SearchFilter from "@/Components/SearchFilter.vue";
 import ContractSteps from "@/Pages/InternalAgent/ContractSteps.vue";
 import ViewPdfindex from "@/Pages/Admin/Agent/ViewPdfindex.vue";
-import AgentTree from "@/Pages/Admin/Agent/AgentTree.vue";
+// import AgentTree from "@/Pages/Admin/Agent/AgentTree.vue";
+import AgentTree from "@/Components/AgentTree.vue";
 import ProgressView from "@/Pages/Admin/Agent/ProgressView.vue";
 import ApproveConfirm from "@/Pages/Admin/Agent/ApproveConfirm.vue";
 import axios from "axios";
@@ -81,7 +82,7 @@ let editAgentModal = (user, page) => {
   currentPage.value = page;
   showModal.value = true;
 };
-let userData = {};
+let userData = ref({});
 let openContractModal = (agent) => {
   // console.log('agent',agent);
   userData.value = agent;
@@ -233,15 +234,6 @@ let agentTreeModal = ref(false)
 let inviteParent = (agent) => {
   agentTreeModal.value = true
   userData.value = agent;
-  // if(props.agents.current_page > 1){
-
-  // }
-  // const queryParams = {
-  //           pare: agent.id,
-  //       };
-  //       router.visit('/admin/agents', {
-  //           data: queryParams
-  //       })
 }
 </script>
 <style scoped>
@@ -636,7 +628,7 @@ let inviteParent = (agent) => {
       <ViewPdfindex @close="viewModalpdf = false" :userData="userData.value" />
     </Modal>
 
-      <AgentTree v-if="agentTreeModal"  :agentTreeModal="agentTreeModal" @close="agentTreeModal = false" :userData="userData.value" />
+      <AgentTree v-if="agentTreeModal" :treeRoute="'/admin/internal-agent/tree/'"  :agentTreeModal="agentTreeModal" @close="agentTreeModal = false" :userData="userData" />
 
     <Modal :show="progressModal" @close="progressModal = false">
       <ProgressView

@@ -98,8 +98,18 @@ class MyAgencyController extends Controller
         $inviteAgents = getInviteeIds(auth()->user());
         $agents = User::whereIn('id', $inviteAgents)
         ->where('id', '!=', auth()->user()->id)
+        ->withCount('invitees')
         ->with(['getAgentLevel', 'states', 'latestActivity', 'callTypes'])->
         paginate(10);
         return Inertia::render('InternalAgent/MyAgents/Index', compact('agents'));
+    }
+    public function getAgentTree($id)
+    {
+        //retrieve the entire hierarchy
+        $agentHierarchy = User::with('allInvitees')->find($id);
+        return response()->json([
+            'success' => true,
+            'agentHierarchy' => $agentHierarchy,
+        ], 200);
     }
 }
