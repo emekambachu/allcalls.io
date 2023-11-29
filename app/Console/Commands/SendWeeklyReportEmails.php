@@ -38,5 +38,8 @@ class SendWeeklyReportEmails extends Command
             ->count();
 
         Mail::to(['iamfaizahmed123@gmail.com'])->send(new WeeklyReportEmail($totalAgentsCount, $approvedAgentsCount));
+
+        $this->info('Total agents count: ' . $totalAgentsCount);
+        $this->info('Approved agents count: ' . $approvedAgentsCount);
     }
 }
