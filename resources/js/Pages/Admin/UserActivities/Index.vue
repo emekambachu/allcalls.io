@@ -88,7 +88,7 @@ let abbreviateString = (theString) => {
                     <Popover class="relative">
                       <PopoverButton class="whitespace-nowrap" title="Click to expand">{{ abbreviateString(activity.ip_address) }}</PopoverButton>
 
-                      <PopoverPanel class="absolute z-10 whitespace-normal">
+                      <PopoverPanel class="absolute z-10 top-2 whitespace-normal">
                         <div class="shadow bg-white p-2">
                           {{ activity.ip_address }}
                         </div>
@@ -99,7 +99,7 @@ let abbreviateString = (theString) => {
                     <Popover class="relative">
                       <PopoverButton class="whitespace-nowrap" title="Click to expand">{{ abbreviateString(activity.user_agent) }}</PopoverButton>
 
-                      <PopoverPanel class="absolute z-10 whitespace-normal">
+                      <PopoverPanel class="absolute z-10 top-2 whitespace-normal">
                         <div class="shadow bg-white p-2">
                           {{ activity.user_agent }}
                         </div>
