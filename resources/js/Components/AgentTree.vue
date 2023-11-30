@@ -19,11 +19,11 @@ let close = () => {
 };
 
 const convertToTree = (agentData, parent) => {
-
     const tree = {
         name: parent.first_name + ' ' + parent.last_name,
         avatar: parent.profile_picture == null ? '/profile/avatar.png' : parent.profile_picture,
         children: [],
+        hasChildren: agentData.length > 0 ? true : false, // New property to indicate if it has children
         identifier: 'id', // Change this to the unique identifier in your agent data
     };
     const buildTree = (agent, parentNode) => {
@@ -31,6 +31,7 @@ const convertToTree = (agentData, parent) => {
             name: `${agent.first_name} ${agent.last_name}`,
             avatar: agent.profile_picture == null ? '/profile/avatar.png' : agent.profile_picture,
             id: agent.id,
+            hasChildren: false, // Initialize to false
             // Add other properties you want to include in the node
         };
 
@@ -40,8 +41,8 @@ const convertToTree = (agentData, parent) => {
         } else {
             tree.children.push(node);
         }
-
         if (agent.all_invitees && Array.isArray(agent.all_invitees) && agent.all_invitees.length > 0) {
+            node.hasChildren = true; // Set hasChildren to true if there are nested invitees
             agent.all_invitees.forEach((childAgent) => {
                 if (childAgent.all_invitees && Array.isArray(childAgent.all_invitees)) {
                     // If there are nested all_invitees, call buildTree recursively
@@ -52,6 +53,7 @@ const convertToTree = (agentData, parent) => {
                         name: `${childAgent.first_name} ${childAgent.last_name}`,
                         avatar: agent.profile_picture == null ? '/profile/avatar.png' : agent.profile_picture,
                         id: childAgent.id,
+                        hasChildren: false, // No children for the child node
                         // Add other properties you want to include in the child node
                     };
                     node.children = node.children || [];
@@ -179,6 +181,7 @@ const handleTouchMove = (event) => {
 }
 
 .rich-media-node {
+    position: relative;
     width: auto;
     padding: 20px;
     display: flex;
@@ -190,7 +193,11 @@ const handleTouchMove = (event) => {
     background-color: rgb(232, 240, 254);
     border-radius: 4px;
 }
-
+.rich-media-node svg {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
 /* Styles for screens with a width between 601 and 900 pixels */
 @media only screen and (min-width: 320px) and (max-width: 768px) {
     .zoom-controls {
@@ -253,6 +260,14 @@ const handleTouchMove = (event) => {
                             :config="treeConfig" linkStyle="straight">
                             <template v-slot:node="{ node, collapsed }">
                                 <div class="rich-media-node" :style="{ border: collapsed ? '2px solid grey' : '' }">
+                                    <svg v-if="!collapsed && node.hasChildren" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-red-600">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" />
+                                    </svg>
+                                    <svg v-if="collapsed && node.hasChildren" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-green-600">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                    </svg>
                                     <img v-if="node.avatar" :src="node.avatar" alt="Avatar"
                                         style="width: 32px; height: 32px; border-radius: 50%;" />
                                     <span style="padding: 4px 0; font-weight: bold;" class="text-black">{{ node.name

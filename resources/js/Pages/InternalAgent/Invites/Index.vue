@@ -363,7 +363,7 @@ let inviteAgentTree = (agent) => {
 
     <div class="pt-0 flex justify-between px-16">
         <div class="text-4xl text-custom-sky font-bold mb-6">Registered Agents</div>
-        <button class="button-custom-back px-2 py-3 rounded-md ml-2 mb-2" @click="inviteAgentTree(page.props.auth.user)">View Complete Tree</button>     
+        <button class="button-custom-back px-4 py-3 rounded-md ml-2 mb-2" @click="inviteAgentTree(page.props.auth.user)">View Complete Tree</button>     
     </div>
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
       <div class="px-4 sm:px-8 sm:rounded-lg">

@@ -290,7 +290,7 @@ let inviteAgentTree = (agent) => {
         <div class="text-4xl text-custom-sky font-bold mb-6">Agents</div>
       </div>
       <div>
-        <button class="button-custom-back px-2 py-3 rounded-md mr-4" @click="inviteAgentTree(page.props.auth.user)">View Complete Tree</button>
+        <button class="button-custom-back px-4 py-3 rounded-md mr-4" @click="inviteAgentTree(page.props.auth.user)">View Complete Tree</button>
 
         <PrimaryButton @click="addAgentModal(agents.current_page)">Add New</PrimaryButton>
       </div>

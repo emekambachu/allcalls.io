@@ -124,7 +124,6 @@ class InternalAgentController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -169,6 +168,8 @@ class InternalAgentController extends Controller
             'upline_id' => $request->upline_id,
             'password' => Hash::make($request->password),
             'balance' => isset($request->balance) ? $request->balance : 0,
+            'invited_by' => auth()->user()->id,
+
         ]);
 
         $user->markEmailAsVerified();
