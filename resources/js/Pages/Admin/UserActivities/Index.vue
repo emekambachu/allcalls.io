@@ -162,7 +162,7 @@ let abbreviateString = (theString) => {
     </section>
 
 
-    <Modal :show="true" :closeable="true">
+    <Modal :show="false" :closeable="true">
       <div>Data here</div>
     </Modal>
   </AuthenticatedLayout>
