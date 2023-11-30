@@ -195,7 +195,7 @@ let abbreviateString = (theString) => {
             showDataModal = true;
           "
           class="p-2 bg-gray-200 text-gray-800 rounded"
-          >{{ activity.data }}</pre
+          >{{ selectedActivity.data }}</pre
         >
       </div>
     </Modal>
