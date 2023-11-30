@@ -62,14 +62,14 @@ let abbreviateString = (theString) => {
             <table class="w-full text-sm text-left text-gray-400">
               <thead class="text-xs text-gray-300 uppercase bg-sky-900">
                 <tr>
-                  <th scope="col" class="px-4 py-3">ID</th>
-                  <th scope="col" class="px-4 py-3">Action</th>
-                  <th scope="col" class="px-4 py-3">Name</th>
-                  <th scope="col" class="px-4 py-3">Platform</th>
-                  <th scope="col" class="px-4 py-3">IP Address</th>
-                  <th scope="col" class="px-4 py-3">User Agent</th>
-                  <th scope="col" class="px-4 py-3">Data</th>
-                  <th scope="col" class="px-4 py-3">Created At</th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">ID</th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Action</th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Name</th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Platform</th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">IP Address</th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">User Agent</th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Data</th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Created At</th>
                 </tr>
               </thead>
               <tbody>
@@ -78,32 +78,32 @@ let abbreviateString = (theString) => {
                   :key="activity.id"
                   class="border-b border-gray-500"
                 >
-                  <td class="text-gray-600 px-4 py-3">{{ activity.id }}</td>
-                  <td class="text-gray-600 px-4 py-3">{{ activity.action }}</td>
-                  <td class="text-gray-600 px-4 py-3">
+                  <td class="text-gray-600 px-4 py-3 whitespace-nowrap">{{ activity.id }}</td>
+                  <td class="text-gray-600 px-4 py-3 whitespace-nowrap">{{ activity.action }}</td>
+                  <td class="text-gray-600 px-4 py-3 whitespace-nowrap">
                     {{ activity.user.first_name + " " + activity.user.last_name }}
                   </td>
-                  <td class="text-gray-600 px-4 py-3">{{ activity.platform }}</td>
-                  <td class="text-gray-600 px-4 py-3">{{ activity.ip_address }}</td>
-                  <td class="text-gray-600 px-4 py-3">
-                    <Popover class="relative">
+                  <td class="text-gray-600 px-4 py-3 whitespace-nowrap">{{ activity.platform }}</td>
+                  <td class="text-gray-600 px-4 py-3 whitespace-nowrap">{{ activity.ip_address }}</td>
+                  <td class="text-gray-600 px-4 py-3 whitespace-nowrap">
+                    <Popover class="relative whitespace-normal">
                       <PopoverButton title="Click to expand">{{ abbreviateString(activity.user_agent) }}</PopoverButton>
 
                       <PopoverPanel class="absolute z-10">
-                        <div>
+                        <div class="">
                           {{ activity.user_agent }}
                         </div>
                       </PopoverPanel>
                     </Popover>
                   </td>
-                  <td class="text-gray-600 px-4 py-3">
+                  <td class="text-gray-600 px-4 py-3 whitespace-nowrap">
                     <pre
                       style="width: 200px; overflow-x: scroll; word-wrap: break-word"
                       class="p-2 bg-gray-200 text-gray-800 rounded"
                       >{{ activity.data }}</pre
                     >
                   </td>
-                  <td class="text-gray-600 px-4 py-3">{{ activity.created_at }}</td>
+                  <td class="text-gray-600 px-4 py-3 whitespace-nowrap">{{ activity.created_at }}</td>
                 </tr>
               </tbody>
             </table>
