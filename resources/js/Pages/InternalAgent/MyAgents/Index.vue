@@ -144,13 +144,13 @@ let inviteParent = (agent) => {
   <AuthenticatedLayout>
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-        My Agents
+        Registered Agents
       </h2>
     </template>
 
     <div class="pt-14 flex justify-between px-16">
       <div>
-        <div class="text-4xl text-custom-sky font-bold mb-6">My Agents</div>
+        <div class="text-4xl text-custom-sky font-bold mb-6">Registered Agents</div>
       </div>
      
     </div>

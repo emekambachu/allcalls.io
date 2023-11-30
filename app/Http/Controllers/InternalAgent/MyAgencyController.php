@@ -16,12 +16,32 @@ class MyAgencyController extends Controller
 {
     public function index()
     {
+       
         $agentInvites = AgentInvite::where('invited_by', auth()->user()->id)
             ->with('getAgentLevel')
             ->with('getAgentLevel')->orderBy('created_at', 'desc')
             ->paginate(10);
         $agentLevels = InternalAgentLevel::get();
-        return Inertia::render('InternalAgent/MyAgency/Index', compact('agentInvites', 'agentLevels'));
+
+        $inviteAgents = getInviteeIds(auth()->user());
+        $agents = User::whereIn('id', $inviteAgents)
+        ->where('id', '!=', auth()->user()->id)
+        ->withCount('invitees')
+        ->with(['getAgentLevel', 'states', 'latestActivity', 'callTypes'])->
+        paginate(10);
+
+        return Inertia::render('InternalAgent/Invites/Index', compact('agentInvites', 'agentLevels', 'agents'));
+    }
+    function GetAgentInvites() {
+        $agentInvites = AgentInvite::where('invited_by', auth()->user()->id)
+        ->with('getAgentLevel')
+        ->with('getAgentLevel')->orderBy('created_at', 'desc')
+        ->paginate(10);
+        return response()->json([
+            'success' => true,
+            'agentInvites' => $agentInvites,
+        ], 200);
+
     }
     public function store(Request $request)
     {
@@ -60,8 +80,13 @@ class MyAgencyController extends Controller
             ]
         );
         event(new InviteAgent($inviteSent->email, $inviteSent->url));
+        $agentInvites = AgentInvite::where('invited_by', auth()->user()->id)
+        ->with('getAgentLevel')
+        ->with('getAgentLevel')->orderBy('created_at', 'desc')
+        ->paginate(10);
         return response()->json([
             'success' =>  true,
+            'agentInvites' =>  $agentInvites,
             'message' => 'Agent invited successfully.',
         ]);
     }
@@ -75,9 +100,7 @@ class MyAgencyController extends Controller
         $agentreInvite->created_at = now();
         $agentreInvite->updated_at = now();
         $agentreInvite->save();
-
         event(new InviteAgent($agentreInvite->email, $agentreInvite->url));
-
         return response()->json([
             'success' =>  true,
             'message' => 'Agent re-invited successfully.',
@@ -88,8 +111,13 @@ class MyAgencyController extends Controller
     {
         $invite = AgentInvite::findOrFail($id);
         $invite->delete();
+        $agentInvites = AgentInvite::where('invited_by', auth()->user()->id)
+        ->with('getAgentLevel')
+        ->with('getAgentLevel')->orderBy('created_at', 'desc')
+        ->paginate(10);
         return response()->json([
             'success' =>  true,
+            'agentInvites' =>  $agentInvites,
             'message' => 'Invite deleted successfully.'
         ]);
     }
@@ -101,7 +129,11 @@ class MyAgencyController extends Controller
         ->withCount('invitees')
         ->with(['getAgentLevel', 'states', 'latestActivity', 'callTypes'])->
         paginate(10);
-        return Inertia::render('InternalAgent/MyAgents/Index', compact('agents'));
+        return response()->json([
+            'success' => true,
+            'agents' => $agents,
+        ], 200);
+        // return Inertia::render('InternalAgent/MyAgents/Index', compact('agents'));
     }
     public function getAgentTree($id)
     {

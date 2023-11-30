@@ -331,7 +331,7 @@ const closeDropDown = () => {
                 pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}" />
               <div v-if="uiEmailValidation.isValid" class="text-red-500">
                 Please enter valid email address.
-              </div>
+              </div>  
               <!-- <InputError class="mt-2" :message="form.errors.email" /> -->
               <div v-if="firstStepErrors.email" class="text-red-500" v-text="firstStepErrors.email[0]"></div>
             </div>

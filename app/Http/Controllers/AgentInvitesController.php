@@ -69,7 +69,7 @@ class AgentInvitesController extends Controller
                 'level_id' => $request->level,
                 'email' => $request->email,
                 'upline_id' => $request->upline_id,
-                'invited_by' => $request->invited_by,
+                'invited_by' => $request->invited_by ?? auth()->user()->id,
                 'url' => url('/internal-agent/register?agentToken=' . $uuId)
             ]
         );
