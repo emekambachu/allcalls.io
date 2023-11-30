@@ -181,7 +181,7 @@ let abbreviateString = (theString) => {
     </section>
 
     <Modal
-      :show="showDataModal && selectedActivity"
+      :show="showDataModal"
       @close="
         showDataModal = false;
         selectedActivity = null;
@@ -194,6 +194,7 @@ let abbreviateString = (theString) => {
             selectedActivity = activity;
             showDataModal = true;
           "
+          v-if="selectedActivity"
           class="p-2 bg-gray-200 text-gray-800 rounded"
           >{{ selectedActivity.data }}</pre
         >
