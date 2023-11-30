@@ -10,6 +10,10 @@ let page = usePage();
 if (page.props.flash.message) {
   toaster("success", page.props.flash.message);
 }
+
+let selectedActivity = ref(null);
+let showDataModal = ref(true);
+
 let props = defineProps(["userActivities"]);
 
 console.log(props);
@@ -23,9 +27,8 @@ let clearAll = () => {
 };
 
 let abbreviateString = (theString) => {
-  return theString.length > 12 ? theString.substring(0, 12) + '...' : theString;
+  return theString.length > 12 ? theString.substring(0, 12) + "..." : theString;
 };
-
 </script>
 
 <style scoped>
@@ -79,15 +82,23 @@ let abbreviateString = (theString) => {
                   :key="activity.id"
                   class="border-b border-gray-500"
                 >
-                  <td class="text-gray-600 px-4 py-3 whitespace-nowrap">{{ activity.id }}</td>
-                  <td class="text-gray-600 px-4 py-3 whitespace-nowrap">{{ activity.action }}</td>
+                  <td class="text-gray-600 px-4 py-3 whitespace-nowrap">
+                    {{ activity.id }}
+                  </td>
+                  <td class="text-gray-600 px-4 py-3 whitespace-nowrap">
+                    {{ activity.action }}
+                  </td>
                   <td class="text-gray-600 px-4 py-3 whitespace-nowrap">
                     {{ activity.user.first_name + " " + activity.user.last_name }}
                   </td>
-                  <td class="text-gray-600 px-4 py-3 whitespace-nowrap">{{ activity.platform }}</td>
+                  <td class="text-gray-600 px-4 py-3 whitespace-nowrap">
+                    {{ activity.platform }}
+                  </td>
                   <td class="text-gray-600 px-4 py-3">
                     <Popover class="relative">
-                      <PopoverButton class="whitespace-nowrap" title="Click to expand">{{ abbreviateString(activity.ip_address) }}</PopoverButton>
+                      <PopoverButton class="whitespace-nowrap" title="Click to expand">{{
+                        abbreviateString(activity.ip_address)
+                      }}</PopoverButton>
 
                       <PopoverPanel class="absolute z-10 top-6 whitespace-normal">
                         <div class="shadow bg-white rounded p-3">
@@ -98,7 +109,9 @@ let abbreviateString = (theString) => {
                   </td>
                   <td class="text-gray-600 px-4 py-3 whitespace-nowrap">
                     <Popover class="relative">
-                      <PopoverButton class="whitespace-nowrap" title="Click to expand">{{ abbreviateString(activity.user_agent) }}</PopoverButton>
+                      <PopoverButton class="whitespace-nowrap" title="Click to expand">{{
+                        abbreviateString(activity.user_agent)
+                      }}</PopoverButton>
 
                       <PopoverPanel class="absolute z-10 top-6 whitespace-normal">
                         <div class="shadow bg-white rounded p-3">
@@ -110,11 +123,17 @@ let abbreviateString = (theString) => {
                   <td class="text-gray-600 px-4 py-3 whitespace-nowrap">
                     <pre
                       style="width: 200px; overflow-x: scroll; word-wrap: break-word"
+                      @click.prevent="
+                        selectedActivity = activity;
+                        showDataModal = true;
+                      "
                       class="p-2 bg-gray-200 text-gray-800 rounded"
                       >{{ activity.data }}</pre
                     >
                   </td>
-                  <td class="text-gray-600 px-4 py-3 whitespace-nowrap">{{ activity.created_at }}</td>
+                  <td class="text-gray-600 px-4 py-3 whitespace-nowrap">
+                    {{ activity.created_at }}
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -161,9 +180,24 @@ let abbreviateString = (theString) => {
       </div>
     </section>
 
-
-    <Modal :show="false" :closeable="true">
-      <div>Data here</div>
+    <Modal
+      :show="showDataModal && selectedActivity"
+      @close="
+        showDataModal = false;
+        selectedActivity = null;
+      "
+    >
+      <div class="bg-white p-3">
+        <pre
+          style="width: 200px; overflow-x: scroll; word-wrap: break-word"
+          @click.prevent="
+            selectedActivity = activity;
+            showDataModal = true;
+          "
+          class="p-2 bg-gray-200 text-gray-800 rounded"
+          >{{ activity.data }}</pre
+        >
+      </div>
     </Modal>
   </AuthenticatedLayout>
 </template>
