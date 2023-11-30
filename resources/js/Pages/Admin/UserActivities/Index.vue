@@ -4,6 +4,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import { toaster } from "@/helper.js";
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
+import Modal from "@/Components/Modal.vue";
 
 let page = usePage();
 if (page.props.flash.message) {
@@ -159,5 +160,10 @@ let abbreviateString = (theString) => {
         </nav>
       </div>
     </section>
+
+
+    <Modal :show="true" :closeable="true">
+      <div>Data here</div>
+    </Modal>
   </AuthenticatedLayout>
 </template>
