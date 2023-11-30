@@ -22,7 +22,7 @@ let clearAll = () => {
 };
 
 let abbreviateString = (theString) => {
-  return theString.length > 5 ? theString.substring(0, 5) + '...' : theString;
+  return theString.length > 12 ? theString.substring(0, 12) + '...' : theString;
 };
 
 </script>
