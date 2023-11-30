@@ -189,7 +189,7 @@ let abbreviateString = (theString) => {
     >
       <div class="bg-white p-3">
         <pre
-          style="width: 200px; overflow-x: scroll; word-wrap: break-word"
+          style="width: 100%; overflow-x: scroll; word-wrap: break-word"
           @click.prevent="
             selectedActivity = activity;
             showDataModal = true;
