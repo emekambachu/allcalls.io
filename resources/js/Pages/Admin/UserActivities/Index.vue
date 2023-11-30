@@ -80,20 +80,7 @@ let clearAll = () => {
                   <td class="text-gray-600 px-4 py-3">{{ activity.platform }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ activity.ip_address }}</td>
                   <td class="text-gray-600 px-4 py-3">
-                    <span
-                      :data-tooltip-target="`user-agent-${activity.id}`"
-                      data-tooltip-style="light"
-                      >{{ activity.user_agent }}</span
-                    >
-
-                    <div
-                      :id="`user-agent-${activity.id}`"
-                      role="tooltip"
-                      class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 tooltip"
-                    >
-                      {{ activity.user_agent }}}
-                      <div class="tooltip-arrow" data-popper-arrow></div>
-                    </div>
+                    <span v-tooltip="'Hello, world!'">{{ activity.user_agent }}</span>
                   </td>
                   <td class="text-gray-600 px-4 py-3">
                     <pre
