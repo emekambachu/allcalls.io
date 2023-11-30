@@ -8,7 +8,6 @@
     import GlobalSpinnerPlugin from './spinner.js'
     const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
     import VueDatePicker from '@vuepic/vue-datepicker';
-    import VTooltip from 'v-tooltip'
     import countryList  from './countryList.js';
     // import vueSignature from "vue-signature";
     // import VueSignature from "vue-signature-pad";
@@ -29,7 +28,6 @@
                 .use(GlobalSpinnerPlugin)
                 .use(VueCreditCardValidation)
                 .use(VueLoaders)
-                .use(VTooltip)
                 .provide('countryList', countryList)
                 // .use(VueSignature)
                 // .component('VueSignaturePad', VueSignature)
