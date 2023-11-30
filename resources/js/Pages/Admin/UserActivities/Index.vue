@@ -79,8 +79,8 @@ let clearAll = () => {
                   </td>
                   <td class="text-gray-600 px-4 py-3">{{ activity.platform }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ activity.ip_address }}</td>
-                  <td class="text-gray-600 px-4 py-3">
-                    <span v-tooltip="'Hello, world!'">{{ activity.user_agent }}</span>
+                  <td class="text-gray-600 px-4 py-3" v-tooltip="'Hello'">
+                    {{ activity.user_agent }}
                   </td>
                   <td class="text-gray-600 px-4 py-3">
                     <pre
