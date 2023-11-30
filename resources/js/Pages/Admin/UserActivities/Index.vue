@@ -3,6 +3,7 @@ import { ref, onMounted } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import { toaster } from "@/helper.js";
+import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
 
 let page = usePage();
 if (page.props.flash.message) {
@@ -110,8 +111,16 @@ let clearAll = () => {
                         "
                       ></div>
                     </div>
+                    <!-- {{ activity.user_agent }} -->
+                    <Popover class="relative">
+                      <PopoverButton>User Agent (Click to View)</PopoverButton>
 
-                    {{ activity.user_agent }}
+                      <PopoverPanel class="absolute z-10">
+                        <div>
+                          {{ activity.user_agent }}
+                        </div>
+                      </PopoverPanel>
+                    </Popover>
                   </td>
                   <td class="text-gray-600 px-4 py-3">
                     <pre
