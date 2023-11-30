@@ -12,7 +12,7 @@ if (page.props.flash.message) {
 }
 
 let selectedActivity = ref(null);
-let showDataModal = ref(true);
+let showDataModal = ref(false);
 
 let props = defineProps(["userActivities"]);
 
