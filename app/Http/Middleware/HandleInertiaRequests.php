@@ -32,8 +32,9 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         $role = null;
+        $user_level = null;
         if(auth()->user() && auth()->user()->roles->contains('name', 'admin')) {
-            $role = 'admin';
+            $role = 'admin';  
         }
 
         // if auth user and auth user is NOT internal agent or admin
@@ -43,10 +44,8 @@ class HandleInertiaRequests extends Middleware
 
         if(auth()->user() && auth()->user()->roles->contains('name', 'internal-agent')) {
             $role = 'internal-agent';
+            $user_level = $request->user()->getAgentLevel;
         }
-
-
-
 
         $notifications = null;
 
@@ -61,6 +60,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
                 'role' => $role,
+                'user_level' => $user_level,
                 'notifications' => $notifications,
             ],
             'ziggy' => function () use ($request) {

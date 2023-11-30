@@ -39,9 +39,11 @@ class InternalAgentLevelSeeder extends Seeder
         // Enable foreign key checks
         DB::statement('SET FOREIGN_KEY_CHECKS=1');
  
-        foreach ($roles as $role) {
+        foreach ($roles as $key => $role) {
             InternalAgentLevel::updateOrCreate(
-                ['name' => $role]
+                ['name' => $role], [
+                    'order'=> $key+1,
+                ]
             );
         }
     }
