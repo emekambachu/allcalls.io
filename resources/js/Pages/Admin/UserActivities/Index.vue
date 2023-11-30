@@ -79,8 +79,29 @@ let clearAll = () => {
                   </td>
                   <td class="text-gray-600 px-4 py-3">{{ activity.platform }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ activity.ip_address }}</td>
-                  <td class="text-gray-600 px-4 py-3">{{ activity.user_agent }}</td>
-                  <td class="text-gray-600 px-4 py-3"><pre style="width: 200px; overflow-x: scroll; word-wrap: break-word;" class="p-2 bg-gray-200 text-gray-800 rounded">{{ activity.data }}</pre></td>
+                  <td class="text-gray-600 px-4 py-3">
+                    <span
+                      :data-tooltip-target="`user-agent-${activity.id}`"
+                      data-tooltip-style="light"
+                      >{{ activity.user_agent }}</span
+                    >
+
+                    <div
+                      :id="`user-agent-${activity.id}`"
+                      role="tooltip"
+                      class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 tooltip"
+                    >
+                      {{ activity.user_agent }}}
+                      <div class="tooltip-arrow" data-popper-arrow></div>
+                    </div>
+                  </td>
+                  <td class="text-gray-600 px-4 py-3">
+                    <pre
+                      style="width: 200px; overflow-x: scroll; word-wrap: break-word"
+                      class="p-2 bg-gray-200 text-gray-800 rounded"
+                      >{{ activity.data }}</pre
+                    >
+                  </td>
                   <td class="text-gray-600 px-4 py-3">{{ activity.created_at }}</td>
                 </tr>
               </tbody>
