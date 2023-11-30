@@ -20,6 +20,11 @@ let paginate = (url) => {
 let clearAll = () => {
   router.visit("/admin/user-activities/clear-all", { method: "DELETE" });
 };
+
+let abbreviateString = (theString) => {
+  return theString.length > 5 ? theString.substring(0, 5) + '...' : theString;
+};
+
 </script>
 
 <style scoped>
@@ -81,39 +86,8 @@ let clearAll = () => {
                   <td class="text-gray-600 px-4 py-3">{{ activity.platform }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ activity.ip_address }}</td>
                   <td class="text-gray-600 px-4 py-3">
-                    <button
-                      data-tooltip-target="tooltip-default"
-                      type="button"
-                      class="text-white bg-gradient-to-br from-pink-500 to-voilet-500 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 text-center inline-flex items-center shadow-md shadow-gray-300 hover:scale-[1.02] transition-transform"
-                    >
-                      Default tooltip
-                    </button>
-                    <div
-                      id="tooltip-default"
-                      role="tooltip"
-                      class="inline-block absolute invisible z-10 py-2 px-3 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition-opacity duration-300 tooltip dark:bg-gray-700"
-                      style="
-                        position: absolute;
-                        inset: auto auto 0px 0px;
-                        margin: 0px;
-                        transform: translate3d(270.5px, -120px, 0px);
-                      "
-                      data-popper-placement="top"
-                    >
-                      Tooltip content
-                      <div
-                        class="tooltip-arrow"
-                        data-popper-arrow=""
-                        style="
-                          position: absolute;
-                          left: 0px;
-                          transform: translate3d(58px, 0px, 0px);
-                        "
-                      ></div>
-                    </div>
-                    <!-- {{ activity.user_agent }} -->
                     <Popover class="relative">
-                      <PopoverButton>User Agent (Click to View)</PopoverButton>
+                      <PopoverButton>{{ abbreviateString(activity.user_agent) }}</PopoverButton>
 
                       <PopoverPanel class="absolute z-10">
                         <div>
