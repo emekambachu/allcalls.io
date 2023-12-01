@@ -25,6 +25,8 @@ let props = defineProps({
   requestData: Array,
 });
 
+console.log('Calls:', props.calls);
+
 const presetDates = ref([
   { label: 'Today', value: [new Date(), new Date()] },
   {
@@ -248,6 +250,9 @@ maxDate.value.setHours(23, 59, 59, 999);
 
                   <th scope="col" class="px-4 py-2 whitespace-no-wrap">
                     Revenue
+                  </th>
+                  <th scope="col" class="px-4 py-2 whitespace-no-wrap">
+                    
                   </th>
                   <th scope="col" class="px-4 py-2 whitespace-no-wrap" style="min-width: 130px">
                     VERTICAL
