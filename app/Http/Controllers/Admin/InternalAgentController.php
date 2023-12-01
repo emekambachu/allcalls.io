@@ -98,7 +98,7 @@ class InternalAgentController extends Controller
     public function getAgentTree($id)
     {
         //retrieve the entire hierarchy
-        if ($id == 1) {
+        if (auth()->user()->roles->contains('name', 'admin')) {
             $agent = Role::whereName('internal-agent')->first();
             $agentHierarchy = User::whereHas('roles', function ($query) use ($agent) {
                 $query->where('role_id', $agent->id);
