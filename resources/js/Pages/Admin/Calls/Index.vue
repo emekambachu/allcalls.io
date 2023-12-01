@@ -252,6 +252,9 @@ maxDate.value.setHours(23, 59, 59, 999);
                   <th scope="col" class="px-4 py-2" style="min-width: 130px">
                     Disposition
                   </th>
+                  <th scope="col" class="px-4 py-2" style="min-width: 130px">
+                    Vertical
+                  </th>
                   <th scope="col" class="px-4 py-2" style="min-width: 100px">
                     Caller ID
                   </th>
