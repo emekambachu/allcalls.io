@@ -272,12 +272,12 @@ maxDate.value.setHours(23, 59, 59, 999);
               <tbody v-if="calls.data.length">
                 <tr v-for="call in calls.data" :key="call.id" class="border-b border-gray-500">
 
-                  <td class="text-gray-600 ">{{ call.id }}</td>
-                  <th class="text-gray-600 ">{{ call.call_taken }}</th>
-                  <td class="text-gray-600 ">
+                  <td class="text-gray-600 whitespace-nowrap">{{ call.id }}</td>
+                  <th class="text-gray-600 whitespace-nowrap">{{ call.call_taken }}</th>
+                  <td class="text-gray-600 whitespace-nowrap">
                     {{ call.user.first_name }} {{ call.user.last_name }}
                   </td>
-                  <td class="text-gray-600 ">
+                  <td class="text-gray-600 whitespace-nowrap">
                     <span v-if="call.role === 'Internal Agent'"
                       class="bg-indigo-100 text-indigo-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Internal
                       Agent</span>
@@ -286,7 +286,7 @@ maxDate.value.setHours(23, 59, 59, 999);
                       User</span>
                   </td>
 
-                  <td class="text-gray-600 ">
+                  <td class="text-gray-600 whitespace-nowrap">
                     {{
                       String(Math.floor(call.ringing_duration / 60)).padStart(
                         2,
@@ -296,7 +296,7 @@ maxDate.value.setHours(23, 59, 59, 999);
                       String(call.ringing_duration % 60).padStart(2, "0")
                     }}
                   </td>
-                  <td class="text-gray-600 ">
+                  <td class="text-gray-600 whitespace-nowrap">
                     {{
                       String(
                         Math.floor(call.call_duration_in_seconds / 60)
@@ -309,16 +309,16 @@ maxDate.value.setHours(23, 59, 59, 999);
                     }}
                   </td>
 
-                  <th class="text-gray-600 ">{{ call.hung_up_by }}</th>
+                  <th class="text-gray-600 whitespace-nowrap">{{ call.hung_up_by }}</th>
                   <td class="text-gray-600 ">
                     ${{ call.amount_spent }}
                   </td>
-                  <td class="text-gray-600 ">
+                  <td class="text-gray-600 whitespace-nowrap">
                     {{ call.call_type.type }}
                   </td>
-                  <td class="text-gray-600 ">{{ call.from }}</td>
+                  <td class="text-gray-600 whitespace-nowrap">{{ call.from }}</td>
 
-                  <td class="text-gray-600 ">
+                  <td class="text-gray-600 whitespace-nowrap">
                     <a v-if="call.recording_url" target="_blank" :href="call.recording_url" class="flex whitespace-nowrap"><svg
                         xmlns="http://www.w3.org/2000/svg" height="1.5em" class="pr-1" viewBox="0 0 512 512">
                         <path
@@ -327,7 +327,7 @@ maxDate.value.setHours(23, 59, 59, 999);
                     </a>
                     <span v-else>_</span>
                   </td>
-                  <td class="text-gray-700 px-4 py-3">
+                  <td class="text-gray-700 px-4 py-3 whitespace-nowrap">
                     <Menu as="div" class="relative inline-block text-left">
                       <div>
                         <MenuButton class="inline-flex justify-center rounded-md px-4 py-2 relative" style="z-index: 1">
