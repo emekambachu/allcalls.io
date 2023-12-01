@@ -1,17 +1,22 @@
 <?php
 
-namespace App\Http\Controllers\InternalAgen;
+namespace App\Http\Controllers\InternalAgent;
 
 use App\Http\Controllers\Controller;
 use App\Models\InternalAgentMyBusiness;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Inertia\Inertia;
 
 class MyBusinessController extends Controller
 {
     public function index()
     {
-        $businesses = InternalAgentMyBusiness::get();
+        $businesses = InternalAgentMyBusiness::whereIn('agent_id', getInviteeIds(auth()->user()))->get();
+        dd($businesses);
+        return Inertia::render('InternalAgent/MyBusiness/Index', [
+            'businesses' => $businesses,
+        ]);
     }
 
     public function store(Request $request)
@@ -52,7 +57,7 @@ class MyBusinessController extends Controller
             'client_phone_no' => 'required',
             'client_email' => 'required',
         ]);
-        
+
         if ($validate->fails()) {
             return response()->json([
                 'success' => false,
@@ -61,7 +66,7 @@ class MyBusinessController extends Controller
         }
 
         InternalAgentMyBusiness::create([
-            'agent_id' => auth()->id,
+            'agent_id' => auth()->user()->id,
             'agent_full_name' => $request->agent_full_name,
             'agent_email' => $request->agent_email,
             'ef_number' => $request->ef_number,
@@ -95,6 +100,6 @@ class MyBusinessController extends Controller
             'client_zipcode' => $request->client_zipcode,
             'client_phone_no' => $request->client_phone_no,
             'client_email' => $request->client_email,
-        ])
+        ]);
     }
 }
