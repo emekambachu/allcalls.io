@@ -24,7 +24,6 @@ return new class extends Migration
             $table->boolean('split_sale');
             $table->string('split_sale_type');
             $table->string('split_agent_email');
-            $table->string('split_agent_email');
             $table->string('insurance_company');
             $table->string('product_name');
             $table->date('application_date');
@@ -32,6 +31,7 @@ return new class extends Migration
             $table->string('coverage_length');
             $table->string('premium_frequency');
             $table->double('quarterly_premium_amount');
+            $table->double('annually_premium_amount');
             $table->boolean('equis_writing_number_carrier')->nullable();
             $table->string('carrier_writing_number')->nullable();
             $table->string('this_app_from_lead');
