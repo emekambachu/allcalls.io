@@ -98,44 +98,44 @@ class InternalAgentController extends Controller
     public function getAgentTree($id)
     {
         //retrieve the entire hierarchy
-        if (auth()->user()->roles->contains('name', 'admin')) {
+        $user = User::findOrFail($id); 
+
+        if ($user && $user->roles->contains('name', 'admin')) {
             $agent = Role::whereName('internal-agent')->first();
             $agentHierarchy = User::whereHas('roles', function ($query) use ($agent) {
                 $query->where('role_id', $agent->id);
             })->whereNull('invited_by')->with('allInvitees')->get();
 
-            $admin = User::find($id);
-
             $returnArr = [
-                "id" => $admin->id,
-                "email" => $admin->email,
-                "upline_id" => $admin->upline_id,
-                "email_verified_at" => $admin->email_verified_at,
-                "created_at" => $admin->created_at,
-                "updated_at" => $admin->updated_at,
-                "stripe_id" => $admin->stripe_id,
-                "pm_type" => $admin->pm_type,
-                "pm_last_four" => $admin->pm_last_four,
-                "trial_ends_at" => $admin->trial_ends_at,
-                "first_name" => $admin->first_name,
-                "last_name" => $admin->last_name,
-                "balance" => $admin->balance,
-                "phone_country" => $admin->phone_country,
-                "phone_code" => $admin->phone_code,
-                "phone" => $admin->phone,
-                "profile_picture" => $admin->profile_picture,
-                "device_token" => $admin->device_token,
-                "last_called_at" => $admin->last_called_at,
-                "banned" => $admin->banned,
-                "call_status" => $admin->call_status,
-                "timezone" => $admin->timezone,
-                "legacy_key" => $admin->legacy_key,
-                "contract_step" => $admin->contract_step,
-                "is_locked" => $admin->is_locked,
-                "progress" => $admin->progress,
-                "equis_duplicate" => $admin->equis_duplicate,
-                "level_id" => $admin->level_id,
-                "invited_by" => $admin->invited_by,
+                "id" => $user->id,
+                "email" => $user->email,
+                "upline_id" => $user->upline_id,
+                "email_verified_at" => $user->email_verified_at,
+                "created_at" => $user->created_at,
+                "updated_at" => $user->updated_at,
+                "stripe_id" => $user->stripe_id,
+                "pm_type" => $user->pm_type,
+                "pm_last_four" => $user->pm_last_four,
+                "trial_ends_at" => $user->trial_ends_at,
+                "first_name" => $user->first_name,
+                "last_name" => $user->last_name,
+                "balance" => $user->balance,
+                "phone_country" => $user->phone_country,
+                "phone_code" => $user->phone_code,
+                "phone" => $user->phone,
+                "profile_picture" => $user->profile_picture,
+                "device_token" => $user->device_token,
+                "last_called_at" => $user->last_called_at,
+                "banned" => $user->banned,
+                "call_status" => $user->call_status,
+                "timezone" => $user->timezone,
+                "legacy_key" => $user->legacy_key,
+                "contract_step" => $user->contract_step,
+                "is_locked" => $user->is_locked,
+                "progress" => $user->progress,
+                "equis_duplicate" => $user->equis_duplicate,
+                "level_id" => $user->level_id,
+                "invited_by" => $user->invited_by,
                 "all_invitees" => $agentHierarchy
             ];
 
@@ -144,7 +144,9 @@ class InternalAgentController extends Controller
                 'agentHierarchy' => $returnArr,
             ], 200);
         }
+
         $agentHierarchy = User::with('allInvitees')->find($id);
+
         return response()->json([
             'success' => true,
             'agentHierarchy' => $agentHierarchy,
