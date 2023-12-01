@@ -1,9 +1,10 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import DeleteUserForm from "./Partials/DeleteUserForm.vue";
-import { reactive, computed } from "vue";
-import { Link, Head } from "@inertiajs/vue3";
+import { reactive, computed, ref } from "vue";
+import { Link, Head, router, usePage } from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+
 let props = defineProps({
   user: {
     type: Object,
@@ -38,6 +39,7 @@ let getFirstLetter = (str) => {
 };
 
 let state = reactive(props);
+const file = ref(null);  // Initialize the file variable
 
 let selectedCallTypesWithStates = computed(() => {
   return state.callTypes
@@ -57,6 +59,47 @@ let formatMoney = (amount) => {
     .toFixed(2)
     .replace(/\d(?=(\d{3})+\.)/g, "$&,");
 };
+
+const selectedFile = ref(null);
+
+const handleImageUpload = (event) => {
+  file.value = event.target.files[0]; // Assign the selected file
+  if (!file) return;
+
+  // if (!['image/jpeg', 'image/jpg', 'image/png'].includes(file.type)) {
+  //   alert('Please select a JPG, JPEG, or PNG file.');
+  //   return;
+  // }
+
+  // if (file.size > 5 * 1024 * 1024) { // 5 MB
+  //   alert('File size should not exceed 5 MB.');
+  //   return;
+  // }
+
+  selectedFile.value = file.value;
+  uploadImage();
+};
+
+
+const uploadImage = () => {
+  const formData = new FormData();
+  formData.append('profile_picture', selectedFile.value); // Assuming 'this.file' is your file to upload
+
+  router.visit('/profile/upload-picture', {
+    method: 'post',
+    data: formData,
+    // Inertia handles multipart/form-data automatically,
+    // so you don't need to set Content-Type header.
+    onSuccess: () => {
+        console.log('Image uploaded successfully');
+    },
+    onError: errors => {
+        console.error('Error uploading image:', errors);
+    }
+  });
+};
+
+
 </script>
 <style scoped>
 .button-custom {
@@ -102,6 +145,29 @@ let formatMoney = (amount) => {
               <span class="text-5xl font-medium text-center text-custom-white">{{ getFirstLetter(user.first_name)
               }}{{ getFirstLetter(user.last_name) }}</span>
             </div>
+              <!-- Check if user has a profile picture -->
+              <!-- <img v-if="user.profile_picture" :src="`/storage/profile_pictures/${user.profile_picture}`" class="w-full h-full rounded-full"> -->
+              <!-- Display placeholder with initials if no profile picture -->
+              <!-- <span v-else class="text-5xl font-medium text-center text-custom-white">
+                  {{ getFirstLetter(user.first_name) }}{{ getFirstLetter(user.last_name) }}
+              </span> -->
+            <!-- <div class="relative inline-flex items-center justify-center w-28 h-28 overflow-hidden rounded-full bg-custom-blue group">
+
+              <div class="absolute inset-0 flex items-center justify-center w-full h-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div class="absolute inset-0 w-full h-full bg-black bg-opacity-80 rounded-full"></div> Reduced opacity -->
+                  <!-- Centered SVG icon with higher z-index -->
+                  <!-- <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-white z-10">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                  </svg> -->
+              <!-- </div>
+              <input type="file" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" @change="handleImageUpload" accept="image/jpeg,image/jpg,image/png">
+            </div> -->
+
+
+
+
+
+
             <div class="font-medium text-white">
               <div class="text-4xl text-sky-950">
                 {{ user.first_name }} {{ user.last_name }}
