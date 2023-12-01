@@ -25,8 +25,6 @@ let props = defineProps({
   requestData: Array,
 });
 
-console.log('Calls:', props.calls);
-
 const presetDates = ref([
   { label: 'Today', value: [new Date(), new Date()] },
   {
