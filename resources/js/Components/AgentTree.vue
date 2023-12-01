@@ -264,7 +264,7 @@ let truncatedName = (name) =>  {
                     </div>
                     <vue-loader :slidingLoader="slidingLoader" />
                     <div class='container'>
-                        <vue-tree ref="treeRef" style="width: 100%; height: 600px;" :direction="'horizontal'"
+                        <vue-tree @wheel.prevent="handleWheel" ref="treeRef" style="width: 100%; height: 600px;" :direction="'horizontal'"
                             :style="{ transform: `scale(${zoom})`, 'transform-origin': '0 0' }" :dataset="vehicules"
                             :config="treeConfig" linkStyle="straight">
                             <template v-slot:node="{ node, collapsed }">
