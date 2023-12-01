@@ -140,7 +140,14 @@ const handleTouchMove = (event) => {
         event._prevDistance = distance;
     }
 };
-
+let truncatedName = (name) =>  {
+      const maxLength = 18; // Set your desired maximum length
+      if (name.length <= maxLength) {
+        return name;
+      } else {
+        return name.substring(0, maxLength) + '...';
+      }
+    }
 </script>
 <style scoped >
 .zoom-controls {
@@ -270,7 +277,7 @@ const handleTouchMove = (event) => {
                                     </svg>
                                     <img v-if="node.avatar" :src="node.avatar" alt="Avatar"
                                         style="width: 32px; height: 32px; border-radius: 50%;" />
-                                    <span style="padding: 4px 0; font-weight: bold;" class="text-black">{{ node.name
+                                    <span style="padding: 4px 0; font-weight: bold;" class="text-black">{{ truncatedName(node.name)
                                     }}</span>
                                 </div>
                             </template>
