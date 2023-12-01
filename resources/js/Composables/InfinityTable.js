@@ -1,25 +1,44 @@
 import { ref, computed, watch } from "vue";
 import { router } from "@inertiajs/vue3";
 
-export function useInfinityTable(initialItems, initialUrl, filters, isLoadMoreEnabled = true) {
+export function useInfinityTable(props, initialItems, initialUrl, filters, isLoadMoreEnabled = true) {
+
+    console.log('Args passed to useInfinityTable from InfinityTable.js', {
+        initialItems,
+        initialUrl,
+        filters,
+        isLoadMoreEnabled
+    });
+
+
     const loadedItems = ref(initialItems.data);
     const sortColumn = ref(null);
     const sortDirection = ref("asc");
     const sortingMethod = ref(null);
 
-    console.log('Initial items from InfinityTable.js', initialItems);
 
-    watch(
-        () => initialItems,
-        () => {
-            loadedItems.value = [...loadedItems.value, ...initialItems.data];
-        }
-    );
+    console.log('Initial items from InfinityTable.js', initialItems.data);
+
+    // let filteredItems = ref(initialItems.data);
+
+    // apply filters to the original data:
+    // let items = initialItems.data;
+
+    // filters.forEach((filter) => {
+    //     if (filter.checked) {
+    //         items = filter.filter(items);
+    //     }
+    // });
+
+    // filteredItems.value = items;
+
+
 
     const loadMore = (url) => {
         if (!isLoadMoreEnabled) return;
     
         console.log('Load more called from InfinityTable.js');
+        console.log('Next page url from InfinityTable.js', initialItems.next_page_url);
     
         router.get(
             initialItems.next_page_url,
@@ -28,6 +47,7 @@ export function useInfinityTable(initialItems, initialUrl, filters, isLoadMoreEn
                 preserveState: true,
                 preserveScroll: true,
                 onSuccess: () => {
+                    console.log('Successfully navigated to the next page and ');
                     window.history.replaceState({}, "", initialUrl);
                 },
             }
@@ -50,6 +70,8 @@ export function useInfinityTable(initialItems, initialUrl, filters, isLoadMoreEn
             sortingMethod.value = column.sortingMethod;
         }
 
+        console.log('Performing sorting for column', column.label, 'with sorting method', sortingMethod.value, ' and sort direction', sortDirection.value);
+
         performSorting();
     };
 
@@ -57,17 +79,12 @@ export function useInfinityTable(initialItems, initialUrl, filters, isLoadMoreEn
         return column.render(item);
     };
 
-    const filteredItems = computed(() => {
-        let items = loadedItems.value;
 
-        filters.value.forEach((filter) => {
-            if (filter.checked) {
-                items = filter.filter(items);
-            }
-        });
+    console.log('loadedItems from InfinityTable.js', loadedItems);
 
-        return items;
-    });
+
+
+    console.log('Intial items data from InfinityTable.js BEFORE RETURNING OBJECT, why is this empty??', initialItems.data);
 
     return {
         loadedItems,
@@ -76,7 +93,6 @@ export function useInfinityTable(initialItems, initialUrl, filters, isLoadMoreEn
         performSorting,
         sortByColumn,
         renderColumn,
-        filteredItems,
         loadMore
     };
 }

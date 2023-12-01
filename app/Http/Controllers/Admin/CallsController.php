@@ -35,6 +35,7 @@ class CallsController extends Controller
         }
 
         $calls = Call::with('user.roles', 'getClient', 'callType')
+            ->with('client')
             ->where(function ($query) use ($request) {
                 if (isset($request->from) && $request->from != '' && isset($request->to) && $request->to != '') {
                     $fromDate = Carbon::parse($request->from)->startOfDay();
@@ -112,7 +113,7 @@ class CallsController extends Controller
 
 
 
-        return Inertia::render('Admin/Calls/IndexAlpha', [
+        return Inertia::render('Admin/Calls/IndexNew', [
             'requestData' => $request->all(),
             'calls' => $calls,
             'totalCalls' => Call::count(),

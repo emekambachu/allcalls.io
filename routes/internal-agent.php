@@ -33,12 +33,16 @@ Route::prefix('internal-agent')->middleware(['auth', 'verified', 'internal-agent
         return Inertia::render('Auth/InternalAgentLocked', []);
     })->name('internal.agent.locked');
 
-    Route::get('/agent-agency', [MyAgencyController::class, 'index'])->name('internal-agent.agent-agency.index');
-    Route::get('/my-agent', [MyAgencyController::class, 'myAgent'])->name('internal-agent.my-agent.index');
-    Route::post('/agent-invites', [MyAgencyController::class, 'store'])->name('admin.agent-invites.store');
-    Route::delete('/agent-invites/{id}', [MyAgencyController::class, 'destroy'])->name('internal-agent.agent-invites.destroy');
-    Route::get('/reinvite-agent/{id}', [MyAgencyController::class, 'reInvite'])->name('internal-agent.agent.reinvite');
+    Route::get('/agent-agency', [MyAgencyController::class, 'index'])->name('internal-agent.agent-agency.index')->middleware('registration-step-check');
+    // get Agent invites
+    Route::get('/get-agent-invites', [MyAgencyController::class, 'GetAgentInvites'])->name('internal-agent.get-agent-invites.GetAgentInvites')->middleware('registration-step-check');
 
+    Route::get('/my-agent', [MyAgencyController::class, 'myAgent'])->name('internal-agent.my-agent')->middleware('registration-step-check');
+    Route::post('/agent-invites', [MyAgencyController::class, 'store'])->name('admin.agent-invites.store')->middleware('registration-step-check');
+    Route::delete('/agent-invites/{id}', [MyAgencyController::class, 'destroy'])->name('internal-agent.agent-invites.destroy')->middleware('registration-step-check');
+    Route::get('/reinvite-agent/{id}', [MyAgencyController::class, 'reInvite'])->name('internal-agent.agent.reinvite')->middleware('registration-step-check');
+
+    Route::get('/agent/tree/{id}', [MyAgencyController::class, 'getAgentTree'])->name('agent.tree')->middleware('registration-step-check');
 });
 
 Route::middleware(['auth', 'verified', 'internal-agent'])->group(function () {

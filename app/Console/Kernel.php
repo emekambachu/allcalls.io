@@ -18,6 +18,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('allcalls:release-available-numbers')
             ->timezone('America/New_York')
             ->dailyAt('00:00');
+
+        $schedule->command('allcalls:allcalls:send-equis-duplicate-emails')
+            ->timezone('America/New_York')
+            ->dailyAt('05:00');
     }
 
     /**

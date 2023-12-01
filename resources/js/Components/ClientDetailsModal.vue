@@ -64,8 +64,8 @@ let openEdit = () => {
       </div>
       <div class="p-6">
         <div v-if="callDetail">
-          <span class="spnClassLocked" v-if = "callDetail.get_client.unlocked == 1">Client is locked</span>
-          <div class="flex justify-between items-center" v-if = "callDetail.get_client.unlocked != 1">
+          <span class="spnClassLocked" v-if="callDetail.get_client.unlocked == 0">Client is locked</span>
+          <div class="flex justify-between items-center" v-if="callDetail.get_client.unlocked == 1">
             <h4 class="text-2xl font-small text-custom-sky mb-2">Personal Details</h4>
 
             <PrimaryButton @click="openEdit" > Edit Client </PrimaryButton>
@@ -80,7 +80,7 @@ let openEdit = () => {
               <strong class="text-lg">Last Name: </strong>
               {{ callDetail.get_client.last_name }}
             </div>
-            <div v-if = "callDetail.get_client.unlocked != 1">
+            <div v-if="callDetail.get_client.unlocked != 1">
               <strong class="text-lg">Date of Birth: </strong>
               {{ callDetail.get_client.dob || "N/A" }}
             </div>
@@ -88,15 +88,15 @@ let openEdit = () => {
 
           <h4 class="text-2xl font-small text-custom-sky mb-2" >Contact Information</h4>
           <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-10" >
-            <div v-if = "callDetail.get_client.unlocked != 1">
+            <div v-if="callDetail.get_client.unlocked != 1">
               <strong class="text-lg">Phone: </strong>
               {{ callDetail.get_client.phone }}
             </div>
-            <div v-if = "callDetail.get_client.unlocked != 1">
+            <div v-if="callDetail.get_client.unlocked != 1">
               <strong class="text-lg">Email: </strong>
               {{ callDetail.get_client.email || "N/A" }}
             </div>
-            <div v-if = "callDetail.get_client.unlocked != 1">
+            <div v-if="callDetail.get_client.unlocked != 1">
               <strong class="text-lg">Address: </strong>
               {{ callDetail.get_client.address || "N/A" }}
             </div>
@@ -104,7 +104,7 @@ let openEdit = () => {
               <strong class="text-lg">State: </strong>
               {{ callDetail.get_client.state || "N/A" }}
             </div>
-            <div v-if = "callDetail.get_client.unlocked != 1">
+            <div v-if="callDetail.get_client.unlocked != 1">
               <strong class="text-lg">Zip Code: </strong>
               {{ callDetail.get_client.zipCode || "N/A" }}
             </div>

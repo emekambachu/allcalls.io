@@ -31,6 +31,7 @@ class InternalAgentLevelSeeder extends Seeder
             'AC Level 10',
             'AC Level 11',
         ];
+        
         // Disable foreign key checks
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
         // Truncate the table
@@ -38,9 +39,11 @@ class InternalAgentLevelSeeder extends Seeder
         // Enable foreign key checks
         DB::statement('SET FOREIGN_KEY_CHECKS=1');
  
-        foreach ($roles as $role) {
+        foreach ($roles as $key => $role) {
             InternalAgentLevel::updateOrCreate(
-                ['name' => $role]
+                ['name' => $role], [
+                    'order'=> $key+1,
+                ]
             );
         }
     }

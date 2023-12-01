@@ -196,64 +196,168 @@ const {
   performSorting,
   sortByColumn,
   renderColumn,
-  filteredItems,
   loadMore,
-} = useInfinityTable(props.calls, initialUrl, columns, filters);
+} = useInfinityTable(props, props.calls, initialUrl, columns, filters, true);
 
 let callsGroupedByUser = ref(props.callsGroupedByUser);
 
-
 // Columns for the grouped calls table
 let groupedColumns = ref([
-  { label: "Agent Name", render: (userData) => userData.agentName },
-  { label: "Total Calls", render: (userData) => userData.totalCalls },
-  { label: "Paid Calls", render: (userData) => userData.paidCalls },
-  { label: "Revenue Earned", render: (userData) => `$${userData.revenueEarned}` },
+  {
+    label: "Agent Name",
+    render: (userData) => userData.agentName,
+    visible: true,
+    sortable: true,
+    sortingMethod: (a, b) => {
+      console.log("sort agent name called");
+      console.log("sort direction is: ", groupedTableData.sortDirection.value);
+
+      if (groupedTableData.sortDirection.value === "asc") {
+        return a.agentName.localeCompare(b.agentName);
+      } else {
+        return b.agentName.localeCompare(a.agentName);
+      }
+    },
+  },
+  {
+    label: "Total Calls",
+    render: (userData) => userData.totalCalls,
+    visible: true,
+    sortable: true,
+    sortingMethod: (a, b) => {
+      if (groupedTableData.sortDirection === "asc") {
+        return a.totalCalls - b.totalCalls;
+      } else {
+        return b.totalCalls - a.totalCalls;
+      }
+    },
+  },
+  {
+    label: "Paid Calls",
+    render: (userData) => userData.paidCalls,
+    visible: true,
+    sortable: true,
+    sortingMethod: (a, b) => {
+      if (groupedTableData.sortDirection === "asc") {
+        return a.paidCalls - b.paidCalls;
+      } else {
+        return b.paidCalls - a.paidCalls;
+      }
+    },
+  },
+  {
+    label: "Unpaid Calls",
+    render: (userData) => userData.unpaidCalls,
+    visible: true,
+    sortable: true,
+    sortingMethod: (a, b) => {
+      if (groupedTableData.sortDirection === "asc") {
+        return a.unpaidCalls - b.unpaidCalls;
+      } else {
+        return b.unpaidCalls - a.unpaidCalls;
+      }
+    },
+  },
+  {
+    label: "Revenue Earned",
+    render: (userData) => `$${userData.revenueEarned}`,
+    visible: true,
+    sortable: true,
+    sortingMethod: (a, b) => {
+      let valueA = parseFloat(userData.revenueEarned);
+      let valueB = parseFloat(userData.revenueEarned);
+      if (groupedTableData.sortDirection === "asc") {
+        return valueA - valueB;
+      } else {
+        return valueB - valueA;
+      }
+    },
+  },
   {
     label: "Revenue Per Call",
-    render: (userData) => `$${userData.revenuePerCall}`,
+    render: (userData) => `$${userData.revenuePerCall.toFixed(2)}`,
+    visible: true,
+    sortable: true,
+    sortingMethod: (a, b) => {
+      if (groupedTableData.sortDirection === "asc") {
+        return a.revenuePerCall - b.revenuePerCall;
+      } else {
+        return b.revenuePerCall - a.revenuePerCall;
+      }
+    },
   },
-  { label: "Total Call Length", render: (userData) => userData.totalCallLength },
+  {
+    label: "Total Call Length",
+    render: (userData) => userData.totalCallLength,
+    visible: true,
+    sortable: true,
+    sortingMethod: (a, b) => {
+      if (groupedTableData.sortDirection === "asc") {
+        return a.totalCallLength - b.totalCallLength;
+      } else {
+        return b.totalCallLength - a.totalCallLength;
+      }
+    },
+  },
   {
     label: "Average Call Length",
-    render: (userData) => `${userData.averageCallLength} mins`,
+    render: (userData) => `${userData.averageCallLength.toFixed(2)} mins`,
+    visible: true,
+    sortable: true,
+    sortingMethod: (a, b) => {
+      if (groupedTableData.sortDirection === "asc") {
+        return a.averageCallLength - b.averageCallLength;
+      } else {
+        return b.averageCallLength - a.averageCallLength;
+      }
+    },
   },
-  // Add more columns as needed
 ]);
 
 // Filters for the grouped calls table (if needed)
-let groupedFilters = ref([]);
+let groupedFilters = [];
 
 const groupedCallsItems = {
-  data: Object.values(props.callsGroupedByUser)
+  data: Object.values(props.callsGroupedByUser),
 };
 
-// Use the modified useInfinityTable composable
-let {
-  loadedItemsGrouped,
-  sortColumnGrouped,
-  sortDirectionGrouped,
-  performSortingGrouped,
-  sortByColumnGrouped,
-  renderColumnGrouped,
-  filteredItemsGrouped,
-  loadMoreGrouped,
-} = useInfinityTable(
+const groupedTableData = useInfinityTable(
+  props,
   groupedCallsItems,
   initialUrl,
-  groupedColumns,
-  groupedFilters
+  groupedFilters,
+  false
 );
 
-console.log({
-  loadedItemsGrouped,
-  sortColumnGrouped,
-  sortDirectionGrouped,
-  performSortingGrouped,
-  sortByColumnGrouped,
-  renderColumnGrouped,
-  filteredItemsGrouped,
-  loadMoreGrouped,
+console.log('groupedTableData.loadedItems.value:', groupedTableData.loadedItems.value);
+
+watch(
+  () => props.calls,
+  (first, second) => {
+    loadedItems.value = [...loadedItems.value, ...props.calls.data];
+  }
+);
+
+let filteredItems = computed(() => {
+  if (!filters.value.length) {
+    return loadedItems.value;
+  }
+
+  let items = loadedItems.value;
+
+  filters.value.forEach((filter) => {
+    if (filter.checked) {
+      items = filter.filter(items);
+    }
+  });
+
+
+  return items;
+});
+
+
+let groupedFilteredItems = computed(() => {
+  return groupedTableData.loadedItems.value;
 });
 </script>
 
@@ -279,17 +383,14 @@ console.log({
     <!-- Grouped Calls Table -->
     <InfinityTable
       :columns="groupedColumns"
-      :items="filteredItemsGrouped"
-      :renderColumn="(column, userData) => column.render(userData)"
+      :items="groupedFilteredItems"
+      :renderColumn="groupedTableData.renderColumn"
       :filters="groupedFilters"
       :totalItems="totalCalls"
+      :sortColumn="groupedTableData.sortColumn"
+      :sortByColumn="groupedTableData.sortByColumn"
+      :sortDirection="groupedTableData.sortDirection"
     />
-
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-      <div class="px-4 sm:px-8 sm:rounded-lg">
-        <hr class="mb-4" />
-      </div>
-    </div>
 
     <InfinityTable
       :columns="columns"
