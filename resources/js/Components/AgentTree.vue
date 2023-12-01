@@ -5,12 +5,15 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import VueTree from "@ssthouse/vue3-tree-chart";
 import "@ssthouse/vue3-tree-chart/dist/vue3-tree-chart.css";
 import axios from "axios";
+
+
+let page = usePage();
+
 let { userData, agentTreeModal, treeRoute } = defineProps({
     userData: Object,
     agentTreeModal: Boolean,
     treeRoute: String,
 });
-console.log('user data', userData);
 
 let emit = defineEmits(["close"]);
 
@@ -31,7 +34,7 @@ const convertToTree = (agentData, parent) => {
             name: `${agent.first_name} ${agent.last_name}`,
             avatar: agent.profile_picture == null ? '/profile/avatar.png' : agent.profile_picture,
             id: agent.id,
-            // isAdmin: agent.is_admin ? true : false,
+            isAdmin: agent.is_admin ? true : false,
             hasChildren: false, // Initialize to false
             // Add other properties you want to include in the node
         };
@@ -54,7 +57,7 @@ const convertToTree = (agentData, parent) => {
                         name: `${childAgent.first_name} ${childAgent.last_name}`,
                         avatar: agent.profile_picture == null ? '/profile/avatar.png' : agent.profile_picture,
                         id: childAgent.id,
-
+                        isAdmin: agent.is_admin ? true : false,
                         hasChildren: false, // No children for the child node
                         // Add other properties you want to include in the child node
                     };
@@ -297,7 +300,7 @@ let truncatedName = (name) => {
                                         {{ truncatedName(node.name) }}
                                     </span>
 
-                                    <!-- <a v-if="node.isAdmin === false" title="View Agent"
+                                    <a v-if="node.isAdmin === false && page.props.auth.role == 'admin'" title="View Agent"
                                         :href="node.id ? route('admin.agent.detail', node.id) : ''">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="1.5" stroke="currentColor" class="w-5 h-5 view-agent-detail">
@@ -306,7 +309,7 @@ let truncatedName = (name) => {
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                         </svg>
-                                    </a> -->
+                                    </a>
 
                                 </div>
                             </template>
