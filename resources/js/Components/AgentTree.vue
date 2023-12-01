@@ -87,9 +87,9 @@ let fetchAgentTree = () => {
         })
 }
 const treeConfig = ref({
-    nodeWidth: 120,
+    nodeWidth: 150,
     nodeHeight: 80,
-    levelHeight: 200,
+    levelHeight: 250,
 });
 const zoom = ref(1); // Initial zoom level
 const treeRef = ref(null);
@@ -141,7 +141,7 @@ const handleTouchMove = (event) => {
     }
 };
 let truncatedName = (name) =>  {
-      const maxLength = 18; // Set your desired maximum length
+      const maxLength = 25; // Set your desired maximum length
       if (name.length <= maxLength) {
         return name;
       } else {
@@ -199,7 +199,9 @@ let truncatedName = (name) =>  {
     /* color: white; */
     background-color: rgb(232, 240, 254);
     border-radius: 4px;
+    white-space: normal;
 }
+
 .rich-media-node svg {
     position: absolute;
     top: 5px;
@@ -262,11 +264,11 @@ let truncatedName = (name) =>  {
                     </div>
                     <vue-loader :slidingLoader="slidingLoader" />
                     <div class='container'>
-                        <vue-tree ref="treeRef" style="width: 100%; height: 600px;" :direction="'horizontal'"
+                        <vue-tree @wheel.prevent="handleWheel" ref="treeRef" style="width: 100%; height: 600px;" :direction="'horizontal'"
                             :style="{ transform: `scale(${zoom})`, 'transform-origin': '0 0' }" :dataset="vehicules"
                             :config="treeConfig" linkStyle="straight">
                             <template v-slot:node="{ node, collapsed }">
-                                <div class="rich-media-node" :style="{ border: collapsed ? '2px solid grey' : '' }">
+                                <div :title="node.name" class="rich-media-node" :style="{ border: collapsed ? '2px solid grey' : '' }">
                                     <svg v-if="!collapsed && node.hasChildren" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-red-600">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" />
@@ -277,7 +279,7 @@ let truncatedName = (name) =>  {
                                     </svg>
                                     <img v-if="node.avatar" :src="node.avatar" alt="Avatar"
                                         style="width: 32px; height: 32px; border-radius: 50%;" />
-                                    <span style="padding: 4px 0; font-weight: bold;" class="text-black">{{ truncatedName(node.name)
+                                    <span  style="padding: 4px 0; font-weight: bold;" class="text-black">{{ truncatedName(node.name)
                                     }}</span>
                                 </div>
                             </template>
