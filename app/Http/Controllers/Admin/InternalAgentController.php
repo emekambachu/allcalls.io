@@ -98,6 +98,52 @@ class InternalAgentController extends Controller
     public function getAgentTree($id)
     {
         //retrieve the entire hierarchy
+        if ($id == 1) {
+            $agent = Role::whereName('internal-agent')->first();
+            $agentHierarchy = User::whereHas('roles', function ($query) use ($agent) {
+                $query->where('role_id', $agent->id);
+            })->whereNull('invited_by')->with('allInvitees')->get();
+
+            $admin = User::find($id);
+
+            $returnArr = [
+                "id" => $admin->id,
+                "email" => $admin->email,
+                "upline_id" => $admin->upline_id,
+                "email_verified_at" => $admin->email_verified_at,
+                "created_at" => $admin->created_at,
+                "updated_at" => $admin->updated_at,
+                "stripe_id" => $admin->stripe_id,
+                "pm_type" => $admin->pm_type,
+                "pm_last_four" => $admin->pm_last_four,
+                "trial_ends_at" => $admin->trial_ends_at,
+                "first_name" => $admin->first_name,
+                "last_name" => $admin->last_name,
+                "balance" => $admin->balance,
+                "phone_country" => $admin->phone_country,
+                "phone_code" => $admin->phone_code,
+                "phone" => $admin->phone,
+                "profile_picture" => $admin->profile_picture,
+                "device_token" => $admin->device_token,
+                "last_called_at" => $admin->last_called_at,
+                "banned" => $admin->banned,
+                "call_status" => $admin->call_status,
+                "timezone" => $admin->timezone,
+                "legacy_key" => $admin->legacy_key,
+                "contract_step" => $admin->contract_step,
+                "is_locked" => $admin->is_locked,
+                "progress" => $admin->progress,
+                "equis_duplicate" => $admin->equis_duplicate,
+                "level_id" => $admin->level_id,
+                "invited_by" => $admin->invited_by,
+                "all_invitees" => $agentHierarchy
+            ];
+
+            return response()->json([
+                'success' => true,
+                'agentHierarchy' => $returnArr,
+            ], 200);
+        }
         $agentHierarchy = User::with('allInvitees')->find($id);
         return response()->json([
             'success' => true,
@@ -223,7 +269,7 @@ class InternalAgentController extends Controller
         ]);
     }
 
-    public function getTransaction($id)
+    public function getTransactionj($id)
     {
         $transactions = Transaction::whereUserId($id)->with('card')->paginate(10);
         return response()->json([
