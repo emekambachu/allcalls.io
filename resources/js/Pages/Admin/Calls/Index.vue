@@ -251,9 +251,6 @@ maxDate.value.setHours(23, 59, 59, 999);
                   <th scope="col" class="px-4 py-2 whitespace-nowrap">
                     Revenue
                   </th>
-                  <th scope="col" class="px-4 py-2 whitespace-nowrap">
-                    
-                  </th>
                   <th scope="col" class="px-4 py-2 whitespace-nowrap" style="min-width: 130px">
                     VERTICAL
                   </th>
