@@ -239,10 +239,10 @@ maxDate.value.setHours(23, 59, 59, 999);
                     Role
                   </th>
                   <th scope="col" class="px-4 py-2 whitespace-nowrap">
-                    RING DURATION
+                    Ring Duration
                   </th>
                   <th scope="col" class="px-4 py-2 whitespace-nowrap">
-                    CONNECTED DURATION
+                    Connected Duration
                   </th>
                   <th scope="col" class="px-4 py-2 whitespace-nowrap">
                     Hang Up By
@@ -252,10 +252,10 @@ maxDate.value.setHours(23, 59, 59, 999);
                     Revenue
                   </th>
                   <th scope="col" class="px-4 py-2 whitespace-nowrap" style="min-width: 130px">
-                    VERTICAL
+                    Disposition
                   </th>
                   <th scope="col" class="px-4 py-2 whitespace-nowrap" style="min-width: 100px">
-                    CALLER ID
+                    Caller ID
                   </th>
                   <th scope="col" class="px-4 py-2 whitespace-nowrap" style="min-width: 160px">
                     URL
@@ -307,8 +307,11 @@ maxDate.value.setHours(23, 59, 59, 999);
                   </td>
 
                   <th class="text-gray-600 whitespace-nowrap">{{ call.hung_up_by }}</th>
-                  <td class="text-gray-600 ">
+                  <td class="text-gray-600 whitespace-nowrap">
                     ${{ call.amount_spent }}
+                  </td>
+                  <td class="text-gray-600 whitespace-nowrap">
+                    <span v-if="call.client && call.client.unlocked == 1">{{ call.client.status }}</span>
                   </td>
                   <td class="text-gray-600 whitespace-nowrap">
                     {{ call.call_type.type }}
