@@ -309,9 +309,10 @@ maxDate.value.setHours(23, 59, 59, 999);
                     ${{ call.amount_spent }}
                   </td>
                   <td class="text-gray-600">
-                    <span v-if="call.client && call.client.unlocked == 1">
+                    <div v-if="call.client && call.client.unlocked == 1">
                       {{ call.client.status }}
-                    </span>
+                    </div>
+                    <div v-else>N/A</div>
                   </td>
                   <td class="text-gray-600">
                     {{ call.call_type.type }}
