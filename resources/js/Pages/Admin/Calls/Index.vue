@@ -228,7 +228,7 @@ maxDate.value.setHours(23, 59, 59, 999);
                 <tr>
                   <th scope="col" class="px-4 py-2">ID</th>
                   <th scope="col" class="px-4 py-2" style="min-width: 250px">
-                    CALL Date
+                    Call Date
                   </th>
                   <th scope="col" class="px-4 py-2" style="min-width: 150px">
                     Name
@@ -304,7 +304,7 @@ maxDate.value.setHours(23, 59, 59, 999);
                     }}
                   </td>
 
-                  <th class="text-gray-600">{{ call.hung_up_by }}</th>
+                  <td class="text-gray-600">{{ call.hung_up_by }}</td>
                   <td class="text-gray-600">
                     ${{ call.amount_spent }}
                   </td>
