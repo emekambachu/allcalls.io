@@ -263,7 +263,7 @@ class InternalAgentController extends Controller
 
     public function getCall($id)
     {
-        $calls = Call::whereUserId($id)->with('user', 'getClient',  'callType')->paginate(10);
+        $calls = Call::whereUserId($id)->with('user', 'getClient',  'callType')->latest()->paginate(10);
         $states = State::all();
         return response()->json([
             'calls' => $calls,
