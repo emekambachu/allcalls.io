@@ -319,7 +319,7 @@ maxDate.value.setHours(23, 59, 59, 999);
                   <td class="text-gray-600 ">{{ call.from }}</td>
 
                   <td class="text-gray-600 ">
-                    <a v-if="call.recording_url" target="_blank" :href="call.recording_url" class="flex"><svg
+                    <a v-if="call.recording_url" target="_blank" :href="call.recording_url" class="flex whitespace-nowrap"><svg
                         xmlns="http://www.w3.org/2000/svg" height="1.5em" class="pr-1" viewBox="0 0 512 512">
                         <path
                           d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm256-96a96 96 0 1 1 0 192 96 96 0 1 1 0-192zm0 224a128 128 0 1 0 0-256 128 128 0 1 0 0 256zm0-96a32 32 0 1 0 0-64 32 32 0 1 0 0 64z" />
