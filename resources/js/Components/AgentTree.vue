@@ -24,7 +24,7 @@ let close = () => {
 const convertToTree = (agentData, parent) => {
     const tree = {
         name: parent.first_name + ' ' + parent.last_name,
-        avatar: parent.profile_picture == null ? '/profile/avatar.png' : parent.profile_picture,
+        avatar: parent.is_admin ? '/img/favicon.png': parent.profile_picture == null ? '/profile/avatar.png' : parent.profile_picture,
         children: [],
         hasChildren: agentData.length > 0 ? true : false, // New property to indicate if it has children
         identifier: 'id', // Change this to the unique identifier in your agent data
