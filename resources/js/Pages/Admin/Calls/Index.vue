@@ -228,42 +228,42 @@ maxDate.value.setHours(23, 59, 59, 999);
             <table class="w-full text-sm text-left text-gray-400 table-responsive">
               <thead class="text-xs text-gray-300 uppercase bg-sky-900">
                 <tr>
-                  <th scope="col" class="px-4 py-2 whitespace-no-wrap">ID</th>
-                  <th scope="col" class="px-4 py-2 whitespace-no-wrap" style="min-width: 250px">
+                  <th scope="col" class="px-4 py-2 whitespace-nowrap">ID</th>
+                  <th scope="col" class="px-4 py-2 whitespace-nowrap" style="min-width: 250px">
                     CALL Date
                   </th>
-                  <th scope="col" class="px-4 py-2 whitespace-no-wrap" style="min-width: 150px">
+                  <th scope="col" class="px-4 py-2 whitespace-nowrap" style="min-width: 150px">
                     Name
                   </th>
-                  <th scope="col" class="px-4 py-2 whitespace-no-wrap" style="min-width: 150px">
+                  <th scope="col" class="px-4 py-2 whitespace-nowrap" style="min-width: 150px">
                     Role
                   </th>
-                  <th scope="col" class="px-4 py-2 whitespace-no-wrap">
+                  <th scope="col" class="px-4 py-2 whitespace-nowrap">
                     RING DURATION
                   </th>
-                  <th scope="col" class="px-4 py-2 whitespace-no-wrap">
+                  <th scope="col" class="px-4 py-2 whitespace-nowrap">
                     CONNECTED DURATION
                   </th>
-                  <th scope="col" class="px-4 py-2 whitespace-no-wrap">
+                  <th scope="col" class="px-4 py-2 whitespace-nowrap">
                     Hang Up By
                   </th>
 
-                  <th scope="col" class="px-4 py-2 whitespace-no-wrap">
+                  <th scope="col" class="px-4 py-2 whitespace-nowrap">
                     Revenue
                   </th>
-                  <th scope="col" class="px-4 py-2 whitespace-no-wrap">
+                  <th scope="col" class="px-4 py-2 whitespace-nowrap">
                     
                   </th>
-                  <th scope="col" class="px-4 py-2 whitespace-no-wrap" style="min-width: 130px">
+                  <th scope="col" class="px-4 py-2 whitespace-nowrap" style="min-width: 130px">
                     VERTICAL
                   </th>
-                  <th scope="col" class="px-4 py-2 whitespace-no-wrap" style="min-width: 100px">
+                  <th scope="col" class="px-4 py-2 whitespace-nowrap" style="min-width: 100px">
                     CALLER ID
                   </th>
-                  <th scope="col" class="px-4 py-2 whitespace-no-wrap" style="min-width: 160px">
+                  <th scope="col" class="px-4 py-2 whitespace-nowrap" style="min-width: 160px">
                     URL
                   </th>
-                  <th scope="col" class="px-4 py-2 whitespace-no-wrap text-end" style="min-width: 110px">
+                  <th scope="col" class="px-4 py-2 whitespace-nowrap text-end" style="min-width: 110px">
                     Actions
                   </th>
                 </tr>
