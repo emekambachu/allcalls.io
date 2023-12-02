@@ -314,7 +314,7 @@ let inviteAgentTree = (agent) => {
                   <th scope="col" style="min-width: 110px;" class="px-4 py-3">Last Name</th>
                   <th scope="col" style="min-width: 110px;" class="px-4 py-3">Level</th>
                   <th scope="col" style="min-width: 110px;" class="px-4 py-3">Upline</th>
-                  <th scope="col" style="min-width: 100px;" class="px-4 py-3">Invitees</th>
+                  <th scope="col" style="min-width: 100px;" class="px-4 py-3">Hierarchy</th>
                   <th scope="col" class="px-4 py-3">Email</th>
                   <th scope="col" class="px-4 py-3">Balance</th>
                   <th scope="col" class="px-4 py-3">Phone</th>

@@ -5,12 +5,15 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import VueTree from "@ssthouse/vue3-tree-chart";
 import "@ssthouse/vue3-tree-chart/dist/vue3-tree-chart.css";
 import axios from "axios";
+
+
+let page = usePage();
+
 let { userData, agentTreeModal, treeRoute } = defineProps({
     userData: Object,
     agentTreeModal: Boolean,
     treeRoute: String,
 });
-console.log('user data', userData);
 
 let emit = defineEmits(["close"]);
 
@@ -21,7 +24,7 @@ let close = () => {
 const convertToTree = (agentData, parent) => {
     const tree = {
         name: parent.first_name + ' ' + parent.last_name,
-        avatar: parent.profile_picture == null ? '/profile/avatar.png' : parent.profile_picture,
+        avatar: parent.is_admin ? '/img/favicon.png': parent.profile_picture == null ? '/profile/avatar.png' : parent.profile_picture,
         children: [],
         hasChildren: agentData.length > 0 ? true : false, // New property to indicate if it has children
         identifier: 'id', // Change this to the unique identifier in your agent data
@@ -31,6 +34,7 @@ const convertToTree = (agentData, parent) => {
             name: `${agent.first_name} ${agent.last_name}`,
             avatar: agent.profile_picture == null ? '/profile/avatar.png' : agent.profile_picture,
             id: agent.id,
+            isAdmin: agent.is_admin ? true : false,
             hasChildren: false, // Initialize to false
             // Add other properties you want to include in the node
         };
@@ -53,6 +57,7 @@ const convertToTree = (agentData, parent) => {
                         name: `${childAgent.first_name} ${childAgent.last_name}`,
                         avatar: agent.profile_picture == null ? '/profile/avatar.png' : agent.profile_picture,
                         id: childAgent.id,
+                        isAdmin: agent.is_admin ? true : false,
                         hasChildren: false, // No children for the child node
                         // Add other properties you want to include in the child node
                     };
@@ -87,9 +92,9 @@ let fetchAgentTree = () => {
         })
 }
 const treeConfig = ref({
-    nodeWidth: 120,
+    nodeWidth: 150,
     nodeHeight: 80,
-    levelHeight: 200,
+    levelHeight: 250,
 });
 const zoom = ref(1); // Initial zoom level
 const treeRef = ref(null);
@@ -140,14 +145,14 @@ const handleTouchMove = (event) => {
         event._prevDistance = distance;
     }
 };
-let truncatedName = (name) =>  {
-      const maxLength = 18; // Set your desired maximum length
-      if (name.length <= maxLength) {
+let truncatedName = (name) => {
+    const maxLength = 25; // Set your desired maximum length
+    if (name.length <= maxLength) {
         return name;
-      } else {
+    } else {
         return name.substring(0, maxLength) + '...';
-      }
     }
+}
 </script>
 <style scoped >
 .zoom-controls {
@@ -199,12 +204,21 @@ let truncatedName = (name) =>  {
     /* color: white; */
     background-color: rgb(232, 240, 254);
     border-radius: 4px;
+    white-space: normal;
 }
-.rich-media-node svg {
+
+.rich-media-node .collapsed-control {
     position: absolute;
     top: 5px;
     right: 5px;
 }
+
+.rich-media-node .view-agent-detail {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+}
+
 /* Styles for screens with a width between 601 and 900 pixels */
 @media only screen and (min-width: 320px) and (max-width: 768px) {
     .zoom-controls {
@@ -212,6 +226,7 @@ let truncatedName = (name) =>  {
         top: 68px;
         right: 10px;
     }
+
     .tree-container {
         margin-top: 40px;
     }
@@ -262,23 +277,40 @@ let truncatedName = (name) =>  {
                     </div>
                     <vue-loader :slidingLoader="slidingLoader" />
                     <div class='container'>
-                        <vue-tree ref="treeRef" style="width: 100%; height: 600px;" :direction="'horizontal'"
-                            :style="{ transform: `scale(${zoom})`, 'transform-origin': '0 0' }" :dataset="vehicules"
-                            :config="treeConfig" linkStyle="straight">
+                        <vue-tree @wheel.prevent="handleWheel" ref="treeRef" style="width: 100%; height: 600px;"
+                            :direction="'horizontal'" :style="{ transform: `scale(${zoom})`, 'transform-origin': '0 0' }"
+                            :dataset="vehicules" :config="treeConfig" linkStyle="straight">
                             <template v-slot:node="{ node, collapsed }">
-                                <div class="rich-media-node" :style="{ border: collapsed ? '2px solid grey' : '' }">
-                                    <svg v-if="!collapsed && node.hasChildren" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-red-600">
+                                <div :title="node.name" class="rich-media-node"
+                                    :style="{ border: collapsed ? '2px solid grey' : '' }">
+
+                                    <svg v-if="!collapsed && node.hasChildren" xmlns="http://www.w3.org/2000/svg"
+                                        fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                        class="w-6 h-6 text-red-600 collapsed-control">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" />
                                     </svg>
-                                    <svg v-if="collapsed && node.hasChildren" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-green-600">
+                                    <svg v-if="collapsed && node.hasChildren" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                        class="w-6 h-6 text-green-600 collapsed-control">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                                     </svg>
                                     <img v-if="node.avatar" :src="node.avatar" alt="Avatar"
                                         style="width: 32px; height: 32px; border-radius: 50%;" />
-                                    <span style="padding: 4px 0; font-weight: bold;" class="text-black">{{ truncatedName(node.name)
-                                    }}</span>
+                                    <span style="padding: 4px 0; font-weight: bold;" class="text-black">
+                                        {{ truncatedName(node.name) }}
+                                    </span>
+
+                                    <a v-if="node.isAdmin === false && page.props.auth.role == 'admin'" title="View Agent"
+                                        :href="node.id ? route('admin.agent.detail', node.id) : ''">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="w-5 h-5 view-agent-detail">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </svg>
+                                    </a>
+
                                 </div>
                             </template>
                         </vue-tree>

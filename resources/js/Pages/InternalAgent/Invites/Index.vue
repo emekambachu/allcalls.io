@@ -359,10 +359,8 @@ let inviteAgentTree = (agent) => {
     </div>
 
 
-
-
     <div class="pt-0 flex justify-between px-16">
-        <div class="text-4xl text-custom-sky font-bold mb-6">Registered Agents</div>
+        <div class="text-4xl text-custom-sky font-bold mb-6">My Agents</div>
         <button class="button-custom-back px-4 py-3 rounded-md ml-2 mb-2" @click="inviteAgentTree(page.props.auth.user)">View Complete Tree</button>     
     </div>
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
@@ -384,7 +382,7 @@ let inviteAgentTree = (agent) => {
                   <th scope="col" style="min-width: 110px;" class="px-4 py-3">Last Name</th>
                   <th scope="col" style="min-width: 110px;" class="px-4 py-3">Level</th>
                   <th scope="col" style="min-width: 110px;" class="px-4 py-3">Upline</th>
-                  <th scope="col" class="px-4 py-3" style="min-width: 100px;"  >Invitees</th>
+                  <th scope="col" class="px-4 py-3" style="min-width: 100px;"  >Hierarchy</th>
                   <th scope="col" class="px-4 py-3">Email</th>
                   <th scope="col" class="px-4 py-3">Balance</th>
                   <th scope="col" class="px-4 py-3">Phone</th>
