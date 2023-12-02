@@ -21,6 +21,7 @@ use App\Http\Controllers\TakeCallsController;
 use App\Http\Controllers\StripeTestController;
 use App\Http\Controllers\DefaultCardController;
 use App\Http\Controllers\TwilioTokenController;
+use App\Http\Controllers\WebCallsAPIController;
 use App\Http\Controllers\CallTypeBidsController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TransactionsController;
@@ -227,8 +228,4 @@ Route::post('/notifications/mark-all-as-read', [NotificationController::class, '
 Route::post('/notifications/clear-all', [NotificationController::class, 'clearAll'])->middleware(['auth', 'verified', 'registration-step-check'])->name('notifications.clear-all');
 Route::get('/equis-api', [EquisAPIController::class, 'show']);
 
-Route::get('/queue-test', function() {
-    SampleJob::dispatch();
-
-    return 'Job dispatched to the queue.';
-});
+Route::get('/web-api/calls', [WebCallsAPIController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check']);
