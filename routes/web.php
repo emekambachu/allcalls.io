@@ -228,8 +228,4 @@ Route::post('/notifications/mark-all-as-read', [NotificationController::class, '
 Route::post('/notifications/clear-all', [NotificationController::class, 'clearAll'])->middleware(['auth', 'verified', 'registration-step-check'])->name('notifications.clear-all');
 Route::get('/equis-api', [EquisAPIController::class, 'show']);
 
-Route::get('/example-datatable', function() {
-    return Inertia::render('ExampleDatatable');
-});
-
 Route::get('/web-api/calls', [WebCallsAPIController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check']);
