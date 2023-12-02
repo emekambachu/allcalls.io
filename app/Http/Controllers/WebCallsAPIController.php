@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Call;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class WebCallsAPIController extends Controller
 {
@@ -34,6 +35,8 @@ class WebCallsAPIController extends Controller
         // Apply filtering
         foreach ($this->supportedFilters as $filterKey) {
             if ($request->has($filterKey)) {
+                Log::debug('Filtering by ' . $filterKey . ' = ' . $request->input($filterKey));
+
                 $query->where($filterKey, $request->input($filterKey));
             }
         }
