@@ -14,13 +14,13 @@ class WebCallsAPIController extends Controller
         $query = Call::whereUserId($request->user()->id);
 
         // Retrieve sort column and direction from request
-        $sortColumn = $request->input('sort_column', 'id'); // Default to 'id' if not specified
-        $sortDirection = $request->input('sort_direction', 'desc'); // Default to 'desc' if not specified
+        $sortColumn = $request->input('sort_column', 'id');
+        $sortDirection = $request->input('sort_direction', 'desc');
 
         // Validate sort column
         if (in_array($sortColumn, $this->supportedSortColumns)) {
             // Validate sort direction
-            $sortDirection = $sortDirection === 'asc' ? 'asc' : 'desc'; // Default to 'desc' if invalid value provided
+            $sortDirection = $sortDirection === 'asc' ? 'asc' : 'desc';
             $query->orderBy($sortColumn, $sortDirection);
         }
 
