@@ -159,6 +159,14 @@ onMounted(() => {
         console.log('Response from the new endpoint: ', response.data)
     });
 });
+
+let calls = ref([]);
+
+onMounted(() => {
+  axios.get("/web-api/calls").then((response) => {
+    calls.value = response.data;
+  });
+});
 </script>
 
 <template>
