@@ -210,6 +210,20 @@ let rejectCall = () => {
 
 let disconnectCall = () => {
   console.log("disconnect call now");
+
+
+  // send reject to the web-api to track who disconnected the call
+  axios.post("/web-api/calls/" + connectedUniqueCallId.value + "/reject", {
+    user_response_time: new Date(),
+    device: "desktop",
+  }).then((response) => {
+    console.log(response.data);
+    console.log('Hung up by values saved!');
+  }).catch((error) => {
+    // Handle any error that occurred during the request
+    console.error('Error saving the hung up by values:', error);
+  });
+
   Echo.private("calls." + page.props.auth.user.id).whisper("psst", {
     action: "disconnect",
   });

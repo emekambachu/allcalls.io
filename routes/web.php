@@ -230,4 +230,4 @@ Route::post('/notifications/clear-all', [NotificationController::class, 'clearAl
 Route::get('/equis-api', [EquisAPIController::class, 'show']);
 
 Route::get('/web-api/calls', [WebCallsAPIController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check']);
-Route::middleware('auth:sanctum')->post('/web-api/calls/{uniqueCallId}/reject', [CallHungUpController::class, 'update']);
+Route::middleware('auth:sanctum')->post('/web-api/calls/{uniqueCallId}/reject', [CallHungUpController::class, 'updateForWeb'])->middleware(['auth', 'verified', 'registration-step-check']);
