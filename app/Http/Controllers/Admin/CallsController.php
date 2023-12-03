@@ -115,7 +115,7 @@ class CallsController extends Controller
 
         return Inertia::render('Admin/Calls/IndexBeta', [
             'requestData' => $request->all(),
-            'calls' => $calls,
+            // 'calls' => $calls,
             'totalCalls' => Call::count(),
             'totalRevenue' => round((float) Call::sum('amount_spent'), 2),
             'callsGroupedByUser' => $callsGroupedByUser,

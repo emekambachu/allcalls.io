@@ -18,10 +18,6 @@ if (page.props.flash.message) {
   toaster("success", page.props.flash.message);
 }
 let props = defineProps({
-  calls: {
-    type: Object,
-    required: true,
-  },
   totalCalls: {
     type: Number,
     required: true,
@@ -38,87 +34,35 @@ let props = defineProps({
 
 console.log("Calls Grouped By User: ", props.callsGroupedByUser);
 
-let loadedCalls = ref(props.calls.data);
-let callsGroupedByUser = ref(props.callsGroupedByUser);
+// let loadedCalls = ref(props.calls.data);
+// let callsGroupedByUser = ref(props.callsGroupedByUser);
 
-// Convert the object into an array of [userId, calls] pairs
-let groupedCallsArray = computed(() => {
-  return Object.entries(callsGroupedByUser.value);
-});
-
-watch(
-  () => props.calls,
-  () => {
-    loadedCalls.value = [...loadedCalls.value, ...props.calls.data];
-  }
-);
-
-let initialUrl = usePage().url;
+// // Convert the object into an array of [userId, calls] pairs
+// let groupedCallsArray = computed(() => {
+//   return Object.entries(callsGroupedByUser.value);
+// });
 
 let loadMore = (url) => {
-  router.get(
-    props.calls.next_page_url,
-    {},
-    {
-      preserveState: true,
-      preserveScroll: true,
-      onSuccess: () => {
-        window.history.replaceState({}, "", initialUrl);
-      },
-    }
-  );
 };
 
 let columns = ref([
   {
     label: "ID",
-    columnMethod: "getIdColumn",
     visible: true,
     sortable: true,
-    sortingMethod(a, b) {
-      let valueA = a.id; // Assuming 'id' is the property name in your call object
-      let valueB = b.id;
-
-      if (sortDirection.value === "asc") {
-        return valueA - valueB;
-      } else {
-        return valueB - valueA;
-      }
-    },
     render(call) {
       return call.id;
     },
   },
   {
     label: "Call Date",
-    columnMethod: "getCallTakenColumn",
     visible: true,
-    sortable: true,
     render(call) {
       return call.call_taken;
-    },
-    sortingMethod: (a, b) => {
-      const extractDateTime = (call) => {
-        const dateTimePattern = /\((.*?)\)/; // Regex to extract string in parentheses
-        const match = call.call_taken.match(dateTimePattern);
-        return match
-          ? new Date(match[1].replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$2/$1/$3"))
-          : new Date(0); // Convert to MM/DD/YYYY format for Date parsing
-      };
-
-      let dateA = extractDateTime(a);
-      let dateB = extractDateTime(b);
-
-      if (sortDirection.value === "asc") {
-        return dateA - dateB;
-      } else {
-        return dateB - dateA;
-      }
     },
   },
   {
     label: "Agent Name",
-    columnMethod: "getAgentNameColumn",
     visible: true,
     sortable: false,
     render(call) {
@@ -451,7 +395,7 @@ onMounted(() => {
               </div>
             </div>
           </div>
-          <div v-if="loadedCalls.length" class="overflow-x-auto">
+          <div class="overflow-x-auto">
             <table class="w-full text-sm text-left text-gray-500">
               <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                 <tr class="cursor-pointer">
@@ -461,12 +405,11 @@ onMounted(() => {
                     v-for="(column, index) in columns"
                     :key="index"
                     v-show="column.visible"
-                    @click="sortByColumn(column)"
                   >
                     <div class="flex items-center">
                       <span>{{ column.label }}</span>
 
-                      <span v-if="sortColumn === column.label">
+                      <span>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
