@@ -108,11 +108,6 @@ let columns = ref([
 let sortColumn = ref(null);
 let sortDirection = ref("asc");
 
-
-onMounted(() => {
-  observer.observe(landmark.value);
-});
-
 let performSorting = () => {
   console.log("Perform sorting now!!");
   console.log("Sort Column: ", sortColumn.value);
