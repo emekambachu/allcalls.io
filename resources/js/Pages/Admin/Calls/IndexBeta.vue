@@ -154,12 +154,6 @@ let filters = ref([
 ]);
 
 
-onMounted(() => {
-    axios.get('/web-api/calls').then(response => {
-        console.log('Response from the new endpoint: ', response.data)
-    });
-});
-
 let calls = ref([]);
 
 onMounted(() => {
