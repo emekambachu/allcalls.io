@@ -163,7 +163,7 @@ onMounted(() => {
 let calls = ref([]);
 
 onMounted(() => {
-  axios.get("/web-api/calls").then((response) => {
+  axios.get("/admin/web-api/calls").then((response) => {
     calls.value = response.data;
   });
 });
