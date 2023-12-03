@@ -35,8 +35,6 @@ class WebCallsAPIController extends Controller
         // Apply filtering
         foreach ($this->supportedFilters as $filterKey) {
             if ($request->has($filterKey)) {
-                Log::debug('Filtering by ' . $filterKey . ' = ' . $request->input($filterKey));
-
                 $query->where($filterKey, $request->input($filterKey));
             }
         }
