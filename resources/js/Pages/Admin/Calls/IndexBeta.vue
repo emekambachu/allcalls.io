@@ -32,16 +32,6 @@ let props = defineProps({
   },
 });
 
-// console.log("Calls Grouped By User: ", props.callsGroupedByUser);
-
-// let loadedCalls = ref(props.calls.data);
-// let callsGroupedByUser = ref(props.callsGroupedByUser);
-
-// // Convert the object into an array of [userId, calls] pairs
-// let groupedCallsArray = computed(() => {
-//   return Object.entries(callsGroupedByUser.value);
-// });
-
 let loadMore = (url) => {
 };
 
@@ -127,8 +117,6 @@ let performSorting = () => {
   console.log("Perform sorting now!!");
   console.log("Sort Column: ", sortColumn.value);
   console.log("Sort Direction", sortDirection.value);
-
-  loadedCalls.value.sort(sortingMethod.value);
 };
 
 const sortByColumn = (column) => {
@@ -169,18 +157,6 @@ let filters = ref([
     },
   },
 ]);
-
-let filteredCalls = computed(() => {
-  let calls = loadedCalls.value;
-
-  filters.value.forEach((filter) => {
-    if (filter.checked) {
-      calls = filter.filter(calls);
-    }
-  });
-
-  return calls;
-});
 
 
 onMounted(() => {
@@ -412,7 +388,7 @@ onMounted(() => {
               <tbody>
                 <tr
                   class="border-b hover:bg-gray-100"
-                  v-for="(call, index) in filteredCalls"
+                  v-for="(call, index) in calls"
                   :key="call.id"
                 >
                   <td
@@ -430,21 +406,6 @@ onMounted(() => {
             </table>
           </div>
 
-          <div v-if="loadedCalls.length" class="flex justify-center my-4">
-            <!-- <button
-              type="button"
-              class="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200"
-              @click.prevent="loadMore"
-            >
-              Load More
-            </button> -->
-
-            <div ref="landmark"></div>
-          </div>
-
-          <div v-else class="text-sm text-center py-20 text-gray-200">
-            No calls found.
-          </div>
         </div>
       </div>
     </section>
