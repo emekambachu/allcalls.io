@@ -185,7 +185,7 @@ let filteredCalls = computed(() => {
 
 onMounted(() => {
     axios.get('/web-api/calls').then(response => {
-        console.log('Response from the new endpoint: ', response.data')
+        console.log('Response from the new endpoint: ', response.data)
     });
 });
 </script>
