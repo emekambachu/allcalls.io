@@ -61,14 +61,19 @@ use App\Http\Controllers\TwilioAndroidAccessTokenGuestController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     $user = $request->user();
-    $userRoles = $user->roles; // This will be a collection of Role objects
+    Log::debug('User retrieved', ['user' => $user]);
+
+    $userRoles = $user->roles;
+    Log::debug('User roles retrieved', ['roles' => $userRoles]);
 
     // Add the roles to the user object for this response.
-    // We'll use 'setRelation' to avoid potential issues with direct property assignment
     $user->setRelation('roles', $userRoles);
+
+    Log::debug('Roles setRelation on user', ['user' => $user]);
 
     return $user;
 });
+
 
 
 
