@@ -22,7 +22,7 @@ class WebCallsAPIController extends Controller
 
     public function index(Request $request)
     {
-        $query = Call::query();
+        $query = Call::with('user');
 
         // Apply sorting
         $sortColumn = $request->input('sort_column', 'id');
