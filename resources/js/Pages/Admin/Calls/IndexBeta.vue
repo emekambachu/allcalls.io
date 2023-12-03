@@ -32,7 +32,7 @@ let props = defineProps({
   },
 });
 
-console.log("Calls Grouped By User: ", props.callsGroupedByUser);
+// console.log("Calls Grouped By User: ", props.callsGroupedByUser);
 
 // let loadedCalls = ref(props.calls.data);
 // let callsGroupedByUser = ref(props.callsGroupedByUser);
@@ -71,7 +71,6 @@ let columns = ref([
   },
   {
     label: "Role",
-    columnMethod: "getRoleColumn",
     visible: false,
     sortable: false,
     render(call) {
@@ -80,19 +79,8 @@ let columns = ref([
   },
   {
     label: "Connected Duration",
-    columnMethod: "getConnectedDurationColumn",
     visible: false,
     sortable: true,
-    sortingMethod: (a, b) => {
-      let durationA = a.call_duration_in_seconds;
-      let durationB = b.call_duration_in_seconds;
-
-      if (sortDirection.value === "asc") {
-        return durationA - durationB;
-      } else {
-        return durationB - durationA;
-      }
-    },
     render(call) {
       return (
         String(Math.floor(call.call_duration_in_seconds / 60)).padStart(2, "0") +
@@ -103,29 +91,14 @@ let columns = ref([
   },
   {
     label: "Revenue",
-    columnMethod: "getRevenueColumn",
     visible: true,
     sortable: true,
     render(call) {
       return "$" + call.amount_spent;
     },
-    sortingMethod: (a, b) => {
-      // Convert the string with dollar sign to a float number
-      const getNumericValue = (call) => parseFloat(call.amount_spent);
-
-      let valueA = getNumericValue(a);
-      let valueB = getNumericValue(b);
-
-      if (sortDirection.value === "asc") {
-        return valueA - valueB;
-      } else {
-        return valueB - valueA;
-      }
-    },
   },
   {
     label: "Vertical",
-    columnMethod: "getVerticalColumn",
     visible: true,
     sortable: false,
     render(call) {
@@ -134,7 +107,6 @@ let columns = ref([
   },
   {
     label: "CallerID",
-    columnMethod: "getCallerIdColumn",
     visible: true,
     sortable: false,
     render(call) {
@@ -145,17 +117,7 @@ let columns = ref([
 
 let sortColumn = ref(null);
 let sortDirection = ref("asc");
-let sortingMethod = ref(null);
 
-let landmark = ref(null);
-
-let observer = new IntersectionObserver((entries) => {
-  entries.forEach((entry) => {
-    if (entry.isIntersecting) {
-      loadMore();
-    }
-  });
-});
 
 onMounted(() => {
   observer.observe(landmark.value);
@@ -246,7 +208,7 @@ onMounted(() => {
         <hr class="mb-4" />
       </div>
     </div>
-    <section class="py-3 sm:py-5">
+    <section v-if="false" class="py-3 sm:py-5">
       <div class="px-4 mx-auto max-w-screen-2xl lg:px-12">
         <div class="relative overflow-hidden bg-white sm:rounded-lg">
           <div class="overflow-x-auto">
