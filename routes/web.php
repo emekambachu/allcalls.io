@@ -18,6 +18,7 @@ use App\Http\Controllers\EquisAPIController;
 use App\Http\Controllers\PingDocsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TakeCallsController;
+use App\Http\Controllers\CallHungUpController;
 use App\Http\Controllers\StripeTestController;
 use App\Http\Controllers\DefaultCardController;
 use App\Http\Controllers\TwilioTokenController;
@@ -229,3 +230,4 @@ Route::post('/notifications/clear-all', [NotificationController::class, 'clearAl
 Route::get('/equis-api', [EquisAPIController::class, 'show']);
 
 Route::get('/web-api/calls', [WebCallsAPIController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check']);
+Route::middleware('auth:sanctum')->post('/web-api/calls/{uniqueCallId}/reject', [CallHungUpController::class, 'update']);
