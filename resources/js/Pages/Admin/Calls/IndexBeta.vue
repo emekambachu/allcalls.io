@@ -155,12 +155,17 @@ let filters = ref([
 
 let calls = ref([]);
 let loading = ref(false);
+let currentPage = ref(1);
+
+let fetchCalls = async () => {
+  loading.value = true;
+  let response = await axios.get("/admin/web-api/calls?page=" + currentPage.value);
+  calls.value = response.data.calls;
+  loading.value = false;
+};
 
 onMounted(() => {
-  axios.get("/admin/web-api/calls").then((response) => {
-    console.log("Calls from the response", response.data.calls);
-    calls.value = response.data.calls;
-  });
+  fetchCalls();
 });
 </script>
 
