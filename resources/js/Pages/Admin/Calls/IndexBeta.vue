@@ -197,7 +197,7 @@ let sortByColumn = async (column) => {
         <hr class="mb-4" />
       </div>
     </div>
-    <section v-if="false" class="py-3 sm:py-5">
+    <section class="py-3 sm:py-5">
       <div class="px-4 mx-auto max-w-screen-2xl lg:px-12">
         <div class="relative overflow-hidden bg-white sm:rounded-lg">
           <div class="overflow-x-auto">
@@ -323,19 +323,7 @@ let sortByColumn = async (column) => {
 
                   <PopoverPanel class="absolute z-10 -left-20">
                     <div class="border border-gray-100 p-2 shadow bg-white mt-2">
-                      <div class="flex items-center mb-4">
-                        <div class="mr-2 text-sm">Where</div>
-
-                        <div class="mr-2">
-                          <select class="text-sm">
-                            <option>ID</option>
-                          </select>
-                        </div>
-
-                        <div>
-                          <TextInput placeholder="Enter value" />
-                        </div>
-                      </div>
+                      <input type="checkbox" v-model="" />
                     </div>
                   </PopoverPanel>
                 </Popover>
