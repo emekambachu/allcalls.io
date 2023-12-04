@@ -392,7 +392,6 @@ onMounted(() => {
                     v-for="(column, colIndex) in columns"
                     :key="colIndex"
                     class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
-                    v-show="column.visible"
                     v-text="renderColumn(column, call)"
                   ></td>
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
