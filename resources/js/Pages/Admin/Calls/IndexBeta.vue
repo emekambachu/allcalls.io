@@ -318,7 +318,7 @@ let sortByColumn = async (column) => {
                   </PopoverPanel>
                 </Popover>
 
-                <Popover class="relative">
+                <!-- <Popover class="relative">
                   <PopoverButton>
                     <button
                       type="button"
@@ -331,7 +331,7 @@ let sortByColumn = async (column) => {
                   <PopoverPanel class="absolute z-10 -left-20">
                     <div class="border border-gray-100 p-2 shadow bg-white mt-2"></div>
                   </PopoverPanel>
-                </Popover>
+                </Popover> -->
               </div>
             </div>
           </div>
