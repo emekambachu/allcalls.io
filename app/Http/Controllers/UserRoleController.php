@@ -11,7 +11,7 @@ class UserRoleController extends Controller
 {
     /**
      * Display a listing of the role names of the authenticated user.
-     *
+     * 
      * @return \Illuminate\Http\Response
      */
     public function getUserRoles()
