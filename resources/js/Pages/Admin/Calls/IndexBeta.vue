@@ -64,7 +64,7 @@ let columns = ref([
     visible: false,
     sortable: false,
     render(call) {
-      for(let i = 0; i < call.user.roles; i++) {
+      for(let i = 0; i < call.user.roles.length; i++) {
         if (call.user.roles[i].name === 'internal-agent') {
           return 'Internal Agent';
         }
