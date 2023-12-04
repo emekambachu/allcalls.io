@@ -324,9 +324,7 @@ let sortByColumn = async (column) => {
                   <PopoverPanel class="absolute z-10 w-40 -left-20">
                     <div class="border border-gray-100 p-2 shadow bg-white mt-2">
                       <div class="flex items-center mb-4">
-                        <div class="mr-2 text-sm">
-                          Where
-                        </div>
+                        <div class="mr-2 text-sm">Where</div>
 
                         <div class="mr-2">
                           <select class="text-sm">
@@ -335,7 +333,7 @@ let sortByColumn = async (column) => {
                         </div>
 
                         <div>
-                         <input>
+                          <TextInput placeholder="Enter value" />
                         </div>
                       </div>
                     </div>
@@ -359,7 +357,9 @@ let sortByColumn = async (column) => {
                     <div class="flex items-center">
                       <span>{{ column.label }}</span>
 
-                      <span v-if="column.sortable && sortColumn && sortColumn === column.name">
+                      <span
+                        v-if="column.sortable && sortColumn && sortColumn === column.name"
+                      >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
