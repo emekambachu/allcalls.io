@@ -353,6 +353,7 @@ let sortByColumn = (column) => {
                     v-for="(column, index) in columns"
                     :key="index"
                     v-show="column.visible"
+                    @click="sortByColumn(column)"
                   >
                     <div class="flex items-center">
                       <span>{{ column.label }}</span>
