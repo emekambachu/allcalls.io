@@ -153,7 +153,7 @@ let filters = ref([
   },
 ]);
 
-let callsPaginator = ref([]);
+let callsPaginator = ref(null);
 let loadedCalls = ref([]);
 let loading = ref(false);
 let currentPage = ref(1);
