@@ -47,6 +47,7 @@ let columns = ref([
     label: "Call Date",
     name: "call_taken",
     visible: true,
+    sortable: true,
     render(call) {
       return call.call_taken;
     },
