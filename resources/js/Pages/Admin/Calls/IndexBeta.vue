@@ -33,8 +33,6 @@ let props = defineProps({
   },
 });
 
-
-
 let columns = ref([
   {
     label: "ID",
@@ -55,17 +53,17 @@ let columns = ref([
   },
   {
     label: "Role",
-    name: 'role',
+    name: "role",
     visible: false,
     sortable: false,
     render(call) {
-      for(let i = 0; i < call.user.roles.length; i++) {
-        if (call.user.roles[i].name === 'internal-agent') {
-          return 'Internal Agent';
+      for (let i = 0; i < call.user.roles.length; i++) {
+        if (call.user.roles[i].name === "internal-agent") {
+          return "Internal Agent";
         }
       }
 
-      return 'External Agent';
+      return "External Agent";
     },
   },
   {
@@ -101,7 +99,7 @@ let columns = ref([
   },
   {
     label: "CallerID",
-    name: 'from',
+    name: "from",
     visible: true,
     sortable: false,
     render(call) {
@@ -110,13 +108,11 @@ let columns = ref([
   },
 ]);
 
-
 let performSorting = () => {
   console.log("Perform sorting now!!");
   console.log("Sort Column: ", sortColumn.value);
   console.log("Sort Direction", sortDirection.value);
 };
-
 
 let renderColumn = (column, call) => {
   return column.render(call);
@@ -150,14 +146,14 @@ let loading = ref(false);
 let currentPage = ref(1);
 
 let fetchCalls = async () => {
-  loading.value = true;
+  let url = "/admin/web-api/calls?page=" + currentPage.value;
 
   if (sortColumn.value) {
-    url += '&sort_column=' + sortColumn.value + '&sort_direction=' + sortDirection.value;
+    url += "&sort_column=" + sortColumn.value + "&sort_direction=" + sortDirection.value;
   }
 
-
-  let response = await axios.get("/admin/web-api/calls?page=" + currentPage.value);
+  loading.value = true;
+  let response = await axios.get(url);
   loadedCalls.value = [...loadedCalls.value, ...response.data.calls.data];
   callsPaginator.value = response.data.calls;
   loading.value = false;
@@ -173,7 +169,6 @@ onMounted(() => {
 });
 
 let sortByColumn = (column) => {
-
   console.log("Sort By Column: ", column.name);
 
   if (!column.sortable) return;
@@ -429,7 +424,10 @@ let sortByColumn = (column) => {
               v-if="callsPaginator && callsPaginator.next_page_url"
               class="flex items-center justify-center py-4 mt-4"
             >
-              <button @click.prevent="loadMore" class="bg-gray-200 hover:bg-gray-100 text-gray-800 cursor-pointer px-4 py-2 text-sm rounded-md flex items-center">
+              <button
+                @click.prevent="loadMore"
+                class="bg-gray-200 hover:bg-gray-100 text-gray-800 cursor-pointer px-4 py-2 text-sm rounded-md flex items-center"
+              >
                 <GlobalSpinner :spinner="loading" />
                 Load More
               </button>
