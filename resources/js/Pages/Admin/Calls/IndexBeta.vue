@@ -416,7 +416,7 @@ onMounted(() => {
             </table>
 
             <div
-              v-if="calls.data.length && calls.next_page_url"
+              v-if="callsPaginator && callsPaginator.next_page_url"
               class="flex items-center justify-center py-4 mt-4"
             >
               <button @click.prevent="loadMore" class="bg-gray-200 hover:bg-gray-100 text-gray-800 cursor-pointer px-4 py-2 text-sm rounded-md">
