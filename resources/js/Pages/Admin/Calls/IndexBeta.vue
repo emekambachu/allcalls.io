@@ -179,12 +179,7 @@ let sortByColumn = async (column) => {
 };
 
 let callsGroupedByUserCount = props.callsGroupedByUser.length;
-let minimizedCallsGroupedByUser = ref(
-  // only grab the first 3 keys:values from the callsGroupedByUser object and return it:
-  return Object.fromEntries(
-    Object.entries(props.callsGroupedByUser).slice(0, 3)
-  );
-);
+let minimizedCallsGroupedByUser = Object.fromEntries(Object.entries(props.callsGroupedByUser).slice(0, 3));
 
 console.log('Mini Calls Grouped By User: ', minimizedCallsGroupedByUser.value);
 </script>
