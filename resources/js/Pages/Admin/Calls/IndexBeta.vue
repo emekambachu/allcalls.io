@@ -110,8 +110,6 @@ let columns = ref([
   },
 ]);
 
-let sortColumn = ref(null);
-let sortDirection = ref("asc");
 
 let performSorting = () => {
   console.log("Perform sorting now!!");
@@ -146,11 +144,19 @@ let filters = ref([
 
 let callsPaginator = ref(null);
 let loadedCalls = ref([]);
+let sortColumn = ref(null);
+let sortDirection = ref("asc");
 let loading = ref(false);
 let currentPage = ref(1);
 
 let fetchCalls = async () => {
   loading.value = true;
+
+  if (sortColumn.value) {
+    url += '&sort_column=' + sortColumn.value + '&sort_direction=' + sortDirection.value;
+  }
+
+
   let response = await axios.get("/admin/web-api/calls?page=" + currentPage.value);
   loadedCalls.value = [...loadedCalls.value, ...response.data.calls.data];
   callsPaginator.value = response.data.calls;
