@@ -160,7 +160,7 @@ let currentPage = ref(1);
 let fetchCalls = async () => {
   loading.value = true;
   let response = await axios.get("/admin/web-api/calls?page=" + currentPage.value);
-  calls.value = response.data.calls;
+  calls.value.data.push(...response.data.data);
   loading.value = false;
 };
 
