@@ -119,25 +119,7 @@ let renderColumn = (column, call) => {
   return column.render(call);
 };
 
-let filters = ref([
-  {
-    label: "Paid Calls",
-    checked: false,
-    filter(calls) {
-      return calls.filter((call) => call.amount_spent > 0);
-    },
-  },
-  {
-    label: "Unpaid Calls",
-    checked: false,
-    filter(calls) {
-      console.log("Unpaid Calls Filter");
-      console.log(calls.filter((call) => Number(call.amount_spent) === 0));
-
-      return calls.filter((call) => Number(call.amount_spent) == 0);
-    },
-  },
-]);
+let filters = ref([]);
 
 let callsPaginator = ref(null);
 let loadedCalls = ref([]);
@@ -146,7 +128,7 @@ let sortDirection = ref("asc");
 let loading = ref(false);
 let currentPage = ref(1);
 
-let fetchCalls = async (replace=false) => {
+let fetchCalls = async (replace = false) => {
   let url = "/admin/web-api/calls?page=" + currentPage.value;
 
   if (sortColumn.value) {
@@ -186,10 +168,10 @@ let sortByColumn = async (column) => {
 
   sortColumn.value = column.name;
 
-  if (sortDirection.value === 'asc') {
-    sortDirection.value = 'desc';
+  if (sortDirection.value === "asc") {
+    sortDirection.value = "desc";
   } else {
-    sortDirection.value = 'asc';
+    sortDirection.value = "asc";
   }
 
   await fetchCalls(true);
@@ -340,22 +322,20 @@ let sortByColumn = async (column) => {
 
                   <PopoverPanel class="absolute z-10 w-40 -left-20">
                     <div class="border border-gray-100 p-2 shadow bg-white mt-2">
-                      <div
-                        v-for="(filter, index) in filters"
-                        :key="index"
-                        class="flex items-center mb-4"
-                      >
-                        <input
-                          v-model="filter.checked"
-                          :id="`filter-${index}`"
-                          type="checkbox"
-                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                        />
-                        <label
-                          :for="`filter-${index}`"
-                          class="ms-2 text-sm font-medium text-gray-900 select-none"
-                          v-text="filter.label"
-                        ></label>
+                      <div class="flex items-center mb-4">
+                        <div>
+                          Where
+                        </div>
+
+                        <div>
+                          <select>
+                            <option>ID</option>
+                          </select>
+                        </div>
+
+                        <div>
+                          
+                        </div>
                       </div>
                     </div>
                   </PopoverPanel>
@@ -372,7 +352,7 @@ let sortByColumn = async (column) => {
                     class="px-4 py-3 whitespace-nowrap select-none"
                     v-for="(column, index) in columns"
                     :key="index"
-                    v-show="column.visible"
+                    v-show="column.sortable"
                     @click="sortByColumn(column)"
                   >
                     <div class="flex items-center">
