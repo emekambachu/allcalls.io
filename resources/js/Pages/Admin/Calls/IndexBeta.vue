@@ -32,8 +32,7 @@ let props = defineProps({
   },
 });
 
-let loadMore = (url) => {
-};
+let loadMore = (url) => {};
 
 let columns = ref([
   {
@@ -157,7 +156,7 @@ let calls = ref([]);
 
 onMounted(() => {
   axios.get("/admin/web-api/calls").then((response) => {
-    console.log('Calls from the response', response.data.calls);
+    console.log("Calls from the response", response.data.calls);
     calls.value = response.data.calls;
   });
 });
@@ -401,8 +400,14 @@ onMounted(() => {
                 </tr>
               </tbody>
             </table>
-          </div>
 
+            <div
+              v-if="calls.next_page_url"
+              class="flex items-center justify-center py-4"
+            >
+              <button class="bg-gray-300 hover:bg-gray-200 text-gray-800 cursor-pointer p-2 text-sm">Load More</button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
