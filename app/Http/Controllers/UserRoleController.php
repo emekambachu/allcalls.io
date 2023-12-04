@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 class UserRoleController extends Controller
 {
     /**
-     * Display a listing of the roles of the authenticated user.
+     * Display a listing of the role names of the authenticated user.
      *
      * @return \Illuminate\Http\Response
      */
@@ -22,6 +22,9 @@ class UserRoleController extends Controller
             return response()->json(['message' => 'Not authenticated'], 401);
         }
 
-        return response()->json($user->roles);
+        // Pluck only the 'name' attribute from each role
+        $roleNames = $user->roles->pluck('name');
+
+        return response()->json($roleNames);
     }
 }
