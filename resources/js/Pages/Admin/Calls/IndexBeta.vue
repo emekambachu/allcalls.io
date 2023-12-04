@@ -114,20 +114,6 @@ let performSorting = () => {
   console.log("Sort Direction", sortDirection.value);
 };
 
-const sortByColumn = (column) => {
-  if (!column.sortable) return;
-
-  if (sortColumn.value === column.label) {
-    sortDirection.value = sortDirection.value === "asc" ? "desc" : "asc";
-    sortingMethod.value = column.sortingMethod;
-  } else {
-    sortColumn.value = column.label;
-    sortDirection.value = "asc";
-    sortingMethod.value = column.sortingMethod;
-  }
-
-  performSorting();
-};
 
 let renderColumn = (column, call) => {
   return column.render(call);
@@ -174,6 +160,15 @@ let loadMore = () => {
 onMounted(() => {
   fetchCalls();
 });
+
+const sortByColumn = (column) => {
+  if (!column.sortable) return;
+
+  sortColumn.value = column.label;
+  sortDirection.value = "asc";
+
+  fetchCalls();
+};
 </script>
 
 <template>
