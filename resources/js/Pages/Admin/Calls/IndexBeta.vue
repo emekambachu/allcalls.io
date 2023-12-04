@@ -161,7 +161,7 @@ onMounted(() => {
   fetchCalls();
 });
 
-const sortByColumn = (column) => {
+let sortByColumn = (column) => {
   if (!column.sortable) return;
 
   sortColumn.value = column.label;
