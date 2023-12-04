@@ -181,6 +181,16 @@ let sortByColumn = async (column) => {
 let callsGroupedByUserArray = Object.entries(props.callsGroupedByUser);
 let minimizedCallsGroupedByUserArray = callsGroupedByUserArray.slice(0, 2);
 let minimizedCallsGroupedByUser = ref(Object.fromEntries(minimizedCallsGroupedByUserArray));
+let maxmizedCallsGroupedByUser = ref(Object.fromEntries(minimizedCallsGroupedByUserArray));
+let showMoreForGrouped = ref(false);
+
+let groupedCalls = computed(() => {
+  if (showMoreForGrouped.value) {
+    return maxmizedCallsGroupedByUser.value;
+  } else {
+    return minimizedCallsGroupedByUser.value;
+  }
+});
 
 
 console.log('Mini Calls Grouped By User: ', minimizedCallsGroupedByUser.value);
@@ -230,7 +240,7 @@ console.log('Mini Calls Grouped By User: ', minimizedCallsGroupedByUser.value);
               </thead>
               <tbody>
                 <tr
-                  v-for="(userData, userId) in callsGroupedByUser"
+                  v-for="(userData, userId) in groupedCalls"
                   :key="userId"
                   class="border-b hover:bg-gray-100"
                 >
