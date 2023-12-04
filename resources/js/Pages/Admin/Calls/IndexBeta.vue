@@ -405,7 +405,7 @@ onMounted(() => {
               v-if="calls.next_page_url"
               class="flex items-center justify-center py-4"
             >
-              <button class="bg-gray-300 hover:bg-gray-200 text-gray-800 cursor-pointer p-2 text-sm">Load More</button>
+              <button class="bg-gray-300 hover:bg-gray-200 text-gray-800 cursor-pointer p-2 text-sm rounded-md">Load More</button>
             </div>
           </div>
         </div>
