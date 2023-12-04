@@ -321,7 +321,7 @@ let sortByColumn = async (column) => {
                     </button>
                   </PopoverButton>
 
-                  <PopoverPanel class="absolute z-10 w-40 -left-20">
+                  <PopoverPanel class="absolute z-10 -left-20">
                     <div class="border border-gray-100 p-2 shadow bg-white mt-2">
                       <div class="flex items-center mb-4">
                         <div class="mr-2 text-sm">Where</div>
