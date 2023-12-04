@@ -161,8 +161,8 @@ let currentPage = ref(1);
 let fetchCalls = async () => {
   loading.value = true;
   let response = await axios.get("/admin/web-api/calls?page=" + currentPage.value);
-  loadedCalls.value = [...loadedCalls.value, ...response.data.data];
-  callsPaginator.value = response.data;
+  loadedCalls.value = [...loadedCalls.value, ...response.data.calls.data];
+  callsPaginator.value = response.data.calls;
   loading.value = false;
 };
 
