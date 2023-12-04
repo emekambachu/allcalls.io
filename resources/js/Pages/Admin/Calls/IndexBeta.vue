@@ -3,6 +3,7 @@ import { ref, onMounted, watch, computed } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import { toaster } from "@/helper.js";
+import GlobalSpinner from "@/Components/GlobalSpinner.vue";
 import {
   Menu,
   MenuButton,
@@ -153,6 +154,7 @@ let filters = ref([
 ]);
 
 let calls = ref([]);
+let loading = ref(false);
 
 onMounted(() => {
   axios.get("/admin/web-api/calls").then((response) => {
@@ -402,10 +404,13 @@ onMounted(() => {
             </table>
 
             <div
-              v-if="calls.next_page_url"
+              v-if="calls.data.length && calls.next_page_url"
               class="flex items-center justify-center py-4 mt-4"
             >
-              <button class="bg-gray-200 hover:bg-gray-100 text-gray-800 cursor-pointer px-4 py-2 text-sm rounded-md">Load More</button>
+              <button class="bg-gray-200 hover:bg-gray-100 text-gray-800 cursor-pointer px-4 py-2 text-sm rounded-md">
+                <GlobalSpinner :spinner="loading" />
+                Load More
+              </button>
             </div>
           </div>
         </div>
