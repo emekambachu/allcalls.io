@@ -170,7 +170,7 @@ onMounted(() => {
   fetchCalls();
 });
 
-let sortByColumn = (column) => {
+let sortByColumn = async (column) => {
   console.log("Sort By Column: ", column.name);
 
   if (!column.sortable) return;
@@ -178,7 +178,7 @@ let sortByColumn = (column) => {
   sortColumn.value = column.name;
   sortDirection.value = "asc";
 
-  fetchCalls();
+  await fetchCalls(true);
 };
 </script>
 
