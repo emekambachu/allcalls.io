@@ -44,6 +44,8 @@ use App\Http\Controllers\TwilioAndroidAccessTokenController;
 use App\Http\Controllers\TwilioIOSAccessTokenGuestController;
 use App\Http\Controllers\TwilioIOSSandboxAccessTokenController;
 use App\Http\Controllers\TwilioAndroidAccessTokenGuestController;
+use App\Http\Controllers\UserRoleController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -55,26 +57,10 @@ use App\Http\Controllers\TwilioAndroidAccessTokenGuestController;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    $user = $request->user();
-    Log::debug('User retrieved', ['user' => $user]);
-
-    $userRoles = $user->roles;
-    Log::debug('User roles retrieved', ['roles' => $userRoles]);
-
-    // Add the roles to the user object for this response.
-    $user->setRelation('roles', $userRoles);
-
-    Log::debug('Roles setRelation on user', ['user' => $user]);
-
-    return $user;
+    return $request->user();
 });
-
-
+Route::middleware('auth:sanctum')->get('user/{id}/roles', [UserRoleController::class, 'getUserRoles']);
 
 
 Route::post('/sanctum/token', function (Request $request) {
