@@ -176,7 +176,12 @@ let sortByColumn = async (column) => {
   if (!column.sortable) return;
 
   sortColumn.value = column.name;
-  sortDirection.value = "asc";
+
+  if (sortDirection.value === 'asc') {
+    sortDirection.value = 'desc';
+  } else {
+    sortDirection.value = 'asc';
+  }
 
   await fetchCalls(true);
 };
