@@ -178,10 +178,12 @@ let sortByColumn = async (column) => {
   await fetchCalls(true);
 };
 
-let callsGroupedByUserCount = props.callsGroupedByUser.length;
-let minimizedCallsGroupedByUser = ref(props.callsGroupedByUser.slice(0, 2));
+let callsGroupedByUserArray = Object.entries(props.callsGroupedByUser);
+let minimizedCallsGroupedByUserArray = callsGroupedByUserArray.slice(0, 2);
+let minimizedCallsGroupedByUser = ref(Object.fromEntries(minimizedCallsGroupedByUserArray));
 
-console.log('Mini Calls Grouped By User: ', minimizedCallsGroupedByUser);
+
+console.log('Mini Calls Grouped By User: ', minimizedCallsGroupedByUser.value);
 
 </script>
 
