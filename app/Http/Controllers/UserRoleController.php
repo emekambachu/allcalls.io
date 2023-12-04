@@ -4,22 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 
 class UserRoleController extends Controller
 {
-        /**
-     * Display a listing of the user roles.
+    /**
+     * Display a listing of the roles of the authenticated user.
      *
-     * @param  int  $userId
      * @return \Illuminate\Http\Response
      */
-    public function getUserRoles($userId)
+    public function getUserRoles()
     {
-        $user = User::with('roles')->find($userId);
+        $user = Auth::user();
 
         if (!$user) {
-            return response()->json(['message' => 'User not found'], 404);
+            return response()->json(['message' => 'Not authenticated'], 401);
         }
 
         return response()->json($user->roles);
