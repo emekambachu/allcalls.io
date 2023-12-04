@@ -323,7 +323,6 @@ let sortByColumn = async (column) => {
 
                   <PopoverPanel class="absolute z-10 -left-20">
                     <div class="border border-gray-100 p-2 shadow bg-white mt-2">
-                      <input type="checkbox" v-model="" />
                     </div>
                   </PopoverPanel>
                 </Popover>
