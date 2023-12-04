@@ -167,6 +167,9 @@ onMounted(() => {
 });
 
 let sortByColumn = (column) => {
+
+  console.log("Sort By Column: ", column.name);
+
   if (!column.sortable) return;
 
   sortColumn.value = column.name;
