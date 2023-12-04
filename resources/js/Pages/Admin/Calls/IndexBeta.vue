@@ -242,7 +242,14 @@ let sortByColumn = async (column) => {
                     ${{ userData.revenuePerCall.toFixed(2) }}
                   </td>
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                    {{ userData.totalCallLength }}
+                    {{
+                      String(Math.floor(userData.totalCallLength / 60)).padStart(
+                        2,
+                        "0"
+                      ) +
+                      ":" +
+                      String(userData.totalCallLength % 60).padStart(2, "0")
+                    }}
                   </td>
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
                     {{ userData.averageCallLength.toFixed(2) }}
@@ -322,8 +329,7 @@ let sortByColumn = async (column) => {
                   </PopoverButton>
 
                   <PopoverPanel class="absolute z-10 -left-20">
-                    <div class="border border-gray-100 p-2 shadow bg-white mt-2">
-                    </div>
+                    <div class="border border-gray-100 p-2 shadow bg-white mt-2"></div>
                   </PopoverPanel>
                 </Popover>
               </div>
