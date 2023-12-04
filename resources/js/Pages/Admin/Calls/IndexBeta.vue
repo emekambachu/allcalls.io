@@ -157,9 +157,9 @@ let fetchCalls = async () => {
   loading.value = false;
 };
 
-let loadMore = () => {
+let loadMore = async () => {
   currentPage.value++;
-  fetchCalls();
+  await fetchCalls();
 };
 
 onMounted(() => {
