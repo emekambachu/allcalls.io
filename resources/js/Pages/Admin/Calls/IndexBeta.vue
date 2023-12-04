@@ -181,7 +181,7 @@ let sortByColumn = async (column) => {
 let callsGroupedByUserCount = props.callsGroupedByUser.length;
 let minimizedCallsGroupedByUser = ref(props.callsGroupedByUser.slice(0, 2));
 
-console.log('Mini Calls Grouped By User: ', minimizedCallsGroupedByUser.value);
+console.log('Mini Calls Grouped By User: ', minimizedCallsGroupedByUser);
 
 </script>
 
