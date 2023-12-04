@@ -4,6 +4,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import { toaster } from "@/helper.js";
 import GlobalSpinner from "@/Components/GlobalSpinner.vue";
+import TextInput from "@/Components/TextInput.vue";
 import {
   Menu,
   MenuButton,
@@ -323,18 +324,18 @@ let sortByColumn = async (column) => {
                   <PopoverPanel class="absolute z-10 w-40 -left-20">
                     <div class="border border-gray-100 p-2 shadow bg-white mt-2">
                       <div class="flex items-center mb-4">
-                        <div>
+                        <div class="mr-2 text-sm">
                           Where
                         </div>
 
-                        <div>
-                          <select>
+                        <div class="mr-2">
+                          <select class="text-sm">
                             <option>ID</option>
                           </select>
                         </div>
 
                         <div>
-                          
+                         <input>
                         </div>
                       </div>
                     </div>
