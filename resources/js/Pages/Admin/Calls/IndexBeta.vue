@@ -145,16 +145,18 @@ let sortDirection = ref("asc");
 let loading = ref(false);
 let currentPage = ref(1);
 
-let fetchCalls = async () => {
+let fetchCalls = async (replace=false) => {
   let url = "/admin/web-api/calls?page=" + currentPage.value;
-
-  if (sortColumn.value) {
-    url += "&sort_column=" + sortColumn.value + "&sort_direction=" + sortDirection.value;
-  }
 
   loading.value = true;
   let response = await axios.get(url);
-  loadedCalls.value = [...loadedCalls.value, ...response.data.calls.data];
+
+  if (replace) {
+    loadedCalls.value = response.data.calls.data;
+  } else {
+    loadedCalls.value = [...loadedCalls.value, ...response.data.calls.data];
+  }
+
   callsPaginator.value = response.data.calls;
   loading.value = false;
 };
