@@ -64,7 +64,8 @@ let columns = ref([
     visible: false,
     sortable: false,
     render(call) {
-      return call.user.role;
+      console.log(call.user.roles);
+      return call.user.id;
     },
   },
   {
