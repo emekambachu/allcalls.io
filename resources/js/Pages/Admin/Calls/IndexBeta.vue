@@ -153,14 +153,16 @@ let filters = ref([
   },
 ]);
 
-let calls = ref([]);
+let callsPaginator = ref([]);
+let loadedCalls = ref([]);
 let loading = ref(false);
 let currentPage = ref(1);
 
 let fetchCalls = async () => {
   loading.value = true;
   let response = await axios.get("/admin/web-api/calls?page=" + currentPage.value);
-  calls.value.data.push(...response.data.data);
+  loadedCalls.value.push(response.data.data);
+  callsPaginator.value = response.data;
   loading.value = false;
 };
 
@@ -170,7 +172,8 @@ let loadMore = () => {
 };
 
 onMounted(() => {
-  fetchCalls();
+  // fetchCalls();
+  fetchInitialCalls();
 });
 </script>
 
