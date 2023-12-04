@@ -398,7 +398,7 @@ onMounted(() => {
               <tbody>
                 <tr
                   class="border-b hover:bg-gray-100"
-                  v-for="(call, index) in calls.data"
+                  v-for="(call, index) in loadedCalls"
                   :key="call.id"
                 >
                   <td
