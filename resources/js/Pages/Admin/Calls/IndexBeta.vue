@@ -352,7 +352,7 @@ let sortByColumn = async (column) => {
                     class="px-4 py-3 whitespace-nowrap select-none"
                     v-for="(column, index) in columns"
                     :key="index"
-                    v-show="column.sortable"
+                    v-show="column.visible"
                     @click="sortByColumn(column)"
                   >
                     <div class="flex items-center">
