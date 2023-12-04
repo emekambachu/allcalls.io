@@ -358,7 +358,7 @@ let sortByColumn = async (column) => {
                     <div class="flex items-center">
                       <span>{{ column.label }}</span>
 
-                      <span v-show="column.sortable && sortColumn && sortColumn === column.name">
+                      <span v-if="column.sortable && sortColumn && sortColumn === column.name">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
