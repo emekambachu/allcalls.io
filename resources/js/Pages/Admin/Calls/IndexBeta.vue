@@ -33,7 +33,7 @@ let props = defineProps({
   },
 });
 
-let loadMore = (url) => {};
+
 
 let columns = ref([
   {
@@ -162,6 +162,11 @@ let fetchCalls = async () => {
   let response = await axios.get("/admin/web-api/calls?page=" + currentPage.value);
   calls.value = response.data.calls;
   loading.value = false;
+};
+
+let loadMore = () => {
+  currentPage.value++;
+  fetchCalls();
 };
 
 onMounted(() => {
@@ -412,7 +417,7 @@ onMounted(() => {
               v-if="calls.data.length && calls.next_page_url"
               class="flex items-center justify-center py-4 mt-4"
             >
-              <button class="bg-gray-200 hover:bg-gray-100 text-gray-800 cursor-pointer px-4 py-2 text-sm rounded-md">
+              <button @click.prevent="loadMore" class="bg-gray-200 hover:bg-gray-100 text-gray-800 cursor-pointer px-4 py-2 text-sm rounded-md">
                 <GlobalSpinner :spinner="loading" />
                 Load More
               </button>
