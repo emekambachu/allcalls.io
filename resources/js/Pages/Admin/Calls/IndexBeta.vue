@@ -38,6 +38,7 @@ let props = defineProps({
 let columns = ref([
   {
     label: "ID",
+    name: "id",
     visible: true,
     sortable: true,
     render(call) {
@@ -46,21 +47,15 @@ let columns = ref([
   },
   {
     label: "Call Date",
+    name: "call_taken",
     visible: true,
     render(call) {
       return call.call_taken;
     },
   },
   {
-    label: "Agent Name",
-    visible: true,
-    sortable: false,
-    render(call) {
-      return call.user.first_name + " " + call.user.last_name;
-    },
-  },
-  {
     label: "Role",
+    name: 'role',
     visible: false,
     sortable: false,
     render(call) {
@@ -75,6 +70,7 @@ let columns = ref([
   },
   {
     label: "Connected Duration",
+    name: "call_duration_in_seconds",
     visible: false,
     sortable: true,
     render(call) {
@@ -87,6 +83,7 @@ let columns = ref([
   },
   {
     label: "Revenue",
+    name: "amount_spent",
     visible: true,
     sortable: true,
     render(call) {
@@ -95,6 +92,7 @@ let columns = ref([
   },
   {
     label: "Vertical",
+    name: "vertical",
     visible: true,
     sortable: false,
     render(call) {
@@ -103,6 +101,7 @@ let columns = ref([
   },
   {
     label: "CallerID",
+    name: 'from',
     visible: true,
     sortable: false,
     render(call) {
@@ -170,7 +169,7 @@ onMounted(() => {
 let sortByColumn = (column) => {
   if (!column.sortable) return;
 
-  sortColumn.value = column.label;
+  sortColumn.value = column.name;
   sortDirection.value = "asc";
 
   fetchCalls();
