@@ -172,8 +172,7 @@ let loadMore = () => {
 };
 
 onMounted(() => {
-  // fetchCalls();
-  fetchInitialCalls();
+  fetchCalls();
 });
 </script>
 
