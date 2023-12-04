@@ -158,6 +158,7 @@ let calls = ref([]);
 
 onMounted(() => {
   axios.get("/admin/web-api/calls").then((response) => {
+    console.log('Call response', response.data);
     calls.value = response.data;
   });
 });
