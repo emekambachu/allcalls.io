@@ -206,11 +206,7 @@ let groupedCalls = computed(() => {
   <AuthenticatedLayout>
     <div class="pt-14 flex justify-between px-16">
       <div>
-        <div class="text-4xl text-custom-sky font-bold mb-6">Calls</div>
-      </div>
-
-      <div class="flex items-center">
-        <!-- <button class="button-custom-back px-3 py-2 rounded-md mr-2">Clear All</button> -->
+        <div class="text-4xl text-custom-sky font-bold mb-6">Summary</div>
       </div>
     </div>
 
@@ -219,6 +215,7 @@ let groupedCalls = computed(() => {
         <hr class="mb-4" />
       </div>
     </div>
+
     <section class="py-3 sm:py-5">
       <div class="px-4 mx-auto max-w-screen-2xl lg:px-12">
         <div class="relative overflow-hidden bg-white sm:rounded-lg">
@@ -455,5 +452,18 @@ let groupedCalls = computed(() => {
         </div>
       </div>
     </section>
+
+
+    <div class="pt-14 flex justify-between px-16">
+      <div>
+        <div class="text-4xl text-custom-sky font-bold mb-6">Call Details</div>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+      <div class="px-4 sm:px-8 sm:rounded-lg">
+        <hr class="mb-4" />
+      </div>
+    </div>
   </AuthenticatedLayout>
 </template>
