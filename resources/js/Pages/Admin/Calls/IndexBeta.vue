@@ -262,20 +262,20 @@ let exportCSV = () => {
   document.body.removeChild(link);
 };
 
-let playingRecordingCallIds = ref([]);
 let currentlyPlayingAudio = ref(null);
+let currentlyPlayingAudioCallId = ref(null);
 
 let playRecording = (call) => {
-  playingRecordingCallIds.value = [];
-  playingRecordingCallIds.value.push(call.id);
   currentlyPlayingAudio.value = new Audio(call.recording_url);
   currentlyPlayingAudio.value.play();
+  currentlyPlayingAudioCallId.value = call.id;
+
 };
 
 let stopPlayingRecording = (call) => {
-  playingRecordingCallIds.value = [];
-  currentlyPlayingAudio.value.pause();
+  currentlyPlayingAudio.value.stop();
   currentlyPlayingAudio.value = null;
+  currentlyPlayingAudioCallId.value = null;
 };
 </script>
 
@@ -573,7 +573,7 @@ let stopPlayingRecording = (call) => {
                       stroke-width="1.5"
                       stroke="currentColor"
                       class="w-4 h-4 cursor-pointer ml-3"
-                      v-if="!playingRecordingCallIds.includes(call.id)"
+                      v-if="currentlyPlayingAudioCallId !== call.id"
                       @click.prevent="playRecording(call)"
                     >
                       <path
@@ -586,10 +586,7 @@ let stopPlayingRecording = (call) => {
                     <div class="flex items-center">
                       <svg
                         class="w-4 h-4 cursor-pointer ml-3"
-                        v-if="
-                          playingRecordingCallIds.includes(call.id) &&
-                          currentlyPlayingAudio !== null
-                        "
+                        v-if="currentlyPlayingAudioCallId === call.id"
                         @click.prevent="stopPlayingRecording(call)"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
