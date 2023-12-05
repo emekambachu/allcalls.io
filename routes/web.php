@@ -231,7 +231,3 @@ Route::get('/equis-api', [EquisAPIController::class, 'show']);
 
 
 Route::middleware('auth:sanctum')->post('/web-api/calls/{uniqueCallId}/reject', [CallHungUpController::class, 'updateForWeb'])->middleware(['auth', 'verified', 'registration-step-check']);
-
-Route::get('/sample', function() {
-    return request()->query('name') ?? 'No name';
-});

@@ -226,8 +226,37 @@ let summaryFooterRow = computed(() => {
 });
 
 let exportCSV = () => {
-  console.log(loadedCalls.value);
-}
+    let array = loadedCalls.value; // Assuming this is your array of objects
+    let csvContent = "data:text/csv;charset=utf-8,";
+
+    // Extracting headers
+    if (array.length > 0) {
+        csvContent += Object.keys(array[0]).join(",") + "\r\n";
+    }
+
+    // Adding the data
+    array.forEach(obj => {
+        let row = Object.values(obj).join(",");
+        csvContent += row + "\r\n";
+    });
+
+    // Encoding URI
+    var encodedUri = encodeURI(csvContent);
+
+    // Creating a temporary link to trigger download
+    var link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "my_data.csv");
+    document.body.appendChild(link);
+
+    // Triggering the download
+    link.click();
+
+    // Cleaning up
+    document.body.removeChild(link);
+};
+
+
 </script>
 
 <template>
