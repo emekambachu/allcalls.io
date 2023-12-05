@@ -530,6 +530,7 @@ let exportCSV = () => {
                       </span>
                     </div>
                   </th>
+                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Recording</th>
                   <th scope="col" class="px-4 py-3 whitespace-nowrap">Actions</th>
                 </tr>
               </thead>
@@ -546,6 +547,9 @@ let exportCSV = () => {
                     v-show="column.visible"
                     v-text="renderColumn(column, call)"
                   ></td>
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                    Play
+                  </td>
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
                     <!-- Actions column content -->
                   </td>
