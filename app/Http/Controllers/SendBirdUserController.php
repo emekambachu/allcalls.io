@@ -32,7 +32,7 @@ class SendBirdUserController extends Controller
         // Validate incoming request fields
         $validatedData = $request->validate([
             'nickname' => 'required|string|max:255',
-            'profile_image' => 'required|image', // Validate the image
+            // 'profile_image' => 'required|image', // Validate the image
         ]);
 
         // Handle Image Upload
