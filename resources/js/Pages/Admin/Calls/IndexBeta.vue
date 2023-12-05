@@ -188,6 +188,10 @@ let maxmizedCallsGroupedByUser = ref(
 );
 let showMoreForGrouped = ref(false);
 
+
+console.log('Mini Calls Grouped By User: ', minimizedCallsGroupedByUser.value);
+console.log('Max Calls Grouped By User: ', maxmizedCallsGroupedByUser.value);
+
 let groupedCalls = computed(() => {
   if (showMoreForGrouped.value) {
     return maxmizedCallsGroupedByUser.value;
@@ -195,8 +199,6 @@ let groupedCalls = computed(() => {
     return minimizedCallsGroupedByUser.value;
   }
 });
-
-console.log("Mini Calls Grouped By User: ", minimizedCallsGroupedByUser.value);
 </script>
 
 <template>
