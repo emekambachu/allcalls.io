@@ -9,7 +9,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class SendBirdUser extends Model
 {
     use HasFactory;
-
+    protected $table = 'sendbird_users'; 
+    
     protected $fillable = [
         'nickname', 'user_id', 'profile_url', 'access_token', 'is_online', 
         'is_active', 'is_created', 'phone_number', 'require_auth_for_profile_image', 
