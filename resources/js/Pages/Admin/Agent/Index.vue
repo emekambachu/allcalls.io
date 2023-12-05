@@ -232,6 +232,10 @@ let exportCSV = agent => {
 };
 let agentTreeModal = ref(false)
 let inviteAgentTree = (agent) => {
+
+
+  console.log('AGENT: ', agent);
+
   agentTreeModal.value = true
   userData.value = agent;
 }
