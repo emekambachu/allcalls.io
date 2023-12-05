@@ -227,19 +227,21 @@ let summaryFooterRow = computed(() => {
 
 let exportCSV = () => {
   // Filter out only the visible columns
-  let visibleColumns = columns.value.filter(c => c.visible);
+  let visibleColumns = columns.value.filter((c) => c.visible);
 
   // Extracting headers from the visible columns
-  let headers = visibleColumns.map(c => c.label);
+  let headers = visibleColumns.map((c) => c.label);
 
   let csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "\r\n";
 
   // Adding the data
-  loadedCalls.value.forEach(call => {
-    let row = visibleColumns.map(column => {
-      // Using the render function to get the displayed value
-      return column.render(call);
-    }).join(",");
+  loadedCalls.value.forEach((call) => {
+    let row = visibleColumns
+      .map((column) => {
+        // Using the render function to get the displayed value
+        return column.render(call);
+      })
+      .join(",");
     csvContent += row + "\r\n";
   });
 
@@ -258,7 +260,6 @@ let exportCSV = () => {
   // Cleaning up
   document.body.removeChild(link);
 };
-
 </script>
 
 <template>
@@ -548,7 +549,20 @@ let exportCSV = () => {
                     v-text="renderColumn(column, call)"
                   ></td>
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                    Play
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-3 h-3"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
+                      />
+                    </svg>
                   </td>
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
                     <!-- Actions column content -->
