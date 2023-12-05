@@ -272,7 +272,9 @@ let playRecording = (call) => {
 
   // Assuming audio is your Audio element
   currentlyPlayingAudio.value.addEventListener("ended", () => {
-    console.log("Audio has ended.");
+    currentlyPlayingAudio.value.pause();
+    currentlyPlayingAudio.value = null;
+    currentlyPlayingAudioCallId.value = null;
   });
 };
 
