@@ -277,7 +277,7 @@ let export = () => {
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
                     <Link
                       :href="`/admin/customer/detail/${userId}`"
-                      class="text-blue-500 hover:text-blue-600"
+                      class="text-blue-400 hover:text-blue-500 underline"
                     >
                       {{ userData.agentName }}
                     </Link>
