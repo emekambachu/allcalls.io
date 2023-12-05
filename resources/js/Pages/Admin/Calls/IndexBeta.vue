@@ -284,7 +284,7 @@ let summaryFooterRow = computed(() => {
                   </td>
                 </tr>
 
-                <tr class="border-b hover:bg-gray-100" v-if="showMoreForGrouped">
+                <tr class="bg-gray-100 border-b" v-if="showMoreForGrouped">
                   <td
                     class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
                     v-text="summaryFooterRow.agentName"
