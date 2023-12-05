@@ -599,7 +599,7 @@ let stopPlayingRecording = (call) => {
                       />
                     </svg>
 
-                    <p style="font-size: 10px;" class="text-gray-800 mt-2">Playing</p>
+                    <p style="font-size: 10px;" class="text-gray-800 ml-1" v-if="currentlyPlayingAudio !== null">Playing</p>
                   </td>
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
                     <!-- Actions column content -->
