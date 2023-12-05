@@ -273,7 +273,7 @@ let playRecording = (call) => {
 };
 
 let stopPlayingRecording = (call) => {
-  currentlyPlayingAudio.value.stop();
+  currentlyPlayingAudio.value.pause();
   currentlyPlayingAudio.value = null;
   currentlyPlayingAudioCallId.value = null;
 };
