@@ -12,8 +12,8 @@ class MyBusinessController extends Controller
 {
     public function index()
     {
-        $businesses = InternalAgentMyBusiness::whereIn('agent_id', getInviteeIds(auth()->user()))->get();
-        dd($businesses);
+        $businesses = InternalAgentMyBusiness::whereIn('agent_id', getInviteeIds(auth()->user()))->paginate(10);
+        // dd($businesses);
         return Inertia::render('InternalAgent/MyBusiness/Index', [
             'businesses' => $businesses,
         ]);
