@@ -226,36 +226,38 @@ let summaryFooterRow = computed(() => {
 });
 
 let exportCSV = () => {
-    let array = loadedCalls.value; // Assuming this is your array of objects
-    let csvContent = "data:text/csv;charset=utf-8,";
+  // Filter out only the visible columns
+  let visibleColumns = columns.value.filter(c => c.visible);
 
-    // Extracting headers
-    if (array.length > 0) {
-        csvContent += Object.keys(array[0]).join(",") + "\r\n";
-    }
+  // Extracting headers from the visible columns
+  let headers = visibleColumns.map(c => c.label);
 
-    // Adding the data
-    array.forEach(obj => {
-        let row = Object.values(obj).join(",");
-        csvContent += row + "\r\n";
-    });
+  let csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "\r\n";
 
-    // Encoding URI
-    var encodedUri = encodeURI(csvContent);
+  // Adding the data
+  loadedCalls.value.forEach(call => {
+    let row = visibleColumns.map(column => {
+      // Using the render function to get the displayed value
+      return column.render(call);
+    }).join(",");
+    csvContent += row + "\r\n";
+  });
 
-    // Creating a temporary link to trigger download
-    var link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "my_data.csv");
-    document.body.appendChild(link);
+  // Encoding URI
+  var encodedUri = encodeURI(csvContent);
 
-    // Triggering the download
-    link.click();
+  // Creating a temporary link to trigger download
+  var link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "my_data.csv");
+  document.body.appendChild(link);
 
-    // Cleaning up
-    document.body.removeChild(link);
+  // Triggering the download
+  link.click();
+
+  // Cleaning up
+  document.body.removeChild(link);
 };
-
 
 </script>
 
