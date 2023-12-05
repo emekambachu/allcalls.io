@@ -272,9 +272,7 @@ let playRecording = (call) => {
 };
 
 let stopPlayingRecording = (call) => {
-  playingRecordingCallIds.value = playingRecordingCallIds.value.filter(
-    (id) => id !== call.id
-  );
+  playingRecordingCallIds.value = [];
   currentlyPlayingAudio.value.pause();
   currentlyPlayingAudio.value = null;
 };
