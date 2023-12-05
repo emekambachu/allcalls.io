@@ -261,6 +261,11 @@ let exportCSV = () => {
   // Cleaning up
   document.body.removeChild(link);
 };
+
+let playRecording = (url) => {
+  let audio = new Audio(url);
+  audio.play();
+}
 </script>
 
 <template>
@@ -557,6 +562,7 @@ let exportCSV = () => {
                       stroke-width="1.5"
                       stroke="currentColor"
                       class="w-4 h-4 cursor-pointer ml-3"
+                      @click.prevent="playRecording(call.recording_url)"
                     >
                       <path
                         stroke-linecap="round"
