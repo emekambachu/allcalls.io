@@ -28,8 +28,19 @@ class SendBirdUserController extends Controller
         // Validate incoming request fields
         $validatedData = $request->validate([
             'nickname' => 'required|string|max:255',
-            'profile_url' => 'required',
+            'profile_image' => 'required|image', // Validate the image
         ]);
+
+        // Handle Image Upload
+        $path = $request->file('profile_image')->storeAs(
+            'profile_pictures', $user->id . '.' . $request->file('profile_image')->extension()
+        );
+        $profileUrl = Storage::url($path);
+        $fullUrl = url($profileUrl);
+        
+        // Update user's profile picture in the database
+        $user->profile_picture = $profileUrl;
+        $user->save();
 
         $applicationId = env('SENDBIRD_APPLICATION_ID'); // Replace with your SendBird application ID
         $apiKey = env('SENDBIRD_API_TOKEN'); // Replace with your SendBird API key
@@ -40,7 +51,7 @@ class SendBirdUserController extends Controller
         ])->post("https://api-{$applicationId}.sendbird.com/v3/users", [
             'user_id' => $user->id,
             'nickname' => $request->nickname,
-            'profile_url' => $request->profile_url,
+            'profile_url' => $fullUrl,
             'issue_access_token' => true, // Include this field
         ]);
 
