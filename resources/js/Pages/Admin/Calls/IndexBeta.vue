@@ -249,7 +249,7 @@ let exportCSV = () => {
   // Creating a temporary link to trigger download
   var link = document.createElement("a");
   link.setAttribute("href", encodedUri);
-  link.setAttribute("download", "my_data.csv");
+  link.setAttribute("download", "calls.csv");
   document.body.appendChild(link);
 
   // Triggering the download
