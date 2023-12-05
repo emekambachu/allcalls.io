@@ -278,7 +278,7 @@ console.log("Mini Calls Grouped By User: ", minimizedCallsGroupedByUser.value);
               </tbody>
             </table>
 
-            <div class="flex justify-center">
+            <div class="flex justify-center mt-4">
               <button
                 @click.prevent="showMoreForGrouped = !showMoreForGrouped"
                 class="bg-gray-200 hover:bg-gray-100 text-gray-800 cursor-pointer px-4 py-2 text-sm rounded-md flex items-center"
