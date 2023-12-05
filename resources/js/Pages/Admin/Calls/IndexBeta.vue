@@ -197,15 +197,32 @@ let groupedCalls = computed(() => {
   }
 });
 
+
 let summaryFooterRow = computed(() => {
+  let totalCalls = 0;
+  let totalPaidCalls = 0;
+  let totalRevenue = 0;
+  let totalCallLength = 0;
+
+  for (const userId in maxmizedCallsGroupedByUser.value) {
+    const userData = maxmizedCallsGroupedByUser.value[userId];
+    totalCalls += userData.totalCalls;
+    totalPaidCalls += userData.paidCalls; // Summing up the paidCalls
+    totalRevenue += userData.revenueEarned;
+    totalCallLength += userData.totalCallLength; // Assuming this field exists in userData
+  }
+
+  let averageCallLength = totalCalls > 0 ? totalCallLength / totalCalls : 0;
+  let revenuePerCall = totalCalls > 0 ? totalRevenue / totalCalls : 0;
+
   return {
     agentName: "Totals",
-    totalCalls: props.totalCalls,
-    paidCalls: props.totalCalls - 1,
-    revenueEarned: props.totalRevenue,
-    revenuePerCall: props.totalRevenue / props.totalCalls,
-    totalCallLength: 0,
-    averageCallLength: 0,
+    totalCalls: totalCalls,
+    paidCalls: totalPaidCalls, // Using the summed value of paidCalls
+    revenueEarned: totalRevenue,
+    revenuePerCall: revenuePerCall,
+    totalCallLength: totalCallLength,
+    averageCallLength: averageCallLength,
   };
 });
 </script>
