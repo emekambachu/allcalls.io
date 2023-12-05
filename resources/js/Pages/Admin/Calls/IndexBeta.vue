@@ -208,7 +208,6 @@ let summaryFooterRow = computed(() => {
     averageCallLength: 0,
   };
 });
-
 </script>
 
 <template>
@@ -285,14 +284,35 @@ let summaryFooterRow = computed(() => {
                   </td>
                 </tr>
 
-                <tr class="bg-gray-100">
-                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap" v-text="summaryFooterRow.agentName"></td>
-                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap" v-text="summaryFooterRow.totalCalls"></td>
-                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap" v-text="summaryFooterRow.paidCalls"></td>
-                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap" v-text="`$${summaryFooterRow.revenueEarned}`"></td>
-                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap" v-text="`$${summaryFooterRow.revenuePerCall.toFixed(2)}`"></td>
-                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap" v-text="`$${summaryFooterRow.totalCallLength.toFixed(2)}`"></td>
-                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap" v-text="`$${summaryFooterRow.averageCallLength.toFixed(2)}`"></td>
+                <tr class="border-b hover:bg-gray-100" v-if="showMoreForGrouped">
+                  <td
+                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                    v-text="summaryFooterRow.agentName"
+                  ></td>
+                  <td
+                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                    v-text="summaryFooterRow.totalCalls"
+                  ></td>
+                  <td
+                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                    v-text="summaryFooterRow.paidCalls"
+                  ></td>
+                  <td
+                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                    v-text="`$${summaryFooterRow.revenueEarned}`"
+                  ></td>
+                  <td
+                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                    v-text="`$${summaryFooterRow.revenuePerCall.toFixed(2)}`"
+                  ></td>
+                  <td
+                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                    v-text="`$${summaryFooterRow.totalCallLength.toFixed(2)}`"
+                  ></td>
+                  <td
+                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                    v-text="`$${summaryFooterRow.averageCallLength.toFixed(2)}`"
+                  ></td>
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"></td>
                 </tr>
               </tbody>
@@ -466,7 +486,6 @@ let summaryFooterRow = computed(() => {
                     <!-- Actions column content -->
                   </td>
                 </tr>
-
               </tbody>
             </table>
 
