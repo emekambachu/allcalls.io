@@ -151,6 +151,7 @@ let fetchCalls = async (replace = false) => {
 
   callsPaginator.value = response.data.calls;
   loading.value = false;
+  console.log('Loaded Calls: ', loadedCalls.value);
 };
 
 let loadMore = async () => {
