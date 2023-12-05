@@ -180,8 +180,12 @@ let sortByColumn = async (column) => {
 
 let callsGroupedByUserArray = Object.entries(props.callsGroupedByUser);
 let minimizedCallsGroupedByUserArray = callsGroupedByUserArray.slice(0, 2);
-let minimizedCallsGroupedByUser = ref(Object.fromEntries(minimizedCallsGroupedByUserArray));
-let maxmizedCallsGroupedByUser = ref(Object.fromEntries(minimizedCallsGroupedByUserArray));
+let minimizedCallsGroupedByUser = ref(
+  Object.fromEntries(minimizedCallsGroupedByUserArray)
+);
+let maxmizedCallsGroupedByUser = ref(
+  Object.fromEntries(minimizedCallsGroupedByUserArray)
+);
 let showMoreForGrouped = ref(false);
 
 let groupedCalls = computed(() => {
@@ -192,9 +196,7 @@ let groupedCalls = computed(() => {
   }
 });
 
-
-console.log('Mini Calls Grouped By User: ', minimizedCallsGroupedByUser.value);
-
+console.log("Mini Calls Grouped By User: ", minimizedCallsGroupedByUser.value);
 </script>
 
 <template>
@@ -261,10 +263,7 @@ console.log('Mini Calls Grouped By User: ', minimizedCallsGroupedByUser.value);
                   </td>
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
                     {{
-                      String(Math.floor(userData.totalCallLength / 60)).padStart(
-                        2,
-                        "0"
-                      ) +
+                      String(Math.floor(userData.totalCallLength / 60)).padStart(2, "0") +
                       ":" +
                       String(userData.totalCallLength % 60).padStart(2, "0")
                     }}
@@ -278,6 +277,18 @@ console.log('Mini Calls Grouped By User: ', minimizedCallsGroupedByUser.value);
                 </tr>
               </tbody>
             </table>
+
+            <div v-if="showMoreForGrouped">
+              <button
+                @click.prevent="showMoreForGrouped = !showMoreForGrouped"
+                class="bg-gray-200 hover:bg-gray-100 text-gray-800 cursor-pointer px-4 py-2 text-sm rounded-md flex items-center"
+              >
+
+                <span v-if="showMoreForGrouped">Show More</span>
+                <span v-else>Show Less</span>
+
+              </button>
+            </div>
           </div>
         </div>
       </div>
