@@ -414,7 +414,7 @@ let exportCSV = () => {
                         />
                         <label
                           :for="`column-${index}`"
-                          class="ms-2 text-sm font-medium text-gray-900 select-none"
+                          class="ms-2 text-xs font-medium text-gray-900 select-none whitespace-nowrap"
                           >{{ column.label }}</label
                         >
                       </div>
