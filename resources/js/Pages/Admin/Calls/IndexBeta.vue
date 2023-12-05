@@ -285,7 +285,7 @@ let summaryFooterRow = computed(() => {
                   </td>
                 </tr>
 
-                <tr>
+                <tr class="bg-gray-100">
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap" v-text="summaryFooterRow.agentName"></td>
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap" v-text="summaryFooterRow.totalCalls"></td>
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap" v-text="summaryFooterRow.paidCalls"></td>
