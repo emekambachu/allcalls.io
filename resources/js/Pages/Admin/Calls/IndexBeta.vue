@@ -196,6 +196,19 @@ let groupedCalls = computed(() => {
     return minimizedCallsGroupedByUser.value;
   }
 });
+
+let summaryFooterRow = computed(() => {
+  return {
+    agentName: "Totals",
+    totalCalls: props.totalCalls,
+    paidCalls: props.totalCalls - 1,
+    revenueEarned: props.totalRevenue,
+    revenuePerCall: props.totalRevenue / props.totalCalls,
+    totalCallLength: 0,
+    averageCallLength: 0,
+  };
+});
+
 </script>
 
 <template>
@@ -270,6 +283,17 @@ let groupedCalls = computed(() => {
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
                     <!-- Actions column content -->
                   </td>
+                </tr>
+
+                <tr>
+                  <td v-text="summaryFooterRow.agentName"></td>
+                  <td v-text="summaryFooterRow.totalCalls"></td>
+                  <td v-text="summaryFooterRow.paidCalls"></td>
+                  <td v-text="`$${summaryFooterRow.revenueEarned}`"></td>
+                  <td v-text="`$${summaryFooterRow.revenuePerCall.toFixed(2)}`"></td>
+                  <td v-text="`$${summaryFooterRow.totalCallLength.toFixed(2)}`"></td>
+                  <td v-text="`$${summaryFooterRow.averageCallLength.toFixed(2)}`"></td>
+                  <td></td>
                 </tr>
               </tbody>
             </table>
@@ -442,6 +466,7 @@ let groupedCalls = computed(() => {
                     <!-- Actions column content -->
                   </td>
                 </tr>
+
               </tbody>
             </table>
 
