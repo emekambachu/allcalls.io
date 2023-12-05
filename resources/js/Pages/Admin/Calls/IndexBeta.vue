@@ -548,14 +548,14 @@ let exportCSV = () => {
                     v-show="column.visible"
                     v-text="renderColumn(column, call)"
                   ></td>
-                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap flex justify-center">
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke-width="1.5"
                       stroke="currentColor"
-                      class="w-4 h-4 cursor-pointer"
+                      class="w-4 h-4 cursor-pointer ml-3"
                     >
                       <path
                         stroke-linecap="round"
