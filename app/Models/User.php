@@ -13,6 +13,7 @@ use App\Models\Transaction;
 use Laravel\Cashier\Billable;
 use App\Models\AdditionalFile;
 use App\Models\UserCallTypeState;
+use App\Models\SendBirdUser;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -192,4 +193,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(User::class, 'id', 'invited_by');
     }
 
+
+    public function sendbirdUser()
+    {
+        return $this->hasOne(SendbirdUser::class);
+    }
 }
