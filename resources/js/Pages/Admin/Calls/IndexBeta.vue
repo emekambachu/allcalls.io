@@ -574,6 +574,7 @@ let stopPlayingRecording = (call) => {
                       stroke-width="1.5"
                       stroke="currentColor"
                       class="w-4 h-4 cursor-pointer ml-3"
+                      v-if="!playingRecordingCallIds.includes(call.id)"
                       @click.prevent="playRecording(call)"
                     >
                       <path
@@ -585,6 +586,7 @@ let stopPlayingRecording = (call) => {
 
                     <svg
                       class="w-4 h-4 cursor-pointer ml-3"
+                      v-if="playingRecordingCallIds.includes(call.id) && currentlyPlayingAudio !== null"
                       @click.prevent="stopPlayingRecording(call)"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
