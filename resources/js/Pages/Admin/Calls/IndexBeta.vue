@@ -183,14 +183,11 @@ let minimizedCallsGroupedByUserArray = callsGroupedByUserArray.slice(0, 2);
 let minimizedCallsGroupedByUser = ref(
   Object.fromEntries(minimizedCallsGroupedByUserArray)
 );
-let maxmizedCallsGroupedByUser = ref(
-  Object.fromEntries(callsGroupedByUserArray)
-);
+let maxmizedCallsGroupedByUser = ref(Object.fromEntries(callsGroupedByUserArray));
 let showMoreForGrouped = ref(false);
 
-
-console.log('Mini Calls Grouped By User: ', minimizedCallsGroupedByUser.value);
-console.log('Max Calls Grouped By User: ', maxmizedCallsGroupedByUser.value);
+console.log("Mini Calls Grouped By User: ", minimizedCallsGroupedByUser.value);
+console.log("Max Calls Grouped By User: ", maxmizedCallsGroupedByUser.value);
 
 let groupedCalls = computed(() => {
   if (showMoreForGrouped.value) {
@@ -290,6 +287,18 @@ let groupedCalls = computed(() => {
         </div>
       </div>
     </section>
+
+    <div class="pt-14 flex justify-between px-16">
+      <div>
+        <div class="text-4xl text-custom-sky font-bold mb-6">Call Details</div>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+      <div class="px-4 sm:px-8 sm:rounded-lg">
+        <hr class="mb-4" />
+      </div>
+    </div>
 
     <section class="py-3 sm:py-5">
       <div class="px-4 mx-auto max-w-screen-2xl lg:px-12">
@@ -452,18 +461,5 @@ let groupedCalls = computed(() => {
         </div>
       </div>
     </section>
-
-
-    <div class="pt-14 flex justify-between px-16">
-      <div>
-        <div class="text-4xl text-custom-sky font-bold mb-6">Call Details</div>
-      </div>
-    </div>
-
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-      <div class="px-4 sm:px-8 sm:rounded-lg">
-        <hr class="mb-4" />
-      </div>
-    </div>
   </AuthenticatedLayout>
 </template>
