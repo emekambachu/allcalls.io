@@ -7,21 +7,25 @@ use Illuminate\Support\Facades\Http;
 use App\Models\User;
 use App\Models\SendBirdUser;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class SendBirdUserController extends Controller
 {
     public function createSendBirdUser(Request $request)
     {
         $user = Auth::user(); // Get the authenticated user
+        Log::debug('Creating SendBird user for user ID: ' . $user->id);
 
         // Check if the user has the required roles
         if (!$user->roles->contains('name', 'internal-agent') && !$user->roles->contains('name', 'admin')) {
+            Log::warning('User does not have required roles. User ID: ' . $user->id);
             return response()->json(['message' => 'User is not an internal agent or admin'], 403);
         }
 
         // Check if a SendBird user already exists for the user
         $existingSendBirdUser = $user->sendBirdUser()->first();
         if ($existingSendBirdUser) {
+            Log::info('SendBird user already exists for user ID: ' . $user->id);
             return response()->json(['message' => 'SendBird user already exists'], 409);
         }
 
@@ -41,6 +45,7 @@ class SendBirdUserController extends Controller
         // Update user's profile picture in the database
         $user->profile_picture = $profileUrl;
         $user->save();
+        Log::debug('Profile image uploaded. Path: ' . $path);
 
         $applicationId = env('SENDBIRD_APPLICATION_ID'); // Replace with your SendBird application ID
         $apiKey = env('SENDBIRD_API_TOKEN'); // Replace with your SendBird API key
@@ -76,13 +81,15 @@ class SendBirdUserController extends Controller
             ]);
         
             $sendBirdUser->save();
-        
+            Log::info('SendBird user created successfully for user ID: ' . $user->id);
+
             return response()->json([
                 'message' => 'SendBird user created successfully',
                 'sendBirdUser' => $sendBirdUser
             ], 201);
         } else {
             // Handle failure response from SendBird API
+            Log::error('Failed to create SendBird user. User ID: ' . $user->id . ' Response: ' . $response->body());
             return response()->json([
                 'message' => 'Failed to create SendBird user',
                 'error' => $response->body()
