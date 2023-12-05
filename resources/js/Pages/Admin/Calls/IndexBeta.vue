@@ -603,7 +603,7 @@ let stopPlayingRecording = (call) => {
 
                       <p
                         style="font-size: 10px"
-                        class="text-gray-800 ml-1"
+                        class="text-gray-800 ml-1 user-select-none"
                         v-if="currentlyPlayingAudioCallId === call.id"
                       >
                         Playing
