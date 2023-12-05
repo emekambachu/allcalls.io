@@ -197,7 +197,6 @@ let groupedCalls = computed(() => {
   }
 });
 
-
 let summaryFooterRow = computed(() => {
   let totalCalls = 0;
   let totalPaidCalls = 0;
@@ -272,7 +271,9 @@ let summaryFooterRow = computed(() => {
                   class="border-b hover:bg-gray-100"
                 >
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                    {{ userData.agentName }}
+                    <Link :href="`/admin/customer/detail/${userId}`">
+                      {{ userData.agentName }}
+                    </Link>
                   </td>
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
                     {{ userData.totalCalls }}
