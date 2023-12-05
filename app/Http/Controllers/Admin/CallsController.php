@@ -101,6 +101,7 @@ class CallsController extends Controller
             $averageCallLength = $totalCalls > 0 ? $totalCallLength / $totalCalls : 0;
 
             return [
+                'userId' => $user->id,
                 'agentName' => $user->first_name . ' ' . $user->last_name,
                 'totalCalls' => $totalCalls,
                 'paidCalls' => $paidCalls,

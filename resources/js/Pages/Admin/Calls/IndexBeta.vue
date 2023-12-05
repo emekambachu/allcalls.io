@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, watch, computed } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, router, usePage } from "@inertiajs/vue3";
+import { Head, router, usePage, Link } from "@inertiajs/vue3";
 import { toaster } from "@/helper.js";
 import GlobalSpinner from "@/Components/GlobalSpinner.vue";
 import TextInput from "@/Components/TextInput.vue";
@@ -183,14 +183,11 @@ let minimizedCallsGroupedByUserArray = callsGroupedByUserArray.slice(0, 2);
 let minimizedCallsGroupedByUser = ref(
   Object.fromEntries(minimizedCallsGroupedByUserArray)
 );
-let maxmizedCallsGroupedByUser = ref(
-  Object.fromEntries(callsGroupedByUserArray)
-);
+let maxmizedCallsGroupedByUser = ref(Object.fromEntries(callsGroupedByUserArray));
 let showMoreForGrouped = ref(false);
 
-
-console.log('Mini Calls Grouped By User: ', minimizedCallsGroupedByUser.value);
-console.log('Max Calls Grouped By User: ', maxmizedCallsGroupedByUser.value);
+console.log("Mini Calls Grouped By User: ", minimizedCallsGroupedByUser.value);
+console.log("Max Calls Grouped By User: ", maxmizedCallsGroupedByUser.value);
 
 let groupedCalls = computed(() => {
   if (showMoreForGrouped.value) {
@@ -199,6 +196,34 @@ let groupedCalls = computed(() => {
     return minimizedCallsGroupedByUser.value;
   }
 });
+
+let summaryFooterRow = computed(() => {
+  let totalCalls = 0;
+  let totalPaidCalls = 0;
+  let totalRevenue = 0;
+  let totalCallLength = 0;
+
+  for (const userId in maxmizedCallsGroupedByUser.value) {
+    const userData = maxmizedCallsGroupedByUser.value[userId];
+    totalCalls += userData.totalCalls;
+    totalPaidCalls += userData.paidCalls; // Summing up the paidCalls
+    totalRevenue += userData.revenueEarned;
+    totalCallLength += userData.totalCallLength; // Assuming this field exists in userData
+  }
+
+  let averageCallLength = totalCalls > 0 ? totalCallLength / totalCalls : 0;
+  let revenuePerCall = totalCalls > 0 ? totalRevenue / totalCalls : 0;
+
+  return {
+    agentName: "Totals",
+    totalCalls: totalCalls,
+    paidCalls: totalPaidCalls,
+    revenueEarned: totalRevenue,
+    revenuePerCall: revenuePerCall,
+    totalCallLength: totalCallLength,
+    averageCallLength: averageCallLength,
+  };
+});
 </script>
 
 <template>
@@ -206,11 +231,7 @@ let groupedCalls = computed(() => {
   <AuthenticatedLayout>
     <div class="pt-14 flex justify-between px-16">
       <div>
-        <div class="text-4xl text-custom-sky font-bold mb-6">Calls</div>
-      </div>
-
-      <div class="flex items-center">
-        <!-- <button class="button-custom-back px-3 py-2 rounded-md mr-2">Clear All</button> -->
+        <div class="text-4xl text-custom-sky font-bold mb-6">Summary</div>
       </div>
     </div>
 
@@ -219,6 +240,7 @@ let groupedCalls = computed(() => {
         <hr class="mb-4" />
       </div>
     </div>
+
     <section class="py-3 sm:py-5">
       <div class="px-4 mx-auto max-w-screen-2xl lg:px-12">
         <div class="relative overflow-hidden bg-white sm:rounded-lg">
@@ -249,7 +271,9 @@ let groupedCalls = computed(() => {
                   class="border-b hover:bg-gray-100"
                 >
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                    {{ userData.agentName }}
+                    <Link :href="`/admin/customer/detail/${userId}`" class="text-blue-500 hover:text-blue-600">
+                      {{ userData.agentName }}
+                    </Link>
                   </td>
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
                     {{ userData.totalCalls }}
@@ -277,6 +301,38 @@ let groupedCalls = computed(() => {
                     <!-- Actions column content -->
                   </td>
                 </tr>
+
+                <tr class="bg-gray-100 border-b" v-if="showMoreForGrouped">
+                  <td
+                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                    v-text="summaryFooterRow.agentName"
+                  ></td>
+                  <td
+                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                    v-text="summaryFooterRow.totalCalls"
+                  ></td>
+                  <td
+                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                    v-text="summaryFooterRow.paidCalls"
+                  ></td>
+                  <td
+                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                    v-text="`$${summaryFooterRow.revenueEarned}`"
+                  ></td>
+                  <td
+                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                    v-text="`$${summaryFooterRow.revenuePerCall.toFixed(2)}`"
+                  ></td>
+                  <td
+                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                    v-text="`${summaryFooterRow.totalCallLength.toFixed(2)}`"
+                  ></td>
+                  <td
+                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                    v-text="`${summaryFooterRow.averageCallLength.toFixed(2)}`"
+                  ></td>
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"></td>
+                </tr>
               </tbody>
             </table>
 
@@ -293,6 +349,18 @@ let groupedCalls = computed(() => {
         </div>
       </div>
     </section>
+
+    <div class="pt-14 flex justify-between px-16">
+      <div>
+        <div class="text-4xl text-custom-sky font-bold mb-6">Call Details</div>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+      <div class="px-4 sm:px-8 sm:rounded-lg">
+        <hr class="mb-4" />
+      </div>
+    </div>
 
     <section class="py-3 sm:py-5">
       <div class="px-4 mx-auto max-w-screen-2xl lg:px-12">
