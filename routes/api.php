@@ -11,7 +11,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\IOSLogController;
 use App\Http\Controllers\PingAPIController;
+use App\Http\Controllers\UserRoleController;
 use App\Http\Controllers\CallRejectedByAgent;
+use App\Http\Controllers\CallHungUpController;
 use App\Http\Controllers\CallStatusController;
 use App\Http\Controllers\ClientsAPIController;
 use App\Http\Controllers\DevicesAPIController;
@@ -23,6 +25,7 @@ use App\Http\Controllers\CallTypesAPIController;
 use App\Http\Controllers\DispositionsController;
 use App\Http\Controllers\IncomingCallController;
 use App\Http\Controllers\LaravelTokenController;
+use App\Http\Controllers\SendBirdUserController;
 use App\Http\Controllers\CallRecordingController;
 use App\Http\Controllers\RingyResponseController;
 use App\Http\Controllers\AgentStatusAPIController;
@@ -39,11 +42,11 @@ use App\Http\Controllers\TwilioIOSAccessTokenController;
 use App\Http\Controllers\CustomBroadcastingAuthController;
 use App\Http\Controllers\ActiveUsersPusherWebhookController;
 use App\Http\Controllers\CallCenterDispositionAPIController;
-use App\Http\Controllers\CallHungUpController;
 use App\Http\Controllers\TwilioAndroidAccessTokenController;
 use App\Http\Controllers\TwilioIOSAccessTokenGuestController;
 use App\Http\Controllers\TwilioIOSSandboxAccessTokenController;
 use App\Http\Controllers\TwilioAndroidAccessTokenGuestController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -58,6 +61,7 @@ use App\Http\Controllers\TwilioAndroidAccessTokenGuestController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::middleware('auth:sanctum')->get('user/roles', [UserRoleController::class, 'getUserRoles']);
 
 
 Route::post('/sanctum/token', function (Request $request) {
@@ -230,3 +234,6 @@ Route::middleware('auth:sanctum')->delete('/notifications/{notificationId}', [No
 Route::middleware('auth:sanctum')->post('/ios-logs', [IOSLogController::class, 'log']);
 
 Route::middleware('auth:sanctum')->post('/calls/{uniqueCallId}/reject', [CallHungUpController::class, 'update']);
+
+Route::middleware('auth:sanctum')->post('/sendbird-user/create', [SendBirdUserController::class, 'createSendBirdUser']);
+Route::middleware('auth:sanctum')->get('/sendbird-user/check', [SendBirdUserController::class, 'checkSendBirdUser']);

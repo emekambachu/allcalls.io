@@ -101,6 +101,7 @@ class CallsController extends Controller
             $averageCallLength = $totalCalls > 0 ? $totalCallLength / $totalCalls : 0;
 
             return [
+                'userId' => $user->id,
                 'agentName' => $user->first_name . ' ' . $user->last_name,
                 'totalCalls' => $totalCalls,
                 'paidCalls' => $paidCalls,
@@ -113,9 +114,9 @@ class CallsController extends Controller
 
 
 
-        return Inertia::render('Admin/Calls/IndexNew', [
+        return Inertia::render('Admin/Calls/IndexBeta', [
             'requestData' => $request->all(),
-            'calls' => $calls,
+            // 'calls' => $calls,
             'totalCalls' => Call::count(),
             'totalRevenue' => round((float) Call::sum('amount_spent'), 2),
             'callsGroupedByUser' => $callsGroupedByUser,

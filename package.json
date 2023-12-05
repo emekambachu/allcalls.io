@@ -31,6 +31,7 @@
         "@vuepic/vue-datepicker": "^6.0.2",
         "chart.js": "^4.3.2",
         "date-fns": "^2.30.0",
+        "laravel-vue-datatable": "^0.6.0",
         "moment-timezone": "^0.5.43",
         "signature_pad": "^4.1.6",
         "tippy.js": "^6.3.7",

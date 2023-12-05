@@ -18,9 +18,11 @@ use App\Http\Controllers\EquisAPIController;
 use App\Http\Controllers\PingDocsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TakeCallsController;
+use App\Http\Controllers\CallHungUpController;
 use App\Http\Controllers\StripeTestController;
 use App\Http\Controllers\DefaultCardController;
 use App\Http\Controllers\TwilioTokenController;
+use App\Http\Controllers\WebCallsAPIController;
 use App\Http\Controllers\CallTypeBidsController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TransactionsController;
@@ -113,6 +115,7 @@ Route::middleware(['auth', 'notBanned'])->group(function () {
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('/profile/upload-picture', [ProfileController::class, 'uploadProfilePicture']);
 });
 
 Route::patch('/bids', [BidsController::class, 'update'])->middleware(['auth', 'verified', 'notBanned'])->name('bids.update');
@@ -226,8 +229,9 @@ Route::post('/notifications/mark-all-as-read', [NotificationController::class, '
 Route::post('/notifications/clear-all', [NotificationController::class, 'clearAll'])->middleware(['auth', 'verified', 'registration-step-check'])->name('notifications.clear-all');
 Route::get('/equis-api', [EquisAPIController::class, 'show']);
 
-Route::get('/queue-test', function() {
-    SampleJob::dispatch();
 
-    return 'Job dispatched to the queue.';
+Route::middleware('auth:sanctum')->post('/web-api/calls/{uniqueCallId}/reject', [CallHungUpController::class, 'updateForWeb'])->middleware(['auth', 'verified', 'registration-step-check']);
+
+Route::get('/sample', function() {
+    return request()->query('name') ?? 'No name';
 });

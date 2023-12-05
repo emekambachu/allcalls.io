@@ -3,8 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ActiveUsersController;
 use App\Http\Controllers\Admin\CallsController;
+use App\Http\Controllers\WebCallsAPIController;
 use App\Http\Controllers\AgentInvitesController;
 use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\InternalAgentLevel;
 use App\Http\Controllers\ActiveUserChannelController;
 use App\Http\Controllers\Admin\OnlineAgentsController;
 use App\Http\Controllers\AdminNotificationsController;
@@ -15,7 +17,6 @@ use App\Http\Controllers\Admin\AvailableNumberController;
 use App\Http\Controllers\AdminAvaialbleNumbersController;
 use App\Http\Controllers\Admin\LegalQuestionPdfController;
 use App\Http\Controllers\AvailableNumberReleaseController;
-use App\Http\Controllers\Admin\InternalAgentLevel;
 
 /*
 |--------------------------------------------------------------------------
@@ -112,4 +113,6 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
     Route::delete('/user-activities/clear-all', [AdminUserActivitiesController::class, 'clearAll'])->name('admin.user-activities.clearAll');
 
+   
+    Route::get('/web-api/calls', [WebCallsAPIController::class, 'index']);
 });

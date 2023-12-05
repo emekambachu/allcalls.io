@@ -107,35 +107,9 @@ class InternalAgentController extends Controller
             })->whereNull('invited_by')->with('allInvitees')->get();
 
             $returnArr = [
-                "id" => $user->id,
-                "email" => $user->email,
-                "upline_id" => $user->upline_id,
-                "email_verified_at" => $user->email_verified_at,
-                "created_at" => $user->created_at,
-                "updated_at" => $user->updated_at,
-                "stripe_id" => $user->stripe_id,
-                "pm_type" => $user->pm_type,
-                "pm_last_four" => $user->pm_last_four,
-                "trial_ends_at" => $user->trial_ends_at,
-                "first_name" => $user->first_name,
-                "last_name" => $user->last_name,
-                "balance" => $user->balance,
-                "phone_country" => $user->phone_country,
-                "phone_code" => $user->phone_code,
-                "phone" => $user->phone,
-                "profile_picture" => $user->profile_picture,
-                "device_token" => $user->device_token,
-                "last_called_at" => $user->last_called_at,
-                "banned" => $user->banned,
-                "call_status" => $user->call_status,
-                "timezone" => $user->timezone,
-                "legacy_key" => $user->legacy_key,
-                "contract_step" => $user->contract_step,
-                "is_locked" => $user->is_locked,
-                "progress" => $user->progress,
-                "equis_duplicate" => $user->equis_duplicate,
-                "level_id" => $user->level_id,
-                "invited_by" => $user->invited_by,
+                "first_name" => 'AllCalls',
+                "last_name" => '.io',
+                "is_admin" => true,
                 "all_invitees" => $agentHierarchy
             ];
 

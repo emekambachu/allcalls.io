@@ -20,15 +20,17 @@ class MyAgencyController extends Controller
         $agentInvites = AgentInvite::where('invited_by', auth()->user()->id)
             ->with('getAgentLevel')
             ->with('getAgentLevel')->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->paginate(5);
+
         $agentLevels = InternalAgentLevel::get();
 
         $inviteAgents = getInviteeIds(auth()->user());
         $agents = User::whereIn('id', $inviteAgents)
         ->where('id', '!=', auth()->user()->id)
         ->withCount('invitees')
-        ->with(['getAgentLevel', 'states', 'latestActivity', 'callTypes'])->
-        paginate(10);
+        ->with(['getAgentLevel', 'states', 'latestActivity', 'callTypes'])
+        ->orderBy('created_at', 'desc')
+        ->paginate(5);
 
         return Inertia::render('InternalAgent/Invites/Index', compact('agentInvites', 'agentLevels', 'agents'));
     }
@@ -36,7 +38,7 @@ class MyAgencyController extends Controller
         $agentInvites = AgentInvite::where('invited_by', auth()->user()->id)
         ->with('getAgentLevel')
         ->with('getAgentLevel')->orderBy('created_at', 'desc')
-        ->paginate(10);
+        ->paginate(5);
         return response()->json([
             'success' => true,
             'agentInvites' => $agentInvites,
@@ -83,7 +85,7 @@ class MyAgencyController extends Controller
         $agentInvites = AgentInvite::where('invited_by', auth()->user()->id)
         ->with('getAgentLevel')
         ->with('getAgentLevel')->orderBy('created_at', 'desc')
-        ->paginate(10);
+        ->paginate(5);
         return response()->json([
             'success' =>  true,
             'agentInvites' =>  $agentInvites,
@@ -127,8 +129,9 @@ class MyAgencyController extends Controller
         $agents = User::whereIn('id', $inviteAgents)
         ->where('id', '!=', auth()->user()->id)
         ->withCount('invitees')
-        ->with(['getAgentLevel', 'states', 'latestActivity', 'callTypes'])->
-        paginate(10);
+        ->with(['getAgentLevel', 'states', 'latestActivity', 'callTypes'])
+        ->orderBy('created_at', 'desc')
+        ->paginate(5);
         return response()->json([
             'success' => true,
             'agents' => $agents,
