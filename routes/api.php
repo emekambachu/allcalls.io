@@ -238,7 +238,7 @@ Route::middleware('auth:sanctum')->post('/calls/{uniqueCallId}/reject', [CallHun
 Route::middleware('auth:sanctum')->post('/sendbird-user/create', [SendBirdUserController::class, 'createSendBirdUser']);
 Route::middleware('auth:sanctum')->get('/sendbird-user/check', [SendBirdUserController::class, 'checkSendBirdUser']);
 
-Route::post('/poo/blahblahblah', function (Request $request){
+Route::get('/sendbird-user/blahblahblah', function (Request $request){
     return response()->json([
         'message' => 'Yo Yo Yo successfully'
     ], 200);
