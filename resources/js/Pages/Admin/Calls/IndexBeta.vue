@@ -266,6 +266,7 @@ let playingRecordingCallIds = ref([]);
 let currentlyPlayingAudio = ref(null);
 
 let playRecording = (call) => {
+  playingRecordingCallIds.value = [];
   playingRecordingCallIds.value.push(call.id);
   currentlyPlayingAudio.value = new Audio(call.recording_url);
   currentlyPlayingAudio.value.play();
