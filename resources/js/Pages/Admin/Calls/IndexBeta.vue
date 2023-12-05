@@ -400,7 +400,7 @@ let exportCSV = () => {
                   </PopoverButton>
 
                   <PopoverPanel class="absolute z-10 w-40 -left-20">
-                    <div class="border border-gray-100 p-2 shadow bg-white mt-2">
+                    <div class="border border-gray-100 p-3 shadow bg-white mt-2">
                       <div
                         class="flex items-center mb-4"
                         v-for="(column, index) in columns"
