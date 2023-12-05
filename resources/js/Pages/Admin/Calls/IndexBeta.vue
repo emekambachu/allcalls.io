@@ -606,7 +606,7 @@ let stopPlayingRecording = (call) => {
                       <p
                         style="font-size: 10px"
                         class="text-gray-800 ml-1"
-                        v-if="currentlyPlayingAudio !== null"
+                        v-if="currentlyPlayingAudio !== null && playingRecordingCallIds.includes(call.id)"
                       >
                         Playing
                       </p>
