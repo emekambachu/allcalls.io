@@ -324,11 +324,11 @@ let summaryFooterRow = computed(() => {
                   ></td>
                   <td
                     class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
-                    v-text="`$${summaryFooterRow.totalCallLength.toFixed(2)}`"
+                    v-text="`${summaryFooterRow.totalCallLength.toFixed(2)}`"
                   ></td>
                   <td
                     class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
-                    v-text="`$${summaryFooterRow.averageCallLength.toFixed(2)}`"
+                    v-text="`${summaryFooterRow.averageCallLength.toFixed(2)}`"
                   ></td>
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"></td>
                 </tr>
