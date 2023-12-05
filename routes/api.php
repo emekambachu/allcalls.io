@@ -235,7 +235,7 @@ Route::middleware('auth:sanctum')->post('/ios-logs', [IOSLogController::class, '
 
 Route::middleware('auth:sanctum')->post('/calls/{uniqueCallId}/reject', [CallHungUpController::class, 'update']);
 
-// Route::middleware('auth:sanctum')->post('/sendbird-user/create', [SendBirdUserController::class, 'createSendBirdUser']);
+Route::middleware('auth:sanctum')->post('/sendbird-user/create', [SendBirdUserController::class, 'createSendBirdUser']);
 Route::middleware('auth:sanctum')->get('/sendbird-user/check', [SendBirdUserController::class, 'checkSendBirdUser']);
 
 Route::post('/sendbird-user/blahblahblah', function (Request $request){
