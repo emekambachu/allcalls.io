@@ -180,9 +180,17 @@ let sortByColumn = async (column) => {
 
 let callsGroupedByUserArray = Object.entries(props.callsGroupedByUser);
 let minimizedCallsGroupedByUserArray = callsGroupedByUserArray.slice(0, 2);
-let minimizedCallsGroupedByUser = ref(Object.fromEntries(minimizedCallsGroupedByUserArray));
-let maxmizedCallsGroupedByUser = ref(Object.fromEntries(minimizedCallsGroupedByUserArray));
+let minimizedCallsGroupedByUser = ref(
+  Object.fromEntries(minimizedCallsGroupedByUserArray)
+);
+let maxmizedCallsGroupedByUser = ref(
+  Object.fromEntries(callsGroupedByUserArray)
+);
 let showMoreForGrouped = ref(false);
+
+
+console.log('Mini Calls Grouped By User: ', minimizedCallsGroupedByUser.value);
+console.log('Max Calls Grouped By User: ', maxmizedCallsGroupedByUser.value);
 
 let groupedCalls = computed(() => {
   if (showMoreForGrouped.value) {
@@ -191,10 +199,6 @@ let groupedCalls = computed(() => {
     return minimizedCallsGroupedByUser.value;
   }
 });
-
-
-console.log('Mini Calls Grouped By User: ', minimizedCallsGroupedByUser.value);
-
 </script>
 
 <template>
@@ -261,16 +265,13 @@ console.log('Mini Calls Grouped By User: ', minimizedCallsGroupedByUser.value);
                   </td>
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
                     {{
-                      String(Math.floor(userData.totalCallLength / 60)).padStart(
-                        2,
-                        "0"
-                      ) +
+                      String(Math.floor(userData.totalCallLength / 60)).padStart(2, "0") +
                       ":" +
                       String(userData.totalCallLength % 60).padStart(2, "0")
                     }}
                   </td>
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                    {{ userData.averageCallLength.toFixed(2) }}
+                    {{ userData.averageCallLength.toFixed(2) }} sec
                   </td>
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
                     <!-- Actions column content -->
@@ -278,6 +279,16 @@ console.log('Mini Calls Grouped By User: ', minimizedCallsGroupedByUser.value);
                 </tr>
               </tbody>
             </table>
+
+            <div class="flex justify-center mt-4">
+              <button
+                @click.prevent="showMoreForGrouped = !showMoreForGrouped"
+                class="bg-gray-200 hover:bg-gray-100 text-gray-800 cursor-pointer px-4 py-2 text-sm rounded-md flex items-center"
+              >
+                <span v-if="showMoreForGrouped">Show Less</span>
+                <span v-else>Show More</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
