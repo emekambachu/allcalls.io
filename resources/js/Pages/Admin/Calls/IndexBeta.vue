@@ -218,7 +218,7 @@ let summaryFooterRow = computed(() => {
   return {
     agentName: "Totals",
     totalCalls: totalCalls,
-    paidCalls: totalPaidCalls, // Using the summed value of paidCalls
+    paidCalls: totalPaidCalls,
     revenueEarned: totalRevenue,
     revenuePerCall: revenuePerCall,
     totalCallLength: totalCallLength,
