@@ -224,6 +224,10 @@ let summaryFooterRow = computed(() => {
     averageCallLength: averageCallLength,
   };
 });
+
+let export = () => {
+  console.log(loadedCalls.value);
+}
 </script>
 
 <template>
@@ -271,7 +275,10 @@ let summaryFooterRow = computed(() => {
                   class="border-b hover:bg-gray-100"
                 >
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                    <Link :href="`/admin/customer/detail/${userId}`" class="text-blue-500 hover:text-blue-600">
+                    <Link
+                      :href="`/admin/customer/detail/${userId}`"
+                      class="text-blue-500 hover:text-blue-600"
+                    >
                       {{ userData.agentName }}
                     </Link>
                   </td>
@@ -414,6 +421,14 @@ let summaryFooterRow = computed(() => {
                     </div>
                   </PopoverPanel>
                 </Popover>
+
+                <button
+                  type="button"
+                  class="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200"
+                  @click.prevent="export"
+                >
+                  Export
+                </button>
 
                 <!-- <Popover class="relative">
                   <PopoverButton>
