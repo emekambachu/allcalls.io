@@ -270,6 +270,9 @@ let playRecording = (call) => {
   currentlyPlayingAudio.value.play();
   currentlyPlayingAudioCallId.value = call.id;
 
+  currentlyPlayingAudio.onended = () => {
+    console.log("Audio Ended");
+  };
 };
 
 let stopPlayingRecording = (call) => {
