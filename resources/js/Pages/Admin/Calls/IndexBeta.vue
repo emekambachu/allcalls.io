@@ -582,7 +582,7 @@ let stopPlayingRecording = (call) => {
                       />
                     </svg>
 
-                    <div class="flex">
+                    <div class="flex items-center">
                       <svg
                         class="w-4 h-4 cursor-pointer ml-3"
                         v-if="
