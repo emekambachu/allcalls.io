@@ -599,7 +599,7 @@ let stopPlayingRecording = (call) => {
                       />
                     </svg>
 
-                    <p class="text-xs">Currently Playing</p>
+                    <p style="font-size: 10px;" class="text-gray-800 mt-2">Playing</p>
                   </td>
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
                     <!-- Actions column content -->
