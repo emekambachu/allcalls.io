@@ -184,7 +184,7 @@ let minimizedCallsGroupedByUser = ref(
   Object.fromEntries(minimizedCallsGroupedByUserArray)
 );
 let maxmizedCallsGroupedByUser = ref(
-  Object.fromEntries(minimizedCallsGroupedByUserArray)
+  Object.fromEntries(callsGroupedByUserArray)
 );
 let showMoreForGrouped = ref(false);
 
