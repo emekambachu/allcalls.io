@@ -286,14 +286,14 @@ let summaryFooterRow = computed(() => {
                 </tr>
 
                 <tr>
-                  <td v-text="summaryFooterRow.agentName"></td>
-                  <td v-text="summaryFooterRow.totalCalls"></td>
-                  <td v-text="summaryFooterRow.paidCalls"></td>
-                  <td v-text="`$${summaryFooterRow.revenueEarned}`"></td>
-                  <td v-text="`$${summaryFooterRow.revenuePerCall.toFixed(2)}`"></td>
-                  <td v-text="`$${summaryFooterRow.totalCallLength.toFixed(2)}`"></td>
-                  <td v-text="`$${summaryFooterRow.averageCallLength.toFixed(2)}`"></td>
-                  <td></td>
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap" v-text="summaryFooterRow.agentName"></td>
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap" v-text="summaryFooterRow.totalCalls"></td>
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap" v-text="summaryFooterRow.paidCalls"></td>
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap" v-text="`$${summaryFooterRow.revenueEarned}`"></td>
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap" v-text="`$${summaryFooterRow.revenuePerCall.toFixed(2)}`"></td>
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap" v-text="`$${summaryFooterRow.totalCallLength.toFixed(2)}`"></td>
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap" v-text="`$${summaryFooterRow.averageCallLength.toFixed(2)}`"></td>
+                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"></td>
                 </tr>
               </tbody>
             </table>
