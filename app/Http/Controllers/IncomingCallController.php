@@ -194,7 +194,8 @@ class IncomingCallController extends Controller
         $onlineUsers = OnlineUser::sortByCallPriority($onlineUsers, $callType);
 
         Log::debug('onlineUsersAfterPrioritize:', [
-            'onlineUsers' => $onlineUsers,
+            'onlineUsers' => $onlineUsers->toArray(),
+            'onlineUsersSorted' => $onlineUsers->sortBy('last_called_at'),
         ]);
 
         if (!$onlineUsers->count()) {
