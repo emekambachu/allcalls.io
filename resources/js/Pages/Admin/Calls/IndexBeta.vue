@@ -420,7 +420,7 @@ let date = ref();
       </div>
     </div>
 
-    <div>
+    <div class="pt-14 flex justify-between px-16">
       <VueDatePicker range v-model="date"></VueDatePicker>
     </div>
 
