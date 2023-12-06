@@ -130,15 +130,16 @@ class SendBirdUserController extends Controller
         $sendBirdUser = $user->sendBirdUser()->first();
 
         if ($sendBirdUser) {
-            // If a SendBird user exists, return success response with SendBird user data
             return response()->json([
                 'message' => 'SendBird user exists',
-                'sendBirdUserExists' => $sendBirdUser
+                'sendBirdUserExists' => true  // Return true as a boolean
             ], 200);
         } else {
-            // If a SendBird user does not exist, return a not found response
-            return response()->json(['message' => 'SendBird user does not exist'], 404);
-        }
+            return response()->json([
+                'message' => 'SendBird user does not exist',
+                'sendBirdUserExists' => false  // Return false as a boolean
+            ], 404);
+        }        
     }
 
     protected function joinSendBirdGroupChannel($userId, $channelUrl)
