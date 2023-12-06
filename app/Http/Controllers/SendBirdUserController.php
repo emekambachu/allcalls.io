@@ -87,7 +87,7 @@ class SendBirdUserController extends Controller
 
             // Join the user to a SendBird group channel
             $channelUrl = env('SENDBIRD_INTERNAL_AGENTS_GROUP_URL'); // Replace with your actual channel URL
-            $joinChannelResponse = $this->joinSendBirdGroupChannel($user->id, $channelUrl);
+            $joinChannelResponse = $this->joinSendBirdGroupChannel((string) $user->id, $channelUrl);
 
             if ($joinChannelResponse->successful()) {
                 Log::info("User ID: {$user->id} joined SendBird group channel successfully.");
