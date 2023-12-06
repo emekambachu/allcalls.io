@@ -79,7 +79,7 @@ let customLabel = function (options, select$) {
 
 let submitForm = () => {
   console.log("form", form);
-  form.patch(route("profile.update"));
+  form.post(route("profile.update"));
 };
 
 let optionsForStates = (callType) => {
