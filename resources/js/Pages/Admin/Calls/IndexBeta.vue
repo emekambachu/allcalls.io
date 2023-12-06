@@ -296,7 +296,11 @@ let startDate = ref(null);
 let endDate = ref(null);
 
 watch(date, (newVal, oldVal) => {
-  console.log("Date range: ", newVal);
+  // When the date range changes, we need to update the start_date and end_date and fetch the calls again
+  startDate.value = newVal[0];
+  endDate.value = newVal[1];
+
+  fetchCalls();
 });
 
 let convertTZ = (date, tzString) => {
