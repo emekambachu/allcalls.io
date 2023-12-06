@@ -133,7 +133,7 @@ class SendBirdUserController extends Controller
             // If a SendBird user exists, return success response with SendBird user data
             return response()->json([
                 'message' => 'SendBird user exists',
-                'sendBirdUser' => $sendBirdUser
+                'sendBirdUserExists' => $sendBirdUser
             ], 200);
         } else {
             // If a SendBird user does not exist, return a not found response
