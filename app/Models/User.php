@@ -173,6 +173,18 @@ class User extends Authenticatable implements MustVerifyEmail
 
         return Carbon::parse($value);
     }
+
+
+    public function getLastCalledAtAttribute($value)
+    {
+        if (auth()->user()) {
+            $timezone = auth()->user()->timezone;
+            return Carbon::parse($value)->timezone($timezone);
+        }
+
+        return Carbon::parse($value);
+    }
+
     public function getAgentLevel(){
         return $this->belongsTo(InternalAgentLevel::class, 'level_id', 'id');
     }
