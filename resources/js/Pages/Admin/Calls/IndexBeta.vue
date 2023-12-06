@@ -295,10 +295,13 @@ let convertTZ = (date, tzString) => {
 }
 
 onMounted(() => {
-  const startDate = new Date();
-  const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
+  let startDate = new Date();
+  let endDate = new Date(new Date().setDate(startDate.getDate() + 7));
+
+  startDate = convertTZ(startDate, "America/New_York");
+  endDate = convertTZ(endDate, "America/New_York");
+
   date.value = [startDate, endDate];
-  convertTZ(startDate, "America/New_York");
 });
 
 </script>
