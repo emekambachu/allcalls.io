@@ -10,8 +10,7 @@ let props = defineProps({
 let loading = ref(false)
 let showConfirmationWindow = ref(false)
 let index = ref(0)
-let errors = ref({})
-let insuranceCompanyChangeEventAdded = ref(false)
+let step = ref(8)
 
 let typeA = [31, 32, 33, 34, 35, 36, 37, 38, 39, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 40, 19, 20, 21, 22, 23, 41, 29, 30];
 let typeB = [31, 32, 33, 34, 35, 36, 37, 38, 39, 0, 2, 14, 6, 7, 8, 9, 10, 15, 16, 40, 19, 20, 21, 22, 23, 41, 29, 30];
@@ -21,36 +20,26 @@ let typeE = [31, 32, 33, 34, 35, 36, 37, 38, 39, 0, 1, 2, 11, 12, 13, 6, 7, 8, 9
 let typeF = [31, 32, 33, 34, 35, 36, 37, 38, 39, 0, 2, 14, 18, 6, 7, 8, 9, 10, 15, 16, 40, 19, 31, 20, 21, 22, 23, 41, 29, 30];
 
 let form = ref({
+    full_name: '',
+    agentEmail: '',
+    EFNumber: '',
+    uplineManager: 'Select',
+    wasThisASplitSale: 'Select',
+    typeOfSplitSale: 'Select',
     insuranceCompany: 'AETNA/CVS',
-    productName: 'Individual Whole Life',
+    productName: 'Select',
     applicationDate: '',
     coverageAmount: 0,
     coverageLength: '',
-    premiumAmount: 0,
     premiumFrequency: '',
+    premiumAmount: 0,
     annualPremiumVolume: 0,
     doYouHaveAnEquisWritingNumberWithThisCarrier: '',
     carrierWritingNumber: '',
     wasThisAppFromALead: '',
     sourceOfTheLead: '',
     wasThisAppointmentVirtualOrFaceToFace: '',
-
-    annualTargetPremium: 0,
-    annualPlannedPremium: 0,
-    annualExcessPremium: 0,
-
-    initialInvestmentAmount: 0,
-    didAnotherAgentReferThisApplicationToYou: '',
-    referringAgentEFNumber: '',
-
-    isThisAnSDIC: '',
-
-    willThereBeARecurringPremium: '',
-
     whatIsThePolicyDraftDate: '',
-
-
-
     firstName: '',
     MI: '',
     lastName: '',
@@ -62,15 +51,21 @@ let form = ref({
     state: '',
     zipcode: '',
     phoneNumber: '',
-    email: '',
+    client_email: '',
 
-    agentName: '',
-    EFNumber: '',
-    agentEmail: '',
-    uplineManager: '',
-    wasThisASplitSale: '',
-    choose: '',
+
     splitAgentEmail: '',
+    annualTargetPremium: 0,
+    annualPlannedPremium: 0,
+    annualExcessPremium: 0,
+    initialInvestmentAmount: 0,
+    didAnotherAgentReferThisApplicationToYou: '',
+    referringAgentEFNumber: '',
+    isThisAnSDIC: '',
+    willThereBeARecurringPremium: '',
+    agentName: '',
+    choose: '',
+
 });
 let companies = ref({
     "AETNA/CVS": {
@@ -1604,80 +1599,217 @@ let questions = ref([
         ],
     },
 ])
+let uplineManagerArray = ref([
+    { text: 'Aurora Financial - Vincent Hall' },
+    { text: 'Imperial Group - Ruben Basurto' },
+    { text: '1st Choice Agency - Paul & Lauren Vassallo' },
+    { text: 'Advisor Guild - David Richter' },
+    { text: 'Peace Financial - Timothy Charpentier' },
+    { text: 'Straus Agency - Cynthia Straus' }
+])
 
-const Next = () => {
-  const questionsForTheCurrentProduct = companies.value[form.value.insuranceCompany][form.value.productName].questions.map(questionIndex => {
-    return questions.value[questionIndex];
-  });
-
-  // Check if the current question is a collection
-  if (currentQuestion.value.type === 'collection') {
-    // First check if each individual question in the collection is valid
-    for (let i = 0; i < currentQuestion.value.questions.length; i++) {
-      if (!currentQuestion.value.questions[i].validationMethod.call()) {
-        return;
-      }
-    }
-
-    index.value++;
-    currentQuestion.value = questionsForTheCurrentProduct[index.value];
-    return;
-  }
-
-  if (currentQuestion.value.validationMethod.call()) {
-    index.value++;
-
-    if (!questionsForTheCurrentProduct[index.value]) {
-      index.value--;
-      showConfirmationWindow.value = true;
-      return;
-    }
-
-    currentQuestion.value = questionsForTheCurrentProduct[index.value];
-
-    // If it's certain questions, fields can be skipped depending on various conditions.
-    if (currentQuestion.value.propertyName === 'choose') {
-      if (form.value.wasThisASplitSale === 'No') {
-        // Skip this question and the next one as well, so we can get straight to the insuranceCompany field.
-        index.value = index.value + 2;
-        currentQuestion.value = questionsForTheCurrentProduct[index.value];
-        return;
-      }
-    }
-
-    if (currentQuestion.value.propertyName === 'splitAgentEmail') {
-      if (form.value.choose === 'Transfer Program') {
-        // Skip this question
-        index.value++;
-        currentQuestion.value = questionsForTheCurrentProduct[index.value];
-        return;
-      }
-    }
-
-    if (currentQuestion.value.propertyName === 'sourceOfTheLead') {
-      if (form.value.wasThisAppFromALead === 'No') {
-        // Skip this question
-        index.value++;
-        currentQuestion.value = questionsForTheCurrentProduct[index.value];
-        return;
-      }
-    }
-
-    if (currentQuestion.value.propertyName === 'carrierWritingNumber') {
-      if (form.value.doYouHaveAnEquisWritingNumberWithThisCarrier === 'No') {
-        // Skip this question
-        index.value++;
-        currentQuestion.value = questionsForTheCurrentProduct[index.value];
-        return;
-      }
-    }
-
-    return;
-  }
-
-  return;
+const isValidEmail = (email) => {
+    // Regular expression for validating an Email address
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
 };
 
+let restoreError = () => {
+    props.firstStepErrors.full_name = ''
+    props.firstStepErrors.agentEmail = ''
+    props.firstStepErrors.EFNumber = ''
+    props.firstStepErrors.uplineManager = '';
+    props.firstStepErrors.wasThisASplitSale = '';
+    props.firstStepErrors.typeOfSplitSale = '';
+    props.firstStepErrors.insuranceCompany = '';
+    props.firstStepErrors.productName = '';
+    props.firstStepErrors.applicationDate = '';
+    props.firstStepErrors.coverageAmount = '';
+    props.firstStepErrors.coverageLength = '';
+    props.firstStepErrors.premiumFrequency = '';
+    props.firstStepErrors.premiumAmount = '';
+    props.firstStepErrors.annualPremiumVolume = '';
+    props.firstStepErrors.doYouHaveAnEquisWritingNumberWithThisCarrier = '';
+    props.firstStepErrors.carrierWritingNumber = '';
+    props.firstStepErrors.wasThisAppFromALead = '';
+    props.firstStepErrors.sourceOfTheLead = '';
+    props.firstStepErrors.wasThisAppointmentVirtualOrFaceToFace = '';
+    props.firstStepErrors.whatIsThePolicyDraftDate = '';
+    props.firstStepErrors.firstName = '';
+    props.firstStepErrors.MI = '';
+    props.firstStepErrors.lastName = '';
+    props.firstStepErrors.dateOfBirth = '';
+    props.firstStepErrors.gender = '';
+    props.firstStepErrors.streetLine1 = '';
+    props.firstStepErrors.streetLine2 = '';
+    props.firstStepErrors.city = '';
+    props.firstStepErrors.state = '';
+    props.firstStepErrors.zipcode = '';
+    props.firstStepErrors.phoneNumber = '';
+    props.firstStepErrors.client_email = '';
+}
+// validation steps  star
+let validationMethod = (step_input) => {
+    restoreError()
+    // Check for required fields in step 1
+    if (step_input === 1) {
+        if (!form.value.full_name.trim()) {
+            props.firstStepErrors.full_name = ['This field is required'];
+        }
+
+        // Add similar checks for other fields in step 1
+    } else if (step_input === 2) {
+        // Check for required fields in step 2
+        if (!form.value.agentEmail.trim()) {
+            props.firstStepErrors.agentEmail = ['This field is required'];
+        } else if (!isValidEmail(form.value.agentEmail)) {
+            props.firstStepErrors.agentEmail = ['Invalid email format'];
+        }
+
+        // Add similar checks for other fields in step 2
+    } else if (step_input === 3) {
+        if (!form.value.EFNumber.trim()) {
+            props.firstStepErrors.EFNumber = ['This field is required'];
+        }
+    } else if (step_input === 4) {
+        if (!form.value.uplineManager.trim() || form.value.uplineManager === 'Select') {
+            props.firstStepErrors.uplineManager = ['This field is required'];
+        }
+    } else if (step_input === 5) {
+        if (!form.value.wasThisASplitSale.trim() || form.value.wasThisASplitSale === 'Select') {
+            props.firstStepErrors.wasThisASplitSale = ['This field is required'];
+        }
+    } else if (step_input === 6) {
+        if (!form.value.typeOfSplitSale.trim() || form.value.typeOfSplitSale === 'Select') {
+            props.firstStepErrors.typeOfSplitSale = ['This field is required'];
+        }
+    } else if (step_input === 7) {
+        if (!form.value.insuranceCompany.trim() || form.value.insuranceCompany === 'Select') {
+            props.firstStepErrors.insuranceCompany = ['This field is required'];
+        }
+    } else if (step_input === 8) {
+        if (!form.value.productName.trim() || form.value.productName === 'Select') {
+            props.firstStepErrors.productName = ['This field is required'];
+        }
+    } else if (step_input === 9) {
+        if (!form.value.applicationDate.trim()) {
+            props.firstStepErrors.applicationDate = ['This field is required'];
+        }
+    } else if (step_input === 10) {
+        if (!form.value.coverageAmount.trim()) {
+            props.firstStepErrors.coverageAmount = ['This field is required'];
+        }
+    } else if (step_input === 11) {
+        if (!form.value.coverageLength.trim()) {
+            props.firstStepErrors.coverageLength = ['This field is required'];
+        }
+    } else if (step_input === 12) {
+        if (!form.value.premiumFrequency.trim()) {
+            props.firstStepErrors.premiumFrequency = ['This field is required'];
+        }
+    } else if (step_input === 13) {
+        if (!form.value.premiumAmount.trim()) {
+            props.firstStepErrors.premiumAmount = ['This field is required'];
+        }
+    } else if (step_input === 14) {
+        if (!form.value.annualPremiumVolume.trim()) {
+            props.firstStepErrors.annualPremiumVolume = ['This field is required'];
+        }
+    } else if (step_input === 15) {
+        if (!form.value.doYouHaveAnEquisWritingNumberWithThisCarrier.trim()) {
+            props.firstStepErrors.doYouHaveAnEquisWritingNumberWithThisCarrier = ['This field is required'];
+        }
+    } else if (step_input === 16) {
+        if (!form.value.carrierWritingNumber.trim()) {
+            props.firstStepErrors.carrierWritingNumber = ['This field is required'];
+        }
+    } else if (step_input === 17) {
+        if (!form.value.wasThisAppFromALead.trim()) {
+            props.firstStepErrors.wasThisAppFromALead = ['This field is required'];
+        }
+    } else if (step_input === 18) {
+        if (!form.value.sourceOfTheLead.trim()) {
+            props.firstStepErrors.sourceOfTheLead = ['This field is required'];
+        }
+    } else if (step_input === 19) {
+        if (!form.value.wasThisAppointmentVirtualOrFaceToFace.trim()) {
+            props.firstStepErrors.wasThisAppointmentVirtualOrFaceToFace = ['This field is required'];
+        }
+    } else if (step_input === 20) {
+        if (!form.value.whatIsThePolicyDraftDate.trim()) {
+            props.firstStepErrors.whatIsThePolicyDraftDate = ['This field is required'];
+        }
+    } else if (step_input === 21) {
+        if (!form.value.firstName.trim()) {
+            props.firstStepErrors.firstName = ['This field is required'];
+        }
+    } else if (step_input === 22) {
+        if (!form.value.MI.trim()) {
+            props.firstStepErrors.MI = ['This field is required'];
+        }
+    } else if (step_input === 23) {
+        if (!form.value.lastName.trim()) {
+            props.firstStepErrors.lastName = ['This field is required'];
+        }
+    } else if (step_input === 24) {
+        if (!form.value.dateOfBirth.trim()) {
+            props.firstStepErrors.dateOfBirth = ['This field is required'];
+        }
+    } else if (step_input === 25) {
+        if (!form.value.gender.trim()) {
+            props.firstStepErrors.gender = ['This field is required'];
+        }
+    } else if (step_input === 26) {
+        if (!form.value.streetLine1.trim()) {
+            props.firstStepErrors.streetLine1 = ['This field is required'];
+        }
+    } else if (step_input === 27) {
+        if (!form.value.streetLine2.trim()) {
+            props.firstStepErrors.streetLine2 = ['This field is required'];
+        }
+    } else if (step_input === 28) {
+        if (!form.value.city.trim()) {
+            props.firstStepErrors.city = ['This field is required'];
+        }
+    } else if (step_input === 29) {
+        if (!form.value.state.trim()) {
+            props.firstStepErrors.state = ['This field is required'];
+        }
+    } else if (step_input === 30) {
+        if (!form.value.zipcode.trim()) {
+            props.firstStepErrors.zipcode = ['This field is required'];
+        }
+    } else if (step_input === 31) {
+        if (!form.value.phoneNumber.trim()) {
+            props.firstStepErrors.phoneNumber = ['This field is required'];
+        }
+    } else if (step_input === 32) {
+        if (!form.value.client_email.trim()) {
+            props.firstStepErrors.client_email = ['This field is required'];
+        }
+    }
+}
+// validation steps end
+
+let ChangeProducName = () => {
+   form.value.productName = 'Select' 
+}
+let getInsuranceCompanyOptions = () =>  {
+            return Object.keys(companies.value);
+}
+let getProductNameOptions = () =>  {
+            return Object.keys(companies.value[form.value.insuranceCompany]);
+        }
+const Next = (data) => {
+    validationMethod(data);
+    // Only proceed to the next step if there are no errors
+    if (!Object.values(props.firstStepErrors).flat().some(error => error)) {
+        step.value += 1;
+    }
+};
+let Previous = (data) => {
+    step.value -= 1;
+}
 let close = () => {
     emits('close')
 }
@@ -1770,234 +1902,382 @@ let close = () => {
                         <br>
                         <div class="mb-3">
                             <form @submit.prevent="" class="question-card-list">
-                                <div v-show="!showConfirmationWindow" class="question-card animate__animated"
-                                    style="position: relative;">
-                                    <div v-if="loading"
-                                        style="position: absolute; height: 100%; width: 100%; background-color: #000000c7; z-index: 999; top: 0; left: 0; display: flex; justify-content: center; align-items: center; flex-direction: column; color: white; text-transform: uppercase; font-weight: 300; letter-spacing: 2px;">
-                                        <span class="loader"></span>
-                                        <div>Processing Information</div>
+                                <div class="question-card animate__animated" style="position: relative;">
+
+                                    <div v-show="step == 1">
+                                        <label for="full name"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Full
+                                            Name <span class="text-red-400">*</span></label>
+                                        <input v-model="form.full_name" type="text" id="full name"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="Full Name" required>
+                                        <div v-if="firstStepErrors.full_name" class="text-red-500"
+                                            v-text="firstStepErrors.full_name[0]"></div>
                                     </div>
 
-                                    <div class="question-card__question">
-                                        <div class="question-card__body">
-                                            <div>
-                                                <div v-if="currentQuestion">
-                                                    <h1 v-if="!currentQuestion.textMethod"
-                                                        :class="{ 'question-card__title--required': currentQuestion.required }"
-                                                        class="question-card__title" v-text="currentQuestion.text"></h1>
-                                                    <h1 v-if="currentQuestion.textMethod"
-                                                        :class="{ 'question-card__title--required': currentQuestion.required }"
-                                                        class="question-card__title"
-                                                        v-text="[currentQuestion.textMethod]()"></h1>
-
-
-                                                    <h2 class="question-card__heading" v-text="currentQuestion.heading">
-                                                    </h2>
-
-
-                                                    <div v-if="currentQuestion.type === 'text'">
-                                                        <input @keyup.enter="Next" type="text"
-                                                            v-model="form[currentQuestion.propertyName]"
-                                                            class="question-card__input">
-                                                        <p class="question-card__error"
-                                                            v-if="errors[currentQuestion.propertyName]"
-                                                            v-text="errors[currentQuestion.propertyName]"></p>
-                                                    </div>
-                                                    <div v-if="currentQuestion.type === 'number'">
-                                                        <input @keyup.enter="Next" type="number"
-                                                            v-model="form[currentQuestion.propertyName]"
-                                                            class="question-card__input">
-                                                        <p class="question-card__error"
-                                                            v-if="errors[currentQuestion.propertyName]"
-                                                            v-text="errors[currentQuestion.propertyName]"></p>
-                                                    </div>
-                                                    <div v-if="currentQuestion.type === 'date'">
-                                                        <input type="date" v-model="form[currentQuestion.propertyName]"
-                                                            class="question-card__input">
-                                                        <p class="question-card__error"
-                                                            v-if="errors[currentQuestion.propertyName]"
-                                                            v-text="errors[currentQuestion.propertyName]"></p>
-                                                    </div>
-                                                    <div v-if="currentQuestion && currentQuestion.type === 'currency'">
-                                                        <my-currency-input :input="form[currentQuestion.propertyName]"
-                                                            :name="currentQuestion.propertyName"
-                                                            v-on:update="updatedCurrencyValue"></my-currency-input>
-                                                        <p class="question-card__error"
-                                                            v-if="errors[currentQuestion.propertyName]"
-                                                            v-text="errors[currentQuestion.propertyName]"></p>
-                                                    </div>
-                                                    <div v-if="currentQuestion.type === 'select'">
-                                                        <select v-model="form[currentQuestion.propertyName]"
-                                                            class="question-card__input">
-                                                            <option value="" selected>Select</option>
-                                                            <option v-for="option in currentQuestion.options"
-                                                                v-text="option" :value="option"></option>
-                                                        </select>
-                                                        <p class="question-card__error"
-                                                            v-if="errors[currentQuestion.propertyName]"
-                                                            v-text="errors[currentQuestion.propertyName]"></p>
-                                                    </div>
-                                                    <div v-if="currentQuestion.type === 'dynamicSelect'">
-                                                        <select v-model="form[currentQuestion.propertyName]"
-                                                            :data-name="currentQuestion.propertyName"
-                                                            @change="onDynamicSelectChange" class="question-card__input">
-                                                            <option value="" selected>Select</option>
-                                                            <option
-                                                                v-for="option in this[currentQuestion.dynamicOptionsMethod]()"
-                                                                v-text="option"></option>
-                                                        </select>
-                                                        <p class="question-card__error"
-                                                            v-if="errors[currentQuestion.propertyName]"
-                                                            v-text="errors[currentQuestion.propertyName]"></p>
-                                                    </div>
-
-                                                    <div v-if="currentQuestion.type === 'collection'">
-                                                        <div style="margin-bottom: 20px;"
-                                                            v-for="question in currentQuestion.questions" :key="question">
-                                                            <div v-if="question.type === 'text'">
-                                                                <label class="question-card__label"
-                                                                    v-text="question.text"></label>
-                                                                <input type="text"
-                                                                    v-model="form[question.propertyName]"
-                                                                    class="question-card__input">
-                                                                <p class="question-card__error"
-                                                                    v-if="errors[question.propertyName]"
-                                                                    v-text="errors[question.propertyName]"></p>
-                                                            </div>
-                                                            <div v-if="question.type === 'number'">
-                                                                <label class="question-card__label"
-                                                                    v-text="question.text"></label>
-                                                                <input type="number"
-                                                                    v-model="form[question.propertyName]"
-                                                                    class="question-card__input">
-                                                                <p class="question-card__error"
-                                                                    v-if="errors[question.propertyName]"
-                                                                    v-text="errors[question.propertyName]"></p>
-                                                            </div>
-                                                            <div v-if="question.type === 'date'">
-                                                                <label class="question-card__label"
-                                                                    v-text="question.text"></label>
-                                                                <input type="date"
-                                                                    v-model="form[question.propertyName]"
-                                                                    class="question-card__input">
-                                                                <p class="question-card__error"
-                                                                    v-if="errors[question.propertyName]"
-                                                                    v-text="errors[question.propertyName]"></p>
-                                                            </div>
-                                                            <div v-if="question && question.type === 'currency'">
-                                                                <label class="question-card__label"
-                                                                    v-text="question.text"></label>
-                                                                <my-currency-input :input="form[question.propertyName]"
-                                                                    :name="question.propertyName"
-                                                                    v-on:update="updatedCurrencyValue"></my-currency-input>
-                                                                <p class="question-card__error"
-                                                                    v-if="errors[question.propertyName]"
-                                                                    v-text="errors[question.propertyName]"></p>
-                                                            </div>
-                                                            <div v-if="question.type === 'select'">
-                                                                <label class="question-card__label"
-                                                                    v-text="question.text"></label>
-                                                                <select v-model="form[question.propertyName]"
-                                                                    class="question-card__input">
-                                                                    <option value="" selected>Select</option>
-                                                                    <option v-for="option in question.options"
-                                                                        v-text="option" :value="option"></option>
-                                                                </select>
-                                                                <p class="question-card__error"
-                                                                    v-if="errors[question.propertyName]"
-                                                                    v-text="errors[question.propertyName]"></p>
-                                                            </div>
-                                                            <div v-if="question.type === 'dynamicSelect'">
-                                                                <label class="question-card__label"
-                                                                    v-text="question.text"></label>
-                                                                <select v-model="form[question.propertyName]"
-                                                                    :data-name="question.propertyName"
-                                                                    @change="onDynamicSelectChange"
-                                                                    class="question-card__input">
-                                                                    <option value="" selected>Select</option>
-                                                                    <option
-                                                                        v-for="option in this[question.dynamicOptionsMethod]()"
-                                                                        v-text="option"></option>
-                                                                </select>
-                                                                <p class="question-card__error"
-                                                                    v-if="errors[question.propertyName]"
-                                                                    v-text="errors[question.propertyName]"></p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <div v-show="step == 2">
+                                        <label for="Email"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email<span
+                                                class="text-red-400">*</span></label>
+                                        <input v-model="form.agentEmail" type="text" id="Email"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="Email" required>
+                                        <div v-if="firstStepErrors.agentEmail" class="text-red-500"
+                                            v-text="firstStepErrors.agentEmail[0]"></div>
+                                    </div>
+                                    <div v-show="step == 3">
+                                        <label for="EFNumber"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
+                                            FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
+                                        <input v-model="form.EFNumber" type="text" id="EFNumber"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="EFNumber" required>
+                                        <div v-if="firstStepErrors.EFNumber" class="text-red-500"
+                                            v-text="firstStepErrors.EFNumber[0]"></div>
                                     </div>
 
-                                    <div class=" flex justify-between">
-                                        <a @click.prevent="Previous()"
+
+
+                                    <div v-show="step == 4">
+                                        <label for="countries"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Your
+                                            Upline Manager</label>
+                                        <select v-model="form.uplineManager" id="countries"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                            <option disabled>Select</option>
+                                            <option v-for="uplineManager in uplineManagerArray" :value="uplineManager.text">{{ uplineManager.text }}</option>
+                                        </select>
+
+                                        <div v-if="firstStepErrors.uplineManager" class="text-red-500"
+                                            v-text="firstStepErrors.uplineManager[0]"></div>
+                                    </div>
+                                    <div v-show="step == 5">
+                                        <label for="countries"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Was this a split sale?</label>
+                                        <select v-model="form.wasThisASplitSale" id="countries"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                            <option disabled>Select</option>
+                                            <option  value="YES">YES</option>
+                                            <option  value="NO">NO</option>
+                                        </select>
+                                        <div v-if="firstStepErrors.wasThisASplitSale" class="text-red-500"
+                                            v-text="firstStepErrors.wasThisASplitSale[0]"></div>
+                                    </div>
+                                    <div v-show="step == 6">
+                                        <label for="countries"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Choose Type of Split Sale</label>
+                                        <select v-model="form.typeOfSplitSale" id="countries"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                            <option disabled>Select</option>
+                                            <option  value="Transfer Program">Transfer Program</option>
+                                            <option  value="Callback Lead">Callback Lead</option>
+                                            <option  value="Internet Leads">Internet Leads</option>
+                                            <option  value="Opt Leads">Opt Leads</option>
+                                            <option  value="Referral">Referral</option>
+                                        </select>
+                                        <div v-if="firstStepErrors.typeOfSplitSale" class="text-red-500"
+                                            v-text="firstStepErrors.typeOfSplitSale[0]"></div>
+                                    </div>
+                                    <div v-show="step == 7">
+                                        <label for="countries"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Was this a split sale?</label>
+                                        <select v-model="form.insuranceCompany" id="countries" @change="ChangeProducName()"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                            <option disabled>Select</option>
+                                            <option v-for="option in getInsuranceCompanyOptions()" v-text="option"></option>
+                                        </select>
+                                        <div v-if="firstStepErrors.insuranceCompany" class="text-red-500"
+                                            v-text="firstStepErrors.insuranceCompany[0]"></div>
+                                    </div>
+                                    <div v-show="step == 8">
+                                        <label for="countries"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Was this a split sale?</label>
+                                        <select v-model="form.productName" id="countries"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                            <option disabled>Select</option>
+                                            <option v-for="option in getProductNameOptions()" :value="option" v-text="option"></option>
+                                        </select>
+                                        <div v-if="firstStepErrors.productName" class="text-red-500"
+                                            v-text="firstStepErrors.productName[0]"></div>
+                                    </div>
+                                    <div v-show="step == 9">
+                                        <label for="countries"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Your
+                                            Upline Manager</label>
+                                        <select v-model="form.uplineManager" id="countries"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                            <option disabled>Select</option>
+                                            <option v-for="uplineManager in uplineManagerArray" :value="uplineManager.text">{{ uplineManager.text }}</option>
+                                        </select>
+
+                                        <div v-if="firstStepErrors.uplineManager" class="text-red-500"
+                                            v-text="firstStepErrors.uplineManager[0]"></div>
+                                        <label for="EFNumber"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
+                                            FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
+                                        <input v-model="form.EFNumber" type="text" id="EFNumber"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="EFNumber" required>
+                                        <div v-if="firstStepErrors.EFNumber" class="text-red-500"
+                                            v-text="firstStepErrors.EFNumber[0]"></div>
+                                    </div>
+                                    <div v-show="step == 10">
+                                        <label for="EFNumber"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
+                                            FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
+                                        <input v-model="form.EFNumber" type="text" id="EFNumber"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="EFNumber" required>
+                                        <div v-if="firstStepErrors.EFNumber" class="text-red-500"
+                                            v-text="firstStepErrors.EFNumber[0]"></div>
+                                    </div>
+                                    <div v-show="step == 11">
+                                        <label for="EFNumber"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
+                                            FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
+                                        <input v-model="form.EFNumber" type="text" id="EFNumber"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="EFNumber" required>
+                                        <div v-if="firstStepErrors.EFNumber" class="text-red-500"
+                                            v-text="firstStepErrors.EFNumber[0]"></div>
+                                    </div>
+                                    <div v-show="step == 12">
+                                        <label for="EFNumber"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
+                                            FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
+                                        <input v-model="form.EFNumber" type="text" id="EFNumber"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="EFNumber" required>
+                                        <div v-if="firstStepErrors.EFNumber" class="text-red-500"
+                                            v-text="firstStepErrors.EFNumber[0]"></div>
+                                    </div>
+                                    <div v-show="step == 13">
+                                        <label for="EFNumber"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
+                                            FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
+                                        <input v-model="form.EFNumber" type="text" id="EFNumber"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="EFNumber" required>
+                                        <div v-if="firstStepErrors.EFNumber" class="text-red-500"
+                                            v-text="firstStepErrors.EFNumber[0]"></div>
+                                    </div>
+                                    <div v-show="step == 14">
+                                        <label for="EFNumber"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
+                                            FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
+                                        <input v-model="form.EFNumber" type="text" id="EFNumber"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="EFNumber" required>
+                                        <div v-if="firstStepErrors.EFNumber" class="text-red-500"
+                                            v-text="firstStepErrors.EFNumber[0]"></div>
+                                    </div>
+                                    <div v-show="step == 15">
+                                        <label for="EFNumber"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
+                                            FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
+                                        <input v-model="form.EFNumber" type="text" id="EFNumber"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="EFNumber" required>
+                                        <div v-if="firstStepErrors.EFNumber" class="text-red-500"
+                                            v-text="firstStepErrors.EFNumber[0]"></div>
+                                    </div>
+                                    <div v-show="step == 16">
+                                        <label for="EFNumber"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
+                                            FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
+                                        <input v-model="form.EFNumber" type="text" id="EFNumber"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="EFNumber" required>
+                                        <div v-if="firstStepErrors.EFNumber" class="text-red-500"
+                                            v-text="firstStepErrors.EFNumber[0]"></div>
+                                    </div>
+                                    <div v-show="step == 17">
+                                        <label for="EFNumber"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
+                                            FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
+                                        <input v-model="form.EFNumber" type="text" id="EFNumber"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="EFNumber" required>
+                                        <div v-if="firstStepErrors.EFNumber" class="text-red-500"
+                                            v-text="firstStepErrors.EFNumber[0]"></div>
+                                    </div>
+                                    <div v-show="step == 18">
+                                        <label for="EFNumber"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
+                                            FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
+                                        <input v-model="form.EFNumber" type="text" id="EFNumber"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="EFNumber" required>
+                                        <div v-if="firstStepErrors.EFNumber" class="text-red-500"
+                                            v-text="firstStepErrors.EFNumber[0]"></div>
+                                    </div>
+                                    <div v-show="step == 19">
+                                        <label for="EFNumber"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
+                                            FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
+                                        <input v-model="form.EFNumber" type="text" id="EFNumber"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="EFNumber" required>
+                                        <div v-if="firstStepErrors.EFNumber" class="text-red-500"
+                                            v-text="firstStepErrors.EFNumber[0]"></div>
+                                    </div>
+                                    <div v-show="step == 20">
+                                        <label for="EFNumber"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
+                                            FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
+                                        <input v-model="form.EFNumber" type="text" id="EFNumber"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="EFNumber" required>
+                                        <div v-if="firstStepErrors.EFNumber" class="text-red-500"
+                                            v-text="firstStepErrors.EFNumber[0]"></div>
+                                    </div>
+                                    <div v-show="step == 21">
+                                        <label for="EFNumber"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
+                                            FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
+                                        <input v-model="form.EFNumber" type="text" id="EFNumber"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="EFNumber" required>
+                                        <div v-if="firstStepErrors.EFNumber" class="text-red-500"
+                                            v-text="firstStepErrors.EFNumber[0]"></div>
+                                    </div>
+                                    <div v-show="step == 22">
+                                        <label for="EFNumber"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
+                                            FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
+                                        <input v-model="form.EFNumber" type="text" id="EFNumber"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="EFNumber" required>
+                                        <div v-if="firstStepErrors.EFNumber" class="text-red-500"
+                                            v-text="firstStepErrors.EFNumber[0]"></div>
+                                    </div>
+                                    <div v-show="step == 23">
+                                        <label for="EFNumber"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
+                                            FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
+                                        <input v-model="form.EFNumber" type="text" id="EFNumber"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="EFNumber" required>
+                                        <div v-if="firstStepErrors.EFNumber" class="text-red-500"
+                                            v-text="firstStepErrors.EFNumber[0]"></div>
+                                    </div>
+                                    <div v-show="step == 24">
+                                        <label for="EFNumber"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
+                                            FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
+                                        <input v-model="form.EFNumber" type="text" id="EFNumber"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="EFNumber" required>
+                                        <div v-if="firstStepErrors.EFNumber" class="text-red-500"
+                                            v-text="firstStepErrors.EFNumber[0]"></div>
+                                    </div>
+                                    <div v-show="step == 25">
+                                        <label for="EFNumber"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
+                                            FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
+                                        <input v-model="form.EFNumber" type="text" id="EFNumber"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="EFNumber" required>
+                                        <div v-if="firstStepErrors.EFNumber" class="text-red-500"
+                                            v-text="firstStepErrors.EFNumber[0]"></div>
+                                    </div>
+                                    <div v-show="step == 26">
+                                        <label for="EFNumber"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
+                                            FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
+                                        <input v-model="form.EFNumber" type="text" id="EFNumber"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="EFNumber" required>
+                                        <div v-if="firstStepErrors.EFNumber" class="text-red-500"
+                                            v-text="firstStepErrors.EFNumber[0]"></div>
+                                    </div>
+                                    <div v-show="step == 27">
+                                        <label for="EFNumber"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
+                                            FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
+                                        <input v-model="form.EFNumber" type="text" id="EFNumber"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="EFNumber" required>
+                                        <div v-if="firstStepErrors.EFNumber" class="text-red-500"
+                                            v-text="firstStepErrors.EFNumber[0]"></div>
+                                    </div>
+                                    <div v-show="step == 28">
+                                        <label for="EFNumber"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
+                                            FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
+                                        <input v-model="form.EFNumber" type="text" id="EFNumber"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="EFNumber" required>
+                                        <div v-if="firstStepErrors.EFNumber" class="text-red-500"
+                                            v-text="firstStepErrors.EFNumber[0]"></div>
+                                    </div>
+                                    <div v-show="step == 29">
+                                        <label for="EFNumber"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
+                                            FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
+                                        <input v-model="form.EFNumber" type="text" id="EFNumber"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="EFNumber" required>
+                                        <div v-if="firstStepErrors.EFNumber" class="text-red-500"
+                                            v-text="firstStepErrors.EFNumber[0]"></div>
+                                    </div>
+                                    <div v-show="step == 30">
+                                        <label for="EFNumber"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
+                                            FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
+                                        <input v-model="form.EFNumber" type="text" id="EFNumber"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="EFNumber" required>
+                                        <div v-if="firstStepErrors.EFNumber" class="text-red-500"
+                                            v-text="firstStepErrors.EFNumber[0]"></div>
+                                    </div>
+                                    <div v-show="step == 31">
+                                        <label for="EFNumber"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
+                                            FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
+                                        <input v-model="form.EFNumber" type="text" id="EFNumber"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="EFNumber" required>
+                                        <div v-if="firstStepErrors.EFNumber" class="text-red-500"
+                                            v-text="firstStepErrors.EFNumber[0]"></div>
+                                    </div>
+                                    <div v-show="step == 32">
+                                        <label for="EFNumber"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
+                                            FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
+                                        <input v-model="form.EFNumber" type="text" id="EFNumber"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="EFNumber" required>
+                                        <div v-if="firstStepErrors.EFNumber" class="text-red-500"
+                                            v-text="firstStepErrors.EFNumber[0]"></div>
+                                    </div>
+
+
+
+                                    <div class=" flex justify-between mt-5">
+                                        <a @click.prevent="Previous(step)"
                                             class="button-custom-back px-3 py-2 rounded-md flex items-center" href="#">
-                                          
+
                                             Previous
                                         </a>
-                                        <a @click.prevent="Next()" class="button-custom px-3 py-2 rounded-md flex items-center"
-                                            href="#">
+                                        <a @click.prevent="Next(step)"
+                                            class="button-custom px-3 py-2 rounded-md flex items-center" href="#">
                                             Next
-                                           
+
                                         </a>
                                     </div>
-                                  
+
 
                                 </div>
                             </form>
 
-                            <div class="confirm" v-show="showConfirmationWindow">
-                                <div class="confirm__container" style="position: relative; min-height: 400px;">
-                                    <div v-show="!loading" class="confirm__card">
-                                        <div class="confirm__heading">Please confirm all your information is correct:</div>
 
-                                        <div class="confirm__info">
-                                            <div class="confirm__item" v-for="(value, key) in information" :key="key">
-                                                <div class="confirm__key" v-text="key"></div>
-                                                <div class="confirm__value" v-text="value"></div>
-                                            </div>
-                                        </div>
-
-                                        <div class="confirm_buttons">
-                                            <a href="#" class="confirm__button"
-                                                @click.prevent="showConfirmationWindow = false">Change Entries</a>
-                                            <a href="#" class="confirm__button confirm__button--next"
-                                                @click.prevent="confirm">Confirm</a>
-                                        </div>
-                                    </div>
-                                    <div v-if="loading"
-                                        style="position: absolute; height: 100%; width: 100%; background-color: #000000c7; z-index: 999; top: 0; left: 0; display: flex; justify-content: center; align-items: center; flex-direction: column; color: white; text-transform: uppercase; font-weight: 300; letter-spacing: 2px;">
-                                        <span class="loader"></span>
-                                        <div>Processing Information</div>
-                                    </div>
-                                </div>
-                            </div>
 
                             <!-- <label for="Email" class="block mb-2 text-sm font-black text-gray-900 ">Email<span
                                     class="text-red-500">*</span></label>
                             <input type="email" id="default-input"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                             <div v-if="firstStepErrors.email" class="text-red-500" v-text="firstStepErrors.email[0]"></div> -->
-                        </div>
-
-                        <div class=" mb-3 mt-2">
-                            <div class="flex justify-between">
-                                <div class="mt-4">
-                                    <button type="button" @click="inviteAgent" :class="{ 'opacity-25': isLoading }"
-                                        :disabled="isLoading"
-                                        class="button-custom-back px-3 py-2 rounded-md flex items-center">
-                                        <global-spinner :spinner="isLoading" /> Back
-                                    </button>
-                                </div>
-                                <div class="mt-4">
-                                    <button type="button" @click="inviteAgent" :class="{ 'opacity-25': isLoading }"
-                                        :disabled="isLoading" class="button-custom px-3 py-2 rounded-md flex items-center">
-                                        <global-spinner :spinner="isLoading" /> Next
-                                    </button>
-                                </div>
-                            </div>
                         </div>
                     </div>
 

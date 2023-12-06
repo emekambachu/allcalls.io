@@ -219,7 +219,7 @@ let app = createApp({
         f() {
             return Object.keys(this.companies);
         },
-
+        
         getProductNameOptions() {
             return Object.keys(this.companies[this.form.insuranceCompany]);
         },
