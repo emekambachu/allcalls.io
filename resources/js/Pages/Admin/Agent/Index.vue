@@ -82,7 +82,7 @@ let editAgentModal = (user, page) => {
   currentPage.value = page;
   showModal.value = true;
 };
-let userData = ref({});
+let userData = {};
 let openContractModal = (agent) => {
   // console.log('agent',agent);
   userData.value = agent;
