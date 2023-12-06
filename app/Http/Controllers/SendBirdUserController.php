@@ -85,8 +85,18 @@ class SendBirdUserController extends Controller
             $sendBirdUser->save();
             Log::info('SendBird user created successfully for user ID: ' . $user->id);
 
+            // Join the user to a SendBird group channel
+            $channelUrl = env('SENDBIRD_INTERNAL_AGENTS_GROUP_URL'); // Replace with your actual channel URL
+            $joinChannelResponse = $this->joinSendBirdGroupChannel($user->id, $channelUrl);
+
+            if ($joinChannelResponse->successful()) {
+                Log::info("User ID: {$user->id} joined SendBird group channel successfully.");
+            } else {
+                Log::error("Failed to join SendBird group channel. User ID: {$user->id} Response: " . $joinChannelResponse->body());
+            }
+
             return response()->json([
-                'message' => 'SendBird user created successfully',
+                'message' => 'SendBird user created and joined to channel successfully',
                 'sendBirdUser' => $sendBirdUser
             ], 201);
         } else {
@@ -121,5 +131,20 @@ class SendBirdUserController extends Controller
             // If a SendBird user does not exist, return a not found response
             return response()->json(['message' => 'SendBird user does not exist'], 404);
         }
+    }
+
+    protected function joinSendBirdGroupChannel($userId, $channelUrl)
+    {
+        $applicationId = env('SENDBIRD_APPLICATION_ID');
+        $apiKey = env('SENDBIRD_API_TOKEN');
+
+        $response = Http::withHeaders([
+            'Api-Token' => $apiKey,
+            'Content-Type' => 'application/json',
+        ])->put("https://api-{$applicationId}.sendbird.com/v3/group_channels/{$channelUrl}/join", [
+            'user_id' => $userId,
+        ]);
+
+        return $response;
     }
 }
