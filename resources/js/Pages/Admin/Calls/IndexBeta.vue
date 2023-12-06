@@ -291,8 +291,8 @@ watch(date, (newVal, oldVal) => {
 });
 
 onMounted(() => {
-  const startDate = new Date();
-  const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
+  const startDate = new Date('EST');
+  const endDate = new Date(new Date().setDate(startDate.getDate() + 7) + ' EST');
   date.value = [startDate, endDate];
 });
 </script>
