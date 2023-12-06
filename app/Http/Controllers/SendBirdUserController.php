@@ -77,7 +77,7 @@ class SendBirdUserController extends Controller
                 'session_tokens' => json_encode($responseData['session_tokens']),
                 'last_seen_at' => $responseData['last_seen_at'],
                 'discovery_keys' => json_encode($responseData['discovery_keys']),
-                'preferred_languages' => json_encode($responseData['preferred_languages']),
+                // 'preferred_languages' => json_encode($responseData['preferred_languages']),
                 'has_ever_logged_in' => $responseData['has_ever_logged_in'],
             ]);
         
