@@ -290,10 +290,15 @@ watch(date, (newVal, oldVal) => {
   console.log("Date range: ", newVal);
 });
 
+let convertTZ = (date, tzString) => {
+  return new Date((typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {timeZone: tzString}));   
+}
+
 onMounted(() => {
   const startDate = new Date();
   const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
   date.value = [startDate, endDate];
+  convertTZ(startDate, "America/New_York");
 });
 
 </script>
