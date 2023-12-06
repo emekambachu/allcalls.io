@@ -9,11 +9,14 @@ let props = defineProps({
     firstStepErrors: Object,
     reIniteAgent: Boolean,
     agentLevels: Array,
+    user_level:Object,
 });
+console.log('user_level', props.user_level);
 let form = ref({
     email: "",
     level: "-- Select an option --",
 });
+console.log('');
 let validateEmail = (email) => {
     return /\S+@\S+\.\S+/.test(email); // Simple regex for email validation
 };
@@ -166,7 +169,7 @@ let close = () => {
                             <select v-model="form.level" id="countries"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                                 <option disabled selected>-- Select an option -- </option>
-                                <option v-for="level in agentLevels" :value="level.id">{{ level.name }} </option>
+                                <option v-show="user_level.order >= level.order" v-for="level in agentLevels" :value="level.id">{{ level.name }} </option>
                             </select>
                             <div v-if="firstStepErrors.level" class="text-red-500" v-text="firstStepErrors.level[0]">
                             </div>

@@ -3,19 +3,21 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Mail\Mailables\Attachment;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
 class EquisDuplicateMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $agentName;
-    public $efNumber;
-    public $agentEmail;
+    // public $agentName;
+    // public $efNumber;
+    // public $agentEmail;
+    public $csvFilePath;
 
     /**
      * Create a new message instance.
@@ -24,11 +26,12 @@ class EquisDuplicateMail extends Mailable
      * @param string $efNumber
      * @param string $agentEmail
      */
-    public function __construct(string $agentName, string $efNumber, string $agentEmail)
+    public function __construct(string $csvFilePath)
     {
-        $this->agentName = $agentName;
-        $this->efNumber = $efNumber;
-        $this->agentEmail = $agentEmail;
+        // $this->agentName = $agentName;
+        // $this->efNumber = $efNumber;
+        // $this->agentEmail = $agentEmail;
+        $this->csvFilePath = $csvFilePath;
     }
 
     /**
@@ -36,7 +39,7 @@ class EquisDuplicateMail extends Mailable
      */
     public function envelope(): Envelope
     {
-        $subject = 'AllCalls Free Agent Request for ' . $this->agentName . ' (' . $this->efNumber . ')';
+        $subject = 'AllCalls Free Agents Request';
         return new Envelope(
             subject: $subject
         );
@@ -50,9 +53,9 @@ class EquisDuplicateMail extends Mailable
         return new Content(
             markdown: 'emails.equis-duplicate',
             with: [
-                'agentName' => $this->agentName,
-                'efNumber' => $this->efNumber,
-                'agentEmail' => $this->agentEmail,
+                // 'agentName' => $this->agentName,
+                // 'efNumber' => $this->efNumber,
+                // 'agentEmail' => $this->agentEmail,
             ]
         );
     }
@@ -64,6 +67,10 @@ class EquisDuplicateMail extends Mailable
      */
     public function attachments(): array
     {
-        return [];
+        return [
+            Attachment::fromPath($this->csvFilePath)
+                ->as('Agents.csv')
+                ->withMime('text/csv'),
+        ];    
     }
 }

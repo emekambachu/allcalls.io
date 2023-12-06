@@ -24,6 +24,7 @@
         "@fortawesome/vue-fontawesome": "^3.0.3",
         "@headlessui/vue": "^1.7.16",
         "@meforma/vue-toaster": "^1.3.0",
+        "@ssthouse/vue3-tree-chart": "^0.2.6",
         "@tailwindcss/typography": "^0.5.9",
         "@twilio/voice-sdk": "^2.7.2",
         "@vueform/multiselect": "^2.6.2",
@@ -34,9 +35,11 @@
         "signature_pad": "^4.1.6",
         "tippy.js": "^6.3.7",
         "tourguidejs": "^1.1.2",
+        "v-tooltip": "^2.1.3",
         "vue-carousel": "^0.18.0",
         "vue-chartjs": "^5.2.0",
         "vue-credit-card-validation": "^1.0.5",
+        "vue-loaders": "^4.1.4",
         "vue-multi-select": "^4.6.0",
         "vue-multiselect": "^2.1.7",
         "vue-shepherd": "^3.0.0",
@@ -44,6 +47,7 @@
         "vue-signature-pad": "^3.0.2",
         "vue-tour": "^2.0.0",
         "vue3-carousel": "^0.3.1",
-        "vue3-tour": "^0.3.4"
+        "vue3-tour": "^0.3.4",
+        "vue3-tree": "^0.11.5"
     }
 }

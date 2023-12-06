@@ -13,6 +13,7 @@ use App\Models\Transaction;
 use Laravel\Cashier\Billable;
 use App\Models\AdditionalFile;
 use App\Models\UserCallTypeState;
+use App\Models\SendBirdUser;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -176,9 +177,15 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsTo(InternalAgentLevel::class, 'level_id', 'id');
     }
 
-    public function invitee()
+    public function invitees()
     {
         return $this->hasMany(User::class, 'invited_by', 'id');
+    }
+
+    public function allInvitees()
+    {
+        //retrieve the entire hierarchy
+        return $this->invitees()->with('allInvitees');
     }
 
     public function invitedBy()
@@ -186,4 +193,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(User::class, 'id', 'invited_by');
     }
 
+
+    public function sendbirdUser()
+    {
+        return $this->hasOne(SendbirdUser::class);
+    }
 }

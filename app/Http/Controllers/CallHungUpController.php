@@ -33,4 +33,28 @@ class CallHungUpController extends Controller
             'message' => 'Call updated successfully.',
         ], 200);
     }
+
+    public function updateForWeb(Request $request, $uniqueCallId)
+    {
+        Log::debug('CallRejectedByAgent::updateForWeb - endpoint hit');
+        Log::debug('All Requests:', $request->all());
+
+        $call = Call::whereUniqueCallId($uniqueCallId)->firstOrFail();
+        Log::debug('CallRejectedByAgent::updateForWeb - call found');
+
+        if ($call->user_id !== $request->user()->id) {
+            Log::debug('CallUserResponseAPIController::updateForWeb - user_id does not match');
+            return response()->json([
+                'message' => 'You are not authorized to update this call.',
+            ], 403);
+        }
+
+        $call->hung_up_by = 'Agent';
+        $call->save();
+        Log::debug('CallUserResponseAPIController::updateForWeb - hung up by for the call updated successfully');
+
+        return response()->json([
+            'message' => 'Call updated successfully.',
+        ], 200);
+    }
 }

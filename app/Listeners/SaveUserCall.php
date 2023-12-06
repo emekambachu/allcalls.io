@@ -37,6 +37,11 @@ class SaveUserCall
             'from' => $event->from,
         ]);
 
+
+        // Save the last_called_at timestamp on the user.
+        $event->user->last_called_at = now();
+        $event->user->save();
+
         Log::debug('FROM IS: ' . $event->from);
 
         Log::debug($call->toArray());

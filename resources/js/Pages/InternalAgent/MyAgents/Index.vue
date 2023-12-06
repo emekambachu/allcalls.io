@@ -5,6 +5,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import InvitesModal from "@/Pages/InternalAgent/MyAgents/InvitesModal.vue";
 import { toaster } from "@/helper.js";
+import AgentTree from "@/Components/AgentTree.vue";
 import axios from "axios";
 
 let { agents, baseUrl } = defineProps({
@@ -130,6 +131,12 @@ let dateFormat = (data) => {
     return `${month}/${day}/${year}`;
   }
 };
+let userData = ref({});
+let agentTreeModal = ref(false)
+let inviteParent = (agent) => {
+  agentTreeModal.value = true
+  userData.value = agent;
+}
 </script>
 
 <template>
@@ -137,13 +144,13 @@ let dateFormat = (data) => {
   <AuthenticatedLayout>
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-        My Agent
+        Registered Agents
       </h2>
     </template>
 
     <div class="pt-14 flex justify-between px-16">
       <div>
-        <div class="text-4xl text-custom-sky font-bold mb-6">My Agent</div>
+        <div class="text-4xl text-custom-sky font-bold mb-6">Registered Agents</div>
       </div>
      
     </div>
@@ -166,12 +173,13 @@ let dateFormat = (data) => {
                   <th scope="col" style="min-width: 110px;" class="px-4 py-3">Last Name</th>
                   <th scope="col" style="min-width: 110px;" class="px-4 py-3">Level</th>
                   <th scope="col" style="min-width: 110px;" class="px-4 py-3">Upline</th>
+                  <th scope="col" class="px-4 py-3">Hierarchy</th>
                   <th scope="col" class="px-4 py-3">Email</th>
                   <th scope="col" class="px-4 py-3">Balance</th>
                   <th scope="col" class="px-4 py-3">Phone</th>
                   <th scope="col" style="min-width: 115px;" class="px-4 py-3">Sign Up Date</th>
                   <th scope="col"  class="px-4 py-3">Progress</th>
-                  <th scope="col" class="px-4 py-3 text-end">Actions</th>
+                  <!-- <th scope="col" class="px-4 py-3 text-end">Actions</th> -->
                 </tr>
               </thead>
               <tbody>
@@ -180,11 +188,18 @@ let dateFormat = (data) => {
                   :key="agent.id"
                   class="border-b border-gray-500"
                 >
+                
                   <td class="text-gray-600 px-4 py-3">{{ agent.id }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ agent.first_name }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ agent.last_name }}</td>
                   <th class="text-gray-600 px-4 py-3">{{ agent.get_agent_level?.name }}</th>
                   <th class="text-gray-600 px-4 py-3">{{ agent.upline_id }}</th>
+                  <th class="text-gray-600 px-4 py-3">
+                    <a class="text-blue-500 cursor-pointer" v-if="agent.invitees_count > 0" title="View Invites" @click="inviteParent(agent)">
+                      View Tree
+                    </a>
+                  <span v-else>-</span>
+                  </th>
                   <th class="text-gray-600 px-4 py-3">{{ agent.email }}</th>
                   <td class="text-gray-600 px-4 py-3">
                     ${{ formatMoney(agent.balance) }}
@@ -204,9 +219,8 @@ let dateFormat = (data) => {
                   <td class="text-gray-600 px-4 py-3">
                     {{ agent.progress ? agent.progress : "-" }}
                   </td>
-                  <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
-                    
-                  </td>
+                  <!-- <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
+                  </td> -->
                 </tr>
               </tbody>
             </table>
@@ -287,8 +301,10 @@ let dateFormat = (data) => {
     </section>
 
     <section v-else class="p-3">
-      <p class="text-center text-gray-600">No clients yet.</p>
+      <p class="text-center text-gray-600">No Agents yet.</p>
     </section>
+    <AgentTree v-if="agentTreeModal" :treeRoute="'/internal-agent/agent/tree/'"  :agentTreeModal="agentTreeModal" @close="agentTreeModal = false" :userData="userData" />
+
     <InvitesModal @close="invitesModal = false" :isLoading="isLoading" @inviteAgent="inviteAgent"
       :firstStepErrors="firstStepErrors" :agentLevels="agentLevels" :invitesModal="invitesModal" @ReinviteAgent="ReInviteAgentFun"
       :reIniteAgent="reIniteAgent" />

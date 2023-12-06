@@ -226,39 +226,42 @@ maxDate.value.setHours(23, 59, 59, 999);
             <table class="w-full text-sm text-left text-gray-400 table-responsive">
               <thead class="text-xs text-gray-300 uppercase bg-sky-900">
                 <tr>
-                  <th scope="col" class="px-4 py-2 whitespace-no-wrap">ID</th>
-                  <th scope="col" class="px-4 py-2 whitespace-no-wrap" style="min-width: 250px">
-                    CALL Date
+                  <th scope="col" class="px-4 py-2">ID</th>
+                  <th scope="col" class="px-4 py-2" style="min-width: 250px">
+                    Call Date
                   </th>
-                  <th scope="col" class="px-4 py-2 whitespace-no-wrap" style="min-width: 150px">
+                  <th scope="col" class="px-4 py-2" style="min-width: 150px">
                     Name
                   </th>
-                  <th scope="col" class="px-4 py-2 whitespace-no-wrap" style="min-width: 150px">
+                  <th scope="col" class="px-4 py-2" style="min-width: 150px">
                     Role
                   </th>
-                  <th scope="col" class="px-4 py-2 whitespace-no-wrap">
-                    RING DURATION
+                  <th scope="col" class="px-4 py-2">
+                    Ring Duration
                   </th>
-                  <th scope="col" class="px-4 py-2 whitespace-no-wrap">
-                    CONNECTED DURATION
+                  <th scope="col" class="px-4 py-2">
+                    Connected Duration
                   </th>
-                  <th scope="col" class="px-4 py-2 whitespace-no-wrap">
+                  <th scope="col" class="px-4 py-2">
                     Hang Up By
                   </th>
 
-                  <th scope="col" class="px-4 py-2 whitespace-no-wrap">
+                  <th scope="col" class="px-4 py-2">
                     Revenue
                   </th>
-                  <th scope="col" class="px-4 py-2 whitespace-no-wrap" style="min-width: 130px">
-                    VERTICAL
+                  <th scope="col" class="px-4 py-2" style="min-width: 130px">
+                    Disposition
                   </th>
-                  <th scope="col" class="px-4 py-2 whitespace-no-wrap" style="min-width: 100px">
-                    CALLER ID
+                  <th scope="col" class="px-4 py-2" style="min-width: 130px">
+                    Vertical
                   </th>
-                  <th scope="col" class="px-4 py-2 whitespace-no-wrap" style="min-width: 160px">
+                  <th scope="col" class="px-4 py-2" style="min-width: 100px">
+                    Caller ID
+                  </th>
+                  <th scope="col" class="px-4 py-2" style="min-width: 160px">
                     URL
                   </th>
-                  <th scope="col" class="px-4 py-2 whitespace-no-wrap text-end" style="min-width: 110px">
+                  <th scope="col" class="px-4 py-2 text-end" style="min-width: 110px">
                     Actions
                   </th>
                 </tr>
@@ -267,12 +270,12 @@ maxDate.value.setHours(23, 59, 59, 999);
               <tbody v-if="calls.data.length">
                 <tr v-for="call in calls.data" :key="call.id" class="border-b border-gray-500">
 
-                  <td class="text-gray-600 ">{{ call.id }}</td>
-                  <th class="text-gray-600 ">{{ call.call_taken }}</th>
-                  <td class="text-gray-600 ">
+                  <td class="text-gray-600">{{ call.id }}</td>
+                  <th class="text-gray-600">{{ call.call_taken }}</th>
+                  <td class="text-gray-600">
                     {{ call.user.first_name }} {{ call.user.last_name }}
                   </td>
-                  <td class="text-gray-600 ">
+                  <td class="text-gray-600">
                     <span v-if="call.role === 'Internal Agent'"
                       class="bg-indigo-100 text-indigo-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Internal
                       Agent</span>
@@ -281,7 +284,7 @@ maxDate.value.setHours(23, 59, 59, 999);
                       User</span>
                   </td>
 
-                  <td class="text-gray-600 ">
+                  <td class="text-gray-600">
                     {{
                       String(Math.floor(call.ringing_duration / 60)).padStart(
                         2,
@@ -291,7 +294,7 @@ maxDate.value.setHours(23, 59, 59, 999);
                       String(call.ringing_duration % 60).padStart(2, "0")
                     }}
                   </td>
-                  <td class="text-gray-600 ">
+                  <td class="text-gray-600">
                     {{
                       String(
                         Math.floor(call.call_duration_in_seconds / 60)
@@ -304,16 +307,22 @@ maxDate.value.setHours(23, 59, 59, 999);
                     }}
                   </td>
 
-                  <th class="text-gray-600 ">{{ call.hung_up_by }}</th>
-                  <td class="text-gray-600 ">
+                  <td class="text-gray-600">{{ call.hung_up_by }}</td>
+                  <td class="text-gray-600">
                     ${{ call.amount_spent }}
                   </td>
-                  <td class="text-gray-600 ">
+                  <td class="text-gray-600">
+                    <div v-if="call.client && call.client.unlocked == 1">
+                      {{ call.client.status }}
+                    </div>
+                    <div v-else>N/A</div>
+                  </td>
+                  <td class="text-gray-600">
                     {{ call.call_type.type }}
                   </td>
-                  <td class="text-gray-600 ">{{ call.from }}</td>
+                  <td class="text-gray-600">{{ call.from }}</td>
 
-                  <td class="text-gray-600 ">
+                  <td class="text-gray-600">
                     <a v-if="call.recording_url" target="_blank" :href="call.recording_url" class="flex"><svg
                         xmlns="http://www.w3.org/2000/svg" height="1.5em" class="pr-1" viewBox="0 0 512 512">
                         <path

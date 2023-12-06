@@ -34,7 +34,7 @@ class InternalAgentController extends Controller
         $levels = AgentLevel::orderBy('created_at', 'desc')->get();
         $agents = User::whereHas('roles', function ($query) use ($agent) {
             $query->where('role_id', $agent->id);
-        })
+        })->withCount('invitees')
             ->where(function ($query) use ($request) {
                 if (isset($request->name) && $request->name != '') {
                     $query->where('first_name', 'LIKE', '%' . $request->name . '%')
@@ -81,6 +81,7 @@ class InternalAgentController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
+        // dd($agents);
 
         $callTypes = CallType::get();
         $states = State::get();
@@ -92,6 +93,38 @@ class InternalAgentController extends Controller
             'states' => $states,
             'statuses' => PROGRESS_STATUSES
         ]);
+    }
+
+    public function getAgentTree($id)
+    {
+        //retrieve the entire hierarchy
+        $user = User::findOrFail($id); 
+
+        if ($user && $user->roles->contains('name', 'admin')) {
+            $agent = Role::whereName('internal-agent')->first();
+            $agentHierarchy = User::whereHas('roles', function ($query) use ($agent) {
+                $query->where('role_id', $agent->id);
+            })->whereNull('invited_by')->with('allInvitees')->get();
+
+            $returnArr = [
+                "first_name" => 'AllCalls',
+                "last_name" => '.io',
+                "is_admin" => true,
+                "all_invitees" => $agentHierarchy
+            ];
+
+            return response()->json([
+                'success' => true,
+                'agentHierarchy' => $returnArr,
+            ], 200);
+        }
+
+        $agentHierarchy = User::with('allInvitees')->find($id);
+
+        return response()->json([
+            'success' => true,
+            'agentHierarchy' => $agentHierarchy,
+        ], 200);
     }
 
     public function show($id)
@@ -113,7 +146,6 @@ class InternalAgentController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -158,6 +190,8 @@ class InternalAgentController extends Controller
             'upline_id' => $request->upline_id,
             'password' => Hash::make($request->password),
             'balance' => isset($request->balance) ? $request->balance : 0,
+            'invited_by' => auth()->user()->id,
+
         ]);
 
         $user->markEmailAsVerified();
@@ -203,7 +237,7 @@ class InternalAgentController extends Controller
 
     public function getCall($id)
     {
-        $calls = Call::whereUserId($id)->with('user', 'getClient',  'callType')->paginate(10);
+        $calls = Call::whereUserId($id)->with('user', 'getClient',  'callType')->latest()->paginate(10);
         $states = State::all();
         return response()->json([
             'calls' => $calls,
@@ -211,7 +245,7 @@ class InternalAgentController extends Controller
         ]);
     }
 
-    public function getTransaction($id)
+    public function getTransactionj($id)
     {
         $transactions = Transaction::whereUserId($id)->with('card')->paginate(10);
         return response()->json([
@@ -256,7 +290,7 @@ class InternalAgentController extends Controller
                 'errors' => $validator->errors(),
             ], 400);
         }
-        if($user->phone !== $request->phone){
+        if ($user->phone !== $request->phone) {
             $phoneValidator = Validator::make($request->all(), [
                 'phone_code' => ['required', 'regex:/^\+(?:[0-9]){1,4}$/'],
                 'phone_country' => ['required'],
@@ -275,9 +309,9 @@ class InternalAgentController extends Controller
                 'phone' => $request->phone,
             ]);
         }
-        
+
         try {
-           
+
             if ($user->balance != $request->balance) {
                 Transaction::create([
                     'amount' => $request->balance - $user->balance,
@@ -355,7 +389,8 @@ class InternalAgentController extends Controller
         return $pdf->download($serialNo . '-explaination.pdf');
     }
 
-    public function internalAgentApproved($id) {
+    public function internalAgentApproved($id)
+    {
         try {
             $user = User::findOrFail($id);
             $user->is_locked = false;
@@ -370,10 +405,10 @@ class InternalAgentController extends Controller
                 'errors' => $e->getMessage(),
             ], 400);
         }
-
     }
 
-    public function internalAgentProgress(Request $request) {
+    public function internalAgentProgress(Request $request)
+    {
         try {
             $user = User::findOrFail($request->id);
             $user->progress = $request->progress;
@@ -388,19 +423,18 @@ class InternalAgentController extends Controller
                 'errors' => $e->getMessage(),
             ], 400);
         }
-
     }
 
     public function signatureAuthorizationPdf($id)
     {
-//        set_time_limit(0);
-//
-//        $returnArr['contractData'] = User::where('id', $id)
-//            ->with('internalAgentContract.getContractSign')
-//            ->first();
-//
-//        $pdf = PDF::loadView('pdf.internal-agent-contract.signature-authorization', $returnArr);
-//
-//        return $pdf->download('signature-authorization.pdf');
+        //        set_time_limit(0);
+        //
+        //        $returnArr['contractData'] = User::where('id', $id)
+        //            ->with('internalAgentContract.getContractSign')
+        //            ->first();
+        //
+        //        $pdf = PDF::loadView('pdf.internal-agent-contract.signature-authorization', $returnArr);
+        //
+        //        return $pdf->download('signature-authorization.pdf');
     }
 }

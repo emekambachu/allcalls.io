@@ -15,6 +15,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Timezone;
 class ProfileController extends Controller
 {
@@ -175,6 +176,38 @@ class ProfileController extends Controller
         // Return the populated incoming data array.
         return $incomingData;
     }
+
+    public function uploadProfilePicture(Request $request)
+    {
+        $request->validate([
+            'profile_picture' => 'required|image|mimes:jpg,jpeg,png|max:5120', // 5MB Max
+        ]);
+    
+        $user = Auth::user();
+    
+        // Get the file extension of the uploaded file
+        $extension = $request->file('profile_picture')->getClientOriginalExtension();
+    
+        // Sanitize the email to create a valid filename
+        $sanitizedEmail = str_replace(['@', '.'], ['_at_', '_dot_'], $user->email);
+    
+        // Create a filename using the user's email
+        $filename = $sanitizedEmail . '.' . $extension;
+    
+        // Store the file in the 'profile_pictures' directory with the new filename
+        $path = $request->file('profile_picture')->storeAs('profile_pictures', $filename, 'public');
+    
+        // Optionally delete the old image if it exists and is different from the new one
+        if ($user->profile_picture && $user->profile_picture != $path) {
+            Storage::disk('public')->delete($user->profile_picture);
+        }
+    
+        $user->profile_picture = $path;
+        $user->save();
+    
+        return redirect()->back()->with('success', 'Profile picture updated successfully.');
+    }
+    
 
     /**
      * Delete the user's account.

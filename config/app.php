@@ -172,6 +172,7 @@ return [
         App\Providers\TelescopeServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         Jenssegers\Agent\AgentServiceProvider::class,
+        JamesDordoy\LaravelVueDatatable\Providers\LaravelVueDatatableServiceProvider::class,
     ])->toArray(),
 
     /*
