@@ -283,6 +283,8 @@ let stopPlayingRecording = (call) => {
   currentlyPlayingAudio.value = null;
   currentlyPlayingAudioCallId.value = null;
 };
+
+let date = ref();
 </script>
 
 <template>
@@ -419,20 +421,7 @@ let stopPlayingRecording = (call) => {
     </div>
 
     <div>
-      <Popover class="relative mr-2">
-        <PopoverButton>
-          <button
-            type="button"
-            class="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200"
-          >
-            Today
-          </button>
-        </PopoverButton>
-
-        <PopoverPanel class="absolute z-10 w-40 -left-20">
-          Other options here
-        </PopoverPanel>
-      </Popover>
+      <VueDatePicker v-model="date"></VueDatePicker>
     </div>
 
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
