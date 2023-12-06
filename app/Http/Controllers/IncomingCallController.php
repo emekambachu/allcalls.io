@@ -110,7 +110,6 @@ class IncomingCallController extends Controller
         $onlineUsers = OnlineUser::byCallTypeAndState($callType, $stateModel)
             ->withSufficientBalance($callType)
             ->withCallStatusWaiting()
-            ->orderBy('last_called_at')
             ->get();
 
         // $onlineUsers = OnlineUser::prioritizeInternalAgents($onlineUsers);
@@ -184,7 +183,6 @@ class IncomingCallController extends Controller
         $onlineUsers = OnlineUser::byCallTypeAndState($callType, $stateModel)
             ->withSufficientBalance($callType)
             ->withCallStatusWaiting()
-            ->orderBy('last_called_at')
             ->get();
 
 

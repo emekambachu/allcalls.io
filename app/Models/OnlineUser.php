@@ -131,7 +131,7 @@ class OnlineUser extends Model
             $priorityForInternal = 1 - $isInternalAgent;
 
             // Handle nullable "last_called_at" by replacing it with a future date to ensure it comes last
-            $lastCalledAt = $onlineUser->last_called_at ?? now()->addYears(10);
+            $lastCalledAt = $onlineUser->user->last_called_at ?? now()->addYears(10);
 
             return [$priorityForInternal, $lastCalledAt];
         })->values();
@@ -182,7 +182,7 @@ class OnlineUser extends Model
             $isInternalAgent = $onlineUser->user->roles->contains('name', 'internal-agent') ? 1 : 0;
 
             // Handle nullable "last_called_at" by replacing it with a future date to ensure it comes last
-            $lastCalledAt = $onlineUser->last_called_at ?? now()->addYears(10);
+            $lastCalledAt = $onlineUser->user->last_called_at ?? now()->addYears(10);
 
             // For internal agents, give them top priority and sort by last_called_at
             if ($isInternalAgent) {
