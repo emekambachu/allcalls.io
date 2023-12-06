@@ -140,6 +140,12 @@ let fetchCalls = async (replace = false) => {
     url += "&sort_direction=" + sortDirection.value;
   }
 
+  // Include start_date and end_date in the query string if they both exist
+  if (startDate.value && endDate.value) {
+    url += "&start_date=" + startDate.value;
+    url += "&end_date=" + endDate.value;
+  }
+
   loading.value = true;
   let response = await axios.get(url);
 
@@ -160,7 +166,7 @@ let loadMore = async () => {
 };
 
 onMounted(() => {
-  fetchCalls();
+
 });
 
 let sortByColumn = async (column) => {
@@ -286,6 +292,9 @@ let stopPlayingRecording = (call) => {
 
 let date = ref([new Date(), new Date()]);
 
+let startDate = ref(null);
+let endDate = ref(null);
+
 watch(date, (newVal, oldVal) => {
   console.log("Date range: ", newVal);
 });
@@ -294,14 +303,17 @@ let convertTZ = (date, tzString) => {
   return new Date((typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {timeZone: tzString}));   
 }
 
+
+
 onMounted(() => {
   let startDate = new Date();
   let endDate = new Date(new Date().setDate(startDate.getDate() + 7));
 
-  startDate = convertTZ(startDate, "America/New_York");
-  endDate = convertTZ(endDate, "America/New_York");
-
+  startDate.value = startDate;
+  endDate.value = endDate;
   date.value = [startDate, endDate];
+
+  fetchCalls();
 });
 
 </script>
