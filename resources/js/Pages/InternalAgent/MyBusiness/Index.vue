@@ -7,11 +7,12 @@ import { toaster } from "@/helper.js";
 import AddModal from "@/Pages/InternalAgent/MyBusiness/AddModal.vue";
 
 
-let { agentInvites } = defineProps({
+let { agentInvites, states } = defineProps({
     businesses: {
         required: true,
         type: Array,
     },
+    states:Array,
 });
 let firstStepErrors = ref({})
 let slidingLoader = ref(false)
@@ -187,7 +188,7 @@ let fetchagentInvites = (page) => {
                 </div>
             </div>
         </div>
-        <AddModal v-if="addBusinessModal" :addBusinessModal="addBusinessModal" @close="addBusinessModal = false" 
+        <AddModal v-if="addBusinessModal" :states="states" :addBusinessModal="addBusinessModal" @close="addBusinessModal = false" 
       :firstStepErrors="firstStepErrors"   
       :reIniteAgent="reIniteAgent" />
     </AuthenticatedLayout>

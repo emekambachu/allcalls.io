@@ -4,6 +4,7 @@ namespace App\Http\Controllers\InternalAgent;
 
 use App\Http\Controllers\Controller;
 use App\Models\InternalAgentMyBusiness;
+use App\Models\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
@@ -13,9 +14,11 @@ class MyBusinessController extends Controller
     public function index()
     {
         $businesses = InternalAgentMyBusiness::whereIn('agent_id', getInviteeIds(auth()->user()))->paginate(10);
+        $states = State::get();
         // dd($businesses);
         return Inertia::render('InternalAgent/MyBusiness/Index', [
             'businesses' => $businesses,
+            'states' => $states,
         ]);
     }
 

@@ -6,11 +6,12 @@ let emits = defineEmits();
 let props = defineProps({
   addBusinessModal: Boolean,
   firstStepErrors: Object,
+  states: Array,
 });
 let loading = ref(false);
 let showConfirmationWindow = ref(false);
 let index = ref(0);
-let step = ref(8);
+let step = ref(1);
 
 let typeA = [31, 32, 33, 34, 35, 36, 37, 38, 39, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 40, 19, 20, 21, 22, 23, 41, 29, 30];
 let typeB = [31, 32, 33, 34, 35, 36, 37, 38, 39, 0, 2, 14, 6, 7, 8, 9, 10, 15, 16, 40, 19, 20, 21, 22, 23, 41, 29, 30];
@@ -20,50 +21,39 @@ let typeE = [31, 32, 33, 34, 35, 36, 37, 38, 39, 0, 1, 2, 11, 12, 13, 6, 7, 8, 9
 let typeF = [31, 32, 33, 34, 35, 36, 37, 38, 39, 0, 2, 14, 18, 6, 7, 8, 9, 10, 15, 16, 40, 19, 31, 20, 21, 22, 23, 41, 29, 30];
 
 let form = ref({
-  full_name: "",
-  agentEmail: "",
-  EFNumber: "",
-  uplineManager: "Select",
-  wasThisASplitSale: "Select",
-  typeOfSplitSale: "Select",
-  insuranceCompany: "AETNA/CVS",
-  productName: "Select",
-  applicationDate: "",
-  coverageAmount: 0,
-  coverageLength: "",
-  premiumFrequency: "",
-  premiumAmount: 0,
-  annualPremiumVolume: 0,
-  doYouHaveAnEquisWritingNumberWithThisCarrier: "",
-  carrierWritingNumber: "",
-  wasThisAppFromALead: "",
-  sourceOfTheLead: "",
-  wasThisAppointmentVirtualOrFaceToFace: "",
-  whatIsThePolicyDraftDate: "",
-  firstName: "",
-  MI: "",
-  lastName: "",
-  dateOfBirth: "",
-  gender: "",
-  streetLine1: "",
-  streetLine2: "",
-  city: "",
-  state: "",
-  zipcode: "",
-  phoneNumber: "",
-  client_email: "",
+  agent_full_name: "",
+  agent_email: "",
+  ef_number: "",
+  upline_manager: "Select",
+  split_sale: "Select",
+  split_sale_type: "Select",
+  split_agent_email: "",
+  insurance_company: "AETNA/CVS",
+  product_name: "Select",
+  application_date: "",
+  coverage_length: "Select",
+  premium_frequency: "Select",
+  coverage_amount: '',
+  annually_premium_amount: '',
+  equis_writing_number_carrier: 'Select',
+  carrier_writing_number: '',
+  this_app_from_lead: "Select",
+  source_of_lead: '',
+  appointment_type: 'Select',
+  policy_draft_date: '',
+  first_name: '',
+  mi: '',
+  last_name: '',
+  dob: '',
+  gender: 'Select',
+  client_street_address_1: '',
+  client_street_address_2: '',
+  client_city: '',
+  client_state: 'Select',
+  client_zipcode: '',
 
-  splitAgentEmail: "",
-  annualTargetPremium: 0,
-  annualPlannedPremium: 0,
-  annualExcessPremium: 0,
-  initialInvestmentAmount: 0,
-  didAnotherAgentReferThisApplicationToYou: "",
-  referringAgentEFNumber: "",
-  isThisAnSDIC: "",
-  willThereBeARecurringPremium: "",
-  agentName: "",
-  choose: "",
+
+
 });
 let companies = ref({
   "AETNA/CVS": {
@@ -1584,6 +1574,7 @@ let questions = ref([
     ],
   },
 ]);
+
 let uplineManagerArray = ref([
   { text: "Aurora Financial - Vincent Hall" },
   { text: "Imperial Group - Ruben Basurto" },
@@ -1592,7 +1583,26 @@ let uplineManagerArray = ref([
   { text: "Peace Financial - Timothy Charpentier" },
   { text: "Straus Agency - Cynthia Straus" },
 ]);
-
+let coverageLengthArray = ref([
+  "N/A",
+  "3 Years",
+  "5 Years",
+  "5 Years w/ 5 Year Guaranty",
+  "5 Years w/ ROP",
+  "7 Years",
+  "10 Years",
+  "15 Years",
+  "15 Years w/ ROP",
+  "20 Years",
+  "20 Years w/ 5 Year Guaranty",
+  "20 Years w/ ROP",
+  "25 Years",
+  "25 Years w/ ROP",
+  "30 Years",
+  "30 Years w/ 5 Year Guaranty",
+  "30 Years w/ ROP",
+  "Issue Ages",
+])
 const isValidEmail = (email) => {
   // Regular expression for validating an Email address
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -1600,183 +1610,149 @@ const isValidEmail = (email) => {
 };
 
 let restoreError = () => {
-  props.firstStepErrors.full_name = "";
-  props.firstStepErrors.agentEmail = "";
-  props.firstStepErrors.EFNumber = "";
-  props.firstStepErrors.uplineManager = "";
-  props.firstStepErrors.wasThisASplitSale = "";
-  props.firstStepErrors.typeOfSplitSale = "";
-  props.firstStepErrors.insuranceCompany = "";
-  props.firstStepErrors.productName = "";
-  props.firstStepErrors.applicationDate = "";
-  props.firstStepErrors.coverageAmount = "";
-  props.firstStepErrors.coverageLength = "";
-  props.firstStepErrors.premiumFrequency = "";
-  props.firstStepErrors.premiumAmount = "";
-  props.firstStepErrors.annualPremiumVolume = "";
-  props.firstStepErrors.doYouHaveAnEquisWritingNumberWithThisCarrier = "";
-  props.firstStepErrors.carrierWritingNumber = "";
-  props.firstStepErrors.wasThisAppFromALead = "";
-  props.firstStepErrors.sourceOfTheLead = "";
-  props.firstStepErrors.wasThisAppointmentVirtualOrFaceToFace = "";
-  props.firstStepErrors.whatIsThePolicyDraftDate = "";
-  props.firstStepErrors.firstName = "";
-  props.firstStepErrors.MI = "";
-  props.firstStepErrors.lastName = "";
-  props.firstStepErrors.dateOfBirth = "";
+  props.firstStepErrors.agent_full_name = "";
+  props.firstStepErrors.agent_email = "";
+  props.firstStepErrors.ef_number = "";
+  props.firstStepErrors.upline_manager = "";
+  props.firstStepErrors.split_sale = "";
+  props.firstStepErrors.split_sale_type = "";
+  props.firstStepErrors.split_agent_email = "";
+  props.firstStepErrors.insurance_company = "";
+  props.firstStepErrors.product_name = "";
+  props.firstStepErrors.application_date = "";
+  props.firstStepErrors.coverage_length = "";
+  props.firstStepErrors.premium_frequency = "";
+  props.firstStepErrors.coverage_amount = "";
+  props.firstStepErrors.annually_premium_amount = "";
+  props.firstStepErrors.equis_writing_number_carrier = "";
+  props.firstStepErrors.carrier_writing_number = "";
+  props.firstStepErrors.this_app_from_lead = "";
+  props.firstStepErrors.source_of_lead = "";
+  props.firstStepErrors.appointment_type = "";
+  props.firstStepErrors.policy_draft_date = "";
+  props.firstStepErrors.first_name = "";
+  props.firstStepErrors.mi = "";
+  props.firstStepErrors.last_name = "";
+  props.firstStepErrors.dob = "";
   props.firstStepErrors.gender = "";
-  props.firstStepErrors.streetLine1 = "";
-  props.firstStepErrors.streetLine2 = "";
-  props.firstStepErrors.city = "";
-  props.firstStepErrors.state = "";
-  props.firstStepErrors.zipcode = "";
-  props.firstStepErrors.phoneNumber = "";
-  props.firstStepErrors.client_email = "";
+  props.firstStepErrors.client_street_address_1 = "";
+  props.firstStepErrors.client_street_address_2 = "";
+  props.firstStepErrors.client_city = "";
+  props.firstStepErrors.client_state = "";
+  props.firstStepErrors.client_zipcode = "";
+
+
 };
+let  checkRequiredField = (fieldName, errorMessage) => {
+    if (!form.value[fieldName] || form.value[fieldName] === 'Select') {
+        props.firstStepErrors[fieldName] = [errorMessage];
+    }
+}
+
 // validation steps  star
 let validationMethod = (step_input) => {
   restoreError();
   // Check for required fields in step 1
   if (step_input === 1) {
-    if (!form.value.full_name.trim()) {
-      props.firstStepErrors.full_name = ["This field is required"];
-    }
-
+    checkRequiredField('agent_full_name', 'This field is required')
     // Add similar checks for other fields in step 1
   } else if (step_input === 2) {
     // Check for required fields in step 2
-    if (!form.value.agentEmail.trim()) {
-      props.firstStepErrors.agentEmail = ["This field is required"];
-    } else if (!isValidEmail(form.value.agentEmail)) {
-      props.firstStepErrors.agentEmail = ["Invalid email format"];
+    if (!form.value.agent_email.trim()) {
+      props.firstStepErrors.agent_email = ["This field is required"];
+    } else if (!isValidEmail(form.value.agent_email)) {
+      props.firstStepErrors.agent_email = ["Invalid email format"];
     }
-
     // Add similar checks for other fields in step 2
   } else if (step_input === 3) {
-    if (!form.value.EFNumber.trim()) {
-      props.firstStepErrors.EFNumber = ["This field is required"];
-    }
+    checkRequiredField('ef_number', 'This field is required')
   } else if (step_input === 4) {
-    if (!form.value.uplineManager.trim() || form.value.uplineManager === "Select") {
-      props.firstStepErrors.uplineManager = ["This field is required"];
-    }
+    checkRequiredField('upline_manager', 'This field is required')
   } else if (step_input === 5) {
-    if (
-      !form.value.wasThisASplitSale.trim() ||
-      form.value.wasThisASplitSale === "Select"
-    ) {
-      props.firstStepErrors.wasThisASplitSale = ["This field is required"];
-    }
+    checkRequiredField('split_sale', 'This field is required')
   } else if (step_input === 6) {
-    if (!form.value.typeOfSplitSale.trim() || form.value.typeOfSplitSale === "Select") {
-      props.firstStepErrors.typeOfSplitSale = ["This field is required"];
-    }
+    checkRequiredField('split_sale_type', 'This field is required')
   } else if (step_input === 7) {
-    if (!form.value.insuranceCompany.trim() || form.value.insuranceCompany === "Select") {
-      props.firstStepErrors.insuranceCompany = ["This field is required"];
+    if (!form.value.split_agent_email.trim()) {
+      props.firstStepErrors.split_agent_email = ["This field is required"];
+    } else if (!isValidEmail(form.value.split_agent_email)) {
+      props.firstStepErrors.split_agent_email = ["Invalid email format"];
     }
-  } else if (step_input === 8) {
-    if (!form.value.productName.trim() || form.value.productName === "Select") {
-      props.firstStepErrors.productName = ["This field is required"];
-    }
+  }
+  else if (step_input === 8) {
+    checkRequiredField('insurance_company', 'This field is required')
   } else if (step_input === 9) {
-
-    if (!form.value.applicationDate) {
-      props.firstStepErrors.applicationDate = ["This field is required"];
-    }
+    checkRequiredField('product_name', 'This field is required')
   } else if (step_input === 10) {
-    if (!form.value.coverageAmount.trim()) {
-      props.firstStepErrors.coverageAmount = ["This field is required"];
-    }
+    checkRequiredField('application_date', 'This field is required')
   } else if (step_input === 11) {
-    if (!form.value.coverageLength.trim()) {
-      props.firstStepErrors.coverageLength = ["This field is required"];
-    }
+    checkRequiredField('coverage_length', 'This field is required')
   } else if (step_input === 12) {
-    if (!form.value.premiumFrequency.trim()) {
-      props.firstStepErrors.premiumFrequency = ["This field is required"];
-    }
+    checkRequiredField('premium_frequency', 'This field is required')
   } else if (step_input === 13) {
-    if (!form.value.premiumAmount.trim()) {
-      props.firstStepErrors.premiumAmount = ["This field is required"];
+    if (!form.value.coverage_amount.trim()) {
+      props.firstStepErrors.coverage_amount = ["This field is required"];
+    } else if (form.value.coverage_amount == 0) {
+      props.firstStepErrors.coverage_amount = ["Please enter a positive integer."];
     }
   } else if (step_input === 14) {
-    if (!form.value.annualPremiumVolume.trim()) {
-      props.firstStepErrors.annualPremiumVolume = ["This field is required"];
-    }
+    checkRequiredField('annually_premium_amount', 'This field is required')
   } else if (step_input === 15) {
-    if (!form.value.doYouHaveAnEquisWritingNumberWithThisCarrier.trim()) {
-      props.firstStepErrors.doYouHaveAnEquisWritingNumberWithThisCarrier = [
-        "This field is required",
-      ];
-    }
+    checkRequiredField('equis_writing_number_carrier', 'This field is required')
   } else if (step_input === 16) {
-    if (!form.value.carrierWritingNumber.trim()) {
-      props.firstStepErrors.carrierWritingNumber = ["This field is required"];
-    }
+    checkRequiredField('carrier_writing_number', 'This field is required')
   } else if (step_input === 17) {
-    if (!form.value.wasThisAppFromALead.trim()) {
-      props.firstStepErrors.wasThisAppFromALead = ["This field is required"];
-    }
+    checkRequiredField('this_app_from_lead', 'This field is required')
   } else if (step_input === 18) {
-    if (!form.value.sourceOfTheLead.trim()) {
-      props.firstStepErrors.sourceOfTheLead = ["This field is required"];
-    }
+    checkRequiredField('source_of_lead', 'This field is required')
   } else if (step_input === 19) {
-    if (!form.value.wasThisAppointmentVirtualOrFaceToFace.trim()) {
-      props.firstStepErrors.wasThisAppointmentVirtualOrFaceToFace = [
-        "This field is required",
-      ];
-    }
+    checkRequiredField('appointment_type', 'This field is required')
   } else if (step_input === 20) {
-    if (!form.value.whatIsThePolicyDraftDate.trim()) {
-      props.firstStepErrors.whatIsThePolicyDraftDate = ["This field is required"];
-    }
+    checkRequiredField('policy_draft_date', 'This field is required')
   } else if (step_input === 21) {
-    if (!form.value.firstName.trim()) {
-      props.firstStepErrors.firstName = ["This field is required"];
-    }
+    checkRequiredField('first_name', 'This field is required')
   } else if (step_input === 22) {
-    if (!form.value.MI.trim()) {
-      props.firstStepErrors.MI = ["This field is required"];
-    }
+    checkRequiredField('mi', 'This field is required')
   } else if (step_input === 23) {
-    if (!form.value.lastName.trim()) {
-      props.firstStepErrors.lastName = ["This field is required"];
-    }
+    checkRequiredField('last_name', 'This field is required')
   } else if (step_input === 24) {
-    if (!form.value.dateOfBirth.trim()) {
-      props.firstStepErrors.dateOfBirth = ["This field is required"];
-    }
+    checkRequiredField('dob', 'This field is required')
   } else if (step_input === 25) {
+    checkRequiredField('gender', 'This field is required')
+  } else if (step_input === 26) {
+        checkRequiredField('client_street_address_1', 'This field is required')
+        checkRequiredField('client_street_address_2', 'This field is required')
+        checkRequiredField('client_city', 'This field is required')
+        checkRequiredField('client_state', 'This field is required')
+        checkRequiredField('client_zipcode', 'This field is required')
+  } else if (step_input === 27) {
+    
     if (!form.value.gender.trim()) {
       props.firstStepErrors.gender = ["This field is required"];
     }
-  } else if (step_input === 26) {
-    if (!form.value.streetLine1.trim()) {
-      props.firstStepErrors.streetLine1 = ["This field is required"];
-    }
-  } else if (step_input === 27) {
+  } else if (step_input === 28) {
+    
+  } else if (step_input === 29) {
     if (!form.value.streetLine2.trim()) {
       props.firstStepErrors.streetLine2 = ["This field is required"];
     }
-  } else if (step_input === 28) {
+  } else if (step_input === 30) {
     if (!form.value.city.trim()) {
       props.firstStepErrors.city = ["This field is required"];
     }
-  } else if (step_input === 29) {
+  } else if (step_input === 31) {
     if (!form.value.state.trim()) {
       props.firstStepErrors.state = ["This field is required"];
     }
-  } else if (step_input === 30) {
+  } else if (step_input === 32) {
     if (!form.value.zipcode.trim()) {
       props.firstStepErrors.zipcode = ["This field is required"];
     }
-  } else if (step_input === 31) {
+  } else if (step_input === 33) {
     if (!form.value.phoneNumber.trim()) {
       props.firstStepErrors.phoneNumber = ["This field is required"];
     }
-  } else if (step_input === 32) {
+  } else if (step_input === 34) {
     if (!form.value.client_email.trim()) {
       props.firstStepErrors.client_email = ["This field is required"];
     }
@@ -1785,17 +1761,27 @@ let validationMethod = (step_input) => {
 // validation steps end
 
 let ChangeProducName = () => {
-  form.value.productName = "Select";
+  form.value.product_name = "Select";
 };
 let getInsuranceCompanyOptions = () => {
   return Object.keys(companies.value);
 };
 let getProductNameOptions = () => {
-  return Object.keys(companies.value[form.value.insuranceCompany]);
+  return Object.keys(companies.value[form.value.insurance_company]);
 };
+
 const Next = (data) => {
-  if (data === 5 && form.value.wasThisASplitSale === "NO") {
+  console.log('step', data);
+  if (data === 5 && form.value.split_sale === "NO") {
     step.value = 7
+    return
+  }
+  if (data === 15 && form.value.equis_writing_number_carrier === "NO") {
+    step.value = 17
+    return
+  }
+  if (data === 17 && form.value.this_app_from_lead === "NO") {
+    step.value = 19
     return
   }
   validationMethod(data);
@@ -1809,13 +1795,33 @@ const Next = (data) => {
   }
 };
 let Previous = (data) => {
+  if (data === 7 && form.value.split_sale === "NO") {
+    step.value = 5
+    return
+  }
+  if (data === 17 && form.value.equis_writing_number_carrier === "NO") {
+    step.value = 15
+    return
+  }
+  if (data === 19 && form.value.this_app_from_lead === "NO") {
+    step.value = 17
+    return
+  }
   step.value -= 1;
 };
 let close = () => {
   emits("close");
 };
+
 let maxDate = ref(new Date)
 maxDate.value.setHours(23, 59, 59, 999);
+
+let enforceFiveDigitInput = (fieldName, val) => {
+  form.value[val] = fieldName.replace(/[^0-9]/g, '');
+  if (fieldName.length > 5) {
+    form.value[val] = fieldName.slice(0, 5);
+  }
+}
 </script>
 <style scoped>
 .active\:bg-gray-900:active {
@@ -1898,43 +1904,46 @@ maxDate.value.setHours(23, 59, 59, 999);
             </button>
           </div>
           <div class="px-12 py-2">
-            <h1 class="text-gray-800 text-2xl font-bold">Invite Agent</h1>
             <br />
             <div class="mb-3">
               <form @submit.prevent="" class="question-card-list">
                 <div class="question-card animate__animated" style="position: relative">
                   <div v-show="step == 1">
-                    <label for="full name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Full Name
-                      <span class="text-red-400">*</span></label>
-                    <input v-model="form.full_name" type="text" id="full name"
+                    <h1 class="text-gray-800 text-2xl font-bold">Full Name<span class="text-red-400">*</span></h1>
+                    <br>
+                    <input v-model="form.agent_full_name" type="text" id="full name"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="Full Name" required />
-                    <div v-if="firstStepErrors.full_name" class="text-red-500" v-text="firstStepErrors.full_name[0]">
+                      placeholder="" required />
+                    <div v-if="firstStepErrors.agent_full_name" class="text-red-500"
+                      v-text="firstStepErrors.agent_full_name[0]">
                     </div>
                   </div>
 
                   <div v-show="step == 2">
-                    <label for="Email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email<span
-                        class="text-red-400">*</span></label>
-                    <input v-model="form.agentEmail" type="text" id="Email"
+                    <h1 class="text-gray-800 text-2xl font-bold">Agent Email<span class="text-red-400">*</span></h1>
+                    <br>
+                    <input v-model="form.agent_email" type="text" id="Email"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="Email" required />
-                    <div v-if="firstStepErrors.agentEmail" class="text-red-500" v-text="firstStepErrors.agentEmail[0]">
+                      placeholder="" required />
+                    <div v-if="firstStepErrors.agent_email" class="text-red-500" v-text="firstStepErrors.agent_email[0]">
                     </div>
                   </div>
                   <div v-show="step == 3">
-                    <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
-                      FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
-                    <input v-model="form.EFNumber" type="text" id="EFNumber"
+                    <h1 class="text-gray-800 text-2xl font-bold">Enter Your FULL EF Number. EXAMPLE: EF123456<span
+                        class="text-red-400">*</span></h1>
+                    <br>
+                    <input v-model="form.ef_number" type="text" id="ef_number"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="EFNumber" required />
-                    <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
+                      placeholder="" required />
+                    <div v-if="firstStepErrors.ef_number" class="text-red-500" v-text="firstStepErrors.ef_number[0]">
+                    </div>
                   </div>
 
                   <div v-show="step == 4">
-                    <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select
-                      Your Upline Manager</label>
-                    <select v-model="form.uplineManager" id="countries"
+                    <h1 class="text-gray-800 text-2xl font-bold">Select Your Upline Manager<span
+                        class="text-red-400">*</span></h1>
+                    <br>
+                    <select v-model="form.upline_manager" id="countries"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                       <option disabled>Select</option>
                       <option v-for="uplineManager in uplineManagerArray" :value="uplineManager.text">
@@ -1942,25 +1951,27 @@ maxDate.value.setHours(23, 59, 59, 999);
                       </option>
                     </select>
 
-                    <div v-if="firstStepErrors.uplineManager" class="text-red-500"
-                      v-text="firstStepErrors.uplineManager[0]"></div>
+                    <div v-if="firstStepErrors.upline_manager" class="text-red-500"
+                      v-text="firstStepErrors.upline_manager[0]"></div>
                   </div>
                   <div v-show="step == 5">
-                    <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Was this a
-                      split sale?</label>
-                    <select v-model="form.wasThisASplitSale" id="countries"
+                    <h1 class="text-gray-800 text-2xl font-bold">Was this a split sale?<span class="text-red-400">*</span>
+                    </h1>
+                    <br>
+                    <select v-model="form.split_sale" id="countries"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                       <option disabled>Select</option>
                       <option value="YES">YES</option>
                       <option value="NO">NO</option>
                     </select>
-                    <div v-if="firstStepErrors.wasThisASplitSale" class="text-red-500"
-                      v-text="firstStepErrors.wasThisASplitSale[0]"></div>
+                    <div v-if="firstStepErrors.split_sale" class="text-red-500" v-text="firstStepErrors.split_sale[0]">
+                    </div>
                   </div>
                   <div v-show="step == 6">
-                    <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Choose
-                      Type of Split Sale</label>
-                    <select v-model="form.typeOfSplitSale" id="countries"
+                    <h1 class="text-gray-800 text-2xl font-bold">Choose Type of Split Sale<span
+                        class="text-red-400">*</span></h1>
+                    <br>
+                    <select v-model="form.split_sale_type" id="countries"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                       <option disabled>Select</option>
                       <option value="Transfer Program">Transfer Program</option>
@@ -1969,174 +1980,285 @@ maxDate.value.setHours(23, 59, 59, 999);
                       <option value="Opt Leads">Opt Leads</option>
                       <option value="Referral">Referral</option>
                     </select>
-                    <div v-if="firstStepErrors.typeOfSplitSale" class="text-red-500"
-                      v-text="firstStepErrors.typeOfSplitSale[0]"></div>
+                    <div v-if="firstStepErrors.split_sale_type" class="text-red-500"
+                      v-text="firstStepErrors.split_sale_type[0]"></div>
                   </div>
                   <div v-show="step == 7">
-                    <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Insurance Company</label>
-                    <select v-model="form.insuranceCompany" id="countries" @change="ChangeProducName()"
+                    <h1 class="text-gray-800 text-2xl font-bold">Agent Email<span class="text-red-400">*</span></h1>
+                    <br>
+                    <input v-model="form.split_agent_email" type="text" id="Email"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="" required />
+                    <div v-if="firstStepErrors.split_agent_email" class="text-red-500"
+                      v-text="firstStepErrors.split_agent_email[0]">
+                    </div>
+                  </div>
+                  <div v-show="step == 8">
+                    <h1 class="text-gray-800 text-2xl font-bold">Insurance Company<span class="text-red-400">*</span></h1>
+                    <br>
+                    <select v-model="form.insurance_company" id="countries" @change="ChangeProducName()"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                       <option disabled>Select</option>
                       <option v-for="option in getInsuranceCompanyOptions()" v-text="option"></option>
                     </select>
-                    <div v-if="firstStepErrors.insuranceCompany" class="text-red-500"
-                      v-text="firstStepErrors.insuranceCompany[0]"></div>
+                    <div v-if="firstStepErrors.insurance_company" class="text-red-500"
+                      v-text="firstStepErrors.insurance_company[0]"></div>
                   </div>
-                  <div v-show="step == 8">
-                    <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product Name</label>
-                    <select v-model="form.productName" id="countries"
+                  <div v-show="step == 9">
+                    <h1 class="text-gray-800 text-2xl font-bold">Product Name<span class="text-red-400">*</span></h1>
+                    <br>
+                    <select v-model="form.product_name" id="countries"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                       <option disabled>Select</option>
                       <option v-for="option in getProductNameOptions()" :value="option" v-text="option"></option>
                     </select>
-                    <div v-if="firstStepErrors.productName" class="text-red-500" v-text="firstStepErrors.productName[0]">
+                    <div v-if="firstStepErrors.product_name" class="text-red-500" v-text="firstStepErrors.productName[0]">
                     </div>
                   </div>
-                  <div v-show="step == 9">
-                
-                    <label for="applicationDate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Application Date<span class="text-red-400">*</span></label>
-                   
-                      <VueDatePicker  v-model="form.applicationDate" format="dd-MMM-yyyy"
-                    :maxDate="maxDate" auto-apply></VueDatePicker>
-                    <div v-if="firstStepErrors.applicationDate" class="text-red-500" v-text="firstStepErrors.applicationDate[0]"></div>
-                  </div>
                   <div v-show="step == 10">
-                    <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
-                      FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
-                    <input v-model="form.EFNumber" type="text" id="EFNumber"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="EFNumber" required />
-                    <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
+                    <h1 class="text-gray-800 text-2xl font-bold">Application Date<span class="text-red-400">*</span></h1>
+                    <br>
+                    <VueDatePicker v-model="form.application_date" format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply>
+                    </VueDatePicker>
+                    <div v-if="firstStepErrors.application_date" class="text-red-500"
+                      v-text="firstStepErrors.application_date[0]"></div>
                   </div>
                   <div v-show="step == 11">
-                    <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
-                      FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
-                    <input v-model="form.EFNumber" type="text" id="EFNumber"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="EFNumber" required />
-                    <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
+                    <h1 class="text-gray-800 text-2xl font-bold">Coverage Length<span class="text-red-400">*</span></h1>
+                    <br>
+                    <select v-model="form.coverage_length" id="countries"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                      <option disabled>Select</option>
+                      <option v-for="option in coverageLengthArray" :value="option" v-text="option"></option>
+                    </select>
+                    <div v-if="firstStepErrors.coverage_length" class="text-red-500"
+                      v-text="firstStepErrors.coverage_length[0]">
+                    </div>
                   </div>
+
+
+
                   <div v-show="step == 12">
-                    <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
-                      FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
-                    <input v-model="form.EFNumber" type="text" id="EFNumber"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="EFNumber" required />
-                    <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
+                    <h1 class="text-gray-800 text-2xl font-bold">Premium Frequency<span class="text-red-400">*</span></h1>
+                    <br>
+                    <select v-model="form.premium_frequency" id="countries"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                      <option disabled>Select</option>
+                      <option value="Monthly">Monthly</option>
+                      <option value="Quarterly">Quarterly</option>
+                      <option value="Semi-Annual">Semi-Annual</option>
+                      <option value="Annual">Annual</option>
+                    </select>
+                    <div v-if="firstStepErrors.premium_frequency" class="text-red-500"
+                      v-text="firstStepErrors.premium_frequency[0]"></div>
                   </div>
+
                   <div v-show="step == 13">
-                    <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
-                      FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
-                    <input v-model="form.EFNumber" type="text" id="EFNumber"
+                    <h1 class="text-gray-800 text-2xl font-bold">{{ form.premium_frequency }} Premium Amount<span
+                        class="text-red-400">*</span></h1>
+                    <br>
+                    <input v-model="form.coverage_amount" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')"
+                      type="text" id="text"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="EFNumber" required />
-                    <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
+                      placeholder="$ 0.00" required />
+                    <div v-if="firstStepErrors.coverage_amount" class="text-red-500"
+                      v-text="firstStepErrors.coverage_amount[0]"></div>
                   </div>
                   <div v-show="step == 14">
-                    <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
-                      FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
-                    <input v-model="form.EFNumber" type="text" id="EFNumber"
+                    <h1 class="text-gray-800 text-2xl font-bold">Annual Premium Volume<span class="text-red-400">*</span>
+                    </h1>
+                    <br>
+                    <input v-model="form.annually_premium_amount" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')"
+                      type="text" id="text"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="EFNumber" required />
-                    <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
+                      placeholder="$ 0.00" required />
+                    <div v-if="firstStepErrors.annually_premium_amount" class="text-red-500"
+                      v-text="firstStepErrors.annually_premium_amount[0]"></div>
                   </div>
+
                   <div v-show="step == 15">
-                    <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
-                      FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
-                    <input v-model="form.EFNumber" type="text" id="EFNumber"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="EFNumber" required />
-                    <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
+                    <h1 class="text-gray-800 text-2xl font-bold">Do you have an Equis writing number with this carrier? {{
+                      step }}<span class="text-red-400">*</span></h1>
+                    <br>
+                    <select v-model="form.equis_writing_number_carrier" id="countries"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                      <option disabled>Select</option>
+                      <option value="YES">YES</option>
+                      <option value="NO">NO</option>
+                    </select>
+                    <div v-if="firstStepErrors.equis_writing_number_carrier" class="text-red-500"
+                      v-text="firstStepErrors.equis_writing_number_carrier[0]"></div>
                   </div>
+
                   <div v-show="step == 16">
-                    <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
-                      FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
-                    <input v-model="form.EFNumber" type="text" id="EFNumber"
+                    <h1 class="text-gray-800 text-2xl font-bold">Carrier Writing Number {{ step }}<span
+                        class="text-red-400">*</span></h1>
+                    <br>
+                    <input v-model="form.carrier_writing_number" type="text" id="carrier_writing_number"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="EFNumber" required />
-                    <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
+                      placeholder="" required />
+                    <div v-if="firstStepErrors.carrier_writing_number" class="text-red-500"
+                      v-text="firstStepErrors.carrier_writing_number[0]"></div>
                   </div>
+
                   <div v-show="step == 17">
-                    <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
-                      FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
-                    <input v-model="form.EFNumber" type="text" id="EFNumber"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="EFNumber" required />
-                    <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
+                    <h1 class="text-gray-800 text-2xl font-bold">Was this app from a lead? {{ step }}<span
+                        class="text-red-400">*</span></h1>
+                    <br>
+                    <select v-model="form.this_app_from_lead" id="countries"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                      <option disabled>Select</option>
+                      <option value="YES">YES</option>
+                      <option value="NO">NO</option>
+                    </select>
+                    <div v-if="firstStepErrors.this_app_from_lead" class="text-red-500"
+                      v-text="firstStepErrors.this_app_from_lead[0]"></div>
                   </div>
+
                   <div v-show="step == 18">
-                    <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
-                      FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
-                    <input v-model="form.EFNumber" type="text" id="EFNumber"
+                    <h1 class="text-gray-800 text-2xl font-bold">Source of the lead {{ step }}<span
+                        class="text-red-400">*</span></h1>
+                    <br>
+                    <input v-model="form.source_of_lead" type="text" id="source_of_lead"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="EFNumber" required />
-                    <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
+                      placeholder="" required />
+                    <div v-if="firstStepErrors.source_of_lead" class="text-red-500"
+                      v-text="firstStepErrors.source_of_lead[0]"></div>
                   </div>
+
+
                   <div v-show="step == 19">
-                    <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
-                      FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
-                    <input v-model="form.EFNumber" type="text" id="EFNumber"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="EFNumber" required />
-                    <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
+                    <h1 class="text-gray-800 text-2xl font-bold">Was this appointment virtual or face-to-face?<span
+                        class="text-red-400">*</span></h1>
+                    <br>
+                    <select v-model="form.appointment_type" id="countries"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                      <option disabled>Select</option>
+                      <option value="Virtual">Virtual</option>
+                      <option value="Face to face">Face to face</option>
+                    </select>
+                    <div v-if="firstStepErrors.appointment_type" class="text-red-500"
+                      v-text="firstStepErrors.appointment_type[0]"></div>
                   </div>
+
                   <div v-show="step == 20">
-                    <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
-                      FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
-                    <input v-model="form.EFNumber" type="text" id="EFNumber"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="EFNumber" required />
-                    <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
+                    <h1 class="text-gray-800 text-2xl font-bold">What Is the Policy Draft Date?<span
+                        class="text-red-400">*</span></h1>
+                    <br>
+                    <VueDatePicker v-model="form.policy_draft_date" format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply>
+                    </VueDatePicker>
+                    <div v-if="firstStepErrors.policy_draft_date" class="text-red-500"
+                      v-text="firstStepErrors.policy_draft_date[0]"></div>
                   </div>
+
                   <div v-show="step == 21">
-                    <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
-                      FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
-                    <input v-model="form.EFNumber" type="text" id="EFNumber"
+                    <h1 class="text-gray-800 text-2xl font-bold">First Name<span class="text-red-400">*</span></h1>
+                    <br>
+                    <input v-model="form.first_name" type="text" id="first_name"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="EFNumber" required />
-                    <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
+                      placeholder="" required />
+                    <div v-if="firstStepErrors.first_name" class="text-red-500" v-text="firstStepErrors.first_name[0]">
+                    </div>
                   </div>
+
                   <div v-show="step == 22">
-                    <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
-                      FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
-                    <input v-model="form.EFNumber" type="text" id="EFNumber"
+                    <h1 class="text-gray-800 text-2xl font-bold">MI<span class="text-red-400">*</span></h1>
+                    <br>
+                    <input v-model="form.mi" type="text" id="mi"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="EFNumber" required />
-                    <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
+                      placeholder="" required />
+                    <div v-if="firstStepErrors.mi" class="text-red-500" v-text="firstStepErrors.mi[0]"></div>
                   </div>
+
                   <div v-show="step == 23">
-                    <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
-                      FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
-                    <input v-model="form.EFNumber" type="text" id="EFNumber"
+                    <h1 class="text-gray-800 text-2xl font-bold">Last name<span class="text-red-400">*</span></h1>
+                    <br>
+                    <input v-model="form.last_name" type="text" id="last_name"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="EFNumber" required />
-                    <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
+                      placeholder="" required />
+                    <div v-if="firstStepErrors.last_name" class="text-red-500" v-text="firstStepErrors.last_name[0]">
+                    </div>
                   </div>
+
                   <div v-show="step == 24">
-                    <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
-                      FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
-                    <input v-model="form.EFNumber" type="text" id="EFNumber"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="EFNumber" required />
-                    <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
+                    <h1 class="text-gray-800 text-2xl font-bold">Date of Birth<span class="text-red-400">*</span></h1>
+                    <br>
+                    <VueDatePicker v-model="form.dob" format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply>
+                    </VueDatePicker>
+                    <div v-if="firstStepErrors.dob" class="text-red-500" v-text="firstStepErrors.dob[0]"></div>
                   </div>
                   <div v-show="step == 25">
-                    <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
-                      FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
-                    <input v-model="form.EFNumber" type="text" id="EFNumber"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="EFNumber" required />
-                    <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
+                    <h1 class="text-gray-800 text-2xl font-bold">Carrier Writing Number<span class="text-red-400">*</span>
+                    </h1>
+                    <br>
+                    <select v-model="form.gender" id="countries"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                      <option disabled>Select</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                      <option value="Other">Other</option>
+                    </select>
+                    <div v-if="firstStepErrors.gender" class="text-red-500" v-text="firstStepErrors.gender[0]"></div>
                   </div>
+
                   <div v-show="step == 26">
-                    <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
-                      FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
-                    <input v-model="form.EFNumber" type="text" id="EFNumber"
+                    <h1 class="text-gray-800 text-2xl font-bold">Client Information</h1>
+                    <br>
+                    <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Street
+                      Address 1<span class="text-red-400">*</span></label>
+                    <input v-model="form.client_street_address_1" type="text" id="client_street_address_1"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="EFNumber" required />
-                    <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
+                      placeholder="" required />
+                    <div v-if="firstStepErrors.client_street_address_1" class="text-red-500"
+                      v-text="firstStepErrors.client_street_address_1[0]"></div>
+
+                    <label for="EFNumber" class="block mb-2 mt-2 text-sm font-medium text-gray-900 dark:text-white">Street
+                      Address 2<span class="text-red-400">*</span></label>
+                    <input v-model="form.client_street_address_2" type="text" id="client_street_address_2"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="" required />
+                    <div v-if="firstStepErrors.client_street_address_2" class="text-red-500"
+                      v-text="firstStepErrors.client_street_address_2[0]"></div>
+
+                    <label for="EFNumber"
+                      class="block mb-2 mt-2 text-sm font-medium text-gray-900 dark:text-white">City<span
+                        class="text-red-400">*</span></label>
+                    <input v-model="form.client_city" type="text" id="client_city"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="" required />
+                    <div v-if="firstStepErrors.client_city" class="text-red-500" v-text="firstStepErrors.client_city[0]">
+                    </div>
+
+                    <label for="EFNumber"
+                      class="block mb-2 mt-2 text-sm font-medium text-gray-900 dark:text-white">State<span
+                        class="text-red-400">*</span></label>
+                    <select v-model="form.client_state" id="countries"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                      <option disabled>Select</option>
+                      <option v-for="state in states" :value="state.id">{{ state.full_name }}</option>
+                    </select>
+                    <div v-if="firstStepErrors.client_state" class="text-red-500"
+                      v-text="firstStepErrors.client_state[0]"></div>
+
+
+                    <label for="" class="block mb-2 mt-2 text-sm font-medium text-gray-900 dark:text-white">Zip-code<span
+                        class="text-red-400">*</span></label>
+                    <input v-model="form.client_zipcode"
+                      @input="enforceFiveDigitInput(form.client_zipcode, 'client_zipcode')" type="text"
+                      id="client_zipcode"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="" required />
+                    <div v-if="firstStepErrors.client_zipcode" class="text-red-500"
+                      v-text="firstStepErrors.client_zipcode[0]"></div>
+
                   </div>
+
+
+
                   <div v-show="step == 27">
+                    <h1 class="text-gray-800 text-2xl font-bold">Carrier Writing Number<span class="text-red-400">*</span>
+                    </h1>
+                    <br>
                     <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
                       FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
                     <input v-model="form.EFNumber" type="text" id="EFNumber"
@@ -2145,6 +2267,9 @@ maxDate.value.setHours(23, 59, 59, 999);
                     <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
                   </div>
                   <div v-show="step == 28">
+                    <h1 class="text-gray-800 text-2xl font-bold">Carrier Writing Number<span class="text-red-400">*</span>
+                    </h1>
+                    <br>
                     <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
                       FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
                     <input v-model="form.EFNumber" type="text" id="EFNumber"
@@ -2153,6 +2278,9 @@ maxDate.value.setHours(23, 59, 59, 999);
                     <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
                   </div>
                   <div v-show="step == 29">
+                    <h1 class="text-gray-800 text-2xl font-bold">Carrier Writing Number<span class="text-red-400">*</span>
+                    </h1>
+                    <br>
                     <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
                       FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
                     <input v-model="form.EFNumber" type="text" id="EFNumber"
@@ -2161,6 +2289,9 @@ maxDate.value.setHours(23, 59, 59, 999);
                     <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
                   </div>
                   <div v-show="step == 30">
+                    <h1 class="text-gray-800 text-2xl font-bold">Carrier Writing Number<span class="text-red-400">*</span>
+                    </h1>
+                    <br>
                     <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
                       FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
                     <input v-model="form.EFNumber" type="text" id="EFNumber"
@@ -2169,6 +2300,9 @@ maxDate.value.setHours(23, 59, 59, 999);
                     <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
                   </div>
                   <div v-show="step == 31">
+                    <h1 class="text-gray-800 text-2xl font-bold">Carrier Writing Number<span class="text-red-400">*</span>
+                    </h1>
+                    <br>
                     <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
                       FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
                     <input v-model="form.EFNumber" type="text" id="EFNumber"
@@ -2177,6 +2311,31 @@ maxDate.value.setHours(23, 59, 59, 999);
                     <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
                   </div>
                   <div v-show="step == 32">
+                    <h1 class="text-gray-800 text-2xl font-bold">Carrier Writing Number<span class="text-red-400">*</span>
+                    </h1>
+                    <br>
+                    <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
+                      FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
+                    <input v-model="form.EFNumber" type="text" id="EFNumber"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="EFNumber" required />
+                    <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
+                  </div>
+                  <div v-show="step == 33">
+                    <h1 class="text-gray-800 text-2xl font-bold">Carrier Writing Number<span class="text-red-400">*</span>
+                    </h1>
+                    <br>
+                    <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
+                      FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
+                    <input v-model="form.EFNumber" type="text" id="EFNumber"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="EFNumber" required />
+                    <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
+                  </div>
+                  <div v-show="step == 34">
+                    <h1 class="text-gray-800 text-2xl font-bold">Carrier Writing Number<span class="text-red-400">*</span>
+                    </h1>
+                    <br>
                     <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
                       FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
                     <input v-model="form.EFNumber" type="text" id="EFNumber"
@@ -2185,9 +2344,10 @@ maxDate.value.setHours(23, 59, 59, 999);
                     <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
                   </div>
 
-                  <div class="flex justify-between mt-5">
-                    <a @click.prevent="Previous(step)" class="button-custom-back px-3 py-2 rounded-md flex items-center"
-                      href="#">
+
+                  <div class="flex mt-8 mb-10" :class="step > 1 ? 'justify-between' : 'justify-end '">
+                    <a v-if="step > 1" @click.prevent="Previous(step)"
+                      class="button-custom-back px-3 py-2 rounded-md flex items-center" href="#">
                       Previous
                     </a>
                     <a @click.prevent="Next(step)" class="button-custom px-3 py-2 rounded-md flex items-center" href="#">
@@ -2205,7 +2365,6 @@ maxDate.value.setHours(23, 59, 59, 999);
             </div>
           </div>
         </div>
-      </div>
     </div>
-  </Transition>
-</template>
+  </div>
+</Transition></template>
