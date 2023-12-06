@@ -38,7 +38,8 @@ class SendBirdUserController extends Controller
 
         // Handle Image Upload
         $path = $request->file('profile_image')->storeAs(
-            'profile_pictures', $user->id . '.' . $request->file('profile_image')->extension()
+            'profile_pictures', $user->id . '.' . $request->file('profile_image')->extension(),
+            'public'
         );
         $profileUrl = Storage::url($path);
         $fullUrl = url($profileUrl);
@@ -48,8 +49,8 @@ class SendBirdUserController extends Controller
         $user->save();
         Log::debug('Profile image uploaded. Path: ' . $path);
 
-        $applicationId = env('SENDBIRD_APPLICATION_ID'); // Replace with your SendBird application ID
-        $apiKey = env('SENDBIRD_API_TOKEN'); // Replace with your SendBird API key
+        $applicationId = env('SENDBIRD_APPLICATION_ID');
+        $apiKey = env('SENDBIRD_API_TOKEN');
 
         $response = Http::withHeaders([
             'Api-Token' => $apiKey,
