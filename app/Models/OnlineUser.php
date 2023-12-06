@@ -177,7 +177,7 @@ class OnlineUser extends Model
      */
     public static function sortByCallPriority(Collection $onlineUsers, CallType $callType)
     {
-        return $onlineUsers->sortBy(function ($onlineUser, $key) use ($callType) {
+        return $onlineUsers->sortByDesc(function ($onlineUser, $key) use ($callType) {
             // Determine if the user is an internal agent (1 for yes, 0 for no)
             $isInternalAgent = $onlineUser->user->roles->contains('name', 'internal-agent') ? 1 : 0;
 
