@@ -49,13 +49,13 @@ class OnlineUser extends Model
     public function scopeWithSufficientBalance($query, $callType)
     {
         Log::debug('Entering scopeWithSufficientBalance method');
-    
+
         return $query->whereHas('user', function ($query) use ($callType) {
             Log::debug('Filtering by user relationship');
-    
+
             $query->where(function ($query) {
                 Log::debug('Checking for internal agents');
-    
+
                 // For internal agents, they should always have a balance of at least $35
                 $query->whereHas('roles', function ($subQuery) {
                     Log::debug('Filtering by roles for internal-agent');
@@ -63,16 +63,16 @@ class OnlineUser extends Model
                 })->where('balance', '>=', 40);
             })->orWhere(function ($query) use ($callType) {
                 Log::debug('Checking for normal users');
-    
+
                 $allBids = DB::table('bids')
                     ->where('call_type_id', $callType->id)
                     ->orderBy('amount', 'desc')
                     ->get();
-    
+
                 $userBid = $allBids->firstWhere('user_id', $query->getModel()->getAttribute('id'));
-    
+
                 $minimumRequiredBalance = 35; // Default
-    
+
                 if ($userBid) {
                     if ($allBids->where('amount', $userBid->amount)->count() > 1) {
                         $minimumRequiredBalance = $userBid->amount;
@@ -82,15 +82,15 @@ class OnlineUser extends Model
                         $userBidIndex = $allBids->search(function ($bid) use ($userBid) {
                             return $bid->id == $userBid->id;
                         });
-    
+
                         if (isset($allBids[$userBidIndex + 1])) {
                             $minimumRequiredBalance = $allBids[$userBidIndex + 1]->amount + 1;
                         }
                     }
                 }
-    
+
                 Log::debug("Minimum required balance for user: {$minimumRequiredBalance}");
-    
+
                 $query->whereDoesntHave('roles', function ($subQuery) {
                     Log::debug('Filtering out internal-agent roles for normal users');
                     $subQuery->where('name', 'internal-agent');
@@ -98,7 +98,7 @@ class OnlineUser extends Model
             });
         });
     }
-    
+
 
     public function user()
     {
@@ -169,7 +169,7 @@ class OnlineUser extends Model
     }
 
     /**
-     * Prioritize internal agents and then sort regular users by their bid amounts for a specific call type.
+     * Prioritize internal agents and then sort regular users by their last called time and bid amounts for a specific call type.
      *
      * @param  \Illuminate\Support\Collection $onlineUsers Collection of online users.
      * @param  \App\Models\CallType $callType The specific call type.
@@ -197,11 +197,9 @@ class OnlineUser extends Model
 
             // Return an array with:
             // - 1 to place them below internal agents
+            // - lastCalledAt to sort by time, prioritizing older dates
             // - negative bidAmount to sort in descending order by bid
-            // - lastCalledAt to sort by time
-            return [1, -$bidAmount, $lastCalledAt];
-
+            return [1, $lastCalledAt, -$bidAmount];
         })->values();
     }
-
 }
