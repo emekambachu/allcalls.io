@@ -63,9 +63,9 @@ let fetchAgents = (page) => {
   }
 
   // Ensure the protocol is https
-  // if (url.protocol !== "https:") {
-  //   url.protocol = "https:";
-  // }
+  if (url.protocol !== "https:") {
+    url.protocol = "https:";
+  }
 
   // Get the https URL as a string
   let httpsPage = url.toString();
@@ -188,13 +188,13 @@ let dateFormat = (data) => {
   }
 };
 
-let jsonToCSV = jsonObject => {
+let jsonToCSV = (jsonObject) => {
   // Extract keys (column headers) and values (row)
   const keys = Object.keys(jsonObject);
-  const values = keys.map(key => `"${jsonObject[key]}"`);
+  const values = keys.map((key) => `"${jsonObject[key]}"`);
 
   // Combine keys and values
-  return `${keys.join(',')}\n${values.join(',')}`;
+  return `${keys.join(",")}\n${values.join(",")}`;
 };
 
 let downloadCSV = (jsonData, fileName) => {
@@ -232,9 +232,6 @@ let exportCSV = agent => {
 };
 let agentTreeModal = ref(false)
 let inviteAgentTree = (agent) => {
-
-
-  console.log('AGENT: ', agent);
 
   agentTreeModal.value = true
   userData.value = agent;
@@ -314,17 +311,22 @@ let inviteAgentTree = (agent) => {
               <thead class="text-xs text-gray-300 uppercase bg-sky-900">
                 <tr>
                   <th scope="col" class="px-4 py-3">ID</th>
-                  <th scope="col" style="min-width: 110px;" class="px-4 py-3">First Name</th>
-                  <th scope="col" style="min-width: 110px;" class="px-4 py-3">Last Name</th>
-                  <th scope="col" style="min-width: 110px;" class="px-4 py-3">Level</th>
-                  <th scope="col" style="min-width: 110px;" class="px-4 py-3">Upline</th>
-                  <th scope="col" style="min-width: 100px;" class="px-4 py-3">Hierarchy</th>
+                  <th scope="col" style="min-width: 110px" class="px-4 py-3">
+                    First Name
+                  </th>
+                  <th scope="col" style="min-width: 110px" class="px-4 py-3">
+                    Last Name
+                  </th>
+                  <th scope="col" class="px-4 py-3">Progress</th>
+                  <th scope="col" class="px-4 py-3 text-end">Actions</th>
+                  <th scope="col" style="min-width: 110px" class="px-4 py-3">Level</th>
+                  <th scope="col" style="min-width: 110px" class="px-4 py-3">Upline</th>
                   <th scope="col" class="px-4 py-3">Email</th>
                   <th scope="col" class="px-4 py-3">Balance</th>
                   <th scope="col" class="px-4 py-3">Phone</th>
-                  <th scope="col" style="min-width: 115px;" class="px-4 py-3">Sign Up Date</th>
-                  <th scope="col" class="px-4 py-3">Progress</th>
-                  <th scope="col" class="px-4 py-3 text-end">Actions</th>
+                  <th scope="col" style="min-width: 115px" class="px-4 py-3">
+                    Sign Up Date
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -332,30 +334,6 @@ let inviteAgentTree = (agent) => {
                   <td class="text-gray-600 px-4 py-3">{{ agent.id }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ agent.first_name }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ agent.last_name }}</td>
-                  <th class="text-gray-600 px-4 py-3">{{ agent.get_agent_level?.name }}</th>
-                  <th class="text-gray-600 px-4 py-3">{{ agent.upline_id }}</th>
-                  <th class="text-gray-600 px-4 py-3">
-                    <a class="text-blue-500 cursor-pointer" v-if="agent.invitees_count > 0" title="View Invites"
-                      @click="inviteAgentTree(agent)">
-                      View Tree
-                    </a>
-                    <span v-else>-</span>
-                  </th>
-                  <th class="text-gray-600 px-4 py-3">{{ agent.email }}</th>
-                  <td class="text-gray-600 px-4 py-3">
-                    ${{ formatMoney(agent.balance) }}
-                  </td>
-                  <td class="text-gray-600 px-4 py-3">
-                    <div class="flex">
-                      <span class="mr-1" v-if="agent.phone_code">{{
-                        agent.phone_code
-                      }}</span>
-                      <span>{{ agent.phone }}</span>
-                    </div>
-                  </td>
-                  <th class="text-gray-600 px-4 py-3">
-                    {{ dateFormat(agent.created_at) }}
-                  </th>
 
                   <td class="text-gray-600 px-4 py-3">
                     {{ agent.progress ? agent.progress : "-" }}
@@ -370,7 +348,9 @@ let inviteAgentTree = (agent) => {
                       </svg>
                     </a>
 
-                    <button title="Edit Agent" @click="editAgentModal(agent, agents.current_page)"
+                    <button
+                      title="Edit Agent"
+                      @click="editAgentModal(agent, agents.current_page)"
                       class="inline-flex items-center mx-2 p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
                       type="button">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -452,14 +432,47 @@ let inviteAgentTree = (agent) => {
                     </button>
 
                     <!-- Export button -->
-                    <button class="ml-3" title="Export CSV" @click.prevent="exportCSV(agent)">
-                      <svg class="w-5 h-5 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                        viewBox="0 0 18 20">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M15 6V2a.97.97 0 0 0-.933-1H5.828a2 2 0 0 0-1.414.586L1.586 4.414A2 2 0 0 0 1 5.828V18a.969.969 0 0 0 .933 1H14a1 1 0 0 0 1-1M6 1v4a1 1 0 0 1-1 1H1m6 6h9m-1.939-2.768L16.828 12l-2.767 2.768" />
+                    <button
+                      class="ml-3"
+                      title="Export CSV"
+                      @click.prevent="exportCSV(agent)"
+                    >
+                      <svg
+                        class="w-5 h-5 text-gray-800"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 18 20"
+                      >
+                        <path
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M15 6V2a.97.97 0 0 0-.933-1H5.828a2 2 0 0 0-1.414.586L1.586 4.414A2 2 0 0 0 1 5.828V18a.969.969 0 0 0 .933 1H14a1 1 0 0 0 1-1M6 1v4a1 1 0 0 1-1 1H1m6 6h9m-1.939-2.768L16.828 12l-2.767 2.768"
+                        />
                       </svg>
                     </button>
                   </td>
+                  <th class="text-gray-600 px-4 py-3">
+                    {{ agent.get_agent_level?.name }}
+                  </th>
+                  <th class="text-gray-600 px-4 py-3">{{ agent.upline_id }}</th>
+                  <th class="text-gray-600 px-4 py-3">{{ agent.email }}</th>
+                  <td class="text-gray-600 px-4 py-3">
+                    ${{ formatMoney(agent.balance) }}
+                  </td>
+                  <td class="text-gray-600 px-4 py-3">
+                    <div class="flex">
+                      <span class="mr-1" v-if="agent.phone_code">{{
+                        agent.phone_code
+                      }}</span>
+                      <span>{{ agent.phone }}</span>
+                    </div>
+                  </td>
+                  <th class="text-gray-600 px-4 py-3">
+                    {{ dateFormat(agent.created_at) }}
+                  </th>
                 </tr>
               </tbody>
             </table>
@@ -537,9 +550,17 @@ let inviteAgentTree = (agent) => {
     </Modal>
 
     <Modal :show="showModal" @close="showModal = false">
-      <Edit :showModal="showModal" :userDetail="userDetail" :levels="levels" :user_type="'Internal Agent'"
-        :currentPage="currentPage" @close="showModal = false" :callTypes="callTypes" :states="states"
-        :route="'/admin/agent'"></Edit>
+      <Edit
+        :showModal="showModal"
+        :userDetail="userDetail"
+        :levels="levels"
+        :user_type="'Internal Agent'"
+        :currentPage="currentPage"
+        @close="showModal = false"
+        :callTypes="callTypes"
+        :states="states"
+        :route="'/admin/agent'"
+      ></Edit>
     </Modal>
 
     <Modal :show="agentModal" @close="agentModal = false">
