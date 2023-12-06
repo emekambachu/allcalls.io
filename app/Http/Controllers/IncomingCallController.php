@@ -195,7 +195,7 @@ class IncomingCallController extends Controller
 
         Log::debug('onlineUsersAfterPrioritize:', [
             'onlineUsers' => $onlineUsers->toArray(),
-            'onlineUsersSorted' => $onlineUsers->sortBy('last_called_at'),
+            'onlineUsersSorted' => $onlineUsers->sortByDesc('last_called_at'),
         ]);
 
         if (!$onlineUsers->count()) {
