@@ -17,11 +17,15 @@ class SendBirdUserController extends Controller
         $user = Auth::user(); // Get the authenticated user
         Log::debug('Creating SendBird user for user ID: ' . $user->id);
 
+        Log::debug('And we stopped here or right at trying to check if the user has the required roles!');
+
         // Check if the user has the required roles
         if (!$user->roles->contains('name', 'internal-agent') && !$user->roles->contains('name', 'admin')) {
             Log::warning('User does not have required roles. User ID: ' . $user->id);
             return response()->json(['message' => 'User is not an internal agent or admin'], 403);
         }
+
+        Log::debug('Were still going!');
 
         // Check if a SendBird user already exists for the user
         $existingSendBirdUser = $user->sendBirdUser()->first();
@@ -30,11 +34,15 @@ class SendBirdUserController extends Controller
             return response()->json(['message' => 'SendBird user already exists'], 409);
         }
 
+        Log::debug('We just passed checking if a SendBird user already exists for the user!');
+
         // Validate incoming request fields
         $validatedData = $request->validate([
             'nickname' => 'required|string|max:255',
             'profile_image' => 'required|image', // Validate the image
         ]);
+
+        Log::debug('Validated request successfully!');
 
         // Handle Image Upload
         $path = $request->file('profile_image')->storeAs(
