@@ -291,10 +291,11 @@ watch(date, (newVal, oldVal) => {
 });
 
 onMounted(() => {
-  const startDate = new Date('EST');
-  const endDate = new Date(new Date().setDate(startDate.getDate() + 7) + ' EST');
+  const startDate = new Date();
+  const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
   date.value = [startDate, endDate];
 });
+
 </script>
 
 <template>
@@ -431,7 +432,7 @@ onMounted(() => {
     </div>
 
     <div class="pt-14 flex justify-between px-16">
-      <VueDatePicker range v-model="date"></VueDatePicker>
+      <VueDatePicker timezone="America/New_York" range v-model="date"></VueDatePicker>
     </div>
 
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
