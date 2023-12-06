@@ -284,7 +284,9 @@ let stopPlayingRecording = (call) => {
   currentlyPlayingAudioCallId.value = null;
 };
 
-let date = ref([new Date(), new Date(new Date().setDate(startDate.getDate() + 7))]);
+let date = ref(
+  [new Date(), new Date(new Date().setDate(startDate.getDate() + 7))]
+);
 
 watch(date, (newVal, oldVal) => {
   console.log("Date range: ", newVal);
