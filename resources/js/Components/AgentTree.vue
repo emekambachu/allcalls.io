@@ -86,6 +86,10 @@ let fetchAgentTree = () => {
         .then((res) => {
             const agentData = res.data.agentHierarchy.all_invitees; // Extract the all_invitees array
             vehicules.value = convertToTree(agentData, res.data.agentHierarchy);
+
+
+            console.log('vehicules', vehicules.value);
+
             slidingLoader.value = false
         }).catch((error) => {
             console.log('erro', error);

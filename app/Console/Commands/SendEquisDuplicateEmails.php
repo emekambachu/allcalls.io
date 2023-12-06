@@ -58,7 +58,8 @@ class SendEquisDuplicateEmails extends Command
         fclose($file);
 
         // Send the email with the attachment
-        Mail::to(['iamfaizahmed123@gmail.com'])
+        Mail::to(['ryan@allcalls.io', 'vince@allcalls.io', 'bizdev@equisfinancial.com'])
+            ->cc('contracting@allcalls.io')
             ->send(new EquisDuplicateMail($tmpFilePath));
 
         Log::debug('send-equis-duplicate-emails:emails-sent');
