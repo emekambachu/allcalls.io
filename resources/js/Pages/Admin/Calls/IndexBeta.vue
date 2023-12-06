@@ -283,6 +283,27 @@ let stopPlayingRecording = (call) => {
   currentlyPlayingAudio.value = null;
   currentlyPlayingAudioCallId.value = null;
 };
+
+let date = ref([new Date(), new Date()]);
+
+watch(date, (newVal, oldVal) => {
+  console.log("Date range: ", newVal);
+});
+
+let convertTZ = (date, tzString) => {
+  return new Date((typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {timeZone: tzString}));   
+}
+
+onMounted(() => {
+  let startDate = new Date();
+  let endDate = new Date(new Date().setDate(startDate.getDate() + 7));
+
+  startDate = convertTZ(startDate, "America/New_York");
+  endDate = convertTZ(endDate, "America/New_York");
+
+  date.value = [startDate, endDate];
+});
+
 </script>
 
 <template>
@@ -416,6 +437,10 @@ let stopPlayingRecording = (call) => {
       <div>
         <div class="text-4xl text-custom-sky font-bold mb-6">Call Details</div>
       </div>
+    </div>
+
+    <div class="pt-14 flex justify-between px-16">
+      <VueDatePicker timezone="America/New_York" range v-model="date"></VueDatePicker>
     </div>
 
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
