@@ -181,10 +181,10 @@ class OnlineUser extends Model
             // Determine if the user is an internal agent (1 for yes, 0 for no)
             $isInternalAgent = $onlineUser->user->roles->contains('name', 'internal-agent') ? 1 : 0;
 
-            // Handle nullable "last_called_at" by replacing it with a past date to ensure it comes first
-            $lastCalledAt = $onlineUser->last_called_at ?? now()->subYears(10);
+            // Handle nullable "last_called_at" by replacing it with a future date to ensure it comes last
+            $lastCalledAt = $onlineUser->last_called_at ?? now()->addYears(10);
 
-            // For internal agents, give them top priority and sort by last_called_at (oldest first)
+            // For internal agents, give them top priority and sort by last_called_at
             if ($isInternalAgent) {
                 return [0, $lastCalledAt];
             }
@@ -198,8 +198,9 @@ class OnlineUser extends Model
             // Return an array with:
             // - 1 to place them below internal agents
             // - negative bidAmount to sort in descending order by bid
-            // - lastCalledAt to sort by oldest call time first
+            // - lastCalledAt to sort by time
             return [1, -$bidAmount, $lastCalledAt];
+
         })->values();
     }
 }
