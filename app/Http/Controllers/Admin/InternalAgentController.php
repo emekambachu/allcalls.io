@@ -247,7 +247,7 @@ class InternalAgentController extends Controller
 
     public function getTransaction($id)
     {
-        $transactions = Transaction::whereUserId($id)->with('card')->paginate(10);
+        $transactions = Transaction::latest()->whereUserId($id)->with('card')->paginate(10);
         return response()->json([
             'transactions' => $transactions
         ]);
