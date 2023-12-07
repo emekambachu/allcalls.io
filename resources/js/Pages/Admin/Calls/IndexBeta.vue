@@ -461,7 +461,7 @@ onMounted(() => {
 
 
 
-    <div class="flex items-center">
+    <div class="pt-14 px-16 flex items-center">
       <div class="px-3 py-2 bg-gray-200 text-gray-800 text-sm"><span class="font-bold">id</span> is <span class="font-bold">19</span></div>
       <button class="px-3 py-2 bg-gray-200 text-gray-800 text-sm">+</button>
     </div>
