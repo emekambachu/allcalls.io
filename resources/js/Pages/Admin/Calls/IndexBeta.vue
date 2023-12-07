@@ -5,6 +5,7 @@ import { Head, router, usePage, Link } from "@inertiajs/vue3";
 import { toaster } from "@/helper.js";
 import GlobalSpinner from "@/Components/GlobalSpinner.vue";
 import TextInput from "@/Components/TextInput.vue";
+import Modal from '@/Components/Modal.vue';
 import {
   Menu,
   MenuButton,
@@ -324,6 +325,7 @@ let filters = ref([
   { label: "Revenue", name: "amount_spent", value: "500", operator: "is less than or equal to" },
 ])
 
+let showNewFilterModal = ref(false);
 </script>
 
 <template>
@@ -467,8 +469,12 @@ let filters = ref([
 
     <div class="pt-14 px-16 flex items-center mb-2">
       <div v-for="filter in filters" :key="filter.name" class="rounded shadow mr-2 px-3 py-0.5 bg-gray-100 hover:bg-gray-50 text-gray-800 text-lg cursor-pointer"><span class="font-bold">{{ filter.label }}</span> {{ filter.operator}} <span class="font-bold">{{ filter.value }}</span></div>
-      <button class="rounded shadow mr-2 px-3 py-0.5 bg-gray-100 hover:bg-gray-50 text-gray-800 text-lg">+</button>
+      <button class="rounded shadow mr-2 px-3 py-0.5 bg-gray-100 hover:bg-gray-50 text-gray-800 text-lg" @click.prevent="showNewFilterModal = true">+</button>
     </div>
+
+    <Modal :show="showNewFilterModal" @close="showNewFilterModal = false" :closeable="true">
+      Create your new filter here.
+    </Modal>
 
 
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
