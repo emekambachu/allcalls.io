@@ -232,9 +232,9 @@ let exportCSV = agent => {
 };
 let agentTreeModal = ref(false)
 let inviteAgentTree = (agent) => {
-
-  agentTreeModal.value = true
   userData.value = agent;
+  agentTreeModal.value = true
+ 
 }
 </script>
 <style scoped>
@@ -542,7 +542,7 @@ let inviteAgentTree = (agent) => {
     </Modal>
 
     <AgentTree v-if="agentTreeModal" :treeRoute="'/admin/internal-agent/tree/'" :agentTreeModal="agentTreeModal"
-      @close="agentTreeModal = false" :userData="userData" />
+      @close="agentTreeModal = false" :userData="userData.value" />
 
     <Modal :show="progressModal" @close="progressModal = false">
       <ProgressView @close="progressModal = false" :statuses="statuses" :isLoading="isLoading"

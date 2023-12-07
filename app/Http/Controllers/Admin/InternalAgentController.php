@@ -98,7 +98,7 @@ class InternalAgentController extends Controller
     public function getAgentTree($id)
     {
         //retrieve the entire hierarchy
-        $user = User::findOrFail($id); 
+        $user = User::findOrFail($id);
 
         if ($user && $user->roles->contains('name', 'admin')) {
             $agent = Role::whereName('internal-agent')->first();
@@ -245,9 +245,9 @@ class InternalAgentController extends Controller
         ]);
     }
 
-    public function getTransactionj($id)
+    public function getTransaction($id)
     {
-        $transactions = Transaction::whereUserId($id)->with('card')->paginate(10);
+        $transactions = Transaction::latest()->whereUserId($id)->with('card')->paginate(10);
         return response()->json([
             'transactions' => $transactions
         ]);

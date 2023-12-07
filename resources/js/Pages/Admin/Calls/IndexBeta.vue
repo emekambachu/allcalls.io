@@ -5,6 +5,7 @@ import { Head, router, usePage, Link } from "@inertiajs/vue3";
 import { toaster } from "@/helper.js";
 import GlobalSpinner from "@/Components/GlobalSpinner.vue";
 import TextInput from "@/Components/TextInput.vue";
+import Modal from '@/Components/Modal.vue';
 import {
   Menu,
   MenuButton,
@@ -120,8 +121,6 @@ let renderColumn = (column, call) => {
   return column.render(call);
 };
 
-let filters = ref([]);
-
 let callsPaginator = ref(null);
 let loadedCalls = ref([]);
 let sortColumn = ref(null);
@@ -138,6 +137,12 @@ let fetchCalls = async (replace = false) => {
 
   if (sortDirection.value) {
     url += "&sort_direction=" + sortDirection.value;
+  }
+
+  // Include start_date and end_date in the query string if they both exist
+  if (startDate.value && endDate.value) {
+    url += "&start_date=" + startDate.value;
+    url += "&end_date=" + endDate.value;
   }
 
   loading.value = true;
@@ -160,7 +165,7 @@ let loadMore = async () => {
 };
 
 onMounted(() => {
-  fetchCalls();
+
 });
 
 let sortByColumn = async (column) => {
@@ -283,6 +288,44 @@ let stopPlayingRecording = (call) => {
   currentlyPlayingAudio.value = null;
   currentlyPlayingAudioCallId.value = null;
 };
+
+let date = ref([new Date(), new Date()]);
+
+let startDate = ref(null);
+let endDate = ref(null);
+
+watch(date, (newVal, oldVal) => {
+  // When the date range changes, we need to update the start_date and end_date and fetch the calls again
+  startDate.value = newVal[0];
+  endDate.value = newVal[1];
+
+  fetchCalls();
+});
+
+let convertTZ = (date, tzString) => {
+  return new Date((typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {timeZone: tzString}));   
+}
+
+
+
+onMounted(() => {
+  let startDate = new Date();
+  let endDate = new Date(new Date().setDate(startDate.getDate() + 7));
+
+  startDate.value = startDate;
+  endDate.value = endDate;
+  date.value = [startDate, endDate];
+
+  fetchCalls();
+});
+
+let filters = ref([
+  // { label: "ID", name: "id", value: "", operator: "is" },
+  { label: "Call Duration", name: "call_duration_in_seconds", value: "12", operator: "is greater than" },
+  { label: "Revenue", name: "amount_spent", value: "500", operator: "is less than or equal to" },
+])
+
+let showNewFilterModal = ref(false);
 </script>
 
 <template>
@@ -417,6 +460,22 @@ let stopPlayingRecording = (call) => {
         <div class="text-4xl text-custom-sky font-bold mb-6">Call Details</div>
       </div>
     </div>
+
+    <div class="pt-14 flex justify-between px-16">
+      <VueDatePicker timezone="America/New_York" range v-model="date"></VueDatePicker>
+    </div>
+
+
+
+    <div class="pt-14 px-16 flex items-center mb-2">
+      <div v-for="filter in filters" :key="filter.name" class="rounded shadow mr-2 px-3 py-0.5 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md cursor-pointer"><span class="font-bold">{{ filter.label }}</span> {{ filter.operator}} <span class="font-bold">{{ filter.value }}</span></div>
+      <button class="rounded shadow mr-2 px-3 py-0.5 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md" @click.prevent="showNewFilterModal = true">+</button>
+    </div>
+
+    <Modal :show="showNewFilterModal" @close="showNewFilterModal = false" :closeable="true">
+      Create your new filter here.
+    </Modal>
+
 
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
       <div class="px-4 sm:px-8 sm:rounded-lg">

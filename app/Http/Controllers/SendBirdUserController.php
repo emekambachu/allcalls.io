@@ -132,7 +132,8 @@ class SendBirdUserController extends Controller
         if ($sendBirdUser) {
             return response()->json([
                 'message' => 'SendBird user exists',
-                'sendBirdUserExists' => true  // Return true as a boolean
+                'sendBirdUserExists' => true,
+                'sb_access_token' => $sendBirdUser->access_token
             ], 200);
         } else {
             return response()->json([
