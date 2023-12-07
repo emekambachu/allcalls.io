@@ -120,8 +120,6 @@ let renderColumn = (column, call) => {
   return column.render(call);
 };
 
-let filters = ref([]);
-
 let callsPaginator = ref(null);
 let loadedCalls = ref([]);
 let sortColumn = ref(null);
@@ -320,6 +318,12 @@ onMounted(() => {
   fetchCalls();
 });
 
+let filters = ref([
+  // { label: "ID", name: "id", value: "", operator: "is" },
+  { label: "Call Duration", name: "call_duration_in_seconds", value: "12", operator: "is greater than" },
+  { label: "Revenue", name: "amount_spent", value: "500", operator: "is less than or equal to" },
+])
+
 </script>
 
 <template>
@@ -462,7 +466,7 @@ onMounted(() => {
 
 
     <div class="pt-14 px-16 flex items-center mb-2">
-      <div class="rounded shadow mr-2 px-3 py-0.5 bg-gray-100 hover:bg-gray-50 text-gray-800 text-lg cursor-pointer"><span class="font-bold">id</span> is <span class="font-bold">19</span></div>
+      <div v-for="filter in filters" :key="filter.name" class="rounded shadow mr-2 px-3 py-0.5 bg-gray-100 hover:bg-gray-50 text-gray-800 text-lg cursor-pointer"><span class="font-bold">{{ filter.label }}</span> {{ filter.operator}} <span class="font-bold">{{ filter.value }}</span></div>
       <button class="rounded shadow mr-2 px-3 py-0.5 bg-gray-100 hover:bg-gray-50 text-gray-800 text-lg">+</button>
     </div>
 
