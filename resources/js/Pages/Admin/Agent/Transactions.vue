@@ -50,13 +50,13 @@ let fetchTransactionsBypage = async (page) => {
             <thead class="text-xs text-gray-300 uppercase bg-sky-900">
               <tr>
                 <th scope="col" class="px-4 py-3">ID</th>
-                <th scope="col" class="px-4 py-3">Amount</th>
-                <th scope="col" class="px-4 py-3">Sign</th>
+                <th scope="col" class="px-4 py-3">Label</th>
+                <th scope="col" class="px-4 py-3">Direction</th>
                 <!-- <th scope="col" class="px-4 py-3">Card NO.</th> -->
                 <!-- <th scope="col" class="px-4 py-3">City</th>
                 <th scope="col" class="px-4 py-3">State</th>
                 <th scope="col" class="px-4 py-3">Zip</th> -->
-                <th scope="col" class="px-4 py-3">Label</th>
+                <th scope="col" class="px-4 py-3">Amount</th>
               </tr>
             </thead>
             <tbody>
