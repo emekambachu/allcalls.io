@@ -25,11 +25,18 @@ class Transaction extends Model
 
     public function getCreatedAtAttribute($value)
     {
+        // Parse the timestamp
+        $timestamp = Carbon::parse($value);
+
+        // Check if there's an authenticated user
         if (auth()->user()) {
+            // Get the user's timezone
             $timezone = auth()->user()->timezone;
-            return Carbon::parse($value)->timezone($timezone);
+
+            // Apply the timezone to the timestamp
+            $timestamp->timezone($timezone);
         }
 
-        return Carbon::parse($value);
+        return $timestamp->diffForHumans() . ' (' . $timestamp->format('H:i d/m/Y') . ')';
     }
 }
