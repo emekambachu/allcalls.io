@@ -73,7 +73,14 @@ let fetchTransactionsBypage = async (page) => {
                   <span v-if="transaction.sign == 1"> ${{ transaction.amount }} </span>
                   <span v-else> -${{ transaction.amount }}</span>
                 </td>
-                <td class="text-gray-600 px-4 py-3">{{ transaction.sign }}</td>
+                <td class="text-gray-600 px-4 py-3">
+                  <span v-if="transaction.sign == 1" class="bg-green-100 text-green-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded">
+                    Added
+                  </span>
+                  <span class="bg-red-100 text-red-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded" v-else>
+                    Deducted
+                  </span>
+                </td>
                 <!-- <td class="text-gray-600 px-4 py-3">{{ transaction.card?.number }}</td> -->
                 <!-- <td class="text-gray-600 px-4 py-3">{{ transaction.card?.city }}</td>
                 <td class="text-gray-600 px-4 py-3">{{ transaction.card?.state }}</td>
