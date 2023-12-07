@@ -46,6 +46,7 @@ Route::prefix('internal-agent')->middleware(['auth', 'verified', 'internal-agent
     Route::get('/agent/tree/{id}', [MyAgencyController::class, 'getAgentTree'])->name('agent.tree')->middleware('registration-step-check');
 
     Route::get('/my-business', [MyBusinessController::class, 'index'])->name('agent.my.business')->middleware('registration-step-check');
+    Route::post('/my-business', [MyBusinessController::class, 'store'])->name('agent.my.business.store')->middleware('registration-step-check');
 
 });
 

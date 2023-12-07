@@ -2,6 +2,10 @@
 import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
 import GuestTextInput from "@/Components/GuestTextInput.vue";
 import GuestInputLabel from "@/Components/GuestInputLabel.vue";
+import PreviewInfo from "@/Pages/InternalAgent/MyBusiness/PreviewInfo.vue";
+import { toaster } from "@/helper.js";
+import { Head, router, usePage } from "@inertiajs/vue3";
+
 let emits = defineEmits();
 let props = defineProps({
   addBusinessModal: Boolean,
@@ -31,10 +35,11 @@ let form = ref({
   insurance_company: "AETNA/CVS",
   product_name: "Select",
   application_date: "",
+  coverage_amount: '',
   coverage_length: "Select",
   premium_frequency: "Select",
-  coverage_amount: '',
-  annually_premium_amount: '',
+  premium_amount: '',
+  premium_volumn: '',
   equis_writing_number_carrier: 'Select',
   carrier_writing_number: '',
   this_app_from_lead: "Select",
@@ -43,6 +48,13 @@ let form = ref({
   policy_draft_date: '',
   first_name: '',
   mi: '',
+  annual_target_premium: '',
+  annual_planned_premium: '',
+  annual_excess_premium: '',
+  intial_investment_amount: '',
+  refer_another_agent: 'Select',
+  this_an_sdic: 'Select',
+  recurring_premium: 'Select',
   last_name: '',
   dob: '',
   gender: 'Select',
@@ -51,7 +63,8 @@ let form = ref({
   client_city: '',
   client_state: 'Select',
   client_zipcode: '',
-
+  client_phone_no: '',
+  client_email: '',
 
 
 });
@@ -1620,10 +1633,11 @@ let restoreError = () => {
   props.firstStepErrors.insurance_company = "";
   props.firstStepErrors.product_name = "";
   props.firstStepErrors.application_date = "";
+  props.firstStepErrors.coverage_amount = "";
   props.firstStepErrors.coverage_length = "";
   props.firstStepErrors.premium_frequency = "";
-  props.firstStepErrors.coverage_amount = "";
-  props.firstStepErrors.annually_premium_amount = "";
+  props.firstStepErrors.premium_amount = "";
+  props.firstStepErrors.premium_volumn = "";
   props.firstStepErrors.equis_writing_number_carrier = "";
   props.firstStepErrors.carrier_writing_number = "";
   props.firstStepErrors.this_app_from_lead = "";
@@ -1632,6 +1646,13 @@ let restoreError = () => {
   props.firstStepErrors.policy_draft_date = "";
   props.firstStepErrors.first_name = "";
   props.firstStepErrors.mi = "";
+  props.firstStepErrors.annual_target_premium = "";
+  props.firstStepErrors.annual_planned_premium = "";
+  props.firstStepErrors.annual_excess_premium = "";
+  props.firstStepErrors.intial_investment_amount = "";
+  props.firstStepErrors.refer_another_agent = "";
+  props.firstStepErrors.this_an_sdic = "";
+  props.firstStepErrors.recurring_premium = "";
   props.firstStepErrors.last_name = "";
   props.firstStepErrors.dob = "";
   props.firstStepErrors.gender = "";
@@ -1640,13 +1661,32 @@ let restoreError = () => {
   props.firstStepErrors.client_city = "";
   props.firstStepErrors.client_state = "";
   props.firstStepErrors.client_zipcode = "";
+  props.firstStepErrors.client_phone_no = "";
+  props.firstStepErrors.client_email = "";
 
 
 };
-let  checkRequiredField = (fieldName, errorMessage) => {
-    if (!form.value[fieldName] || form.value[fieldName] === 'Select') {
-        props.firstStepErrors[fieldName] = [errorMessage];
+let checkRequiredField = (fieldName, errorMessage, validation) => {
+  if (!form.value[fieldName] || form.value[fieldName] === 'Select') {
+    props.firstStepErrors[fieldName] = [errorMessage];
+    return
+  }
+  if (validation == 'phone') {
+    if (form.value[fieldName].length < 10) {
+      props.firstStepErrors[fieldName] = ['Please enter a valid phone number.'];
     }
+  }
+  if (validation == 'email') {
+    if (!isValidEmail(form.value[fieldName])) {
+      props.firstStepErrors[fieldName] = ["Invalid email format"];
+    }
+  }
+  if (validation == 'amount') {
+    if (form.value[fieldName] == 0) {
+      props.firstStepErrors[fieldName] = ["Please enter a positive integer."];
+    }
+  }
+
 }
 
 // validation steps  star
@@ -1655,15 +1695,8 @@ let validationMethod = (step_input) => {
   // Check for required fields in step 1
   if (step_input === 1) {
     checkRequiredField('agent_full_name', 'This field is required')
-    // Add similar checks for other fields in step 1
   } else if (step_input === 2) {
-    // Check for required fields in step 2
-    if (!form.value.agent_email.trim()) {
-      props.firstStepErrors.agent_email = ["This field is required"];
-    } else if (!isValidEmail(form.value.agent_email)) {
-      props.firstStepErrors.agent_email = ["Invalid email format"];
-    }
-    // Add similar checks for other fields in step 2
+    checkRequiredField('agent_email', 'This field is required', 'email')
   } else if (step_input === 3) {
     checkRequiredField('ef_number', 'This field is required')
   } else if (step_input === 4) {
@@ -1673,11 +1706,7 @@ let validationMethod = (step_input) => {
   } else if (step_input === 6) {
     checkRequiredField('split_sale_type', 'This field is required')
   } else if (step_input === 7) {
-    if (!form.value.split_agent_email.trim()) {
-      props.firstStepErrors.split_agent_email = ["This field is required"];
-    } else if (!isValidEmail(form.value.split_agent_email)) {
-      props.firstStepErrors.split_agent_email = ["Invalid email format"];
-    }
+    checkRequiredField('split_agent_email', 'This field is required', 'email')
   }
   else if (step_input === 8) {
     checkRequiredField('insurance_company', 'This field is required')
@@ -1686,76 +1715,61 @@ let validationMethod = (step_input) => {
   } else if (step_input === 10) {
     checkRequiredField('application_date', 'This field is required')
   } else if (step_input === 11) {
-    checkRequiredField('coverage_length', 'This field is required')
+    checkRequiredField('coverage_amount', 'This field is required', 'amount')
   } else if (step_input === 12) {
-    checkRequiredField('premium_frequency', 'This field is required')
+    checkRequiredField('coverage_length', 'This field is required')
   } else if (step_input === 13) {
-    if (!form.value.coverage_amount.trim()) {
-      props.firstStepErrors.coverage_amount = ["This field is required"];
-    } else if (form.value.coverage_amount == 0) {
-      props.firstStepErrors.coverage_amount = ["Please enter a positive integer."];
-    }
+    checkRequiredField('premium_frequency', 'This field is required')
   } else if (step_input === 14) {
-    checkRequiredField('annually_premium_amount', 'This field is required')
+    checkRequiredField('premium_amount', 'This field is required', 'amount')
   } else if (step_input === 15) {
-    checkRequiredField('equis_writing_number_carrier', 'This field is required')
+    checkRequiredField('premium_volumn', 'This field is required', 'amount')
   } else if (step_input === 16) {
-    checkRequiredField('carrier_writing_number', 'This field is required')
+    checkRequiredField('equis_writing_number_carrier', 'This field is required')
   } else if (step_input === 17) {
-    checkRequiredField('this_app_from_lead', 'This field is required')
+    checkRequiredField('carrier_writing_number', 'This field is required')
   } else if (step_input === 18) {
-    checkRequiredField('source_of_lead', 'This field is required')
+    checkRequiredField('this_app_from_lead', 'This field is required')
   } else if (step_input === 19) {
-    checkRequiredField('appointment_type', 'This field is required')
+    checkRequiredField('source_of_lead', 'This field is required')
   } else if (step_input === 20) {
-    checkRequiredField('policy_draft_date', 'This field is required')
+    checkRequiredField('appointment_type', 'This field is required')
   } else if (step_input === 21) {
-    checkRequiredField('first_name', 'This field is required')
+    checkRequiredField('policy_draft_date', 'This field is required')
   } else if (step_input === 22) {
-    checkRequiredField('mi', 'This field is required')
+    checkRequiredField('first_name', 'This field is required')
   } else if (step_input === 23) {
+    checkRequiredField('mi', 'This field is required')
+  }else if (step_input === 24) {
+    checkRequiredField('annual_target_premium', 'This field is required', 'amount')
+  }else if (step_input === 25) {
+    checkRequiredField('annual_planned_premium', 'This field is required', 'amount')
+  }else if (step_input === 26) {
+    checkRequiredField('annual_excess_premium', 'This field is required', 'amount')
+  }else if (step_input === 27) {
+    checkRequiredField('intial_investment_amount', 'This field is required', 'amount')
+  }else if (step_input === 28) {
+    checkRequiredField('refer_another_agent', 'This field is required')
+  }else if (step_input === 29) {
+    checkRequiredField('this_an_sdic', 'This field is required')
+  }else if (step_input === 30) {
+    checkRequiredField('recurring_premium', 'This field is required', )
+  }else if (step_input === 31) {
     checkRequiredField('last_name', 'This field is required')
-  } else if (step_input === 24) {
-    checkRequiredField('dob', 'This field is required')
-  } else if (step_input === 25) {
-    checkRequiredField('gender', 'This field is required')
-  } else if (step_input === 26) {
-        checkRequiredField('client_street_address_1', 'This field is required')
-        checkRequiredField('client_street_address_2', 'This field is required')
-        checkRequiredField('client_city', 'This field is required')
-        checkRequiredField('client_state', 'This field is required')
-        checkRequiredField('client_zipcode', 'This field is required')
-  } else if (step_input === 27) {
-    
-    if (!form.value.gender.trim()) {
-      props.firstStepErrors.gender = ["This field is required"];
-    }
-  } else if (step_input === 28) {
-    
-  } else if (step_input === 29) {
-    if (!form.value.streetLine2.trim()) {
-      props.firstStepErrors.streetLine2 = ["This field is required"];
-    }
-  } else if (step_input === 30) {
-    if (!form.value.city.trim()) {
-      props.firstStepErrors.city = ["This field is required"];
-    }
-  } else if (step_input === 31) {
-    if (!form.value.state.trim()) {
-      props.firstStepErrors.state = ["This field is required"];
-    }
   } else if (step_input === 32) {
-    if (!form.value.zipcode.trim()) {
-      props.firstStepErrors.zipcode = ["This field is required"];
-    }
+    checkRequiredField('dob', 'This field is required')
   } else if (step_input === 33) {
-    if (!form.value.phoneNumber.trim()) {
-      props.firstStepErrors.phoneNumber = ["This field is required"];
-    }
+    checkRequiredField('gender', 'This field is required')
   } else if (step_input === 34) {
-    if (!form.value.client_email.trim()) {
-      props.firstStepErrors.client_email = ["This field is required"];
-    }
+    checkRequiredField('client_street_address_1', 'This field is required')
+    checkRequiredField('client_street_address_2', 'This field is required')
+    checkRequiredField('client_city', 'This field is required')
+    checkRequiredField('client_state', 'This field is required')
+    checkRequiredField('client_zipcode', 'This field is required')
+  } else if (step_input === 35) {
+    checkRequiredField('client_phone_no', 'This field is required', 'phone')
+  } else if (step_input === 36) {
+    checkRequiredField('client_email', 'This field is required', 'email')
   }
 };
 // validation steps end
@@ -1771,17 +1785,16 @@ let getProductNameOptions = () => {
 };
 
 const Next = (data) => {
-  console.log('step', data);
   if (data === 5 && form.value.split_sale === "NO") {
     step.value = 7
     return
   }
-  if (data === 15 && form.value.equis_writing_number_carrier === "NO") {
-    step.value = 17
+  if (data === 16 && form.value.equis_writing_number_carrier === "NO") {
+    step.value = 18
     return
   }
-  if (data === 17 && form.value.this_app_from_lead === "NO") {
-    step.value = 19
+  if (data === 18 && form.value.this_app_from_lead === "NO") {
+    step.value = 20
     return
   }
   validationMethod(data);
@@ -1799,20 +1812,35 @@ let Previous = (data) => {
     step.value = 5
     return
   }
-  if (data === 17 && form.value.equis_writing_number_carrier === "NO") {
-    step.value = 15
+  if (data === 18 && form.value.equis_writing_number_carrier === "NO") {
+    step.value = 16
     return
   }
-  if (data === 19 && form.value.this_app_from_lead === "NO") {
-    step.value = 17
+  if (data === 20 && form.value.this_app_from_lead === "NO") {
+    step.value = 18
     return
   }
   step.value -= 1;
 };
+
+// save business data start 
+let SaveBussinessData = async () => {
+  await axios.post('/internal-agent/my-business', form.value)
+    .then((response) => {
+      toaster("success", response.data.message);
+      router.visit('/internal-agent/my-business')
+    }).catch((error) => {
+      console.log('error', error);
+      toaster("error", error.response.data.message);
+    })
+}
+// save business data end 
 let close = () => {
   emits("close");
 };
-
+let StateChange = (state) => {
+  console.log('');
+}
 let maxDate = ref(new Date)
 maxDate.value.setHours(23, 59, 59, 999);
 
@@ -1822,6 +1850,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
     form.value[val] = fieldName.slice(0, 5);
   }
 }
+
 </script>
 <style scoped>
 .active\:bg-gray-900:active {
@@ -2012,7 +2041,8 @@ let enforceFiveDigitInput = (fieldName, val) => {
                       <option disabled>Select</option>
                       <option v-for="option in getProductNameOptions()" :value="option" v-text="option"></option>
                     </select>
-                    <div v-if="firstStepErrors.product_name" class="text-red-500" v-text="firstStepErrors.productName[0]">
+                    <div v-if="firstStepErrors.product_name" class="text-red-500"
+                      v-text="firstStepErrors.product_name[0]">
                     </div>
                   </div>
                   <div v-show="step == 10">
@@ -2024,6 +2054,16 @@ let enforceFiveDigitInput = (fieldName, val) => {
                       v-text="firstStepErrors.application_date[0]"></div>
                   </div>
                   <div v-show="step == 11">
+                    <h1 class="text-gray-800 text-2xl font-bold"> Coverage Amount<span class="text-red-400">*</span></h1>
+                    <br>
+                    <input v-model="form.coverage_amount" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')"
+                      type="text" id="text"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="$ 0.00" required />
+                    <div v-if="firstStepErrors.coverage_amount" class="text-red-500"
+                      v-text="firstStepErrors.coverage_amount[0]"></div>
+                  </div>
+                  <div v-show="step == 12">
                     <h1 class="text-gray-800 text-2xl font-bold">Coverage Length<span class="text-red-400">*</span></h1>
                     <br>
                     <select v-model="form.coverage_length" id="countries"
@@ -2036,9 +2076,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
                     </div>
                   </div>
 
-
-
-                  <div v-show="step == 12">
+                  <div v-show="step == 13">
                     <h1 class="text-gray-800 text-2xl font-bold">Premium Frequency<span class="text-red-400">*</span></h1>
                     <br>
                     <select v-model="form.premium_frequency" id="countries"
@@ -2053,30 +2091,30 @@ let enforceFiveDigitInput = (fieldName, val) => {
                       v-text="firstStepErrors.premium_frequency[0]"></div>
                   </div>
 
-                  <div v-show="step == 13">
+                  <div v-show="step == 14">
                     <h1 class="text-gray-800 text-2xl font-bold">{{ form.premium_frequency }} Premium Amount<span
                         class="text-red-400">*</span></h1>
                     <br>
-                    <input v-model="form.coverage_amount" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')"
-                      type="text" id="text"
+                    <input v-model="form.premium_amount" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" type="text"
+                      id="text"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="$ 0.00" required />
-                    <div v-if="firstStepErrors.coverage_amount" class="text-red-500"
-                      v-text="firstStepErrors.coverage_amount[0]"></div>
+                    <div v-if="firstStepErrors.premium_amount" class="text-red-500"
+                      v-text="firstStepErrors.premium_amount[0]"></div>
                   </div>
-                  <div v-show="step == 14">
+                  <div v-show="step == 15">
                     <h1 class="text-gray-800 text-2xl font-bold">Annual Premium Volume<span class="text-red-400">*</span>
                     </h1>
                     <br>
-                    <input v-model="form.annually_premium_amount" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')"
-                      type="text" id="text"
+                    <input v-model="form.premium_volumn" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" type="text"
+                      id="text"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="$ 0.00" required />
-                    <div v-if="firstStepErrors.annually_premium_amount" class="text-red-500"
-                      v-text="firstStepErrors.annually_premium_amount[0]"></div>
+                    <div v-if="firstStepErrors.premium_volumn" class="text-red-500"
+                      v-text="firstStepErrors.premium_volumn[0]"></div>
                   </div>
 
-                  <div v-show="step == 15">
+                  <div v-show="step == 16">
                     <h1 class="text-gray-800 text-2xl font-bold">Do you have an Equis writing number with this carrier? {{
                       step }}<span class="text-red-400">*</span></h1>
                     <br>
@@ -2090,8 +2128,8 @@ let enforceFiveDigitInput = (fieldName, val) => {
                       v-text="firstStepErrors.equis_writing_number_carrier[0]"></div>
                   </div>
 
-                  <div v-show="step == 16">
-                    <h1 class="text-gray-800 text-2xl font-bold">Carrier Writing Number {{ step }}<span
+                  <div v-show="step == 17">
+                    <h1 class="text-gray-800 text-2xl font-bold">Carrier Writing Number <span
                         class="text-red-400">*</span></h1>
                     <br>
                     <input v-model="form.carrier_writing_number" type="text" id="carrier_writing_number"
@@ -2101,8 +2139,8 @@ let enforceFiveDigitInput = (fieldName, val) => {
                       v-text="firstStepErrors.carrier_writing_number[0]"></div>
                   </div>
 
-                  <div v-show="step == 17">
-                    <h1 class="text-gray-800 text-2xl font-bold">Was this app from a lead? {{ step }}<span
+                  <div v-show="step == 18">
+                    <h1 class="text-gray-800 text-2xl font-bold">Was this app from a lead? <span
                         class="text-red-400">*</span></h1>
                     <br>
                     <select v-model="form.this_app_from_lead" id="countries"
@@ -2115,9 +2153,9 @@ let enforceFiveDigitInput = (fieldName, val) => {
                       v-text="firstStepErrors.this_app_from_lead[0]"></div>
                   </div>
 
-                  <div v-show="step == 18">
-                    <h1 class="text-gray-800 text-2xl font-bold">Source of the lead {{ step }}<span
-                        class="text-red-400">*</span></h1>
+                  <div v-show="step == 19">
+                    <h1 class="text-gray-800 text-2xl font-bold">Source of the lead <span class="text-red-400">*</span>
+                    </h1>
                     <br>
                     <input v-model="form.source_of_lead" type="text" id="source_of_lead"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -2127,7 +2165,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
                   </div>
 
 
-                  <div v-show="step == 19">
+                  <div v-show="step == 20">
                     <h1 class="text-gray-800 text-2xl font-bold">Was this appointment virtual or face-to-face?<span
                         class="text-red-400">*</span></h1>
                     <br>
@@ -2141,7 +2179,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
                       v-text="firstStepErrors.appointment_type[0]"></div>
                   </div>
 
-                  <div v-show="step == 20">
+                  <div v-show="step == 21">
                     <h1 class="text-gray-800 text-2xl font-bold">What Is the Policy Draft Date?<span
                         class="text-red-400">*</span></h1>
                     <br>
@@ -2151,7 +2189,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
                       v-text="firstStepErrors.policy_draft_date[0]"></div>
                   </div>
 
-                  <div v-show="step == 21">
+                  <div v-show="step == 22">
                     <h1 class="text-gray-800 text-2xl font-bold">First Name<span class="text-red-400">*</span></h1>
                     <br>
                     <input v-model="form.first_name" type="text" id="first_name"
@@ -2161,7 +2199,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
                     </div>
                   </div>
 
-                  <div v-show="step == 22">
+                  <div v-show="step == 23">
                     <h1 class="text-gray-800 text-2xl font-bold">MI<span class="text-red-400">*</span></h1>
                     <br>
                     <input v-model="form.mi" type="text" id="mi"
@@ -2170,7 +2208,99 @@ let enforceFiveDigitInput = (fieldName, val) => {
                     <div v-if="firstStepErrors.mi" class="text-red-500" v-text="firstStepErrors.mi[0]"></div>
                   </div>
 
-                  <div v-show="step == 23">
+                  <div v-show="step == 24">
+                    <h1 class="text-gray-800 text-2xl font-bold"> Annual Target Premium<span
+                        class="text-red-400">*</span></h1>
+                    <br>
+                    <input v-model="form.annual_target_premium" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" type="text"
+                      id="text"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="$ 0.00" required />
+                    <div v-if="firstStepErrors.annual_target_premium" class="text-red-500"
+                      v-text="firstStepErrors.annual_target_premium[0]"></div>
+                  </div>
+
+                  <div v-show="step == 25">
+                    <h1 class="text-gray-800 text-2xl font-bold"> Annual Planned Premium<span
+                        class="text-red-400">*</span></h1>
+                    <br>
+                    <input v-model="form.annual_planned_premium" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" type="text"
+                      id="text"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="$ 0.00" required />
+                    <div v-if="firstStepErrors.annual_planned_premium" class="text-red-500"
+                      v-text="firstStepErrors.annual_planned_premium[0]"></div>
+                  </div>
+
+                  <div v-show="step == 26">
+                    <h1 class="text-gray-800 text-2xl font-bold"> Annual Excess Premium<span
+                        class="text-red-400">*</span></h1>
+                    <br>
+                    <input v-model="form.annual_excess_premium" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" type="text"
+                      id="text"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="$ 0.00" required />
+                    <div v-if="firstStepErrors.annual_excess_premium" class="text-red-500"
+                      v-text="firstStepErrors.annual_excess_premium[0]"></div>
+                  </div>
+
+                  <div v-show="step == 27">
+                    <h1 class="text-gray-800 text-2xl font-bold"> Initial Investment Amount<span
+                        class="text-red-400">*</span></h1>
+                    <br>
+                    <input v-model="form.intial_investment_amount" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" type="text"
+                      id="text"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="$ 0.00" required />
+                    <div v-if="firstStepErrors.intial_investment_amount" class="text-red-500"
+                      v-text="firstStepErrors.intial_investment_amount[0]"></div>
+                  </div>
+
+                  
+                  <div v-show="step == 28">
+                    <h1 class="text-gray-800 text-2xl font-bold">Did another agent refer this application to you?<span class="text-red-400">*</span></h1>
+                    <br>
+                    <select v-model="form.refer_another_agent" id="countries"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                      <option disabled>Select</option>
+                      <option value="YES">YES</option>
+                      <option value="No">No</option>
+                    </select>
+                    <div v-if="firstStepErrors.refer_another_agent" class="text-red-500" v-text="firstStepErrors.refer_another_agent[0]"></div>
+                  </div>
+                  
+                  <div v-show="step == 29">
+                    <h1 class="text-gray-800 text-2xl font-bold">Is this AN SDIC?<span class="text-red-400">*</span></h1>
+                    <br>
+                    <select v-model="form.this_an_sdic" 
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                      <option disabled>Select</option>
+                      <option value="YES">YES</option>
+                      <option value="No">No</option>
+                    </select>
+                    <div v-if="firstStepErrors.this_an_sdic" class="text-red-500" v-text="firstStepErrors.this_an_sdic[0]"></div>
+                  </div>
+
+                  
+                  <div v-show="step == 30">
+                    <h1 class="text-gray-800 text-2xl font-bold">Will there be a recurring premium?<span class="text-red-400">*</span></h1>
+                    <br>
+                    <select v-model="form.recurring_premium" 
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                      <option disabled>Select</option>
+                      <option value="YES">YES</option>
+                      <option value="No">No</option>
+                    </select>
+                    <div v-if="firstStepErrors.recurring_premium" class="text-red-500" v-text="firstStepErrors.recurring_premium[0]"></div>
+                  </div>
+                  
+
+
+
+
+
+
+                  <div v-show="step == 31">
                     <h1 class="text-gray-800 text-2xl font-bold">Last name<span class="text-red-400">*</span></h1>
                     <br>
                     <input v-model="form.last_name" type="text" id="last_name"
@@ -2180,15 +2310,15 @@ let enforceFiveDigitInput = (fieldName, val) => {
                     </div>
                   </div>
 
-                  <div v-show="step == 24">
+                  <div v-show="step == 32">
                     <h1 class="text-gray-800 text-2xl font-bold">Date of Birth<span class="text-red-400">*</span></h1>
                     <br>
                     <VueDatePicker v-model="form.dob" format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply>
                     </VueDatePicker>
                     <div v-if="firstStepErrors.dob" class="text-red-500" v-text="firstStepErrors.dob[0]"></div>
                   </div>
-                  <div v-show="step == 25">
-                    <h1 class="text-gray-800 text-2xl font-bold">Carrier Writing Number<span class="text-red-400">*</span>
+                  <div v-show="step == 33">
+                    <h1 class="text-gray-800 text-2xl font-bold">Gender<span class="text-red-400">*</span>
                     </h1>
                     <br>
                     <select v-model="form.gender" id="countries"
@@ -2201,7 +2331,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
                     <div v-if="firstStepErrors.gender" class="text-red-500" v-text="firstStepErrors.gender[0]"></div>
                   </div>
 
-                  <div v-show="step == 26">
+                  <div v-show="step == 34">
                     <h1 class="text-gray-800 text-2xl font-bold">Client Information</h1>
                     <br>
                     <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Street
@@ -2232,7 +2362,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
                     <label for="EFNumber"
                       class="block mb-2 mt-2 text-sm font-medium text-gray-900 dark:text-white">State<span
                         class="text-red-400">*</span></label>
-                    <select v-model="form.client_state" id="countries"
+                    <select v-model="form.client_state" @change="StateChange(state)" id="countries"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                       <option disabled>Select</option>
                       <option v-for="state in states" :value="state.id">{{ state.full_name }}</option>
@@ -2253,118 +2383,57 @@ let enforceFiveDigitInput = (fieldName, val) => {
 
                   </div>
 
+                  <div v-show="step == 35">
+                    <h1 class="text-gray-800 text-2xl font-bold">Client Phone Number<span class="text-red-400">*</span>
+                    </h1>
+                    <br>
+                    <input v-model="form.client_phone_no" type="text" maxLength="15"
+                      onkeyup="this.value=this.value.replace(/[^0-9]/g,'')"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="" required />
+                    <div v-if="firstStepErrors.client_phone_no" class="text-red-500"
+                      v-text="firstStepErrors.client_phone_no[0]"></div>
+                  </div>
 
+                  <div v-show="step == 36">
+                    <h1 class="text-gray-800 text-2xl font-bold">Client Email<span class="text-red-400">*</span>
+                    </h1>
+                    <br>
+                    <input v-model="form.client_email" type="text" id="client_email"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="" required />
+                    <div v-if="firstStepErrors.client_email" class="text-red-500"
+                      v-text="firstStepErrors.client_email[0]"></div>
+                  </div>
 
-                  <div v-show="step == 27">
-                    <h1 class="text-gray-800 text-2xl font-bold">Carrier Writing Number<span class="text-red-400">*</span>
-                    </h1>
-                    <br>
-                    <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
-                      FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
-                    <input v-model="form.EFNumber" type="text" id="EFNumber"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="EFNumber" required />
-                    <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
+                  <div v-show="step == 37">
+                    <PreviewInfo :form="form" />
                   </div>
-                  <div v-show="step == 28">
-                    <h1 class="text-gray-800 text-2xl font-bold">Carrier Writing Number<span class="text-red-400">*</span>
-                    </h1>
-                    <br>
-                    <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
-                      FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
-                    <input v-model="form.EFNumber" type="text" id="EFNumber"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="EFNumber" required />
-                    <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
-                  </div>
-                  <div v-show="step == 29">
-                    <h1 class="text-gray-800 text-2xl font-bold">Carrier Writing Number<span class="text-red-400">*</span>
-                    </h1>
-                    <br>
-                    <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
-                      FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
-                    <input v-model="form.EFNumber" type="text" id="EFNumber"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="EFNumber" required />
-                    <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
-                  </div>
-                  <div v-show="step == 30">
-                    <h1 class="text-gray-800 text-2xl font-bold">Carrier Writing Number<span class="text-red-400">*</span>
-                    </h1>
-                    <br>
-                    <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
-                      FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
-                    <input v-model="form.EFNumber" type="text" id="EFNumber"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="EFNumber" required />
-                    <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
-                  </div>
-                  <div v-show="step == 31">
-                    <h1 class="text-gray-800 text-2xl font-bold">Carrier Writing Number<span class="text-red-400">*</span>
-                    </h1>
-                    <br>
-                    <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
-                      FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
-                    <input v-model="form.EFNumber" type="text" id="EFNumber"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="EFNumber" required />
-                    <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
-                  </div>
-                  <div v-show="step == 32">
-                    <h1 class="text-gray-800 text-2xl font-bold">Carrier Writing Number<span class="text-red-400">*</span>
-                    </h1>
-                    <br>
-                    <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
-                      FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
-                    <input v-model="form.EFNumber" type="text" id="EFNumber"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="EFNumber" required />
-                    <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
-                  </div>
-                  <div v-show="step == 33">
-                    <h1 class="text-gray-800 text-2xl font-bold">Carrier Writing Number<span class="text-red-400">*</span>
-                    </h1>
-                    <br>
-                    <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
-                      FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
-                    <input v-model="form.EFNumber" type="text" id="EFNumber"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="EFNumber" required />
-                    <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
-                  </div>
-                  <div v-show="step == 34">
-                    <h1 class="text-gray-800 text-2xl font-bold">Carrier Writing Number<span class="text-red-400">*</span>
-                    </h1>
-                    <br>
-                    <label for="EFNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Your
-                      FULL EF Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
-                    <input v-model="form.EFNumber" type="text" id="EFNumber"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="EFNumber" required />
-                    <div v-if="firstStepErrors.EFNumber" class="text-red-500" v-text="firstStepErrors.EFNumber[0]"></div>
-                  </div>
+
 
 
                   <div class="flex mt-8 mb-10" :class="step > 1 ? 'justify-between' : 'justify-end '">
                     <a v-if="step > 1" @click.prevent="Previous(step)"
-                      class="button-custom-back px-3 py-2 rounded-md flex items-center" href="#">
-                      Previous
+                      class="button-custom-back px-3 py-2 rounded-md flex items-center"
+                      v-text="step < 37 ? 'Previous' : 'Change Entries'" href="#">
+
                     </a>
-                    <a @click.prevent="Next(step)" class="button-custom px-3 py-2 rounded-md flex items-center" href="#">
+                    <a v-if="step < 37" @click.prevent="Next(step)"
+                      class="button-custom px-3 py-2 rounded-md flex items-center" href="#">
                       Next
+                    </a>
+                    <a v-if="step === 37" @click="SaveBussinessData()"
+                      class="button-custom px-3 py-2 rounded-md flex items-center" href="#">
+                      Confirm
                     </a>
                   </div>
                 </div>
               </form>
 
-              <!-- <label for="Email" class="block mb-2 text-sm font-black text-gray-900 ">Email<span
-                                    class="text-red-500">*</span></label>
-                            <input type="email" id="default-input"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
-                            <div v-if="firstStepErrors.email" class="text-red-500" v-text="firstStepErrors.email[0]"></div> -->
             </div>
           </div>
         </div>
+      </div>
     </div>
-  </div>
-</Transition></template>
+  </Transition>
+</template>
