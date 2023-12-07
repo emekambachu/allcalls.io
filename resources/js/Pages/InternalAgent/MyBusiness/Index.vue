@@ -5,17 +5,61 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { toaster } from "@/helper.js";
 import AddModal from "@/Pages/InternalAgent/MyBusiness/AddModal.vue";
+import { endOfMonth, endOfYear, startOfMonth, subDays, startOfYear, subMonths, startOfWeek, endOfWeek, subWeeks, startOfQuarter, endOfQuarter, subQuarters } from 'date-fns';
+
+const presetDates = ref([
+    { label: 'Today', value: [new Date(), new Date()] },
+    {
+        label: 'Today (Slot)',
+        value: [new Date(), new Date()],
+        slot: 'preset-date-range-button'
+    },
+    { label: 'This month', value: [startOfMonth(new Date()), endOfMonth(new Date())] },
+    {
+        label: 'Last month',
+        value: [startOfMonth(subMonths(new Date(), 1)), endOfMonth(subMonths(new Date(), 1))],
+    },
+    { label: 'This year', value: [startOfYear(new Date()), endOfYear(new Date())] },
+    {
+        label: 'Last 7 Days',
+        value: [subDays(new Date(), 6), new Date()],
+    },
+    {
+        label: 'Last 14 Days',
+        value: [subDays(new Date(), 13), new Date()],
+    },
+    {
+        label: 'Last 30 Days',
+        value: [subDays(new Date(), 29), new Date()],
+    },
+    {
+        label: 'This Week',
+        value: [startOfWeek(new Date()), endOfWeek(new Date())],
+    },
+    {
+        label: 'Last Week',
+        value: [startOfWeek(subWeeks(new Date(), 1)), endOfWeek(subWeeks(new Date(), 1))],
+    },
 
 
-let { agentInvites, states } = defineProps({
+]);
+
+
+
+let { agentInvites, states , requestData } = defineProps({
     businesses: {
         required: true,
         type: Array,
     },
     states: Array,
+    requestData:Array,
 });
+
+
 let firstStepErrors = ref({})
 let slidingLoader = ref(false)
+
+
 
 let page = usePage();
 if (page.props.flash.message) {
@@ -24,6 +68,44 @@ if (page.props.flash.message) {
 onMounted(() => {
 
 });
+
+let dateRange = ref(null)
+if(requestData.from && requestData.to){
+     // Convert date strings to Date objects
+     const fromDate = new Date(requestData.from);
+    const toDate = new Date(requestData.to);
+    // Set the date range initially
+    dateRange.value = [fromDate, toDate];
+}
+let filterBusiness = () => {
+   
+    if (dateRange.value) {
+        const from = new Date(dateRange.value[0]);
+        const to = new Date(dateRange.value[1]);
+        // Extract month, date, and year components
+        const fromMonth = from.getMonth() + 1; // Add 1 because months are zero-based
+        const fromDate = from.getDate();
+        const fromYear = from.getFullYear();
+
+        const toMonth = to.getMonth() + 1;
+        const toDate = to.getDate();
+        const toYear = to.getFullYear();
+
+        // Format the components as desired (e.g., as "MM-DD-YYYY")
+        const formattedFrom = `${fromMonth}/${fromDate}/${fromYear}`;
+        const formattedTo = `${toMonth}/${toDate}/${toYear}`;
+        const queryParams = {
+            from: formattedFrom,
+            to: formattedTo,
+        };
+        router.visit(page.url, {
+            data: queryParams,
+        });
+    }
+
+
+
+}
 let addBusinessModal = ref(false)
 
 let addBusiness = () => {
@@ -47,7 +129,11 @@ let fetchagentInvites = (page) => {
 };
 // get Agent invites by pagination end
 </script>
-<style scoped></style>
+<style scoped>
+/deep/ .dp__pointer {
+    height: 49px;
+}
+</style>
 <template>
     <Head title="Agent Invites" />
     <AuthenticatedLayout>
@@ -70,6 +156,16 @@ let fetchagentInvites = (page) => {
                             <PrimaryButton @click="addBusiness()">Report Application</PrimaryButton>
                         </div>
                     </div>
+                    <div class="flex mb-5">
+                        <div style="width:40%;">
+                            <VueDatePicker v-model="dateRange" range :preset-dates="presetDates"
+                                placeholder="Picker date range" format="dd-MMM-yyyy" :multi-calendars="{ solo: true }"
+                                auto-apply />
+                        </div>
+                        <PrimaryButton type="button" class="ml-4" @click.prevent="filterBusiness">
+                            <global-spinner :spinner="isLoading" /> Filter
+                        </PrimaryButton>
+                    </div>
                     <hr class="mb-4" />
                     <div class="mx-auto max-w-screen-xl sm:px-12">
                         <div class="relative sm:rounded-lg overflow-hidden">
@@ -80,79 +176,46 @@ let fetchagentInvites = (page) => {
                             <thead class="text-xs text-gray-300 uppercase bg-sky-900">
                                 <tr class="business-table-custom">
                                     <th scope="col" class="px-4 py-3">ID</th>
-                                    <th scope="col" style="min-width:145px;" class="px-4 py-3">Agent Full Name</th>
-                                    <th scope="col" style="min-width:145px;" class="px-4 py-3">Agent Email</th>
-                                    <th scope="col" style="min-width:100px;" class="px-4 py-3">EF Number</th>
-                                    <th scope="col" style="min-width:140px;" class="px-4 py-3">Upline Manager</th>
-                                    <th scope="col" style="min-width:100px;" class="px-4 py-3">split sale</th>
-                                    <th scope="col" style="min-width:130px;" class="px-4 py-3">split sale Type</th>
-                                    <th scope="col" class="px-4 py-3">split Agent Email</th>
-                                    <th scope="col" style="min-width:166px;" class="px-4 py-3">Insurance Company</th>
-                                    <th scope="col" class="px-4 py-3">Product Name</th>
+                                    <th scope="col" style="min-width:145px;" class="px-4 py-3">Client Name</th>
                                     <th scope="col" class="px-4 py-3">Application Date</th>
+                                    <th scope="col" class="px-4 py-3">Paid Date</th>
+                                    <th scope="col" class="px-4 py-3">Carrier</th>
+                                    <th scope="col" class="px-4 py-3">Product</th>
+                                    <th scope="col" class="px-4 py-3">APV (Annual Premium Volume)</th>
                                     <th scope="col" class="px-4 py-3">Coverage Amount</th>
-                                    <th scope="col" class="px-4 py-3">Coverage Length</th>
-                                    <th scope="col" class="px-4 py-3">Premium Frequency</th>
-                                    <th scope="col" class="px-4 py-3">Premium Amount</th>
-                                    <th scope="col" class="px-4 py-3">Annual Premium Volume</th>
-                                    <th scope="col" class="px-4 py-3">Equis writing number</th>
-                                    <th scope="col" class="px-4 py-3">Carrier Writing Number</th>
-                                    <th scope="col" class="px-4 py-3">App from a lead</th>
-                                    <th scope="col" class="px-4 py-3">Source of the lead</th>
-                                    <th scope="col" class="px-4 py-3">Appointment Type</th>
-                                    <th scope="col" class="px-4 py-3">Policy Draft Date</th>
-                                    <th scope="col" class="px-4 py-3">First Name</th>
-                                    <th scope="col" class="px-4 py-3">MI</th>
-                                    <th scope="col" class="px-4 py-3">Last Name</th>
-                                    <th scope="col" class="px-4 py-3">Date of Birth</th>
-                                    <th scope="col" class="px-4 py-3">Gender</th>
-                                    <th scope="col" class="px-4 py-3">Street Address 1</th>
-                                    <th scope="col" class="px-4 py-3">Street Address 2</th>
-                                    <th scope="col" class="px-4 py-3">City</th>
-                                    <th scope="col" class="px-4 py-3">State</th>
-                                    <th scope="col" class="px-4 py-3">Zip-code</th>
-                                    <th scope="col" class="px-4 py-3">Client Phone Number</th>
-                                    <th scope="col" class="px-4 py-3">Client Email</th>
+                                    <th scope="col" class="px-4 py-3">Initial Annual Investment Amount</th>
+                                    <th scope="col" class="px-4 py-3">Target Premium</th>
+                                    <th scope="col" class="px-4 py-3">Annual Base Plan Premium</th>
+                                    <th scope="col" class="px-4 py-3">Status</th>
+                                    <th scope="col" class="px-4 py-3">App Type</th>
+                                    <th scope="col" class="px-4 py-3">Agent Name</th>
+                                    <th scope="col" class="px-4 py-3">Upline Manager</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr class="border-b border-gray-500" v-for="(businesse, index) in businesses.data"
                                     :key="businesse.id">
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse.id"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.agent_full_name"></td>
+                                    <td class="text-gray-600 px-4 py-3">{{ businesse.first_name }} {{ businesse.last_name }}
+                                    </td>
+                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.application_date"></td>
+
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse.agent_email"></td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.ef_number"></td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.upline_manager"></td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.split_sale"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.split_sale_type"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.split_agent_email"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.insurance_company"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.product_name"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.application_date"></td>
+
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.coverage_amount"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.coverage_length"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.premium_frequency"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.quarterly_premium_amount"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.annually_premium_amount"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.equis_writing_number_carrier">
-                                    </td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.carrier_writing_number"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.this_app_from_lead"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.source_of_lead"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.appointment_type"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.policy_draft_date"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.first_name"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.mi"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.last_name"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.dob"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.gender"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.client_street_address_1"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.client_street_address_2"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.city"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.client_state"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.client_zipcode"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.client_phone_no"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.client_email"></td>
+                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.intial_investment_amount"></td>
+                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.annual_target_premium"></td>
+                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.annual_planned_premium"></td>
+                                    <td class="text-gray-600 px-4 py-3">status</td>
+                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.agent_full_name"></td>
+                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.upline_manager"></td>
+
+
+
+
                                 </tr>
                             </tbody>
                         </table>
