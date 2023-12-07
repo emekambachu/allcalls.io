@@ -733,7 +733,7 @@ let appDownloadModal = ref(false);
 
                           <div v-if="unreadNotifications.length" class="relative">
                             <div
-                              class="h-4 w-4 flex items-center justify-center absolute -top-2 -left-2 bg-red-500 rounded-full text-xs"
+                              class="h-4 w-4 flex items-center justify-center absolute -top-2 -left-2 bg-red-500 rounded-full text-xs z-10"
                               v-text="unreadNotifications.length"></div>
                           </div>
 
