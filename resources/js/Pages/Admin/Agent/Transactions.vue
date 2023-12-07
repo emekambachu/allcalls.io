@@ -50,10 +50,10 @@ let fetchTransactionsBypage = async (page) => {
                 <th scope="col" class="px-4 py-3">ID</th>
                 <th scope="col" class="px-4 py-3">Amount</th>
                 <th scope="col" class="px-4 py-3">Sign</th>
-                <th scope="col" class="px-4 py-3">Card NO.</th>
-                <th scope="col" class="px-4 py-3">City</th>
+                <!-- <th scope="col" class="px-4 py-3">Card NO.</th> -->
+                <!-- <th scope="col" class="px-4 py-3">City</th>
                 <th scope="col" class="px-4 py-3">State</th>
-                <th scope="col" class="px-4 py-3">Zip</th>
+                <th scope="col" class="px-4 py-3">Zip</th> -->
                 <th scope="col" class="px-4 py-3">Label</th>
               </tr>
             </thead>
@@ -61,12 +61,12 @@ let fetchTransactionsBypage = async (page) => {
               <tr v-for="transaction in transactions.data" :key="transaction.id" class="border-b border-gray-500">
 
                 <td class="text-gray-600 px-4 py-3">{{ transaction.id }}</td>
-                <td class="text-gray-600 px-4 py-3">{{ transaction.amount }}</td>
+                <td class="text-gray-600 px-4 py-3 font-bold">${{ transaction.amount }}</td>
                 <td class="text-gray-600 px-4 py-3">{{ transaction.sign }}</td>
-                <td class="text-gray-600 px-4 py-3">{{ transaction.card?.number }}</td>
-                <td class="text-gray-600 px-4 py-3">{{ transaction.card?.city }}</td>
+                <!-- <td class="text-gray-600 px-4 py-3">{{ transaction.card?.number }}</td> -->
+                <!-- <td class="text-gray-600 px-4 py-3">{{ transaction.card?.city }}</td>
                 <td class="text-gray-600 px-4 py-3">{{ transaction.card?.state }}</td>
-                <td class="text-gray-600 px-4 py-3">{{ transaction.card?.zip }}</td>
+                <td class="text-gray-600 px-4 py-3">{{ transaction.card?.zip }}</td> -->
                 <td class="text-gray-600 px-4 py-3">{{ transaction.label ? transaction.label : '-' }}</td>
               </tr>
             </tbody>
