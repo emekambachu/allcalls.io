@@ -459,6 +459,13 @@ onMounted(() => {
       <VueDatePicker timezone="America/New_York" range v-model="date"></VueDatePicker>
     </div>
 
+
+
+    <div class="flex items-center">
+      <div class="p-2 bg-gray-200 text-gray-800 text-sm"><span class="font-bold">id</span> is <span class="font-bold">19</span></div>
+      <button class="p-2 bg-gray-200 text-gray-800 text-sm">+</button>
+    </div>
+
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
       <div class="px-4 sm:px-8 sm:rounded-lg">
         <hr class="mb-4" />
