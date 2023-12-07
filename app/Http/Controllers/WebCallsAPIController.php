@@ -40,14 +40,14 @@ class WebCallsAPIController extends Controller
         }
 
         // Filter by date range for created_at
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
-        if ($startDate && $endDate) {
-            $query->whereBetween('created_at', [$startDate, $endDate]);
-        } else {
-            $today = now()->format('Y-m-d');
-            $query->whereDate('created_at', $today);
-        }
+        // $startDate = $request->input('start_date');
+        // $endDate = $request->input('end_date');
+        // if ($startDate && $endDate) {
+        //     $query->whereBetween('created_at', [$startDate, $endDate]);
+        // } else {
+        //     $today = now()->format('Y-m-d');
+        //     $query->whereDate('created_at', $today);
+        // }
 
 
         $calls = $query->paginate();
