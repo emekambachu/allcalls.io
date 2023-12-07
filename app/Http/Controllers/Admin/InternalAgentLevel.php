@@ -16,7 +16,7 @@ class InternalAgentLevel extends Controller
      */
     public function index()
     {
-        $levels = AgentLevel::orderBy('created_at', 'asc')->paginate(10);
+        $levels = AgentLevel::orderBy('order', 'asc')->paginate(10);
         return Inertia::render('Admin/AgentLevel/Index', [
             'levels' => $levels,
         ]);
@@ -34,7 +34,7 @@ class InternalAgentLevel extends Controller
      */
     public function store(Request $request)
     {
-        
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255|unique:'.AgentLevel::class.',name',
             'order' => 'required|numeric|max:255',
@@ -87,7 +87,7 @@ class InternalAgentLevel extends Controller
             ],
             'order' => [
             'required',
-            'numeric',  
+            'numeric',
             'max:255',
             Rule::unique('internal_agent_levels', 'order')->ignore($request->lavel_id),
         ],
@@ -101,7 +101,7 @@ class InternalAgentLevel extends Controller
             ], 400);
         }
         $agentLevel = AgentLevel::find($request->lavel_id);
-        
+
         if (!$agentLevel) {
             return response()->json([
                 'success' => false,
