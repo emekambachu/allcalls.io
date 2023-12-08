@@ -38,7 +38,7 @@ class SendBirdUserController extends Controller
 
         // Validate incoming request fields
         $validatedData = $request->validate([
-            'nickname' => 'required|string|max:255',
+            // 'nickname' => 'required|string|max:255',
             'profile_image' => 'required|image|max:5120', // 5 MB limit
         ]);
 
@@ -59,13 +59,14 @@ class SendBirdUserController extends Controller
 
         $applicationId = env('SENDBIRD_APPLICATION_ID');
         $apiKey = env('SENDBIRD_API_TOKEN');
+        $nickname = $user->first_name . ' ' . $user->last_name;
 
         $response = Http::withHeaders([
             'Api-Token' => $apiKey,
             'Content-Type' => 'application/json',
         ])->post("https://api-{$applicationId}.sendbird.com/v3/users", [
             'user_id' => $user->id,
-            'nickname' => $request->nickname,
+            'nickname' => $nickname,
             'profile_url' => $fullUrl,
             'issue_access_token' => true, // Include this field
         ]);
