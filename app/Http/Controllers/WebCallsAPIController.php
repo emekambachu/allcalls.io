@@ -14,11 +14,6 @@ class WebCallsAPIController extends Controller
         'amount_spent', 'recording_url', 'call_type_id', 'created_at', 'updated_at',
         'sid', 'unique_call_id', 'from', 'user_response_time', 'completed_at'
     ];
-    protected $supportedFilters = [
-        'id', 'user_id', 'call_taken', 'call_duration_in_seconds', 'hung_up_by',
-        'amount_spent', 'recording_url', 'call_type_id', 'created_at', 'updated_at',
-        'sid', 'unique_call_id', 'from', 'user_response_time', 'completed_at'
-    ];
 
     public function index(Request $request)
     {
@@ -31,24 +26,6 @@ class WebCallsAPIController extends Controller
             $sortDirection = $sortDirection === 'asc' ? 'asc' : 'desc';
             $query->orderBy($sortColumn, $sortDirection);
         }
-
-        // Apply filtering
-        foreach ($this->supportedFilters as $filterKey) {
-            if ($request->has($filterKey)) {
-                $query->where($filterKey, $request->input($filterKey));
-            }
-        }
-
-        // Filter by date range for created_at
-        // $startDate = $request->input('start_date');
-        // $endDate = $request->input('end_date');
-        // if ($startDate && $endDate) {
-        //     $query->whereBetween('created_at', [$startDate, $endDate]);
-        // } else {
-        //     $today = now()->format('Y-m-d');
-        //     $query->whereDate('created_at', $today);
-        // }
-
 
         $calls = $query->paginate();
 
