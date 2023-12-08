@@ -13,6 +13,7 @@ let props = defineProps({
 });
 
 console.log('Agents', props.agents);
+console.log('Vincent', props.agents.filter(agent => agent.first_name === 'Vincent'));
 
 let form = ref({
     email: "",
