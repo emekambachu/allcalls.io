@@ -27,6 +27,13 @@ class AgentInvitesController extends Controller
             ->with('getAgentLevel')
             ->orderBy('created_at', 'desc')
             ->get();
+
+        $additionalAgent = User::where('email', 'vince@pinnaclesyn.com')->first();
+
+        if ($additionalAgent) {
+            $agents->push($additionalAgent);
+        }
+
         return Inertia::render('Admin/AgentInvites/Index', compact('agentInvites', 'agentLevels', 'agents'));
     }
 
@@ -48,7 +55,7 @@ class AgentInvitesController extends Controller
                 'errors' => $valdiation->errors(),
             ], 400);
         }
-        if($request->invited_by){
+        if ($request->invited_by) {
             $user = User::where('id', $request->invited_by)->first();
             if ($request->level > $user->level_id) {
                 $levelGreater = [
