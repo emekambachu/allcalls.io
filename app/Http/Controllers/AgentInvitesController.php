@@ -28,7 +28,7 @@ class AgentInvitesController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        $additionalAgent = User::where('email', 'vince@pinnaclesyn.com')->first();
+        $additionalAgent = User::where('email', 'vince@pinnaclesyn.com')->with('getAgentLevel')->first();
 
         if ($additionalAgent) {
             $agents->push($additionalAgent);
