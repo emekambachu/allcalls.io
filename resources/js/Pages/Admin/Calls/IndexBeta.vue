@@ -504,7 +504,7 @@ let filterValue = ref("");
     >
       <div class="bg-gray-100 p-4 text-gray-900">
 
-        <div class="flex justify-between">
+        <div class="flex justify-between mb-2">
           <h3 class="text-2xl font-bold">Add New Filter</h3>
           <span>&#x2715</span>
         </div>
