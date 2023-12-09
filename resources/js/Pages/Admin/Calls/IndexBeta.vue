@@ -547,7 +547,7 @@ let applyFilter = (filter) => {
         <div class="mb-3">
           <label class="block mb-2 text-sm font-medium text-gray-900">Filter:</label>
 
-          <select class="select-custom">
+          <select class="select-custom border-gray-200">
             <option v-for="(filter, index) in filters" :key="index" :value="filter.name">{{ filter.label }}</option>
           </select>
         </div>
@@ -555,7 +555,7 @@ let applyFilter = (filter) => {
         <div class="mb-3">
           <label class="block mb-2 text-sm font-medium text-gray-900">Operator:</label>
 
-          <select v-model="filterOperator" class="select-custom">
+          <select v-model="filterOperator" class="select-custom border-gray-200">
             <option v-for="filter in filters" :key="filter.id">is</option>
             <option>is greater than</option>
             <option>is less than</option>
@@ -565,7 +565,7 @@ let applyFilter = (filter) => {
         </div>
 
         <div class="mb-3">
-          <label class="block mb-2 text-sm font-medium text-gray-900">Value:</label>
+          <label class="block mb-2 text-sm font-medium text-gray-900 border-gray-200">Value:</label>
 
           <TextInput v-model="filterValue" />
         </div>
