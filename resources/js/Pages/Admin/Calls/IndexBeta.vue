@@ -503,7 +503,7 @@ let filterValue = ref("");
       :closeable="true"
     >
       <div class="bg-gray-100 p-4 text-gray-900">
-        <div>
+        <div class="mb-2">
           <label>Filter</label>
           <select v-model="filterName" class="select-custom">
             <option>ID</option>
@@ -511,7 +511,7 @@ let filterValue = ref("");
           </select>
         </div>
 
-        <div>
+        <div class="mb-2">
           <label>Operator</label>
           <select v-model="filterOperator" class="select-custom">
             <option>is</option>
@@ -522,7 +522,7 @@ let filterValue = ref("");
           </select>
         </div>
 
-        <div>
+        <div class="mb-2">
           <label>Value</label>
           <TextInput v-model="filterValue" />
         </div>
