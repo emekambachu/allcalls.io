@@ -508,7 +508,7 @@ let filterValue = ref("");
           <span class="cursor-pointer">&#x2715</span>
         </div>
 
-        <div class="mb-2">
+        <div class="mb-3">
           <label class="text-sm">Filter</label>
           <select v-model="filterName" class="select-custom">
             <option>ID</option>
@@ -516,7 +516,7 @@ let filterValue = ref("");
           </select>
         </div>
 
-        <div class="mb-2">
+        <div class="mb-3">
           <label class="text-sm">Operator</label>
           <select v-model="filterOperator" class="select-custom">
             <option>is</option>
@@ -527,7 +527,7 @@ let filterValue = ref("");
           </select>
         </div>
 
-        <div class="mb-2">
+        <div class="mb-3">
           <label class="text-sm">Value</label>
           <TextInput v-model="filterValue" />
         </div>
