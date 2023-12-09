@@ -537,9 +537,6 @@ let filterValue = ref("");
 
           <button
             class="inline-flex items-center px-4 py-3 border rounded-md font-semibold text-md uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 hover:bg-white hover:text-custom-blue"
-            :class="{
-              'border-transparent text-gray-900 bg-gray-100 hover:drop-shadow-2xl ': true,
-            }"
             :disabled="disabled"
             @click.prevent="showNewFilterModal = false"
           >
