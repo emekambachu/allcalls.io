@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Log;
 
 class WebCallsAPIController extends Controller
 {
-    // Add all columns to the supported sort and filter arrays
     protected $supportedSortColumns = [
         'id', 'user_id', 'call_taken', 'call_duration_in_seconds', 'hung_up_by',
         'amount_spent', 'recording_url', 'call_type_id', 'created_at', 'updated_at',

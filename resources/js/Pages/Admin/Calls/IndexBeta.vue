@@ -147,6 +147,13 @@ let fetchCalls = async (replace = false) => {
     url += "&end_date=" + endDate.value;
   }
 
+  // Append filters to the query string
+  filters.value.forEach((filter, index) => {
+    url += `&filters[${index}][name]=${encodeURIComponent(filter.name)}`;
+    url += `&filters[${index}][value]=${encodeURIComponent(filter.value)}`;
+    url += `&filters[${index}][operator]=${encodeURIComponent(filter.operator)}`;
+  });
+
   loading.value = true;
   let response = await axios.get(url);
 
@@ -160,6 +167,7 @@ let fetchCalls = async (replace = false) => {
   loading.value = false;
   console.log("Loaded Calls: ", loadedCalls.value);
 };
+
 
 let loadMore = async () => {
   currentPage.value++;
@@ -349,6 +357,11 @@ let applyFilter = () => {
     value: filterValue.value,
     operator: filterOperator.value,
   });
+
+  // Refetch the calls and replace them with current filters
+  fetchCalls(true);
+
+  showNewFilterModal.value = false;
 }
 </script>
 
