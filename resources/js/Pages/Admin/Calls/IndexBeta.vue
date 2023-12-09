@@ -528,9 +528,9 @@ let showNewFilterModal = ref(false);
           <PrimaryButton class="mr-2">Apply</PrimaryButton>
 
           <button
-            class="inline-flex items-center px-4 py-3 border rounded-md font-semibold text-md uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 hover:bg-white hover:text-custom-blue hover:border-custom-blue"
+            class="inline-flex items-center px-4 py-3 border rounded-md font-semibold text-md uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 hover:bg-white hover:text-custom-blue"
             :class="{
-              'border-transparent text-custom-green bg-custom-blue hover:drop-shadow-2xl focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300': true,
+              'border-transparent text-gray-900 bg-gray-100 hover:drop-shadow-2xl ': true,
             }"
             :disabled="disabled"
           >
