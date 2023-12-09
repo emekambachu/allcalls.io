@@ -4,6 +4,8 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, router, usePage, Link } from "@inertiajs/vue3";
 import { toaster } from "@/helper.js";
 import GlobalSpinner from "@/Components/GlobalSpinner.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import Modal from "@/Components/Modal.vue";
 import {
@@ -520,6 +522,11 @@ let showNewFilterModal = ref(false);
         <div>
           <label>Value</label>
           <TextInput />
+        </div>
+
+        <div class="flex items-center">
+          <PrimaryButton class="mr-2">Apply</PrimaryButton>
+          <SecondaryButton> Cancel</SecondaryButton>
         </div>
       </div>
     </Modal>
