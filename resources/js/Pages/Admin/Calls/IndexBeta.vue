@@ -503,6 +503,12 @@ let filterValue = ref("");
       :closeable="true"
     >
       <div class="bg-gray-100 p-4 text-gray-900">
+
+        <div class="flex justify-center">
+          <h3 class="text-2xl font-bold">Add New Filter</h3>
+          <span>&#x2715</span>
+        </div>
+
         <div class="mb-2">
           <label class="text-sm">Filter</label>
           <select v-model="filterName" class="select-custom">
