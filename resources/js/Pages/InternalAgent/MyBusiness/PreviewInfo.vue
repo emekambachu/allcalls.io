@@ -232,7 +232,7 @@ console.log('form', form);
             </div>
             <div class="flex">
                 <div ><strong>City:</strong></div>
-                <div class="ml-2">{{ formatDate(form.client_city)  }} </div>
+                <div class="ml-2">{{ form.client_city  }} </div>
             </div>
         </div>
         <hr >

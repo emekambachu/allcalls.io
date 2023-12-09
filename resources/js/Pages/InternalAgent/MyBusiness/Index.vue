@@ -283,7 +283,7 @@ let ViewDetail = (business_data) => {
 
 
                     <div v-else class="text-center py-4 text-gray-800">
-                        No Business yet.
+                        No Bu yet.
                     </div>
                 </div>
             </div>
