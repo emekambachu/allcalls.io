@@ -504,7 +504,7 @@ let filterValue = ref("");
     >
       <div class="bg-gray-100 p-4 text-gray-900">
         <div class="mb-2">
-          <label>Filter</label>
+          <label class="text-sm">Filter</label>
           <select v-model="filterName" class="select-custom">
             <option>ID</option>
             <option>Call Duration</option>
@@ -512,7 +512,7 @@ let filterValue = ref("");
         </div>
 
         <div class="mb-2">
-          <label>Operator</label>
+          <label class="text-sm">Operator</label>
           <select v-model="filterOperator" class="select-custom">
             <option>is</option>
             <option>is greater than</option>
@@ -523,7 +523,7 @@ let filterValue = ref("");
         </div>
 
         <div class="mb-2">
-          <label>Value</label>
+          <label class="text-sm">Value</label>
           <TextInput v-model="filterValue" />
         </div>
 
