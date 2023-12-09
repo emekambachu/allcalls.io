@@ -526,7 +526,16 @@ let showNewFilterModal = ref(false);
 
         <div class="flex items-center">
           <PrimaryButton class="mr-2">Apply</PrimaryButton>
-          <SecondaryButton> Cancel</SecondaryButton>
+
+          <button
+            class="inline-flex items-center px-4 py-3 border rounded-md font-semibold text-md uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 hover:bg-white hover:text-custom-blue hover:border-custom-blue"
+            :class="{
+              'border-transparent text-custom-green bg-custom-blue hover:drop-shadow-2xl focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300': true,
+            }"
+            :disabled="disabled"
+          >
+            Cancel
+          </button>
         </div>
       </div>
     </Modal>
