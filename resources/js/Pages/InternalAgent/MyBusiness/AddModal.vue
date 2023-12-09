@@ -1670,7 +1670,16 @@ let checkRequiredField = () => {
       firstStepErrors.value[fieldName] = ["Please enter a valid phone number."];
     }
   });
+  let numericFields = ['coverage_amount', 'premium_amount',  'premium_volumn', 'annual_target_premium', 'annual_planned_premium',  'annual_excess_premium', 'intial_investment_amount'];
 
+numericFields.forEach(fieldName => {
+  const fieldValue = form.value[fieldName];
+
+  // Check if the field is not a number
+  if (isNaN(fieldValue)) {
+    firstStepErrors.value[fieldName] = ['Please enter a valid number.'];
+  }
+});
 
   const hasErrors = Object.values(firstStepErrors.value).some(errors => errors.length > 0);
 
