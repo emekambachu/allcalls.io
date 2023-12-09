@@ -509,7 +509,8 @@ let filterValue = ref("");
         </div>
 
         <div class="mb-3">
-          <label class="text-sm">Filter</label>
+          <label class="block mb-2 text-sm font-medium text-gray-900">Filter:</label>
+
           <select v-model="filterName" class="select-custom">
             <option>ID</option>
             <option>Call Duration</option>
@@ -517,7 +518,8 @@ let filterValue = ref("");
         </div>
 
         <div class="mb-3">
-          <label class="text-sm">Operator</label>
+          <label class="block mb-2 text-sm font-medium text-gray-900">Operator:</label>
+
           <select v-model="filterOperator" class="select-custom">
             <option>is</option>
             <option>is greater than</option>
@@ -528,7 +530,8 @@ let filterValue = ref("");
         </div>
 
         <div class="mb-3">
-          <label class="text-sm">Value</label>
+          <label class="block mb-2 text-sm font-medium text-gray-900">Value:</label>
+
           <TextInput v-model="filterValue" />
         </div>
 
@@ -537,6 +540,9 @@ let filterValue = ref("");
 
           <button
             class="inline-flex items-center px-4 py-3 border rounded-md font-semibold text-md uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 hover:bg-white hover:text-custom-blue"
+            :class="{
+              'border-transparent text-gray-900 bg-gray-100 hover:drop-shadow-2xl ': true,
+            }"
             :disabled="disabled"
             @click.prevent="showNewFilterModal = false"
           >
