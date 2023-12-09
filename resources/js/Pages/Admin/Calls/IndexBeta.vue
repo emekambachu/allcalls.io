@@ -524,7 +524,7 @@ let showNewFilterModal = ref(false);
           <TextInput />
         </div>
 
-        <div class="flex items-center justify-end mt-2">
+        <div class="flex items-center justify-end mt-4">
           <PrimaryButton class="mr-2">Apply</PrimaryButton>
 
           <button
