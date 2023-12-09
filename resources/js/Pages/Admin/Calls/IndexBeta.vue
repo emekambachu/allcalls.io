@@ -329,7 +329,19 @@ onMounted(() => {
   fetchCalls();
 });
 
+
 let filters = ref([
+  {
+    label: "ID",
+    name: "id",
+  },
+  {
+    label: "Call Duration",
+    name: "call_duration_in_seconds",
+  },
+]);
+
+let appliedFilters = ref([
   {
     label: "Call Duration",
     name: "call_duration_in_seconds",
@@ -342,7 +354,7 @@ let filters = ref([
     value: "500",
     operator: "is less than or equal to",
   },
-]);
+])
 
 let showNewFilterModal = ref(false);
 let filterName = ref("ID");
@@ -504,7 +516,7 @@ let applyFilter = () => {
 
     <div class="pt-14 px-16 flex items-center mb-2">
       <div
-        v-for="filter in filters"
+        v-for="filter in appliedFilters"
         :key="filter.name"
         class="rounded shadow mr-2 px-3 py-0.5 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md cursor-pointer"
       >
