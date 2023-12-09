@@ -8,29 +8,29 @@ use App\Models\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
-use Carbon\Carbon;
+use Carbon\Carbon;  
 
 class MyBusinessController extends Controller
 {
-    public function index(Request $request)
-    {
-        $businesses = InternalAgentMyBusiness::whereIn('agent_id', getInviteeIds(auth()->user()))
-        ->where(function ($query) use ($request) {
-            if (isset($request->from) && $request->from != '' && isset($request->to) && $request->to != '') {
-                $startDate = Carbon::parse($request->from)->startOfDay();
-                $endDate = Carbon::parse($request->to)->endOfDay();
-                $query->whereBetween('created_at', [$startDate, $endDate]);
-            }
-        })
-        ->paginate(10);
-        $states = State::get();
-        // dd($businesses);
-        return Inertia::render('InternalAgent/MyBusiness/Index', [
-            'businesses' => $businesses,
-            'states' => $states,
-            'requestData' =>  $request->all()
-        ]);
-    }
+        public function index(Request $request)
+        {
+            $businesses = InternalAgentMyBusiness::whereIn('agent_id', getInviteeIds(auth()->user()))
+            ->where(function ($query) use ($request) {
+                if (isset($request->from) && $request->from != '' && isset($request->to) && $request->to != '') {
+                    $startDate = Carbon::parse($request->from)->startOfDay();
+                    $endDate = Carbon::parse($request->to)->endOfDay();
+                    $query->whereBetween('created_at', [$startDate, $endDate]);
+                }
+            })
+            ->paginate(10);
+            $states = State::get();
+            // dd($businesses);
+            return Inertia::render('InternalAgent/MyBusiness/Index', [
+                'businesses' => $businesses,
+                'states' => $states,
+                'requestData' =>  $request->all()
+            ]);
+        }
 
     public function store(Request $request)
     {

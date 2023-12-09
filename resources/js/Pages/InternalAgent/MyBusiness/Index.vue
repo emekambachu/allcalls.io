@@ -5,6 +5,9 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { toaster } from "@/helper.js";
 import AddModal from "@/Pages/InternalAgent/MyBusiness/AddModal.vue";
+import ViewDetailCom from "@/Pages/InternalAgent/MyBusiness/ViewDetail.vue";
+import Modal from "@/Components/Modal.vue";
+
 import { endOfMonth, endOfYear, startOfMonth, subDays, startOfYear, subMonths, startOfWeek, endOfWeek, subWeeks, startOfQuarter, endOfQuarter, subQuarters } from 'date-fns';
 
 const presetDates = ref([
@@ -46,17 +49,16 @@ const presetDates = ref([
 
 
 
-let { agentInvites, states , requestData } = defineProps({
+let { agentInvites, states, requestData } = defineProps({
     businesses: {
         required: true,
         type: Array,
     },
     states: Array,
-    requestData:Array,
+    requestData: Array,
 });
 
 
-let firstStepErrors = ref({})
 let slidingLoader = ref(false)
 
 
@@ -70,15 +72,15 @@ onMounted(() => {
 });
 
 let dateRange = ref(null)
-if(requestData.from && requestData.to){
-     // Convert date strings to Date objects
-     const fromDate = new Date(requestData.from);
+if (requestData.from && requestData.to) {
+    // Convert date strings to Date objects
+    const fromDate = new Date(requestData.from);
     const toDate = new Date(requestData.to);
     // Set the date range initially
     dateRange.value = [fromDate, toDate];
 }
 let filterBusiness = () => {
-   
+
     if (dateRange.value) {
         const from = new Date(dateRange.value[0]);
         const to = new Date(dateRange.value[1]);
@@ -113,25 +115,29 @@ let addBusiness = () => {
 }
 // get Agent invites by pagination start
 let fetchagentInvites = (page) => {
-    alert('please set the pagination')
-    return
-    slidingLoader.value = true
-    const urlParams = new URLSearchParams(new URL(page).search);
-    const pageValue = urlParams.get('page');
-    axios.get(`/internal-agent/get-agent-invites?page=${pageValue}`)
-        .then((response) => {
+    let url = new URL(page);
+    // Ensure the protocol is https
+    if (url.protocol !== "https:") {
+        url.protocol = "https:";
+    }
 
-        }).catch((error) => {
-            console.log('error agent', error);
-            slidingLoader.value = false
-        })
+    // Get the https URL as a string
+    let httpsPage = url.toString();
+
+    router.visit(httpsPage, { method: "get" });
 
 };
 // get Agent invites by pagination end
+let viewDetailModal = ref(false)
+let businessData = ref(null)
+let ViewDetail = (business_data) => {
+    businessData.value = business_data
+    viewDetailModal.value = true
+}
 </script>
 <style scoped>
 /deep/ .dp__pointer {
-    height: 49px;
+    height: 42px;
 }
 </style>
 <template>
@@ -152,8 +158,9 @@ let fetchagentInvites = (page) => {
                                 My Business
                             </h1>
                         </div>
-                        <div>
-                            <PrimaryButton @click="addBusiness()">Report Application</PrimaryButton>
+
+                        <div v-if="$page.props.auth.role === 'internal-agent'">
+                            <PrimaryButton @click="addBusiness()">Report Application </PrimaryButton>
                         </div>
                     </div>
                     <div class="flex mb-5">
@@ -176,20 +183,24 @@ let fetchagentInvites = (page) => {
                             <thead class="text-xs text-gray-300 uppercase bg-sky-900">
                                 <tr class="business-table-custom">
                                     <th scope="col" class="px-4 py-3">ID</th>
-                                    <th scope="col" style="min-width:145px;" class="px-4 py-3">Client Name</th>
-                                    <th scope="col" class="px-4 py-3">Application Date</th>
-                                    <th scope="col" class="px-4 py-3">Paid Date</th>
-                                    <th scope="col" class="px-4 py-3">Carrier</th>
-                                    <th scope="col" class="px-4 py-3">Product</th>
-                                    <th scope="col" class="px-4 py-3">APV (Annual Premium Volume)</th>
-                                    <th scope="col" class="px-4 py-3">Coverage Amount</th>
-                                    <th scope="col" class="px-4 py-3">Initial Annual Investment Amount</th>
-                                    <th scope="col" class="px-4 py-3">Target Premium</th>
-                                    <th scope="col" class="px-4 py-3">Annual Base Plan Premium</th>
-                                    <th scope="col" class="px-4 py-3">Status</th>
-                                    <th scope="col" class="px-4 py-3">App Type</th>
-                                    <th scope="col" class="px-4 py-3">Agent Name</th>
-                                    <th scope="col" class="px-4 py-3">Upline Manager</th>
+                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">Client Name</th>
+                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">Application Date</th>
+                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">Paid Date</th>
+                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">Carrier</th>
+                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">Product</th>
+                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">APV (Annual Premium Volume)
+                                    </th>
+                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">Coverage Amount</th>
+                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">Initial Annual Investment
+                                        Amount</th>
+                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">Target Premium</th>
+                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">Annual Base Plan Premium
+                                    </th>
+                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">Status</th>
+                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">App Type</th>
+                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">Agent Name</th>
+                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">Upline Manager</th>
+                                    <th scope="col" style="min-width: 100px;" class="px-4 py-3">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -199,23 +210,21 @@ let fetchagentInvites = (page) => {
                                     <td class="text-gray-600 px-4 py-3">{{ businesse.first_name }} {{ businesse.last_name }}
                                     </td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.application_date"></td>
-
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse.agent_email"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.ef_number"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.upline_manager"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.split_sale"></td>
-
+                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.policy_draft_date"></td>
+                                    <td class="text-gray-600 px-4 py-3">Carrier</td>
+                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.product_name"></td>
+                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.premium_volumn"></td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.coverage_amount"></td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.intial_investment_amount"></td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.annual_target_premium"></td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.annual_planned_premium"></td>
                                     <td class="text-gray-600 px-4 py-3">status</td>
+                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.source_of_lead"></td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.agent_full_name"></td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.upline_manager"></td>
-
-
-
-
+                                    <td class="text-gray-600 px-4 py-3">
+                                        <button class="text-blue-600" @click="ViewDetail(businesse)">view detail</button>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -279,7 +288,16 @@ let fetchagentInvites = (page) => {
                 </div>
             </div>
         </div>
-        <AddModal v-if="addBusinessModal" :states="states" :addBusinessModal="addBusinessModal"
-            @close="addBusinessModal = false" :firstStepErrors="firstStepErrors" :reIniteAgent="reIniteAgent" />
+
+        <AddModal v-show="addBusinessModal" :states="states" :addBusinessModal="addBusinessModal"
+            @close="addBusinessModal = false" :reIniteAgent="reIniteAgent" />
+
+
+        <!-- <Modal :show="viewDetailModal" @close="viewDetailModal = false"> -->
+        <ViewDetailCom v-if="viewDetailModal" :viewDetailModal="viewDetailModal" @close="viewDetailModal = false"
+            :businessData="businessData" />
+        <!-- </Modal> -->
+
+
     </AuthenticatedLayout>
 </template>
