@@ -341,6 +341,12 @@ let showNewFilterModal = ref(false);
 let filterName = ref("ID");
 let filterOperator = ref("is");
 let filterValue = ref("");
+
+
+let applyFilter = () => {
+  console.log('Apply Filter');
+}
+
 </script>
 
 <template>
