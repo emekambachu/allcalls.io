@@ -350,7 +350,6 @@ let applyFilter = () => {
     operator: filterOperator.value,
   });
 }
-
 </script>
 
 <template>
