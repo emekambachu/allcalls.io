@@ -334,10 +334,12 @@ let filters = ref([
   {
     label: "ID",
     name: "id",
+    operators: ["is", "is greater than", "is less than", "is greater than or equal to", "is less than or equal to"],
   },
   {
     label: "Call Duration",
     name: "call_duration_in_seconds",
+    operators: ["is", "is greater than", "is less than", "is greater than or equal to", "is less than or equal to"],
   },
 ]);
 
@@ -362,8 +364,8 @@ let filterOperator = ref("is");
 let filterValue = ref("");
 
 
-let applyFilter = () => {
-  filters.value.push({
+let applyFilter = (filter) => {
+  appliedFilters.value.push({
     label: filterName.value,
     name: filterName.value,
     value: filterValue.value,
@@ -545,9 +547,8 @@ let applyFilter = () => {
         <div class="mb-3">
           <label class="block mb-2 text-sm font-medium text-gray-900">Filter:</label>
 
-          <select v-model="filterName" class="select-custom">
-            <option>ID</option>
-            <option>Call Duration</option>
+          <select class="select-custom">
+            <option v-for="(filter, index) in filters" :key="index" :value="filter.name">{{ filter.label }}</option>
           </select>
         </div>
 
@@ -555,7 +556,7 @@ let applyFilter = () => {
           <label class="block mb-2 text-sm font-medium text-gray-900">Operator:</label>
 
           <select v-model="filterOperator" class="select-custom">
-            <option>is</option>
+            <option v-for="filter in filters" :key="filter.id">is</option>
             <option>is greater than</option>
             <option>is less than</option>
             <option>is greater than or equal to</option>
