@@ -344,7 +344,11 @@ let filterValue = ref("");
 
 
 let applyFilter = () => {
-  console.log('Apply Filter');
+  console.log({
+    filterName: filterName.value,
+    filterOperator: filterOperator.value,
+    filterValue: filterValue.value,
+  });
 }
 
 </script>
