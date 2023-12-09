@@ -1821,7 +1821,6 @@ let enforceFiveDigitInput = (fieldName, val) => {
 }
 </style>
 <template>
-  <AuthenticatedLayout>
     <Transition name="modal" enter-active-class="transition ease-out  duration-300 transform"
       enter-from-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
       enter-to-class="opacity-100 translate-y-0 sm:scale-100"
@@ -2431,5 +2430,4 @@ let enforceFiveDigitInput = (fieldName, val) => {
         </div>
       </div>
     </Transition>
-  </AuthenticatedLayout>
 </template>
