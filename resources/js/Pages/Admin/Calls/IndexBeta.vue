@@ -338,6 +338,8 @@ let filters = ref([
 ]);
 
 let showNewFilterModal = ref(false);
+
+
 </script>
 
 <template>
@@ -533,6 +535,7 @@ let showNewFilterModal = ref(false);
               'border-transparent text-gray-900 bg-gray-100 hover:drop-shadow-2xl ': true,
             }"
             :disabled="disabled"
+            @click.prevent="showNewFilterModal = false"
           >
             Cancel
           </button>
