@@ -8,7 +8,7 @@ use App\Http\Controllers\AgentInvitesController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\InternalAgentLevel;
 use App\Http\Controllers\ActiveUserChannelController;
-use App\Http\Controllers\admin\AgentMyBusinessController;
+use App\Http\Controllers\Admin\AgentMyBusinessController;
 use App\Http\Controllers\Admin\OnlineAgentsController;
 use App\Http\Controllers\AdminNotificationsController;
 use App\Http\Controllers\Admin\InternalAgentController;
