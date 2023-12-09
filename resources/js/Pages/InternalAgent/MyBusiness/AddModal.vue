@@ -1762,7 +1762,10 @@ let enforceFiveDigitInput = (fieldName, val) => {
     form.value[val] = fieldName.slice(0, 5);
   }
 }
-
+let CurrencyValidation = (fieldName, val) => {
+  form.value[val] = fieldName.replace(/[^0-9]/g, '');
+  
+}
 </script>
 <style scoped>
 .active\:bg-gray-900:active {
@@ -1926,7 +1929,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
                         <div>
                           <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-white">Coverage
                             Amount<span class="text-red-400">*</span></label>
-                          <input v-model="form.coverage_amount" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')"
+                          <input v-model="form.coverage_amount"  @input="CurrencyValidation(form.coverage_amount, 'coverage_amount')" 
                             type="text" id="text"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="$ 0.00" required />
@@ -1968,7 +1971,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
                           <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-white">{{
                             form.premium_frequency != 'Select' ? form.premium_frequency : '' }} Premium Amount<span
                               class="text-red-400">*</span></label>
-                          <input v-model="form.premium_amount" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')"
+                          <input v-model="form.premium_amount" @input="CurrencyValidation(form.premium_amount, 'premium_amount')" 
                             type="text" id="text"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="$ 0.00" required />
@@ -1980,7 +1983,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
                         <div>
                           <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-white">Annual Premium
                             Volume<span class="text-red-400">*</span></label>
-                          <input v-model="form.premium_volumn" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')"
+                          <input v-model="form.premium_volumn" @input="CurrencyValidation(form.premium_volumn, 'premium_volumn')"  
                             type="text" id="text"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="$ 0.00" required />
@@ -2150,8 +2153,8 @@ let enforceFiveDigitInput = (fieldName, val) => {
                         <div>
                           <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-white">Annual Target
                             Premium<span class="text-red-400">*</span></label>
-                          <input v-model="form.annual_target_premium"
-                            onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" type="text" id="text"
+                          <input v-model="form.annual_target_premium" @input="CurrencyValidation(form.annual_target_premium, 'annual_target_premium')"  
+                             type="text" id="text"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="$ 0.00" required />
                           <div v-if="firstStepErrors.annual_target_premium" class="text-red-500"
@@ -2161,8 +2164,8 @@ let enforceFiveDigitInput = (fieldName, val) => {
                         <div>
                           <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-white">Annual Planned
                             Premium<span class="text-red-400">*</span></label>
-                          <input v-model="form.annual_planned_premium"
-                            onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" type="text" id="text"
+                          <input v-model="form.annual_planned_premium" @input="CurrencyValidation(form.annual_planned_premium, 'annual_planned_premium')"  
+                             type="text" id="text"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="$ 0.00" required />
                           <div v-if="firstStepErrors.annual_planned_premium" class="text-red-500"
@@ -2174,7 +2177,8 @@ let enforceFiveDigitInput = (fieldName, val) => {
                             class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-white">Annual
                             Excess Premium<span class="text-red-400">*</span></label>
                           <input v-model="form.annual_excess_premium"
-                            onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" type="text" id="text"
+                          @input="CurrencyValidation(form.annual_excess_premium, 'annual_excess_premium')"  
+                             type="text" id="text"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="$ 0.00" required />
                           <div v-if="firstStepErrors.annual_excess_premium" class="text-red-500"
@@ -2187,7 +2191,8 @@ let enforceFiveDigitInput = (fieldName, val) => {
                             Investment Amount<span class="text-red-400">*</span></label>
 
                           <input v-model="form.intial_investment_amount"
-                            onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" type="text" id="text"
+                          @input="CurrencyValidation(form.intial_investment_amount, 'intial_investment_amount')"  
+                             type="text" id="text"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="$ 0.00" required />
                           <div v-if="firstStepErrors.intial_investment_amount" class="text-red-500"
@@ -2375,7 +2380,7 @@ let enforceFiveDigitInput = (fieldName, val) => {
                             Phone Number<span class="text-red-400">*</span></label>
 
                           <input v-model="form.client_phone_no" type="text" maxLength="15"
-                            onkeyup="this.value=this.value.replace(/[^0-9]/g,'')"
+                          @input="CurrencyValidation(form.client_phone_no, 'client_phone_no')"  
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="" required />
                           <div v-if="firstStepErrors.client_phone_no" class="text-red-500"
