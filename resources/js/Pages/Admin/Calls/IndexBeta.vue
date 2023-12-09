@@ -364,7 +364,15 @@ let filterOperator = ref("is");
 let filterValue = ref("");
 
 
-let applyFilter = (filter) => {
+let applyFilter = () => {
+
+  console.log({
+    label: filterName.value,
+    name: filterName.value,
+    value: filterValue.value,
+    operator: filterOperator.value,
+  });
+
   appliedFilters.value.push({
     label: filterName.value,
     name: filterName.value,
@@ -556,7 +564,7 @@ let applyFilter = (filter) => {
           <label class="block mb-2 text-sm font-medium text-gray-900">Operator:</label>
 
           <select v-model="filterOperator" class="select-custom border border-gray-200">
-            <option v-for="filter in filters" :key="filter.id">is</option>
+            <option>is</option>
             <option>is greater than</option>
             <option>is less than</option>
             <option>is greater than or equal to</option>
