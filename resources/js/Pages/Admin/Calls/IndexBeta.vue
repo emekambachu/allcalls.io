@@ -147,6 +147,13 @@ let fetchCalls = async (replace = false) => {
     url += "&end_date=" + endDate.value;
   }
 
+  // Append filters to the query string
+  filters.value.forEach((filter, index) => {
+    url += `&filters[${index}][name]=${encodeURIComponent(filter.name)}`;
+    url += `&filters[${index}][value]=${encodeURIComponent(filter.value)}`;
+    url += `&filters[${index}][operator]=${encodeURIComponent(filter.operator)}`;
+  });
+
   loading.value = true;
   let response = await axios.get(url);
 
@@ -160,6 +167,7 @@ let fetchCalls = async (replace = false) => {
   loading.value = false;
   console.log("Loaded Calls: ", loadedCalls.value);
 };
+
 
 let loadMore = async () => {
   currentPage.value++;
@@ -322,7 +330,6 @@ onMounted(() => {
 });
 
 let filters = ref([
-  // { label: "ID", name: "id", value: "", operator: "is" },
   {
     label: "Call Duration",
     name: "call_duration_in_seconds",
@@ -341,6 +348,21 @@ let showNewFilterModal = ref(false);
 let filterName = ref("ID");
 let filterOperator = ref("is");
 let filterValue = ref("");
+
+
+let applyFilter = () => {
+  filters.value.push({
+    label: filterName.value,
+    name: filterName.value,
+    value: filterValue.value,
+    operator: filterOperator.value,
+  });
+
+  // Refetch the calls and replace them with current filters
+  fetchCalls(true);
+
+  showNewFilterModal.value = false;
+}
 </script>
 
 <template>
@@ -509,7 +531,8 @@ let filterValue = ref("");
         </div>
 
         <div class="mb-3">
-          <label class="text-sm">Filter</label>
+          <label class="block mb-2 text-sm font-medium text-gray-900">Filter:</label>
+
           <select v-model="filterName" class="select-custom">
             <option>ID</option>
             <option>Call Duration</option>
@@ -517,7 +540,8 @@ let filterValue = ref("");
         </div>
 
         <div class="mb-3">
-          <label class="text-sm">Operator</label>
+          <label class="block mb-2 text-sm font-medium text-gray-900">Operator:</label>
+
           <select v-model="filterOperator" class="select-custom">
             <option>is</option>
             <option>is greater than</option>
@@ -528,7 +552,8 @@ let filterValue = ref("");
         </div>
 
         <div class="mb-3">
-          <label class="text-sm">Value</label>
+          <label class="block mb-2 text-sm font-medium text-gray-900">Value:</label>
+
           <TextInput v-model="filterValue" />
         </div>
 
@@ -537,6 +562,9 @@ let filterValue = ref("");
 
           <button
             class="inline-flex items-center px-4 py-3 border rounded-md font-semibold text-md uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 hover:bg-white hover:text-custom-blue"
+            :class="{
+              'border-transparent text-gray-900 bg-gray-100 hover:drop-shadow-2xl ': true,
+            }"
             :disabled="disabled"
             @click.prevent="showNewFilterModal = false"
           >

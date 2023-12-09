@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Log;
 
 class WebCallsAPIController extends Controller
 {
-    // Add all columns to the supported sort and filter arrays
     protected $supportedSortColumns = [
         'id', 'user_id', 'call_taken', 'call_duration_in_seconds', 'hung_up_by',
         'amount_spent', 'recording_url', 'call_type_id', 'created_at', 'updated_at',
@@ -26,9 +25,21 @@ class WebCallsAPIController extends Controller
             $sortDirection = $sortDirection === 'asc' ? 'asc' : 'desc';
             $query->orderBy($sortColumn, $sortDirection);
         }
-
+    
+        // Retrieve filters
+        $filters = $request->input('filters', []);
+        foreach ($filters as $filter) {
+            if(isset($filter['name'], $filter['value'], $filter['operator'])) {
+                // Apply filter logic here
+                // Example for a simple where clause
+                // Check if the column exists in your model or handle it as needed
+                $query->where($filter['name'], $filter['operator'], $filter['value']);
+            }
+        }
+    
+        // Get paginated result
         $calls = $query->paginate();
-
+    
         return ['calls' => $calls];
     }
 }
