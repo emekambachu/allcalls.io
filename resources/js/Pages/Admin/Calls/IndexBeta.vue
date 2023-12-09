@@ -4,8 +4,10 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, router, usePage, Link } from "@inertiajs/vue3";
 import { toaster } from "@/helper.js";
 import GlobalSpinner from "@/Components/GlobalSpinner.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
-import Modal from '@/Components/Modal.vue';
+import Modal from "@/Components/Modal.vue";
 import {
   Menu,
   MenuButton,
@@ -164,9 +166,7 @@ let loadMore = async () => {
   await fetchCalls();
 };
 
-onMounted(() => {
-
-});
+onMounted(() => {});
 
 let sortByColumn = async (column) => {
   console.log("Sort By Column: ", column.name);
@@ -303,10 +303,12 @@ watch(date, (newVal, oldVal) => {
 });
 
 let convertTZ = (date, tzString) => {
-  return new Date((typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {timeZone: tzString}));   
-}
-
-
+  return new Date(
+    (typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {
+      timeZone: tzString,
+    })
+  );
+};
 
 onMounted(() => {
   let startDate = new Date();
@@ -321,9 +323,19 @@ onMounted(() => {
 
 let filters = ref([
   // { label: "ID", name: "id", value: "", operator: "is" },
-  { label: "Call Duration", name: "call_duration_in_seconds", value: "12", operator: "is greater than" },
-  { label: "Revenue", name: "amount_spent", value: "500", operator: "is less than or equal to" },
-])
+  {
+    label: "Call Duration",
+    name: "call_duration_in_seconds",
+    value: "12",
+    operator: "is greater than",
+  },
+  {
+    label: "Revenue",
+    name: "amount_spent",
+    value: "500",
+    operator: "is less than or equal to",
+  },
+]);
 
 let showNewFilterModal = ref(false);
 </script>
@@ -465,17 +477,68 @@ let showNewFilterModal = ref(false);
       <VueDatePicker timezone="America/New_York" range v-model="date"></VueDatePicker>
     </div>
 
-
-
     <div class="pt-14 px-16 flex items-center mb-2">
-      <div v-for="filter in filters" :key="filter.name" class="rounded shadow mr-2 px-3 py-0.5 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md cursor-pointer"><span class="font-bold">{{ filter.label }}</span> {{ filter.operator}} <span class="font-bold">{{ filter.value }}</span></div>
-      <button class="rounded shadow mr-2 px-3 py-0.5 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md" @click.prevent="showNewFilterModal = true">+</button>
+      <div
+        v-for="filter in filters"
+        :key="filter.name"
+        class="rounded shadow mr-2 px-3 py-0.5 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md cursor-pointer"
+      >
+        <span class="font-bold">{{ filter.label }}</span> {{ filter.operator }}
+        <span class="font-bold">{{ filter.value }}</span>
+      </div>
+      <button
+        class="rounded shadow mr-2 px-3 py-0.5 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md"
+        @click.prevent="showNewFilterModal = true"
+      >
+        +
+      </button>
     </div>
 
-    <Modal :show="showNewFilterModal" @close="showNewFilterModal = false" :closeable="true">
-      Create your new filter here.
-    </Modal>
+    <Modal
+      :show="showNewFilterModal"
+      @close="showNewFilterModal = false"
+      :closeable="true"
+    >
+      <div class="bg-gray-100 p-4 text-gray-900">
+        <div>
+          <label>Filter</label>
+          <select class="select-custom">
+            <option>ID</option>
+            <option>Call Duration</option>
+          </select>
+        </div>
 
+        <div>
+          <label>Operator</label>
+          <select class="select-custom">
+            <option>is</option>
+            <option>is greater than</option>
+            <option>is less than</option>
+            <option>is greater than or equal to</option>
+            <option>is less than or equal to</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Value</label>
+          <TextInput />
+        </div>
+
+        <div class="flex items-center justify-end mt-2">
+          <PrimaryButton class="mr-2">Apply</PrimaryButton>
+
+          <button
+            class="inline-flex items-center px-4 py-3 border rounded-md font-semibold text-md uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 hover:bg-white hover:text-custom-blue"
+            :class="{
+              'border-transparent text-gray-900 bg-gray-100 hover:drop-shadow-2xl ': true,
+            }"
+            :disabled="disabled"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </Modal>
 
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
       <div class="px-4 sm:px-8 sm:rounded-lg">

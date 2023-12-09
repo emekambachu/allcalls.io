@@ -11,6 +11,10 @@ let props = defineProps({
     agentLevels: Array,
     agents: Array,
 });
+
+console.log('Agents', props.agents);
+console.log('Vincent', props.agents.filter(agent => agent.first_name === 'Vincent'));
+
 let form = ref({
     email: "",
     level: "-- Select an option --",
