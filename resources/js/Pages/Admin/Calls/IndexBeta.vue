@@ -322,7 +322,6 @@ onMounted(() => {
 });
 
 let filters = ref([
-  // { label: "ID", name: "id", value: "", operator: "is" },
   {
     label: "Call Duration",
     name: "call_duration_in_seconds",
@@ -344,11 +343,15 @@ let filterValue = ref("");
 
 
 let applyFilter = () => {
-  console.log({
-    filterName: filterName.value,
-    filterOperator: filterOperator.value,
-    filterValue: filterValue.value,
+
+  filters.value.push({
+    label: filterName.value,
+    name: filterName.value,
+    value: filterValue.value,
+    operator: filterOperator.value,
   });
+
+  console.log('Filters: ', filters.value);
 }
 
 </script>
