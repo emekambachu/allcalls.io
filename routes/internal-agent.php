@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\InternalAgent\RegistrationStepController;
 use Inertia\Inertia;
 use App\Http\Controllers\InternalAgent\MyAgencyController;
+use App\Http\Controllers\InternalAgent\MyBusinessController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -41,8 +43,11 @@ Route::prefix('internal-agent')->middleware(['auth', 'verified', 'internal-agent
     Route::post('/agent-invites', [MyAgencyController::class, 'store'])->name('admin.agent-invites.store')->middleware('registration-step-check');
     Route::delete('/agent-invites/{id}', [MyAgencyController::class, 'destroy'])->name('internal-agent.agent-invites.destroy')->middleware('registration-step-check');
     Route::get('/reinvite-agent/{id}', [MyAgencyController::class, 'reInvite'])->name('internal-agent.agent.reinvite')->middleware('registration-step-check');
-
     Route::get('/agent/tree/{id}', [MyAgencyController::class, 'getAgentTree'])->name('agent.tree')->middleware('registration-step-check');
+
+    Route::get('/my-business', [MyBusinessController::class, 'index'])->name('agent.my.business')->middleware('registration-step-check');
+    Route::post('/my-business', [MyBusinessController::class, 'store'])->name('agent.my.business.store')->middleware('registration-step-check');
+
 });
 
 Route::middleware(['auth', 'verified', 'internal-agent'])->group(function () {

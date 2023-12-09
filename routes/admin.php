@@ -8,6 +8,7 @@ use App\Http\Controllers\AgentInvitesController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\InternalAgentLevel;
 use App\Http\Controllers\ActiveUserChannelController;
+use App\Http\Controllers\admin\AgentMyBusinessController;
 use App\Http\Controllers\Admin\OnlineAgentsController;
 use App\Http\Controllers\AdminNotificationsController;
 use App\Http\Controllers\Admin\InternalAgentController;
@@ -79,6 +80,9 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::get('/approved-internal-agent/{id}', [InternalAgentController::class, 'internalAgentApproved'])->name('admin.approved.internal.agent');
 
     Route::post('/progress-internal-agent', [InternalAgentController::class, 'internalAgentProgress'])->name('admin.internal.agent.update.progress');
+
+    /// My business 
+    Route::get('/my-business', [AgentMyBusinessController::class, 'index'])->name('admin.my-business.index');
 
     // Available Number
     Route::get('/available-numbers',[AvailableNumberController::class,'index'])->name('admin.available-number.index');
