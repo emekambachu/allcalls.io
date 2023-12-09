@@ -505,7 +505,7 @@ let filterValue = ref("");
       <div class="bg-gray-100 py-4 px-6 text-gray-900">
         <div class="flex justify-between mb-4">
           <h3 class="text-2xl font-bold">Add New Filter</h3>
-          <span class="cursor-pointer">&#x2715</span>
+          <span class="cursor-pointer" @click.prevent="showNewFilterModal = false">&#x2715</span>
         </div>
 
         <div class="mb-3">
