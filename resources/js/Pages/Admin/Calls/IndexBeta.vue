@@ -338,6 +338,9 @@ let filters = ref([
 ]);
 
 let showNewFilterModal = ref(false);
+let filterName = ref("ID");
+let filterOperator = ref("is");
+let filterValue = ref("");
 </script>
 
 <template>
@@ -499,18 +502,23 @@ let showNewFilterModal = ref(false);
       @close="showNewFilterModal = false"
       :closeable="true"
     >
-      <div class="bg-gray-100 p-4 text-gray-900">
-        <div>
-          <label>Filter</label>
-          <select class="select-custom">
+      <div class="bg-gray-100 py-4 px-6 text-gray-900">
+        <div class="flex justify-between mb-4">
+          <h3 class="text-2xl font-bold">Add New Filter</h3>
+          <span class="cursor-pointer" @click.prevent="showNewFilterModal = false">&#x2715</span>
+        </div>
+
+        <div class="mb-3">
+          <label class="text-sm">Filter</label>
+          <select v-model="filterName" class="select-custom">
             <option>ID</option>
             <option>Call Duration</option>
           </select>
         </div>
 
-        <div>
-          <label>Operator</label>
-          <select class="select-custom">
+        <div class="mb-3">
+          <label class="text-sm">Operator</label>
+          <select v-model="filterOperator" class="select-custom">
             <option>is</option>
             <option>is greater than</option>
             <option>is less than</option>
@@ -519,13 +527,13 @@ let showNewFilterModal = ref(false);
           </select>
         </div>
 
-        <div>
-          <label>Value</label>
-          <TextInput />
+        <div class="mb-3">
+          <label class="text-sm">Value</label>
+          <TextInput v-model="filterValue" />
         </div>
 
         <div class="flex items-center justify-end mt-4">
-          <PrimaryButton class="mr-2">Apply</PrimaryButton>
+          <PrimaryButton class="mr-2" @click.prevent="applyFilter">Apply</PrimaryButton>
 
           <button
             class="inline-flex items-center px-4 py-3 border rounded-md font-semibold text-md uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 hover:bg-white hover:text-custom-blue"
@@ -533,6 +541,7 @@ let showNewFilterModal = ref(false);
               'border-transparent text-gray-900 bg-gray-100 hover:drop-shadow-2xl ': true,
             }"
             :disabled="disabled"
+            @click.prevent="showNewFilterModal = false"
           >
             Cancel
           </button>
