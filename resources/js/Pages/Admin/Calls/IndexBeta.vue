@@ -343,15 +343,12 @@ let filterValue = ref("");
 
 
 let applyFilter = () => {
-
   filters.value.push({
     label: filterName.value,
     name: filterName.value,
     value: filterValue.value,
     operator: filterOperator.value,
   });
-
-  console.log('Filters: ', filters.value);
 }
 
 </script>
