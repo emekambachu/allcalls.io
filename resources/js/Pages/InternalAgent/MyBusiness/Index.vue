@@ -283,7 +283,7 @@ let ViewDetail = (business_data) => {
 
 
                     <div v-else class="text-center py-4 text-gray-800">
-                        No invites yet.
+                        No Business yet.
                     </div>
                 </div>
             </div>
@@ -293,10 +293,8 @@ let ViewDetail = (business_data) => {
             @close="addBusinessModal = false" :reIniteAgent="reIniteAgent" />
 
 
-        <!-- <Modal :show="viewDetailModal" @close="viewDetailModal = false"> -->
         <ViewDetailCom v-if="viewDetailModal" :viewDetailModal="viewDetailModal" @close="viewDetailModal = false"
             :businessData="businessData" />
-        <!-- </Modal> -->
 
 
     </AuthenticatedLayout>

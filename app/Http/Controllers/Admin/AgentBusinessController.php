@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Inertia\Inertia;
 
-class AgentMyBusinessController extends Controller
+class AgentBusinessController extends Controller
 {
     public function index(Request $request)
     {
