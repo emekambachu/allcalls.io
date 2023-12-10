@@ -106,15 +106,15 @@ console.log('form', form);
 
         <div class="grid my-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1">
             <div class="flex">
-                 <div >EF Number:</div>
+                 <div><strong>EF Number:</strong></div>
                 <div class="ml-2"><strong>{{ form.ef_number }} </strong></div>
             </div>
             <div class="flex">
-                <div ><strong>Upline Manager:</strong></div>
+                <div><strong>Upline Manager:</strong></div>
                 <div class="ml-2">{{ form.upline_manager === 'Select' ? '' : form.upline_manager }} </div>
             </div>
             <div class="flex">
-                <div ><strong>split sale:</strong></div>
+                <div><strong>Split sale:</strong></div>
                 <div class="ml-2">{{ form.split_sale === 'Select' ? '' : form.split_sale }} </div>
             </div>
         </div>
@@ -122,11 +122,11 @@ console.log('form', form);
 
         <div class="grid my-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1">
             <div class="flex">
-                 <div >split sale Type:</div>
+                 <div><strong>Split Sale Type:</strong></div>
                 <div class="ml-2"><strong>{{ form.split_sale_type === 'Select' ? '' : form.split_sale_type }} </strong></div>
             </div>
             <div class="flex">
-                <div ><strong>split Agent Email:</strong></div>
+                <div><strong>Split Agent Email:</strong></div>
                 <div class="ml-2">{{ form.split_agent_email  }} </div>
             </div>
             <div class="flex">
@@ -138,11 +138,11 @@ console.log('form', form);
 
         <div class="grid my-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1">
             <div class="flex">
-                 <div >Policy Draft Date:</div>
+                 <div><strong>Policy Draft Date:</strong></div>
                 <div class="ml-2"><strong>{{ formatDate(form.policy_draft_date) }} </strong></div>
             </div>
             <div class="flex">
-                <div ><strong>First Name:</strong></div>
+                <div><strong>First Name:</strong></div>
                 <div class="ml-2">{{ form.first_name  }} </div>
             </div>
             <div class="flex">
@@ -159,7 +159,7 @@ console.log('form', form);
                 <div class="ml-2">{{ form.mi  }} </div>
             </div>
             <div class="flex">
-                 <div >Annual Target Premium:</div>
+                 <div><strong>Annual Target Premium:</strong></div>
                 <div class="ml-2"><strong>{{ form.annual_target_premium}} </strong></div>
             </div>
             <div class="flex">
@@ -176,7 +176,7 @@ console.log('form', form);
                 <div class="ml-2">{{ form.annual_excess_premium  }} </div>
             </div>
             <div class="flex">
-                 <div >Initial Investment Amount:</div>
+                 <div><strong>Initial Investment Amount:</strong></div>
                 <div class="ml-2"><strong>{{ form.intial_investment_amount}} </strong></div>
             </div>
             <div class="flex">
@@ -227,7 +227,7 @@ console.log('form', form);
                 <div class="ml-2">{{ form.client_street_address_1  }} </div>
             </div>
             <div class="flex">
-                 <div >Street Address 2:</div>
+                 <div><strong>Street Address 2:</strong></div>
                 <div class="ml-2"><strong>{{ form.client_street_address_2}} </strong></div>
             </div>
             <div class="flex">
@@ -244,7 +244,7 @@ console.log('form', form);
                 <div class="ml-2">{{ form.client_state === 'Select' ? '' : form.client_state  }} </div>
             </div>
             <div class="flex">
-                 <div >Zip-code:</div>
+                 <div><strong>Zip-code:</strong></div>
                 <div class="ml-2"><strong>{{ form.client_zipcode}} </strong></div>
             </div>
             <div class="flex">
