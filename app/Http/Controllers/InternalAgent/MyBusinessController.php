@@ -8,7 +8,7 @@ use App\Models\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
-use Carbon\Carbon;  
+use Carbon\Carbon;
 
 class MyBusinessController extends Controller
 {
@@ -45,19 +45,18 @@ class MyBusinessController extends Controller
             'product_name' => 'required',
             'application_date' => 'required',
             'coverage_amount' => 'required|numeric',
-            'coverage_length' => 'required|in:N/A,3 Years,5 Years,5 Years w/ 5 Year Guaranty,5 Years w/ ROP,7 Years,10 Years,15 Years,15 Years w/ ROP,20 Years,20 Years w/ 5 Year Guaranty,20 Years w/ ROP,25 Years,25 Years w/ ROP,30 Years,30 Years w/ 5 Year Guaranty,30 Years w/ ROP',
+            'coverage_length' => 'required|in:N/A,3 Years,5 Years,5 Years w/ 5 Year Guaranty,5 Years w/ ROP,7 Years,10 Years,15 Years,15 Years w/ ROP,20 Years,20 Years w/ 5 Year Guaranty,20 Years w/ ROP,25 Years,25 Years w/ ROP,30 Years,30 Years w/ 5 Year Guaranty,30 Years w/ ROP/Whole Life',
             'premium_frequency' => 'required',
             'premium_amount' => 'required|numeric',
             'premium_volumn' => 'required|numeric',
-            'equis_writing_number_carrier' => 'nullable',
             'this_app_from_lead' => 'required',
             'appointment_type' => 'required',
             'policy_draft_date' => 'required',
             'first_name' => 'required',
             'mi' => 'nullable',
-            'annual_target_premium' => 'required|numeric', 
-            'annual_planned_premium' => 'required|numeric', 
-            'annual_excess_premium' => 'required|numeric', 
+            'annual_target_premium' => 'required|numeric',
+            'annual_planned_premium' => 'required|numeric',
+            'annual_excess_premium' => 'required|numeric',
             'intial_investment_amount' => 'required|numeric',
             'refer_another_agent' => 'required',
             'this_an_sdic' => 'required',
@@ -81,7 +80,7 @@ class MyBusinessController extends Controller
                 'errors' => $validate->errors(),
             ], 400);
         }
-        
+
         InternalAgentMyBusiness::create([
             'agent_id' => auth()->user()->id,
             'agent_full_name' => $request->agent_full_name,
@@ -99,15 +98,14 @@ class MyBusinessController extends Controller
             'premium_frequency' => $request->premium_frequency,
             'premium_amount' => $request->premium_amount,
             'premium_volumn' => $request->premium_volumn,
-            'equis_writing_number_carrier' => $request->equis_writing_number_carrier == "YES" ? 1 : 0,
-            'carrier_writing_number' => $request->equis_writing_number_carrier == "YES" ? $request->carrier_writing_number : null,
+            'carrier_writing_number' => $request->carrier_writing_number ,
             'this_app_from_lead' => $request->this_app_from_lead,
-            'source_of_lead' => $request->source_of_lead,
+            'source_of_lead' => $request->this_app_from_lead == 'NO' ? null : $request->source_of_lead,
             'appointment_type' => $request->appointment_type,
             'policy_draft_date' => Carbon::parse($request->policy_draft_date),
             'first_name' => $request->first_name,
             'mi' => $request->mi,
-            'annual_target_premium' => $request->annual_target_premium, 
+            'annual_target_premium' => $request->annual_target_premium,
             'annual_planned_premium' => $request->annual_planned_premium,
             'annual_excess_premium' => $request->annual_excess_premium,
             'intial_investment_amount' => $request->intial_investment_amount,

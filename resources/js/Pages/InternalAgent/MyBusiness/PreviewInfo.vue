@@ -82,8 +82,8 @@ console.log('form', form);
                 <div class="ml-2">{{ form.premium_volumn }} </div>
             </div>
             <div class="flex">
-                <div ><strong>Equis writing number:</strong></div>
-                <div class="ml-2">{{ form.equis_writing_number_carrier === 'Select' ? '' : form.equis_writing_number_carrier }} </div>
+                <!-- <div ><strong>Equis writing number:</strong></div>
+                <div class="ml-2">{{ form.equis_writing_number_carrier === 'Select' ? '' : form.equis_writing_number_carrier }} </div> -->
             </div>
         </div>
         <hr >
@@ -99,22 +99,22 @@ console.log('form', form);
             </div>
             <div class="flex">
                 <div ><strong>Source of the lead:</strong></div>
-                <div class="ml-2">{{ form.source_of_lead }} </div>
+                <div class="ml-2">{{ form.this_app_from_lead === 'YES' ? form.source_of_lead:"" }} </div>
             </div>
         </div>
         <hr >
 
         <div class="grid my-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1">
             <div class="flex">
-                 <div >EF Number:</div>
+                 <div><strong>EF Number:</strong></div>
                 <div class="ml-2"><strong>{{ form.ef_number }} </strong></div>
             </div>
             <div class="flex">
-                <div ><strong>Upline Manager:</strong></div>
+                <div><strong>Upline Manager:</strong></div>
                 <div class="ml-2">{{ form.upline_manager === 'Select' ? '' : form.upline_manager }} </div>
             </div>
             <div class="flex">
-                <div ><strong>split sale:</strong></div>
+                <div><strong>Split sale:</strong></div>
                 <div class="ml-2">{{ form.split_sale === 'Select' ? '' : form.split_sale }} </div>
             </div>
         </div>
@@ -122,11 +122,11 @@ console.log('form', form);
 
         <div class="grid my-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1">
             <div class="flex">
-                 <div >split sale Type:</div>
+                 <div><strong>Split Sale Type:</strong></div>
                 <div class="ml-2"><strong>{{ form.split_sale_type === 'Select' ? '' : form.split_sale_type }} </strong></div>
             </div>
             <div class="flex">
-                <div ><strong>split Agent Email:</strong></div>
+                <div><strong>Split Agent Email:</strong></div>
                 <div class="ml-2">{{ form.split_agent_email  }} </div>
             </div>
             <div class="flex">
@@ -138,18 +138,18 @@ console.log('form', form);
 
         <div class="grid my-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1">
             <div class="flex">
-                 <div >Policy Draft Date:</div>
+                 <div><strong>Policy Draft Date:</strong></div>
                 <div class="ml-2"><strong>{{ formatDate(form.policy_draft_date) }} </strong></div>
             </div>
             <div class="flex">
-                <div ><strong>First Name:</strong></div>
+                <div><strong>First Name:</strong></div>
                 <div class="ml-2">{{ form.first_name  }} </div>
             </div>
             <div class="flex">
                 <div ><strong>Last Name:</strong></div>
                 <div class="ml-2">{{ form.last_name  }} </div>
             </div>
-            
+
         </div>
         <hr >
 
@@ -159,14 +159,14 @@ console.log('form', form);
                 <div class="ml-2">{{ form.mi  }} </div>
             </div>
             <div class="flex">
-                 <div >Annual Target Premium:</div>
+                 <div><strong>Annual Target Premium:</strong></div>
                 <div class="ml-2"><strong>{{ form.annual_target_premium}} </strong></div>
             </div>
             <div class="flex">
                 <div ><strong>Annual Planned Premium:</strong></div>
                 <div class="ml-2">{{ form.annual_planned_premium  }} </div>
             </div>
-            
+
         </div>
         <hr >
 
@@ -176,25 +176,25 @@ console.log('form', form);
                 <div class="ml-2">{{ form.annual_excess_premium  }} </div>
             </div>
             <div class="flex">
-                 <div >Initial Investment Amount:</div>
+                 <div><strong>Initial Investment Amount:</strong></div>
                 <div class="ml-2"><strong>{{ form.intial_investment_amount}} </strong></div>
             </div>
             <div class="flex">
                 <div ><strong>Did another agent refer this application to you?:</strong></div>
-                <div class="ml-2">{{ form.refer_another_agent  }} </div>
+                <div class="ml-2">{{ form.refer_another_agent === 1 ? 'YES' : 'NO' }} </div>
             </div>
-            
+
         </div>
         <hr >
 
         <div class="grid my-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1">
             <div class="flex">
                 <div ><strong>Is this AN SDIC?:</strong></div>
-                <div class="ml-2">{{ form.this_an_sdic  }} </div>
+                <div class="ml-2">{{ form.this_an_sdic === 1 ? 'YES' : 'NO' }} </div>
             </div>
             <div class="flex">
-                 <div >Will there be a recurring premium?:</div>
-                <div class="ml-2"><strong>{{ form.recurring_premium}} </strong></div>
+                 <div><strong>Will there be a recurring premium?:</strong></div>
+                <div class="ml-2"><strong>{{ form.recurring_premium === 1 ? 'YES' : 'NO' }} </strong></div>
             </div>
             <div class="flex">
                 <div ><strong>Date of Birth:</strong></div>
@@ -209,10 +209,10 @@ console.log('form', form);
                 <div class="ml-2">{{ form.gender === 'Select' ? '' : form.gender  }} </div>
             </div>
             <div class="flex">
-                
+
             </div>
             <div class="flex">
-               
+
             </div>
         </div>
         <hr >
@@ -227,7 +227,7 @@ console.log('form', form);
                 <div class="ml-2">{{ form.client_street_address_1  }} </div>
             </div>
             <div class="flex">
-                 <div >Street Address 2:</div>
+                 <div><strong>Street Address 2:</strong></div>
                 <div class="ml-2"><strong>{{ form.client_street_address_2}} </strong></div>
             </div>
             <div class="flex">
@@ -244,7 +244,7 @@ console.log('form', form);
                 <div class="ml-2">{{ form.client_state === 'Select' ? '' : form.client_state  }} </div>
             </div>
             <div class="flex">
-                 <div >Zip-code:</div>
+                 <div><strong>Zip-code:</strong></div>
                 <div class="ml-2"><strong>{{ form.client_zipcode}} </strong></div>
             </div>
             <div class="flex">
@@ -260,14 +260,11 @@ console.log('form', form);
                 <div class="ml-2">{{ form.client_email   }} </div>
             </div>
             <div class="flex">
-                 
+
             </div>
             <div class="flex">
-                
+
             </div>
         </div>
-        <hr >
-
-
-
+        <hr>
 </div></template>
