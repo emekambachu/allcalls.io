@@ -377,7 +377,7 @@ let applyFilter = () => {
   console.log('Label: ', label);
 
   appliedFilters.value.push({
-    label: filterName.value,
+    label: label,
     name: filterName.value,
     value: filterValue.value,
     operator: filterOperator.value,
