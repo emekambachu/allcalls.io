@@ -579,11 +579,7 @@ let operatorsForTheSelectedFilter = computed(() => {
           <label class="block mb-2 text-sm font-medium text-gray-900">Operator:</label>
 
           <select v-model="filterOperator" class="select-custom border border-gray-200">
-            <option>is</option>
-            <option>is greater than</option>
-            <option>is less than</option>
-            <option>is greater than or equal to</option>
-            <option>is less than or equal to</option>
+            <option v-for="(operator, index) in operatorsForTheSelectedFilter" :key="index">{{ operator }}</option>
           </select>
         </div>
 
