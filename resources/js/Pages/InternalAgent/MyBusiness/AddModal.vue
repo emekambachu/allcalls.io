@@ -4,7 +4,7 @@ import GuestTextInput from "@/Components/GuestTextInput.vue";
 import GuestInputLabel from "@/Components/GuestInputLabel.vue";
 import PreviewInfo from "@/Pages/InternalAgent/MyBusiness/PreviewInfo.vue";
 import { toaster } from "@/helper.js";
-import { Head, router, usePage } from "@inertiajs/vue3";
+import { Head, router, usePage } from "@inertiajs/vue3";    
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 
 
