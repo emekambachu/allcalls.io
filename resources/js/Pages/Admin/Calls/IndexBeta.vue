@@ -343,20 +343,7 @@ let filters = ref([
   },
 ]);
 
-let appliedFilters = ref([
-  {
-    label: "Call Duration",
-    name: "call_duration_in_seconds",
-    value: "12",
-    operator: "is greater than",
-  },
-  {
-    label: "Revenue",
-    name: "amount_spent",
-    value: "500",
-    operator: "is less than or equal to",
-  },
-])
+let appliedFilters = ref([])
 
 let showNewFilterModal = ref(false);
 let filterName = ref("id");
