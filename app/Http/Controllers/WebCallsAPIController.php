@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Call;
+use App\Models\CallType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Foundation\Auth\User;
@@ -18,6 +19,7 @@ class WebCallsAPIController extends Controller
     protected $specialFilters = [
         'user_email' => 'applyUserEmailFilter',
         'user_role' => 'applyUserRoleFilter',
+        'vertical' => 'applyVerticalFilter',
     ];
 
     public function index(Request $request)
@@ -95,5 +97,16 @@ class WebCallsAPIController extends Controller
         } else {
             $query->whereNotIn('user_id', $userIds);
         }
+    }
+
+    protected function applyVerticalFilter($query, $filter)
+    {
+        $callType = CallType::where('type', $filter['value'])->first();
+
+        if (!$callType) {
+            return;
+        }
+
+        $query->where('call_type_id', $callType->id);
     }
 }
