@@ -131,7 +131,7 @@ let fetchagentInvites = (page) => {
 let viewDetailModal = ref(false)
 let businessData = ref(null)
 let ViewDetail = (business_data) => {
-    viewDetailModalviewDetailModal = business_data
+    businessData.value = business_data
     viewDetailModal.value = true
 }
 </script>
