@@ -353,7 +353,7 @@ let filters = ref([
     label: "CallerID",
     name: "from",
     operators: ["is"],
-    inputType: "mumber"
+    inputType: "text"
   },
 ]);
 
