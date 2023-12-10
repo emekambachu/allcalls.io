@@ -193,7 +193,7 @@ console.log('form', form);
                 <div class="ml-2">{{ form.this_an_sdic === 1 ? 'YES' : 'NO' }} </div>
             </div>
             <div class="flex">
-                 <div >Will there be a recurring premium?:</div>
+                 <div><strong>Will there be a recurring premium?:</strong></div>
                 <div class="ml-2"><strong>{{ form.recurring_premium === 1 ? 'YES' : 'NO' }} </strong></div>
             </div>
             <div class="flex">
