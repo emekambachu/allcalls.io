@@ -355,6 +355,12 @@ let filters = ref([
     operators: ["is"],
     inputType: "text"
   },
+  {
+    label: "User Email",
+    name: "user_email",
+    operators: ["is"],
+    inputType: "email"
+  },
 ]);
 
 let appliedFilters = ref([])
@@ -600,6 +606,10 @@ let inputTypeForTheSelectedFilter = computed(() => {
           </div>
 
           <div v-if="inputTypeForTheSelectedFilter === 'text'">
+            <TextInput class="border-gray-200" v-model="filterValue" type="text" />
+          </div>
+
+          <div v-if="inputTypeForTheSelectedFilter === 'email'">
             <TextInput class="border-gray-200" v-model="filterValue" type="text" />
           </div>
         </div>
