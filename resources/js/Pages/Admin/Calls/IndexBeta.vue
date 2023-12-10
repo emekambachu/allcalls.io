@@ -620,7 +620,7 @@ let inputTypeForTheSelectedFilter = computed(() => {
               <div class="w-3 h-0.5 bg-gray-200"></div>
             </div>
             <div>
-              <input class="bg-custom-blue text-sm rounded-lg focus:ring-blue-500 border border-transparent focus:border focus:border-blue-500 block w-full p-2.5 text-black outline-none" type="date">
+              <input style="background-color: #E8F0FE;" class="bg-custom-blue text-sm rounded-lg focus:ring-blue-500 border border-transparent focus:border focus:border-blue-500 block w-full p-2.5 text-black outline-none" type="date">
             </div>
           </div>
         </div>
