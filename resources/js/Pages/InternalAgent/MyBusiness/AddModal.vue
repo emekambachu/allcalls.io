@@ -31,11 +31,6 @@ let page = usePage();
 let form = ref({
   agent_full_name: page.props.auth.user.first_name + ' ' + page.props.auth.user.last_name,
   agent_email: page.props.auth.user.email,
-  ef_number: "",
-  upline_manager: "Select",
-  split_sale: "Select",
-  split_sale_type: "Select",
-  split_agent_email: "",
   insurance_company: "AETNA/CVS",
   product_name: "Select",
   application_date: "",
@@ -47,17 +42,9 @@ let form = ref({
   carrier_writing_number: '',
   this_app_from_lead: "Select",
   source_of_lead: 'Select',
-  appointment_type: 'Select',
   policy_draft_date: '',
   first_name: '',
   mi: '',
-  annual_target_premium: '',
-  annual_planned_premium: '',
-  annual_excess_premium: '',
-  intial_investment_amount: '',
-  refer_another_agent: 'Select',
-  this_an_sdic: 'Select',
-  recurring_premium: 'Select',
   last_name: '',
   dob: '',
   gender: 'Select',
@@ -65,6 +52,7 @@ let form = ref({
   client_street_address_2: '',
   client_city: '',
   client_state: 'Select',
+  client_state_name: '',
   client_zipcode: '',
   client_phone_no: '',
   client_email: '',
@@ -1634,12 +1622,10 @@ let checkRequiredField = () => {
     }
   }
   let requiredFields = [
-    "agent_full_name", 'agent_email', "ef_number", "upline_manager", 'split_sale',
-    "split_agent_email", "insurance_company", "product_name", "application_date", "coverage_amount", "coverage_length",
+    "insurance_company", "product_name", "application_date", "coverage_amount", "coverage_length",
     "premium_frequency", 'premium_amount', 'premium_volumn',
-    "this_app_from_lead", "appointment_type", "policy_draft_date", "first_name", "mi",
-    "annual_target_premium", "annual_planned_premium", "annual_excess_premium", "intial_investment_amount",
-    "refer_another_agent", "this_an_sdic", "recurring_premium", "last_name", "dob", "gender", "client_street_address_1",
+    "this_app_from_lead", "policy_draft_date", "first_name",
+    "last_name", "dob", "gender", "client_street_address_1",
     "client_street_address_2", "client_city", "client_state", "client_zipcode", "client_phone_no", "client_email",
   ]
   const addFieldIfPresent = (field, condition, value) => {
@@ -1647,7 +1633,6 @@ let checkRequiredField = () => {
       requiredFields = [...new Set([...requiredFields, value])];
     }
   };
-  addFieldIfPresent('split_sale_type', form.value.split_sale === "YES", 'split_sale_type');
   addFieldIfPresent('source_of_lead', form.value.this_app_from_lead === "YES", 'source_of_lead');
 
 
@@ -1737,8 +1722,9 @@ let SaveBussinessData = async () => {
 let close = () => {
   emits("close");
 };
-let StateChange = (state) => {
-  console.log('');
+let StateChange = () => {
+  let selectedState = props.states.find(state => state.id === form.value.client_state)
+  form.value.client_state_name = selectedState.full_name
 }
 let maxDate = ref(new Date)
 maxDate.value.setHours(23, 59, 59, 999);
@@ -1762,30 +1748,34 @@ let ChangeFrequency = (frequency) => {
   }
   setAnnualPremium()
 }
-watch(()=> form.value.premium_frequency , (newVal)=> {
-  if(newVal){
+watch(() => form.value.premium_frequency, (newVal) => {
+  if (newVal) {
     setAnnualPremium()
   }
 })
-watch(()=> form.value.premium_amount , (newVal)=> {
-  if(newVal){
+watch(() => form.value.premium_amount, (newVal) => {
+  if (newVal) {
     setAnnualPremium()
-  }else{
+  } else {
     form.value.premium_volumn = ''
   }
 })
 let setAnnualPremium = () => {
   if (form.value.premium_amount && numberOfmonth.value) {
-    form.value.premium_volumn = Number(form.value.premium_amount) * numberOfmonth.value 
+    form.value.premium_volumn = Number(form.value.premium_amount) * numberOfmonth.value
   }
 }
 let CurrencyValidation = (val, fieldName) => {
   form.value[fieldName] = val.replace(/[^0-9]/g, '');
 }
 let changeAppLead = () => {
-  form.value.this_app_from_lead 
-  if(form.value.this_app_from_lead == 'NO'){
+  if (form.value.this_app_from_lead == 'NO') {
     form.value.source_of_lead = 'Select'
+  }
+}
+let changeSpliteScalte = () => {
+  if (form.value.split_sale == 'NO') {
+    form.value.split_sale_type = 'Select'
   }
 }
 </script>
@@ -1878,33 +1868,158 @@ let changeAppLead = () => {
               <form @submit.prevent="" class="question-card-list">
                 <div class="question-card animate__animated" style="position: relative">
                   <div v-show="step == 1">
-                    <h1 style="background-color: #134576;" class="mb-4	text-center rounded-md py-2 text-white">
-                      Agent Information
+
+                    <h1 style="background-color: #134576;" class="my-5	text-center rounded-md py-2 text-white">
+                      Client Information
                     </h1>
+
                     <div class="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-x-8">
+
                       <div>
-                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Full Name<span
+                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">First Name<span
                             class="text-red-400">*</span></label>
-                        <input v-model="form.agent_full_name" type="text" id="full name"
+                        <input v-model="form.first_name" type="text" id="first_name"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="" required />
-                        <div v-if="firstStepErrors.agent_full_name" class="text-red-500"
-                          v-text="firstStepErrors.agent_full_name[0]">
+                        <div v-if="firstStepErrors.first_name" class="text-red-500"
+                          v-text="firstStepErrors.first_name[0]">
                         </div>
-                        <div v-if="firstStepErrors.business_name" class="text-red-500"
-                          v-text="firstStepErrors.business_name[0]">
+                      </div>
+
+                      <div>
+                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">MI</label>
+                        <input v-model="form.mi" type="text" id="mi"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          placeholder="" required />
+                        <div v-if="firstStepErrors.mi" class="text-red-500" v-text="firstStepErrors.mi[0]"></div>
+                      </div>
+
+                      <div>
+                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Last Name<span
+                            class="text-red-400">*</span></label>
+                        <input v-model="form.last_name" type="text" id="last_name"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          placeholder="" required />
+                        <div v-if="firstStepErrors.last_name" class="text-red-500" v-text="firstStepErrors.last_name[0]">
+                        </div>
+                      </div>
+
+                      <div>
+                        <label for="EFNumber"
+                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Street
+                          Address 1<span class="text-red-400">*</span></label>
+                        <input v-model="form.client_street_address_1" type="text" id="client_street_address_1"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          placeholder="" required />
+                        <div v-if="firstStepErrors.client_street_address_1" class="text-red-500"
+                          v-text="firstStepErrors.client_street_address_1[0]"></div>
+                      </div>
+
+                      <div>
+                        <label for="EFNumber"
+                          class="block mb-2 mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Street
+                          Address 2<span class="text-red-400">*</span></label>
+                        <input v-model="form.client_street_address_2" type="text" id="client_street_address_2"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          placeholder="" required />
+                        <div v-if="firstStepErrors.client_street_address_2" class="text-red-500"
+                          v-text="firstStepErrors.client_street_address_2[0]"></div>
+                      </div>
+
+                      <div>
+                        <label for="EFNumber"
+                          class="block mb-2 mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">City<span
+                            class="text-red-400">*</span></label>
+                        <input v-model="form.client_city" type="text" id="client_city"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          placeholder="" required />
+                        <div v-if="firstStepErrors.client_city" class="text-red-500"
+                          v-text="firstStepErrors.client_city[0]">
+                        </div>
+                      </div>
+
+                      <div>
+
+                        <label for="EFNumber"
+                          class="block mb-2 mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">State<span
+                            class="text-red-400">*</span></label>
+                        <select v-model="form.client_state" @change="StateChange(this)" id="countries"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                          <option disabled>Select</option>
+                          <option v-for="state in states" :value="state.id">{{ state.full_name }}</option>
+                        </select>
+                        <div v-if="firstStepErrors.client_state" class="text-red-500"
+                          v-text="firstStepErrors.client_state[0]">
                         </div>
                       </div>
                       <div>
-                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Agent
-                          Email<span class="text-red-400">*</span></label>
-                        <input v-model="form.agent_email" type="text" id="Email"
+
+                        <label for=""
+                          class="block mb-2 mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Zip-code<span
+                            class="text-red-400">*</span></label>
+                        <input v-model="form.client_zipcode"
+                          @input="enforceFiveDigitInput(form.client_zipcode, 'client_zipcode')" type="text"
+                          id="client_zipcode"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="" required />
-                        <div v-if="firstStepErrors.agent_email" class="text-red-500"
-                          v-text="firstStepErrors.agent_email[0]">
+                        <div v-if="firstStepErrors.client_zipcode" class="text-red-500"
+                          v-text="firstStepErrors.client_zipcode[0]"></div>
+                      </div>
+                      <div>
+
+                        <label for="EFNumber"
+                          class="block mt-5 text-sm mb-2 font-medium text-gray-900  dark:text-black">Client
+                          Phone Number<span class="text-red-400">*</span></label>
+
+                        <input v-model="form.client_phone_no" type="text" maxLength="15"
+                          @input="CurrencyValidation(form.client_phone_no, 'client_phone_no')"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          placeholder="" required />
+                        <div v-if="firstStepErrors.client_phone_no" class="text-red-500"
+                          v-text="firstStepErrors.client_phone_no[0]"></div>
+                      </div>
+
+                      <div>
+
+                        <label for="EFNumber"
+                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Client
+                          Email<span class="text-red-400">*</span></label>
+                        <input v-model="form.client_email" type="text" id="client_email"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          placeholder="" required />
+                        <div v-if="firstStepErrors.client_email" class="text-red-500"
+                          v-text="firstStepErrors.client_email[0]">
                         </div>
                       </div>
+
+                      <div>
+                        <label for="EFNumber"
+                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Gender<span
+                            class="text-red-400">*</span></label>
+
+                        <select v-model="form.gender" id="countries"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                          <option disabled>Select</option>
+                          <option value="Male">Male</option>
+                          <option value="Female">Female</option>
+                          <option value="Other">Other</option>
+                        </select>
+                        <div v-if="firstStepErrors.gender" class="text-red-500" v-text="firstStepErrors.gender[0]">
+                        </div>
+                      </div>
+
+                      <div>
+                        <label for="EFNumber"
+                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Date of
+                          Birth<span class="text-red-400">*</span></label>
+
+                        <VueDatePicker v-model="form.dob" format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply>
+                        </VueDatePicker>
+                        <div v-if="firstStepErrors.dob" class="text-red-500" v-text="firstStepErrors.dob[0]"></div>
+                      </div>
+
+
+
                     </div>
 
                     <h1 style="background-color: #134576;" class="my-5	text-center rounded-md py-2 text-white">
@@ -2066,94 +2181,6 @@ let changeAppLead = () => {
                         <div v-if="firstStepErrors.source_of_lead" class="text-red-500"
                           v-text="firstStepErrors.source_of_lead[0]"></div>
                       </div>
-                    </div>
-
-                    <h1 style="background-color: #134576;" class="my-5	text-center rounded-md py-2 text-white">
-                      Application Type
-                    </h1>
-                    <div class="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-x-8">
-                      <div>
-                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Enter Your FULL
-                          EF
-                          Number. EXAMPLE: EF123456<span class="text-red-400">*</span></label>
-                        <input v-model="form.ef_number" type="text" id="ef_number"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                          placeholder="" required />
-                        <div v-if="firstStepErrors.ef_number" class="text-red-500" v-text="firstStepErrors.ef_number[0]">
-                        </div>
-                      </div>
-
-                      <div>
-                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Select Your
-                          Upline
-                          Manager<span class="text-red-400">*</span></label>
-                        <select v-model="form.upline_manager" id="countries"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                          <option disabled>Select</option>
-                          <option v-for="uplineManager in uplineManagerArray" :value="uplineManager.text">
-                            {{ uplineManager.text }}
-                          </option>
-                        </select>
-
-                        <div v-if="firstStepErrors.upline_manager" class="text-red-500"
-                          v-text="firstStepErrors.upline_manager[0]"></div>
-                      </div>
-
-                      <div>
-                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Was this a
-                          split
-                          sale?<span class="text-red-400">*</span></label>
-                        <select v-model="form.split_sale" id="countries"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                          <option disabled>Select</option>
-                          <option value="YES">YES</option>
-                          <option value="NO">NO</option>
-                        </select>
-                        <div v-if="firstStepErrors.split_sale" class="text-red-500"
-                          v-text="firstStepErrors.split_sale[0]">
-                        </div>
-                      </div>
-
-                      <div>
-                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Choose Type of
-                          Split
-                          Sale<span class="text-red-400">*</span></label>
-                        <select v-model="form.split_sale_type" id="countries"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                          <option disabled>Select</option>
-                          <option value="Transfer Program">Transfer Program</option>
-                          <option value="Callback Lead">Callback Lead</option>
-                          <option value="Internet Leads">Internet Leads</option>
-                          <option value="Opt Leads">Opt Leads</option>
-                          <option value="Referral">Referral</option>
-                        </select>
-                        <div v-if="firstStepErrors.split_sale_type" class="text-red-500"
-                          v-text="firstStepErrors.split_sale_type[0]"></div>
-                      </div>
-
-                      <div>
-                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Split Agent
-                          Email<span class="text-red-400">*</span></label>
-                        <input v-model="form.split_agent_email" type="text" id="Email"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                          placeholder="" required />
-                        <div v-if="firstStepErrors.split_agent_email" class="text-red-500"
-                          v-text="firstStepErrors.split_agent_email[0]">
-                        </div>
-                      </div>
-                      <div>
-                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Was this
-                          appointment
-                          virtual or face-to-face?<span class="text-red-400">*</span></label>
-                        <select v-model="form.appointment_type" id="countries"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                          <option disabled>Select</option>
-                          <option value="Virtual">Virtual</option>
-                          <option value="Face to face">Face to face</option>
-                        </select>
-                        <div v-if="firstStepErrors.appointment_type" class="text-red-500"
-                          v-text="firstStepErrors.appointment_type[0]"></div>
-                      </div>
 
                       <div>
                         <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">What Is the
@@ -2166,276 +2193,7 @@ let changeAppLead = () => {
                           v-text="firstStepErrors.policy_draft_date[0]"></div>
                       </div>
 
-
-
-
-
-                      <div>
-                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Annual Target
-                          Premium<span class="text-red-400">*</span></label>
-                        <input v-model="form.annual_target_premium"
-                          @input="CurrencyValidation(form.annual_target_premium, 'annual_target_premium')" type="text"
-                          id="text"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                          placeholder="$ 0.00" required />
-                        <div v-if="firstStepErrors.annual_target_premium" class="text-red-500"
-                          v-text="firstStepErrors.annual_target_premium[0]"></div>
-                      </div>
-
-                      <div>
-                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Annual Planned
-                          Premium<span class="text-red-400">*</span></label>
-                        <input v-model="form.annual_planned_premium"
-                          @input="CurrencyValidation(form.annual_planned_premium, 'annual_planned_premium')" type="text"
-                          id="text"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                          placeholder="$ 0.00" required />
-                        <div v-if="firstStepErrors.annual_planned_premium" class="text-red-500"
-                          v-text="firstStepErrors.annual_planned_premium[0]"></div>
-                      </div>
-
-                      <div>
-                        <label for="EFNumber"
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Annual
-                          Excess Premium<span class="text-red-400">*</span></label>
-                        <input v-model="form.annual_excess_premium"
-                          @input="CurrencyValidation(form.annual_excess_premium, 'annual_excess_premium')" type="text"
-                          id="text"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                          placeholder="$ 0.00" required />
-                        <div v-if="firstStepErrors.annual_excess_premium" class="text-red-500"
-                          v-text="firstStepErrors.annual_excess_premium[0]"></div>
-                      </div>
-
-                      <div>
-                        <label for="EFNumber"
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Initial
-                          Investment Amount<span class="text-red-400">*</span></label>
-
-                        <input v-model="form.intial_investment_amount"
-                          @input="CurrencyValidation(form.intial_investment_amount, 'intial_investment_amount')"
-                          type="text" id="text"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                          placeholder="$ 0.00" required />
-                        <div v-if="firstStepErrors.intial_investment_amount" class="text-red-500"
-                          v-text="firstStepErrors.intial_investment_amount[0]"></div>
-                      </div>
-
-
-                      <div>
-
-                        <label for="EFNumber"
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Did
-                          another agent refer this application to you?<span class="text-red-400">*</span></label>
-
-                        <select v-model="form.refer_another_agent" id="countries"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                          <option disabled>Select</option>
-                          <option value="YES">YES</option>
-                          <option value="No">No</option>
-                        </select>
-                        <div v-if="firstStepErrors.refer_another_agent" class="text-red-500"
-                          v-text="firstStepErrors.refer_another_agent[0]"></div>
-                      </div>
-
-                      <div>
-
-                        <label for="EFNumber" class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Is
-                          this
-                          AN SDIC?<span class="text-red-400">*</span></label>
-
-                        <select v-model="form.this_an_sdic"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                          <option disabled>Select</option>
-                          <option value="YES">YES</option>
-                          <option value="No">No</option>
-                        </select>
-                        <div v-if="firstStepErrors.this_an_sdic" class="text-red-500"
-                          v-text="firstStepErrors.this_an_sdic[0]">
-                        </div>
-                      </div>
-
-
-                      <div>
-
-                        <label for="EFNumber"
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Will
-                          there be a recurring premium?<span class="text-red-400">*</span></label>
-
-                        <select v-model="form.recurring_premium"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                          <option disabled>Select</option>
-                          <option value="YES">YES</option>
-                          <option value="No">No</option>
-                        </select>
-                        <div v-if="firstStepErrors.recurring_premium" class="text-red-500"
-                          v-text="firstStepErrors.recurring_premium[0]"></div>
-                      </div>
-
-
-
-
-
                     </div>
-
-
-
-
-
-
-                    <h1 style="background-color: #134576;" class="my-5	text-center rounded-md py-2 text-white">
-                      Client Information
-                    </h1>
-
-                    <div class="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-x-8">
-
-                      <div>
-                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">First Name<span
-                            class="text-red-400">*</span></label>
-                        <input v-model="form.first_name" type="text" id="first_name"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                          placeholder="" required />
-                        <div v-if="firstStepErrors.first_name" class="text-red-500"
-                          v-text="firstStepErrors.first_name[0]">
-                        </div>
-                      </div>
-
-                      <div>
-                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Last Name<span
-                            class="text-red-400">*</span></label>
-                        <input v-model="form.last_name" type="text" id="last_name"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                          placeholder="" required />
-                        <div v-if="firstStepErrors.last_name" class="text-red-500" v-text="firstStepErrors.last_name[0]">
-                        </div>
-                      </div>
-
-                      <div>
-                        <label for="EFNumber"
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Street
-                          Address 1<span class="text-red-400">*</span></label>
-                        <input v-model="form.client_street_address_1" type="text" id="client_street_address_1"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                          placeholder="" required />
-                        <div v-if="firstStepErrors.client_street_address_1" class="text-red-500"
-                          v-text="firstStepErrors.client_street_address_1[0]"></div>
-                      </div>
-
-                      <div>
-                        <label for="EFNumber"
-                          class="block mb-2 mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Street
-                          Address 2<span class="text-red-400">*</span></label>
-                        <input v-model="form.client_street_address_2" type="text" id="client_street_address_2"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                          placeholder="" required />
-                        <div v-if="firstStepErrors.client_street_address_2" class="text-red-500"
-                          v-text="firstStepErrors.client_street_address_2[0]"></div>
-                      </div>
-
-                      <div>
-                        <label for="EFNumber"
-                          class="block mb-2 mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">City<span
-                            class="text-red-400">*</span></label>
-                        <input v-model="form.client_city" type="text" id="client_city"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                          placeholder="" required />
-                        <div v-if="firstStepErrors.client_city" class="text-red-500"
-                          v-text="firstStepErrors.client_city[0]">
-                        </div>
-                      </div>
-
-                      <div>
-
-                        <label for="EFNumber"
-                          class="block mb-2 mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">State<span
-                            class="text-red-400">*</span></label>
-                        <select v-model="form.client_state" @change="StateChange(state)" id="countries"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                          <option disabled>Select</option>
-                          <option v-for="state in states" :value="state.id">{{ state.full_name }}</option>
-                        </select>
-                        <div v-if="firstStepErrors.client_state" class="text-red-500"
-                          v-text="firstStepErrors.client_state[0]">
-                        </div>
-                      </div>
-                      <div>
-
-                        <label for=""
-                          class="block mb-2 mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Zip-code<span
-                            class="text-red-400">*</span></label>
-                        <input v-model="form.client_zipcode"
-                          @input="enforceFiveDigitInput(form.client_zipcode, 'client_zipcode')" type="text"
-                          id="client_zipcode"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                          placeholder="" required />
-                        <div v-if="firstStepErrors.client_zipcode" class="text-red-500"
-                          v-text="firstStepErrors.client_zipcode[0]"></div>
-                      </div>
-                      <div>
-
-                        <label for="EFNumber"
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900  dark:text-black">Client
-                          Phone Number<span class="text-red-400">*</span></label>
-
-                        <input v-model="form.client_phone_no" type="text" maxLength="15"
-                          @input="CurrencyValidation(form.client_phone_no, 'client_phone_no')"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                          placeholder="" required />
-                        <div v-if="firstStepErrors.client_phone_no" class="text-red-500"
-                          v-text="firstStepErrors.client_phone_no[0]"></div>
-                      </div>
-
-                      <div>
-
-                        <label for="EFNumber"
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Client
-                          Email<span class="text-red-400">*</span></label>
-                        <input v-model="form.client_email" type="text" id="client_email"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                          placeholder="" required />
-                        <div v-if="firstStepErrors.client_email" class="text-red-500"
-                          v-text="firstStepErrors.client_email[0]">
-                        </div>
-                      </div>
-
-                      <div>
-                        <label for="EFNumber"
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Gender<span
-                            class="text-red-400">*</span></label>
-
-                        <select v-model="form.gender" id="countries"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                          <option disabled>Select</option>
-                          <option value="Male">Male</option>
-                          <option value="Female">Female</option>
-                          <option value="Other">Other</option>
-                        </select>
-                        <div v-if="firstStepErrors.gender" class="text-red-500" v-text="firstStepErrors.gender[0]">
-                        </div>
-                      </div>
-
-                      <div>
-                        <label for="EFNumber"
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Date of
-                          Birth<span class="text-red-400">*</span></label>
-
-                        <VueDatePicker v-model="form.dob" format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply>
-                        </VueDatePicker>
-                        <div v-if="firstStepErrors.dob" class="text-red-500" v-text="firstStepErrors.dob[0]"></div>
-                      </div>
-
-                      <div>
-                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">MI<span
-                            class="text-red-400">*</span></label>
-                        <input v-model="form.mi" type="text" id="mi"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                          placeholder="" required />
-                        <div v-if="firstStepErrors.mi" class="text-red-500" v-text="firstStepErrors.mi[0]"></div>
-                      </div>
-
-                    </div>
-
-
                   </div>
 
                   <div v-show="step == 2">

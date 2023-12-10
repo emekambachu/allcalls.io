@@ -18,27 +18,12 @@ let formatDate = date => {
 
     return formattedDate;
 }
-console.log('form', form);
 </script>
 <template>
     <h1 style="font-size:30px;" class="text-gray-800 text-center text-xxl font-bold" v-text="heading"></h1>
     <br>
     <div style="width: 100%;">
-        <div class="grid my-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1">
-            <div class="flex">
-                <div class=""><strong>Agent Full Name:</strong></div>
-                <div class="ml-2">{{ form.agent_full_name }} </div>
-            </div>
-            <div class="flex">
-                <div ><strong>Agent Email:</strong></div>
-                <div class="ml-2">{{ form.agent_email }} </div>
-            </div>
-            <div class="flex">
-                <!-- <div >EF Number :</div>
-                <div class="ml-2"><strong>{{ form.ef_number }} </strong></div> -->
-            </div>
-        </div>
-        <hr >
+       
 
         <div class="grid my-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1">
             <div class="flex ">
@@ -103,39 +88,6 @@ console.log('form', form);
             </div>
         </div>
         <hr >
-
-        <div class="grid my-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1">
-            <div class="flex">
-                 <div><strong>EF Number:</strong></div>
-                <div class="ml-2"><strong>{{ form.ef_number }} </strong></div>
-            </div>
-            <div class="flex">
-                <div><strong>Upline Manager:</strong></div>
-                <div class="ml-2">{{ form.upline_manager === 'Select' ? '' : form.upline_manager }} </div>
-            </div>
-            <div class="flex">
-                <div><strong>Split sale:</strong></div>
-                <div class="ml-2">{{ form.split_sale === 'Select' ? '' : form.split_sale }} </div>
-            </div>
-        </div>
-        <hr >
-
-        <div class="grid my-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1">
-            <div class="flex">
-                 <div><strong>Split Sale Type:</strong></div>
-                <div class="ml-2"><strong>{{ form.split_sale_type === 'Select' ? '' : form.split_sale_type }} </strong></div>
-            </div>
-            <div class="flex">
-                <div><strong>Split Agent Email:</strong></div>
-                <div class="ml-2">{{ form.split_agent_email  }} </div>
-            </div>
-            <div class="flex">
-                <div ><strong>Appointment Type:</strong></div>
-                <div class="ml-2">{{ form.appointment_type === 'Select' ? '' : form.appointment_type }} </div>
-            </div>
-        </div>
-        <hr >
-
         <div class="grid my-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1">
             <div class="flex">
                  <div><strong>Policy Draft Date:</strong></div>
@@ -159,49 +111,18 @@ console.log('form', form);
                 <div class="ml-2">{{ form.mi  }} </div>
             </div>
             <div class="flex">
-                 <div><strong>Annual Target Premium:</strong></div>
-                <div class="ml-2"><strong>{{ form.annual_target_premium}} </strong></div>
-            </div>
-            <div class="flex">
-                <div ><strong>Annual Planned Premium:</strong></div>
-                <div class="ml-2">{{ form.annual_planned_premium  }} </div>
-            </div>
-
-        </div>
-        <hr >
-
-        <div class="grid my-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1">
-            <div class="flex">
-                <div ><strong>Annual Excess Premium:</strong></div>
-                <div class="ml-2">{{ form.annual_excess_premium  }} </div>
-            </div>
-            <div class="flex">
-                 <div><strong>Initial Investment Amount:</strong></div>
-                <div class="ml-2"><strong>{{ form.intial_investment_amount}} </strong></div>
-            </div>
-            <div class="flex">
-                <div ><strong>Did another agent refer this application to you?:</strong></div>
-                <div class="ml-2">{{ form.refer_another_agent === 1 ? 'YES' : 'NO' }} </div>
-            </div>
-
-        </div>
-        <hr >
-
-        <div class="grid my-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1">
-            <div class="flex">
-                <div ><strong>Is this AN SDIC?:</strong></div>
-                <div class="ml-2">{{ form.this_an_sdic === 1 ? 'YES' : 'NO' }} </div>
-            </div>
-            <div class="flex">
                  <div><strong>Will there be a recurring premium?:</strong></div>
-                <div class="ml-2"><strong>{{ form.recurring_premium === 1 ? 'YES' : 'NO' }} </strong></div>
+                 <div v-if="form.recurring_premium == 'YES'|| form.recurring_premium == 'NO'" class="ml-2">{{ form.recurring_premium  }} </div>
+                <div v-if="form.recurring_premium == 0|| form.recurring_premium == 1" class="ml-2">{{ form.recurring_premium == 1 ? 'YES' : 'NO' }} </div>
             </div>
             <div class="flex">
                 <div ><strong>Date of Birth:</strong></div>
                 <div class="ml-2">{{ formatDate(form.dob)  }} </div>
             </div>
+
         </div>
         <hr >
+
 
         <div class="grid my-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1">
             <div class="flex">
@@ -241,7 +162,7 @@ console.log('form', form);
         <div class="grid my-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1">
             <div class="flex">
                 <div ><strong>State:</strong></div>
-                <div class="ml-2">{{ form.client_state === 'Select' ? '' : form.client_state  }} </div>
+                <div class="ml-2">{{ form.client_state_name   }} </div>
             </div>
             <div class="flex">
                  <div><strong>Zip-code:</strong></div>

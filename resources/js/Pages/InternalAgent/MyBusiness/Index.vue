@@ -131,6 +131,10 @@ let fetchagentInvites = (page) => {
 let viewDetailModal = ref(false)
 let businessData = ref(null)
 let ViewDetail = (business_data) => {
+    let selectedState = states.find(state => state.id === business_data.client_state)
+    if (selectedState) {
+        business_data.client_state_name = selectedState.full_name;
+    }
     businessData.value = business_data
     viewDetailModal.value = true
 }
