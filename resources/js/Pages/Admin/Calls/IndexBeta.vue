@@ -111,6 +111,15 @@ let columns = ref([
       return call.from;
     },
   },
+  {
+    label: "User Email",
+    name: "user_email",
+    visible: false,
+    sortable: false,
+    render(call) {
+      return call.user_email;
+    },
+  }
 ]);
 
 let performSorting = () => {
