@@ -343,7 +343,7 @@ let filters = ref([
   {
     label: "ID",
     name: "id",
-    operators: ["is"],
+    operators: ["is", "is greater than", "is less than", "is greater than or equal to", "is less than or equal to"],
     inputType: "number",
   },
   {
