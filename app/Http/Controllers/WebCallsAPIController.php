@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Call;
+use App\Models\User;
 use App\Models\CallType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Foundation\Auth\User;
 
 class WebCallsAPIController extends Controller
 {
