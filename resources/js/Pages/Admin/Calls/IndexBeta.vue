@@ -385,6 +385,12 @@ let applyFilter = () => {
 
   showNewFilterModal.value = false;
 }
+
+let removeFilter = (index) => {
+  appliedFilters.value.splice(index, 1);
+
+  fetchCalls(true);
+}
 </script>
 
 <template>
@@ -526,20 +532,20 @@ let applyFilter = () => {
 
     <div class="pt-14 px-16 flex items-center mb-2">
       <div
-        v-for="filter in appliedFilters"
+        v-for="(filter, index) in appliedFilters"
         :key="filter.name"
-        class="rounded shadow mr-2 px-3 py-0.5 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md cursor-pointer"
+        class="rounded shadow mr-2 px-3 py-0.5 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md cursor-pointer flex items-center"
       >
         <span class="font-bold">{{ filter.label }}</span> {{ filter.operator }}
         <span class="font-bold">{{ filter.value }}</span>
+
+        <span class="cursor-pointer" @click.prevent="removeFilter(index)">&#x2715;</span>
       </div>
       <button
         class="rounded shadow mr-2 px-3 py-0.5 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md flex items-center"
         @click.prevent="showNewFilterModal = true"
       >
-        +
-
-        <span>&#x2715;</span>
+        + Add Filter
       </button>
     </div>
 
