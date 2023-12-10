@@ -598,6 +598,23 @@ let inputTypeForTheSelectedFilter = computed(() => {
     </div>
 
     <div class="pt-14 px-16 flex items-center mb-2">
+
+    <Popover class="relative mr-2">
+      <PopoverButton>
+        <button
+          type="button"
+          class="rounded shadow mr-2 px-3 py-1 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md flex items-center text-sm"
+        >
+          Any Date
+        </button>
+      </PopoverButton>
+
+      <PopoverPanel class="absolute z-10 w-40 -left-20">
+        <div class="border border-gray-100 p-3 shadow bg-white mt-2">
+          Select date here
+        </div>
+      </PopoverPanel>
+    </Popover>
       <div
         v-for="(filter, index) in appliedFilters"
         :key="filter.name"
