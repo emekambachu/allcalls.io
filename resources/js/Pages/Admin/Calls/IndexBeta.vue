@@ -148,7 +148,7 @@ let fetchCalls = async (replace = false) => {
   }
 
   // Append filters to the query string
-  filters.value.forEach((filter, index) => {
+  appliedFilters.value.forEach((filter, index) => {
     url += `&filters[${index}][name]=${encodeURIComponent(filter.name)}`;
     url += `&filters[${index}][value]=${encodeURIComponent(filter.value)}`;
     url += `&filters[${index}][operator]=${encodeURIComponent(filter.operator)}`;
