@@ -341,6 +341,16 @@ let filters = ref([
     name: "call_duration_in_seconds",
     operators: ["is", "is greater than", "is less than", "is greater than or equal to", "is less than or equal to"],
   },
+  {
+    label: "Revenue",
+    name: "amount_spent",
+    operators: ["is", "is greater than", "is less than", "is greater than or equal to", "is less than or equal to"],
+  },
+  {
+    label: "CallerID",
+    name: "from",
+    operators: ["is"],
+  },
 ]);
 
 let appliedFilters = ref([])
@@ -545,7 +555,7 @@ let applyFilter = () => {
         <div class="mb-3">
           <label class="block mb-2 text-sm font-medium text-gray-900">Filter:</label>
 
-          <select class="select-custom border border-gray-200">
+          <select v-model="filterName" class="select-custom border border-gray-200">
             <option v-for="(filter, index) in filters" :key="index" :value="filter.name">{{ filter.label }}</option>
           </select>
         </div>
