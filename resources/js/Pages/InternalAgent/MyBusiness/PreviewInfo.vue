@@ -95,11 +95,11 @@ console.log('form', form);
             </div>
             <div class="flex">
                 <div ><strong>App from a lead:</strong></div>
-                <div class="ml-2">{{ form.this_app_from_lead === 'Select' ? '' : form.this_app_from_lead }} </div>
+                <div class="ml-2">{{ form.this_app_from_lead == '0' ? 'NO' : 'YES' }} </div>
             </div>
             <div class="flex">
                 <div ><strong>Source of the lead:</strong></div>
-                <div class="ml-2">{{ form.source_of_lead }} </div>
+                <div class="ml-2">{{ form.source_of_lead === 'Select' ? '' : form.source_of_lead  }} </div>
             </div>
         </div>
         <hr >
@@ -111,11 +111,11 @@ console.log('form', form);
             </div>
             <div class="flex">
                 <div ><strong>Upline Manager:</strong></div>
-                <div class="ml-2">{{ form.upline_manager === 'Select' ? '' : form.upline_manager }} </div>
+                <div class="ml-2">{{ form.upline_manager == '' ? 'NO' : "YES" }} </div>
             </div>
             <div class="flex">
                 <div ><strong>split sale:</strong></div>
-                <div class="ml-2">{{ form.split_sale === 'Select' ? '' : form.split_sale }} </div>
+                <div class="ml-2">{{ form.split_sale == '0' ? 'NO' : "YES" }} </div>
             </div>
         </div>
         <hr >
@@ -181,7 +181,7 @@ console.log('form', form);
             </div>
             <div class="flex">
                 <div ><strong>Did another agent refer this application to you?:</strong></div>
-                <div class="ml-2">{{ form.refer_another_agent  }} </div>
+                <div class="ml-2">{{ form.refer_another_agent == '0' ? 'NO' : 'YES'  }} </div>
             </div>
             
         </div>
@@ -190,11 +190,11 @@ console.log('form', form);
         <div class="grid my-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1">
             <div class="flex">
                 <div ><strong>Is this AN SDIC?:</strong></div>
-                <div class="ml-2">{{ form.this_an_sdic  }} </div>
+                <div class="ml-2">{{ form.this_an_sdic == '0' ? 'NO' : 'YES'  }} </div>
             </div>
             <div class="flex">
                  <div >Will there be a recurring premium?:</div>
-                <div class="ml-2"><strong>{{ form.recurring_premium}} </strong></div>
+                <div class="ml-2"><strong>{{ form.recurring_premium == '0' ? 'NO' : 'YES'}} </strong></div>
             </div>
             <div class="flex">
                 <div ><strong>Date of Birth:</strong></div>
