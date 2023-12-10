@@ -181,7 +181,7 @@ console.log('form', form);
             </div>
             <div class="flex">
                 <div ><strong>Did another agent refer this application to you?:</strong></div>
-                <div class="ml-2">{{ form.refer_another_agent  }} </div>
+                <div class="ml-2">{{ form.refer_another_agent === 1 ? 'YES' : 'NO' }} </div>
             </div>
 
         </div>
@@ -190,11 +190,11 @@ console.log('form', form);
         <div class="grid my-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1">
             <div class="flex">
                 <div ><strong>Is this AN SDIC?:</strong></div>
-                <div class="ml-2">{{ form.this_an_sdic  }} </div>
+                <div class="ml-2">{{ form.this_an_sdic === 1 ? 'YES' : 'NO' }} </div>
             </div>
             <div class="flex">
                  <div >Will there be a recurring premium?:</div>
-                <div class="ml-2"><strong>{{ form.recurring_premium}} </strong></div>
+                <div class="ml-2"><strong>{{ form.recurring_premium === 1 ? 'YES' : 'NO' }} </strong></div>
             </div>
             <div class="flex">
                 <div ><strong>Date of Birth:</strong></div>
