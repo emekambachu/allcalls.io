@@ -373,6 +373,9 @@ let applyFilter = () => {
     operator: filterOperator.value,
   });
 
+  let label = filters.value.filter((f) => f.name === filterName.value)[0].label;
+  console.log('Label: ', label);
+
   appliedFilters.value.push({
     label: filterName.value,
     name: filterName.value,
