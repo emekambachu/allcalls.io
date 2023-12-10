@@ -626,6 +626,19 @@ let dateFilterTo = ref(null);
               <input v-model="dateFilterTo" style="background-color: #E8F0FE;" class="bg-custom-blue text-sm rounded-lg focus:ring-blue-500 border border-transparent focus:border focus:border-blue-500 block w-full p-2.5 text-black outline-none" type="date">
             </div>
           </div>
+
+          <div class="bg-gray-100 p-3 flex items-center w-full">
+            Today
+          </div>
+          <div class="bg-gray-100 p-3 flex items-center w-full">
+            Yesterday
+          </div>
+          <div class="bg-gray-100 p-3 flex items-center w-full">
+            This Week
+          </div>
+          <div class="bg-gray-100 p-3 flex items-center w-full">
+            This Month
+          </div>
         </div>
       </PopoverPanel>
     </Popover>
