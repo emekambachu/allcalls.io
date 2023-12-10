@@ -601,7 +601,7 @@ let inputTypeForTheSelectedFilter = computed(() => {
       <div
         v-for="(filter, index) in appliedFilters"
         :key="filter.name"
-        class="rounded shadow mr-2 px-3 py-0.5 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md cursor-pointer flex items-center"
+        class="rounded shadow mr-2 px-3 py-1 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md cursor-pointer flex items-center"
       >
         <span class="font-bold mr-2">{{ filter.label }}</span>
         <span class="mr-2">{{ filter.operator }}</span>
@@ -611,7 +611,7 @@ let inputTypeForTheSelectedFilter = computed(() => {
       </div>
 
       <button
-        class="rounded shadow mr-2 px-3 py-0.5 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md flex items-center text-sm"
+        class="rounded shadow mr-2 px-3 py-1 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md flex items-center text-sm"
         @click.prevent="showNewFilterModal = true"
       >
         + Add Filter
