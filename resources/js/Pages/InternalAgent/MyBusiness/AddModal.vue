@@ -1642,7 +1642,7 @@ let checkRequiredField = () => {
     }
   });
 
-  let emails = ['agent_email', 'split_agent_email', 'client_email']
+  let emails = ['agent_email',  'client_email']
   emails.forEach(fieldName => {
     if (!isValidEmail(form.value[fieldName])) {
       firstStepErrors.value[fieldName] = ["Invalid email format"];
@@ -1654,7 +1654,7 @@ let checkRequiredField = () => {
       firstStepErrors.value[fieldName] = ["Please enter a valid phone number."];
     }
   });
-  let numericFields = ['coverage_amount', 'premium_amount', 'premium_volumn', 'annual_target_premium', 'annual_planned_premium', 'annual_excess_premium', 'intial_investment_amount'];
+  let numericFields = ['coverage_amount', 'premium_amount', 'premium_volumn', ];
 
   numericFields.forEach(fieldName => {
     const fieldValue = form.value[fieldName];

@@ -195,15 +195,10 @@ let ViewDetail = (business_data) => {
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">APV (Annual Premium Volume)
                                     </th>
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">Coverage Amount</th>
-                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">Initial Annual Investment
-                                        Amount</th>
-                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">Target Premium</th>
-                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">Annual Base Plan Premium
-                                    </th>
+                                    
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">Status</th>
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">App Type</th>
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">Agent Name</th>
-                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">Upline Manager</th>
                                     <th scope="col" style="min-width: 100px;" class="px-4 py-3">Action</th>
                                 </tr>
                             </thead>
@@ -219,13 +214,9 @@ let ViewDetail = (business_data) => {
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.product_name"></td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.premium_volumn"></td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.coverage_amount"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.intial_investment_amount"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.annual_target_premium"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.annual_planned_premium"></td>
                                     <td class="text-gray-600 px-4 py-3">status</td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.source_of_lead"></td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.agent_full_name"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.upline_manager"></td>
                                     <td class="text-gray-600 px-4 py-3">
                                         <button class="text-blue-600" @click="ViewDetail(businesse)">view detail</button>
                                     </td>
