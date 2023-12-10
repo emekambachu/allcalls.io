@@ -25,14 +25,24 @@ class WebCallsAPIController extends Controller
             $sortDirection = $sortDirection === 'asc' ? 'asc' : 'desc';
             $query->orderBy($sortColumn, $sortDirection);
         }
+
+        $operatorMap = [
+            'is' => '=',
+            'is greater than' => '>',
+            'is less than' => '<',
+            'is greater than or equal to' => '>=',
+            'is less than or equal to' => '<=',
+        ];
     
         // Retrieve filters
         $filters = $request->input('filters', []);
+
         foreach ($filters as $filter) {
             if(isset($filter['name'], $filter['value'], $filter['operator'])) {
                 // Apply filter logic here
                 // Example for a simple where clause
                 // Check if the column exists in your model or handle it as needed
+                $filter['operator'] = $operatorMap[$filter['operator']];
                 $query->where($filter['name'], $filter['operator'], $filter['value']);
             }
         }
