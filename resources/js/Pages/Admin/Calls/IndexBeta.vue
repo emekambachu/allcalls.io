@@ -609,7 +609,7 @@ let inputTypeForTheSelectedFilter = computed(() => {
         </button>
       </PopoverButton>
 
-      <PopoverPanel class="absolute z-10 w-40 -left-20">
+      <PopoverPanel class="absolute z-10 w-40">
         <div class="border border-gray-100 p-3 shadow bg-white mt-2">
           Select date here
         </div>
