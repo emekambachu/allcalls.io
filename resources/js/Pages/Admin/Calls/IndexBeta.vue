@@ -370,6 +370,22 @@ let filters = ref([
     operators: ["is"],
     inputType: "email"
   },
+  {
+    label: "Role",
+    name: "user_role",
+    operators: ["is"],
+    inputType: "select",
+    inputTypeOptions: [
+      {
+        label: "Internal Agent",
+        value: "internal-agent"
+      },
+      {
+        label: "Regular User",
+        value: "regular-user"
+      }
+    ]
+  },
 ]);
 
 let appliedFilters = ref([])
@@ -620,6 +636,12 @@ let inputTypeForTheSelectedFilter = computed(() => {
 
           <div v-if="inputTypeForTheSelectedFilter === 'email'">
             <TextInput class="border-gray-200" v-model="filterValue" type="text" />
+          </div>
+
+          <div v-if="inputTypeForTheSelectedFilter === 'select'">
+            <select v-model="filterValue" class="select-custom border border-gray-200">
+              <option v-for="(option, index) in filters.filter((f) => f.name === filterName)[0].inputTypeOptions" :key="index" :value="option.value">{{ option.label }}</option>
+            </select>
           </div>
         </div>
 

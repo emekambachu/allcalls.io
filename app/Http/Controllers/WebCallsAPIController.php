@@ -17,7 +17,7 @@ class WebCallsAPIController extends Controller
 
     protected $specialFilters = [
         'user_email' => 'applyUserEmailFilter',
-        // Add more special filters here
+        'user_role' => 'applyUserRoleFilter',
     ];
 
     public function index(Request $request)
@@ -39,7 +39,7 @@ class WebCallsAPIController extends Controller
             'is greater than or equal to' => '>=',
             'is less than or equal to' => '<=',
         ];
-    
+
         // Retrieve filters
         $filters = $request->input('filters', []);
 
@@ -58,7 +58,7 @@ class WebCallsAPIController extends Controller
         Log::debug('Filters: ', [
             'filters' => $filters
         ]);
-    
+
         // Get paginated result
         $calls = $query->paginate();
 
@@ -71,7 +71,7 @@ class WebCallsAPIController extends Controller
             return $call;
         });
 
-    
+
         return ['calls' => $calls];
     }
 
@@ -80,6 +80,20 @@ class WebCallsAPIController extends Controller
         $user = User::where('email', $filter['value'])->first();
         if ($user) {
             $query->where('user_id', '=', $user->id);
+        }
+    }
+
+    protected function applyUserRoleFilter($query, $filter)
+    {
+        // Get user IDs associated with the specified role
+        $userIds = User::whereHas('roles', function ($query) {
+            $query->where('name', 'internal-agent');
+        })->pluck('id');
+
+        if ($filter['value'] === 'internal-agent') {
+            $query->whereIn('user_id', $userIds);
+        } else {
+            $query->whereNotIn('user_id', $userIds);
         }
     }
 }
