@@ -359,7 +359,7 @@ let appliedFilters = ref([
 ])
 
 let showNewFilterModal = ref(false);
-let filterName = ref("ID");
+let filterName = ref("id");
 let filterOperator = ref("is");
 let filterValue = ref("");
 
@@ -374,6 +374,7 @@ let applyFilter = () => {
   });
 
   let label = filters.value.filter((f) => f.name === filterName.value);
+  console.log('Filters: ', filters.value);
   console.log('Label: ', label);
 
   appliedFilters.value.push({
