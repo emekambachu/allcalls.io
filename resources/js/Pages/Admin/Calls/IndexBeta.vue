@@ -609,9 +609,20 @@ let inputTypeForTheSelectedFilter = computed(() => {
         </button>
       </PopoverButton>
 
-      <PopoverPanel class="absolute z-10 w-40">
+      <PopoverPanel class="absolute z-10">
         <div class="border border-gray-100 p-3 shadow bg-white mt-2">
-          Select date here
+
+          <div class="flex items-center justify-between">
+            <div class="mr-2">
+              <input type="date">
+            </div>
+            <div class="mr-2">
+              <div class="w-3 h-0.5 bg-gray-200"></div>
+            </div>
+            <div>
+              <input type="date">
+            </div>
+          </div>
         </div>
       </PopoverPanel>
     </Popover>
