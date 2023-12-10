@@ -82,8 +82,8 @@ console.log('form', form);
                 <div class="ml-2">{{ form.premium_volumn }} </div>
             </div>
             <div class="flex">
-                <div ><strong>Equis writing number:</strong></div>
-                <div class="ml-2">{{ form.equis_writing_number_carrier === 'Select' ? '' : form.equis_writing_number_carrier }} </div>
+                <!-- <div ><strong>Equis writing number:</strong></div>
+                <div class="ml-2">{{ form.equis_writing_number_carrier === 'Select' ? '' : form.equis_writing_number_carrier }} </div> -->
             </div>
         </div>
         <hr >

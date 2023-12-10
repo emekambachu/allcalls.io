@@ -1776,7 +1776,7 @@ watch(()=> form.value.premium_amount , (newVal)=> {
 })
 let setAnnualPremium = () => {
   if (form.value.premium_amount && numberOfmonth.value) {
-    form.value.premium_volumn = Number(form.value.premium_amount) * numberOfmonth.value * 100
+    form.value.premium_volumn = Number(form.value.premium_amount) * numberOfmonth.value 
   }
 }
 let CurrencyValidation = (val, fieldName) => {
