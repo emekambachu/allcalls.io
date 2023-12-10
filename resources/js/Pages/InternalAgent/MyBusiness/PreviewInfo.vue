@@ -95,7 +95,7 @@ console.log('form', form);
             </div>
             <div class="flex">
                 <div ><strong>App from a lead:</strong></div>
-                <div class="ml-2">{{ form.this_app_from_lead === 'Select' ? '' : form.this_app_from_lead }} </div>
+                <div class="ml-2">{{ form.this_app_from_lead == '0' ? 'NO' : 'YES' }} </div>
             </div>
             <div class="flex">
                 <div ><strong>Source of the lead:</strong></div>
