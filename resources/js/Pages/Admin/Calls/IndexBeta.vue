@@ -549,7 +549,7 @@ let operatorsForTheSelectedFilter = computed(() => {
       </div>
 
       <button
-        class="rounded shadow mr-2 px-3 py-0.5 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md flex items-center"
+        class="rounded shadow mr-2 px-3 py-0.5 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md flex items-center text-sm"
         @click.prevent="showNewFilterModal = true"
       >
         + Add Filter
