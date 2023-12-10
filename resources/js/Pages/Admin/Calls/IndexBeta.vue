@@ -119,7 +119,7 @@ let columns = ref([
     render(call) {
       return call.user_email;
     },
-  }
+  },
 ]);
 
 let performSorting = () => {
@@ -369,6 +369,28 @@ let filters = ref([
     name: "user_email",
     operators: ["is"],
     inputType: "email"
+  },
+  {
+    label: "Vertical",
+    name: "vertical",
+    operators: ["is"],
+    inputType: "select",
+    inputTypeOptions: [{
+      label: "Auto Insurance",
+      value: "Auto Insurance",
+    }, {
+      label: "Final Expense",
+      value: "Final Expense",
+    }, {
+      label: "U65 Health",
+      value: "U65 Health",
+    }, {
+      label: "ACA",
+      value: "ACA",
+    }, {
+      label: "Medicare",
+      value: "Medicare",
+    }]
   },
   {
     label: "Role",
