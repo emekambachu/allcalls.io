@@ -99,7 +99,7 @@ console.log('form', form);
             </div>
             <div class="flex">
                 <div ><strong>Source of the lead:</strong></div>
-                <div class="ml-2">{{ form.source_of_lead }} </div>
+                <div class="ml-2">{{ form.this_app_from_lead === 'YES' ? form.source_of_lead:"" }} </div>
             </div>
         </div>
         <hr >
@@ -149,7 +149,7 @@ console.log('form', form);
                 <div ><strong>Last Name:</strong></div>
                 <div class="ml-2">{{ form.last_name  }} </div>
             </div>
-            
+
         </div>
         <hr >
 
@@ -166,7 +166,7 @@ console.log('form', form);
                 <div ><strong>Annual Planned Premium:</strong></div>
                 <div class="ml-2">{{ form.annual_planned_premium  }} </div>
             </div>
-            
+
         </div>
         <hr >
 
@@ -183,7 +183,7 @@ console.log('form', form);
                 <div ><strong>Did another agent refer this application to you?:</strong></div>
                 <div class="ml-2">{{ form.refer_another_agent  }} </div>
             </div>
-            
+
         </div>
         <hr >
 
@@ -209,10 +209,10 @@ console.log('form', form);
                 <div class="ml-2">{{ form.gender === 'Select' ? '' : form.gender  }} </div>
             </div>
             <div class="flex">
-                
+
             </div>
             <div class="flex">
-               
+
             </div>
         </div>
         <hr >
@@ -260,14 +260,11 @@ console.log('form', form);
                 <div class="ml-2">{{ form.client_email   }} </div>
             </div>
             <div class="flex">
-                 
+
             </div>
             <div class="flex">
-                
+
             </div>
         </div>
-        <hr >
-
-
-
+        <hr>
 </div></template>
