@@ -33,7 +33,7 @@ class WebCallsAPIController extends Controller
                 // Apply filter logic here
                 // Example for a simple where clause
                 // Check if the column exists in your model or handle it as needed
-                // $query->where($filter['name'], $filter['operator'], $filter['value']);
+                $query->where($filter['name'], $filter['operator'], $filter['value']);
             }
         }
 
