@@ -68,7 +68,7 @@ let columns = ref([
         }
       }
 
-      return "External Agent";
+      return "Regular User";
     },
   },
   {
