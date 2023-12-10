@@ -87,10 +87,8 @@ class WebCallsAPIController extends Controller
 
     protected function applyUserRoleFilter($query, $filter)
     {
-        // Get user IDs associated with the specified role
-        $userIds = User::whereHas('roles', function ($query) {
-            $query->where('name', 'internal-agent');
-        })->pluck('id');
+        $userIds = User::whereHas('roles', fn ($query) => $query->where('name', 'internal-agent'))
+            ->pluck('id');
 
         if ($filter['value'] === 'internal-agent') {
             $query->whereIn('user_id', $userIds);
