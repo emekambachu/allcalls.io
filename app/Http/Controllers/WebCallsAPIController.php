@@ -61,6 +61,17 @@ class WebCallsAPIController extends Controller
     
         // Get paginated result
         $calls = $query->paginate();
+
+
+        $calls->getCollection()->transform(function ($call) {
+            if (isset($call->user)) {
+                $call->user_email = $call->user->email;
+            } else {
+                $call->user_email = null; // or some default value
+            }
+            return $call;
+        });
+
     
         return ['calls' => $calls];
     }
