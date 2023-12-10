@@ -335,21 +335,25 @@ let filters = ref([
     label: "ID",
     name: "id",
     operators: ["is"],
+    inputType: "number",
   },
   {
-    label: "Call Duration",
+    label: "Call Duration (in seconds)",
     name: "call_duration_in_seconds",
     operators: ["is", "is greater than", "is less than", "is greater than or equal to", "is less than or equal to"],
+    inputType: "number"
   },
   {
     label: "Revenue",
     name: "amount_spent",
     operators: ["is", "is greater than", "is less than", "is greater than or equal to", "is less than or equal to"],
+    inputType: "number"
   },
   {
     label: "CallerID",
     name: "from",
     operators: ["is"],
+    inputType: "mumber"
   },
 ]);
 
@@ -395,6 +399,11 @@ let removeFilter = (index) => {
 let operatorsForTheSelectedFilter = computed(() => {
   let filter = filters.value.filter((f) => f.name === filterName.value)[0];
   return filter.operators;
+});
+
+let inputTypeForTheSelectedFilter = computed(() => {
+  let filter = filters.value.filter((f) => f.name === filterName.value)[0];
+  return filter.inputType;
 });
 </script>
 
@@ -586,7 +595,13 @@ let operatorsForTheSelectedFilter = computed(() => {
         <div class="mb-3">
           <label class="block mb-2 text-sm font-medium text-gray-900">Value:</label>
 
-          <TextInput class="border-gray-200" v-model="filterValue" />
+          <div v-if="inputTypeForTheSelectedFilter === 'number'">
+            <TextInput class="border-gray-200" v-model="filterValue" type="number" />
+          </div>
+
+          <div v-if="inputTypeForTheSelectedFilter === 'text'">
+            <TextInput class="border-gray-200" v-model="filterValue" type="text" />
+          </div>
         </div>
 
         <div class="flex items-center justify-end mt-4">
