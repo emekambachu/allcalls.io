@@ -536,8 +536,8 @@ let removeFilter = (index) => {
         :key="filter.name"
         class="rounded shadow mr-2 px-3 py-0.5 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md cursor-pointer flex items-center"
       >
-        <span class="font-bold">{{ filter.label }}</span> {{ filter.operator }}
-        <span class="font-bold">{{ filter.value }}</span>
+        <span class="font-bold mr-2">{{ filter.label }}</span> {{ filter.operator }}
+        <span class="font-bold mr-2">{{ filter.value }}</span>
 
         <span class="cursor-pointer" @click.prevent="removeFilter(index)">&#x2715;</span>
       </div>
