@@ -148,7 +148,7 @@ let fetchCalls = async (replace = false) => {
   }
 
   // Append filters to the query string
-  filters.value.forEach((filter, index) => {
+  appliedFilters.value.forEach((filter, index) => {
     url += `&filters[${index}][name]=${encodeURIComponent(filter.name)}`;
     url += `&filters[${index}][value]=${encodeURIComponent(filter.value)}`;
     url += `&filters[${index}][operator]=${encodeURIComponent(filter.operator)}`;
@@ -343,23 +343,10 @@ let filters = ref([
   },
 ]);
 
-let appliedFilters = ref([
-  {
-    label: "Call Duration",
-    name: "call_duration_in_seconds",
-    value: "12",
-    operator: "is greater than",
-  },
-  {
-    label: "Revenue",
-    name: "amount_spent",
-    value: "500",
-    operator: "is less than or equal to",
-  },
-])
+let appliedFilters = ref([])
 
 let showNewFilterModal = ref(false);
-let filterName = ref("ID");
+let filterName = ref("id");
 let filterOperator = ref("is");
 let filterValue = ref("");
 
@@ -373,8 +360,11 @@ let applyFilter = () => {
     operator: filterOperator.value,
   });
 
+  let label = filters.value.filter((f) => f.name === filterName.value)[0].label;
+  console.log('Label: ', label);
+
   appliedFilters.value.push({
-    label: filterName.value,
+    label: label,
     name: filterName.value,
     value: filterValue.value,
     operator: filterOperator.value,
