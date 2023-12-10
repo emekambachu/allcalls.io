@@ -534,10 +534,12 @@ let applyFilter = () => {
         <span class="font-bold">{{ filter.value }}</span>
       </div>
       <button
-        class="rounded shadow mr-2 px-3 py-0.5 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md"
+        class="rounded shadow mr-2 px-3 py-0.5 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md flex items-center"
         @click.prevent="showNewFilterModal = true"
       >
         +
+
+        <span>&#x2715;</span>
       </button>
     </div>
 

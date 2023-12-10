@@ -39,9 +39,6 @@ class WebCallsAPIController extends Controller
 
         foreach ($filters as $filter) {
             if(isset($filter['name'], $filter['value'], $filter['operator'])) {
-                // Apply filter logic here
-                // Example for a simple where clause
-                // Check if the column exists in your model or handle it as needed
                 $filter['operator'] = $operatorMap[$filter['operator']];
                 $query->where($filter['name'], $filter['operator'], $filter['value']);
             }
