@@ -458,6 +458,10 @@ let inputTypeForTheSelectedFilter = computed(() => {
   let filter = filters.value.filter((f) => f.name === filterName.value)[0];
   return filter.inputType;
 });
+
+
+let dateFilterFrom = ref(null);
+let dateFilterTo = ref(null);
 </script>
 
 <template>
@@ -593,9 +597,6 @@ let inputTypeForTheSelectedFilter = computed(() => {
       </div>
     </div>
 
-    <div class="pt-14 flex justify-between px-16">
-      <VueDatePicker timezone="America/New_York" range v-model="date"></VueDatePicker>
-    </div>
 
     <div class="pt-14 px-16 flex items-center mb-2">
 
@@ -614,13 +615,15 @@ let inputTypeForTheSelectedFilter = computed(() => {
 
           <div class="flex items-center justify-between">
             <div class="mr-2">
-              <input style="background-color: #E8F0FE;" class="bg-custom-blue text-sm rounded-lg focus:ring-blue-500 border border-transparent focus:border focus:border-blue-500 block w-full p-2.5 text-black outline-none" type="date">
+              <label class="block mb-2 text-sm font-medium text-gray-900">From:</label>
+              <input v-model="dateFilterFrom" style="background-color: #E8F0FE;" class="bg-custom-blue text-sm rounded-lg focus:ring-blue-500 border border-transparent focus:border focus:border-blue-500 block w-full p-2.5 text-black outline-none" type="date">
             </div>
             <div class="mr-2">
               <div class="w-3 h-0.5 bg-gray-200"></div>
             </div>
             <div>
-              <input style="background-color: #E8F0FE;" class="bg-custom-blue text-sm rounded-lg focus:ring-blue-500 border border-transparent focus:border focus:border-blue-500 block w-full p-2.5 text-black outline-none" type="date">
+              <label class="block mb-2 text-sm font-medium text-gray-900">To:</label>
+              <input v-model="dateFilterTo" style="background-color: #E8F0FE;" class="bg-custom-blue text-sm rounded-lg focus:ring-blue-500 border border-transparent focus:border focus:border-blue-500 block w-full p-2.5 text-black outline-none" type="date">
             </div>
           </div>
         </div>
