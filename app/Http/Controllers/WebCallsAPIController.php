@@ -73,7 +73,7 @@ class WebCallsAPIController extends Controller
         ]);
 
         // Get paginated result
-        $calls = $query->paginate();
+        $calls = $query->paginate(100);
 
         $calls->getCollection()->transform(function ($call) {
             if (isset($call->user)) {
