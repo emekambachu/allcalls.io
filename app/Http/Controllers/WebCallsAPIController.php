@@ -64,9 +64,7 @@ class WebCallsAPIController extends Controller
         // Apply date filters
         if ($startDate && $endDate) {
             $query->whereDate('created_at', '>=', $startDate)
-                ->whereDate('created_at', '<=', $endDate)
-                ->whereTime('created_at', '>=', '00:00:00')
-                ->whereTime('created_at', '<=', '23:59:59');
+            ->whereDate('created_at', '<=', $endDate);
         }
 
 
