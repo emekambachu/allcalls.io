@@ -11,7 +11,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
-
+use Illuminate\Support\Str;
 class MyAgencyController extends Controller
 {
     public function index()
@@ -22,7 +22,19 @@ class MyAgencyController extends Controller
             ->with('getAgentLevel')->orderBy('created_at', 'desc')
             ->paginate(5);
 
-        $agentLevels = InternalAgentLevel::get();
+        // $agentLevels = InternalAgentLevel::get();
+        $agentLevels = InternalAgentLevel::where('order', '<=', auth()->user()->getAgentLevel->order)
+        ->where(function ($query) {
+            $stringToCheck = auth()->user()->getAgentLevel->name;
+            if (Str::contains($stringToCheck, 'Internal')) {
+                $query->where('name', 'like', "%Internal%");
+            } elseif (Str::contains($stringToCheck, 'AC'))  {
+                $query->where('name', 'like', "%AC%");
+            }
+        })
+        ->get();
+
+        dd($agentLevels, auth()->user()->getAgentLevel);
 
         $inviteAgents = getInviteeIds(auth()->user());
         $agents = User::whereIn('id', $inviteAgents)
