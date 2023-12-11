@@ -23,16 +23,19 @@ class MyAgencyController extends Controller
             ->paginate(5);
 
         // $agentLevels = InternalAgentLevel::get();
-        $agentLevels = InternalAgentLevel::where('order', '<=', auth()->user()->getAgentLevel->order)
-        ->where(function ($query) {
-            $stringToCheck = auth()->user()->getAgentLevel->name;
-            if (Str::contains($stringToCheck, 'Internal')) {
-                $query->where('name', 'like', "%Internal%");
-            } elseif (Str::contains($stringToCheck, 'AC'))  {
-                $query->where('name', 'like', "%AC%");
-            }
-        })
-        ->get();
+        $agentLevels = [];
+        if(auth()->user()->getAgentLevel->order) {
+            $agentLevels = InternalAgentLevel::where('order', '<=', auth()->user()->getAgentLevel->order)
+            ->where(function ($query) {
+                $stringToCheck = auth()->user()->getAgentLevel->name;
+                if (Str::contains($stringToCheck, 'Internal')) {
+                    $query->where('name', 'like', "%Internal%");
+                } elseif (Str::contains($stringToCheck, 'AC'))  {
+                    $query->where('name', 'like', "%AC%");
+                }
+            })
+            ->get();
+        }
 
         $inviteAgents = getInviteeIds(auth()->user());
         $agents = User::whereIn('id', $inviteAgents)
