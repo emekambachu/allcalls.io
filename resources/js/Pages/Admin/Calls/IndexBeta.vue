@@ -610,7 +610,7 @@ onMounted(() => {
               <input v-model="dateFilterFrom" style="background-color: #E8F0FE;" class="bg-custom-blue text-sm rounded-lg focus:ring-blue-500 border border-transparent focus:border focus:border-blue-500 block w-full p-2.5 text-black outline-none" type="date">
             </div>
             <div class="mr-2">
-              <div class="w-3 h-0.5 bg-gray-200"></div>
+              <div class="w-3 h-0.5 bg-gray-200 mt-6"></div>
             </div>
             <div>
               <label class="block mb-2 text-sm font-medium text-gray-900">To:</label>
