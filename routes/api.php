@@ -243,3 +243,7 @@ Route::post('/sendbird-user/blahblahblah', function (Request $request){
         'message' => 'Yo Yo Yo successfully'
     ], 200);
 });
+
+Route::get('/test-call', function() {
+    return 'All good!';
+});
