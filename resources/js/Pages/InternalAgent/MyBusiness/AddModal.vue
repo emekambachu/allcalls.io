@@ -1,17 +1,17 @@
 <script setup>
-import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
+import { ref, reactive, defineEmits, onMounted, watch, computed, onUnmounted } from "vue";
 import GuestTextInput from "@/Components/GuestTextInput.vue";
 import GuestInputLabel from "@/Components/GuestInputLabel.vue";
 import PreviewInfo from "@/Pages/InternalAgent/MyBusiness/PreviewInfo.vue";
 import { toaster } from "@/helper.js";
-import { Head, router, usePage } from "@inertiajs/vue3";    
+import { Head, router, usePage } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 
 
 let emits = defineEmits();
 let props = defineProps({
   addBusinessModal: Boolean,
-
+  agents:Array,
   states: Array,
 });
 let firstStepErrors = ref({})
@@ -29,8 +29,9 @@ let typeE = [31, 32, 33, 34, 35, 36, 37, 38, 39, 0, 1, 2, 11, 12, 13, 6, 7, 8, 9
 let typeF = [31, 32, 33, 34, 35, 36, 37, 38, 39, 0, 2, 14, 18, 6, 7, 8, 9, 10, 15, 16, 40, 19, 31, 20, 21, 22, 23, 41, 29, 30];
 let page = usePage();
 let form = ref({
-  agent_full_name: page.props.auth.user.first_name + ' ' + page.props.auth.user.last_name,
-  agent_email: page.props.auth.user.email,
+  agent_id: page.props.auth.role === 'internal-agent' ? page.props.auth.user.id : '',
+  agent_full_name: page.props.auth.role === 'internal-agent' ? page.props.auth.user.first_name + ' ' + page.props.auth.user.last_name : '',
+  agent_email: page.props.auth.role === 'internal-agent' ? page.props.auth.user.email : '',
   insurance_company: "AETNA/CVS",
   product_name: "Select",
   application_date: "",
@@ -46,6 +47,9 @@ let form = ref({
   first_name: '',
   mi: '',
   last_name: '',
+  beneficiary_name: '',
+  beneficiary_relationship: '',
+  notes: '',
   dob: '',
   gender: 'Select',
   client_street_address_1: '',
@@ -56,9 +60,18 @@ let form = ref({
   client_zipcode: '',
   client_phone_no: '',
   client_email: '',
-
-
 });
+
+const filteredAgents = computed(() => {
+    return props.agents.filter((agent) => {
+      return (
+        agent.upline_id !== null &&
+        (agent.first_name.toLowerCase().includes(form.value.agent_full_name.toLowerCase()) ||
+          agent.last_name.toLowerCase().includes(form.value.agent_full_name.toLowerCase()) )
+      );
+    });
+  });
+
 let companies = ref({
   "AETNA/CVS": {
     "Individual Whole Life": {
@@ -1622,10 +1635,10 @@ let checkRequiredField = () => {
     }
   }
   let requiredFields = [
-    "insurance_company", "product_name", "application_date", "coverage_amount", "coverage_length",
+    "agent_full_name", "agent_email", "agent_id", "insurance_company", "product_name", "application_date", "coverage_amount", "coverage_length",
     "premium_frequency", 'premium_amount', 'premium_volumn',
     "this_app_from_lead", "policy_draft_date", "first_name",
-    "last_name", "dob", "gender", "client_street_address_1",
+    "last_name", 'beneficiary_name', 'beneficiary_relationship', "dob", "gender", "client_street_address_1",
     "client_street_address_2", "client_city", "client_state", "client_zipcode", "client_phone_no", "client_email",
   ]
   const addFieldIfPresent = (field, condition, value) => {
@@ -1642,7 +1655,7 @@ let checkRequiredField = () => {
     }
   });
 
-  let emails = ['agent_email',  'client_email']
+  let emails = ['agent_email', 'client_email']
   emails.forEach(fieldName => {
     if (!isValidEmail(form.value[fieldName])) {
       firstStepErrors.value[fieldName] = ["Invalid email format"];
@@ -1654,7 +1667,7 @@ let checkRequiredField = () => {
       firstStepErrors.value[fieldName] = ["Please enter a valid phone number."];
     }
   });
-  let numericFields = ['coverage_amount', 'premium_amount', 'premium_volumn', ];
+  let numericFields = ['coverage_amount', 'premium_amount', 'premium_volumn',];
 
   numericFields.forEach(fieldName => {
     const fieldValue = form.value[fieldName];
@@ -1700,11 +1713,12 @@ let Previous = (data) => {
 // save business data start 
 let isLoading = ref(false)
 let SaveBussinessData = async () => {
+  
   isLoading.value = true
-  await axios.post('/internal-agent/my-business', form.value)
+  await axios.post(page.url, form.value)
     .then((response) => {
       toaster("success", response.data.message);
-      router.visit('/internal-agent/my-business')
+      router.visit(page.url)
     }).catch((error) => {
       console.log('error', error);
       isLoading.value = false
@@ -1777,6 +1791,31 @@ let changeSpliteScalte = () => {
   if (form.value.split_sale == 'NO') {
     form.value.split_sale_type = 'Select'
   }
+}
+let isOpen2 = ref(false)
+const SugestAgent = () => {
+    isOpen2.value = true;
+};
+onMounted(() => {
+  document.addEventListener('click', handleOutsideClick);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleOutsideClick);
+});
+const handleOutsideClick = (event) => {
+  const dropdownElement = document.getElementById('dropdown_main_id');
+  if (!dropdownElement.contains(event.target)) {
+    isOpen2.value = false
+  }
+ 
+};
+let selectagent = (agent) => {
+    form.value.agent_full_name = agent.first_name+' '+agent.last_name
+    form.value.agent_email = agent.email
+    form.value.agent_id = agent.id
+    isOpen2.value = false;
+
 }
 </script>
 <style scoped>
@@ -1851,7 +1890,7 @@ let changeSpliteScalte = () => {
       <div style="width:80%;height:90%;" class="relative " id="modal_main_id">
         <div class="relative bg-white rounded-lg shadow-lg transition-all">
           <div class="flex justify-end">
-            <h3 class="text-xl font-small ml-5 mt-5 text-gray-700">Report Application</h3>
+            <h3 class="text-xl font-small ml-5 mt-5 text-gray-700">Report Application </h3>
             <button @click="close" type="button"
               class="text-gray-400 bg-transparent mr-2 mt-2 hover:bg-gray-200 hover:text-gray-700 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
               data-modal-hide="defaultModal">
@@ -1869,7 +1908,41 @@ let changeSpliteScalte = () => {
                 <div class="question-card animate__animated" style="position: relative">
                   <div v-show="step == 1">
 
-                    <h1 style="background-color: #134576;" class="my-5	text-center rounded-md py-2 text-white">
+                    <div v-if="$page.props.auth.role === 'admin'">
+                      <h1 style="background-color: #134576;" class="my-0	text-center rounded-md py-2 text-white">
+                        Agent Information
+                      </h1>
+                      <div class="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-x-8">
+                        <div id="dropdown_main_id">
+                          <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Select Agent<span
+                              class="text-red-400">*</span></label>
+                          <input v-model="form.agent_full_name" @focus="SugestAgent" type="text" id="agent_full_name"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="" required />
+                          <div v-if="firstStepErrors.agent_full_name" class="text-red-500"
+                            v-text="firstStepErrors.agent_full_name[0]">
+                          </div>
+                          <div v-if="firstStepErrors.agent_id" class="text-red-500"
+                            v-text="'Please'">
+                          </div>
+                          <div v-if="isOpen2  > 0" class="items-center justify-center ">
+                            <div class="relative">
+                              <ul style="width: 100%; max-height:250px;"
+                                class="absolute z-10 pb-2 mt-1  overflow-auto bg-white rounded-md shadow-md">
+                                <li v-for="(agent, index) in filteredAgents" :key="index" @click="selectagent(agent)"
+                                  class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                  {{ agent.first_name }} {{ agent.last_name }}  
+
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <h1 style="background-color: #134576;" class="mt-5	text-center rounded-md py-2 text-white">
                       Client Information
                     </h1>
 
@@ -1901,6 +1974,28 @@ let changeSpliteScalte = () => {
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="" required />
                         <div v-if="firstStepErrors.last_name" class="text-red-500" v-text="firstStepErrors.last_name[0]">
+                        </div>
+                      </div>
+
+                      <div>
+                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Beneficiary
+                          Name<span class="text-red-400">*</span></label>
+                        <input v-model="form.beneficiary_name" type="text" id="beneficiary_name"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          placeholder="" required />
+                        <div v-if="firstStepErrors.beneficiary_name" class="text-red-500"
+                          v-text="firstStepErrors.beneficiary_name[0]">
+                        </div>
+                      </div>
+
+                      <div>
+                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Beneficiary
+                          Relationship<span class="text-red-400">*</span></label>
+                        <input v-model="form.beneficiary_relationship" type="text" id="beneficiary_relationship"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          placeholder="" required />
+                        <div v-if="firstStepErrors.beneficiary_relationship" class="text-red-500"
+                          v-text="firstStepErrors.beneficiary_relationship[0]">
                         </div>
                       </div>
 
@@ -2022,7 +2117,15 @@ let changeSpliteScalte = () => {
 
                     </div>
 
-                    <h1 style="background-color: #134576;" class="my-5	text-center rounded-md py-2 text-white">
+                    <label for="message"
+                      class="block mt-5 mb-2 text-sm font-medium text-gray-900 dark:text-white">Notes</label>
+                    <textarea v-model="form.notes" rows="4"
+                      class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="Write your thoughts here..."></textarea>
+                    <div v-if="firstStepErrors.notes" class="text-red-500" v-text="firstStepErrors.notes[0]"></div>
+
+
+                    <h1 style="background-color: #134576;" class="mt-5	text-center rounded-md py-2 text-white">
                       Policy Information
                     </h1>
 
