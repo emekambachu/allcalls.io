@@ -611,7 +611,7 @@ let dateFilterTo = ref(null);
       </PopoverButton>
 
       <PopoverPanel class="absolute z-10">
-        <div class="border border-gray-100 p-3 shadow bg-white mt-2">
+        <div class="border border-gray-100 p-3 shadow bg-gray-50 mt-2">
 
           <div class="flex items-center justify-between">
             <div class="mr-2">
