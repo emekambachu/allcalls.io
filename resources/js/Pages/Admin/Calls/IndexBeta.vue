@@ -627,16 +627,16 @@ let dateFilterTo = ref(null);
             </div>
           </div>
 
-          <div class="text-sm bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow">
+          <div class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
             Today
           </div>
-          <div class="text-sm bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200">
+          <div class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
             Yesterday
           </div>
-          <div class="text-sm bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200">
+          <div class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
             This Week
           </div>
-          <div class="text-sm bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200">
+          <div class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
             This Month
           </div>
 
