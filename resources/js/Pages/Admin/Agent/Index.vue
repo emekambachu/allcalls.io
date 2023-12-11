@@ -560,11 +560,12 @@ let inviteAgentTree = (agent) => {
         :callTypes="callTypes"
         :states="states"
         :route="'/admin/agent'"
+        :agents="agents.data"
       ></Edit>
     </Modal>
 
     <Modal :show="agentModal" @close="agentModal = false">
-      <Create :levels="levels" :agentModal="agentModal" :currentPage="currentPage" :callTypes="callTypes" :states="states"
+      <Create :levels="levels" :agentModal="agentModal" :agents="agents.data" :currentPage="currentPage" :callTypes="callTypes" :states="states"
         @close="agentModal = false"></Create>
     </Modal>
 

@@ -65,8 +65,8 @@ let actionToDeleteLevel = () => {
       }else{
         router.visit(`/admin/internal-agent-levels?page=${props.levels.current_page}`);
       }
-      
-      
+
+
     }).catch((error) => {
       if (error.response.status === 400) {
         toaster("error", error.response.data.message);
@@ -109,17 +109,15 @@ let actionToDeleteLevel = () => {
                         <table class="w-full text-sm text-left text-gray-400">
                             <thead class="text-xs text-gray-300 uppercase bg-sky-900">
                                 <tr>
-                                    <th scope="col" class="px-4 py-3">ID</th>
+                                    <th scope="col" class="px-4 py-3">Order</th>
                                     <th scope="col" class="px-4 py-3"> Name</th>
-                                    <th scope="col" class="px-4 py-3"> Order</th>
                                     <th scope="col" class="px-4 py-3 text-end">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="level in levels.data" :key="level.id" class="border-b border-gray-500">
-                                    <td class="text-gray-600 px-4 py-3">{{ level.id }}</td>
-                                    <td class="text-gray-600 px-4 py-3">{{ level.name }}</td>
                                     <td class="text-gray-600 px-4 py-3">{{ level.order }}</td>
+                                    <td class="text-gray-600 px-4 py-3">{{ level.name }}</td>
                                     <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
                                         <button @click="editAgentLevel(level, levels.current_page)">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4  mr-2">

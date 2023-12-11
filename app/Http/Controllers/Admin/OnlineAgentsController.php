@@ -24,7 +24,6 @@ class OnlineAgentsController extends Controller
                     $query->whereIn('states.id', $request->state_filteration);
                 });
             })
-
             ->orderBy("created_at", "DESC")
             ->get();
 

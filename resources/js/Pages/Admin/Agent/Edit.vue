@@ -32,6 +32,7 @@ let props = defineProps({
   route: String,
   user_type: String,
   levels: Array,
+  agents: Array,
 });
 let emit = defineEmits(["close"]);
 let originalClient = props.userDetail;
@@ -69,7 +70,16 @@ let form = useForm({
     };
   }),
 });
-
+const filteredAgents = computed(() => {
+  return props.agents.filter((agent) => {
+    return (
+      agent.upline_id !== null &&
+      (agent.first_name.toLowerCase().includes(form.upline_id.toLowerCase()) ||
+        agent.last_name.toLowerCase().includes(form.upline_id.toLowerCase()) ||
+        agent.upline_id.toLowerCase().includes(form.upline_id.toLowerCase()))
+    );
+  });
+});
 const selectedTypeIds = ref([]);
 
 selectedTypeIds.value = props.userDetail.call_types.map((callType) => callType.id);
@@ -178,6 +188,7 @@ let ChangeTab = (val) => {
 
 const search = ref('');
 const isOpen = ref(false);
+const isOpen2 = ref(false);
 
 const toggleDropdown = () => {
   isOpen.value = !isOpen.value;
@@ -206,14 +217,26 @@ onUnmounted(() => {
 });
 const handleOutsideClick = (event) => {
   const dropdownElement = document.getElementById('dropdown_main_id');
+  const dropdownElement2 = document.getElementById('dropdown_main_id_2');
   if (!dropdownElement.contains(event.target)) {
     // Call your desired function here
     closeDropDown();
+  }
+  if (!dropdownElement2.contains(event.target)) {
+    isOpen2.value = false
   }
 };
 const closeDropDown = () => {
   isOpen.value = false
 };
+const SugestAgent = () => {
+    isOpen2.value = true;
+};
+let selectagent = (agent) => {
+    form.upline_id = agent.upline_id
+    isOpen2.value = false;
+
+}
 </script>
 <style>
 .chemical-formula {
@@ -394,10 +417,22 @@ const closeDropDown = () => {
             </div>
           </div>
 
-          <div class="mt-4">
+          <div id="dropdown_main_id_2" class="mt-4">
             <GuestInputLabel for="Upline ID" value="Upline ID" />
-            <GuestTextInput id="upline_id" type="text" class="mt-1 block w-full" v-model="form.upline_id" />
+            <GuestTextInput id="upline_id" autocomplete="off" @focus="SugestAgent"  type="text" class="mt-1 block w-full" v-model="form.upline_id" />
             <InputError class="mt-2" :message="form.errors.upline_id" />
+            <div v-if="isOpen2 &&form.upline_id.length > 0" class="items-center justify-center ">
+                <div class="relative">
+                  <ul style="width: 100%; max-height:250px;"
+                    class="absolute z-10 pb-2 mt-1  overflow-auto bg-white rounded-md shadow-md">
+                    <li v-for="(agent, index) in filteredAgents" :key="index" @click="selectagent(agent)"
+                      class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                      {{ agent.first_name }} {{ agent.last_name }} - ( {{ agent.upline_id }} )
+
+                    </li>
+                  </ul>
+                </div>
+              </div>
           </div>
 
           <div class="mt-4">

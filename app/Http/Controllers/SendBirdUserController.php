@@ -38,8 +38,8 @@ class SendBirdUserController extends Controller
 
         // Validate incoming request fields
         $validatedData = $request->validate([
-            'nickname' => 'required|string|max:255',
-            'profile_image' => 'required|image|max:5120', // 5 MB limit
+            // 'nickname' => 'required|string|max:255',
+            'profile_image' => 'required|image', // 5 MB limit
         ]);
 
         Log::debug('Validated request successfully!');
@@ -57,15 +57,18 @@ class SendBirdUserController extends Controller
         $user->save();
         Log::debug('Profile image uploaded. Path: ' . $path);
 
+
         $applicationId = env('SENDBIRD_APPLICATION_ID');
         $apiKey = env('SENDBIRD_API_TOKEN');
+
+        $nickname = $user->first_name . ' ' . $user->last_name;
 
         $response = Http::withHeaders([
             'Api-Token' => $apiKey,
             'Content-Type' => 'application/json',
         ])->post("https://api-{$applicationId}.sendbird.com/v3/users", [
             'user_id' => $user->id,
-            'nickname' => $request->nickname,
+            'nickname' => $nickname,
             'profile_url' => $fullUrl,
             'issue_access_token' => true, // Include this field
         ]);
@@ -94,7 +97,7 @@ class SendBirdUserController extends Controller
             Log::info('SendBird user created successfully for user ID: ' . $user->id);
 
             // Join the user to a SendBird group channel
-            $channelUrl = env('SENDBIRD_INTERNAL_AGENTS_GROUP_URL'); // Replace with your actual channel URL
+            $channelUrl = env('SENDBIRD_TEMP_INTERNAL_AGENTS_GROUP_URL'); // Replace with your actual channel URL
             $joinChannelResponse = $this->joinSendBirdGroupChannel((string) $user->id, $channelUrl);
 
             if ($joinChannelResponse->successful()) {
@@ -157,4 +160,42 @@ class SendBirdUserController extends Controller
 
         return $response;
     }
+
+    public function deleteSendBirdUser(Request $request)
+    {
+        $user = Auth::user(); // Get the authenticated user
+        Log::debug('Deleting SendBird user for user ID: ' . $user->id);
+
+        // Retrieve the SendBird user from your database
+        $sendBirdUser = $user->sendBirdUser()->first();
+
+        if (!$sendBirdUser) {
+            Log::warning('SendBird user not found for user ID: ' . $user->id);
+            return response()->json(['message' => 'SendBird user not found'], 404);
+        }
+
+        $applicationId = env('SENDBIRD_APPLICATION_ID');
+        $apiKey = env('SENDBIRD_API_TOKEN');
+
+        // Send request to SendBird API to delete the user
+        $response = Http::withHeaders([
+            'Api-Token' => $apiKey
+        ])->delete("https://api-{$applicationId}.sendbird.com/v3/users/{$user->id}");
+
+        if ($response->successful()) {
+            // If the API request was successful, delete the user from your database
+            $sendBirdUser->delete();
+            Log::info('SendBird user deleted successfully for user ID: ' . $user->id);
+
+            return response()->json(['message' => 'SendBird user deleted successfully'], 200);
+        } else {
+            // Handle failure response from SendBird API
+            Log::error('Failed to delete SendBird user. User ID: ' . $user->id . ' Response: ' . $response->body());
+            return response()->json([
+                'message' => 'Failed to delete SendBird user',
+                'error' => $response->body()
+            ], 500);
+        }
+    }
+
 }

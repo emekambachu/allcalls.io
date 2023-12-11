@@ -4,8 +4,10 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, router, usePage, Link } from "@inertiajs/vue3";
 import { toaster } from "@/helper.js";
 import GlobalSpinner from "@/Components/GlobalSpinner.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
-import Modal from '@/Components/Modal.vue';
+import Modal from "@/Components/Modal.vue";
 import {
   Menu,
   MenuButton,
@@ -66,7 +68,7 @@ let columns = ref([
         }
       }
 
-      return "External Agent";
+      return "Regular User";
     },
   },
   {
@@ -109,6 +111,15 @@ let columns = ref([
       return call.from;
     },
   },
+  {
+    label: "User Email",
+    name: "user_email",
+    visible: false,
+    sortable: false,
+    render(call) {
+      return call.user_email;
+    },
+  },
 ]);
 
 let performSorting = () => {
@@ -140,10 +151,22 @@ let fetchCalls = async (replace = false) => {
   }
 
   // Include start_date and end_date in the query string if they both exist
-  if (startDate.value && endDate.value) {
-    url += "&start_date=" + startDate.value;
-    url += "&end_date=" + endDate.value;
+  // if (startDate.value && endDate.value) {
+  //   url += "&start_date=" + startDate.value;
+  //   url += "&end_date=" + endDate.value;
+  // }
+
+  if (dateFilterFrom.value && dateFilterTo.value) {
+    url += "&start_date=" + dateFilterFrom.value;
+    url += "&end_date=" + dateFilterTo.value;
   }
+
+  // Append filters to the query string
+  appliedFilters.value.forEach((filter, index) => {
+    url += `&filters[${index}][name]=${encodeURIComponent(filter.name)}`;
+    url += `&filters[${index}][value]=${encodeURIComponent(filter.value)}`;
+    url += `&filters[${index}][operator]=${encodeURIComponent(filter.operator)}`;
+  });
 
   loading.value = true;
   let response = await axios.get(url);
@@ -159,14 +182,13 @@ let fetchCalls = async (replace = false) => {
   console.log("Loaded Calls: ", loadedCalls.value);
 };
 
+
 let loadMore = async () => {
   currentPage.value++;
   await fetchCalls();
 };
 
-onMounted(() => {
-
-});
+onMounted(() => {});
 
 let sortByColumn = async (column) => {
   console.log("Sort By Column: ", column.name);
@@ -289,43 +311,194 @@ let stopPlayingRecording = (call) => {
   currentlyPlayingAudioCallId.value = null;
 };
 
-let date = ref([new Date(), new Date()]);
-
-let startDate = ref(null);
-let endDate = ref(null);
-
-watch(date, (newVal, oldVal) => {
-  // When the date range changes, we need to update the start_date and end_date and fetch the calls again
-  startDate.value = newVal[0];
-  endDate.value = newVal[1];
-
-  fetchCalls();
-});
-
-let convertTZ = (date, tzString) => {
-  return new Date((typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {timeZone: tzString}));   
-}
-
-
-
-onMounted(() => {
-  let startDate = new Date();
-  let endDate = new Date(new Date().setDate(startDate.getDate() + 7));
-
-  startDate.value = startDate;
-  endDate.value = endDate;
-  date.value = [startDate, endDate];
-
-  fetchCalls();
-});
-
 let filters = ref([
-  // { label: "ID", name: "id", value: "", operator: "is" },
-  { label: "Call Duration", name: "call_duration_in_seconds", value: "12", operator: "is greater than" },
-  { label: "Revenue", name: "amount_spent", value: "500", operator: "is less than or equal to" },
-])
+  {
+    label: "ID",
+    name: "id",
+    operators: ["is", "is greater than", "is less than", "is greater than or equal to", "is less than or equal to"],
+    inputType: "number",
+  },
+  {
+    label: "Call Duration (in seconds)",
+    name: "call_duration_in_seconds",
+    operators: ["is", "is greater than", "is less than", "is greater than or equal to", "is less than or equal to"],
+    inputType: "number"
+  },
+  {
+    label: "Revenue",
+    name: "amount_spent",
+    operators: ["is", "is greater than", "is less than", "is greater than or equal to", "is less than or equal to"],
+    inputType: "number"
+  },
+  {
+    label: "CallerID",
+    name: "from",
+    operators: ["is"],
+    inputType: "text"
+  },
+  {
+    label: "User Email",
+    name: "user_email",
+    operators: ["is"],
+    inputType: "email"
+  },
+  {
+    label: "Vertical",
+    name: "vertical",
+    operators: ["is"],
+    inputType: "select",
+    inputTypeOptions: [{
+      label: "Auto Insurance",
+      value: "Auto Insurance",
+    }, {
+      label: "Final Expense",
+      value: "Final Expense",
+    }, {
+      label: "U65 Health",
+      value: "U65 Health",
+    }, {
+      label: "ACA",
+      value: "ACA",
+    }, {
+      label: "Medicare",
+      value: "Medicare",
+    }]
+  },
+  {
+    label: "Role",
+    name: "user_role",
+    operators: ["is"],
+    inputType: "select",
+    inputTypeOptions: [
+      {
+        label: "Internal Agent",
+        value: "internal-agent"
+      },
+      {
+        label: "Regular User",
+        value: "regular-user"
+      }
+    ]
+  },
+]);
+
+let appliedFilters = ref([])
 
 let showNewFilterModal = ref(false);
+let filterName = ref("id");
+let filterOperator = ref("is");
+let filterValue = ref("");
+
+
+let applyFilter = () => {
+  console.log({
+    label: filterName.value,
+    name: filterName.value,
+    value: filterValue.value,
+    operator: filterOperator.value,
+  });
+
+  let label = filters.value.filter((f) => f.name === filterName.value)[0].label;
+  console.log('Label: ', label);
+
+  appliedFilters.value.push({
+    label: label,
+    name: filterName.value,
+    value: filterValue.value,
+    operator: filterOperator.value,
+  });
+
+  // Refetch the calls and replace them with current filters
+  fetchCalls(true);
+
+  showNewFilterModal.value = false;
+}
+
+let removeFilter = (index) => {
+  appliedFilters.value.splice(index, 1);
+
+  fetchCalls(true);
+}
+
+let operatorsForTheSelectedFilter = computed(() => {
+  let filter = filters.value.filter((f) => f.name === filterName.value)[0];
+  return filter.operators;
+});
+
+let inputTypeForTheSelectedFilter = computed(() => {
+  let filter = filters.value.filter((f) => f.name === filterName.value)[0];
+  return filter.inputType;
+});
+
+
+let dateFilterFrom = ref(null);
+let dateFilterTo = ref(null);
+
+let clearDateFilter = () => {
+  dateFilterFrom.value = null;
+  dateFilterTo.value = null;
+
+  fetchCalls(true);
+}
+
+let applyDateFilter = () => {
+
+  console.log("Date Filter From: ", dateFilterFrom.value);
+  console.log("Date Filter To: ", dateFilterTo.value);
+
+  fetchCalls(true);
+}
+
+onMounted(() => {
+  fetchCalls();
+});
+
+
+let applyDatePreset = label => {
+  const today = new Date();
+  let from, to;
+
+  switch(label) {
+    case "Today":
+      from = to = formatDate(today);
+      break;
+    case "Yesterday":
+      let yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+      from = to = formatDate(yesterday);
+      break;
+      case "Past 7 Days":
+      let pastWeekStart = new Date(today);
+      pastWeekStart.setDate(pastWeekStart.getDate() - 6); // 6 days ago from today
+      from = formatDate(pastWeekStart);
+      to = formatDate(today); // today's date
+      break;
+    case "Past 30 Days":
+      let pastMonthStart = new Date(today);
+      pastMonthStart.setDate(pastMonthStart.getDate() - 29); // 29 days ago from today
+      from = formatDate(pastMonthStart);
+      to = formatDate(today); // today's date
+      break;
+  }
+
+  dateFilterFrom.value = from;
+  dateFilterTo.value = to;
+};
+
+function formatDate(date) {
+  let d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+
+  if (month.length < 2) 
+      month = '0' + month;
+  if (day.length < 2) 
+      day = '0' + day;
+
+  return [year, month, day].join('-');
+}
+
 </script>
 
 <template>
@@ -461,21 +634,149 @@ let showNewFilterModal = ref(false);
       </div>
     </div>
 
-    <div class="pt-14 flex justify-between px-16">
-      <VueDatePicker timezone="America/New_York" range v-model="date"></VueDatePicker>
-    </div>
-
-
 
     <div class="pt-14 px-16 flex items-center mb-2">
-      <div v-for="filter in filters" :key="filter.name" class="rounded shadow mr-2 px-3 py-0.5 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md cursor-pointer"><span class="font-bold">{{ filter.label }}</span> {{ filter.operator}} <span class="font-bold">{{ filter.value }}</span></div>
-      <button class="rounded shadow mr-2 px-3 py-0.5 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md" @click.prevent="showNewFilterModal = true">+</button>
+
+    <Popover class="relative mr-2">
+      <PopoverButton>
+        <button
+          type="button"
+          class="rounded shadow mr-2 px-3 py-1 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md flex items-center text-sm"
+        >
+          <span v-if="!(dateFilterFrom && dateFilterTo)">Any Date</span>
+          <span v-if="dateFilterFrom && dateFilterTo">
+            <span class="font-bold">Range:</span> {{ dateFilterFrom }} - {{ dateFilterTo }}
+          </span>
+        </button>
+      </PopoverButton>
+
+      <PopoverPanel class="absolute z-10">
+        <div class="border border-gray-100 p-3 shadow bg-gray-50 mt-2">
+
+          <div class="flex items-center justify-between">
+            <div class="mr-2">
+              <label class="block mb-2 text-sm font-medium text-gray-900">From:</label>
+              <input v-model="dateFilterFrom" style="background-color: #E8F0FE;" class="bg-custom-blue text-sm rounded-lg focus:ring-blue-500 border border-transparent focus:border focus:border-blue-500 block w-full p-2.5 text-black outline-none" type="date">
+            </div>
+            <div class="mr-2">
+              <div class="w-3 h-0.5 bg-gray-200 mt-6"></div>
+            </div>
+            <div>
+              <label class="block mb-2 text-sm font-medium text-gray-900">To:</label>
+              <input v-model="dateFilterTo" style="background-color: #E8F0FE;" class="bg-custom-blue text-sm rounded-lg focus:ring-blue-500 border border-transparent focus:border focus:border-blue-500 block w-full p-2.5 text-black outline-none" type="date">
+            </div>
+          </div>
+
+          <div @click.prevent="applyDatePreset('Today')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+            Today
+          </div>
+          <div @click.prevent="applyDatePreset('Yesterday')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+            Yesterday
+          </div>
+          <div @click.prevent="applyDatePreset('Past 7 Days')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+            Past 7 Days
+          </div>
+          <div @click.prevent="applyDatePreset('Past 30 Days')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+            Past 30 Days
+          </div>
+
+          <PrimaryButton @click.prevent="applyDateFilter" class="w-full text-center flex justify-center text-md mb-4">Apply</PrimaryButton>
+
+          <button class="w-full text-center flex justify-center items-center text-md px-4 py-3 border rounded-md font-semibold text-md uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 hover:bg-white hover:text-custom-blue"
+            @click.prevent="clearDateFilter"
+            :class="{
+              'border-transparent text-gray-900 bg-gray-100 hover:drop-shadow-2xl ': true,
+            }">
+              Clear Date
+            </button>
+        </div>
+      </PopoverPanel>
+    </Popover>
+      <div
+        v-for="(filter, index) in appliedFilters"
+        :key="filter.name"
+        class="rounded shadow mr-2 px-3 py-1 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md cursor-pointer flex items-center"
+      >
+        <span class="font-bold mr-2">{{ filter.label }}</span>
+        <span class="mr-2">{{ filter.operator }}</span>
+        <span class="font-bold mr-2">{{ filter.value }}</span>
+
+        <span class="cursor-pointer" @click.prevent="removeFilter(index)">&#x2715;</span>
+      </div>
+
+      <button
+        class="rounded shadow mr-2 px-3 py-1 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md flex items-center text-sm"
+        @click.prevent="showNewFilterModal = true"
+      >
+        + Add Filter
+      </button>
     </div>
 
-    <Modal :show="showNewFilterModal" @close="showNewFilterModal = false" :closeable="true">
-      Create your new filter here.
-    </Modal>
+    <Modal
+      :show="showNewFilterModal"
+      @close="showNewFilterModal = false"
+      :closeable="true"
+    >
+      <div class="bg-gray-100 py-4 px-6 text-gray-900">
+        <div class="flex justify-between mb-6">
+          <h3 class="text-2xl font-bold">Add New Filter</h3>
+          <span class="cursor-pointer" @click.prevent="showNewFilterModal = false">&#x2715</span>
+        </div>
 
+        <div class="mb-3">
+          <label class="block mb-2 text-sm font-medium text-gray-900">Filter:</label>
+
+          <select v-model="filterName" class="select-custom border border-gray-200">
+            <option v-for="(filter, index) in filters" :key="index" :value="filter.name">{{ filter.label }}</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="block mb-2 text-sm font-medium text-gray-900">Operator:</label>
+
+          <select v-model="filterOperator" class="select-custom border border-gray-200">
+            <option v-for="(operator, index) in operatorsForTheSelectedFilter" :key="index">{{ operator }}</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="block mb-2 text-sm font-medium text-gray-900">Value:</label>
+
+          <div v-if="inputTypeForTheSelectedFilter === 'number'">
+            <TextInput class="border-gray-200" v-model="filterValue" type="number" />
+          </div>
+
+          <div v-if="inputTypeForTheSelectedFilter === 'text'">
+            <TextInput class="border-gray-200" v-model="filterValue" type="text" />
+          </div>
+
+          <div v-if="inputTypeForTheSelectedFilter === 'email'">
+            <TextInput class="border-gray-200" v-model="filterValue" type="text" />
+          </div>
+
+          <div v-if="inputTypeForTheSelectedFilter === 'select'">
+            <select v-model="filterValue" class="select-custom border border-gray-200">
+              <option v-for="(option, index) in filters.filter((f) => f.name === filterName)[0].inputTypeOptions" :key="index" :value="option.value">{{ option.label }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end mt-4">
+          <PrimaryButton class="mr-2" @click.prevent="applyFilter">Apply</PrimaryButton>
+
+          <button
+            class="inline-flex items-center px-4 py-3 border rounded-md font-semibold text-md uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 hover:bg-white hover:text-custom-blue"
+            :class="{
+              'border-transparent text-gray-900 bg-gray-100 hover:drop-shadow-2xl ': true,
+            }"
+            :disabled="disabled"
+            @click.prevent="showNewFilterModal = false"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </Modal>
 
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
       <div class="px-4 sm:px-8 sm:rounded-lg">
