@@ -57,8 +57,10 @@ class SendBirdUserController extends Controller
         $user->save();
         Log::debug('Profile image uploaded. Path: ' . $path);
 
-        $applicationId = env('SENDBIRD_TEMP_APPLICATION_ID');
-        $apiKey = env('SENDBIRD_TEMP_API_TOKEN');
+
+        $applicationId = env('SENDBIRD_APPLICATION_ID');
+        $apiKey = env('SENDBIRD_API_TOKEN');
+
         $nickname = $user->first_name . ' ' . $user->last_name;
 
         $response = Http::withHeaders([
