@@ -391,7 +391,6 @@ let filterValue = ref("");
 
 
 let applyFilter = () => {
-
   console.log({
     label: filterName.value,
     name: filterName.value,
@@ -482,8 +481,6 @@ let applyDatePreset = label => {
 
   dateFilterFrom.value = from;
   dateFilterTo.value = to;
-
-  fetchCalls(true);
 };
 
 function formatDate(date) {
