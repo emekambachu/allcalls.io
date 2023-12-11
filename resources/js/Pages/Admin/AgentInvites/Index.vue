@@ -162,11 +162,11 @@ let ReInviteAgentFun = () => {
                   </td>
                   <td class="text-gray-600 px-4 py-3">
                     <span v-if="agentInvite.used"
-                      class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">
+                      class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full whitespace-nowrap">
                       Used
                     </span>
                     <span v-else
-                      class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">
+                      class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full whitespace-nowrap">
                       Not Used
                     </span>
                   </td>
