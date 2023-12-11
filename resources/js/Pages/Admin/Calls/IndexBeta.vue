@@ -675,10 +675,10 @@ function formatDate(date) {
           <div @click.prevent="applyDatePreset('Yesterday')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
             Yesterday
           </div>
-          <div @click.prevent="applyDatePreset('This Week')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+          <div @click.prevent="applyDatePreset('Past 7 Days')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
             This Week
           </div>
-          <div @click.prevent="applyDatePreset('This Month')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+          <div @click.prevent="applyDatePreset('Past 30 Days')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
             This Month
           </div>
 
