@@ -151,9 +151,14 @@ let fetchCalls = async (replace = false) => {
   }
 
   // Include start_date and end_date in the query string if they both exist
-  if (startDate.value && endDate.value) {
-    url += "&start_date=" + startDate.value;
-    url += "&end_date=" + endDate.value;
+  // if (startDate.value && endDate.value) {
+  //   url += "&start_date=" + startDate.value;
+  //   url += "&end_date=" + endDate.value;
+  // }
+
+  if (dateFilterFrom.value && dateFilterTo.value) {
+    url += "&start_date=" + dateFilterFrom.value;
+    url += "&end_date=" + dateFilterTo.value;
   }
 
   // Append filters to the query string
@@ -306,39 +311,6 @@ let stopPlayingRecording = (call) => {
   currentlyPlayingAudioCallId.value = null;
 };
 
-let date = ref([new Date(), new Date()]);
-
-let startDate = ref(null);
-let endDate = ref(null);
-
-watch(date, (newVal, oldVal) => {
-  // When the date range changes, we need to update the start_date and end_date and fetch the calls again
-  startDate.value = newVal[0];
-  endDate.value = newVal[1];
-
-  fetchCalls();
-});
-
-let convertTZ = (date, tzString) => {
-  return new Date(
-    (typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {
-      timeZone: tzString,
-    })
-  );
-};
-
-onMounted(() => {
-  let startDate = new Date();
-  let endDate = new Date(new Date().setDate(startDate.getDate() + 7));
-
-  startDate.value = startDate;
-  endDate.value = endDate;
-  date.value = [startDate, endDate];
-
-  fetchCalls();
-});
-
-
 let filters = ref([
   {
     label: "ID",
@@ -462,6 +434,18 @@ let inputTypeForTheSelectedFilter = computed(() => {
 
 let dateFilterFrom = ref(null);
 let dateFilterTo = ref(null);
+
+let clearDateFilter = () => {
+}
+
+let applyDateFilter = () => {
+
+  console.log("Date Filter From: ", dateFilterFrom.value);
+  console.log("Date Filter To: ", dateFilterTo.value);
+
+  fetchCalls(true);
+}
+
 </script>
 
 <template>
@@ -640,9 +624,10 @@ let dateFilterTo = ref(null);
             This Month
           </div>
 
-          <PrimaryButton class="w-full text-center flex justify-center text-md mb-4">Apply</PrimaryButton>
+          <PrimaryButton @click.prevent="applyDateFilter" class="w-full text-center flex justify-center text-md mb-4">Apply</PrimaryButton>
 
           <button class="w-full text-center flex justify-center items-center text-md px-4 py-3 border rounded-md font-semibold text-md uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 hover:bg-white hover:text-custom-blue"
+            @click.prevent="clearDateFilter"
             :class="{
               'border-transparent text-gray-900 bg-gray-100 hover:drop-shadow-2xl ': true,
             }">
