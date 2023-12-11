@@ -34,8 +34,6 @@ class MyAgencyController extends Controller
         })
         ->get();
 
-        dd($agentLevels, auth()->user()->getAgentLevel);
-
         $inviteAgents = getInviteeIds(auth()->user());
         $agents = User::whereIn('id', $inviteAgents)
         ->where('id', '!=', auth()->user()->id)
