@@ -435,6 +435,10 @@ let dateFilterFrom = ref(null);
 let dateFilterTo = ref(null);
 
 let clearDateFilter = () => {
+  dateFilterFrom.value = null;
+  dateFilterTo.value = null;
+
+  fetchCalls(true);
 }
 
 let applyDateFilter = () => {
