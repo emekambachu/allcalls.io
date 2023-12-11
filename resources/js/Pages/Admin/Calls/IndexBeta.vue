@@ -467,19 +467,17 @@ let applyDatePreset = label => {
       yesterday.setDate(yesterday.getDate() - 1);
       from = to = formatDate(yesterday);
       break;
-    case "This Week":
-      let weekStart = new Date(today);
-      weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-      let weekEnd = new Date(weekStart);
-      weekEnd.setDate(weekEnd.getDate() + 6);
-      from = formatDate(weekStart);
-      to = formatDate(weekEnd);
+      case "Past 7 Days":
+      let pastWeekStart = new Date(today);
+      pastWeekStart.setDate(pastWeekStart.getDate() - 6); // 6 days ago from today
+      from = formatDate(pastWeekStart);
+      to = formatDate(today); // today's date
       break;
-    case "This Month":
-      let monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-      let monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-      from = formatDate(monthStart);
-      to = formatDate(monthEnd);
+    case "Past 30 Days":
+      let pastMonthStart = new Date(today);
+      pastMonthStart.setDate(pastMonthStart.getDate() - 29); // 29 days ago from today
+      from = formatDate(pastMonthStart);
+      to = formatDate(today); // today's date
       break;
   }
 
