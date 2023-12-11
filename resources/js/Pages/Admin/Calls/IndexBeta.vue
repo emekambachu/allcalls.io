@@ -674,10 +674,10 @@ function formatDate(date) {
             Yesterday
           </div>
           <div @click.prevent="applyDatePreset('Past 7 Days')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
-            This Week
+            Past 7 Days
           </div>
           <div @click.prevent="applyDatePreset('Past 30 Days')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
-            This Month
+            Past 30 Days
           </div>
 
           <PrimaryButton @click.prevent="applyDateFilter" class="w-full text-center flex justify-center text-md mb-4">Apply</PrimaryButton>
