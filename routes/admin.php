@@ -83,6 +83,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
     /// My business 
     Route::get('/my-business', [AgentBusinessController::class, 'index'])->name('admin.my-business.index');
+    Route::post('/my-business', [AgentBusinessController::class, 'store'])->name('admin.my-business.store');
 
     // Available Number
     Route::get('/available-numbers',[AvailableNumberController::class,'index'])->name('admin.available-number.index');

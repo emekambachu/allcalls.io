@@ -8,7 +8,7 @@ import { toaster } from "@/helper.js";
 import AgentTree from "@/Components/AgentTree.vue";
 import axios from "axios";
 
-let { agentInvites, baseUrl , agents} = defineProps({
+let { agentInvites, baseUrl , agents, agentLevels} = defineProps({
   agentInvites: {
     required: true,
     type: Array,
@@ -20,6 +20,7 @@ let { agentInvites, baseUrl , agents} = defineProps({
   },
   agents:Array,
 });
+
 let agentInvitesData = ref(agentInvites)
 let agentsData = ref(agents)
 let invitesModal = ref(false)

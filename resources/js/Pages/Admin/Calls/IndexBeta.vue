@@ -151,9 +151,14 @@ let fetchCalls = async (replace = false) => {
   }
 
   // Include start_date and end_date in the query string if they both exist
-  if (startDate.value && endDate.value) {
-    url += "&start_date=" + startDate.value;
-    url += "&end_date=" + endDate.value;
+  // if (startDate.value && endDate.value) {
+  //   url += "&start_date=" + startDate.value;
+  //   url += "&end_date=" + endDate.value;
+  // }
+
+  if (dateFilterFrom.value && dateFilterTo.value) {
+    url += "&start_date=" + dateFilterFrom.value;
+    url += "&end_date=" + dateFilterTo.value;
   }
 
   // Append filters to the query string
@@ -306,39 +311,6 @@ let stopPlayingRecording = (call) => {
   currentlyPlayingAudioCallId.value = null;
 };
 
-let date = ref([new Date(), new Date()]);
-
-let startDate = ref(null);
-let endDate = ref(null);
-
-watch(date, (newVal, oldVal) => {
-  // When the date range changes, we need to update the start_date and end_date and fetch the calls again
-  startDate.value = newVal[0];
-  endDate.value = newVal[1];
-
-  fetchCalls();
-});
-
-let convertTZ = (date, tzString) => {
-  return new Date(
-    (typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {
-      timeZone: tzString,
-    })
-  );
-};
-
-onMounted(() => {
-  let startDate = new Date();
-  let endDate = new Date(new Date().setDate(startDate.getDate() + 7));
-
-  startDate.value = startDate;
-  endDate.value = endDate;
-  date.value = [startDate, endDate];
-
-  fetchCalls();
-});
-
-
 let filters = ref([
   {
     label: "ID",
@@ -419,7 +391,6 @@ let filterValue = ref("");
 
 
 let applyFilter = () => {
-
   console.log({
     label: filterName.value,
     name: filterName.value,
@@ -462,6 +433,72 @@ let inputTypeForTheSelectedFilter = computed(() => {
 
 let dateFilterFrom = ref(null);
 let dateFilterTo = ref(null);
+
+let clearDateFilter = () => {
+  dateFilterFrom.value = null;
+  dateFilterTo.value = null;
+
+  fetchCalls(true);
+}
+
+let applyDateFilter = () => {
+
+  console.log("Date Filter From: ", dateFilterFrom.value);
+  console.log("Date Filter To: ", dateFilterTo.value);
+
+  fetchCalls(true);
+}
+
+onMounted(() => {
+  fetchCalls();
+});
+
+
+let applyDatePreset = label => {
+  const today = new Date();
+  let from, to;
+
+  switch(label) {
+    case "Today":
+      from = to = formatDate(today);
+      break;
+    case "Yesterday":
+      let yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+      from = to = formatDate(yesterday);
+      break;
+      case "Past 7 Days":
+      let pastWeekStart = new Date(today);
+      pastWeekStart.setDate(pastWeekStart.getDate() - 6); // 6 days ago from today
+      from = formatDate(pastWeekStart);
+      to = formatDate(today); // today's date
+      break;
+    case "Past 30 Days":
+      let pastMonthStart = new Date(today);
+      pastMonthStart.setDate(pastMonthStart.getDate() - 29); // 29 days ago from today
+      from = formatDate(pastMonthStart);
+      to = formatDate(today); // today's date
+      break;
+  }
+
+  dateFilterFrom.value = from;
+  dateFilterTo.value = to;
+};
+
+function formatDate(date) {
+  let d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+
+  if (month.length < 2) 
+      month = '0' + month;
+  if (day.length < 2) 
+      day = '0' + day;
+
+  return [year, month, day].join('-');
+}
+
 </script>
 
 <template>
@@ -606,7 +643,10 @@ let dateFilterTo = ref(null);
           type="button"
           class="rounded shadow mr-2 px-3 py-1 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md flex items-center text-sm"
         >
-          Any Date
+          <span v-if="!(dateFilterFrom && dateFilterTo)">Any Date</span>
+          <span v-if="dateFilterFrom && dateFilterTo">
+            <span class="font-bold">Range:</span> {{ dateFilterFrom }} - {{ dateFilterTo }}
+          </span>
         </button>
       </PopoverButton>
 
@@ -619,7 +659,7 @@ let dateFilterTo = ref(null);
               <input v-model="dateFilterFrom" style="background-color: #E8F0FE;" class="bg-custom-blue text-sm rounded-lg focus:ring-blue-500 border border-transparent focus:border focus:border-blue-500 block w-full p-2.5 text-black outline-none" type="date">
             </div>
             <div class="mr-2">
-              <div class="w-3 h-0.5 bg-gray-200"></div>
+              <div class="w-3 h-0.5 bg-gray-200 mt-6"></div>
             </div>
             <div>
               <label class="block mb-2 text-sm font-medium text-gray-900">To:</label>
@@ -627,22 +667,23 @@ let dateFilterTo = ref(null);
             </div>
           </div>
 
-          <div class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+          <div @click.prevent="applyDatePreset('Today')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
             Today
           </div>
-          <div class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+          <div @click.prevent="applyDatePreset('Yesterday')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
             Yesterday
           </div>
-          <div class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
-            This Week
+          <div @click.prevent="applyDatePreset('Past 7 Days')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+            Past 7 Days
           </div>
-          <div class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
-            This Month
+          <div @click.prevent="applyDatePreset('Past 30 Days')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+            Past 30 Days
           </div>
 
-          <PrimaryButton class="w-full text-center flex justify-center text-md mb-4">Apply</PrimaryButton>
+          <PrimaryButton @click.prevent="applyDateFilter" class="w-full text-center flex justify-center text-md mb-4">Apply</PrimaryButton>
 
           <button class="w-full text-center flex justify-center items-center text-md px-4 py-3 border rounded-md font-semibold text-md uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 hover:bg-white hover:text-custom-blue"
+            @click.prevent="clearDateFilter"
             :class="{
               'border-transparent text-gray-900 bg-gray-100 hover:drop-shadow-2xl ': true,
             }">

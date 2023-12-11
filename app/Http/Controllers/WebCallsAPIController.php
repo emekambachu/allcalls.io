@@ -57,12 +57,23 @@ class WebCallsAPIController extends Controller
             }
         }
 
+        // Extract the start and end date from request
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        // Apply date filters
+        if ($startDate && $endDate) {
+            $query->whereDate('created_at', '>=', $startDate)
+            ->whereDate('created_at', '<=', $endDate);
+        }
+
+
         Log::debug('Filters: ', [
             'filters' => $filters
         ]);
 
         // Get paginated result
-        $calls = $query->paginate();
+        $calls = $query->paginate(100);
 
         $calls->getCollection()->transform(function ($call) {
             if (isset($call->user)) {
