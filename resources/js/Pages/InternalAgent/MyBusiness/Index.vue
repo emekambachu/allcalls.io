@@ -109,11 +109,7 @@ let filterBusiness = () => {
 
 
 }
-let addBusinessModal = ref(false)
 
-let addBusiness = () => {
-    addBusinessModal.value = true
-}
 // get Agent invites by pagination start
 let fetchagentInvites = (page) => {
     let url = new URL(page);
@@ -130,6 +126,7 @@ let fetchagentInvites = (page) => {
 };
 // get Agent invites by pagination end
 let viewDetailModal = ref(false)
+let addBusinessModal = ref(false)
 let businessData = ref(null)
 let ViewDetail = (business_data) => {
     let selectedState = states.find(state => state.id === business_data.client_state)
@@ -138,6 +135,15 @@ let ViewDetail = (business_data) => {
     }
     businessData.value = business_data
     viewDetailModal.value = true
+}
+
+let addBusiness = () => {
+    businessData.value = null
+    addBusinessModal.value = true
+}
+let EditBusiness = (business_data) => {
+    addBusinessModal.value = true
+    businessData.value = business_data
 }
 </script>
 <style scoped>
@@ -219,7 +225,19 @@ let ViewDetail = (business_data) => {
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.source_of_lead"></td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.agent_full_name"></td>
                                     <td class="text-gray-600 px-4 py-3">
-                                        <button class="text-blue-600" @click="ViewDetail(businesse)">view detail</button>
+                                        <button  @click="ViewDetail(businesse)">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            </svg>
+                                        </button>
+
+                                        <button v-if="$page.props.auth.role === 'admin'" class="ml-3"  @click="EditBusiness(businesse)">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                                            </svg>
+                                        </button>
+
                                     </td>
                                 </tr>
                             </tbody>
@@ -285,8 +303,8 @@ let ViewDetail = (business_data) => {
             </div>
         </div>
 
-        <AddModal v-show="addBusinessModal" :agents="agents" :states="states" :addBusinessModal="addBusinessModal"
-            @close="addBusinessModal = false" :reIniteAgent="reIniteAgent" />
+        <AddModal v-if="addBusinessModal" :agents="agents" :states="states" :addBusinessModal="addBusinessModal"
+            @close="addBusinessModal = false" :businessData="businessData" :reIniteAgent="reIniteAgent" />
 
 
         <ViewDetailCom v-if="viewDetailModal" :viewDetailModal="viewDetailModal" @close="viewDetailModal = false"

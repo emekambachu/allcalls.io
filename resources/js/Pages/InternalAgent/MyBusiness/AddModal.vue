@@ -11,8 +11,9 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 let emits = defineEmits();
 let props = defineProps({
   addBusinessModal: Boolean,
-  agents:Array,
+  agents: Array,
   states: Array,
+  businessData: Object,
 });
 let firstStepErrors = ref({})
 
@@ -61,16 +62,12 @@ let form = ref({
   client_phone_no: '',
   client_email: '',
 });
+let edit_data = ref(false)
+if (props.businessData) {
+  form.value = props.businessData
+  edit_data.value = true
+}
 
-const filteredAgents = computed(() => {
-    return props.agents.filter((agent) => {
-      return (
-        agent.upline_id !== null &&
-        (agent.first_name.toLowerCase().includes(form.value.agent_full_name.toLowerCase()) ||
-          agent.last_name.toLowerCase().includes(form.value.agent_full_name.toLowerCase()) )
-      );
-    });
-  });
 
 let companies = ref({
   "AETNA/CVS": {
@@ -1713,7 +1710,7 @@ let Previous = (data) => {
 // save business data start 
 let isLoading = ref(false)
 let SaveBussinessData = async () => {
-  
+
   isLoading.value = true
   await axios.post(page.url, form.value)
     .then((response) => {
@@ -1733,6 +1730,36 @@ let SaveBussinessData = async () => {
     })
 }
 // save business data end 
+
+// update business data start
+let isLoading2 = ref(false)
+let UpdateBussinessData = async () => {
+  isLoading2.value = true
+  await axios.post(`${page.url}/update`, form.value)
+    .then((response) => {
+      toaster("success", response.data.message);
+      router.visit(page.url)
+    }).catch((error) => {
+      console.log('error', error);
+      if (error.response.status == 400) {
+        firstStepErrors.value = error.response.data.errors
+        console.log('firstStepErrors.value', firstStepErrors.value);
+        console.log('error.response.data.errors', error.response.data.errors);
+      }
+      if (error.response.status == 401) {
+        toaster("error", error.response.data.message);
+      }
+      isLoading2.value = false
+
+      if (firstStepErrors.value) {
+        step.value = 1
+        var element = document.getElementById("modal_main_id");
+        element.scrollIntoView();
+      }
+    })
+}
+// update business data end
+
 let close = () => {
   emits("close");
 };
@@ -1793,9 +1820,20 @@ let changeSpliteScalte = () => {
   }
 }
 let isOpen2 = ref(false)
+let search = ref('')
 const SugestAgent = () => {
-    isOpen2.value = true;
+  isOpen2.value = !isOpen2.value;
+  search.value = ''
 };
+const filteredAgents = computed(() => {
+  return props.agents.filter((agent) => {
+    return (
+      agent.upline_id !== null &&
+      (agent.first_name.toLowerCase().includes(search.value.toLowerCase()) ||
+        agent.last_name.toLowerCase().includes(search.value.toLowerCase()))
+    );
+  });
+});
 onMounted(() => {
   document.addEventListener('click', handleOutsideClick);
 });
@@ -1808,17 +1846,29 @@ const handleOutsideClick = (event) => {
   if (!dropdownElement.contains(event.target)) {
     isOpen2.value = false
   }
- 
+
 };
 let selectagent = (agent) => {
-    form.value.agent_full_name = agent.first_name+' '+agent.last_name
-    form.value.agent_email = agent.email
-    form.value.agent_id = agent.id
-    isOpen2.value = false;
+  form.value.agent_full_name = agent.first_name + ' ' + agent.last_name
+  form.value.agent_email = agent.email
+  form.value.agent_id = agent.id
+  isOpen2.value = false;
 
 }
 </script>
 <style scoped>
+.drop_down_main {
+  width: 100%;
+  background: white;
+  height: 39.5px;
+  margin-top: 5px;
+  border-radius: 5px 5px;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  padding: 0px 5px;
+}
+
 .active\:bg-gray-900:active {
   color: white;
 }
@@ -1890,7 +1940,8 @@ let selectagent = (agent) => {
       <div style="width:80%;height:90%;" class="relative " id="modal_main_id">
         <div class="relative bg-white rounded-lg shadow-lg transition-all">
           <div class="flex justify-end">
-            <h3 class="text-xl font-small ml-5 mt-5 text-gray-700">Report Application </h3>
+            <h3 class="text-xl font-small ml-5 mt-5 text-gray-700"> <span v-if="edit_data">Edit</span> Report Application
+            </h3>
             <button @click="close" type="button"
               class="text-gray-400 bg-transparent mr-2 mt-2 hover:bg-gray-200 hover:text-gray-700 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
               data-modal-hide="defaultModal">
@@ -1914,24 +1965,37 @@ let selectagent = (agent) => {
                       </h1>
                       <div class="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-x-8">
                         <div id="dropdown_main_id">
-                          <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Select Agent<span
-                              class="text-red-400">*</span></label>
-                          <input v-model="form.agent_full_name" autocomplete="off" @focus="SugestAgent" type="text" id="agent_full_name"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="" required />
+                          <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Select
+                            Agent<span class="text-red-400">*</span></label>
+                          <button @click="SugestAgent" class="bg-gray-50 mt-1 mb-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 flex" id="states-button"
+                            data-dropdown-toggle="dropdown-states" type="button">
+                            
+                            <span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="w-4 mt-1 h-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                              </svg></span><span v-if="!form.agent_full_name" class="ml-2">Select Agent</span>
+                              <span class="ml-2">{{ form.agent_full_name }}</span>
+                          </button>
+
                           <div v-if="firstStepErrors.agent_full_name" class="text-red-500"
                             v-text="firstStepErrors.agent_full_name[0]">
                           </div>
-                          <div v-if="firstStepErrors.agent_id" class="text-red-500"
-                            v-text="'Please'">
-                          </div>
-                          <div v-if="isOpen2  > 0" class="items-center justify-center ">
+                          
+                          <div v-if="isOpen2 > 0" class="items-center justify-center ">
+
                             <div class="relative">
-                              <ul style="width: 100%; max-height:250px;"
-                                class="absolute z-10 pb-2 mt-1  overflow-auto bg-white rounded-md shadow-md">
+
+
+                              <ul style="width: 100%; max-height:250px;" 
+                                class="absolute z-10 pb-2    overflow-auto bg-white rounded-md shadow-md">
+                                <div class="mx-2 mt-1">
+                                <input v-model="search" autocomplete="off" type="text" id="agent_full_name"
+                                  class="bg-gray-50  mb-1  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                  placeholder="" required />
+                                </div>
                                 <li v-for="(agent, index) in filteredAgents" :key="index" @click="selectagent(agent)"
                                   class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                                  {{ agent.first_name }} {{ agent.last_name }}  
+                                  {{ agent.first_name }} {{ agent.last_name }}
 
                                 </li>
                               </ul>
@@ -2119,7 +2183,7 @@ let selectagent = (agent) => {
 
                     <label for="message"
                       class="block mt-5 mb-2 text-sm font-medium text-gray-900 dark:text-white">Notes</label>
-                    <textarea v-model="form.notes" rows="4"
+                    <textarea v-model="form.notes" rows="5"
                       class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="Write your thoughts here..."></textarea>
                     <div v-if="firstStepErrors.notes" class="text-red-500" v-text="firstStepErrors.notes[0]"></div>
@@ -2315,9 +2379,15 @@ let selectagent = (agent) => {
                       class="button-custom px-3 py-2 rounded-md flex items-center" href="#">
                       Next
                     </a>
-                    <button v-if="step === 2" :class="{ 'opacity-25': isLoading === true }" :disabled="isLoading == true"
-                      @click="SaveBussinessData()" class="button-custom px-3 py-2 rounded-md flex items-center" href="#">
+                    <button v-if="step === 2 && !edit_data" :class="{ 'opacity-25': isLoading === true }"
+                      :disabled="isLoading == true" @click="SaveBussinessData()"
+                      class="button-custom px-3 py-2 rounded-md flex items-center" href="#">
                       <global-spinner :spinner="isLoading" /> Confirm
+                    </button>
+                    <button v-if="step === 2 && edit_data" :class="{ 'opacity-25': isLoading2 === true }"
+                      :disabled="isLoading2 == true" @click="UpdateBussinessData()"
+                      class="button-custom px-3 py-2 rounded-md flex items-center" href="#">
+                      <global-spinner :spinner="isLoading2" /> Update
                     </button>
                   </div>
                 </div>
