@@ -71,6 +71,22 @@ let formatDate = date => {
 
         <div class="grid my-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1">
             <div class="flex">
+                <div><strong>Beneficiary
+                          Name:</strong></div>
+                <div class="ml-2">{{ form.beneficiary_name }} </div>
+            </div>
+            <div class="flex">
+                <div><strong>Beneficiary
+                          Relationship:</strong></div>
+                <div class="ml-2">{{ form.beneficiary_relationship }} </div>
+            </div>
+           
+
+        </div>
+        <hr>
+
+        <div class="grid my-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1">
+            <div class="flex">
                 <div><strong>Street Address 1:</strong></div>
                 <div class="ml-2">{{ form.client_street_address_1 }} </div>
             </div>
@@ -114,6 +130,13 @@ let formatDate = date => {
             <div class="flex">
                 <div><strong>Date of Birth:</strong></div>
                 <div class="ml-2">{{ formatDate(form.dob) }} </div>
+            </div>
+        </div>
+        <hr>
+        <div class="grid my-3 xl:grid-cols-1 lg:grid-cols-1 sm:grid-cols-1">
+            <div class="flex">
+                <div><strong>Notes:</strong></div>
+                <div class="ml-2">{{ form.notes }} </div>
             </div>
         </div>
         <hr>

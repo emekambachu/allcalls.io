@@ -49,13 +49,14 @@ const presetDates = ref([
 
 
 
-let { agentInvites, states, requestData } = defineProps({
+let { agentInvites, states, requestData , agents } = defineProps({
     businesses: {
         required: true,
         type: Array,
     },
     states: Array,
     requestData: Array,
+    agents:Array,
 });
 
 
@@ -163,7 +164,7 @@ let ViewDetail = (business_data) => {
                             </h1>
                         </div>
 
-                        <div v-if="$page.props.auth.role === 'internal-agent'">
+                        <div >
                             <PrimaryButton @click="addBusiness()">Report Application </PrimaryButton>
                         </div>
                     </div>
@@ -284,7 +285,7 @@ let ViewDetail = (business_data) => {
             </div>
         </div>
 
-        <AddModal v-show="addBusinessModal" :states="states" :addBusinessModal="addBusinessModal"
+        <AddModal v-show="addBusinessModal" :agents="agents" :states="states" :addBusinessModal="addBusinessModal"
             @close="addBusinessModal = false" :reIniteAgent="reIniteAgent" />
 
 

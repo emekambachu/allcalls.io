@@ -12,9 +12,9 @@ use Carbon\Carbon;
 
 class MyBusinessController extends Controller
 {
-        public function index(Request $request)
-        {
-            $businesses = InternalAgentMyBusiness::whereIn('agent_id', getInviteeIds(auth()->user()))
+    public function index(Request $request)
+    {
+        $businesses = InternalAgentMyBusiness::whereIn('agent_id', getInviteeIds(auth()->user()))
             ->where(function ($query) use ($request) {
                 if (isset($request->from) && $request->from != '' && isset($request->to) && $request->to != '') {
                     $startDate = Carbon::parse($request->from)->startOfDay();
@@ -23,17 +23,18 @@ class MyBusinessController extends Controller
                 }
             })
             ->paginate(10);
-            $states = State::get();
-            // dd($businesses);
-            return Inertia::render('InternalAgent/MyBusiness/Index', [
-                'businesses' => $businesses,
-                'states' => $states,
-                'requestData' =>  $request->all()
-            ]);
-        }
+        $states = State::get();
+        // dd($businesses);
+        return Inertia::render('InternalAgent/MyBusiness/Index', [
+            'businesses' => $businesses,
+            'states' => $states,
+            'requestData' =>  $request->all()
+        ]);
+    }
 
     public function store(Request $request)
     {
+        // dd($request->all());
         $validate = Validator::make($request->all(), [
             'agent_full_name' => 'required',
             'agent_email' => 'required',
@@ -49,8 +50,9 @@ class MyBusinessController extends Controller
             'policy_draft_date' => 'required',
             'first_name' => 'required',
             'mi' => 'nullable',
-            
             'last_name' => 'required',
+            'beneficiary_name' => 'required',
+            'beneficiary_relationship' => 'required',
             'dob' => 'required',
             'gender' => 'required | in:Male,Female,Other',
             'client_street_address_1' => 'nullable',
@@ -82,13 +84,16 @@ class MyBusinessController extends Controller
             'premium_frequency' => $request->premium_frequency,
             'premium_amount' => $request->premium_amount,
             'premium_volumn' => $request->premium_volumn,
-            'carrier_writing_number' => $request->carrier_writing_number ,
+            'carrier_writing_number' => $request->carrier_writing_number,
             'this_app_from_lead' => $request->this_app_from_lead,
             'source_of_lead' => $request->this_app_from_lead == 'NO' ? null : $request->source_of_lead,
             'policy_draft_date' => Carbon::parse($request->policy_draft_date),
             'first_name' => $request->first_name,
             'mi' => $request->mi,
             'last_name' => $request->last_name,
+            'beneficiary_name' => $request->beneficiary_name,
+            'beneficiary_relationship' => $request->beneficiary_relationship,
+            'notes' => $request->notes,
             'dob' => Carbon::parse($request->dob),
             'gender' => $request->gender,
             'client_street_address_1' => $request->client_street_address_1,
