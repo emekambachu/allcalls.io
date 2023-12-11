@@ -24,7 +24,7 @@ class MyAgencyController extends Controller
 
         // $agentLevels = InternalAgentLevel::get();
         $agentLevels = [];
-        if(auth()->user()->getAgentLevel->order) {
+        if(auth()->user()->getAgentLevel) {
             $agentLevels = InternalAgentLevel::where('order', '<=', auth()->user()->getAgentLevel->order)
             ->where(function ($query) {
                 $stringToCheck = auth()->user()->getAgentLevel->name;
