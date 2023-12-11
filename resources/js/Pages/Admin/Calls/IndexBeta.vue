@@ -446,6 +446,10 @@ let applyDateFilter = () => {
   fetchCalls(true);
 }
 
+onMounted(() => {
+  fetchCalls();
+});
+
 </script>
 
 <template>
