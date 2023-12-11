@@ -450,6 +450,56 @@ onMounted(() => {
   fetchCalls();
 });
 
+
+let applyDatePreset = label => {
+  const today = new Date();
+  let from, to;
+
+  switch(label) {
+    case "Today":
+      from = to = formatDate(today);
+      break;
+    case "Yesterday":
+      let yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+      from = to = formatDate(yesterday);
+      break;
+    case "This Week":
+      let weekStart = new Date(today);
+      weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+      let weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekEnd.getDate() + 6);
+      from = formatDate(weekStart);
+      to = formatDate(weekEnd);
+      break;
+    case "This Month":
+      let monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+      let monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+      from = formatDate(monthStart);
+      to = formatDate(monthEnd);
+      break;
+  }
+
+  dateFilterFrom.value = from;
+  dateFilterTo.value = to;
+
+  fetchCalls(true);
+};
+
+function formatDate(date) {
+  let d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+
+  if (month.length < 2) 
+      month = '0' + month;
+  if (day.length < 2) 
+      day = '0' + day;
+
+  return [year, month, day].join('-');
+}
+
 </script>
 
 <template>
@@ -618,16 +668,16 @@ onMounted(() => {
             </div>
           </div>
 
-          <div class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+          <div @click.prevent="applyDatePreset('Today')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
             Today
           </div>
-          <div class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+          <div @click.prevent="applyDatePreset('Yesterday')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
             Yesterday
           </div>
-          <div class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+          <div @click.prevent="applyDatePreset('This Week')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
             This Week
           </div>
-          <div class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+          <div @click.prevent="applyDatePreset('This Month')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
             This Month
           </div>
 
