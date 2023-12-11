@@ -594,7 +594,10 @@ onMounted(() => {
           type="button"
           class="rounded shadow mr-2 px-3 py-1 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md flex items-center text-sm"
         >
-          Any Date
+          <span v-if="!(dateFilterFrom && dateFilterTo)">Any Date</span>
+          <span v-if="dateFilterFrom && dateFilterTo">
+            {{ dateFilterFrom }} - {{ dateFilterTo }}
+          </span>
         </button>
       </PopoverButton>
 
