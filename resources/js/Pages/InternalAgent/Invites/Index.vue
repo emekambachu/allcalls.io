@@ -21,27 +21,6 @@ let { agentInvites, baseUrl , agents, agentLevels} = defineProps({
   agents:Array,
 });
 
-
-console.log('Agent levels', agentLevels);
-
-let acLevels = computed(() => {
-  return agentLevels.filter((level) => {
-    // level.name does not start with "AC"
-    return level.name.startsWith("AC");
-  });
-})
-
-let internalLevels = computed(() => {
-  return agentLevels.filter((level) => {
-    // level.name does not start with "AC"
-    return level.name.startsWith("AC");
-  });
-})
-
-
-
-console.log('acLevels', acLevels);
-
 let agentInvitesData = ref(agentInvites)
 let agentsData = ref(agents)
 let invitesModal = ref(false)
