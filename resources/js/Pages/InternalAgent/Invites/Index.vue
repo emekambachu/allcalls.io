@@ -8,7 +8,7 @@ import { toaster } from "@/helper.js";
 import AgentTree from "@/Components/AgentTree.vue";
 import axios from "axios";
 
-let { agentInvites, baseUrl , agents} = defineProps({
+let { agentInvites, baseUrl , agents, agentLevels} = defineProps({
   agentInvites: {
     required: true,
     type: Array,
@@ -20,6 +20,28 @@ let { agentInvites, baseUrl , agents} = defineProps({
   },
   agents:Array,
 });
+
+
+console.log('Agent levels', agentLevels);
+
+let acLevels = computed(() => {
+  return agentLevels.filter((level) => {
+    // level.name does not start with "AC"
+    return level.name.startsWith("AC");
+  });
+})
+
+let internalLevels = computed(() => {
+  return agentLevels.filter((level) => {
+    // level.name does not start with "AC"
+    return level.name.startsWith("AC");
+  });
+})
+
+
+
+console.log('acLevels', acLevels);
+
 let agentInvitesData = ref(agentInvites)
 let agentsData = ref(agents)
 let invitesModal = ref(false)
