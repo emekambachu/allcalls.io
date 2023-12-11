@@ -596,7 +596,7 @@ onMounted(() => {
         >
           <span v-if="!(dateFilterFrom && dateFilterTo)">Any Date</span>
           <span v-if="dateFilterFrom && dateFilterTo">
-            Range: {{ dateFilterFrom }} - {{ dateFilterTo }}
+            <span class="font-bold">Range:</span> {{ dateFilterFrom }} - {{ dateFilterTo }}
           </span>
         </button>
       </PopoverButton>
