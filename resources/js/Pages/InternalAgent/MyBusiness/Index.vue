@@ -188,10 +188,11 @@ let ViewDetail = (business_data) => {
                             <thead class="text-xs text-gray-300 uppercase bg-sky-900">
                                 <tr class="business-table-custom">
                                     <th scope="col" class="px-4 py-3">ID</th>
+                                    <th v-if="$page.props.auth.role == 'admin'" scope="col" style="min-width: 150px;" class="px-4 py-3">Agent Name</th>
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">Client Name</th>
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">Application Date</th>
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">Draft Date</th>
-                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">Carrier Writing #</th>
+                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">Carrier</th>
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">Product</th>
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">APV (Annual Premium Volume)
                                     </th>
@@ -199,7 +200,7 @@ let ViewDetail = (business_data) => {
                                     
                                     <!-- <th scope="col" style="min-width: 150px;" class="px-4 py-3">Status</th> -->
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">App Type</th>
-                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">Agent Name</th>
+                                    <th v-if="$page.props.auth.role == 'internal-agent'" scope="col" style="min-width: 150px;" class="px-4 py-3">Agent Name</th>
                                     <th scope="col" style="min-width: 100px;" class="px-4 py-3">Action</th>
                                 </tr>
                             </thead>
@@ -207,17 +208,19 @@ let ViewDetail = (business_data) => {
                                 <tr class="border-b border-gray-500" v-for="(businesse, index) in businesses.data"
                                     :key="businesse.id">
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse.id"></td>
+                                    <td v-if="$page.props.auth.role == 'admin'" class="text-gray-600 px-4 py-3" v-text="businesse?.agent_full_name"></td>
+
                                     <td class="text-gray-600 px-4 py-3">{{ businesse.first_name }} {{ businesse.last_name }}
                                     </td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.application_date"></td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.policy_draft_date"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.carrier_writing_number"></td>
+                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.insurance_company"></td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.product_name"></td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.premium_volumn"></td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.coverage_amount"></td>
                                     <!-- <td class="text-gray-600 px-4 py-3">status</td> -->
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.source_of_lead"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.agent_full_name"></td>
+                                    <td v-if="$page.props.auth.role == 'internal-agent'" class="text-gray-600 px-4 py-3" v-text="businesse?.agent_full_name"></td>
                                     <td class="text-gray-600 px-4 py-3">
                                         <button class="text-blue-600" @click="ViewDetail(businesse)">view detail</button>
                                     </td>
