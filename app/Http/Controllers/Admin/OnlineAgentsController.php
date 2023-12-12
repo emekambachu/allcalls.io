@@ -36,6 +36,26 @@ class OnlineAgentsController extends Controller
         return Inertia::render('Admin/OnlineAgents/Index', compact('onlineUsers', 'onlineStats', 'filters'));
     }
 
+    public function indexNew(Request $request)
+    {
+        $onlineUsers = OnlineUser::with(['user.states', 'user.latestActivity', 'callType'])
+            ->when(isset($request->state_filteration) && count($request->state_filteration), function ($query) use ($request) {
+                $query->whereHas('user.states', function ($query) use ($request) {
+                    $query->whereIn('states.id', $request->state_filteration);
+                });
+            })
+            ->orderBy("created_at", "DESC")
+            ->get();
+
+        $onlineStats = State::whereHas('users.onlineUser')->withCount(['users as user_count' => function ($query) {
+            $query->whereHas('onlineUser')->select(DB::raw('count(*)'));
+        }])->get();
+
+        // dd($onlineStats);
+        $filters = $request->all();
+        return Inertia::render('Admin/OnlineAgents/IndexNew', compact('onlineUsers', 'onlineStats', 'filters'));
+    }
+
     public function destroy($userId)
     {
         OnlineUser::whereUserId($userId)->delete();
