@@ -196,14 +196,14 @@ let EditBusiness = (business_data) => {
                                     <th scope="col" class="px-4 py-3">ID</th>
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">Client Name</th>
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">Application Date</th>
-                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">Paid Date</th>
-                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">Carrier</th>
+                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">Draft Date</th>
+                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">Carrier Writing #</th>
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">Product</th>
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">APV (Annual Premium Volume)
                                     </th>
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">Coverage Amount</th>
                                     
-                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">Status</th>
+                                    <!-- <th scope="col" style="min-width: 150px;" class="px-4 py-3">Status</th> -->
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">App Type</th>
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">Agent Name</th>
                                     <th scope="col" style="min-width: 100px;" class="px-4 py-3">Action</th>
@@ -217,11 +217,11 @@ let EditBusiness = (business_data) => {
                                     </td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.application_date"></td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.policy_draft_date"></td>
-                                    <td class="text-gray-600 px-4 py-3">Carrier</td>
+                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.carrier_writing_number"></td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.product_name"></td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.premium_volumn"></td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.coverage_amount"></td>
-                                    <td class="text-gray-600 px-4 py-3">status</td>
+                                    <!-- <td class="text-gray-600 px-4 py-3">status</td> -->
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.source_of_lead"></td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.agent_full_name"></td>
                                     <td class="text-gray-600 px-4 py-3">

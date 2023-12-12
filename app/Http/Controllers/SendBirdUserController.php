@@ -57,8 +57,8 @@ class SendBirdUserController extends Controller
         $user->save();
         Log::debug('Profile image uploaded. Path: ' . $path);
 
-        $applicationId = env('SENDBIRD_TEMP_APPLICATION_ID');
-        $apiKey = env('SENDBIRD_TEMP_API_TOKEN');
+        $applicationId = env('SENDBIRD_APPLICATION_ID');
+        $apiKey = env('SENDBIRD_API_TOKEN');
         $nickname = $user->first_name . ' ' . $user->last_name;
 
         $response = Http::withHeaders([
@@ -95,7 +95,7 @@ class SendBirdUserController extends Controller
             Log::info('SendBird user created successfully for user ID: ' . $user->id);
 
             // Join the user to a SendBird group channel
-            $channelUrl = env('SENDBIRD_TEMP_INTERNAL_AGENTS_GROUP_URL'); // Replace with your actual channel URL
+            $channelUrl = env('SENDBIRD_INTERNAL_AGENTS_GROUP_URL'); // Replace with your actual channel URL
             $joinChannelResponse = $this->joinSendBirdGroupChannel((string) $user->id, $channelUrl);
 
             if ($joinChannelResponse->successful()) {

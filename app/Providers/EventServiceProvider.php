@@ -63,7 +63,7 @@ class EventServiceProvider extends ServiceProvider
         ],
 
         MissedCallEvent::class => [
-            ChargeUserForMissedCall::class,
+            // ChargeUserForMissedCall::class,
             MakeUserOffline::class,
             AddMissedCallUserActivity::class,
         ],

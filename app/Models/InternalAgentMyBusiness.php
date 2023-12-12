@@ -2,11 +2,36 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class InternalAgentMyBusiness extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
+
+    public function getApplicationDateAttribute($value)
+    {
+        $date = Carbon::parse($value);
+    
+        if (auth()->user()) {
+            $timezone = auth()->user()->timezone;
+            $date->timezone($timezone);
+        }
+    
+        return $date->format('m/d/Y');
+    }
+    
+    public function getPolicyDraftDateAttribute($value)
+    {
+        $date = Carbon::parse($value);
+    
+        if (auth()->user()) {
+            $timezone = auth()->user()->timezone;
+            $date->timezone($timezone);
+        }
+    
+        return $date->format('m/d/Y');
+    }
 }
