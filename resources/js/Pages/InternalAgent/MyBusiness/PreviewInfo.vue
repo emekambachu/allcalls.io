@@ -92,7 +92,7 @@ let formatDate = date => {
             </div>
             <div class="flex">
                 <div><strong>Street Address 2:</strong></div>
-                <div class="ml-2"><strong>{{ form.client_street_address_2 }} </strong></div>
+                <div class="ml-2">{{ form.client_street_address_2 }} </div>
             </div>
             <div class="flex">
                 <div><strong>City:</strong></div>
@@ -109,7 +109,7 @@ let formatDate = date => {
             </div>
             <div class="flex">
                 <div><strong>Zip-code:</strong></div>
-                <div class="ml-2"><strong>{{ form.client_zipcode }} </strong></div>
+                <div class="ml-2">{{ form.client_zipcode }} </div>
             </div>
             <div class="flex">
                 <div><strong>Client Phone Number:</strong></div>
@@ -211,7 +211,7 @@ let formatDate = date => {
         <div class="grid my-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1">
             <div class="flex">
                 <div><strong>Policy Draft Date:</strong></div>
-                <div class="ml-2"><strong>{{ formatDate(form.policy_draft_date) }} </strong></div>
+                <div class="ml-2">{{ formatDate(form.policy_draft_date) }} </div>
             </div>
         </div>
         <hr>

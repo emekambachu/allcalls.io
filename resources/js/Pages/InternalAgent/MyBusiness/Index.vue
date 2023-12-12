@@ -166,7 +166,7 @@ let EditBusiness = (business_data) => {
                     <div class="flex justify-between">
                         <div>
                             <h1 class="text-4xl text-custom-sky font-bold mb-6">
-                                My Business
+                              <span v-if="$page.props.auth.role == 'admin'">Report</span> <span v-else>My</span>   Business
                             </h1>
                         </div>
 

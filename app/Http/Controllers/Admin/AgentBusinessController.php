@@ -43,7 +43,6 @@ class AgentBusinessController extends Controller
     }
     public function store(Request $request)
     {
-        // dd($request->all());
         $validate = Validator::make($request->all(), [
             'agent_full_name' => 'required',
             'agent_email' => 'required',
@@ -121,6 +120,7 @@ class AgentBusinessController extends Controller
 
     public function update(Request $request)
     {
+
         $validate = Validator::make($request->all(), [
             'agent_full_name' => 'required',
             'agent_email' => 'required',
@@ -158,6 +158,7 @@ class AgentBusinessController extends Controller
             ], 400);
         }
         $InternalAgentMyBusiness = InternalAgentMyBusiness::find($request->id);
+      
         if($InternalAgentMyBusiness){
             $InternalAgentMyBusiness->update([
                 'agent_id' => $request->agent_id,
@@ -173,7 +174,7 @@ class AgentBusinessController extends Controller
                 'premium_volumn' => $request->premium_volumn,
                 'carrier_writing_number' => $request->carrier_writing_number,
                 'this_app_from_lead' => $request->this_app_from_lead,
-                'source_of_lead' => $request->this_app_from_lead == 'NO' ? null : $request->source_of_lead,
+                'source_of_lead' => $request->this_app_from_lead === 'NO' ? null : $request->source_of_lead,
                 'policy_draft_date' => Carbon::parse($request->policy_draft_date),
                 'first_name' => $request->first_name,
                 'mi' => $request->mi,
