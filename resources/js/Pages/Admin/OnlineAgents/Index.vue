@@ -147,6 +147,7 @@ let getDeviceType = (userAgent) => {
                 <th scope="col" class="px-4 py-3">First Name</th>
                 <th scope="col" class="px-4 py-3">Last Name</th>
                 <th scope="col" class="px-4 py-3">Email</th>
+                <th scope="col" class="px-4 py-3">Balance</th>
                 <th scope="col" class="px-4 py-3">States</th>
                 <th scope="col" class="px-4 py-3">Call Status</th>
                 <th scope="col" class="px-4 py-3">Last call taken</th>
@@ -169,6 +170,9 @@ let getDeviceType = (userAgent) => {
                 </td>
                 <td class="text-gray-600 px-4 py-3">
                   {{ onlineUser.user.email }}
+                </td>
+                <td class="text-gray-600 px-4 py-3">
+                  {{ onlineUser.user.balance }}
                 </td>
                 <td class="text-gray-600 px-4 py-3">
                   <div v-for="(state, index) in onlineUser.user.states" :key="state.id"
