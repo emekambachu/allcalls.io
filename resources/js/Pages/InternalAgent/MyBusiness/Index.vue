@@ -191,7 +191,7 @@ let ViewDetail = (business_data) => {
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">Client Name</th>
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">Application Date</th>
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">Draft Date</th>
-                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">Carrier</th>
+                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">Carrier ( RN)</th>
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">Product</th>
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">APV (Annual Premium Volume)
                                     </th>
@@ -211,7 +211,7 @@ let ViewDetail = (business_data) => {
                                     </td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.application_date"></td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.policy_draft_date"></td>
-                                    <td class="text-gray-600 px-4 py-3">Carrier</td>
+                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.carrier_writing_number"></td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.product_name"></td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.premium_volumn"></td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.coverage_amount"></td>
