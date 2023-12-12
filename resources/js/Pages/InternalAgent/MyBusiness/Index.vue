@@ -49,14 +49,14 @@ const presetDates = ref([
 
 
 
-let { agentInvites, states, requestData , agents } = defineProps({
+let { agentInvites, states, requestData, agents } = defineProps({
     businesses: {
         required: true,
         type: Array,
     },
     states: Array,
     requestData: Array,
-    agents:Array,
+    agents: Array,
 });
 
 
@@ -109,11 +109,7 @@ let filterBusiness = () => {
 
 
 }
-let addBusinessModal = ref(false)
 
-let addBusiness = () => {
-    addBusinessModal.value = true
-}
 // get Agent invites by pagination start
 let fetchagentInvites = (page) => {
     let url = new URL(page);
@@ -130,6 +126,7 @@ let fetchagentInvites = (page) => {
 };
 // get Agent invites by pagination end
 let viewDetailModal = ref(false)
+let addBusinessModal = ref(false)
 let businessData = ref(null)
 let ViewDetail = (business_data) => {
     let selectedState = states.find(state => state.id === business_data.client_state)
@@ -139,10 +136,45 @@ let ViewDetail = (business_data) => {
     businessData.value = business_data
     viewDetailModal.value = true
 }
+
+let addBusiness = () => {
+    businessData.value = null
+    addBusinessModal.value = true
+}
+let EditBusiness = (business_data) => {
+    addBusinessModal.value = true
+    businessData.value = business_data
+}
+let ClearFilter = () => {
+    try {
+        const baseUrl = page.url.split('?')[0];
+        router.visit(baseUrl)
+    } catch (error) {
+
+    }
+}
 </script>
 <style scoped>
 /deep/ .dp__pointer {
     height: 42px;
+}
+
+.button-custom-back {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 600;
+    border-width: 1px;
+    align-items: center;
+    display: inline-flex;
+    border-color: rgb(107 114 128 / var(--tw-border-opacity));
+}
+
+.button-custom-back:hover {
+    background-color: #03243d;
+    color: #3cfa7a;
+    transition-duration: 150ms;
 }
 </style>
 <template>
@@ -160,11 +192,11 @@ let ViewDetail = (business_data) => {
                     <div class="flex justify-between">
                         <div>
                             <h1 class="text-4xl text-custom-sky font-bold mb-6">
-                                My Business
+                                <span v-if="$page.props.auth.role == 'admin'">Report</span> <span v-else>My</span> Business
                             </h1>
                         </div>
 
-                        <div >
+                        <div>
                             <PrimaryButton @click="addBusiness()">Report Application </PrimaryButton>
                         </div>
                     </div>
@@ -177,6 +209,10 @@ let ViewDetail = (business_data) => {
                         <PrimaryButton type="button" class="ml-4" @click.prevent="filterBusiness">
                             <global-spinner :spinner="isLoading" /> Filter
                         </PrimaryButton>
+                        <button @click.prevent="ClearFilter()" type="button"
+                            class="button-custom-back px-4 py-3 rounded-md ml-2">
+                            <global-spinner :spinner="isLoadingReset" /> Reset
+                        </button>
                     </div>
                     <hr class="mb-4" />
                     <div class="mx-auto max-w-screen-xl sm:px-12">
@@ -188,6 +224,8 @@ let ViewDetail = (business_data) => {
                             <thead class="text-xs text-gray-300 uppercase bg-sky-900">
                                 <tr class="business-table-custom">
                                     <th scope="col" class="px-4 py-3">ID</th>
+                                    <th v-if="$page.props.auth.role == 'admin'" scope="col" style="min-width: 150px;"
+                                        class="px-4 py-3">Agent Name</th>
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">Client Name</th>
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">Application Date</th>
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">Draft Date</th>
@@ -196,10 +234,11 @@ let ViewDetail = (business_data) => {
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">APV (Annual Premium Volume)
                                     </th>
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">Coverage Amount</th>
-                                    
+
                                     <!-- <th scope="col" style="min-width: 150px;" class="px-4 py-3">Status</th> -->
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">App Type</th>
-                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">Agent Name</th>
+                                    <th v-if="$page.props.auth.role == 'internal-agent'" scope="col"
+                                        style="min-width: 150px;" class="px-4 py-3">Agent Name</th>
                                     <th scope="col" style="min-width: 100px;" class="px-4 py-3">Action</th>
                                 </tr>
                             </thead>
@@ -207,19 +246,41 @@ let ViewDetail = (business_data) => {
                                 <tr class="border-b border-gray-500" v-for="(businesse, index) in businesses.data"
                                     :key="businesse.id">
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse.id"></td>
+                                    <td v-if="$page.props.auth.role == 'admin'" class="text-gray-600 px-4 py-3"
+                                        v-text="businesse?.agent_full_name"></td>
+
                                     <td class="text-gray-600 px-4 py-3">{{ businesse.first_name }} {{ businesse.last_name }}
                                     </td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.application_date"></td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.policy_draft_date"></td>
-                                    <td class="text-gray-600 px-4 py-3">Carrier</td>
+                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.insurance_company"></td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.product_name"></td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.premium_volumn"></td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.coverage_amount"></td>
                                     <!-- <td class="text-gray-600 px-4 py-3">status</td> -->
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.source_of_lead"></td>
-                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.agent_full_name"></td>
+                                    <td v-if="$page.props.auth.role == 'internal-agent'" class="text-gray-600 px-4 py-3"
+                                        v-text="businesse?.agent_full_name"></td>
                                     <td class="text-gray-600 px-4 py-3">
-                                        <button class="text-blue-600" @click="ViewDetail(businesse)">view detail</button>
+                                        <button @click="ViewDetail(businesse)">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            </svg>
+                                        </button>
+
+                                        <button v-if="$page.props.auth.role === 'admin'" class="ml-3"
+                                            @click="EditBusiness(businesse)">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                                            </svg>
+                                        </button>
+
                                     </td>
                                 </tr>
                             </tbody>
@@ -285,13 +346,12 @@ let ViewDetail = (business_data) => {
             </div>
         </div>
 
-        <AddModal v-show="addBusinessModal" :agents="agents" :states="states" :addBusinessModal="addBusinessModal"
-            @close="addBusinessModal = false" :reIniteAgent="reIniteAgent" />
+        <AddModal v-if="addBusinessModal" :agents="agents" :states="states" :addBusinessModal="addBusinessModal"
+            @close="addBusinessModal = false" :businessData="businessData" :reIniteAgent="reIniteAgent" />
 
 
-        <ViewDetailCom v-if="viewDetailModal" :viewDetailModal="viewDetailModal" @close="viewDetailModal = false"
-            :businessData="businessData" />
+    <ViewDetailCom v-if="viewDetailModal" :viewDetailModal="viewDetailModal" @close="viewDetailModal = false"
+        :businessData="businessData" />
 
 
-    </AuthenticatedLayout>
-</template>
+</AuthenticatedLayout></template>
