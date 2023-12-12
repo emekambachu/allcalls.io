@@ -166,17 +166,17 @@ let formatMoney = (money) => {
           <table class="w-full text-sm text-left text-gray-400">
             <thead class="text-xs text-gray-300 uppercase bg-sky-900">
               <tr>
-                <th scope="col" class="px-4 py-3">User ID</th>
-                <th scope="col" class="px-4 py-3">First Name</th>
-                <th scope="col" class="px-4 py-3">Last Name</th>
-                <th scope="col" class="px-4 py-3">Email</th>
-                <th scope="col" class="px-4 py-3">Balance</th>
-                <th scope="col" class="px-4 py-3">States</th>
-                <th scope="col" class="px-4 py-3">Call Status</th>
-                <th scope="col" class="px-4 py-3">Last call taken</th>
-                <th scope="col" class="px-4 py-3">Listening For</th>
-                <th scope="col" class="px-4 py-3">last login device</th>
-                <th scope="col" class="px-4 py-3">Actions</th>
+                <th scope="col" class="px-4 py-3 whitespace-nowrap">User ID</th>
+                <th scope="col" class="px-4 py-3 whitespace-nowrap">First Name</th>
+                <th scope="col" class="px-4 py-3 whitespace-nowrap">Last Name</th>
+                <th scope="col" class="px-4 py-3 whitespace-nowrap">Email</th>
+                <th scope="col" class="px-4 py-3 whitespace-nowrap">Balance</th>
+                <th scope="col" class="px-4 py-3 whitespace-nowrap">States</th>
+                <th scope="col" class="px-4 py-3 whitespace-nowrap">Call Status</th>
+                <th scope="col" class="px-4 py-3 whitespace-nowrap">Last call taken</th>
+                <th scope="col" class="px-4 py-3 whitespace-nowrap">Listening For</th>
+                <th scope="col" class="px-4 py-3 whitespace-nowrap">last login device</th>
+                <th scope="col" class="px-4 py-3 whitespace-nowrap">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -186,22 +186,22 @@ let formatMoney = (money) => {
                 :key="onlineUser.id"
                 class="border-b border-gray-500"
               >
-                <td class="text-gray-600 px-4 py-3">
+                <td class="text-gray-600 px-4 py-3 whitespace-nowrap">
                   {{ onlineUser.user.id }}
                 </td>
-                <td class="text-gray-600 px-4 py-3">
+                <td class="text-gray-600 px-4 py-3 whitespace-nowrap">
                   {{ onlineUser.user.first_name }}
                 </td>
-                <td class="text-gray-600 px-4 py-3">
+                <td class="text-gray-600 px-4 py-3 whitespace-nowrap">
                   {{ onlineUser.user.last_name }}
                 </td>
-                <td class="text-gray-600 px-4 py-3">
+                <td class="text-gray-600 px-4 py-3 whitespace-nowrap">
                   {{ onlineUser.user.email }}
                 </td>
-                <td class="text-gray-600 px-4 py-3">
+                <td class="text-gray-600 px-4 py-3 whitespace-nowrap">
                   {{ formatMoney(onlineUser.user.balance) }}
                 </td>
-                <td class="text-gray-600 px-4 py-3">
+                <td class="text-gray-600 px-4 py-3 whitespace-nowrap">
                   <div
                     v-for="(state, index) in onlineUser.user.states"
                     :key="state.id"
@@ -210,7 +210,7 @@ let formatMoney = (money) => {
                     {{ state.name }}
                   </div>
                 </td>
-                <td class="text-gray-600 px-4 py-3">
+                <td class="text-gray-600 px-4 py-3 whitespace-nowrap">
                   <span
                     :class="`${getStatusBadge(
                       onlineUser.user.call_status
@@ -219,17 +219,17 @@ let formatMoney = (money) => {
                     {{ onlineUser.user.call_status }}
                   </span>
                 </td>
-                <td class="text-gray-600 px-4 py-3">
+                <td class="text-gray-600 px-4 py-3 whitespace-nowrap">
                   {{
                     onlineUser.user.last_called_at
                       ? formatDate(onlineUser.user.last_called_at)
                       : ""
                   }}
                 </td>
-                <td class="text-gray-600 px-4 py-3">
+                <td class="text-gray-600 px-4 py-3 whitespace-nowrap">
                   {{ onlineUser.call_type.type }}
                 </td>
-                <td class="text-gray-600 px-4 py-3">
+                <td class="text-gray-600 px-4 py-3 whitespace-nowrap">
                   {{ getDeviceType(onlineUser.user?.latest_activity) }}
                   <div class="flex items-center justify-center">
                     <svg
