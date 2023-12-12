@@ -33,12 +33,15 @@ let stateOptions = computed(() => {
 
 const refreshPage = () => {
   if (usePage().url === '/admin/online-agents') {
-    router.visit("/admin/online-agents");
+    router.visit("/admin/online-agents", {
+      preserveScroll: true,
+    });
   }
 };
 let fetchData = () => {
   isLoading.value = true
   router.visit('/admin/online-agents', {
+    preserveScroll: true,
     data:{
       state_filteration:selectedStates.value
     }
@@ -46,7 +49,9 @@ let fetchData = () => {
 }
 let ResetPage = () => {
   isLoadingReset.value = true
-  router.visit('/admin/online-agents')
+  router.visit('/admin/online-agents', {
+    preserveScroll: true,
+  })
 }
 onMounted(() => {
   console.log("Registering event listener");
@@ -80,7 +85,8 @@ let formatDate = (date) => {
 
 let removeAgent = userId => {
   router.visit(`/admin/online-agents/${userId}`, {
-    method: 'DELETE'
+    method: 'DELETE',
+    preserveScroll: true,
   });
 }
 let deviceName = ref(null)
