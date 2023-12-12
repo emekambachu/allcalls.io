@@ -191,7 +191,7 @@ let ViewDetail = (business_data) => {
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">Client Name</th>
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">Application Date</th>
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">Draft Date</th>
-                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">Carrier ( RN)</th>
+                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">Carrier Writing #</th>
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">Product</th>
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">APV (Annual Premium Volume)
                                     </th>
