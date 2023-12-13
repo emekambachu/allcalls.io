@@ -208,12 +208,42 @@ let minimizedArray = (arr) => {
                   {{ formatMoney(onlineUser.user.balance) }}
                 </td>
                 <td class="text-gray-600 px-4 py-3">
-                  <div
-                    v-for="(state, index) in minimizedArray(onlineUser.user.states)"
-                    :key="state.id"
-                    class="bg-blue-100 hover:bg-blue-200 mb-2 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400 inline-flex items-center justify-center"
-                  >
-                    {{ state.name }}
+                  <div class="flex items-center">
+                    <div
+                      v-for="(state, index) in minimizedArray(onlineUser.user.states)"
+                      :key="state.id"
+                      class="bg-blue-100 hover:bg-blue-200 mb-2 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400 inline-flex items-center justify-center"
+                    >
+                      {{ state.name }}
+                    </div>
+
+                    <div v-if="onlineUser.user.states.length > 2">
+                      <Popover class="relative mr-2">
+                        <PopoverButton>
+                          <svg
+                            class="w-3 h-3 text-gray-800 cursor-pointer"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor"
+                            viewBox="0 0 16 3"
+                          >
+                            <path
+                              d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"
+                            />
+                          </svg>
+                        </PopoverButton>
+
+                        <PopoverPanel class="absolute z-10 w-40 -left-20">
+                          <div
+                            v-for="(state, index) in onlineUser.user.states"
+                            :key="state.id"
+                            class="bg-blue-100 hover:bg-blue-200 mb-2 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400 inline-flex items-center justify-center"
+                          >
+                            {{ state.name }}
+                          </div>
+                        </PopoverPanel>
+                      </Popover>
+                    </div>
                   </div>
                 </td>
                 <td class="text-gray-600 px-4 py-3">
