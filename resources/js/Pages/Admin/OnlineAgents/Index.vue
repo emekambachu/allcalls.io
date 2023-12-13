@@ -112,6 +112,13 @@ let getDeviceType = (userAgent) => {
 let formatMoney = (money) => {
   return "$" + new Intl.NumberFormat().format(money);
 };
+
+let minimizedArray = (arr) => {
+  // check if the elements are more than 2
+  // if so, return the first two elements
+  // otherwise, return the array as it is
+  return arr.length > 2 ? arr.slice(0, 2) : arr;
+};
 </script>
 
 <template>
@@ -202,7 +209,7 @@ let formatMoney = (money) => {
                 </td>
                 <td class="text-gray-600 px-4 py-3">
                   <div
-                    v-for="(state, index) in onlineUser.user.states"
+                    v-for="(state, index) in minimizedArray(onlineUser.user.states)"
                     :key="state.id"
                     class="bg-blue-100 hover:bg-blue-200 mb-2 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400 inline-flex items-center justify-center"
                   >
