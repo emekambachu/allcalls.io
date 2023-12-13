@@ -235,7 +235,7 @@ let minimizedArray = (arr) => {
                         </PopoverButton>
 
                         <PopoverPanel class="absolute z-10 w-40 -left-20">
-                          <div class="bg-white p-2 border border-gray-100 shadow flex justify-center items-center flex-wrap">
+                          <div class="bg-white p-2 border border-gray-100 shadow flex justify-center items-center flex-wrap" style="width: 200px">
                             <div
                               v-for="(state, index) in onlineUser.user.states"
                               :key="state.id"
