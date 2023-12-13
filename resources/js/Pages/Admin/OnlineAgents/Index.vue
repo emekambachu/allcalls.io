@@ -4,6 +4,8 @@ import { onMounted, ref, computed } from "vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import Multiselect from "@vueform/multiselect";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
+
 let page = usePage()
 const props = defineProps({
   onlineUsers: {
@@ -114,6 +116,12 @@ let formatMoney = (money) => {
 };
 let paginate = (url) => {
   router.visit(url);
+}
+let minimizedArray = (arr) => {
+  // check if the elements are more than 2
+  // if so, return the first two elements
+  // otherwise, return the array as it is
+  return arr.length > 2 ? arr.slice(0, 2) : arr;
 };
 </script>
 
@@ -126,7 +134,7 @@ let paginate = (url) => {
     </template>
     <div class="py-14">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-        <div class="p-4 rounded-lg bg-white">
+        <div class="p-4 rounded-lg bg-white" style="overflow-x: scroll;">
           <h3 class="text-4xl text-custom-sky font-bold mb-6">Online Agents</h3>
           <hr class="mb-4" />
           <div
@@ -177,6 +185,7 @@ let paginate = (url) => {
                 <th scope="col" class="px-4 py-3">States</th>
                 <th scope="col" class="px-4 py-3">Call Status</th>
                 <th scope="col" class="px-4 py-3">Last call taken</th>
+                <th scope="col" class="px-4 py-3">Platform</th>
                 <th scope="col" class="px-4 py-3">Listening For</th>
                 <th scope="col" class="px-4 py-3">Actions</th>
               </tr>
@@ -204,12 +213,44 @@ let paginate = (url) => {
                   {{ formatMoney(onlineUser.user.balance) }}
                 </td>
                 <td class="text-gray-600 px-4 py-3">
-                  <div
-                    v-for="(state, index) in onlineUser.user.states"
-                    :key="state.id"
-                    class="bg-blue-100 hover:bg-blue-200 mb-2 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400 inline-flex items-center justify-center"
-                  >
-                    {{ state.name }}
+                  <div class="flex items-center">
+                    <div
+                      v-for="(state, index) in minimizedArray(onlineUser.user.states)"
+                      :key="state.id"
+                      class="bg-blue-100 hover:bg-blue-200 mb-2 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400 inline-flex items-center justify-center"
+                    >
+                      {{ state.name }}
+                    </div>
+
+                    <div v-if="onlineUser.user.states.length > 2">
+                      <Popover class="relative mr-2">
+                        <PopoverButton>
+                          <svg
+                            class="w-3 h-3 text-gray-800 cursor-pointer"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor"
+                            viewBox="0 0 16 3"
+                          >
+                            <path
+                              d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"
+                            />
+                          </svg>
+                        </PopoverButton>
+
+                        <PopoverPanel class="absolute z-10 w-40 -left-20">
+                          <div class="bg-white p-2 border border-gray-100 shadow flex justify-center items-center flex-wrap" style="width: 200px">
+                            <div
+                              v-for="(state, index) in onlineUser.user.states"
+                              :key="state.id"
+                              class="bg-blue-100 hover:bg-blue-200 mb-2 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400 inline-flex items-center justify-center"
+                            >
+                              {{ state.name }}
+                            </div>
+                          </div>
+                        </PopoverPanel>
+                      </Popover>
+                    </div>
                   </div>
                 </td>
                 <td class="text-gray-600 px-4 py-3">
@@ -227,6 +268,9 @@ let paginate = (url) => {
                       ? formatDate(onlineUser.user.last_called_at)
                       : ""
                   }}
+                </td>
+                <td>
+                  {{ onlineUser.user.last_login_platform ?? 'N/A' }}
                 </td>
                 <td class="text-gray-600 px-4 py-3">
                   {{ onlineUser.call_type.type }}
@@ -251,8 +295,6 @@ let paginate = (url) => {
                         d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
                       />
                     </svg>
-
-                    Remove
                   </button>
                 </td>
               </tr>
