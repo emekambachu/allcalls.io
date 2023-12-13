@@ -152,7 +152,7 @@ let ReInviteAgentFun = () => {
                   <td class="text-gray-600 px-4 py-3" v-text="index + 1"></td>
                   <td class="text-gray-600 px-4 py-3" v-text="agentInvite?.upline_id"></td>
                   <td class="text-gray-600 px-4 py-3" v-text="agentInvite.email"></td>
-                  <td class="text-gray-600 px-4 py-3" >{{ agentInvite?.invited_by.first_name }} {{ agentInvite?.invited_by.last_name }}</td>
+                  <td class="text-gray-600 px-4 py-3" >{{ agentInvite?.invited_by?.first_name }} {{ agentInvite?.invited_by?.last_name }}</td>
                   <td class="text-gray-600 px-4 py-3" v-text="agentInvite?.get_agent_level?.name"></td>
                   <td class="text-gray-600 px-4 py-3">
                     <a class="text-blue-500 hover:text-blue-700 hover:underline" target="_blank" :href="agentInvite.url"
