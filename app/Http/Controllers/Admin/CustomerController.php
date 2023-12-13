@@ -67,7 +67,7 @@ class CustomerController extends Controller
             ->with('roles')
             ->with('callTypes')
             ->orderBy("users.created_at","DESC")
-            ->paginate(10);
+            ->paginate(100);
 
         $callTypes = CallType::get();
         $states = State::get();

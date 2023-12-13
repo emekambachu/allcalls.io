@@ -83,13 +83,10 @@ let deleteInvite = (agentInvite) => {
     console.log("Deletion cancelled");
   }
 };
-let fetchagentInvites = (page) => {
-  let url = new URL(page);
-  if (url.protocol !== "https:") {
-    url.protocol = "https:";
-  }
-  let httpsPage = url.toString();
-  router.visit(httpsPage, { method: "get" });
+
+
+let paginate = (url) => {
+  router.visit(url);
 };
 
 let reInviteAgent = (agentInvite) => {
@@ -140,9 +137,10 @@ let ReInviteAgentFun = () => {
               <thead class="text-xs text-gray-300 uppercase bg-sky-900">
                 <tr>
                   <th scope="col" class="px-4 py-3">ID</th>
-                  <th scope="col" class="px-4 py-3">Upline ID</th>
+                  <th scope="col" style="min-width: 130px;" class="px-4 py-3">Upline ID</th>
                   <th scope="col" class="px-4 py-3">Email</th>
-                  <th scope="col" class="px-4 py-3">Level</th>
+                  <th scope="col" style="min-width: 130px;" class="px-4 py-3">Invited By</th>
+                  <th scope="col" style="min-width: 130px;" class="px-4 py-3">Level</th>
                   <th scope="col" class="px-4 py-3">URL</th>
                   <th scope="col" class="px-4 py-3">Status</th>
                   <th scope="col" class="px-4 py-3 text-center">Actions</th>
@@ -154,6 +152,7 @@ let ReInviteAgentFun = () => {
                   <td class="text-gray-600 px-4 py-3" v-text="index + 1"></td>
                   <td class="text-gray-600 px-4 py-3" v-text="agentInvite?.upline_id"></td>
                   <td class="text-gray-600 px-4 py-3" v-text="agentInvite.email"></td>
+                  <td class="text-gray-600 px-4 py-3" >{{ agentInvite?.invited_by.first_name }} {{ agentInvite?.invited_by.last_name }}</td>
                   <td class="text-gray-600 px-4 py-3" v-text="agentInvite?.get_agent_level?.name"></td>
                   <td class="text-gray-600 px-4 py-3">
                     <a class="text-blue-500 hover:text-blue-700 hover:underline" target="_blank" :href="agentInvite.url"
@@ -190,56 +189,37 @@ let ReInviteAgentFun = () => {
                 </tr>
               </tbody>
             </table>
-            <div class="p-4">
-              <nav
-                class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
-                aria-label="Table navigation">
-                <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
+
+            <nav class="flex justify-between my-4" v-if="agentInvites.links">
+              <div v-if="agentInvites">
+                <span class="text-sm text-gray-700">
                   Showing
-                  <span class="font-semibold text-custom-blue">{{
-                    agentInvites.current_page
-                  }}</span>
-                  of
-                  <span class="font-semibold text-custom-blue">{{
-                    agentInvites.last_page
-                  }}</span>
+                  <span class="font-semibold text-gray-900">{{ agentInvites.from }}</span>
+                  to
+                  <span class="font-semibold text-gray-900">{{ agentInvites.to }}</span> of
+                  <span class="font-semibold text-gray-900">{{ agentInvites.total }}</span>
+                  Entries
                 </span>
-                <ul class="inline-flex items-stretch -space-x-px cursor-pointer">
-                  <li>
-                    <a v-if="agentInvites.prev_page_url" @click="fetchagentInvites(agentInvites.prev_page_url)"
-                      class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-custom-white rounded-l-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white">
-                      <span class="sr-only">Previous</span>
-                      <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                          d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                          clip-rule="evenodd" />
-                      </svg>
-                    </a>
-                  </li>
+              </div>
 
-                  <li>
-                    <a
-                      class="flex items-center justify-center text-sm py-2 px-3 leading-tight font-extrabold text-gray-500 bg-custom-white shadow-2xl hover:bg-sky-950 hover:shadow-2xl hover:text-white">{{
-                        agentInvites.current_page }}
-                    </a>
-                  </li>
-
-                  <li>
-                    <a v-if="agentInvites.next_page_url" @click="fetchagentInvites(agentInvites.next_page_url)"
-                      class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-custom-white rounded-r-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white">
-                      <span class="sr-only">Next</span>
-                      <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                          d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                          clip-rule="evenodd" />
-                      </svg>
-                    </a>
-                  </li>
-                </ul>
-              </nav>
-            </div>
+              <ul class="inline-flex -space-x-px text-base h-10">
+                <li v-for="(link, index) in agentInvites.links" :key="link.label"
+                  :class="{ disabled: link.url === null }">
+                  <a href="#" @click.prevent="paginate(link.url)" :class="[
+                    'flex items-center justify-center px-4 h-10 border border-gray-300',
+                    link.active
+                      ? 'text-blue-600 bg-blue-50 hover:bg-blue-100 hover:text-blue-700'
+                      : 'leading-tight text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700',
+                    {
+                      'rounded-l-lg': index === 0,
+                      'rounded-r-lg': index === agentInvites.links.length - 1,
+                    },
+                  ]" v-html="link.label"></a>
+                </li>
+              </ul>
+            </nav>
+            <br>
+            
           </div>
 
 

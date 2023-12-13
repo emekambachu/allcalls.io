@@ -53,7 +53,7 @@ class CallsController extends Controller
                 }
             })
             ->orderBy($orderColumn, $orderBy)
-            ->paginate(50);
+            ->paginate(100);
         return Inertia::render('Admin/Calls/Index', [
             'requestData' => $request->all(),
             'calls' => $calls

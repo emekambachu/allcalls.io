@@ -32,23 +32,10 @@ let formData = ref({
   phone: props.requestData.phone,
 });
 
-let fetchAvailableNumber = (page) => {
-  // Create URL object from page
-  let url = new URL(page);
-  console.log(page);
-  if (formData.value.phone !== undefined && formData.value.phone !== null) {
-    url.searchParams.set("phone", formData.value.phone);
-  }
 
-  // Ensure the protocol is https
-  if (url.protocol !== "https:") {
-    url.protocol = "https:";
-  }
 
-  // Get the https URL as a string
-  let httpsPage = url.toString();
-
-  router.visit(httpsPage, { method: "get" });
+let paginate = (url) => {
+  router.visit(url);
 };
 
 let showModal = ref(false);
@@ -135,10 +122,9 @@ let releaseAllNumbers = () => {
         <div class="text-4xl text-custom-sky font-bold mb-6">Available Number</div>
       </div>
       <div class="flex items-center">
-        <button @click.prevent="releaseAllNumbers" class="button-custom-back px-3 py-2 rounded-md mr-2">Release All Numbers</button>
-        <PrimaryButton @click="addAvailableNumberModal(availableNumber.current_page)"
-          >Add New</PrimaryButton
-        >
+        <button @click.prevent="releaseAllNumbers" class="button-custom-back px-3 py-2 rounded-md mr-2">Release All
+          Numbers</button>
+        <PrimaryButton @click="addAvailableNumberModal(availableNumber.current_page)">Add New</PrimaryButton>
       </div>
     </div>
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
@@ -162,20 +148,14 @@ let releaseAllNumbers = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr
-                  v-for="availableNumber in availableNumber.data"
-                  :key="availableNumber.id"
-                  class="border-b border-gray-500"
-                >
+                <tr v-for="availableNumber in availableNumber.data" :key="availableNumber.id"
+                  class="border-b border-gray-500">
                   <td class="text-gray-600 px-4 py-3">{{ availableNumber.id }}</td>
                   <td class="text-gray-600 px-4 py-3">
                     {{ availableNumber.phone }}
                   </td>
                   <td class="text-gray-600 px-4 py-3">
-                    <a
-                      v-if="availableNumber.user"
-                      :href="'/admin/customer/detail/' + availableNumber.user.id"
-                    >
+                    <a v-if="availableNumber.user" :href="'/admin/customer/detail/' + availableNumber.user.id">
                       {{ availableNumber.user.first_name }}
                     </a>
                   </td>
@@ -188,77 +168,36 @@ let releaseAllNumbers = () => {
                 </tr>
               </tbody>
             </table>
-            <div class="p-4">
-              <nav
-                class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
-                aria-label="Table navigation"
-              >
-                <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
+
+            <nav class="flex justify-between my-4" v-if="availableNumber.links">
+              <div v-if="availableNumber">
+                <span class="text-sm text-gray-700">
                   Showing
-                  <span class="font-semibold text-custom-blue">{{
-                    availableNumber.current_page
-                  }}</span>
-                  of
-                  <span class="font-semibold text-custom-blue">{{
-                    availableNumber.last_page
-                  }}</span>
+                  <span class="font-semibold text-gray-900">{{ availableNumber.from }}</span>
+                  to
+                  <span class="font-semibold text-gray-900">{{ availableNumber.to }}</span> of
+                  <span class="font-semibold text-gray-900">{{ availableNumber.total }}</span>
+                  Entries
                 </span>
-                <ul class="inline-flex items-stretch -space-x-px cursor-pointer">
-                  <li>
-                    <a
-                      v-if="availableNumber.prev_page_url"
-                      @click="fetchAvailableNumber(availableNumber.prev_page_url)"
-                      class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-custom-white rounded-l-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white"
-                    >
-                      <span class="sr-only">Previous</span>
-                      <svg
-                        class="w-5 h-5"
-                        aria-hidden="true"
-                        fill="currentColor"
-                        viewbox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                    </a>
-                  </li>
+              </div>
 
-                  <li>
-                    <a
-                      class="flex items-center justify-center text-sm py-2 px-3 leading-tight font-extrabold text-gray-500 bg-custom-white shadow-2xl hover:bg-sky-950 hover:shadow-2xl hover:text-white"
-                      >{{ availableNumber.current_page }}
-                    </a>
-                  </li>
-
-                  <li>
-                    <a
-                      v-if="availableNumber.next_page_url"
-                      @click="fetchAvailableNumber(availableNumber.next_page_url)"
-                      class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-custom-white rounded-r-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white"
-                    >
-                      <span class="sr-only">Next</span>
-                      <svg
-                        class="w-5 h-5"
-                        aria-hidden="true"
-                        fill="currentColor"
-                        viewbox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                    </a>
-                  </li>
-                </ul>
-              </nav>
-            </div>
+              <ul class="inline-flex -space-x-px text-base h-10">
+                <li v-for="(link, index) in availableNumber.links" :key="link.label"
+                  :class="{ disabled: link.url === null }">
+                  <a href="#" @click.prevent="paginate(link.url)" :class="[
+                    'flex items-center justify-center px-4 h-10 border border-gray-300',
+                    link.active
+                      ? 'text-blue-600 bg-blue-50 hover:bg-blue-100 hover:text-blue-700'
+                      : 'leading-tight text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700',
+                    {
+                      'rounded-l-lg': index === 0,
+                      'rounded-r-lg': index === availableNumber.links.length - 1,
+                    },
+                  ]" v-html="link.label"></a>
+                </li>
+              </ul>
+            </nav>
+            <br>
           </div>
         </div>
       </div>
@@ -281,14 +220,8 @@ let releaseAllNumbers = () => {
     </Modal> -->
 
     <Modal :show="availableNumberModal" @close="availableNumberModal = false">
-      <Create
-        :availableNumberModal="availableNumberModal"
-        :currentPage="currentPage"
-        :callTypes="callTypes"
-        :states="states"
-        :user="user"
-        @close="availableNumberModal = false"
-      ></Create>
+      <Create :availableNumberModal="availableNumberModal" :currentPage="currentPage" :callTypes="callTypes"
+        :states="states" :user="user" @close="availableNumberModal = false"></Create>
     </Modal>
   </AuthenticatedLayout>
 </template>
