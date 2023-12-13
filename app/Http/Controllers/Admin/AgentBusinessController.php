@@ -23,7 +23,7 @@ class AgentBusinessController extends Controller
                 $query->whereBetween('created_at', [$startDate, $endDate]);
             }
         })->orderBy('created_at', 'desc')
-        ->paginate(10);
+        ->paginate(100);
 
         $states = State::get();
 

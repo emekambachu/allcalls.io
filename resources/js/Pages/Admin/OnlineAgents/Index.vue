@@ -6,6 +6,7 @@ import Multiselect from "@vueform/multiselect";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
 
+let page = usePage()
 const props = defineProps({
   onlineUsers: {
     type: Array,
@@ -44,7 +45,7 @@ const refreshPage = () => {
 };
 let fetchData = () => {
   isLoading.value = true;
-  router.visit("/admin/online-agents", {
+  router.visit(page.url, {
     preserveScroll: true,
     data: {
       state_filteration: selectedStates.value,
@@ -113,7 +114,9 @@ let getDeviceType = (userAgent) => {
 let formatMoney = (money) => {
   return "$" + new Intl.NumberFormat().format(money);
 };
-
+let paginate = (url) => {
+  router.visit(url);
+}
 let minimizedArray = (arr) => {
   // check if the elements are more than 2
   // if so, return the first two elements
@@ -190,7 +193,7 @@ let minimizedArray = (arr) => {
             <tbody>
               <!-- The Table Body -->
               <tr
-                v-for="onlineUser in onlineUsers"
+                v-for="onlineUser in onlineUsers.data"
                 :key="onlineUser.id"
                 class="border-b border-gray-500"
               >
@@ -297,6 +300,36 @@ let minimizedArray = (arr) => {
               </tr>
             </tbody>
           </table>
+
+          <nav class="flex justify-between my-4" v-if="onlineUsers.links">
+              <div v-if="onlineUsers">
+                <span class="text-sm text-gray-700">
+                  Showing
+                  <span class="font-semibold text-gray-900">{{ onlineUsers.from }}</span>
+                  to
+                  <span class="font-semibold text-gray-900">{{ onlineUsers.to }}</span> of
+                  <span class="font-semibold text-gray-900">{{ onlineUsers.total }}</span>
+                  Entries
+                </span>
+              </div>
+
+              <ul class="inline-flex -space-x-px text-base h-10">
+                <li v-for="(link, index) in onlineUsers.links" :key="link.label"
+                  :class="{ disabled: link.url === null }">
+                  <a href="#" @click.prevent="paginate(link.url)" :class="[
+                    'flex items-center justify-center px-4 h-10 border border-gray-300',
+                    link.active
+                      ? 'text-blue-600 bg-blue-50 hover:bg-blue-100 hover:text-blue-700'
+                      : 'leading-tight text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700',
+                    {
+                      'rounded-l-lg': index === 0,
+                      'rounded-r-lg': index === onlineUsers.links.length - 1,
+                    },
+                  ]" v-html="link.label"></a>
+                </li>
+              </ul>
+            </nav>
+            <br>
         </div>
       </div>
     </div>
