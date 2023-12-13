@@ -182,6 +182,7 @@ let minimizedArray = (arr) => {
                 <th scope="col" class="px-4 py-3">States</th>
                 <th scope="col" class="px-4 py-3">Call Status</th>
                 <th scope="col" class="px-4 py-3">Last call taken</th>
+                <th scope="col" class="px-4 py-3">Platform</th>
                 <th scope="col" class="px-4 py-3">Listening For</th>
                 <th scope="col" class="px-4 py-3">Actions</th>
               </tr>
@@ -264,6 +265,9 @@ let minimizedArray = (arr) => {
                       ? formatDate(onlineUser.user.last_called_at)
                       : ""
                   }}
+                </td>
+                <td>
+                  {{ onlineUser.user.last_login_platform ?? 'N/A' }}
                 </td>
                 <td class="text-gray-600 px-4 py-3">
                   {{ onlineUser.call_type.type }}
