@@ -4,6 +4,7 @@ import { onMounted, ref, computed } from "vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import Multiselect from "@vueform/multiselect";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
 
 const props = defineProps({
   onlineUsers: {
