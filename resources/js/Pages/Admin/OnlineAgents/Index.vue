@@ -235,12 +235,14 @@ let minimizedArray = (arr) => {
                         </PopoverButton>
 
                         <PopoverPanel class="absolute z-10 w-40 -left-20">
-                          <div
-                            v-for="(state, index) in onlineUser.user.states"
-                            :key="state.id"
-                            class="bg-blue-100 hover:bg-blue-200 mb-2 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400 inline-flex items-center justify-center"
-                          >
-                            {{ state.name }}
+                          <div class="bg-white p-2 border border-gray-100 shadow">
+                            <div
+                              v-for="(state, index) in onlineUser.user.states"
+                              :key="state.id"
+                              class="bg-blue-100 hover:bg-blue-200 mb-2 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400 inline-flex items-center justify-center"
+                            >
+                              {{ state.name }}
+                            </div>
                           </div>
                         </PopoverPanel>
                       </Popover>
