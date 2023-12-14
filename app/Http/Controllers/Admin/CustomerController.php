@@ -21,6 +21,7 @@ use App\Models\UserCallTypeState;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\NotificationGroupMember;
+use App\Models\UserActivity;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
@@ -185,12 +186,19 @@ class CustomerController extends Controller
 
     public function getActivity($id)
     {
-        $activities = Activity::whereUserId($id)->orderBy('created_at', 'desc')->with('user')->paginate(100);
+        $activities = UserActivity::whereUserId($id)->orderBy('created_at', 'desc')->with('user')->paginate(100);
         return response()->json([
             'activities' => $activities
         ]);
     }
-
+    public function deleteActivity($id)
+    {
+         UserActivity::whereUserId($id)->delete();
+        $activities = UserActivity::whereUserId($id)->orderBy('created_at', 'desc')->with('user')->paginate(100);
+        return response()->json([
+            'activities' => $activities
+        ]);
+    }
     public function update(Request $request, $id)
     {
         $user = User::find($id);
