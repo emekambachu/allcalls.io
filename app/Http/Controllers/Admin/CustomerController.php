@@ -160,7 +160,7 @@ class CustomerController extends Controller
 
     public function getUserCall($id)
     {
-        $calls = Call::whereUserId($id)->with('user','getClient', 'callType')->paginate(10);
+        $calls = Call::whereUserId($id)->with('user','getClient', 'callType')->orderBy('created_at', 'desc')->paginate(100);
         $states = State::all();
         return response()->json([
             'calls' => $calls,
@@ -169,7 +169,7 @@ class CustomerController extends Controller
     }
 
     public function getCustomerClients($id){
-        $Clients = Client::where('user_id', $id)->paginate(10);
+        $Clients = Client::where('user_id', $id)->orderBy('created_at', 'desc')->paginate(100);
         return response()->json([
             'clients' => $Clients
         ]);
@@ -177,7 +177,7 @@ class CustomerController extends Controller
 
     public function getTransaction($id)
     {
-        $transactions = Transaction::whereUserId($id)->with('card')->paginate(10);
+        $transactions = Transaction::whereUserId($id)->with('card')->orderBy('created_at', 'desc')->paginate(100);
         return response()->json([
             'transactions' => $transactions
         ]);
@@ -185,7 +185,7 @@ class CustomerController extends Controller
 
     public function getActivity($id)
     {
-        $activities = Activity::whereUserId($id)->paginate(10);
+        $activities = Activity::whereUserId($id)->orderBy('created_at', 'desc')->with('user')->paginate(100);
         return response()->json([
             'activities' => $activities
         ]);
