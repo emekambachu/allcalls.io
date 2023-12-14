@@ -77,7 +77,6 @@ let fetchactivitiesBypage = async (page) => {
                   {{ activity.user.email }}
 
                 </td>
-                {{ activity.last_activity_at }} - {{ activity.created_at }}
                 <td class="text-gray-700 px-4 py-3">{{ formatCustomDate(activity.last_activity_at) }} </td>
                 <td class="text-gray-700 px-4 py-3">{{ (activity.ip_address) ? activity.ip_address : 'N/A' }}</td>
                 <td class="text-gray-700 px-4 py-3">{{ (activity.devices_details) ? activity.devices_details : 'N/A' }}
