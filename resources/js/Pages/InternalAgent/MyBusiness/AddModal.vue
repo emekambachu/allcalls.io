@@ -63,6 +63,9 @@ let form = ref({
 let edit_data = ref(false)
 if (props.businessData) {
   form.value = props.businessData
+  if(!props.businessData.source_of_lead){
+    form.value.source_of_lead = 'Select'
+  }
   edit_data.value = true
 }
 const isValidEmail = (email) => {
