@@ -772,7 +772,7 @@ let appDownloadModal = ref(false);
                         leave-from-class="transform scale-100 opacity-100" leave-to-class="transform scale-95 opacity-0">
                         <!-- Notifications list -->
                         <MenuItems
-                          class="absolute right-0 mt-2 w-80 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none">
+                          class="absolute right-0 mt-2 w-80 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none z-10">
                           <div class="text-lg font-bold px-3 py-2">Notifications</div>
 
                           <div class="px-3 py-2 text-sm text-gray-600 font-bold flex items-center justify-between"
