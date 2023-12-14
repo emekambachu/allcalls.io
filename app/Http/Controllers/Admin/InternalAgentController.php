@@ -79,7 +79,7 @@ class InternalAgentController extends Controller
             ->with('callTypes')
             ->with('getAgentLevel')
             ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->paginate(100);
 
         // dd($agents);
 

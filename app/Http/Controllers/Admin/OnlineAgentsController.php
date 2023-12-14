@@ -25,7 +25,7 @@ class OnlineAgentsController extends Controller
                 });
             })
             ->orderBy("created_at", "DESC")
-            ->get();
+            ->paginate(100);
 
         $onlineStats = State::whereHas('users.onlineUser')->withCount(['users as user_count' => function ($query) {
             $query->whereHas('onlineUser')->select(DB::raw('count(*)'));

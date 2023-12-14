@@ -31,7 +31,10 @@ class AgentInvite extends Model
         $invite->save();
         return true; // Successfully verified and marked as used
     }
-
+    public function invitedBy()
+    {
+        return $this->hasOne(User::class, 'id', 'invited_by');
+    }
     public static function isAvailable($token)
     {
         // Find the invite by token
@@ -45,20 +48,19 @@ class AgentInvite extends Model
         return true; // Successfully verified and marked as used
     }
 
-    public static function tokenExpired($token) {
+    public static function tokenExpired($token)
+    {
         // Check if the invite has expired (older than 24 hours)
         $invite = self::where('token', $token)->first();
         $created = $invite->created_at;
         if ($created->lt(now()->subHours(24))) {
             return true; // Invite has expired
-        } 
+        }
         return false;
-
     }
 
-    public function getAgentLevel(){
+    public function getAgentLevel()
+    {
         return $this->belongsTo(InternalAgentLevel::class, 'level_id', 'id');
     }
-    
-
 }

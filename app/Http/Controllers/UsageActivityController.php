@@ -18,13 +18,13 @@ class UsageActivityController extends Controller
         if (Gate::allows('view-activities')) {
             $query = Activity::with('user')->orderBy('created_at', 'desc');
 
-            $activities = $query->paginate(10); 
+            $activities = $query->paginate(100); 
         } 
         else {            
             $user = Auth::user();
             $query = $user->activities()->with('user')->orderBy('created_at', 'desc');
 
-            $activities = $query->paginate(10);
+            $activities = $query->paginate(100);
         }
 
         return Inertia::render('Activities/Index', compact('activities'));

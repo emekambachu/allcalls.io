@@ -45,34 +45,9 @@ let formData = ref({
   last_four_card_no: props.requestData.last_four_card_no,
 });
 
-let fetchAgents = (page) => {
-  // Create URL object from page
-  let url = new URL(page);
-
-  if (formData.value.name !== undefined && formData.value.name !== null) {
-    url.searchParams.set("name", formData.value.name);
-  }
-  if (formData.value.email !== undefined && formData.value.email !== null) {
-    url.searchParams.set("email", formData.value.email);
-  }
-  if (formData.value.phone !== undefined && formData.value.phone !== null) {
-    url.searchParams.set("phone", formData.value.phone);
-  }
-  if (formData.value.card_no !== undefined && formData.value.card_no !== null) {
-    url.searchParams.set("card_no", formData.value.card_no);
-  }
-
-  // Ensure the protocol is https
-  if (url.protocol !== "https:") {
-    url.protocol = "https:";
-  }
-
-  // Get the https URL as a string
-  let httpsPage = url.toString();
-
-  router.visit(httpsPage, { method: "get" });
+let paginate = (url) => {
+  router.visit(url);
 };
-
 let showModal = ref(false);
 let userDetail = ref(null);
 let currentPage = ref(null);
@@ -476,56 +451,37 @@ let inviteAgentTree = (agent) => {
                 </tr>
               </tbody>
             </table>
-            <div class="p-4">
-              <nav
-                class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
-                aria-label="Table navigation">
-                <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
+
+            <nav class="flex justify-between my-4" v-if="agents.links">
+              <div v-if="agents">
+                <span class="text-sm text-gray-700">
                   Showing
-                  <span class="font-semibold text-custom-blue">{{
-                    agents.current_page
-                  }}</span>
-                  of
-                  <span class="font-semibold text-custom-blue">{{
-                    agents.last_page
-                  }}</span>
+                  <span class="font-semibold text-gray-900">{{ agents.from }}</span>
+                  to
+                  <span class="font-semibold text-gray-900">{{ agents.to }}</span> of
+                  <span class="font-semibold text-gray-900">{{ agents.total }}</span>
+                  Entries
                 </span>
-                <ul class="inline-flex items-stretch -space-x-px cursor-pointer">
-                  <li>
-                    <a v-if="agents.prev_page_url" @click="fetchAgents(agents.prev_page_url)"
-                      class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-custom-white rounded-l-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white">
-                      <span class="sr-only">Previous</span>
-                      <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                          d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                          clip-rule="evenodd" />
-                      </svg>
-                    </a>
-                  </li>
+              </div>
 
-                  <li>
-                    <a
-                      class="flex items-center justify-center text-sm py-2 px-3 leading-tight font-extrabold text-gray-500 bg-custom-white shadow-2xl hover:bg-sky-950 hover:shadow-2xl hover:text-white">{{
-                        agents.current_page }}
-                    </a>
-                  </li>
+              <ul class="inline-flex -space-x-px text-base h-10">
+                <li v-for="(link, index) in agents.links" :key="link.label"
+                  :class="{ disabled: link.url === null }">
+                  <a href="#" @click.prevent="paginate(link.url)" :class="[
+                    'flex items-center justify-center px-4 h-10 border border-gray-300',
+                    link.active
+                      ? 'text-blue-600 bg-blue-50 hover:bg-blue-100 hover:text-blue-700'
+                      : 'leading-tight text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700',
+                    {
+                      'rounded-l-lg': index === 0,
+                      'rounded-r-lg': index === agents.links.length - 1,
+                    },
+                  ]" v-html="link.label"></a>
+                </li>
+              </ul>
+            </nav>
+            <br>
 
-                  <li>
-                    <a v-if="agents.next_page_url" @click="fetchAgents(agents.next_page_url)"
-                      class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-custom-white rounded-r-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white">
-                      <span class="sr-only">Next</span>
-                      <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                          d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                          clip-rule="evenodd" />
-                      </svg>
-                    </a>
-                  </li>
-                </ul>
-              </nav>
-            </div>
           </div>
         </div>
       </div>

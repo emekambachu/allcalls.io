@@ -51,6 +51,7 @@ let GetagentInvites = () => {
 // get Agent invites by pagination start
 let fetchagentInvites = (page) => {
   slidingLoader.value = true
+  console.log('page', page);
   const urlParams = new URLSearchParams(new URL(page).search);
   const pageValue = urlParams.get('page');
   axios.get(`/internal-agent/get-agent-invites?page=${pageValue}`)
@@ -63,6 +64,7 @@ let fetchagentInvites = (page) => {
   })
   
 };
+
 // get Agent invites by pagination end
 
 // get agents api start
@@ -299,56 +301,36 @@ let inviteAgentTree = (agent) => {
                 </tr>
               </tbody>
             </table>
-            <div class="p-4">
-              <nav
-                class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
-                aria-label="Table navigation">
-                <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
+            <nav class="flex justify-between my-4" v-if="agentInvitesData.links">
+              <div v-if="agentInvitesData">
+                <span class="text-sm text-gray-700">
                   Showing
-                  <span class="font-semibold text-custom-blue">{{
-                    agentInvitesData.current_page
-                  }}</span>
-                  of
-                  <span class="font-semibold text-custom-blue">{{
-                    agentInvitesData.last_page
-                  }}</span>
+                  <span class="font-semibold text-gray-900">{{ agentInvitesData.from }}</span>
+                  to
+                  <span class="font-semibold text-gray-900">{{ agentInvitesData.to }}</span> of
+                  <span class="font-semibold text-gray-900">{{ agentInvitesData.total }}</span>
+                  Entries
                 </span>
-                <ul class="inline-flex items-stretch -space-x-px cursor-pointer">
-                  <li>
-                    <a v-if="agentInvitesData.prev_page_url" @click="fetchagentInvites(agentInvitesData.prev_page_url)"
-                      class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-custom-white rounded-l-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white">
-                      <span class="sr-only">Previous</span>
-                      <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                          d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                          clip-rule="evenodd" />
-                      </svg>
-                    </a>
-                  </li>
+              </div>
 
-                  <li>
-                    <a
-                      class="flex items-center justify-center text-sm py-2 px-3 leading-tight font-extrabold text-gray-500 bg-custom-white shadow-2xl hover:bg-sky-950 hover:shadow-2xl hover:text-white">{{
-                        agentInvitesData.current_page }}
-                    </a>
-                  </li>
-
-                  <li>
-                    <a v-if="agentInvitesData.next_page_url" @click="fetchagentInvites(agentInvitesData.next_page_url)"
-                      class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-custom-white rounded-r-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white">
-                      <span class="sr-only">Next</span>
-                      <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                          d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                          clip-rule="evenodd" />
-                      </svg>
-                    </a>
-                  </li>
-                </ul>
-              </nav>
-            </div>
+              <ul class="inline-flex -space-x-px text-base h-10">
+                <li v-for="(link, index) in agentInvitesData.links" :key="link.label"
+                  :class="{ disabled: link.url === null }">
+                  <a href="#" @click.prevent="fetchagentInvites(link.url)" :class="[
+                    'flex items-center justify-center px-4 h-10 border border-gray-300',
+                    link.active
+                      ? 'text-blue-600 bg-blue-50 hover:bg-blue-100 hover:text-blue-700'
+                      : 'leading-tight text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700',
+                    {
+                      'rounded-l-lg': index === 0,
+                      'rounded-r-lg': index === agentInvitesData.links.length - 1,
+                    },
+                  ]" v-html="link.label"></a>
+                </li>
+              </ul>
+            </nav>
+            <br>
+            
           </div>
 
 
@@ -434,77 +416,37 @@ let inviteAgentTree = (agent) => {
                 </tr>
               </tbody>
             </table>
-            <div class="p-4">
-              <nav
-                class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
-                aria-label="Table navigation"
-              >
-                <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
+
+            <nav class="flex justify-between my-4" v-if="agentsData.links">
+              <div v-if="agentsData">
+                <span class="text-sm text-gray-700">
                   Showing
-                  <span class="font-semibold text-custom-blue">{{
-                    agentsData.current_page
-                  }}</span>
-                  of
-                  <span class="font-semibold text-custom-blue">{{
-                    agentsData.last_page
-                  }}</span>
+                  <span class="font-semibold text-gray-900">{{ agentsData.from }}</span>
+                  to
+                  <span class="font-semibold text-gray-900">{{ agentsData.to }}</span> of
+                  <span class="font-semibold text-gray-900">{{ agentsData.total }}</span>
+                  Entries
                 </span>
-                <ul class="inline-flex items-stretch -space-x-px cursor-pointer">
-                  <li>
-                    <a
-                      v-if="agentsData.prev_page_url"
-                      @click="fetchagents(agentsData.prev_page_url)"
-                      class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-custom-white rounded-l-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white"
-                    >
-                      <span class="sr-only">Previous</span>
-                      <svg
-                        class="w-5 h-5"
-                        aria-hidden="true"
-                        fill="currentColor"
-                        viewbox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                    </a>
-                  </li>
+              </div>
 
-                  <li>
-                    <a
-                      class="flex items-center justify-center text-sm py-2 px-3 leading-tight font-extrabold text-gray-500 bg-custom-white shadow-2xl hover:bg-sky-950 hover:shadow-2xl hover:text-white"
-                      >{{ agentsData.current_page }}
-                    </a>
-                  </li>
-
-                  <li>
-                    <a
-                      v-if="agentsData.next_page_url"
-                      @click="fetchagents(agentsData.next_page_url)"
-                      class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-custom-white rounded-r-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white"
-                    >
-                      <span class="sr-only">Next</span>
-                      <svg
-                        class="w-5 h-5"
-                        aria-hidden="true"
-                        fill="currentColor"
-                        viewbox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                    </a>
-                  </li>
-                </ul>
-              </nav>
-            </div>
+              <ul class="inline-flex -space-x-px text-base h-10">
+                <li v-for="(link, index) in agentsData.links" :key="link.label"
+                  :class="{ disabled: link.url === null }">
+                  <a href="#" @click.prevent="fetchagents(link.url)" :class="[
+                    'flex items-center justify-center px-4 h-10 border border-gray-300',
+                    link.active
+                      ? 'text-blue-600 bg-blue-50 hover:bg-blue-100 hover:text-blue-700'
+                      : 'leading-tight text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700',
+                    {
+                      'rounded-l-lg': index === 0,
+                      'rounded-r-lg': index === agentsData.links.length - 1,
+                    },
+                  ]" v-html="link.label"></a>
+                </li>
+              </ul>
+            </nav>
+            <br>
+            
           </div>
         </div>
       </div>

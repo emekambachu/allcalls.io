@@ -11,7 +11,7 @@ class TransactionsController extends Controller
 {
     public function index()
     {
-        $transactions = Transaction::where('user_id',auth()->user()->id)->latest()->paginate(10);
+        $transactions = Transaction::where('user_id',auth()->user()->id)->latest()->paginate(100);
         $isInternalAgent = false;
         if(auth()->user()->roles->contains('name', 'internal-agent')) {
             $isInternalAgent = true;

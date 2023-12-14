@@ -200,7 +200,8 @@ let formatDate = date => {
             </div>
             <div class="flex">
                 <div><strong>App from a lead:</strong></div>
-                <div class="ml-2">{{ form.this_app_from_lead == '0' ? 'NO' : 'YES' }} </div>
+                <div v-if="form.this_app_from_lead == 0 || form.this_app_from_lead == 1" class="ml-2">{{ form.this_app_from_lead == '0' ? 'NO' : 'YES' }} </div>
+                <div v-else class="ml-2">{{ form.this_app_from_lead }} </div>
             </div>
             <div class="flex">
                 <div><strong>Source of the lead:</strong></div>
