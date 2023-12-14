@@ -34,18 +34,20 @@ let Fetehcalls = async (id) => {
   }
 };
 let fetchcallsBypage = async (page) => {
-  slidingLoader.value = true;
-  let url = new URL(page);
-  try {
-    const response = await axios.get(
-      `/admin/customer/calls/${props.user.id}${url.search}`
-    );
-    const data = response.data; // Assuming your API response provides relevant data
-    // console.log('what is data', data.calls);
-    calls.value = data.calls;
-    slidingLoader.value = false;
-  } catch (error) {
-    console.error(error);
+  if (page) {
+    slidingLoader.value = true;
+    let url = new URL(page);
+    try {
+      const response = await axios.get(
+        `/admin/customer/calls/${props.user.id}${url.search}`
+      );
+      const data = response.data; // Assuming your API response provides relevant data
+      // console.log('what is data', data.calls);
+      calls.value = data.calls;
+      slidingLoader.value = false;
+    } catch (error) {
+      console.error(error);
+    }
   }
 };
 
@@ -102,95 +104,56 @@ let openClientModal = (call) => {
                 <td class="text-gray-600 px-4 py-3">{{ call.amount_spent }}</td>
                 <td class="text-gray-600 px-4 py-3">{{ call.call_type.type }}</td>
                 <td class="text-gray-600 px-4 py-3">{{ call.from }}</td>
-                <td class="text-gray-600 px-4 py-3"> 
-                    <a v-if="call.recording_url" target="_blank" :href="call.recording_url" class="flex"><svg
-                        xmlns="http://www.w3.org/2000/svg" height="1.5em" class="pr-1" viewBox="0 0 512 512">
-                        <path
-                          d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm256-96a96 96 0 1 1 0 192 96 96 0 1 1 0-192zm0 224a128 128 0 1 0 0-256 128 128 0 1 0 0 256zm0-96a32 32 0 1 0 0-64 32 32 0 1 0 0 64z" />
-                      </svg>Open Recording
-                    </a>
-                    <span v-else>_</span>
+                <td class="text-gray-600 px-4 py-3">
+                  <a v-if="call.recording_url" target="_blank" :href="call.recording_url" class="flex"><svg
+                      xmlns="http://www.w3.org/2000/svg" height="1.5em" class="pr-1" viewBox="0 0 512 512">
+                      <path
+                        d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm256-96a96 96 0 1 1 0 192 96 96 0 1 1 0-192zm0 224a128 128 0 1 0 0-256 128 128 0 1 0 0 256zm0-96a32 32 0 1 0 0-64 32 32 0 1 0 0 64z" />
+                    </svg>Open Recording
+                  </a>
+                  <span v-else>_</span>
                 </td>
                 <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
-                    <button v-if="call.get_client" @click="openClientModal(call)"
-                      class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
-                      type="button">
-                      View Client
-                    </button>
-                    <button v-else class="text-center" type="button">-</button>
-                  </td>
+                  <button v-if="call.get_client" @click="openClientModal(call)"
+                    class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
+                    type="button">
+                    View Client
+                  </button>
+                  <button v-else class="text-center" type="button">-</button>
+                </td>
               </tr>
             </tbody>
           </table>
-          <div class="p-4">
-            <nav
-              class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
-              aria-label="Table navigation"
-            >
-              <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
+
+          <nav class="flex justify-between my-4" v-if="calls.links">
+            <div v-if="calls">
+              <span class="text-sm text-gray-700">
                 Showing
-                <span class="font-semibold text-custom-blue">{{
-                  calls.current_page
-                }}</span>
-                of
-                <span class="font-semibold text-custom-blue">{{ calls.last_page }}</span>
+                <span class="font-semibold text-gray-900">{{ calls.from }}</span>
+                to
+                <span class="font-semibold text-gray-900">{{ calls.to }}</span> of
+                <span class="font-semibold text-gray-900">{{ calls.total }}</span>
+                Entries
               </span>
-              <ul class="inline-flex items-stretch -space-x-px cursor-pointer">
-                <li>
-                  <a
-                    v-if="calls.prev_page_url"
-                    @click="fetchcallsBypage(calls.prev_page_url)"
-                    class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-custom-white rounded-l-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white"
-                  >
-                    <span class="sr-only">Previous</span>
-                    <svg
-                      class="w-5 h-5"
-                      aria-hidden="true"
-                      fill="currentColor"
-                      viewbox="0 0 20 20"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                  </a>
-                </li>
+            </div>
 
-                <li>
-                  <a
-                    class="flex items-center justify-center text-sm py-2 px-3 leading-tight font-extrabold text-gray-500 bg-custom-white shadow-2xl hover:bg-sky-950 hover:shadow-2xl hover:text-white"
-                    >{{ calls.current_page }}
-                  </a>
-                </li>
+            <ul class="inline-flex -space-x-px text-base h-10">
+              <li v-for="(link, index) in calls.links" :key="link.label" :class="{ disabled: link.url === null }">
+                <a href="#" @click.prevent="fetchcallsBypage(link.url)" :class="[
+                  'flex items-center justify-center px-4 h-10 border border-gray-300',
+                  link.active
+                    ? 'text-blue-600 bg-blue-50 hover:bg-blue-100 hover:text-blue-700'
+                    : 'leading-tight text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700',
+                  {
+                    'rounded-l-lg': index === 0,
+                    'rounded-r-lg': index === calls.links.length - 1,
+                  },
+                ]" v-html="link.label"></a>
+              </li>
+            </ul>
+          </nav>
+          <br>
 
-                <li>
-                  <a
-                    v-if="calls.next_page_url"
-                    @click="fetchcallsBypage(calls.next_page_url)"
-                    class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-custom-white rounded-r-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white"
-                  >
-                    <span class="sr-only">Next</span>
-                    <svg
-                      class="w-5 h-5"
-                      aria-hidden="true"
-                      fill="currentColor"
-                      viewbox="0 0 20 20"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                  </a>
-                </li>
-              </ul>
-            </nav>
-          </div>
         </div>
       </div>
     </div>
@@ -200,6 +163,7 @@ let openClientModal = (call) => {
     <p class="text-center text-gray-600">No Calls yet.</p>
   </section>
   <Modal :show="showModal" @close="showModal = false">
-      <ClientDetailsModal :showModal="showModal" :callDetail="callDetail" :states="states" @close="showModal = false"></ClientDetailsModal>
-    </Modal>
+    <ClientDetailsModal :showModal="showModal" :callDetail="callDetail" :states="states" @close="showModal = false">
+    </ClientDetailsModal>
+  </Modal>
 </template>
