@@ -27,9 +27,9 @@ class AvailableNumberController extends Controller
     public function index(Request $request)
     {
         if (isset($request->phone)) {
-            $availableNumber = AvailableNumber::where('phone', 'LIKE', '%' . $request->phone . '%')->with('callType')->with('user')->paginate(10);
+            $availableNumber = AvailableNumber::where('phone', 'LIKE', '%' . $request->phone . '%')->with('callType')->with('user')->paginate(100);
         } else {
-            $availableNumber = AvailableNumber::with('callType')->with('user')->paginate(10);
+            $availableNumber = AvailableNumber::with('callType')->with('user')->paginate(100);
         }
 
 

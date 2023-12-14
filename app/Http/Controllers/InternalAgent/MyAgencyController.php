@@ -20,7 +20,7 @@ class MyAgencyController extends Controller
         $agentInvites = AgentInvite::where('invited_by', auth()->user()->id)
             ->with('getAgentLevel')
             ->with('getAgentLevel')->orderBy('created_at', 'desc')
-            ->paginate(5);
+            ->paginate(100);
 
         // $agentLevels = InternalAgentLevel::get();
         $agentLevels = [];
@@ -43,7 +43,7 @@ class MyAgencyController extends Controller
         ->withCount('invitees')
         ->with(['getAgentLevel', 'states', 'latestActivity', 'callTypes'])
         ->orderBy('created_at', 'desc')
-        ->paginate(5);
+        ->paginate(100);
 
         return Inertia::render('InternalAgent/Invites/Index', compact('agentInvites', 'agentLevels', 'agents'));
     }
@@ -51,7 +51,7 @@ class MyAgencyController extends Controller
         $agentInvites = AgentInvite::where('invited_by', auth()->user()->id)
         ->with('getAgentLevel')
         ->with('getAgentLevel')->orderBy('created_at', 'desc')
-        ->paginate(5);
+        ->paginate(100);
         return response()->json([
             'success' => true,
             'agentInvites' => $agentInvites,
@@ -144,7 +144,7 @@ class MyAgencyController extends Controller
         ->withCount('invitees')
         ->with(['getAgentLevel', 'states', 'latestActivity', 'callTypes'])
         ->orderBy('created_at', 'desc')
-        ->paginate(5);
+        ->paginate(100);
         return response()->json([
             'success' => true,
             'agents' => $agents,

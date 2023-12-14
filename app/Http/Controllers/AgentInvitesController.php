@@ -17,7 +17,7 @@ class AgentInvitesController extends Controller
 {
     public function index(Request $request)
     {
-        $agentInvites = AgentInvite::with('getAgentLevel')->orderBy('created_at', 'desc')->paginate(10);
+        $agentInvites = AgentInvite::with('getAgentLevel', 'invitedBy')->orderBy('created_at', 'desc')->paginate(100);
         $agentLevels = InternalAgentLevel::get();
         $role = Role::whereName('internal-agent')->first();
         $agents = User::whereHas('roles', function ($query) use ($role) {
@@ -25,6 +25,7 @@ class AgentInvitesController extends Controller
         })
             ->whereNotNull('upline_id')
             ->with('getAgentLevel')
+            ->with('invitedBy')
             ->orderBy('created_at', 'desc')
             ->get();
 

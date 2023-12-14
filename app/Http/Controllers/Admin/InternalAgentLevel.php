@@ -16,7 +16,7 @@ class InternalAgentLevel extends Controller
      */
     public function index()
     {
-        $levels = AgentLevel::orderBy('order', 'asc')->paginate(10);
+        $levels = AgentLevel::orderBy('order', 'asc')->paginate(100);
         return Inertia::render('Admin/AgentLevel/Index', [
             'levels' => $levels,
         ]);

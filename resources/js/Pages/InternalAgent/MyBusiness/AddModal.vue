@@ -63,6 +63,9 @@ let form = ref({
 let edit_data = ref(false)
 if (props.businessData) {
   form.value = props.businessData
+  if(!props.businessData.source_of_lead){
+    form.value.source_of_lead = 'Select'
+  }
   edit_data.value = true
 }
 const isValidEmail = (email) => {
@@ -297,7 +300,15 @@ let setAnnualPremium = () => {
   }
 };
 let CurrencyValidation = (val, fieldName) => {
-  form.value[fieldName] = val.replace(/[^0-9]/g, "");
+  // form.value[fieldName] = val.replace(/[^0-9]/g, "");
+  const cleanedValue = val.replace(/[^0-9.]/g, "");
+  // Ensure there is only one decimal point
+  const decimalCount = cleanedValue.split('.').length - 1;
+  if (decimalCount > 1) {
+    form.value[fieldName] = cleanedValue.slice(0, cleanedValue.lastIndexOf('.'));
+  } else {
+    form.value[fieldName] = cleanedValue;
+  }
 };
 let changeAppLead = () => {
   if (form.value.this_app_from_lead == "NO") {
@@ -326,6 +337,7 @@ const filteredAgents = computed(() => {
 });
 onMounted(() => {
   document.addEventListener("click", handleOutsideClick);
+  ChangeFrequency(form.value.premium_frequency)
 });
 
 onUnmounted(() => {

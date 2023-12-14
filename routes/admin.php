@@ -47,6 +47,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::get('/customer/banned/{id}',[CustomerController::class,'banUser'])->name('admin.ban.customer');
 
     Route::get('/customer/activities/{id}', [CustomerController::class, 'getActivity']);
+    Route::delete('/customer/activities/{id}', [CustomerController::class, 'deleteActivity']);
 
     Route::get('/customer/clients/{id}', [CustomerController::class, 'getCustomerClients']);
 

@@ -32,16 +32,9 @@ let editAgentLevel = (level, page) => {
     currentPage.value = page;
     levelData.value = level
 }
-let fetchlevels = (page) => {
-    // Create URL object from page
-    let url = new URL(page);
-    // Ensure the protocol is https
-    if (url.protocol !== "https:") {
-        url.protocol = "https:";
-    }
-    // Get the https URL as a string
-    let httpsPage = url.toString();
-    router.visit(httpsPage, { method: "get" });
+
+let paginate = (url) => {
+    router.visit(url);
 };
 let deleteUserModal = ref(false)
 let confirmMessage = ref(null)
@@ -55,27 +48,27 @@ let deleteUser = (level_id) => {
     deleteUserModal.value = true
 };
 let actionToDeleteLevel = () => {
-  isLoading.value = true
-  axios.delete(`/admin/internal-agent-level/destroy/${confirmMessage.value.level_id}`)
-    .then((res) => {
-      deleteUserModal.value = false
-      toaster("success", res.data.message)
-      if(props.levels.current_page === 1){
-        router.visit('/admin/internal-agent-levels')
-      }else{
-        router.visit(`/admin/internal-agent-levels?page=${props.levels.current_page}`);
-      }
+    isLoading.value = true
+    axios.delete(`/admin/internal-agent-level/destroy/${confirmMessage.value.level_id}`)
+        .then((res) => {
+            deleteUserModal.value = false
+            toaster("success", res.data.message)
+            if (props.levels.current_page === 1) {
+                router.visit('/admin/internal-agent-levels')
+            } else {
+                router.visit(`/admin/internal-agent-levels?page=${props.levels.current_page}`);
+            }
 
 
-    }).catch((error) => {
-      if (error.response.status === 400) {
-        toaster("error", error.response.data.message);
-        deleteUserModal.value = false
-        isLoading.value = false
-       }else{
-        toaster("error", error.message);
-       }
-    })
+        }).catch((error) => {
+            if (error.response.status === 400) {
+                toaster("error", error.response.data.message);
+                deleteUserModal.value = false
+                isLoading.value = false
+            } else {
+                toaster("error", error.message);
+            }
+        })
 }
 </script>
 
@@ -120,8 +113,10 @@ let actionToDeleteLevel = () => {
                                     <td class="text-gray-600 px-4 py-3">{{ level.name }}</td>
                                     <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
                                         <button @click="editAgentLevel(level, levels.current_page)">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4  mr-2">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="w-4 h-4  mr-2">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                                             </svg>
 
                                         </button>
@@ -136,55 +131,36 @@ let actionToDeleteLevel = () => {
                                 </tr>
                             </tbody>
                         </table>
-                        <div class="p-4">
-                            <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
-                                aria-label="Table navigation">
-                                <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
+                        <nav class="flex justify-between my-4" v-if="levels.links">
+                            <div v-if="levels">
+                                <span class="text-sm text-gray-700">
                                     Showing
-                                    <span class="font-semibold text-custom-blue">{{
-                                        levels.current_page
-                                    }}</span>
-                                    of
-                                    <span class="font-semibold text-custom-blue">{{
-                                        levels.last_page
-                                    }}</span>
+                                    <span class="font-semibold text-gray-900">{{ levels.from }}</span>
+                                    to
+                                    <span class="font-semibold text-gray-900">{{ levels.to }}</span> of
+                                    <span class="font-semibold text-gray-900">{{ levels.total }}</span>
+                                    Entries
                                 </span>
-                                <ul class="inline-flex items-stretch -space-x-px cursor-pointer">
-                                    <li>
-                                        <a v-if="levels.prev_page_url" @click="fetchlevels(levels.prev_page_url)"
-                                            class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-custom-white rounded-l-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white">
-                                            <span class="sr-only">Previous</span>
-                                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd"
-                                                    d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                                                    clip-rule="evenodd" />
-                                            </svg>
-                                        </a>
-                                    </li>
+                            </div>
 
-                                    <li>
-                                        <a
-                                            class="flex items-center justify-center text-sm py-2 px-3 leading-tight font-extrabold text-gray-500 bg-custom-white shadow-2xl hover:bg-sky-950 hover:shadow-2xl hover:text-white">{{
-                                                levels.current_page }}
-                                        </a>
-                                    </li>
-
-                                    <li>
-                                        <a v-if="levels.next_page_url" @click="fetchlevels(levels.next_page_url)"
-                                            class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-custom-white rounded-r-lg hover:bg-sky-950 hover:shadow-2xl hover:text-white">
-                                            <span class="sr-only">Next</span>
-                                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd"
-                                                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                                    clip-rule="evenodd" />
-                                            </svg>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
+                            <ul class="inline-flex -space-x-px text-base h-10">
+                                <li v-for="(link, index) in levels.links" :key="link.label"
+                                    :class="{ disabled: link.url === null }">
+                                    <a href="#" @click.prevent="paginate(link.url)" :class="[
+                                        'flex items-center justify-center px-4 h-10 border border-gray-300',
+                                        link.active
+                                            ? 'text-blue-600 bg-blue-50 hover:bg-blue-100 hover:text-blue-700'
+                                            : 'leading-tight text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700',
+                                        {
+                                            'rounded-l-lg': index === 0,
+                                            'rounded-r-lg': index === levels.links.length - 1,
+                                        },
+                                    ]" v-html="link.label"></a>
+                                </li>
+                            </ul>
+                        </nav>
+                        <br>
+                       
                     </div>
                 </div>
             </div>
@@ -194,8 +170,8 @@ let actionToDeleteLevel = () => {
             <p class="text-center text-gray-600">No Level yet.</p>
         </section>
         <Modal :show="addAgentLevelModal" @close="addAgentLevelModal = false">
-            <LevelModal :addAgentLevelModal="addAgentLevelModal" :currentPage="currentPage" :levelData="levelData" @close="addAgentLevelModal = false"
-                :modal_type="modal_type"></LevelModal>
+            <LevelModal :addAgentLevelModal="addAgentLevelModal" :currentPage="currentPage" :levelData="levelData"
+                @close="addAgentLevelModal = false" :modal_type="modal_type"></LevelModal>
         </Modal>
         <DeleteModal :isLoading="isLoading" @actionToDeleteUser="actionToDeleteLevel" :deleteUserModal="deleteUserModal"
             @close="deleteUserModal = false" :confirmMessage="confirmMessage" />

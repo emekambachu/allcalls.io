@@ -18,7 +18,7 @@ class ClientsController extends Controller
         $Clients = Client::where('user_id', $user_id)
                         ->where('unlocked', true)
                         ->orderBy('created_at', 'desc')
-                        ->paginate(10);
+                        ->paginate(100);
         
         $totalClients = Client::where('user_id', $user_id)->count();
         $states = State::all();

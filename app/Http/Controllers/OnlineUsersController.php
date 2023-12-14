@@ -76,6 +76,10 @@ class OnlineUsersController extends Controller
             'user_agent' => $request->header('User-Agent') ?? null,
         ]);
 
+        $user = $request->user();
+        $user->last_login_platform = 'mobile';
+        $user->save();
+
         // Return a response
         return response()->json(['status' => 'success'], 200);
     }
