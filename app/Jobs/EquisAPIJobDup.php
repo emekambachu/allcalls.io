@@ -24,14 +24,8 @@ class EquisAPIJobDup implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public $user;
-    public function __construct($user)
+    public function __construct()
     {
-        Log::debug('equis-api-job:constructing equis api job', [
-            'user' => $user,
-        ]);
-
-        $this->user = $user;
     }
 
     /**
@@ -102,44 +96,41 @@ class EquisAPIJobDup implements ShouldQueue
 
     protected function sendEmailsToPeople()
     {
-        Log::debug('equis-api-job:EquisDuplicate');
-        // Mail::to(['bizdev@equisfinancial.com'])
-        //     ->cc(['contracting@allcalls.io'])
-        //     ->send(new EquisDuplicateMail($this->user->internalAgentContract->first_name . " " . $this->user->internalAgentContract->last_name, 'EF222171', $this->user->internalAgentContract->email));
+        // Log::debug('equis-api-job:EquisDuplicate');
 
         // Mail::to(['iamfaizahmed123@gmail.com', 'ryan@allcalls.io', 'vince@allcalls.io'])
         // ->send(new EquisDuplicateMail($this->user->internalAgentContract->first_name . " " . $this->user->internalAgentContract->last_name, 'EF222171', $this->user->internalAgentContract->email));
-        EquisDuplicate::create([
-            'email' => $this->user->email,
-            'first_name' => $this->user->first_name,
-            'last_name' => $this->user->last_name,
-            'upline_code' => $this->user->upline_id,
-        ]);
+        // EquisDuplicate::create([
+        //     'email' => $this->user->email,
+        //     'first_name' => $this->user->first_name,
+        //     'last_name' => $this->user->last_name,
+        //     'upline_code' => $this->user->upline_id,
+        // ]);
     }
 
     protected function tagUserAsEquisDuplicate()
     {
-        Log::debug('equis-api-job:tagging user as equis_duplicate');
-        $this->user->equis_duplicate = true;
-        $this->user->save();
+        // Log::debug('equis-api-job:tagging user as equis_duplicate');
+        // $this->user->equis_duplicate = true;
+        // $this->user->save();
     }
 
     protected function mapAgentToEquis($accessToken)
     {
-        $response = Http::withHeaders([
-            'Content-Type' => 'application/json',
-        ])->withToken($accessToken)->post('https://equisapipartner-uat.azurewebsites.net/Agent/Map', [
-            "userName" =>  isset($this->user->upline_id) ? $this->user->upline_id : "",
-            "partnerUniqueId" => "AC" . $this->user->id,
-        ]);
+        // $response = Http::withHeaders([
+        //     'Content-Type' => 'application/json',
+        // ])->withToken($accessToken)->post('https://equisapipartner-uat.azurewebsites.net/Agent/Map', [
+        //     "userName" =>  isset($this->user->upline_id) ? $this->user->upline_id : "",
+        //     "partnerUniqueId" => "AC" . $this->user->id,
+        // ]);
 
-        // Log the response body and status
-        Log::debug('equis-api-job:map agent response:', [
-            'responseBody' => $response->body(),
-            'responseStatus' => $response->status(),
-        ]);
+        // // Log the response body and status
+        // Log::debug('equis-api-job:map agent response:', [
+        //     'responseBody' => $response->body(),
+        //     'responseStatus' => $response->status(),
+        // ]);
 
-        return;
+        // return;
     }
 
     protected function getRequestData()
@@ -163,22 +154,30 @@ class EquisAPIJobDup implements ShouldQueue
         // ];
 
 
-        return [
-            "address" => $this->user->internalAgentContract->address ?? null,
-            "birthDate" =>  isset($this->user->internalAgentContract->dob) ? Carbon::parse($this->user->internalAgentContract->dob)->format('Y-m-d') : '-',
-            "city" =>  $this->user->internalAgentContract->city ?? null,
-            "currentlyLicensed" => false,
-            "email" =>  $this->user->internalAgentContract->email ?? null,
-            "firstName" =>  $this->user->internalAgentContract->first_name ?? null,
+        $data = [
+            "address" => fake()->streetAddress,
+            "birthDate" => fake()->date('Y-m-d', '2000-01-01'),
+            "city" => fake()->city,
+            "currentlyLicensed" => fake()->boolean,
+            "email" => fake()->unique()->safeEmail,
+            "firstName" => fake()->firstName,
+            "lastName" => fake()->lastName,
+
             "languageId" => "en",
-            "lastName" =>  $this->user->internalAgentContract->last_name ?? null,
-            "npn" => $this->user->internalAgentContract->resident_insu_license_no ?? null,
-            "partnerUniqueId" => "AC" . $this->user->id,
+
+            "npn" => "9JL456C",
+            "partnerUniqueId" => "AC" . fake()->randomNumber(3),
             "role" => "Agent",
-            "state" => isset($this->user->internalAgentContract->state) ? $this->getStateAbbrev($this->user->internalAgentContract->state) : null,
-            "uplineAgentEFNumber" => isset($this->user->upline_id) ? $this->user->upline_id : "",
-            "zipCode" =>  $this->user->internalAgentContract->zip ?? null,
+            "state" => fake()->stateAbbr,
+            "uplineAgentEFNumber" => "EF222171",
+            "zipCode" => fake()->postcode,
         ];
+
+        $this->info('equis-api-job:request data to create an agent:', [
+            'requestData' => $data,
+        ]);
+
+        return $data;
     }
 
     protected function getStateAbbrev($stateId)
