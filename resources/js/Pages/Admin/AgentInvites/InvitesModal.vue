@@ -237,9 +237,6 @@ const closeDropDown = () => {
                 class="text-red-500"
                 v-text="firstStepErrors.email[0]"
               ></div>
-              <!-- <div v-if="uiEmailValidation.isValid" class="text-red-500">
-                                Please enter valid email address.
-                            </div> -->
             </div>
             <div id="dropdown_main_id" class="mb-3">
               <label for="Upline ID" class="block mb-2 text-sm font-black text-gray-900"
@@ -280,6 +277,18 @@ const closeDropDown = () => {
                   </ul>
                 </div>
               </div>
+            </div>
+
+            <div>
+              <label for="inviter" class="block mb-2 text-sm font-black text-gray-900"
+                >Email<span class="text-red-500">*</span></label
+              >
+              <input
+                id="inviter"
+                type="text"
+                autocomplete="off"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              />
             </div>
 
             <div>
