@@ -281,7 +281,7 @@ const closeDropDown = () => {
                       class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                     >
                       {{ agent.first_name }} {{ agent.last_name }} - (
-                      {{ agent.upline_id }} )
+                      {{ 'AC' + agent.id }} )
                     </li>
                   </ul>
                 </div>
