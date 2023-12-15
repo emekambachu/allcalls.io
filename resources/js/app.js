@@ -8,6 +8,7 @@
     import GlobalSpinnerPlugin from './spinner.js'
     const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
     import VueDatePicker from '@vuepic/vue-datepicker';
+    import VueAutosuggest from "vue-autosuggest";
     // import DataTable from 'laravel-vue-datatable';
     import countryList  from './countryList.js';
     // import vueSignature from "vue-signature";
@@ -29,6 +30,7 @@
                 .use(GlobalSpinnerPlugin)
                 .use(VueCreditCardValidation)
                 .use(VueLoaders)
+                .use(VueAutosuggest)
                 // .use(DataTable)
                 .provide('countryList', countryList)
                 // .use(VueSignature)

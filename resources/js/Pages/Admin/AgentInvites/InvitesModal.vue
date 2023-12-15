@@ -2,6 +2,14 @@
 import { ref, reactive, defineEmits, onMounted, watch, computed, onUnmounted } from "vue";
 import GuestTextInput from "@/Components/GuestTextInput.vue";
 import GuestInputLabel from "@/Components/GuestInputLabel.vue";
+import {
+  Listbox,
+  ListboxLabel,
+  ListboxButton,
+  ListboxOptions,
+  ListboxOption,
+} from "@headlessui/vue";
+
 let emits = defineEmits();
 let props = defineProps({
   invitesModal: Boolean,
@@ -103,6 +111,16 @@ const handleOutsideClick = (event) => {
 const closeDropDown = () => {
   isOpen.value = false;
 };
+
+let people = [
+  { name: "Wade Cooper" },
+  { name: "Arlene Mccoy" },
+  { name: "Devon Webb" },
+  { name: "Tom Cook" },
+  { name: "Tanya Fox" },
+  { name: "Hellen Schmidt" },
+];
+let selectedPerson = ref(people[0]);
 </script>
 <style scoped>
 .active\:bg-gray-900:active {
@@ -283,12 +301,64 @@ const closeDropDown = () => {
               <label for="inviter" class="block mb-2 text-sm font-black text-gray-900"
                 >Inviter<span class="text-red-500">*</span></label
               >
-              <input
+              <!-- <input
                 id="inviter"
                 type="text"
                 autocomplete="off"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-              />
+              /> -->
+
+              <Listbox v-model="selectedPerson">
+                <div class="relative mt-1">
+                  <ListboxButton
+                    class="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+                  >
+                    <span class="block truncate">{{ selectedPerson.name }}</span>
+                    <span
+                      class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
+                    >
+                    </span>
+                  </ListboxButton>
+
+                  <transition
+                    leave-active-class="transition duration-100 ease-in"
+                    leave-from-class="opacity-100"
+                    leave-to-class="opacity-0"
+                  >
+                    <ListboxOptions
+                      class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
+                    >
+                      <ListboxOption
+                        v-slot="{ active, selected }"
+                        v-for="person in people"
+                        :key="person.name"
+                        :value="person"
+                        as="template"
+                      >
+                        <li
+                          :class="[
+                            active ? 'bg-amber-100 text-amber-900' : 'text-gray-900',
+                            'relative cursor-default select-none py-2 pl-10 pr-4',
+                          ]"
+                        >
+                          <span
+                            :class="[
+                              selected ? 'font-medium' : 'font-normal',
+                              'block truncate',
+                            ]"
+                            >{{ person.name }}</span
+                          >
+                          <span
+                            v-if="selected"
+                            class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
+                          >
+                          </span>
+                        </li>
+                      </ListboxOption>
+                    </ListboxOptions>
+                  </transition>
+                </div>
+              </Listbox>
             </div>
 
             <div>
