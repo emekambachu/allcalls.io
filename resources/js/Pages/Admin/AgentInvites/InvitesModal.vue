@@ -279,9 +279,9 @@ const closeDropDown = () => {
               </div>
             </div>
 
-            <div>
+            <div class="mb-3">
               <label for="inviter" class="block mb-2 text-sm font-black text-gray-900"
-                >Email<span class="text-red-500">*</span></label
+                >Inviter<span class="text-red-500">*</span></label
               >
               <input
                 id="inviter"
