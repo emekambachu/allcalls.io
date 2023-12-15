@@ -165,7 +165,7 @@ class EquisAPIJobDup implements ShouldQueue
 
             "languageId" => "en",
 
-            "npn" => "9JL456C",
+            "npn" => "1527638",
             "partnerUniqueId" => "AC" . fake()->randomNumber(3),
             "role" => "Agent",
             "state" => fake()->stateAbbr,
