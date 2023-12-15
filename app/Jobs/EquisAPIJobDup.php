@@ -173,10 +173,6 @@ class EquisAPIJobDup implements ShouldQueue
             "zipCode" => fake()->postcode,
         ];
 
-        $this->info('equis-api-job:request data to create an agent:', [
-            'requestData' => $data,
-        ]);
-
         return $data;
     }
 
