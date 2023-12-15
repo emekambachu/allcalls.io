@@ -311,7 +311,7 @@ let selectedPerson = ref(people[0]);
               <Listbox v-model="selectedPerson">
                 <div class="relative mt-1">
                   <ListboxButton
-                    class="relative w-full cursor-default bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    class="relative w-full cursor-default bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 text-left"
                   >
                     <span class="block truncate">{{ selectedPerson.name }}</span>
                     <span
