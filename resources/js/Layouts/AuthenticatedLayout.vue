@@ -16,8 +16,6 @@ import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 
 let page = usePage();
 
-
-
 let showMobileNotifications = ref(false);
 let userNotifications = ref(page.props.auth.notifications);
 
@@ -71,17 +69,17 @@ let showIncomingCall = (conn) => {
 
   // add a timeout for 25 seconds to hide the ringing screen in case the user doesn't accept the call in 25 seconds
   if (ringingTimeout.value) {
-    console.log('Clearing the previous timeout.');
+    console.log("Clearing the previous timeout.");
     clearTimeout(ringingTimeout.value);
     ringingTimeout.value = null;
   }
 
-  console.log('Setting timeout for 25 seconds now.');
+  console.log("Setting timeout for 25 seconds now.");
   ringingTimeout.value = setTimeout(() => {
-    console.log('Timeout for 25 seconds reached!');
+    console.log("Timeout for 25 seconds reached!");
 
     if (!showOngoing.value) {
-      console.log('Show ongoing is false, so hide the ringing screen now.');
+      console.log("Show ongoing is false, so hide the ringing screen now.");
       showRinging.value = false;
       ringingTimeout.value = null;
     }
@@ -142,6 +140,13 @@ let acceptCall = () => {
   if (call) {
     call.accept();
     showRinging.value = false;
+
+    if (ringingTimeout.value) {
+      console.log("Clearing the previous timeout.");
+      clearTimeout(ringingTimeout.value);
+      ringingTimeout.value = null;
+    }
+
     showOngoing.value = true;
 
     callConnectionTime = new Date();
@@ -223,18 +228,20 @@ let rejectCall = () => {
 let disconnectCall = () => {
   console.log("disconnect call now");
 
-
   // send reject to the web-api to track who disconnected the call
-  axios.post("/web-api/calls/" + connectedUniqueCallId.value + "/reject", {
-    user_response_time: new Date(),
-    device: "desktop",
-  }).then((response) => {
-    console.log(response.data);
-    console.log('Hung up by values saved!');
-  }).catch((error) => {
-    // Handle any error that occurred during the request
-    console.error('Error saving the hung up by values:', error);
-  });
+  axios
+    .post("/web-api/calls/" + connectedUniqueCallId.value + "/reject", {
+      user_response_time: new Date(),
+      device: "desktop",
+    })
+    .then((response) => {
+      console.log(response.data);
+      console.log("Hung up by values saved!");
+    })
+    .catch((error) => {
+      // Handle any error that occurred during the request
+      console.error("Error saving the hung up by values:", error);
+    });
 
   Echo.private("calls." + page.props.auth.user.id).whisper("psst", {
     action: "disconnect",
@@ -357,13 +364,18 @@ let appDownloadModal = ref(false);
 <template>
   <div>
     <div id="body-background-element" class="min-h-screen bg-custom-indigo">
-      <div class="bg-custom-sky text-gray-50 py-2 px-16 flex-col sm:flex-row flex justify-center items-center">
+      <div
+        class="bg-custom-sky text-gray-50 py-2 px-16 flex-col sm:flex-row flex justify-center items-center"
+      >
         <div class="mb-2 sm:mb-0 sm:mr-6 text-center sm:text-left">
           Download the mobile app and start buying calls now!
         </div>
         <div>
-          <button type="button" @click="appDownloadModal = true"
-            class="px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+          <button
+            type="button"
+            @click="appDownloadModal = true"
+            class="px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
+          >
             Download App
           </button>
         </div>
@@ -380,9 +392,10 @@ let appDownloadModal = ref(false);
                 <div class="shrink-0 flex items-center">
                   <Link
                     class="mt-4 bg-clip-text text-4xl text-transparent bg-gradient-to-r from-blue-400 to-green-500 font-bold uppercase tracking-wider"
-                    :href="route('admin.dashboard')">
-                  <!-- AllCalls.io -->
-                  <img style="max-width: 200px" src="/img/new-logo.png" />
+                    :href="route('admin.dashboard')"
+                  >
+                    <!-- AllCalls.io -->
+                    <img style="max-width: 200px" src="/img/new-logo.png" />
                   </Link>
                 </div>
               </div>
@@ -393,19 +406,27 @@ let appDownloadModal = ref(false);
                   <Dropdown align="right" width="48">
                     <template #trigger>
                       <span class="inline-flex rounded-md">
-                        <button type="button"
-                          class="inline-flex items-center text-lg leading-4 font-bold text-gray-300 hover:text-custom-green focus:outline-none transition ease-in-out duration-150">
+                        <button
+                          type="button"
+                          class="inline-flex items-center text-lg leading-4 font-bold text-gray-300 hover:text-custom-green focus:outline-none transition ease-in-out duration-150"
+                        >
                           {{
                             $page.props.auth.user.first_name +
                             " " +
                             $page.props.auth.user.last_name
                           }}
 
-                          <svg class="ml-2 -mr-0.5 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd"
+                          <svg
+                            class="ml-2 -mr-0.5 h-4 w-4 text-white"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fill-rule="evenodd"
                               d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                              clip-rule="evenodd" />
+                              clip-rule="evenodd"
+                            />
                           </svg>
                         </button>
                       </span>
@@ -422,17 +443,36 @@ let appDownloadModal = ref(false);
 
               <!-- Hamburger -->
               <div class="-mr-2 flex items-center md:hidden">
-                <button @click="showingNavigationDropdown = !showingNavigationDropdown"
-                  class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
-                  <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                    <path :class="{
-                      hidden: showingNavigationDropdown,
-                      'inline-flex': !showingNavigationDropdown,
-                    }" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                    <path :class="{
-                      hidden: !showingNavigationDropdown,
-                      'inline-flex': showingNavigationDropdown,
-                    }" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                <button
+                  @click="showingNavigationDropdown = !showingNavigationDropdown"
+                  class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out"
+                >
+                  <svg
+                    class="h-6 w-6"
+                    stroke="currentColor"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      :class="{
+                        hidden: showingNavigationDropdown,
+                        'inline-flex': !showingNavigationDropdown,
+                      }"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 6h16M4 12h16M4 18h16"
+                    />
+                    <path
+                      :class="{
+                        hidden: !showingNavigationDropdown,
+                        'inline-flex': showingNavigationDropdown,
+                      }"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               </div>
@@ -445,75 +485,104 @@ let appDownloadModal = ref(false);
           </div>
 
           <!-- Responsive Navigation Menu -->
-          <div :class="{
-            block: showingNavigationDropdown,
-            hidden: !showingNavigationDropdown,
-          }" class="md:hidden">
+          <div
+            :class="{
+              block: showingNavigationDropdown,
+              hidden: !showingNavigationDropdown,
+            }"
+            class="md:hidden"
+          >
             <div class="pt-2 pb-3 space-y-1">
-              <ResponsiveNavLink :href="route('admin.dashboard')" :active="route().current('admin.dashboard')">
+              <ResponsiveNavLink
+                :href="route('admin.dashboard')"
+                :active="route().current('admin.dashboard')"
+              >
                 Dashboard
               </ResponsiveNavLink>
             </div>
             <div class="pt-2 pb-3 space-y-1">
-              <ResponsiveNavLink :href="route('admin.calls.index')" :active="route().current('admin.calls.index') ||
-                route().current('admin.calls.detail')
-                ">
+              <ResponsiveNavLink
+                :href="route('admin.calls.index')"
+                :active="
+                  route().current('admin.calls.index') ||
+                  route().current('admin.calls.detail')
+                "
+              >
                 Calls
               </ResponsiveNavLink>
             </div>
             <div class="pt-2 pb-3 space-y-1">
-              <ResponsiveNavLink :href="route('admin.customer.index')" :active="route().current('admin.customer.index') ||
-                route().current('admin.customer.detail')
-                ">
+              <ResponsiveNavLink
+                :href="route('admin.customer.index')"
+                :active="
+                  route().current('admin.customer.index') ||
+                  route().current('admin.customer.detail')
+                "
+              >
                 Customers
               </ResponsiveNavLink>
             </div>
             <div class="pt-2 pb-3 space-y-1">
-              <ResponsiveNavLink :href="route('admin.agent.index')" :active="route().current('admin.agent.index') ||
-                route().current('admin.agent.detail')
-                ">
+              <ResponsiveNavLink
+                :href="route('admin.agent.index')"
+                :active="
+                  route().current('admin.agent.index') ||
+                  route().current('admin.agent.detail')
+                "
+              >
                 Internal Agents
               </ResponsiveNavLink>
             </div>
 
             <div class="pt-2 pb-3 space-y-1">
-              <ResponsiveNavLink :href="route('admin.online-agents.index')"
-                :active="route().current('admin.online-agents.index')">
+              <ResponsiveNavLink
+                :href="route('admin.online-agents.index')"
+                :active="route().current('admin.online-agents.index')"
+              >
                 Online Agents
               </ResponsiveNavLink>
             </div>
 
             <div class="pt-2 pb-3 space-y-1">
-              <ResponsiveNavLink :href="route('admin.internal.agent.level.index')"
-                :active="route().current('admin.internal.agent.level.index')">
+              <ResponsiveNavLink
+                :href="route('admin.internal.agent.level.index')"
+                :active="route().current('admin.internal.agent.level.index')"
+              >
                 Agents Levels
               </ResponsiveNavLink>
             </div>
 
-
             <div class="pt-2 pb-3 space-y-1">
-              <ResponsiveNavLink :href="route('admin.my-business.index')"
-                :active="route().current('admin.my-business.index')">
+              <ResponsiveNavLink
+                :href="route('admin.my-business.index')"
+                :active="route().current('admin.my-business.index')"
+              >
                 My Business
               </ResponsiveNavLink>
             </div>
 
             <div class="pt-2 pb-3 space-y-1">
-              <ResponsiveNavLink :href="route('admin.notifications.create')"
-                :active="route().current('admin.notifications.create')">
+              <ResponsiveNavLink
+                :href="route('admin.notifications.create')"
+                :active="route().current('admin.notifications.create')"
+              >
                 Notifications
               </ResponsiveNavLink>
             </div>
 
             <div class="pt-2 pb-3 space-y-1">
-              <ResponsiveNavLink :href="route('admin.agent-invites.index')"
-                :active="route().current('admin.agent-invites.index')">
+              <ResponsiveNavLink
+                :href="route('admin.agent-invites.index')"
+                :active="route().current('admin.agent-invites.index')"
+              >
                 Agent Invites
               </ResponsiveNavLink>
             </div>
             <div class="pt-2 pb-3 space-y-1">
-              <ResponsiveNavLink :href="route('admin.available-number.index')"
-                :active="route().current('admin.available-number.index')">
+              <ResponsiveNavLink
+                :href="route('admin.available-number.index')"
+                :active="route().current('admin.available-number.index')"
+              >
                 Available Numbers
               </ResponsiveNavLink>
             </div>
@@ -541,162 +610,331 @@ let appDownloadModal = ref(false);
           </div>
         </nav>
 
-        <div class="w-full mx-auto md:grid md:grid-cols-5 md:gap-28 md:max-w-screen-2xl xl:gap-0">
+        <div
+          class="w-full mx-auto md:grid md:grid-cols-5 md:gap-28 md:max-w-screen-2xl xl:gap-0"
+        >
           <div class="py-12 hidden sm:-my-px sm:ml-10 col-span-1 md:flex md:flex-col">
-            <NavLink class="mb-10 gap-2" :href="route('admin.dashboard')" :active="route().current('admin.dashboard')">
+            <NavLink
+              class="mb-10 gap-2"
+              :href="route('admin.dashboard')"
+              :active="route().current('admin.dashboard')"
+            >
               <img src="/img/dashboard.png" alt="" />
               Dashboard
             </NavLink>
-            <NavLink class="mb-10 gap-2" :href="route('admin.calls.index')" :active="route().current('admin.calls.index') ||
-              route().current('admin.calls.detail')
-              ">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-8 h-8 mr-2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M14.25 9.75v-4.5m0 4.5h4.5m-4.5 0l6-6m-3 18c-8.284 0-15-6.716-15-15V4.5A2.25 2.25 0 014.5 2.25h1.372c.516 0 .966.351 1.091.852l1.106 4.423c.11.44-.054.902-.417 1.173l-1.293.97a1.062 1.062 0 00-.38 1.21 12.035 12.035 0 007.143 7.143c.441.162.928-.004 1.21-.38l.97-1.293a1.125 1.125 0 011.173-.417l4.423 1.106c.5.125.852.575.852 1.091V19.5a2.25 2.25 0 01-2.25 2.25h-2.25z" />
+            <NavLink
+              class="mb-10 gap-2"
+              :href="route('admin.calls.index')"
+              :active="
+                route().current('admin.calls.index') ||
+                route().current('admin.calls.detail')
+              "
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-8 h-8 mr-2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M14.25 9.75v-4.5m0 4.5h4.5m-4.5 0l6-6m-3 18c-8.284 0-15-6.716-15-15V4.5A2.25 2.25 0 014.5 2.25h1.372c.516 0 .966.351 1.091.852l1.106 4.423c.11.44-.054.902-.417 1.173l-1.293.97a1.062 1.062 0 00-.38 1.21 12.035 12.035 0 007.143 7.143c.441.162.928-.004 1.21-.38l.97-1.293a1.125 1.125 0 011.173-.417l4.423 1.106c.5.125.852.575.852 1.091V19.5a2.25 2.25 0 01-2.25 2.25h-2.25z"
+                />
               </svg>
 
               Calls
             </NavLink>
-            <NavLink class="mb-10 gap-2" :href="route('admin.customer.index')" :active="route().current('admin.customer.index') ||
-              route().current('admin.customer.detail')
-              ">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-8 h-8 mr-2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+            <NavLink
+              class="mb-10 gap-2"
+              :href="route('admin.customer.index')"
+              :active="
+                route().current('admin.customer.index') ||
+                route().current('admin.customer.detail')
+              "
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-8 h-8 mr-2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"
+                />
               </svg>
 
               Customers
             </NavLink>
 
-            <NavLink class="mb-10 gap-2" :href="route('admin.agent-invites.index')"
-              :active="route().current('admin.agent-invites.index')">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-8 h-8 mr-2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+            <NavLink
+              class="mb-10 gap-2"
+              :href="route('admin.agent-invites.index')"
+              :active="route().current('admin.agent-invites.index')"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-8 h-8 mr-2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"
+                />
               </svg>
 
               Agent Invites
             </NavLink>
 
-            <NavLink class="mb-10 gap-2" :href="route('admin.agent.index')" :active="route().current('admin.agent.index') ||
-              route().current('admin.agent.detail')
-              ">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-8 h-8 mr-2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+            <NavLink
+              class="mb-10 gap-2"
+              :href="route('admin.agent.index')"
+              :active="
+                route().current('admin.agent.index') ||
+                route().current('admin.agent.detail')
+              "
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-8 h-8 mr-2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"
+                />
               </svg>
 
               Internal Agents
             </NavLink>
 
-            <NavLink class="mb-10 gap-2" :href="route('admin.online-agents.index')"
-              :active="route().current('admin.online-agents.index')">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-8 h-8 mr-2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 011.06 0z" />
+            <NavLink
+              class="mb-10 gap-2"
+              :href="route('admin.online-agents.index')"
+              :active="route().current('admin.online-agents.index')"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-8 h-8 mr-2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 011.06 0z"
+                />
               </svg>
 
               Online Agents
             </NavLink>
 
-
-            <NavLink class="mb-10 gap-2" :href="route('admin.internal.agent.level.index')"
-              :active="route().current('admin.internal.agent.level.index')">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-8 h-8 mr-2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M6 13.5V3.75m0 9.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 3.75V16.5m12-3V3.75m0 9.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 3.75V16.5m-6-9V3.75m0 3.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 9.75V10.5" />
+            <NavLink
+              class="mb-10 gap-2"
+              :href="route('admin.internal.agent.level.index')"
+              :active="route().current('admin.internal.agent.level.index')"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-8 h-8 mr-2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 13.5V3.75m0 9.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 3.75V16.5m12-3V3.75m0 9.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 3.75V16.5m-6-9V3.75m0 3.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 9.75V10.5"
+                />
               </svg>
               Agents Levels
             </NavLink>
 
-            <NavLink class="mb-10 gap-2" :href="route('admin.my-business.index')"
-              :active="route().current('admin.my-business.index')">
-              <svg fill="#fff" class="w-8 h-8 mr-2" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink" stroke="#fff">
+            <NavLink
+              class="mb-10 gap-2"
+              :href="route('admin.my-business.index')"
+              :active="route().current('admin.my-business.index')"
+            >
+              <svg
+                fill="#fff"
+                class="w-8 h-8 mr-2"
+                viewBox="0 0 50 50"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                stroke="#fff"
+              >
                 <path
-                  d="M7 2L7 7L2 7L2 46L14 46L14 44L4 44L4 9L9 9L9 4L29 4L29 7L11 7L11 9L34 9L34 20L36 20L36 7L31 7L31 2 Z M 8 12L8 14L12 14L12 12 Z M 17 12L17 14L21 14L21 12 Z M 26 12L26 14L30 14L30 12 Z M 8 17L8 19L12 19L12 17 Z M 17 17L17 19L21 19L21 17 Z M 26 17L26 19L30 19L30 17 Z M 29 20C25.742188 20 23.328125 21.324219 22.074219 23.296875C20.929688 25.09375 20.875 27.339844 21.59375 29.433594C21.515625 29.566406 21.402344 29.679688 21.328125 29.839844C21.171875 30.191406 21.035156 30.589844 21.054688 31.097656L21.054688 31.101563C21.109375 32.378906 21.851563 33.046875 22.398438 33.421875C22.628906 34.640625 23.207031 35.660156 24 36.390625L24 38.53125C23.824219 38.953125 23.472656 39.308594 22.796875 39.679688C22.089844 40.070313 21.132813 40.4375 20.144531 40.917969C19.15625 41.398438 18.125 42.011719 17.324219 42.988281C16.519531 43.96875 16 45.308594 16 47L16 48L48.050781 48L47.992188 46.941406C47.902344 45.363281 47.316406 44.117188 46.488281 43.222656C45.664063 42.328125 44.644531 41.765625 43.679688 41.320313C42.714844 40.875 41.785156 40.535156 41.109375 40.171875C40.464844 39.832031 40.148438 39.511719 40 39.160156L40 37.472656C40.597656 36.609375 40.859375 35.617188 40.9375 34.6875C41.414063 34.265625 41.96875 33.617188 42.125 32.457031C42.230469 31.625 42.019531 30.996094 41.695313 30.464844C42.144531 29.277344 42.328125 27.84375 41.933594 26.417969C41.707031 25.589844 41.277344 24.777344 40.5625 24.171875C40.003906 23.691406 39.238281 23.425781 38.390625 23.308594L37.75 22L37.125 22C36.097656 22 35.085938 22.238281 34.214844 22.578125C33.871094 22.714844 33.558594 22.863281 33.265625 23.027344C33.101563 22.808594 32.921875 22.601563 32.714844 22.414063C32.105469 21.863281 31.261719 21.550781 30.324219 21.421875L29.621094 20 Z M 8 22L8 24L12 24L12 22 Z M 17 22L17 24L19.484375 24L20.761719 22 Z M 28.4375 22.113281L29.027344 23.300781L29.644531 23.300781C30.464844 23.300781 30.96875 23.535156 31.371094 23.894531C31.773438 24.257813 32.066406 24.796875 32.238281 25.429688C32.582031 26.695313 32.289063 28.339844 32.007813 28.792969L31.644531 29.371094L32.050781 29.921875C32.289063 30.238281 32.441406 30.566406 32.363281 31.007813C32.253906 31.625 32.03125 31.707031 31.589844 32.089844L31.257813 32.375L31.246094 32.8125C31.210938 33.792969 30.871094 34.777344 30.300781 35.339844L30 35.632813L30 38.988281L30.058594 39.152344C30.453125 40.25 31.335938 40.933594 32.234375 41.429688C33.132813 41.925781 34.101563 42.289063 34.976563 42.714844C35.851563 43.140625 36.609375 43.625 37.132813 44.261719C37.496094 44.699219 37.71875 45.289063 37.855469 46L18.144531 46C18.28125 45.289063 18.503906 44.699219 18.867188 44.261719C19.390625 43.625 20.148438 43.140625 21.023438 42.714844C21.898438 42.289063 22.867188 41.925781 23.765625 41.429688C24.664063 40.933594 25.546875 40.25 25.941406 39.152344L26 38.988281L26 35.523438L25.5625 35.226563C25.101563 34.914063 24.34375 33.769531 24.238281 32.742188L24.183594 32.1875L23.683594 31.945313C23.398438 31.808594 23.082031 31.753906 23.050781 31.015625C23.050781 31.015625 23.082031 30.824219 23.15625 30.65625C23.234375 30.484375 23.375 30.304688 23.332031 30.347656L23.8125 29.867188L23.542969 29.242188C22.796875 27.523438 22.898438 25.722656 23.761719 24.367188C24.550781 23.125 26.097656 22.269531 28.4375 22.113281 Z M 36.558594 24.113281L37.089844 25.199219L37.714844 25.199219C38.472656 25.199219 38.921875 25.398438 39.265625 25.691406C39.613281 25.984375 39.859375 26.414063 40.003906 26.949219C40.300781 28.019531 40.085938 29.480469 39.746094 30.144531L39.417969 30.796875L39.933594 31.308594C39.867188 31.242188 40.195313 31.785156 40.140625 32.195313C40.011719 33.175781 39.871094 33.113281 39.449219 33.390625L39.03125 33.667969L39 34.171875C38.953125 35.042969 38.515625 36.351563 38.28125 36.589844L38 36.878906L38 39.621094L38.058594 39.78125C38.4375 40.835938 39.296875 41.476563 40.167969 41.9375C41.035156 42.398438 41.980469 42.738281 42.84375 43.136719C43.707031 43.535156 44.476563 43.984375 45.019531 44.578125C45.367188 44.953125 45.601563 45.433594 45.769531 46L39.921875 46C39.757813 44.777344 39.3125 43.765625 38.675781 42.988281C37.875 42.011719 36.84375 41.398438 35.855469 40.917969C34.867188 40.4375 33.910156 40.070313 33.203125 39.679688C32.527344 39.308594 32.175781 38.953125 32 38.53125L32 36.296875C32.691406 35.421875 33.054688 34.390625 33.15625 33.34375C33.542969 33.003906 34.144531 32.417969 34.332031 31.359375C34.484375 30.492188 34.226563 29.785156 33.90625 29.210938C34.4375 27.988281 34.59375 26.460938 34.167969 24.902344C34.164063 24.886719 34.15625 24.871094 34.152344 24.855469C34.367188 24.71875 34.640625 24.5625 34.949219 24.441406C35.4375 24.25 36.007813 24.179688 36.558594 24.113281 Z M 8 27L8 29L12 29L12 27 Z M 17 27L17 29L19.753906 29L19.394531 27 Z M 8 32L8 34L12 34L12 32 Z M 17 32L17 34L20.449219 34L19.613281 32 Z M 8 37L8 39L12 39L12 37 Z M 17 37L17 39L21 39L21 37Z">
-                </path>
+                  d="M7 2L7 7L2 7L2 46L14 46L14 44L4 44L4 9L9 9L9 4L29 4L29 7L11 7L11 9L34 9L34 20L36 20L36 7L31 7L31 2 Z M 8 12L8 14L12 14L12 12 Z M 17 12L17 14L21 14L21 12 Z M 26 12L26 14L30 14L30 12 Z M 8 17L8 19L12 19L12 17 Z M 17 17L17 19L21 19L21 17 Z M 26 17L26 19L30 19L30 17 Z M 29 20C25.742188 20 23.328125 21.324219 22.074219 23.296875C20.929688 25.09375 20.875 27.339844 21.59375 29.433594C21.515625 29.566406 21.402344 29.679688 21.328125 29.839844C21.171875 30.191406 21.035156 30.589844 21.054688 31.097656L21.054688 31.101563C21.109375 32.378906 21.851563 33.046875 22.398438 33.421875C22.628906 34.640625 23.207031 35.660156 24 36.390625L24 38.53125C23.824219 38.953125 23.472656 39.308594 22.796875 39.679688C22.089844 40.070313 21.132813 40.4375 20.144531 40.917969C19.15625 41.398438 18.125 42.011719 17.324219 42.988281C16.519531 43.96875 16 45.308594 16 47L16 48L48.050781 48L47.992188 46.941406C47.902344 45.363281 47.316406 44.117188 46.488281 43.222656C45.664063 42.328125 44.644531 41.765625 43.679688 41.320313C42.714844 40.875 41.785156 40.535156 41.109375 40.171875C40.464844 39.832031 40.148438 39.511719 40 39.160156L40 37.472656C40.597656 36.609375 40.859375 35.617188 40.9375 34.6875C41.414063 34.265625 41.96875 33.617188 42.125 32.457031C42.230469 31.625 42.019531 30.996094 41.695313 30.464844C42.144531 29.277344 42.328125 27.84375 41.933594 26.417969C41.707031 25.589844 41.277344 24.777344 40.5625 24.171875C40.003906 23.691406 39.238281 23.425781 38.390625 23.308594L37.75 22L37.125 22C36.097656 22 35.085938 22.238281 34.214844 22.578125C33.871094 22.714844 33.558594 22.863281 33.265625 23.027344C33.101563 22.808594 32.921875 22.601563 32.714844 22.414063C32.105469 21.863281 31.261719 21.550781 30.324219 21.421875L29.621094 20 Z M 8 22L8 24L12 24L12 22 Z M 17 22L17 24L19.484375 24L20.761719 22 Z M 28.4375 22.113281L29.027344 23.300781L29.644531 23.300781C30.464844 23.300781 30.96875 23.535156 31.371094 23.894531C31.773438 24.257813 32.066406 24.796875 32.238281 25.429688C32.582031 26.695313 32.289063 28.339844 32.007813 28.792969L31.644531 29.371094L32.050781 29.921875C32.289063 30.238281 32.441406 30.566406 32.363281 31.007813C32.253906 31.625 32.03125 31.707031 31.589844 32.089844L31.257813 32.375L31.246094 32.8125C31.210938 33.792969 30.871094 34.777344 30.300781 35.339844L30 35.632813L30 38.988281L30.058594 39.152344C30.453125 40.25 31.335938 40.933594 32.234375 41.429688C33.132813 41.925781 34.101563 42.289063 34.976563 42.714844C35.851563 43.140625 36.609375 43.625 37.132813 44.261719C37.496094 44.699219 37.71875 45.289063 37.855469 46L18.144531 46C18.28125 45.289063 18.503906 44.699219 18.867188 44.261719C19.390625 43.625 20.148438 43.140625 21.023438 42.714844C21.898438 42.289063 22.867188 41.925781 23.765625 41.429688C24.664063 40.933594 25.546875 40.25 25.941406 39.152344L26 38.988281L26 35.523438L25.5625 35.226563C25.101563 34.914063 24.34375 33.769531 24.238281 32.742188L24.183594 32.1875L23.683594 31.945313C23.398438 31.808594 23.082031 31.753906 23.050781 31.015625C23.050781 31.015625 23.082031 30.824219 23.15625 30.65625C23.234375 30.484375 23.375 30.304688 23.332031 30.347656L23.8125 29.867188L23.542969 29.242188C22.796875 27.523438 22.898438 25.722656 23.761719 24.367188C24.550781 23.125 26.097656 22.269531 28.4375 22.113281 Z M 36.558594 24.113281L37.089844 25.199219L37.714844 25.199219C38.472656 25.199219 38.921875 25.398438 39.265625 25.691406C39.613281 25.984375 39.859375 26.414063 40.003906 26.949219C40.300781 28.019531 40.085938 29.480469 39.746094 30.144531L39.417969 30.796875L39.933594 31.308594C39.867188 31.242188 40.195313 31.785156 40.140625 32.195313C40.011719 33.175781 39.871094 33.113281 39.449219 33.390625L39.03125 33.667969L39 34.171875C38.953125 35.042969 38.515625 36.351563 38.28125 36.589844L38 36.878906L38 39.621094L38.058594 39.78125C38.4375 40.835938 39.296875 41.476563 40.167969 41.9375C41.035156 42.398438 41.980469 42.738281 42.84375 43.136719C43.707031 43.535156 44.476563 43.984375 45.019531 44.578125C45.367188 44.953125 45.601563 45.433594 45.769531 46L39.921875 46C39.757813 44.777344 39.3125 43.765625 38.675781 42.988281C37.875 42.011719 36.84375 41.398438 35.855469 40.917969C34.867188 40.4375 33.910156 40.070313 33.203125 39.679688C32.527344 39.308594 32.175781 38.953125 32 38.53125L32 36.296875C32.691406 35.421875 33.054688 34.390625 33.15625 33.34375C33.542969 33.003906 34.144531 32.417969 34.332031 31.359375C34.484375 30.492188 34.226563 29.785156 33.90625 29.210938C34.4375 27.988281 34.59375 26.460938 34.167969 24.902344C34.164063 24.886719 34.15625 24.871094 34.152344 24.855469C34.367188 24.71875 34.640625 24.5625 34.949219 24.441406C35.4375 24.25 36.007813 24.179688 36.558594 24.113281 Z M 8 27L8 29L12 29L12 27 Z M 17 27L17 29L19.753906 29L19.394531 27 Z M 8 32L8 34L12 34L12 32 Z M 17 32L17 34L20.449219 34L19.613281 32 Z M 8 37L8 39L12 39L12 37 Z M 17 37L17 39L21 39L21 37Z"
+                ></path>
               </svg>
               Report Business
             </NavLink>
 
-            <NavLink class="mb-10 gap-2" :href="route('admin.user-activities.index')"
-              :active="route().current('admin.user-activities.index')">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-8 h-8 mr-2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
+            <NavLink
+              class="mb-10 gap-2"
+              :href="route('admin.user-activities.index')"
+              :active="route().current('admin.user-activities.index')"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-8 h-8 mr-2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59"
+                />
               </svg>
 
               User Activities
             </NavLink>
 
-            <NavLink class="mb-10 gap-2" :href="route('admin.notifications.create')"
-              :active="route().current('admin.notifications.create')">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-8 h-8 mr-2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0M3.124 7.5A8.969 8.969 0 015.292 3m13.416 0a8.969 8.969 0 012.168 4.5" />
+            <NavLink
+              class="mb-10 gap-2"
+              :href="route('admin.notifications.create')"
+              :active="route().current('admin.notifications.create')"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-8 h-8 mr-2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0M3.124 7.5A8.969 8.969 0 015.292 3m13.416 0a8.969 8.969 0 012.168 4.5"
+                />
               </svg>
 
               Notifications
             </NavLink>
 
-
-
-            <NavLink class="mb-10 gap-2" :href="route('admin.available-number.index')"
-              :active="route().current('admin.available-number.index')">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-8 h-8 mr-2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
+            <NavLink
+              class="mb-10 gap-2"
+              :href="route('admin.available-number.index')"
+              :active="route().current('admin.available-number.index')"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-8 h-8 mr-2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3"
+                />
               </svg>
 
               Available Numbers
             </NavLink>
 
-            <NavLink class="mb-10 gap-2" id="billing-nav-link" :href="route('profile.view')"
-              :active="route().current('profile.view') || route().current('profile.edit')" :class="{
+            <NavLink
+              class="mb-10 gap-2"
+              id="billing-nav-link"
+              :href="route('profile.view')"
+              :active="route().current('profile.view') || route().current('profile.edit')"
+              :class="{
                 'mb-5':
                   route().current('profile.view') || route().current('profile.edit'),
-              }">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-8 h-8 mr-2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              }"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-8 h-8 mr-2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
               </svg>
               Settings
 
-              <svg v-if="route().current('profile.view') || route().current('profile.edit')"
-                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+              <svg
+                v-if="route().current('profile.view') || route().current('profile.edit')"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                />
               </svg>
             </NavLink>
-            <div v-if="route().current('profile.view') || route().current('profile.edit')"
-              class="pl-14 text-white text-xs mb-5">
+            <div
+              v-if="route().current('profile.view') || route().current('profile.edit')"
+              class="pl-14 text-white text-xs mb-5"
+            >
               <ul>
                 <li class="mb-3">
-                  <Link aria-current="page" class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
+                  <Link
+                    aria-current="page"
+                    class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
                     :class="{
                       'text-custom-green':
                         route().current('profile.view') ||
                         route().current('profile.edit'),
-                    }" :href="route('profile.view')">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="w-4 h-4 mr-2">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
+                    }"
+                    :href="route('profile.view')"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-4 h-4 mr-2"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                    </svg>
 
-                  <span>Profile</span>
+                    <span>Profile</span>
                   </Link>
                 </li>
               </ul>
@@ -721,9 +959,10 @@ let appDownloadModal = ref(false);
                 <div class="shrink-0 flex items-center">
                   <Link
                     class="mt-4 bg-clip-text text-4xl text-transparent bg-gradient-to-r from-blue-400 to-green-500 font-bold uppercase tracking-wider"
-                    :href="route('dashboard')">
-                  <!-- AllCalls.io -->
-                  <img style="max-width: 200px" src="/img/new-logo.png" />
+                    :href="route('dashboard')"
+                  >
+                    <!-- AllCalls.io -->
+                    <img style="max-width: 200px" src="/img/new-logo.png" />
                   </Link>
                 </div>
               </div>
@@ -739,13 +978,17 @@ let appDownloadModal = ref(false);
 
                   </div> -->
                   <div>
-                    <Link href="/billing/funds"
-                      class="mr-3 px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
-                    Add Funds
+                    <Link
+                      href="/billing/funds"
+                      class="mr-3 px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
+                    >
+                      Add Funds
                     </Link>
                   </div>
                   <div class="flex flex-col justify-center items-center">
-                    <div class="text-xs leading-4 font-medium rounded-md text-custom-white">
+                    <div
+                      class="text-xs leading-4 font-medium rounded-md text-custom-white"
+                    >
                       Balance
                     </div>
                     <div class="text-xl font-bold text-gray-300">
@@ -766,107 +1009,147 @@ let appDownloadModal = ref(false);
                           <div v-if="unreadNotifications.length" class="relative">
                             <div
                               class="h-4 w-4 flex items-center justify-center absolute -top-2 -left-2 bg-red-500 rounded-full text-xs z-10"
-                              v-text="unreadNotifications.length"></div>
+                              v-text="unreadNotifications.length"
+                            ></div>
                           </div>
 
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="w-6 h-6">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                              d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="w-6 h-6"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"
+                            />
                           </svg>
                         </MenuButton>
                       </div>
 
                       <!-- Dropdown transition effect -->
-                      <transition enter-active-class="transition duration-100 ease-out"
-                        enter-from-class="transform scale-95 opacity-0" enter-to-class="transform scale-100 opacity-100"
+                      <transition
+                        enter-active-class="transition duration-100 ease-out"
+                        enter-from-class="transform scale-95 opacity-0"
+                        enter-to-class="transform scale-100 opacity-100"
                         leave-active-class="transition duration-75 ease-in"
-                        leave-from-class="transform scale-100 opacity-100" leave-to-class="transform scale-95 opacity-0">
+                        leave-from-class="transform scale-100 opacity-100"
+                        leave-to-class="transform scale-95 opacity-0"
+                      >
                         <!-- Notifications list -->
                         <MenuItems
-                          class="absolute right-0 mt-2 w-80 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none z-10">
+                          class="absolute right-0 mt-2 w-80 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none z-10"
+                        >
                           <div class="text-lg font-bold px-3 py-2">Notifications</div>
 
-                          <div class="px-3 py-2 text-sm text-gray-600 font-bold flex items-center justify-between"
-                            v-if="unreadNotifications.length">
+                          <div
+                            class="px-3 py-2 text-sm text-gray-600 font-bold flex items-center justify-between"
+                            v-if="unreadNotifications.length"
+                          >
                             <div class="flex items-center">
                               <div class="mr-1 font-bold">Unread</div>
-                              <div style="font-size: 10px"
-                                class="bg-gray-200 rounded-full text-gray-600 w-4 h-4 flex items-center justify-center">
+                              <div
+                                style="font-size: 10px"
+                                class="bg-gray-200 rounded-full text-gray-600 w-4 h-4 flex items-center justify-center"
+                              >
                                 {{ unreadNotifications.length }}
                               </div>
                             </div>
 
-                            <div class="cursor-pointer text-xs py-2 text-gray-800 hover:text-gray-500"
-                              @click.prevent="markAllAsRead">
+                            <div
+                              class="cursor-pointer text-xs py-2 text-gray-800 hover:text-gray-500"
+                              @click.prevent="markAllAsRead"
+                            >
                               Mark All As Read
                             </div>
                           </div>
                           <!-- Unread Notification Items Start -->
                           <div style="max-height: 400px; overflow-y: scroll">
-                            <div v-for="(notification, index) in unreadNotifications" :key="notification.id"
-                              class="p-1 cursor-pointer">
+                            <div
+                              v-for="(notification, index) in unreadNotifications"
+                              :key="notification.id"
+                              class="p-1 cursor-pointer"
+                            >
                               <MenuItem v-slot="{ active }">
-                              <div :class="[
-                                'flex flex-col gap-1 p-2 rounded-md hover:bg-custom-blue hover:text-white',
-                              ]">
-                                <!-- Notification Title -->
-                                <p class="text-sm font-semibold">
-                                  {{ notification.data.title }}
-                                </p>
-                                <!-- Notification Body -->
-                                <p class="text-xs">{{ notification.data.body }}</p>
+                                <div
+                                  :class="[
+                                    'flex flex-col gap-1 p-2 rounded-md hover:bg-custom-blue hover:text-white',
+                                  ]"
+                                >
+                                  <!-- Notification Title -->
+                                  <p class="text-sm font-semibold">
+                                    {{ notification.data.title }}
+                                  </p>
+                                  <!-- Notification Body -->
+                                  <p class="text-xs">{{ notification.data.body }}</p>
 
-                                <p style="font-size: 9px">
-                                  {{ notification.created_at_diff }}
-                                </p>
-                              </div>
+                                  <p style="font-size: 9px">
+                                    {{ notification.created_at_diff }}
+                                  </p>
+                                </div>
                               </MenuItem>
                             </div>
                           </div>
 
                           <!-- Unread Notification Items End -->
 
-                          <div class="px-3 py-2 text-sm text-gray-600 font-bold flex items-center justify-between"
-                            v-if="userNotifications && userNotifications.length">
+                          <div
+                            class="px-3 py-2 text-sm text-gray-600 font-bold flex items-center justify-between"
+                            v-if="userNotifications && userNotifications.length"
+                          >
                             <div class="flex items-center">
                               <div class="mr-1 font-bold">All</div>
-                              <div style="font-size: 10px"
+                              <div
+                                style="font-size: 10px"
                                 class="bg-gray-200 rounded-full text-gray-600 w-4 h-4 flex items-center justify-center"
-                                v-if="userNotifications && userNotifications.length">
+                                v-if="userNotifications && userNotifications.length"
+                              >
                                 {{ userNotifications.length }}
                               </div>
                             </div>
 
-                            <div class="cursor-pointer text-xs py-2 text-gray-800 hover:text-gray-500"
-                              @click.prevent="clearAllNotifications">
+                            <div
+                              class="cursor-pointer text-xs py-2 text-gray-800 hover:text-gray-500"
+                              @click.prevent="clearAllNotifications"
+                            >
                               Clear All
                             </div>
                           </div>
                           <!-- Notification Items Start -->
                           <!-- Assuming 'notifications' is an array in your component's data -->
                           <div style="max-height: 400px; overflow-y: scroll">
-                            <div v-for="(notification, index) in userNotifications" :key="notification.id"
-                              class="p-1 cursor-pointer">
+                            <div
+                              v-for="(notification, index) in userNotifications"
+                              :key="notification.id"
+                              class="p-1 cursor-pointer"
+                            >
                               <MenuItem>
-                              <div class="flex flex-col gap-1 p-2 rounded-md hover:bg-custom-blue hover:text-white">
-                                <!-- Notification Title -->
-                                <p class="text-sm font-semibold">
-                                  {{ notification.data.title }}
-                                </p>
-                                <!-- Notification Body -->
-                                <p class="text-xs">{{ notification.data.body }}</p>
+                                <div
+                                  class="flex flex-col gap-1 p-2 rounded-md hover:bg-custom-blue hover:text-white"
+                                >
+                                  <!-- Notification Title -->
+                                  <p class="text-sm font-semibold">
+                                    {{ notification.data.title }}
+                                  </p>
+                                  <!-- Notification Body -->
+                                  <p class="text-xs">{{ notification.data.body }}</p>
 
-                                <p style="font-size: 9px">
-                                  {{ notification.created_at_diff }}
-                                </p>
-                              </div>
+                                  <p style="font-size: 9px">
+                                    {{ notification.created_at_diff }}
+                                  </p>
+                                </div>
                               </MenuItem>
                             </div>
                           </div>
                           <!-- Notification Items End -->
 
-                          <div v-if="!userNotifications.length" class="text-center py-3 text-md">
+                          <div
+                            v-if="!userNotifications.length"
+                            class="text-center py-3 text-md"
+                          >
                             You're all caught up!
                           </div>
                         </MenuItems>
@@ -879,19 +1162,27 @@ let appDownloadModal = ref(false);
                   <Dropdown align="right" width="48">
                     <template #trigger>
                       <span class="inline-flex rounded-md">
-                        <button type="button"
-                          class="inline-flex items-center text-lg leading-4 font-bold text-gray-300 hover:text-custom-green focus:outline-none transition ease-in-out duration-150">
+                        <button
+                          type="button"
+                          class="inline-flex items-center text-lg leading-4 font-bold text-gray-300 hover:text-custom-green focus:outline-none transition ease-in-out duration-150"
+                        >
                           {{
                             $page.props.auth.user.first_name +
                             " " +
                             $page.props.auth.user.last_name
                           }}
 
-                          <svg class="ml-2 -mr-0.5 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd"
+                          <svg
+                            class="ml-2 -mr-0.5 h-4 w-4 text-white"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fill-rule="evenodd"
                               d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                              clip-rule="evenodd" />
+                              clip-rule="evenodd"
+                            />
                           </svg>
                         </button>
                       </span>
@@ -908,17 +1199,36 @@ let appDownloadModal = ref(false);
 
               <!-- Hamburger -->
               <div class="-mr-2 flex items-center md:hidden">
-                <button @click="showingNavigationDropdown = !showingNavigationDropdown"
-                  class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
-                  <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                    <path :class="{
-                      hidden: showingNavigationDropdown,
-                      'inline-flex': !showingNavigationDropdown,
-                    }" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                    <path :class="{
-                      hidden: !showingNavigationDropdown,
-                      'inline-flex': showingNavigationDropdown,
-                    }" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                <button
+                  @click="showingNavigationDropdown = !showingNavigationDropdown"
+                  class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out"
+                >
+                  <svg
+                    class="h-6 w-6"
+                    stroke="currentColor"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      :class="{
+                        hidden: showingNavigationDropdown,
+                        'inline-flex': !showingNavigationDropdown,
+                      }"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 6h16M4 12h16M4 18h16"
+                    />
+                    <path
+                      :class="{
+                        hidden: !showingNavigationDropdown,
+                        'inline-flex': showingNavigationDropdown,
+                      }"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               </div>
@@ -931,189 +1241,322 @@ let appDownloadModal = ref(false);
           </div>
 
           <!-- Responsive Navigation Menu -->
-          <div :class="{
-            block: showingNavigationDropdown,
-            hidden: !showingNavigationDropdown,
-          }" class="md:hidden">
+          <div
+            :class="{
+              block: showingNavigationDropdown,
+              hidden: !showingNavigationDropdown,
+            }"
+            class="md:hidden"
+          >
             <div class="pt-2 pb-3 space-y-1">
-              <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
+              <ResponsiveNavLink
+                :href="route('dashboard')"
+                :active="route().current('dashboard')"
+              >
                 Dashboard
               </ResponsiveNavLink>
 
-              <ResponsiveNavLink :href="route('clients.index')" :active="route().current('clients.index')">
+              <ResponsiveNavLink
+                :href="route('clients.index')"
+                :active="route().current('clients.index')"
+              >
                 Clients
               </ResponsiveNavLink>
-              <ResponsiveNavLink v-if="$page.props.auth.role === 'internal-agent'"
+              <ResponsiveNavLink
+                v-if="$page.props.auth.role === 'internal-agent'"
                 :href="route('internal-agent.agent-agency.index')"
-                :active="route().current('internal-agent.agent-agency.index')">
+                :active="route().current('internal-agent.agent-agency.index')"
+              >
                 My Agency
               </ResponsiveNavLink>
               <!-- <ResponsiveNavLink v-if="$page.props.auth.role === 'internal-agent'" :href="route('internal-agent.my-agent.index')" :active="route().current('internal-agent.my-agent.index')">
                 Registered Agents
               </ResponsiveNavLink> -->
-              <ResponsiveNavLink :href="route('calls.index')" :active="route().current('calls.index')">
+              <ResponsiveNavLink
+                :href="route('calls.index')"
+                :active="route().current('calls.index')"
+              >
                 Reporting
               </ResponsiveNavLink>
 
-              <ResponsiveNavLink :href="route('billing.funds.index')" :active="route().current('billing.funds.index') ||
-                route().current('billing.cards.index') ||
-                route().current('billing.autopay.index')
-                ">
+              <ResponsiveNavLink
+                :href="route('billing.funds.index')"
+                :active="
+                  route().current('billing.funds.index') ||
+                  route().current('billing.cards.index') ||
+                  route().current('billing.autopay.index')
+                "
+              >
                 <div class="row pb-3 flex">
                   <div class="columns-6 flex">Add Funds</div>
                   <div class="columns-6 flex pl-20">
-                    <svg v-if="route().current('billing.funds.index') ||
-                      route().current('billing.cards.index') ||
-                      route().current('billing.autopay.index')
-                      " xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                      stroke="currentColor" class="w-6 h-6">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                    <svg
+                      v-if="
+                        route().current('billing.funds.index') ||
+                        route().current('billing.cards.index') ||
+                        route().current('billing.autopay.index')
+                      "
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-6 h-6"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                      />
                     </svg>
                   </div>
                 </div>
-                <div v-if="route().current('billing.funds.index') ||
-                  route().current('billing.cards.index') ||
-                  route().current('billing.autopay.index')
-                  " class="pl-14 text-white text-xs mb-5">
+                <div
+                  v-if="
+                    route().current('billing.funds.index') ||
+                    route().current('billing.cards.index') ||
+                    route().current('billing.autopay.index')
+                  "
+                  class="pl-14 text-white text-xs mb-5"
+                >
                   <ul>
                     <li class="mb-3">
-                      <Link href="/billing/funds" class="inline-flex items-center rounded-t-lg hover:text-custom-green"
+                      <Link
+                        href="/billing/funds"
+                        class="inline-flex items-center rounded-t-lg hover:text-custom-green"
                         :class="{
                           'text-custom-green': route().current('billing.funds.index'),
-                        }">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="w-4 h-4 mr-2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                          d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
-                      </svg>
+                        }"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          class="w-4 h-4 mr-2"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z"
+                          />
+                        </svg>
 
-                      <span>Add Funds</span>
+                        <span>Add Funds</span>
                       </Link>
                     </li>
 
                     <li class="mb-3">
-                      <Link aria-current="page"
-                        class="inline-flex items-center rounded-t-lg hover:text-custom-green group" :class="{
+                      <Link
+                        aria-current="page"
+                        class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
+                        :class="{
                           'text-custom-green': route().current('billing.autopay.index'),
-                        }" href="">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="w-4 h-4 mr-2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                          d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
-                      </svg>
-                      <span>Autopay</span>
-                      <div class="p-2">
-                        <span
-                          class="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">Soon</span>
-                      </div>
+                        }"
+                        href=""
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          class="w-4 h-4 mr-2"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+                          />
+                        </svg>
+                        <span>Autopay</span>
+                        <div class="p-2">
+                          <span
+                            class="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20"
+                            >Soon</span
+                          >
+                        </div>
                       </Link>
                     </li>
                   </ul>
                 </div>
               </ResponsiveNavLink>
 
-              <ResponsiveNavLink :href="route('support.index')" :active="route().current('support.index')">
+              <ResponsiveNavLink
+                :href="route('support.index')"
+                :active="route().current('support.index')"
+              >
                 Support
               </ResponsiveNavLink>
 
-              <ResponsiveNavLink :href="route('activities.index')" :active="route().current('activities.index') ||
-                route().current('transactions.index') ||
-                route().current('profile.view') ||
-                route().current('profile.edit')
-                ">
-                <div class="row pb-3 flex">
-                  <div class="columns-6 flex">Settings</div>
-                  <div class="columns-6 flex pl-20">
-                    <svg v-if="route().current('activities.index') ||
-                      route().current('transactions.index') ||
-                      route().current('profile.view') ||
-                      route().current('profile.edit')
-                      " xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                      stroke="currentColor" class="w-6 h-6">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                    </svg>
-                  </div>
-                </div>
-                <div v-if="route().current('activities.index') ||
+              <ResponsiveNavLink
+                :href="route('activities.index')"
+                :active="
+                  route().current('activities.index') ||
                   route().current('transactions.index') ||
                   route().current('profile.view') ||
                   route().current('profile.edit')
-                  " class="pl-14 text-white text-xs mb-5">
+                "
+              >
+                <div class="row pb-3 flex">
+                  <div class="columns-6 flex">Settings</div>
+                  <div class="columns-6 flex pl-20">
+                    <svg
+                      v-if="
+                        route().current('activities.index') ||
+                        route().current('transactions.index') ||
+                        route().current('profile.view') ||
+                        route().current('profile.edit')
+                      "
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-6 h-6"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div
+                  v-if="
+                    route().current('activities.index') ||
+                    route().current('transactions.index') ||
+                    route().current('profile.view') ||
+                    route().current('profile.edit')
+                  "
+                  class="pl-14 text-white text-xs mb-5"
+                >
                   <ul>
                     <li class="mb-3">
-                      <Link href="/usage-activities" class="inline-flex items-center rounded-t-lg hover:text-custom-green"
+                      <Link
+                        href="/usage-activities"
+                        class="inline-flex items-center rounded-t-lg hover:text-custom-green"
                         :class="{
                           'text-custom-green': route().current('activities.index'),
-                        }">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="w-4 h-4 mr-2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                          d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
-                      </svg>
+                        }"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          class="w-4 h-4 mr-2"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z"
+                          />
+                        </svg>
 
-                      <span>Activities</span>
+                        <span>Activities</span>
                       </Link>
                     </li>
 
                     <li class="mb-3">
-                      <Link href="/transactions" class="inline-flex items-center rounded-t-lg hover:text-custom-green"
+                      <Link
+                        href="/transactions"
+                        class="inline-flex items-center rounded-t-lg hover:text-custom-green"
                         :class="{
                           'text-custom-green': route().current('transactions.index'),
-                        }">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="w-4 h-4 mr-2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                          d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
-                      </svg>
+                        }"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          class="w-4 h-4 mr-2"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z"
+                          />
+                        </svg>
 
-                      <span>Transactions</span>
+                        <span>Transactions</span>
                       </Link>
                     </li>
 
                     <li class="mb-3">
-                      <Link href="/profile/view" class="inline-flex items-center rounded-t-lg hover:text-custom-green"
+                      <Link
+                        href="/profile/view"
+                        class="inline-flex items-center rounded-t-lg hover:text-custom-green"
                         :class="{
                           'text-custom-green': route().current('profile.view'),
-                        }">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="w-4 h-4 mr-2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                          d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
-                      </svg>
+                        }"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          class="w-4 h-4 mr-2"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z"
+                          />
+                        </svg>
 
-                      <span>Profile</span>
+                        <span>Profile</span>
                       </Link>
                     </li>
                   </ul>
                 </div>
               </ResponsiveNavLink>
 
-              <div class="w-full rounded-md bg-custom-indigo shadow-lg focus:outline-none">
-                <div class="text-lg font-bold px-3 py-2 text-white"
-                  @click.prevent="showMobileNotifications = !showMobileNotifications">
+              <div
+                class="w-full rounded-md bg-custom-indigo shadow-lg focus:outline-none"
+              >
+                <div
+                  class="text-lg font-bold px-3 py-2 text-white"
+                  @click.prevent="showMobileNotifications = !showMobileNotifications"
+                >
                   Notifications
                 </div>
 
                 <!-- Unread Notifications -->
                 <div v-if="showMobileNotifications && unreadNotifications.length">
-                  <div class="px-3 py-2 text-sm text-white font-bold flex items-center justify-between">
+                  <div
+                    class="px-3 py-2 text-sm text-white font-bold flex items-center justify-between"
+                  >
                     <div class="flex items-center">
                       <span class="mr-1 font-bold text-white">Unread</span>
-                      <span style="font-size: 10px"
-                        class="bg-gray-600 rounded-full text-white w-4 h-4 flex items-center justify-center">
+                      <span
+                        style="font-size: 10px"
+                        class="bg-gray-600 rounded-full text-white w-4 h-4 flex items-center justify-center"
+                      >
                         {{ unreadNotifications.length }}
                       </span>
                     </div>
-                    <span class="cursor-pointer text-xs py-2 text-white hover:text-gray-400"
-                      @click.prevent="markAllAsRead">
+                    <span
+                      class="cursor-pointer text-xs py-2 text-white hover:text-gray-400"
+                      @click.prevent="markAllAsRead"
+                    >
                       Mark All As Read
                     </span>
                   </div>
 
                   <!-- Unread Notification Items -->
                   <div style="max-height: 400px; overflow-y: auto">
-                    <div v-for="(notification, index) in unreadNotifications" :key="notification.id"
-                      class="p-1 cursor-pointer hover:bg-custom-blue hover:text-white">
+                    <div
+                      v-for="(notification, index) in unreadNotifications"
+                      :key="notification.id"
+                      class="p-1 cursor-pointer hover:bg-custom-blue hover:text-white"
+                    >
                       <div class="flex flex-col gap-1 p-2 rounded-md">
                         <p class="text-sm font-semibold text-white">
                           {{ notification.data.title }}
@@ -1128,28 +1571,40 @@ let appDownloadModal = ref(false);
                 </div>
 
                 <!-- All Notifications -->
-                <div v-if="showMobileNotifications &&
-                  userNotifications &&
-                  userNotifications.length
-                  ">
-                  <div class="px-3 py-2 text-sm text-white font-bold flex items-center justify-between">
+                <div
+                  v-if="
+                    showMobileNotifications &&
+                    userNotifications &&
+                    userNotifications.length
+                  "
+                >
+                  <div
+                    class="px-3 py-2 text-sm text-white font-bold flex items-center justify-between"
+                  >
                     <div class="flex items-center">
                       <span class="mr-1 font-bold text-white">All</span>
-                      <span style="font-size: 10px"
-                        class="bg-gray-600 rounded-full text-white w-4 h-4 flex items-center justify-center">
+                      <span
+                        style="font-size: 10px"
+                        class="bg-gray-600 rounded-full text-white w-4 h-4 flex items-center justify-center"
+                      >
                         {{ userNotifications.length }}
                       </span>
                     </div>
-                    <span class="cursor-pointer text-xs py-2 text-white hover:text-gray-400"
-                      @click.prevent="clearAllNotifications">
+                    <span
+                      class="cursor-pointer text-xs py-2 text-white hover:text-gray-400"
+                      @click.prevent="clearAllNotifications"
+                    >
                       Clear All
                     </span>
                   </div>
 
                   <!-- Notification Items -->
                   <div style="max-height: 400px; overflow-y: auto">
-                    <div v-for="(notification, index) in userNotifications" :key="notification.id"
-                      class="p-1 cursor-pointer hover:bg-custom-blue hover:text-white">
+                    <div
+                      v-for="(notification, index) in userNotifications"
+                      :key="notification.id"
+                      class="p-1 cursor-pointer hover:bg-custom-blue hover:text-white"
+                    >
                       <div class="flex flex-col gap-1 p-2 rounded-md">
                         <p class="text-sm font-semibold text-white">
                           {{ notification.data.title }}
@@ -1164,8 +1619,10 @@ let appDownloadModal = ref(false);
                 </div>
 
                 <!-- No Notifications Message -->
-                <div v-if="showMobileNotifications && !userNotifications.length"
-                  class="text-center py-3 text-md text-white">
+                <div
+                  v-if="showMobileNotifications && !userNotifications.length"
+                  class="text-center py-3 text-md text-white"
+                >
                   You're all caught up!
                 </div>
               </div>
@@ -1194,40 +1651,81 @@ let appDownloadModal = ref(false);
             </div>
           </div>
         </nav>
-        <div class="w-full mx-auto md:grid md:grid-cols-5 md:gap-28 md:max-w-screen-2xl xl:gap-0">
+        <div
+          class="w-full mx-auto md:grid md:grid-cols-5 md:gap-28 md:max-w-screen-2xl xl:gap-0"
+        >
           <div class="py-12 hidden sm:-my-px sm:ml-10 col-span-1 md:flex md:flex-col">
-            <NavLink class="mb-10 gap-2" :href="route('take-calls.show')" :active="route().current('take-calls.show')">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-8 h-8 mr-2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+            <NavLink
+              class="mb-10 gap-2"
+              :href="route('take-calls.show')"
+              :active="route().current('take-calls.show')"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-8 h-8 mr-2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"
+                />
               </svg>
               Take Calls
             </NavLink>
 
-            <NavLink class="mb-10 gap-2" :href="route('clients.index')" :active="route().current('clients.index')">
+            <NavLink
+              class="mb-10 gap-2"
+              :href="route('clients.index')"
+              :active="route().current('clients.index')"
+            >
               <img src="/img/clients.png" alt="" />
               Clients
             </NavLink>
 
-            <NavLink v-if="$page.props.auth.role === 'internal-agent'" class="mb-10 gap-2"
+            <NavLink
+              v-if="$page.props.auth.role === 'internal-agent'"
+              class="mb-10 gap-2"
               :href="route('internal-agent.agent-agency.index')"
-              :active="route().current('internal-agent.agent-agency.index')">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-8 h-8 mr-2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" />
+              :active="route().current('internal-agent.agent-agency.index')"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-8 h-8 mr-2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z"
+                />
               </svg>
               My Agency
             </NavLink>
 
-            <NavLink v-if="$page.props.auth.role === 'internal-agent'" class="mb-10 gap-2"
-              :href="route('agent.my.business')" :active="route().current('agent.my.business')">
-              <svg fill="#fff" class="w-8 h-8 mr-2" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink" stroke="#fff">
+            <NavLink
+              v-if="$page.props.auth.role === 'internal-agent'"
+              class="mb-10 gap-2"
+              :href="route('agent.my.business')"
+              :active="route().current('agent.my.business')"
+            >
+              <svg
+                fill="#fff"
+                class="w-8 h-8 mr-2"
+                viewBox="0 0 50 50"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                stroke="#fff"
+              >
                 <path
-                  d="M7 2L7 7L2 7L2 46L14 46L14 44L4 44L4 9L9 9L9 4L29 4L29 7L11 7L11 9L34 9L34 20L36 20L36 7L31 7L31 2 Z M 8 12L8 14L12 14L12 12 Z M 17 12L17 14L21 14L21 12 Z M 26 12L26 14L30 14L30 12 Z M 8 17L8 19L12 19L12 17 Z M 17 17L17 19L21 19L21 17 Z M 26 17L26 19L30 19L30 17 Z M 29 20C25.742188 20 23.328125 21.324219 22.074219 23.296875C20.929688 25.09375 20.875 27.339844 21.59375 29.433594C21.515625 29.566406 21.402344 29.679688 21.328125 29.839844C21.171875 30.191406 21.035156 30.589844 21.054688 31.097656L21.054688 31.101563C21.109375 32.378906 21.851563 33.046875 22.398438 33.421875C22.628906 34.640625 23.207031 35.660156 24 36.390625L24 38.53125C23.824219 38.953125 23.472656 39.308594 22.796875 39.679688C22.089844 40.070313 21.132813 40.4375 20.144531 40.917969C19.15625 41.398438 18.125 42.011719 17.324219 42.988281C16.519531 43.96875 16 45.308594 16 47L16 48L48.050781 48L47.992188 46.941406C47.902344 45.363281 47.316406 44.117188 46.488281 43.222656C45.664063 42.328125 44.644531 41.765625 43.679688 41.320313C42.714844 40.875 41.785156 40.535156 41.109375 40.171875C40.464844 39.832031 40.148438 39.511719 40 39.160156L40 37.472656C40.597656 36.609375 40.859375 35.617188 40.9375 34.6875C41.414063 34.265625 41.96875 33.617188 42.125 32.457031C42.230469 31.625 42.019531 30.996094 41.695313 30.464844C42.144531 29.277344 42.328125 27.84375 41.933594 26.417969C41.707031 25.589844 41.277344 24.777344 40.5625 24.171875C40.003906 23.691406 39.238281 23.425781 38.390625 23.308594L37.75 22L37.125 22C36.097656 22 35.085938 22.238281 34.214844 22.578125C33.871094 22.714844 33.558594 22.863281 33.265625 23.027344C33.101563 22.808594 32.921875 22.601563 32.714844 22.414063C32.105469 21.863281 31.261719 21.550781 30.324219 21.421875L29.621094 20 Z M 8 22L8 24L12 24L12 22 Z M 17 22L17 24L19.484375 24L20.761719 22 Z M 28.4375 22.113281L29.027344 23.300781L29.644531 23.300781C30.464844 23.300781 30.96875 23.535156 31.371094 23.894531C31.773438 24.257813 32.066406 24.796875 32.238281 25.429688C32.582031 26.695313 32.289063 28.339844 32.007813 28.792969L31.644531 29.371094L32.050781 29.921875C32.289063 30.238281 32.441406 30.566406 32.363281 31.007813C32.253906 31.625 32.03125 31.707031 31.589844 32.089844L31.257813 32.375L31.246094 32.8125C31.210938 33.792969 30.871094 34.777344 30.300781 35.339844L30 35.632813L30 38.988281L30.058594 39.152344C30.453125 40.25 31.335938 40.933594 32.234375 41.429688C33.132813 41.925781 34.101563 42.289063 34.976563 42.714844C35.851563 43.140625 36.609375 43.625 37.132813 44.261719C37.496094 44.699219 37.71875 45.289063 37.855469 46L18.144531 46C18.28125 45.289063 18.503906 44.699219 18.867188 44.261719C19.390625 43.625 20.148438 43.140625 21.023438 42.714844C21.898438 42.289063 22.867188 41.925781 23.765625 41.429688C24.664063 40.933594 25.546875 40.25 25.941406 39.152344L26 38.988281L26 35.523438L25.5625 35.226563C25.101563 34.914063 24.34375 33.769531 24.238281 32.742188L24.183594 32.1875L23.683594 31.945313C23.398438 31.808594 23.082031 31.753906 23.050781 31.015625C23.050781 31.015625 23.082031 30.824219 23.15625 30.65625C23.234375 30.484375 23.375 30.304688 23.332031 30.347656L23.8125 29.867188L23.542969 29.242188C22.796875 27.523438 22.898438 25.722656 23.761719 24.367188C24.550781 23.125 26.097656 22.269531 28.4375 22.113281 Z M 36.558594 24.113281L37.089844 25.199219L37.714844 25.199219C38.472656 25.199219 38.921875 25.398438 39.265625 25.691406C39.613281 25.984375 39.859375 26.414063 40.003906 26.949219C40.300781 28.019531 40.085938 29.480469 39.746094 30.144531L39.417969 30.796875L39.933594 31.308594C39.867188 31.242188 40.195313 31.785156 40.140625 32.195313C40.011719 33.175781 39.871094 33.113281 39.449219 33.390625L39.03125 33.667969L39 34.171875C38.953125 35.042969 38.515625 36.351563 38.28125 36.589844L38 36.878906L38 39.621094L38.058594 39.78125C38.4375 40.835938 39.296875 41.476563 40.167969 41.9375C41.035156 42.398438 41.980469 42.738281 42.84375 43.136719C43.707031 43.535156 44.476563 43.984375 45.019531 44.578125C45.367188 44.953125 45.601563 45.433594 45.769531 46L39.921875 46C39.757813 44.777344 39.3125 43.765625 38.675781 42.988281C37.875 42.011719 36.84375 41.398438 35.855469 40.917969C34.867188 40.4375 33.910156 40.070313 33.203125 39.679688C32.527344 39.308594 32.175781 38.953125 32 38.53125L32 36.296875C32.691406 35.421875 33.054688 34.390625 33.15625 33.34375C33.542969 33.003906 34.144531 32.417969 34.332031 31.359375C34.484375 30.492188 34.226563 29.785156 33.90625 29.210938C34.4375 27.988281 34.59375 26.460938 34.167969 24.902344C34.164063 24.886719 34.15625 24.871094 34.152344 24.855469C34.367188 24.71875 34.640625 24.5625 34.949219 24.441406C35.4375 24.25 36.007813 24.179688 36.558594 24.113281 Z M 8 27L8 29L12 29L12 27 Z M 17 27L17 29L19.753906 29L19.394531 27 Z M 8 32L8 34L12 34L12 32 Z M 17 32L17 34L20.449219 34L19.613281 32 Z M 8 37L8 39L12 39L12 37 Z M 17 37L17 39L21 39L21 37Z">
-                </path>
+                  d="M7 2L7 7L2 7L2 46L14 46L14 44L4 44L4 9L9 9L9 4L29 4L29 7L11 7L11 9L34 9L34 20L36 20L36 7L31 7L31 2 Z M 8 12L8 14L12 14L12 12 Z M 17 12L17 14L21 14L21 12 Z M 26 12L26 14L30 14L30 12 Z M 8 17L8 19L12 19L12 17 Z M 17 17L17 19L21 19L21 17 Z M 26 17L26 19L30 19L30 17 Z M 29 20C25.742188 20 23.328125 21.324219 22.074219 23.296875C20.929688 25.09375 20.875 27.339844 21.59375 29.433594C21.515625 29.566406 21.402344 29.679688 21.328125 29.839844C21.171875 30.191406 21.035156 30.589844 21.054688 31.097656L21.054688 31.101563C21.109375 32.378906 21.851563 33.046875 22.398438 33.421875C22.628906 34.640625 23.207031 35.660156 24 36.390625L24 38.53125C23.824219 38.953125 23.472656 39.308594 22.796875 39.679688C22.089844 40.070313 21.132813 40.4375 20.144531 40.917969C19.15625 41.398438 18.125 42.011719 17.324219 42.988281C16.519531 43.96875 16 45.308594 16 47L16 48L48.050781 48L47.992188 46.941406C47.902344 45.363281 47.316406 44.117188 46.488281 43.222656C45.664063 42.328125 44.644531 41.765625 43.679688 41.320313C42.714844 40.875 41.785156 40.535156 41.109375 40.171875C40.464844 39.832031 40.148438 39.511719 40 39.160156L40 37.472656C40.597656 36.609375 40.859375 35.617188 40.9375 34.6875C41.414063 34.265625 41.96875 33.617188 42.125 32.457031C42.230469 31.625 42.019531 30.996094 41.695313 30.464844C42.144531 29.277344 42.328125 27.84375 41.933594 26.417969C41.707031 25.589844 41.277344 24.777344 40.5625 24.171875C40.003906 23.691406 39.238281 23.425781 38.390625 23.308594L37.75 22L37.125 22C36.097656 22 35.085938 22.238281 34.214844 22.578125C33.871094 22.714844 33.558594 22.863281 33.265625 23.027344C33.101563 22.808594 32.921875 22.601563 32.714844 22.414063C32.105469 21.863281 31.261719 21.550781 30.324219 21.421875L29.621094 20 Z M 8 22L8 24L12 24L12 22 Z M 17 22L17 24L19.484375 24L20.761719 22 Z M 28.4375 22.113281L29.027344 23.300781L29.644531 23.300781C30.464844 23.300781 30.96875 23.535156 31.371094 23.894531C31.773438 24.257813 32.066406 24.796875 32.238281 25.429688C32.582031 26.695313 32.289063 28.339844 32.007813 28.792969L31.644531 29.371094L32.050781 29.921875C32.289063 30.238281 32.441406 30.566406 32.363281 31.007813C32.253906 31.625 32.03125 31.707031 31.589844 32.089844L31.257813 32.375L31.246094 32.8125C31.210938 33.792969 30.871094 34.777344 30.300781 35.339844L30 35.632813L30 38.988281L30.058594 39.152344C30.453125 40.25 31.335938 40.933594 32.234375 41.429688C33.132813 41.925781 34.101563 42.289063 34.976563 42.714844C35.851563 43.140625 36.609375 43.625 37.132813 44.261719C37.496094 44.699219 37.71875 45.289063 37.855469 46L18.144531 46C18.28125 45.289063 18.503906 44.699219 18.867188 44.261719C19.390625 43.625 20.148438 43.140625 21.023438 42.714844C21.898438 42.289063 22.867188 41.925781 23.765625 41.429688C24.664063 40.933594 25.546875 40.25 25.941406 39.152344L26 38.988281L26 35.523438L25.5625 35.226563C25.101563 34.914063 24.34375 33.769531 24.238281 32.742188L24.183594 32.1875L23.683594 31.945313C23.398438 31.808594 23.082031 31.753906 23.050781 31.015625C23.050781 31.015625 23.082031 30.824219 23.15625 30.65625C23.234375 30.484375 23.375 30.304688 23.332031 30.347656L23.8125 29.867188L23.542969 29.242188C22.796875 27.523438 22.898438 25.722656 23.761719 24.367188C24.550781 23.125 26.097656 22.269531 28.4375 22.113281 Z M 36.558594 24.113281L37.089844 25.199219L37.714844 25.199219C38.472656 25.199219 38.921875 25.398438 39.265625 25.691406C39.613281 25.984375 39.859375 26.414063 40.003906 26.949219C40.300781 28.019531 40.085938 29.480469 39.746094 30.144531L39.417969 30.796875L39.933594 31.308594C39.867188 31.242188 40.195313 31.785156 40.140625 32.195313C40.011719 33.175781 39.871094 33.113281 39.449219 33.390625L39.03125 33.667969L39 34.171875C38.953125 35.042969 38.515625 36.351563 38.28125 36.589844L38 36.878906L38 39.621094L38.058594 39.78125C38.4375 40.835938 39.296875 41.476563 40.167969 41.9375C41.035156 42.398438 41.980469 42.738281 42.84375 43.136719C43.707031 43.535156 44.476563 43.984375 45.019531 44.578125C45.367188 44.953125 45.601563 45.433594 45.769531 46L39.921875 46C39.757813 44.777344 39.3125 43.765625 38.675781 42.988281C37.875 42.011719 36.84375 41.398438 35.855469 40.917969C34.867188 40.4375 33.910156 40.070313 33.203125 39.679688C32.527344 39.308594 32.175781 38.953125 32 38.53125L32 36.296875C32.691406 35.421875 33.054688 34.390625 33.15625 33.34375C33.542969 33.003906 34.144531 32.417969 34.332031 31.359375C34.484375 30.492188 34.226563 29.785156 33.90625 29.210938C34.4375 27.988281 34.59375 26.460938 34.167969 24.902344C34.164063 24.886719 34.15625 24.871094 34.152344 24.855469C34.367188 24.71875 34.640625 24.5625 34.949219 24.441406C35.4375 24.25 36.007813 24.179688 36.558594 24.113281 Z M 8 27L8 29L12 29L12 27 Z M 17 27L17 29L19.753906 29L19.394531 27 Z M 8 32L8 34L12 34L12 32 Z M 17 32L17 34L20.449219 34L19.613281 32 Z M 8 37L8 39L12 39L12 37 Z M 17 37L17 39L21 39L21 37Z"
+                ></path>
               </svg>
               My Business
             </NavLink>
@@ -1242,192 +1740,368 @@ let appDownloadModal = ref(false);
               Registered Agents
             </NavLink> -->
 
-            <NavLink class="mb-10 gap-2" id="billing-nav-link" :href="route('billing.funds.index')" :active="route().current('billing.funds.index') ||
-              route().current('billing.cards.index') ||
-              route().current('billing.autopay.index')
-              " :class="{
-    'mb-5':
-      route().current('billing.funds.index') ||
-      route().current('billing.cards.index') ||
-      route().current('billing.autopay.index'),
-  }">
+            <NavLink
+              class="mb-10 gap-2"
+              id="billing-nav-link"
+              :href="route('billing.funds.index')"
+              :active="
+                route().current('billing.funds.index') ||
+                route().current('billing.cards.index') ||
+                route().current('billing.autopay.index')
+              "
+              :class="{
+                'mb-5':
+                  route().current('billing.funds.index') ||
+                  route().current('billing.cards.index') ||
+                  route().current('billing.autopay.index'),
+              }"
+            >
               <img src="/img/billing.png" alt="" />
               Add Funds
 
-              <svg v-if="route().current('billing.funds.index') ||
-                route().current('billing.cards.index') ||
-                route().current('billing.autopay.index')
-                " xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+              <svg
+                v-if="
+                  route().current('billing.funds.index') ||
+                  route().current('billing.cards.index') ||
+                  route().current('billing.autopay.index')
+                "
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                />
               </svg>
             </NavLink>
 
-            <div v-if="route().current('billing.funds.index') ||
-              route().current('billing.cards.index') ||
-              route().current('billing.autopay.index')
-              " class="pl-14 text-white text-xs mb-5">
+            <div
+              v-if="
+                route().current('billing.funds.index') ||
+                route().current('billing.cards.index') ||
+                route().current('billing.autopay.index')
+              "
+              class="pl-14 text-white text-xs mb-5"
+            >
               <ul>
                 <li class="mb-3">
-                  <Link href="/billing/funds" class="inline-flex items-center rounded-t-lg hover:text-custom-green"
+                  <Link
+                    href="/billing/funds"
+                    class="inline-flex items-center rounded-t-lg hover:text-custom-green"
                     :class="{
                       'text-custom-green': route().current('billing.funds.index'),
-                    }">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="w-4 h-4 mr-2">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
-                  </svg>
+                    }"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-4 h-4 mr-2"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z"
+                      />
+                    </svg>
 
-                  <span>Add Funds</span>
+                    <span>Add Funds</span>
                   </Link>
                 </li>
 
                 <li class="mb-3">
-                  <Link aria-current="page" class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
+                  <Link
+                    aria-current="page"
+                    class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
                     :class="{
                       'text-custom-green': route().current('billing.autopay.index'),
-                    }" href="">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="w-4 h-4 mr-2">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
-                  </svg>
-                  <span>Autopay</span>
-                  <div class="p-2">
-                    <span
-                      class="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">Soon</span>
-                  </div>
+                    }"
+                    href=""
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-4 h-4 mr-2"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+                      />
+                    </svg>
+                    <span>Autopay</span>
+                    <div class="p-2">
+                      <span
+                        class="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20"
+                        >Soon</span
+                      >
+                    </div>
                   </Link>
                 </li>
 
                 <li>
-                  <Link href="/billing/cards" class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
+                  <Link
+                    href="/billing/cards"
+                    class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
                     :class="{
                       'text-custom-green': route().current('billing.cards.index'),
-                    }" aria-current="page">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="w-4 h-4 mr-2">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
-                  </svg>
+                    }"
+                    aria-current="page"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-4 h-4 mr-2"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"
+                      />
+                    </svg>
 
-                  <span>Saved Cards</span>
+                    <span>Saved Cards</span>
                   </Link>
                 </li>
               </ul>
             </div>
 
-            <NavLink class="mb-10 gap-2" :href="route('calls.index')" :active="route().current('calls.index')">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-8 h-8 mr-2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+            <NavLink
+              class="mb-10 gap-2"
+              :href="route('calls.index')"
+              :active="route().current('calls.index')"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-8 h-8 mr-2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"
+                />
               </svg>
 
               Reporting
             </NavLink>
 
-            <NavLink v-if="$page.props.auth.role === 'internal-agent'" class="mb-10 gap-2"
-              :href="route('additional-files.index')" :active="route().current('additional-files.index')">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-8 h-8 mr-2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M12 10.5v6m3-3H9m4.06-7.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
+            <NavLink
+              v-if="$page.props.auth.role === 'internal-agent'"
+              class="mb-10 gap-2"
+              :href="route('additional-files.index')"
+              :active="route().current('additional-files.index')"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-8 h-8 mr-2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 10.5v6m3-3H9m4.06-7.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"
+                />
               </svg>
 
               Additional Files
             </NavLink>
 
-            <NavLink class="mb-10 gap-2" :href="route('support.index')" :active="route().current('support.index')">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" style="height: 38px; width: 38px">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+            <NavLink
+              class="mb-10 gap-2"
+              :href="route('support.index')"
+              :active="route().current('support.index')"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                style="height: 38px; width: 38px"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                />
               </svg>
 
               Support
             </NavLink>
 
-            <NavLink class="mb-10 gap-2" id="billing-nav-link" :href="route('activities.index')" :active="route().current('activities.index') ||
-              route().current('transactions.index') ||
-              route().current('profile.view') ||
-              route().current('profile.edit')
-              " :class="{
-    'mb-5':
-      route().current('activities.index') ||
-      route().current('transactions.index') ||
-      route().current('profile.view') ||
-      route().current('profile.edit'),
-  }">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-8 h-8 mr-2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-              Settings
-
-              <svg v-if="route().current('activities.index') ||
+            <NavLink
+              class="mb-10 gap-2"
+              id="billing-nav-link"
+              :href="route('activities.index')"
+              :active="
+                route().current('activities.index') ||
                 route().current('transactions.index') ||
                 route().current('profile.view') ||
                 route().current('profile.edit')
-                " xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+              "
+              :class="{
+                'mb-5':
+                  route().current('activities.index') ||
+                  route().current('transactions.index') ||
+                  route().current('profile.view') ||
+                  route().current('profile.edit'),
+              }"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-8 h-8 mr-2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+              </svg>
+              Settings
+
+              <svg
+                v-if="
+                  route().current('activities.index') ||
+                  route().current('transactions.index') ||
+                  route().current('profile.view') ||
+                  route().current('profile.edit')
+                "
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                />
               </svg>
             </NavLink>
 
-            <div v-if="route().current('activities.index') ||
-              route().current('transactions.index') ||
-              route().current('profile.view') ||
-              route().current('profile.edit')
-              " class="pl-14 text-white text-xs mb-5">
+            <div
+              v-if="
+                route().current('activities.index') ||
+                route().current('transactions.index') ||
+                route().current('profile.view') ||
+                route().current('profile.edit')
+              "
+              class="pl-14 text-white text-xs mb-5"
+            >
               <ul>
                 <li class="mb-3">
-                  <Link :href="route('activities.index')"
-                    class="inline-flex items-center rounded-t-lg hover:text-custom-green" :class="{
+                  <Link
+                    :href="route('activities.index')"
+                    class="inline-flex items-center rounded-t-lg hover:text-custom-green"
+                    :class="{
                       'text-custom-green': route().current('activities.index'),
-                    }">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="w-4 h-4 mr-2">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
-                  </svg>
+                    }"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-4 h-4 mr-2"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59"
+                      />
+                    </svg>
 
-                  <span>Activities</span>
+                    <span>Activities</span>
                   </Link>
                 </li>
 
                 <li class="mb-3">
-                  <Link aria-current="page" class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
+                  <Link
+                    aria-current="page"
+                    class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
                     :class="{
                       'text-custom-green': route().current('transactions.index'),
-                    }" :href="route('transactions.index')">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="w-4 h-4 mr-2">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+                    }"
+                    :href="route('transactions.index')"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-4 h-4 mr-2"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
 
-                  <span>Transactions</span>
+                    <span>Transactions</span>
                   </Link>
                 </li>
 
                 <li class="mb-3">
-                  <Link aria-current="page" class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
+                  <Link
+                    aria-current="page"
+                    class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
                     :class="{
                       'text-custom-green':
                         route().current('profile.view') ||
                         route().current('profile.edit'),
-                    }" :href="route('profile.view')">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="w-4 h-4 mr-2">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
+                    }"
+                    :href="route('profile.view')"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-4 h-4 mr-2"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                    </svg>
 
-                  <span>Profile</span>
+                    <span>Profile</span>
                   </Link>
                 </li>
               </ul>
@@ -1448,10 +2122,12 @@ let appDownloadModal = ref(false);
           <h2 class="text-xl text-center mb-4 font-bold">Download AllCalls Mobile App</h2>
 
           <div>
-            <a href="https://play.google.com/store/apps/details?id=io.allcalls"><img
-                style="max-width: 200px; margin: auto" src="/img/google-store.png" /></a>
-            <a href="https://apps.apple.com/us/app/allcalls-io/id6464440586"><img style="max-width: 200px; margin: auto"
-                src="/img/app-store.png" /></a>
+            <a href="https://play.google.com/store/apps/details?id=io.allcalls"
+              ><img style="max-width: 200px; margin: auto" src="/img/google-store.png"
+            /></a>
+            <a href="https://apps.apple.com/us/app/allcalls-io/id6464440586"
+              ><img style="max-width: 200px; margin: auto" src="/img/app-store.png"
+            /></a>
           </div>
         </div>
       </Modal>
@@ -1462,32 +2138,65 @@ let appDownloadModal = ref(false);
     <Modal :show="showRinging" maxWidth="sm" :closeable="false">
       <div class="bg-white p-8 py-24 rounded-lg shadow-xl w-full">
         <div class="flex flex-col items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-            class="w-16 h-16 text-green-700 animate-pulse mb-4">
-            <path fill-rule="evenodd"
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="w-16 h-16 text-green-700 animate-pulse mb-4"
+          >
+            <path
+              fill-rule="evenodd"
               d="M19.5 9.75a.75.75 0 01-.75.75h-4.5a.75.75 0 01-.75-.75v-4.5a.75.75 0 011.5 0v2.69l4.72-4.72a.75.75 0 111.06 1.06L16.06 9h2.69a.75.75 0 01.75.75z"
-              clip-rule="evenodd" />
-            <path fill-rule="evenodd"
+              clip-rule="evenodd"
+            />
+            <path
+              fill-rule="evenodd"
               d="M1.5 4.5a3 3 0 013-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 01-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 006.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 011.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 01-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5z"
-              clip-rule="evenodd" />
+              clip-rule="evenodd"
+            />
           </svg>
 
           <h1 class="text-2xl font-bold text-black">Incoming Call</h1>
           <p class="text-md text-gray-600 mt-2">AllCalls Client</p>
 
           <div class="flex mt-20 space-x-10">
-            <div @click="rejectCall()" class="bg-red-500 hover:bg-red-600 p-3 rounded-full">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-6 h-6 text-white cursor-pointer" style="transform: rotate(133deg)">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+            <div
+              @click="rejectCall()"
+              class="bg-red-500 hover:bg-red-600 p-3 rounded-full"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6 text-white cursor-pointer"
+                style="transform: rotate(133deg)"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"
+                />
               </svg>
             </div>
-            <div @click="acceptCall()" class="bg-green-500 hover:bg-green-400 p-3 rounded-full">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-6 h-6 text-white cursor-pointer">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+            <div
+              @click="acceptCall()"
+              class="bg-green-500 hover:bg-green-400 p-3 rounded-full"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6 text-white cursor-pointer"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"
+                />
               </svg>
             </div>
           </div>
@@ -1497,7 +2206,9 @@ let appDownloadModal = ref(false);
 
     <Modal :show="showOngoing" maxWidth="lg" :closeable="false">
       <!-- <Modal :show="true" maxWidth="lg" :closeable="false"> -->
-      <div class="flex flex-col items-center justify-between h-full p-8 bg-white space-y-8">
+      <div
+        class="flex flex-col items-center justify-between h-full p-8 bg-white space-y-8"
+      >
         <!-- Call Duration -->
         <div>
           <p class="text-2xl font-medium text-black" v-text="callDuration"></p>
@@ -1513,8 +2224,8 @@ let appDownloadModal = ref(false);
               <span class="text-gray-600">Name:</span>
               {{
                 connectedClient.first_name || connectedClient.last_name
-                ? connectedClient.first_name + " " + connectedClient.last_name
-                : "N/A"
+                  ? connectedClient.first_name + " " + connectedClient.last_name
+                  : "N/A"
               }}
             </li>
             <li class="flex justify-between">
@@ -1532,12 +2243,25 @@ let appDownloadModal = ref(false);
           <ul class="w-full p-4 bg-gray-100 rounded-md space-y-2">
             <li class="flex justify-between">
               <span class="text-gray-600">Email:</span>
-              <span class="text-black" v-if="hasSixtySecondsPassed" v-text="connectedClient.email"></span>
+              <span
+                class="text-black"
+                v-if="hasSixtySecondsPassed"
+                v-text="connectedClient.email"
+              ></span>
               <span class="text-black" v-else>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                  stroke="currentColor" class="w-6 h-6">
-                  <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
+                  />
                 </svg>
               </span>
             </li>
@@ -1547,10 +2271,19 @@ let appDownloadModal = ref(false);
                 connectedClient.dob
               }}</span>
               <span class="text-black" v-else>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                  stroke="currentColor" class="w-6 h-6">
-                  <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
+                  />
                 </svg>
               </span>
             </li>
@@ -1560,10 +2293,19 @@ let appDownloadModal = ref(false);
                 connectedClient.phone
               }}</span>
               <span class="text-black" v-else>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                  stroke="currentColor" class="w-6 h-6">
-                  <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
+                  />
                 </svg>
               </span>
             </li>
@@ -1573,10 +2315,19 @@ let appDownloadModal = ref(false);
                 connectedClient.address
               }}</span>
               <span class="text-black" v-else>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                  stroke="currentColor" class="w-6 h-6">
-                  <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
+                  />
                 </svg>
               </span>
             </li>
@@ -1586,10 +2337,19 @@ let appDownloadModal = ref(false);
                 connectedClient.zipCode
               }}</span>
               <span class="text-black" v-else>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                  stroke="currentColor" class="w-6 h-6">
-                  <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
+                  />
                 </svg>
               </span>
             </li>
@@ -1639,7 +2399,10 @@ let appDownloadModal = ref(false);
 
         <!-- Hang Up Button -->
         <div>
-          <button @click.prevent="disconnectCall()" class="bg-red-500 hover:bg-red-400 text-white rounded-full py-2 px-6">
+          <button
+            @click.prevent="disconnectCall()"
+            class="bg-red-500 hover:bg-red-400 text-white rounded-full py-2 px-6"
+          >
             Hang Up
           </button>
         </div>
