@@ -52,6 +52,7 @@ let showRinging = ref(false);
 let showOngoing = ref(false);
 let call = reactive(null);
 let hasSixtySecondsPassed = ref(false);
+let ringingTimeout = ref(null);
 
 let getFormattedTime = (startTime) => {
   const now = new Date();
@@ -69,13 +70,20 @@ let showIncomingCall = (conn) => {
   console.log(conn.parameters.Params);
 
   // add a timeout for 25 seconds to hide the ringing screen in case the user doesn't accept the call in 25 seconds
+  if (ringingTimeout.value) {
+    console.log('Clearing the previous timeout.');
+    clearTimeout(ringingTimeout.value);
+    ringingTimeout.value = null;
+  }
+
   console.log('Setting timeout for 25 seconds now.');
-  setTimeout(() => {
+  ringingTimeout.value = setTimeout(() => {
     console.log('Timeout for 25 seconds reached!');
 
     if (!showOngoing.value) {
       console.log('Show ongoing is false, so hide the ringing screen now.');
       showRinging.value = false;
+      ringingTimeout.value = null;
     }
   }, 25000);
 
