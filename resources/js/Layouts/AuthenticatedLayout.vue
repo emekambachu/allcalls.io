@@ -324,6 +324,12 @@ onMounted(() => {
   Echo.private("calls." + page.props.auth.user.id).listenForWhisper("psst", (e) => {
     console.log("call event:");
     console.log(e);
+
+    if (ringingTimeout.value) {
+      console.log("Clearing the previous timeout.");
+      clearTimeout(ringingTimeout.value);
+      ringingTimeout.value = null;
+    }
     showRinging.value = false;
     showOngoing.value = false;
   });
@@ -336,6 +342,12 @@ onMounted(() => {
     (e) => {
       console.log("call accepted or rejected by one of the phone devices");
       console.log(e);
+
+      if (ringingTimeout.value) {
+        console.log("Clearing the previous timeout.");
+        clearTimeout(ringingTimeout.value);
+        ringingTimeout.value = null;
+      }
       showRinging.value = false;
       showOngoing.value = false;
     }
