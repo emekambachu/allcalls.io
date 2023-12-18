@@ -70,7 +70,10 @@ let showIncomingCall = (conn) => {
 
   // add a timeout for 25 seconds to hide the ringing screen in case the user doesn't accept the call in 25 seconds
   setTimeout(() => {
+    console.log('Timeout for 25 seconds reached!');
+
     if (!showOngoing.value) {
+      console.log('Show ongoing is false, so hide the ringing screen now.');
       showRinging.value = false;
     }
   }, 25000);
