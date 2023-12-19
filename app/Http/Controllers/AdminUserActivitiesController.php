@@ -10,7 +10,7 @@ class AdminUserActivitiesController extends Controller
 {
     public function index(Request $request)
     {
-        $userActivities = UserActivity::latest()->with('user')->paginate(10);
+        $userActivities = UserActivity::latest()->with('user')->paginate(100);
 
         return Inertia::render('Admin/UserActivities/Index', compact('userActivities'));
     }

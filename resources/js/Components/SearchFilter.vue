@@ -15,29 +15,24 @@ let formData = ref({
     first_six_card_no: props.requestData.first_six_card_no || '',
     last_four_card_no: props.requestData.last_four_card_no || '',
 });
+let firstStepErrors = ref({})
 let isLoading = ref(false)
 let isLoadingReset = ref(false)
-let firstSixNumberError = ref(false)
-let lastFourNumberError = ref(false)
 let fetchData = (e) => {
+    firstStepErrors.value.first_six_card_no = ['']
+    firstStepErrors.value.last_four_card_no = ['']
     if (formData.value.first_six_card_no) {
         if (formData.value.first_six_card_no.length < 6) {
-            firstSixNumberError.value = true
+            firstStepErrors.value.first_six_card_no = ['At least 6 charactror is required.']
             return
-        } else {
-            firstSixNumberError.value = false
-        }
+        } 
     }
     if (formData.value.last_four_card_no) {
         if (formData.value.last_four_card_no.length < 4) {
-            lastFourNumberError.value = true
+            firstStepErrors.value.last_four_card_no = ['At least 4 charactror is required.']
             return
-        } else {
-            lastFourNumberError.value = false
-        }
+        } 
     }
-    firstSixNumberError.value = false
-    lastFourNumberError.value = false
     isLoading.value = true
     try {
         const queryParams = {
@@ -66,6 +61,38 @@ let ClearFilter = () => {
 
     }
 }
+let filterInputs = ref([
+    {
+        placeholder:'name',
+        name:'name',
+        type:'text',
+        fun:'',
+    },
+    {
+        placeholder:'Email',
+        name:'email',
+        type:'text',
+        fun:'',
+    },
+    {
+        placeholder:'Phone Number',
+        name:'phone',
+        type:'number',
+        fun:'',
+    },
+    {
+        placeholder:'First 6 digit  of  card number',
+        name:'first_six_card_no',
+        type:'number',
+        fun:'firstSixDigit',
+    },
+    {
+        placeholder:'Last 4 digit of  card number',
+        name:'last_four_card_no',
+        type:'number',
+        fun:'lastFourDigit',
+    },  
+])
 const emit = defineEmits();
 onMounted(() => {
     // emit('update-form-data', {
@@ -110,8 +137,16 @@ let lastFourDigit = (e) => {
 </style>
 <template>
     <div class="grid lg:grid-cols-4   md:grid-cols-3 sm:grid-cols-1  gap-4 px-12 mb-3 mx-3">
+        <div v-for="filterInput in filterInputs">
+            <InputLabel :for="filterInput.name" :value="filterInput.name" />
 
-        <div>
+            <TextInput :id="filterInput.name" :type="filterInput.type" :placeholder="filterInput.placeholder" @input="`${filterInput.fun}`" class="mt-1 block w-full" v-model="formData[filterInput.name]" required
+                autofocus />
+                <div v-if="firstStepErrors[filterInput.name]" class="text-red-500" v-text="firstStepErrors[filterInput.name][0]"></div>
+
+        </div>
+
+        <!-- <div>
             <InputLabel for="name" value="name" />
 
             <TextInput id="name" type="text" placeholder="Name" class="mt-1 block w-full" v-model="formData.name" required
@@ -145,7 +180,7 @@ let lastFourDigit = (e) => {
             <TextInput id="card" type="number" placeholder="Last 4 digit of  card number" class="mt-1 block w-full"
                 v-model="formData.last_four_card_no" @input="lastFourDigit" required />
             <div v-if="lastFourNumberError == true" class="text-red-500">At least 4 charactror is required.</div>
-        </div>
+        </div> -->
         <div>
             <PrimaryButton type="button" class="ml-2" @click.prevent="fetchData">
                 <global-spinner :spinner="isLoading" /> Filter

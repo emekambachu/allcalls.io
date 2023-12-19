@@ -22,7 +22,7 @@ class MyBusinessController extends Controller
                     $query->whereBetween('created_at', [$startDate, $endDate]);
                 }
             })->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->paginate(100);
         $states = State::get();
         // dd($businesses);
         return Inertia::render('InternalAgent/MyBusiness/Index', [

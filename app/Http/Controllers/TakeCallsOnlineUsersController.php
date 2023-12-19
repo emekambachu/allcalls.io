@@ -55,6 +55,10 @@ class TakeCallsOnlineUsersController extends Controller
             'user_agent' => $request->header('User-Agent'),
         ]);
 
+        $user = $request->user();
+        $user->last_login_platform = 'web';
+        $user->save();
+
         // Dispatch the event
         OnlineUserListUpdated::dispatch();
 
