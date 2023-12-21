@@ -82,7 +82,8 @@ class AgentStatusAPIController extends Controller
 
 
         if ($request->has('phone')) {
-            $state = config("states.area_codes.{$this->extractAreaCode($request->input('phone'))}");
+            $normalizedPhone = $this->normalizePhoneNumber($request->input('phone'));
+            $state = config("states.area_codes.{$this->extractAreaCode($normalizedPhone)}");
         } elseif ($request->has('state')) {
             $state = $request->input('state');
         } elseif ($request->has('zip')) {
@@ -162,7 +163,8 @@ class AgentStatusAPIController extends Controller
 
 
         if ($request->has('phone')) {
-            $state = config("states.area_codes.{$this->extractAreaCode($request->input('phone'))}");
+            $normalizedPhone = $this->normalizePhoneNumber($request->input('phone'));
+            $state = config("states.area_codes.{$this->extractAreaCode($normalizedPhone)}");
         } elseif ($request->has('state')) {
             $state = $request->input('state');
         } elseif ($request->has('zip')) {
@@ -285,5 +287,18 @@ class AgentStatusAPIController extends Controller
     
         // Otherwise, return the second highest bid amount + 1
         return $secondHighestBid + 1;
+    }
+
+    protected function normalizePhoneNumber($inputNumber)
+    {
+        // Remove any non-numeric characters
+        $cleanNumber = preg_replace('/\D/', '', $inputNumber);
+
+        // Check if the number starts with '1' (U.S. country code) and remove it
+        if (strlen($cleanNumber) == 11 && substr($cleanNumber, 0, 1) == '1') {
+            $cleanNumber = substr($cleanNumber, 1);
+        }
+
+        return $cleanNumber;
     }
 }
