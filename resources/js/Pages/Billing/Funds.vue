@@ -112,7 +112,7 @@ let addFunds = async () => {
             return;
         }
     }
-
+   
     router.visit('/billing/funds', {
         method: 'POST',
         data: requestData,

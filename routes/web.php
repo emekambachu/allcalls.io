@@ -50,6 +50,7 @@ use App\Http\Controllers\ZoomMeetingNotificationController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -75,6 +76,7 @@ Route::middleware(['auth', 'verified', 'notBanned', 'isLocked'])->group(function
     Route::get('/registration-steps', [RegisteredUserController::class, 'steps'])->name('registration.steps');
     Route::post('/store-registration-steps', [RegisteredUserController::class, 'storeSteps'])->name('store.registration.steps');
 });
+
 
 Route::middleware(['auth', 'verified', 'registration-step-check', 'notBanned'])->group(function () {
     //User Routes

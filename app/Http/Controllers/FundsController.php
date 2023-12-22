@@ -30,9 +30,9 @@ class FundsController extends Controller
      */
     public function index(Request $request)
     {
+        
         // Retrieve the user's stored payment cards
         $cards = $request->user()->cards;
-
         // Transform the card details for use in the view
         $cards = $cards->map(function ($card) {
 
@@ -71,6 +71,7 @@ class FundsController extends Controller
 
     public function store(Request $request, NMIGateway $gw)
     {
+        // dd($request->all(), $gw);
         // 1. Validate the request
         $request->validate([
             'amount' => 'required|numeric|min:1',
@@ -103,9 +104,18 @@ class FundsController extends Controller
         if (!in_array($response, ['SUCCESS', 'Approved'])) {
             Log::debug('The status is not SUCCESS or Approved payment failed');
             Log::debug('RESPONSE TEXT: ' . $response);
+            Transaction::create([
+                'amount' => 0,
+                'user_id' => $request->user()->id,
+                'status_code' => 200,
+                'nmi_response' => $response,
+                'sign' => false,
+                'bonus' => false,
+                'label' => 'Failed',
+            ]);
             return redirect()->back()->with(['message' => 'Payment failed.']);
         }
-
+        // dd($response, $paymentDetails);
         // 3. If payment is successful, save the card
         [$card, $cardStatus] = $this->saveCardDetails($request);  // Returning both the card and its status
 
@@ -119,7 +129,7 @@ class FundsController extends Controller
 
         FundsAdded::dispatch($request->user(), $subtotal, $processingFee, $finalAmount, $totalWithBonus ? $subtotal : 0, $card);
         FundsAddedNotification::dispatch($request->user()->id, $finalAmount);
-        $request->user()->notify( new FundsAddedUserNotification($subtotal) );
+        $request->user()->notify(new FundsAddedUserNotification($subtotal));
         Log::debug('FundsAddedNotification dispatched');
 
         // Prepare the flash message
@@ -250,6 +260,8 @@ class FundsController extends Controller
             'sign' => true,
             'card_id' => $card->id,
             'label' => 'Funds added manually with credit card ending in ' . $cardLast4,
+            'status_code' => 200,
+            'nmi_response' => 'Funds added manually with credit card ending in ' . $cardLast4,
         ]);
 
         // Log a separate bonus transaction if the user is an internal agent
@@ -261,6 +273,8 @@ class FundsController extends Controller
                 'bonus' => true,
                 'card_id' => $card->id,
                 'label' => 'Bonus funds',
+                'status_code' => 200,
+                'nmi_response' => 'Bonus funds',
             ]);
         }
     }
