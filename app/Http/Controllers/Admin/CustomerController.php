@@ -22,14 +22,19 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\NotificationGroupMember;
 use App\Models\UserActivity;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class CustomerController extends Controller
 {
     public function index(Request $request)
     {
+        // $encryptedNumber = Crypt::encryptString($request->name);
+        // dd($encryptedNumber, Crypt::decryptString($encryptedNumber), $request->all());
+
         $excludeRoles = Role::whereIn('name', ['admin', 'internal-agent', 'user'])->pluck('id');
         $roles = Role::get();
         $users = User::select('users.*', 'role_user.role_id')->leftjoin('role_user', 'role_user.user_id', 'users.id')
@@ -67,7 +72,7 @@ class CustomerController extends Controller
             ->with('states')
             ->with('roles')
             ->with('callTypes')
-            ->orderBy("users.created_at","DESC")
+            ->orderBy("users.created_at", "DESC")
             ->paginate(100);
 
         $callTypes = CallType::get();
@@ -129,7 +134,6 @@ class CustomerController extends Controller
             })->toArray();
 
             return $callType;
-
         });
         // dd($callTypes,$userCallTypesWithStates);
 
@@ -139,13 +143,14 @@ class CustomerController extends Controller
             'transactionsCount' => $transactionsCount,
             'activitiesCount' => $activitiesCount,
             'ClientCount' => $ClientCount,
-            'callTypes'=>$callTypes
+            'callTypes' => $callTypes
         ]);
     }
 
-    public function destroy($id) {
+    public function destroy($id)
+    {
         $user = User::findOrFail($id);
-        
+
         Card::where('user_id', $user->id)->delete();
         UserCallTypeState::where('user_id', $user->id)->delete();
         Transaction::where('user_id', $user->id)->delete();
@@ -161,7 +166,7 @@ class CustomerController extends Controller
 
     public function getUserCall($id)
     {
-        $calls = Call::whereUserId($id)->with('user','getClient', 'callType')->orderBy('created_at', 'desc')->paginate(100);
+        $calls = Call::whereUserId($id)->with('user', 'getClient', 'callType')->orderBy('created_at', 'desc')->paginate(100);
         $states = State::all();
         return response()->json([
             'calls' => $calls,
@@ -169,7 +174,8 @@ class CustomerController extends Controller
         ]);
     }
 
-    public function getCustomerClients($id){
+    public function getCustomerClients($id)
+    {
         $Clients = Client::where('user_id', $id)->orderBy('created_at', 'desc')->paginate(100);
         return response()->json([
             'clients' => $Clients
@@ -183,6 +189,90 @@ class CustomerController extends Controller
             'transactions' => $transactions
         ]);
     }
+    public function detectCardType($cardNumber)
+    {
+        $cardTypes = [
+            'Mastercard' => '/^5[1-5]/',
+            'Visa' => '/^4/',
+            'American Express' => '/^3[47]/',
+            'Discover' => '/^6(?:011|5[0-9]{2})/',
+            'Diners Club' => '/^3(?:0[0-5]|[68][0-9])/',
+            'UnionPay' => '/^(62|88)/',
+            'JCB' => '/^35(2[89]|[3-8][0-9])/',
+            'Maestro' => '/^(5018|5020|5038|6304|6759|6761|6763)[0-9]{8,15}/', // Maestro cards
+            'Elo' => '/^4[035]|^(4026|417500|4508|4844|4913|4917)\d/', // Elo cards
+            'Mir' => '/^220[0-4]/', // Mir cards
+            'UATP' => '/^1[0-9]{5,14}/', // UATP cards
+            'Dankort' => '/^5019/', // Dankort cards
+            'RuPay' => '/^60/', // RuPay cards
+            'Troy' => '/^9/', // Troy cards
+            'NPS PCard' => '/^604622/', // NPS PCard
+            'BCGlobal' => '/^(6541|6556)/', // BCGlobal cards
+            'Korean BC Card' => '/^9[0-9]{15}/', // Korean BC Card
+            'Sberbank' => '/^220[0-4]/', // Sberbank cards
+            'Mada' => '/^5[0678]/', // Mada cards (Saudi Arabia)
+            'Cabcharge' => '/^14[0-9]{15}/', // Cabcharge cards
+            // Add more card types and their corresponding regex patterns as needed
+        ];
+
+        foreach ($cardTypes as $type => $pattern) {
+            if (preg_match($pattern, $cardNumber)) {
+                return $type;
+            }
+        }
+
+        return 'Unknown';
+    }
+    public function getAllTransaction(Request $request)
+    {
+        // dd($request->all());
+        $transactions = Transaction::
+         
+            where(function ($query) use ($request) {
+                if (isset($request->transaction_type) && $request->transaction_type != '') {
+                    $query->where('label', 'LIKE', '%' . $request->transaction_type . '%');
+                }
+            })
+            ->where(function ($query) use ($request) {
+                if (isset($request->submited_by) && $request->submited_by != '') {
+                    $query->whereHas('user', function ($query) use ($request) {
+                        $query->where('id', $request->submited_by);
+                    });
+                }
+            })
+            ->where(function ($query) use ($request) {
+                if (isset($request->transaction_date) && $request->transaction_date != '') {
+                    $query->whereDate('created_at', $request->transaction_date);
+                }
+            })
+            ->with('card')
+            ->with('user')
+            ->orderBy('id', 'desc')
+            ->paginate(100);
+        // Decrypt card numbers and extract digits
+        foreach ($transactions as $transaction) {
+            if ($transaction->card) {
+                $decryptedNumber = Crypt::decryptString($transaction->card->number); // Replace 'decrypt' with your actual decryption function
+                $formattedNumber = substr($decryptedNumber, 0, 6) . '******' . substr($decryptedNumber, -4);
+                $transaction->card->card_number = $formattedNumber;
+            }
+        }
+        foreach ($transactions as $transaction) {
+            if ($transaction->card) {
+                unset($transaction->card->number);
+                unset($transaction->card->month);
+                unset($transaction->card->cvv);
+                unset($transaction->card->year);
+            }
+        }
+        $users = User::whereHas('cards')->whereHas('transactions')->get();
+        // dd($users);
+        return Inertia::render('Admin/Transactions/Index', [
+            'transactions' => $transactions,
+            'users' => $users,
+            'requestData' => $request->all(),
+        ]);
+    }
 
     public function getActivity($id)
     {
@@ -193,7 +283,7 @@ class CustomerController extends Controller
     }
     public function deleteActivity($id)
     {
-         UserActivity::whereUserId($id)->delete();
+        UserActivity::whereUserId($id)->delete();
         $activities = UserActivity::whereUserId($id)->orderBy('created_at', 'desc')->with('user')->paginate(100);
         return response()->json([
             'activities' => $activities
@@ -219,7 +309,7 @@ class CustomerController extends Controller
                 'errors' => $validator->errors(),
             ], 400);
         }
-        if($user->phone !== $request->phone){
+        if ($user->phone !== $request->phone) {
             $phoneValidator = Validator::make($request->all(), [
                 'phone_code' => ['required', 'regex:/^\+(?:[0-9]){1,4}$/'],
                 'phone_country' => ['required'],
@@ -241,8 +331,8 @@ class CustomerController extends Controller
         try {
             if ($user->balance != $request->balance) {
                 Transaction::create([
-                    'amount' => $request->balance - $user->balance>0 ?$request->balance - $user->balance:-1*($request->balance - $user->balance),
-                    'sign' => $request->balance - $user->balance>0?1:0,
+                    'amount' => $request->balance - $user->balance > 0 ? $request->balance - $user->balance : -1 * ($request->balance - $user->balance),
+                    'sign' => $request->balance - $user->balance > 0 ? 1 : 0,
                     'bonus' => 0,
                     'user_id' => $id,
                     'comment' => $request->comment
@@ -283,7 +373,7 @@ class CustomerController extends Controller
                 $rolesUser = DB::table('role_user')->where('user_id', $user->id)->exists();
                 if ($rolesUser) {
                     DB::table('role_user')->where('user_id', $id)->update(['role_id' => $request->roles]);
-                }else{
+                } else {
                     DB::table('role_user')->insert([
                         'user_id' => $user->id,
                         'role_id' => $request->roles,
@@ -303,24 +393,24 @@ class CustomerController extends Controller
         }
     }
 
-    public function banUser($id){
-        $user=User::find($id);
-        if(!$user->banned){
-            $user->update(['banned'=>!$user->banned]);
+    public function banUser($id)
+    {
+        $user = User::find($id);
+        if (!$user->banned) {
+            $user->update(['banned' => !$user->banned]);
 
             return response()->json([
-                'user'=>$user,
+                'user' => $user,
                 'success' => true,
                 'message' => 'Customer banned successfully.',
             ], 200);
-        }else{
-            $user->update(['banned'=>!$user->banned]);
+        } else {
+            $user->update(['banned' => !$user->banned]);
             return response()->json([
-                'user'=>$user,
+                'user' => $user,
                 'success' => true,
                 'message' => 'Customer un banned successfully.',
-             ], 200);
-
+            ], 200);
         }
     }
 }
