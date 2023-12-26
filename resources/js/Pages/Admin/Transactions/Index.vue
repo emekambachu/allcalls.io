@@ -86,6 +86,9 @@ let paginate = (url) => {
 let ResetPage = () => {
     router.visit('/admin/transactions')
 }
+let RefundPayment = (val) => {
+    console.log('value', val);
+}
 let maxDate = ref(new Date)
 maxDate.value.setHours(23, 59, 59, 999);   
 </script>
@@ -162,7 +165,7 @@ input[type="number"] {
 
 
                     <select id="countries" v-model="transactionType"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
                         <option disabled>Choose transaction Type</option>
                         <option value="Purchased call">Purchased call</option>
                         <option value="Missed call fee">Missed call fee</option>
@@ -172,7 +175,7 @@ input[type="number"] {
                     </select>
 
                     <select id="countries" v-model="paymentSubmitedBy"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
                         <option disabled>Payment Submited By</option>
                         <option v-for="user in users" :key="user.id" :value="user?.id">{{ user?.first_name }} {{
                             user?.last_name }}</option>
@@ -204,24 +207,25 @@ input[type="number"] {
                                 <tr>
                                     <th scope="col" style="min-width: 140px;" class="px-4 py-3">Timestamp</th>
                                     <th scope="col" style="min-width: 140px;" class="px-4 py-3">Customer Name</th>
-                                    <th scope="col" class="px-4 py-3">Card Type</th>
-                                    <th scope="col" class="px-4 py-3">First 6 and last 4 digits of card</th>
+                                    <th scope="col" class="px-4 py-3">Type</th>
+                                    <th scope="col" class="px-4 py-3">Card</th>
                                     <th scope="col" class="px-4 py-3">Amount</th>
+                                    <th scope="col" style="min-width: 210px;" class="px-4 py-3">Label</th>
                                     <th scope="col" class="px-4 py-3">Direction</th>
-                                    <th scope="col" class="px-4 py-3">Result (Success, Decline)</th>
-                                    <th scope="col" class="px-4 py-3">EXACT Decline response</th>
+                                    <th scope="col" class="px-4 py-3">Result </th>
+                                    <th scope="col" class="px-4 py-3">Response</th>
                                     <th scope="col" class="px-4 py-3">transaction ID</th>
                                     <th scope="col" class="px-4 py-3">internal transaction ID</th>
+                                    <!-- <th scope="col" class="px-4 py-3">Action</th> -->
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="transaction in transactions.data" :key="transaction.id"
                                     class="border-b border-gray-500">
-                                    <td class="text-gray-600 px-4 py-3">{{ transaction.created_at }}</td>
+                                    <td class="text-gray-600 px-4 py-3">{{ transaction.created_at }} {{ transaction.card?.get_year }}</td>
                                     <td class="text-gray-600 px-4 py-3"> <a class="text-blue-600"
                                             :href="route('admin.customer.detail', transaction?.user?.id)">{{
-                                                transaction?.user?.first_name }} {{
-        transaction?.user?.last_name }}</a> </td>
+                                                transaction?.user?.first_name }} {{ transaction?.user?.last_name }}</a> </td>
                                     <td class="text-gray-600 px-4 py-3">
 
                                         <span title="Visa" v-if="detectCardType(transaction.card?.card_number) == 'Visa'">
@@ -405,6 +409,7 @@ input[type="number"] {
 
                                     <td class="text-gray-600 px-4 py-3">{{ transaction.card?.card_number }}</td>
                                     <td class="text-gray-600 px-4 py-3">${{ transaction.amount }}</td>
+                                    <td class="text-gray-600 px-4 py-3">{{ transaction.label }}</td>
                                     <td class="text-gray-300 px-4 py-3">
                                         <div v-if="transaction.bonus">
                                             <span
@@ -419,8 +424,7 @@ input[type="number"] {
                                                 class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                                                 Deposited
                                             </span>
-                                            <span v-else-if="transaction.label === 'Failed'"
-                                                    class=" px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
+                                            <span v-else-if="transaction.label === 'Failed'" class=" px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
                                             bg-red-200 text-red-800">
                                                 Failed
                                             </span>
@@ -431,42 +435,23 @@ input[type="number"] {
 
                                         </div>
                                     </td>
-                                    <td class="text-gray-600 px-4 py-3">result</td>
-                                    <td class="text-gray-600 px-4 py-3">response</td>
+                                    <td class="text-gray-600 px-4 py-3"></td>
+                                    <td class="text-gray-600 px-4 py-3"></td>
                                     <td class="text-gray-600 px-4 py-3">{{ transaction.id }}
                                     </td>
+                                    <td class="text-gray-600 px-4 py-3"></td>
+
+                                    <!-- <td class="text-gray-600 px-2 py-2">
+                                        <button @click.prevent="RefundPayment(transaction.id)" type="button"
+                                            class="button-custom-back px-2 py-2 rounded-md ml-2">
+                                            <global-spinner :spinner="isLoadingRefund" /> Refund
+                                        </button>
+                                    </td> -->
                                 </tr>
                             </tbody>
                         </table>
 
-                        <nav class="flex justify-between my-4" v-if="transactions.links">
-                            <div v-if="transactions">
-                                <span class="text-sm text-gray-700">
-                                    Showing
-                                    <span class="font-semibold text-gray-900">{{ transactions.from }}</span>
-                                    to
-                                    <span class="font-semibold text-gray-900">{{ transactions.to }}</span> of
-                                    <span class="font-semibold text-gray-900">{{ transactions.total }}</span>
-                                    Entries
-                                </span>
-                            </div>
 
-                            <ul class="inline-flex -space-x-px text-base h-10">
-                                <li v-for="(link, index) in transactions.links" :key="link.label"
-                                    :class="{ disabled: link.url === null }">
-                                    <a href="#" @click.prevent="paginate(link.url)" :class="[
-                                        'flex items-center justify-center px-4 h-10 border border-gray-300',
-                                        link.active
-                                            ? 'text-blue-600 bg-blue-50 hover:bg-blue-100 hover:text-blue-700'
-                                            : 'leading-tight text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700',
-                                        {
-                                            'rounded-l-lg': index === 0,
-                                            'rounded-r-lg': index === transactions.links.length - 1,
-                                        },
-                                    ]" v-html="link.label"></a>
-                                </li>
-                            </ul>
-                        </nav>
                         <br>
 
 
@@ -478,5 +463,32 @@ input[type="number"] {
         <section v-else class="p-3">
             <p class="text-center text-gray-600">No Transactions yet.</p>
         </section>
+        <nav class="flex justify-between my-4 mx-auto max-w-screen-xl sm:px-12" v-if="transactions.links && transactions.data.length">
+            <div v-if="transactions">
+                <span class="text-sm text-gray-700">
+                    Showing
+                    <span class="font-semibold text-gray-900">{{ transactions.from }}</span>
+                    to
+                    <span class="font-semibold text-gray-900">{{ transactions.to }}</span> of
+                    <span class="font-semibold text-gray-900">{{ transactions.total }}</span>
+                    Entries
+                </span>
+            </div>
+
+            <ul class="inline-flex -space-x-px text-base h-10">
+                <li v-for="(link, index) in transactions.links" :key="link.label" :class="{ disabled: link.url === null }">
+                    <a href="#" @click.prevent="paginate(link.url)" :class="[
+                        'flex items-center justify-center px-4 h-10 border border-gray-300',
+                        link.active
+                            ? 'text-blue-600 bg-blue-50 hover:bg-blue-100 hover:text-blue-700'
+                            : 'leading-tight text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700',
+                        {
+                            'rounded-l-lg': index === 0,
+                            'rounded-r-lg': index === transactions.links.length - 1,
+                        },
+                    ]" v-html="link.label"></a>
+                </li>
+            </ul>
+        </nav>
     </AuthenticatedLayout>
 </template>
