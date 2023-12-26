@@ -185,6 +185,21 @@ class CustomerController extends Controller
     public function getTransaction($id)
     {
         $transactions = Transaction::whereUserId($id)->with('card')->orderBy('created_at', 'desc')->paginate(100);
+         foreach ($transactions as $transaction) {
+            if ($transaction->card) {
+                $decryptedNumber = Crypt::decryptString($transaction->card->number); // Replace 'decrypt' with your actual decryption function
+                $formattedNumber = substr($decryptedNumber, 0, 6) . '******' . substr($decryptedNumber, -4);
+                $transaction->card->card_number = $formattedNumber;
+            }
+        }
+        foreach ($transactions as $transaction) {
+            if ($transaction->card) {
+                unset($transaction->card->number);
+                unset($transaction->card->month);
+                unset($transaction->card->cvv);
+                unset($transaction->card->year);
+            }
+        }
         return response()->json([
             'transactions' => $transactions
         ]);

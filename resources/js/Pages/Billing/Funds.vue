@@ -3,7 +3,7 @@ import TextInput from "@/Components/TextInput.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import InputError from "@/Components/InputError.vue";
 import { toaster } from '@/helper.js';
 
@@ -43,15 +43,31 @@ onMounted(() => {
     startYear = currentYear - 0;
     endYear = currentYear + 10;
 
-    for (i=startYear;i<=endYear;i++) {
-      newOption = document.createElement("option");
-      newOption.value = i;
-      newOption.label = i;
-      dropdownYear.appendChild(newOption);
+    for (i = startYear; i <= endYear; i++) {
+        newOption = document.createElement("option");
+        newOption.value = i;
+        newOption.label = i;
+        dropdownYear.appendChild(newOption);
     }
     showSuccessNotificationIfAvailable();
     selectDefaultCardIfAvailable();
 });
+let years = ref([])
+let Addyears = () => {
+    const currentYear = new Date().getFullYear();
+      const startYear = currentYear - 0;
+      const endYear = currentYear + 10;
+      years.value = Array.from({ length: endYear - startYear + 1 }, (_, index) => startYear + index);
+}
+
+watch(
+    () => card.value,
+    (newVal) => {
+        if (newVal == '0') {
+            Addyears()
+        }
+    }
+);
 
 let selectDefaultCardIfAvailable = () => {
     // Search for the default = 1 card:
@@ -112,7 +128,6 @@ let addFunds = async () => {
             return;
         }
     }
-   
     router.visit('/billing/funds', {
         method: 'POST',
         data: requestData,
@@ -185,23 +200,20 @@ let total = computed(() => {
                                         <TextInput v-model="name" id="name" placeholder="John Doe" />
                                         <InputError class="mt-2" :message="$page.props.errors.name" />
                                     </div>
-
-                                    
                                     <div class="grid grid-cols-2 gap-4 mb-4">
                                         <div>
-                                            <label for="address"
-                                                class="block mb-2 text-sm font-medium text-gray-500">Card Number</label>
+                                            <label for="address" class="block mb-2 text-sm font-medium text-gray-500">Card
+                                                Number</label>
                                             <TextInput
-                                                        class="text-sm border-transparent focus:border-transparent focus:ring-0 bg-transparent"
-                                                        type="text" placeholder="4242 4242 4242 4242" name="cardNumber"
-                                                        v-cardformat:formatCardNumber required
-                                                        v-model="number" />    
+                                                class="text-sm border-transparent focus:border-transparent focus:ring-0 bg-transparent"
+                                                type="text" placeholder="4242 4242 4242 4242" name="cardNumber"
+                                                v-cardformat:formatCardNumber required v-model="number" />
                                             <InputError class="mt-2" :message="$page.props.errors.number" />
                                         </div>
 
                                         <div>
-                                            <label for="month"
-                                                class="block mb-2 text-sm font-medium text-gray-700">Select Expiration Month</label>
+                                            <label for="month" class="block mb-2 text-sm font-medium text-gray-700">Select
+                                                Expiration Month</label>
                                             <select v-model="month" name="month" id="month" class="select-custom" required>
                                                 <option selected="" disabled="" value="">Select Month</option>
                                                 <option value="01">01</option>
@@ -220,18 +232,20 @@ let total = computed(() => {
                                             <InputError class="mt-2" :message="$page.props.errors.month" />
                                         </div>
                                         <div>
-                                            <label for="year"
-                                                class="block mb-2 text-sm font-medium text-gray-700">Select Expiration Year</label>
-                                            <select v-model="year" id='year' name="year"  class="select-custom" required>
+                                            <label for="year" class="block mb-2 text-sm font-medium text-gray-700">Select
+                                                Expiration Year</label>
+                                            <select v-model="year" id='year' name="year" class="select-custom" required>
                                                 <option selected="" disabled="" value="">Select Year</option>
+                                                <option v-if="card == 0" v-for="year in years" :value="year">{{ year }}</option>
                                             </select>
                                             <InputError class="mt-2" :message="$page.props.errors.year" />
                                         </div>
 
                                         <div>
-                                            <label for="zip" class="block mb-2 text-sm font-medium text-gray-500">CVV</label>
+                                            <label for="zip"
+                                                class="block mb-2 text-sm font-medium text-gray-500">CVV</label>
                                             <TextInput type="text" placeholder="0000" name="CVV" required pattern="\d{3,4}"
-                                                        v-model="cvv" maxlength="4" v-cardformat:formatCardCVC />
+                                                v-model="cvv" maxlength="4" v-cardformat:formatCardCVC />
                                             <InputError class="mt-2" :message="$page.props.errors.cvv" />
                                         </div>
                                     </div>
