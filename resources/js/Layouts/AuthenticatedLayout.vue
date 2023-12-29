@@ -272,6 +272,9 @@ let updateLatestClientDisposition = () => {
   }).then(response => {
     console.log('Client disposition update response:');
     console.log(response.data);
+    localStorage.removeItem('latestClientId');
+    localStorage.removeItem('showDispositionModal');
+    router.reload({ preserveState: true });
   }).catch(error => {
     console.log('Error updating client disposition:');
     console.log(error);
