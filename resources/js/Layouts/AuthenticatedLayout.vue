@@ -249,6 +249,7 @@ let disconnectCall = () => {
   if (call) {
     call.disconnect();
     showOngoing.value = false;
+    showUpdateDispositionModal();
   } else {
     console.log("call not found while disconnecting");
   }
@@ -298,6 +299,7 @@ let setupTwilioDevice = () => {
       console.log("Call should disconnect now.");
       // showRinging.value = false;
       showOngoing.value = false;
+      showUpdateDispositionModal();
     });
 
     device.addListener("disconnect", (device) => {
@@ -319,6 +321,10 @@ let setupTwilioDevice = () => {
   });
 };
 
+let showUpdateDispositionModal = () => {
+  console.log("show update disposition modal now");
+}
+
 onMounted(() => {
   console.log("mounted AuthenticatedLayout");
   Echo.private("calls." + page.props.auth.user.id).listenForWhisper("psst", (e) => {
@@ -332,6 +338,7 @@ onMounted(() => {
     }
     showRinging.value = false;
     showOngoing.value = false;
+    showUpdateDispositionModal();
   });
 
   console.log("Attaching call accepted or rejected listener:");
@@ -350,6 +357,7 @@ onMounted(() => {
       }
       showRinging.value = false;
       showOngoing.value = false;
+      showUpdateDispositionModal();
     }
   );
 
