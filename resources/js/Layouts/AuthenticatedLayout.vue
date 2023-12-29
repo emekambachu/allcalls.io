@@ -321,9 +321,35 @@ let setupTwilioDevice = () => {
   });
 };
 
+let showUpdateDispositionForLastClient = ref(false);
+
 let showUpdateDispositionModal = () => {
-  console.log("show update disposition modal now");
+  // Check if 'showDispositionModal' exists in localStorage
+  if (localStorage.getItem('showDispositionModal') === null) {
+    // If not, create the variable in localStorage with a value (e.g., 'true')
+    localStorage.setItem('showDispositionModal', 'true');
+    console.log("'showDispositionModal' variable created in localStorage.");
+    showUpdateDispositionForLastClient.value = true;
+  } else {
+    // If the variable exists, you can perform other actions or log a message
+    console.log("'showDispositionModal' variable already exists in localStorage.");
+  }
 }
+
+let makeDispositionModalNull = () => {
+  localStorage.setItem('showDispositionModal', null);
+  console.log("'showDispositionModal' variable set to null in localStorage.");
+
+  showUpdateDispositionForLastClient.value = false;
+}
+
+onMounted(() => {
+  // if the showDispositionModal is not null, display the modal
+  if (localStorage.getItem('showDispositionModal') !== null) {
+    console.log();
+  } else {
+  }
+});
 
 onMounted(() => {
   console.log("mounted AuthenticatedLayout");
@@ -1690,6 +1716,11 @@ let appDownloadModal = ref(false);
           </button>
         </div>
       </div>
+    </Modal>
+
+
+    <Modal :show="showUpdateDispositionForLastClient" maxWidth="lg" :closeable="true" @close="showUpdateDispositionForLastClient = false">
+      <div>Show Update Disposition For Last Client</div>
     </Modal>
   </div>
 </template>
