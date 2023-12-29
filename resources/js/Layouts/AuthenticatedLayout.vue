@@ -258,12 +258,13 @@ let disconnectCall = () => {
 };
 
 let updateLatestClientDisposition = () => {
-  if (localStorage.getItem('latestClientId')) {
-    let latestClientId = Number(localStorage.getItem('latestClientId'));
-    console.log('latestClientId is ', latestClientId);
+  if (!localStorage.getItem('latestClientId')) {
+    console.log('latestClientId is null');
+    return;
   }
 
-  console.log('Connected Client', connectedClient.value);
+  let latestClientId = Number(localStorage.getItem('latestClientId'));
+  console.log('latestClientId is ', latestClientId);
 }
 
 let setupTwilioDevice = () => {
@@ -335,10 +336,6 @@ let setupTwilioDevice = () => {
 let showUpdateDispositionForLastClient = ref(false);
 
 let showUpdateDispositionModal = () => {
-
-  console.log('Connected client at the time: ');
-  console.log(connectedClient.value);
-
   // Check if 'showDispositionModal' exists in localStorage
   if (localStorage.getItem("showDispositionModal") === null) {
     // If not, create the variable in localStorage with a value (e.g., 'true')
