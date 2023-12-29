@@ -359,8 +359,8 @@ let showUpdateDispositionModal = () => {
     return
   }
 
-  // If the variable exists, you can perform other actions or log a message
   console.log("'showDispositionModal' variable already exists in localStorage.");
+  showUpdateDispositionForLastClient.value = true;
 };
 
 let makeDispositionModalNull = () => {
