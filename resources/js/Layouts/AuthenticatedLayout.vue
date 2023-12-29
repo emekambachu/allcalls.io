@@ -1723,20 +1723,20 @@ let appDownloadModal = ref(false);
         <div class="p-4 my-3">
           <label class="mb-2">Please update the client disposition for the call:</label>
           <select class="select-custom">
-            <option value="sale_simplified_issue">Sale - Simplified Issue</option>
-            <option value="sale_guaranteed_issue">Sale - Guaranteed Issue</option>
-            <option value="follow_up_needed">Follow Up Needed</option>
-            <option value="quoted_not_interested">Quoted - Not Interested</option>
-            <option value="not_interested">Not Interested</option>
-            <option value="transfer_handoff_too_long">Transfer Handoff Too Long</option>
-            <option value="client_hung_up">Client Hung Up</option>
-            <option value="no_income">No Income</option>
-            <option value="wrong_state">Wrong State</option>
-            <option value="not_qualified_age">Not Qualified Age</option>
-            <option value="not_qualified_nursing_home">Not Qualified Nursing Home</option>
-            <option value="not_qualified_memory_issues">Not Qualified Memory Issues</option>
-            <option value="language_barrier">Language Barrier</option>
-            <option value="do_not_call">Do Not Call</option>
+            <option value="Sale - Simplified Issue">Sale - Simplified Issue</option>
+            <option value="Sale - Guaranteed Issue">Sale - Guaranteed Issue</option>
+            <option value="Follow Up Needed">Follow Up Needed</option>
+            <option value="Quoted - Not Interested">Quoted - Not Interested</option>
+            <option value="Not Interested">Not Interested</option>
+            <option value="Transfer Handoff Too Long">Transfer Handoff Too Long</option>
+            <option value="Client Hung Up">Client Hung Up</option>
+            <option value="No Income">No Income</option>
+            <option value="Wrong State">Wrong State</option>
+            <option value="Not Qualified Age">Not Qualified Age</option>
+            <option value="Not Qualified Nursing Home">Not Qualified Nursing Home</option>
+            <option value="Not Qualified Memory Issues">Not Qualified Memory Issues</option>
+            <option value="Language Barrier">Language Barrier</option>
+            <option value="Do Not Call">Do Not Call</option>
           </select>
         </div>
 
