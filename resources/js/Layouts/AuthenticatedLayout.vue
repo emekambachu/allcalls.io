@@ -270,6 +270,7 @@ let startTimeoutForRepeatedDispositionNotifications = () => {
     repeatedNotificationToUpdateDispositionTimeout.value = null;
   }
 
+  console.log('Setting new timeout for disposition notifications')
   repeatedNotificationToUpdateDispositionTimeout.value = setTimeout(() => {
     console.log('Send Notification To Update Disposition')
   }, 5000);
