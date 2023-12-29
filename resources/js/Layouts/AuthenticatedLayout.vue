@@ -1720,7 +1720,27 @@ let appDownloadModal = ref(false);
 
 
     <Modal :show="showUpdateDispositionForLastClient" maxWidth="lg" :closeable="true" @close="showUpdateDispositionForLastClient = false">
-      <div>Show Update Disposition For Last Client</div>
+      <div class="bg-white">
+        <div class="p-4 my-3">
+          <label>Please update the client disposition for the call:</label>
+          <select class="select-custom">
+            <option value="sale_simplified_issue">Sale - Simplified Issue</option>
+            <option value="sale_guaranteed_issue">Sale - Guaranteed Issue</option>
+            <option value="follow_up_needed">Follow Up Needed</option>
+            <option value="quoted_not_interested">Quoted - Not Interested</option>
+            <option value="not_interested">Not Interested</option>
+            <option value="transfer_handoff_too_long">Transfer Handoff Too Long</option>
+            <option value="client_hung_up">Client Hung Up</option>
+            <option value="no_income">No Income</option>
+            <option value="wrong_state">Wrong State</option>
+            <option value="not_qualified_age">Not Qualified Age</option>
+            <option value="not_qualified_nursing_home">Not Qualified Nursing Home</option>
+            <option value="not_qualified_memory_issues">Not Qualified Memory Issues</option>
+            <option value="language_barrier">Language Barrier</option>
+            <option value="do_not_call">Do Not Call</option>
+          </select>
+        </div>
+      </div>
     </Modal>
   </div>
 </template>
