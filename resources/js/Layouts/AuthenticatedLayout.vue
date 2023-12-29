@@ -262,6 +262,14 @@ let repeatedNotificationToUpdateDispositionTimeout = ref(null);
 
 let startTimeoutForRepeatedDispositionNotifications = () => {
   console.log('Starting timeout for repeated disposition notifications.');
+  
+
+  if (repeatedNotificationToUpdateDispositionTimeout.value) {
+    console.log('Clearing the previous timeout.');
+    clearTimeout(repeatedNotificationToUpdateDispositionTimeout.value);
+    repeatedNotificationToUpdateDispositionTimeout.value = null;
+  }
+
   repeatedNotificationToUpdateDispositionTimeout.value = setTimeout(() => {
     console.log('Send Notification To Update Disposition')
   }, 5000);
