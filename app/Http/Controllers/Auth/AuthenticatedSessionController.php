@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Activity;
+use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -40,6 +41,16 @@ class AuthenticatedSessionController extends Controller
             'session_id' => session()->getId(),
         ]);
 
+
+        UserActivity::create([
+            'action' => 'signed in.',
+            'data' => json_encode([]),
+            'platform' => 'web',
+            'user_id' => $request->user()->id,
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->header('user-agent'),
+        ]);
+
         if(auth()->user()->roles->contains('name', 'admin')) {
             return redirect()->intended(RouteServiceProvider::AdminHome);
         }
@@ -69,6 +80,17 @@ class AuthenticatedSessionController extends Controller
                 'logout_time' => now()
             ]);
         }
+
+
+
+        UserActivity::create([
+            'action' => 'Signed out.',
+            'data' => json_encode([]),
+            'platform' => 'web',
+            'user_id' => $user->id,
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->header('User-Agent'),
+        ]);
 
         return redirect('/');
     }
