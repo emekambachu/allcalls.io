@@ -265,13 +265,13 @@ let startTimeoutForRepeatedDispositionNotifications = () => {
   
 
   if (repeatedNotificationToUpdateDispositionTimeout.value) {
-    console.log('Clearing the previous timeout.');
-    clearTimeout(repeatedNotificationToUpdateDispositionTimeout.value);
+    console.log('Clearing the previous interval.');
+    clearInterval(repeatedNotificationToUpdateDispositionTimeout.value);
     repeatedNotificationToUpdateDispositionTimeout.value = null;
   }
 
   console.log('Setting new timeout for disposition notifications')
-  repeatedNotificationToUpdateDispositionTimeout.value = setTimeout(() => {
+  repeatedNotificationToUpdateDispositionTimeout.value = setInterval(() => {
     console.log('Send Notification To Update Disposition')
   }, 5000);
 }
