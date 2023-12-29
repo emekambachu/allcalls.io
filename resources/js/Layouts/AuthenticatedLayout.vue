@@ -1721,7 +1721,7 @@ let appDownloadModal = ref(false);
     <Modal :show="showUpdateDispositionForLastClient" :closeable="true" @close="showUpdateDispositionForLastClient = false">
       <div class="bg-white">
         <div class="p-4 my-3">
-          <label>Please update the client disposition for the call:</label>
+          <label class="mb-2">Please update the client disposition for the call:</label>
           <select class="select-custom">
             <option value="sale_simplified_issue">Sale - Simplified Issue</option>
             <option value="sale_guaranteed_issue">Sale - Guaranteed Issue</option>
@@ -1739,6 +1739,8 @@ let appDownloadModal = ref(false);
             <option value="do_not_call">Do Not Call</option>
           </select>
         </div>
+
+        <PrimaryButton>Save Disposition</PrimaryButton>
       </div>
     </Modal>
 
