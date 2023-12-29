@@ -351,7 +351,7 @@ let showUpdateDispositionForLastClient = ref(false);
 
 let showUpdateDispositionModal = () => {
   // Check if 'showDispositionModal' exists in localStorage
-  if (!localStorage.getItem("showDispositionModal")) {
+  if (localStorage.getItem("showDispositionModal") === null) {
     // If not, create the variable in localStorage with a value (e.g., 'true')
     localStorage.setItem("showDispositionModal", "true");
     console.log("'showDispositionModal' variable created in localStorage.");
