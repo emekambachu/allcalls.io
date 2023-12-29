@@ -255,6 +255,15 @@ let disconnectCall = () => {
   }
 };
 
+let updateLatestClientDisposition = () => {
+  if (localStorage.getItem('latestClientId')) {
+    let latestClientId = Number(localStorage.getItem('latestClientId'));
+    console.log('latestClientId is ', latestClientId);
+  }
+
+  console.log('Connected Client', connectedClient.value);
+}
+
 let setupTwilioDevice = () => {
   axios.get("/twilio-device-token").then((response) => {
     let token = response.data.token;
@@ -2523,7 +2532,9 @@ let appDownloadModal = ref(false);
             </select>
           </div>
 
-          <PrimaryButton>Save Disposition</PrimaryButton>
+          <div class="flex justify-end">
+            <PrimaryButton @click.prevent="updateLatestClientDisposition">Save Disposition</PrimaryButton>
+          </div>
         </div>
       </div>
     </Modal>
