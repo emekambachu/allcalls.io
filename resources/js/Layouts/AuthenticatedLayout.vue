@@ -258,6 +258,20 @@ let disconnectCall = () => {
 };
 
 let latestClientDisposition = ref('Sale - Simplified Issue');
+let repeatedNotificationToUpdateDispositionTimeout = ref(null);
+
+let startTimeoutForRepeatedDispositionNotifications = () => {
+  console.log('Starting timeout for repeated disposition notifications.');
+  repeatedNotificationToUpdateDispositionTimeout.value = setTimeout(() => {
+    console.log('Send Notification To Update Disposition')
+  }, 5000);
+}
+
+let clearTimeoutForRepeatedDispositionNotifications = () => {
+  console.log('Clearing timeout for repeated disposition notifications.');
+  clearTimeout(repeatedNotificationToUpdateDispositionTimeout.value);
+  repeatedNotificationToUpdateDispositionTimeout.value = null;
+}
 
 let updateLatestClientDisposition = () => {
   if (!localStorage.getItem('latestClientId')) {
@@ -276,6 +290,7 @@ let updateLatestClientDisposition = () => {
     localStorage.removeItem('showDispositionModal');
     showUpdateDispositionForLastClient.value = false;
     toaster('success', 'Client disposition updated.');
+    clearTimeoutForRepeatedDispositionNotifications();
   }).catch(error => {
     console.log('Error updating client disposition:');
     console.log(error);
@@ -357,11 +372,14 @@ let showUpdateDispositionModal = () => {
     localStorage.setItem("showDispositionModal", "true");
     console.log("'showDispositionModal' variable created in localStorage.");
     showUpdateDispositionForLastClient.value = true;
+
+    startTimeoutForRepeatedDispositionNotifications();
     return
   }
 
   console.log("'showDispositionModal' variable already exists in localStorage.");
   showUpdateDispositionForLastClient.value = true;
+  startTimeoutForRepeatedDispositionNotifications();
 };
 
 let makeDispositionModalNull = () => {
@@ -375,6 +393,7 @@ onMounted(() => {
   // if the showDispositionModal is not null, display the modal
   if (localStorage.getItem("showDispositionModal") !== null) {
     showUpdateDispositionForLastClient.value = true;
+    startTimeoutForRepeatedDispositionNotifications();
   }
 });
 
