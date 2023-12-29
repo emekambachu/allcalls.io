@@ -43,7 +43,7 @@ class AuthenticatedSessionController extends Controller
 
 
         UserActivity::create([
-            'action' => 'signed in.',
+            'action' => 'Signed in.',
             'data' => json_encode([]),
             'platform' => 'web',
             'user_id' => $request->user()->id,
