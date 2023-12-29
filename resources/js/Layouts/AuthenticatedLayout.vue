@@ -346,8 +346,7 @@ let makeDispositionModalNull = () => {
 onMounted(() => {
   // if the showDispositionModal is not null, display the modal
   if (localStorage.getItem('showDispositionModal') !== null) {
-    console.log();
-  } else {
+    showUpdateDispositionForLastClient.value = true;
   }
 });
 
@@ -1719,7 +1718,7 @@ let appDownloadModal = ref(false);
     </Modal>
 
 
-    <Modal :show="showUpdateDispositionForLastClient" maxWidth="lg" :closeable="true" @close="showUpdateDispositionForLastClient = false">
+    <Modal :show="showUpdateDispositionForLastClient" :closeable="true" @close="showUpdateDispositionForLastClient = false">
       <div class="bg-white">
         <div class="p-4 my-3">
           <label>Please update the client disposition for the call:</label>
@@ -1742,5 +1741,6 @@ let appDownloadModal = ref(false);
         </div>
       </div>
     </Modal>
+
   </div>
 </template>
