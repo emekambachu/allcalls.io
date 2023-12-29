@@ -275,6 +275,7 @@ let updateLatestClientDisposition = () => {
     localStorage.removeItem('latestClientId');
     localStorage.removeItem('showDispositionModal');
     showUpdateDispositionForLastClient.value = false;
+    toaster('success', 'Client disposition updated.');
   }).catch(error => {
     console.log('Error updating client disposition:');
     console.log(error);
