@@ -108,8 +108,7 @@ let updateUser = (id) => {
 }
 </style>
 <template>
-  <Head title="Dashboard" />
-
+  <Head title="User Information" />
   <AuthenticatedLayout>
     <div class="pt-6">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">

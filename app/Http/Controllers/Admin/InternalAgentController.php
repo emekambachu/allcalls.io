@@ -25,6 +25,7 @@ use Illuminate\Validation\Rules\Password;
 use Illuminate\Http\Client\Response;
 use Inertia\Inertia;
 use App\Models\InternalAgentLevel as AgentLevel;
+use App\Models\UserActivity;
 
 class InternalAgentController extends Controller
 {
@@ -255,7 +256,7 @@ class InternalAgentController extends Controller
 
     public function getActivity($id)
     {
-        $activities = Activity::whereUserId($id)->paginate(10);
+        $activities = UserActivity::whereUserId($id)->orderBy('created_at', 'desc')->with('user')->paginate(100);
         return response()->json([
             'activities' => $activities
         ]);
