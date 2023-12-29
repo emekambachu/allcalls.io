@@ -96,6 +96,7 @@ let showIncomingCall = (conn) => {
       .then((response) => {
         console.log(response.data.client);
         connectedClient.value = response.data.client;
+        localStorage.setItem('latestClientId', connectedClient.value.id);
 
         console.log("connected client now: ");
         console.log(connectedClient.value);
@@ -199,6 +200,7 @@ let refetchClient = () => {
     .then((response) => {
       console.log(response.data.client);
       connectedClient.value = response.data.client;
+      localStorage.setItem('latestClientId', connectedClient.value.id);
 
       console.log("connected client now: ");
       console.log(connectedClient.value);
