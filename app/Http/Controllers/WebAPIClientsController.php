@@ -38,4 +38,26 @@ class WebAPIClientsController extends Controller
             'message' => 'Client updated successfully.'
         ]);
     }
+
+    public function updateDispositionOnly(Client $client, Request $request)
+    {
+        $request->validate([
+            "status" => 'required',
+        ]);
+
+        if ($client->user_id !== $request->user()->id) {
+            return response()->json([
+                'message' => 'You are not authorized to update this client.'
+            ], 403);
+        }   
+
+        $client->update([
+            "status" => $request->status,
+        ]);
+
+        // return a json response
+        return response()->json([
+            'message' => 'Client disposition updated successfully.'
+        ]);
+    }
 }

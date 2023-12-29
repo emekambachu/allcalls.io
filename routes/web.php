@@ -142,6 +142,7 @@ Route::get('/device/incoming', function () {
 Route::get('/clients', [ClientsController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.index');
 Route::patch('/clients/{client}', [ClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.update');
 Route::patch('/web-api/clients/{client}', [WebAPIClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.web-api.update');
+Route::post('/web-api/clients/{client}/disposition', [WebAPIClientsController::class, 'updateDispositionOnly'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.web-api.update-disposition-only');
 Route::patch('/web-api/calls/{uniqueCallId}/user-response', [CallUserResponseAPIController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check']);
 Route::patch('/web-api/bids/{callType}', [CallTypeBidsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check']);
 

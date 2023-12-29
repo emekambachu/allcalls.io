@@ -257,6 +257,8 @@ let disconnectCall = () => {
   }
 };
 
+let latestClientDisposition = ref('Sale - Simplified Issue');
+
 let updateLatestClientDisposition = () => {
   if (!localStorage.getItem('latestClientId')) {
     console.log('latestClientId is null');
@@ -264,7 +266,16 @@ let updateLatestClientDisposition = () => {
   }
 
   let latestClientId = Number(localStorage.getItem('latestClientId'));
-  console.log('latestClientId is ', latestClientId);
+
+  axios.post(`/web-api/clients/${latestClientId}/disposition`, {
+    status: latestClientDisposition.value,
+  }).then(response => {
+    console.log('Client disposition update response:');
+    console.log(response.data);
+  }).catch(error => {
+    console.log('Error updating client disposition:');
+    console.log(error);
+  });
 }
 
 let setupTwilioDevice = () => {
@@ -2513,7 +2524,7 @@ let appDownloadModal = ref(false);
         <div class="p-4 my-3">
           <div class="mb-3">
             <label class="mb-2">Please update the client disposition for the call:</label>
-            <select class="select-custom">
+            <select class="select-custom" v-model="latestClientDisposition">
               <option value="Sale - Simplified Issue">Sale - Simplified Issue</option>
               <option value="Sale - Guaranteed Issue">Sale - Guaranteed Issue</option>
               <option value="Follow Up Needed">Follow Up Needed</option>
