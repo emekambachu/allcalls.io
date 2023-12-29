@@ -274,7 +274,7 @@ let startTimeoutForRepeatedDispositionNotifications = () => {
   repeatedNotificationToUpdateDispositionTimeout.value = setInterval(() => {
     console.log('Send Notification To Update Disposition')
     toaster('success', 'Please update the disposition for the client.');
-  }, 5000);
+  }, 15000);
 }
 
 let clearTimeoutForRepeatedDispositionNotifications = () => {
