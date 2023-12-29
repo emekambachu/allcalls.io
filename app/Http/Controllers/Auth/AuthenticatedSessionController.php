@@ -81,8 +81,6 @@ class AuthenticatedSessionController extends Controller
             ]);
         }
 
-
-
         UserActivity::create([
             'action' => 'Signed out.',
             'data' => json_encode([]),
