@@ -351,15 +351,16 @@ let showUpdateDispositionForLastClient = ref(false);
 
 let showUpdateDispositionModal = () => {
   // Check if 'showDispositionModal' exists in localStorage
-  if (localStorage.getItem("showDispositionModal") === null) {
+  if (!localStorage.getItem("showDispositionModal")) {
     // If not, create the variable in localStorage with a value (e.g., 'true')
     localStorage.setItem("showDispositionModal", "true");
     console.log("'showDispositionModal' variable created in localStorage.");
     showUpdateDispositionForLastClient.value = true;
-  } else {
-    // If the variable exists, you can perform other actions or log a message
-    console.log("'showDispositionModal' variable already exists in localStorage.");
+    return
   }
+
+  // If the variable exists, you can perform other actions or log a message
+  console.log("'showDispositionModal' variable already exists in localStorage.");
 };
 
 let makeDispositionModalNull = () => {
