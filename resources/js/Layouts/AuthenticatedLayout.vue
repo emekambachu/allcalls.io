@@ -2495,8 +2495,7 @@ let appDownloadModal = ref(false);
 
     <Modal
       :show="showUpdateDispositionForLastClient"
-      :closeable="true"
-      @close="showUpdateDispositionForLastClient = false"
+      :closeable="false"
     >
       <div class="bg-white">
         <div class="p-4 my-3">
