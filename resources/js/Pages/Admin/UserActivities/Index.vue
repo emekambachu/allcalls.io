@@ -22,9 +22,9 @@ let paginate = (url) => {
   router.visit(url);
 };
 
-let clearAll = () => {
-  router.visit("/admin/user-activities/clear-all", { method: "DELETE" });
-};
+// let clearAll = () => {
+//   router.visit("/admin/user-activities/clear-all", { method: "DELETE" });
+// };
 
 let abbreviateString = (theString) => {
   return theString.length > 12 ? theString.substring(0, 12) + "..." : theString;
@@ -43,14 +43,14 @@ let abbreviateString = (theString) => {
         <div class="text-4xl text-custom-sky font-bold mb-6">User Activities</div>
       </div>
 
-      <div class="flex items-center">
+      <!-- <div class="flex items-center">
         <button
           @click.prevent="clearAll"
           class="button-custom-back px-3 py-2 rounded-md mr-2"
         >
           Clear All
         </button>
-      </div>
+      </div> -->
     </div>
 
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
