@@ -14,6 +14,8 @@ let { transactions, requestData, users } = defineProps({
 })
 
 console.log('Request Data', page.props.requestData);
+console.log('Start Date', page.props.requestData.transaction_date_start);
+console.log('End Date', page.props.requestData.transaction_date_end);
 
 // console.log('requestData', requestData);
 // console.log('transactions', transactions);
