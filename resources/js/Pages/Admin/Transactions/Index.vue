@@ -29,6 +29,9 @@ let form = ref({
 })
 let transactionType = ref('Choose transaction Type')
 let paymentSubmitedBy = ref('Payment Submited By')
+
+let dateRange = ref([new Date, new Date]);
+
 if (requestData.transaction_type) {
     transactionType.value = requestData.transaction_type
 }
@@ -95,12 +98,7 @@ let maxDate = ref(new Date)
 maxDate.value.setHours(23, 59, 59, 999);   
 
 
-let dateRange = ref([]);
 
-onMounted(() => {
-    let startDate = new Date();
-    let endDate = new Date();
-});
 </script>
 <style src="@vueform/multiselect/themes/default.css"></style>
 <style scoped>
