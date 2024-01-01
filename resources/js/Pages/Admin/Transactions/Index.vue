@@ -17,6 +17,12 @@ console.log('Request Data', page.props.requestData);
 console.log('Start Date', page.props.requestData.transaction_date_start);
 console.log('End Date', page.props.requestData.transaction_date_end);
 
+if (! page.props.requestData.transaction_date_start || ! page.props.requestData.transaction_date_end) {
+    let dateRange = ref([null, null])
+} else {
+    let dateRange = ref([new Date(page.props.requestData.transaction_date_start), new Date(page.props.requestData.transaction_date_end)])
+}
+
 // console.log('requestData', requestData);
 // console.log('transactions', transactions);
 // console.log('users', users);
@@ -35,7 +41,7 @@ let form = ref({
 let transactionType = ref('Choose transaction Type')
 let paymentSubmitedBy = ref('Payment Submited By')
 
-let dateRange = ref([new Date, new Date]);
+
 
 if (requestData.transaction_type) {
     transactionType.value = requestData.transaction_type
