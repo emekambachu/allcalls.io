@@ -91,6 +91,14 @@ let RefundPayment = (val) => {
 }
 let maxDate = ref(new Date)
 maxDate.value.setHours(23, 59, 59, 999);   
+
+
+let dateRange = ref([]);
+
+onMounted(() => {
+    let startDate = new Date();
+    let endDate = new Date();
+});
 </script>
 <style src="@vueform/multiselect/themes/default.css"></style>
 <style scoped>
@@ -181,9 +189,11 @@ input[type="number"] {
                             user?.last_name }}</option>
                     </select>
 
-                    <VueDatePicker v-model="form.transaction_date" placeholder="Select Date" format="dd-MMM-yyyy"
+                    <!-- <VueDatePicker v-model="form.transaction_date" placeholder="Select Date" format="dd-MMM-yyyy"
                         :maxDate="maxDate" auto-apply>
-                    </VueDatePicker>
+                    </VueDatePicker> -->
+
+                    <VueDatePicker v-model="dateRange" placeholder="Select Date" format="dd-mm-yyyy" range />
 
                     <div>
                         <PrimaryButton type="button" class="ml-2" @click.prevent="fetchData">
