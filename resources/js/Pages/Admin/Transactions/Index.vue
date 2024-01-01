@@ -17,7 +17,7 @@ console.log('Request Data', page.props.requestData);
 console.log('Start Date', page.props.requestData.transaction_date_start);
 console.log('End Date', page.props.requestData.transaction_date_end);
 
-let dateRange = ref([new Date('01-01-2020'), new Date]);
+let dateRange = ref([null, null]);
 
 if (page.props.requestData.transaction_date_start && page.props.requestData.transaction_date_end) {
     dateRange.value = [new Date(page.props.requestData.transaction_date_start), new Date(page.props.requestData.transaction_date_end)];
@@ -197,7 +197,7 @@ input[type="number"] {
                             user?.last_name }}</option>
                     </select>
 
-                    <VueDatePicker v-model="dateRange" placeholder="Select Date" range />
+                    <VueDatePicker v-model="dateRange" placeholder="Select Date Range" range />
 
                     <div>
                         <PrimaryButton type="button" class="ml-2" @click.prevent="fetchData">
