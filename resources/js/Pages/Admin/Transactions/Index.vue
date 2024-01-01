@@ -13,7 +13,7 @@ let { transactions, requestData, users } = defineProps({
     requestData: Object,
 })
 
-console.log('Page', page);
+console.log('Request Data', page.props.requestData);
 
 // console.log('requestData', requestData);
 // console.log('transactions', transactions);
