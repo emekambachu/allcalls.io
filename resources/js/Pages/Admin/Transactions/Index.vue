@@ -31,6 +31,8 @@ let transactionType = ref('Choose transaction Type')
 let paymentSubmitedBy = ref('Payment Submited By')
 
 let dateRange = ref([new Date, new Date]);
+dateRange.value[0].setHours(0, 0, 0, 0);
+dateRange.value[1].setHours(0, 0, 0, 0);
 
 if (requestData.transaction_type) {
     transactionType.value = requestData.transaction_type
