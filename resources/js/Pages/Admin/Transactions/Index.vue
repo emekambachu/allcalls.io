@@ -12,6 +12,9 @@ let { transactions, requestData, users } = defineProps({
     users: Array,
     requestData: Object,
 })
+
+console.log('Page', page);
+
 // console.log('requestData', requestData);
 // console.log('transactions', transactions);
 // console.log('users', users);
