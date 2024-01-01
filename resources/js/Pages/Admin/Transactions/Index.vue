@@ -17,15 +17,12 @@ console.log('Request Data', page.props.requestData);
 console.log('Start Date', page.props.requestData.transaction_date_start);
 console.log('End Date', page.props.requestData.transaction_date_end);
 
-if (! page.props.requestData.transaction_date_start || ! page.props.requestData.transaction_date_end) {
-    let dateRange = ref([null, null])
-} else {
-    let dateRange = ref([new Date(page.props.requestData.transaction_date_start), new Date(page.props.requestData.transaction_date_end)])
+let dateRange = ref([new Date, new Date]);
+
+if (page.props.requestData.transaction_date_start && page.props.requestData.transaction_date_end) {
+    dateRange.value = [new Date(page.props.requestData.transaction_date_start), new Date(page.props.requestData.transaction_date_end)];
 }
 
-// console.log('requestData', requestData);
-// console.log('transactions', transactions);
-// console.log('users', users);
 let cardType = ref(null)
 let detectCardType = (cardNumber) => {
     const types = creditCardType(cardNumber);
