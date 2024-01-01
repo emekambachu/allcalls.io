@@ -67,7 +67,7 @@ let fetchData = () => {
         data: {
             "transaction_type": transactionType.value !== 'Choose transaction Type' ? transactionType.value : null,
             "submited_by": paymentSubmitedBy.value !== 'Payment Submited By' ? paymentSubmitedBy.value : null,
-            "transaction_date": form.value.transaction_date ? form.value.transaction_date : null,
+            // "transaction_date": form.value.transaction_date ? form.value.transaction_date : null,
             "transaction_date_start": dateRange.value[0] ? dateRange.value[0] : null,
             "transaction_date_end": dateRange.value[1] ? dateRange.value[1] : null,
         }
@@ -196,10 +196,6 @@ input[type="number"] {
                         <option v-for="user in users" :key="user.id" :value="user?.id">{{ user?.first_name }} {{
                             user?.last_name }}</option>
                     </select>
-
-                    <!-- <VueDatePicker v-model="form.transaction_date" placeholder="Select Date" format="dd-MMM-yyyy"
-                        :maxDate="maxDate" auto-apply>
-                    </VueDatePicker> -->
 
                     <VueDatePicker v-model="dateRange" placeholder="Select Date" format="dd-mm-yyyy" range />
 
