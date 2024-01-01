@@ -256,8 +256,20 @@ class CustomerController extends Controller
                 }
             })
             ->where(function ($query) use ($request) {
-                if (isset($request->transaction_date) && $request->transaction_date != '') {
-                    $query->whereDate('created_at', $request->transaction_date);
+
+                $startDateIsSetAndNotEmpty = isset($request->transaction_date_start) && $request->transaction_date_start != '';
+                $endDateIsSetAndNotEmpty = isset($request->transaction_date_end) && $request->transaction_date_end != '';
+
+                // if (isset($request->transaction_date) && $request->transaction_date != '') {
+                //     $query->whereDate('created_at', $request->transaction_date);
+                // }
+
+                if ($startDateIsSetAndNotEmpty && $endDateIsSetAndNotEmpty) {
+                    // $query->whereBetween('created_at', [$request->transaction_date_start, $request->transaction_date_end]);
+                    $query->whereBetween(DB::raw('DATE(created_at)'), [
+                        $request->transaction_date_start, 
+                        $request->transaction_date_end
+                    ]);
                 }
             })
             ->with('card')
