@@ -4,7 +4,7 @@ import { ref, onMounted } from "vue";
 import creditCardType from 'credit-card-type';
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Multiselect from "@vueform/multiselect";
-import { Link, useForm, usePage, router } from "@inertiajs/vue3";
+import { Link, useForm, usePage, router, Head } from "@inertiajs/vue3";
 
 let page = usePage()
 let { transactions, requestData, users } = defineProps({
