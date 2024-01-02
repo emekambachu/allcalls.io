@@ -51,7 +51,7 @@ class CheckDispositionListener
                 if ($client) {
                     Log::info("Found client {$client->id} for call {$event->uniqueCallId}. Checking disposition status.");
 
-                    if ($client->status === null || $client->status === '') {
+                    if ($client->status === null || $client->status === '' || $client->status == 'not_sold') {
                         // The client's status is not set, dispatch the job to handle further checks and notifications
                         CheckDispositionJob::dispatch($client, $event->uniqueCallId)->delay(now()->addSeconds(15));
                         Log::info("Dispatched CheckDispositionJob for client {$client->id} with call {$event->uniqueCallId}");
