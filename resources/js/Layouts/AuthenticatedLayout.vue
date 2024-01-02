@@ -376,35 +376,35 @@ let setupTwilioDevice = () => {
 let showUpdateDispositionForLastClient = ref(false);
 
 let showUpdateDispositionModal = () => {
-  // Check if 'showDispositionModal' exists in localStorage
-  if (localStorage.getItem("showDispositionModal") === null) {
-    // If not, create the variable in localStorage with a value (e.g., 'true')
-    localStorage.setItem("showDispositionModal", "true");
-    console.log("'showDispositionModal' variable created in localStorage.");
-    showUpdateDispositionForLastClient.value = true;
+  // // Check if 'showDispositionModal' exists in localStorage
+  // if (localStorage.getItem("showDispositionModal") === null) {
+  //   // If not, create the variable in localStorage with a value (e.g., 'true')
+  //   localStorage.setItem("showDispositionModal", "true");
+  //   console.log("'showDispositionModal' variable created in localStorage.");
+  //   showUpdateDispositionForLastClient.value = true;
 
-    startTimeoutForRepeatedDispositionNotifications();
-    return
-  }
+  //   startTimeoutForRepeatedDispositionNotifications();
+  //   return
+  // }
 
-  console.log("'showDispositionModal' variable already exists in localStorage.");
-  showUpdateDispositionForLastClient.value = true;
-  startTimeoutForRepeatedDispositionNotifications();
+  // console.log("'showDispositionModal' variable already exists in localStorage.");
+  // showUpdateDispositionForLastClient.value = true;
+  // startTimeoutForRepeatedDispositionNotifications();
 };
 
 let makeDispositionModalNull = () => {
-  localStorage.setItem("showDispositionModal", null);
-  console.log("'showDispositionModal' variable set to null in localStorage.");
+  // localStorage.setItem("showDispositionModal", null);
+  // console.log("'showDispositionModal' variable set to null in localStorage.");
 
-  showUpdateDispositionForLastClient.value = false;
+  // showUpdateDispositionForLastClient.value = false;
 };
 
 onMounted(() => {
   // if the showDispositionModal is not null, display the modal
-  if (localStorage.getItem("showDispositionModal") !== null) {
-    showUpdateDispositionForLastClient.value = true;
-    startTimeoutForRepeatedDispositionNotifications();
-  }
+  // if (localStorage.getItem("showDispositionModal") !== null) {
+  //   showUpdateDispositionForLastClient.value = true;
+  //   startTimeoutForRepeatedDispositionNotifications();
+  // }
 });
 
 onMounted(() => {
