@@ -231,7 +231,7 @@ input[type="number"] {
             <option value="Failed">Failed</option>
           </select>
 
-          <select
+          <!-- <select
             id="countries"
             v-model="paymentSubmitedBy"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
@@ -240,7 +240,7 @@ input[type="number"] {
             <option v-for="user in users" :key="user.id" :value="user?.id">
               {{ user?.first_name }} {{ user?.last_name }}
             </option>
-          </select>
+          </select> -->
 
           <Popover class="relative mr-2">
             <PopoverButton>
@@ -248,27 +248,13 @@ input[type="number"] {
                 type="button"
                 class="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200"
               >
-                Visible Columns
+                Payment Submitted By
               </button>
             </PopoverButton>
 
-            <PopoverPanel class="absolute z-10 w-40 -left-20">
+            <PopoverPanel class="absolute z-10">
               <div class="border border-gray-100 p-3 shadow bg-white mt-2">
-                <!-- Static example of a single checkbox item -->
-                <div class="flex items-center mb-4">
-                  <input
-                    id="column-static"
-                    type="checkbox"
-                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                  />
-                  <label
-                    for="column-static"
-                    class="ms-2 text-xs font-medium text-gray-900 select-none whitespace-nowrap"
-                  >
-                    Static Column Label
-                  </label>
-                </div>
-                <!-- You can duplicate the above div block for more static checkboxes -->
+                Payment submitted by filter
               </div>
             </PopoverPanel>
           </Popover>
