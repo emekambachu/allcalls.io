@@ -246,7 +246,7 @@ input[type="number"] {
             <PopoverButton class="h-full w-full flex">
               <button
                 type="button"
-                class="block w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                class="block h-full w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               >
                 Payment Submitted By
               </button>
