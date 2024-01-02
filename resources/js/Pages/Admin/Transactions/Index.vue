@@ -144,10 +144,7 @@ const formatRange = (range) => {
   // Return the combined string representing the date range
   return `${formattedStartDate} to ${formattedEndDate}`;
 };
-
-let filterUserBy = ref("email");
-</script>
-<style src="@vueform/multiselect/themes/default.css"></style>
+elect/themes/default.css"></style>
 <style scoped>
 ::v-deep .dp__pointer {
   height: 49px;
@@ -254,45 +251,21 @@ input[type="number"] {
               </button>
             </PopoverButton>
 
-            <PopoverPanel class="absolute z-10" style="width: 450px">
+            <PopoverPanel class="absolute z-10" style="width: 450px;">
               <div class="border border-gray-100 p-3 shadow bg-white mt-2 rounded-md">
-                <ul
-                  class="items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:flex"
-                >
-                  <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r">
-                    <div class="flex items-center ps-3">
-                      <input
-                        id="horizontal-list-radio-email"
-                        type="radio"
-                        value="email"
-                        name="list-radio"
-                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
-                        v-model="filterUserBy"
-                      />
-                      <label
-                        for="horizontal-list-radio-email"
-                        class="w-full py-3 ms-2 text-sm font-medium text-gray-900"
-                        >Filter by email</label
-                      >
-                    </div>
-                  </li>
-                  <li class="w-full">
-                    <div class="flex items-center ps-3">
-                      <input
-                        id="horizontal-list-radio-phone"
-                        type="radio"
-                        value="phone"
-                        name="list-radio"
-                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
-                        v-model="filterUserBy"
-                      />
-                      <label
-                        for="horizontal-list-radio-phone"
-                        class="w-full py-3 ms-2 text-sm font-medium text-gray-900"
-                        >Filter by phone number</label
-                      >
-                    </div>
-                  </li>
+                <ul class="items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:flex">
+                    <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r">
+                        <div class="flex items-center ps-3">
+                            <input id="horizontal-list-radio-email" type="radio" value="email" name="list-radio" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2" v-model="filterUserBy">
+                            <label for="horizontal-list-radio-email" class="w-full py-3 ms-2 text-sm font-medium text-gray-900">Filter by email</label>
+                        </div>
+                    </li>
+                    <li class="w-full">
+                        <div class="flex items-center ps-3">
+                            <input id="horizontal-list-radio-phone" type="radio" value="phone" name="list-radio" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2" v-model="filterUserBy">
+                            <label for="horizontal-list-radio-phone" class="w-full py-3 ms-2 text-sm font-medium text-gray-900">Filter by phone number</label>
+                        </div>
+                    </li>
                 </ul>
               </div>
             </PopoverPanel>
