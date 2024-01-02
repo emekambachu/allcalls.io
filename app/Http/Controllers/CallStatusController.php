@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Log;
 use App\Notifications\FundsDeducted;
 use Illuminate\Support\Facades\Http;
 use App\Events\CallAcceptedOrRejected;
+use App\Listeners\CheckDispositionListener;
 
 class CallStatusController extends Controller
 {
@@ -124,12 +125,15 @@ class CallStatusController extends Controller
                 $call = Call::where('unique_call_id', $request->unique_call_id)->first();
                 $call->completed_at = now();
                 $call->save();
+
                 Log::debug('Call completed_at updated.');
-
-
                 Log::debug('Call duration: ' . $callDuration);
 
-
+                // Manually instantiate and invoke CheckDispositionListener
+                $checkDispositionListener = new CheckDispositionListener();
+                $checkDispositionListener->handle(new CompletedCallEvent($user, $call->callType, $call->unique_call_id));
+                Log::debug("CheckDispositionListener invoked manually for user {$request->user_id} and call {$call->unique_call_id}");
+            
 
                 // ========================================
                 // START: Terminate Call Chain Block
