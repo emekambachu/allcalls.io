@@ -219,10 +219,10 @@ const forceUpdate = () => {
   });
 };
 
-const selectAllUsers = () => {
-  // Assuming selectedUserIds is an array holding IDs of selected users
-  this.selectedUserIds = this.filteredUsers.map(user => user.id);
-}
+const selectAllUsers = () => { 
+  selectedUserIds.value = filteredUsers.value.map(user => user.id);
+};
+
 
 // Toggle dropdown visibility
 const toggleDropdown = (event) => {
