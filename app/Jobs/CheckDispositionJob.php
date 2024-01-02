@@ -20,7 +20,7 @@ class CheckDispositionJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    // public User $user;
+    public User $user;
     public $client;
     public $uniqueCallId;
     public $tries = 0; // to keep track of the number of attempts
@@ -30,8 +30,9 @@ class CheckDispositionJob implements ShouldQueue
     //     $this->user = $user;
     // }
 
-    public function __construct(Client $client, $uniqueCallId)
+    public function __construct(User $user, Client $client, $uniqueCallId)
     {
+        $this->user = $user;
         $this->client = $client;
         $this->uniqueCallId = $uniqueCallId;
     }
@@ -53,7 +54,7 @@ class CheckDispositionJob implements ShouldQueue
                     // The status is still not set, and the max number of attempts hasn't been reached
                     
                     // Send a reminder notification to the client
-                    $this->client->notify(new ClientDispositionReminder());
+                    $this->user->notify(new ClientDispositionReminder());
                     Log::info("Notification sent to client {$this->client->id} for call {$this->uniqueCallId}");
     
                     // Increment the number of tries

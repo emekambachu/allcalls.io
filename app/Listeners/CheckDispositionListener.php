@@ -40,6 +40,7 @@ class CheckDispositionListener
 
         try {
             Log::info("CompletedCallEvent triggered for unique call ID: {$event->uniqueCallId}");
+            $user = $event->user;
 
             // Retrieve the call using the uniqueCallId
             $call = Call::where('unique_call_id', $event->uniqueCallId)->first();
@@ -53,7 +54,7 @@ class CheckDispositionListener
 
                     if ($client->status === null || $client->status === '' || $client->status == 'not_sold') {
                         // The client's status is not set, dispatch the job to handle further checks and notifications
-                        CheckDispositionJob::dispatch($client, $event->uniqueCallId)->delay(now()->addSeconds(15));
+                        CheckDispositionJob::dispatch($user, $client, $event->uniqueCallId)->delay(now()->addSeconds(15));
                         Log::info("Dispatched CheckDispositionJob for client {$client->id} with call {$event->uniqueCallId}");
                     } else {
                         Log::info("Client {$client->id} already has a disposition status set for call {$event->uniqueCallId}");
