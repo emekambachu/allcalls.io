@@ -233,7 +233,10 @@ const toggleDropdown = (event) => {
 
 // Close the dropdown when clicking outside
 function handleClickOutside(event) {
-  if (!event.target.closest('.dropdown-container')) {
+  const withinDropdownContainer = event.target.closest('.dropdown-container');
+  const withinDropdownHeader = event.target.closest('.dropdown-header');
+  
+  if (!withinDropdownContainer && !withinDropdownHeader) {
     showDropdown.value = false;
   }
 }
@@ -315,7 +318,7 @@ if (page.props.flash.message) {
           <div v-if="showDropdown" class="border rounded max-h-60 overflow-y-auto">
             
             <!-- Header Row -->
-            <div class="flex justify-between items-center p-2 bg-gray-200">
+            <div class="flex justify-between items-center p-2 bg-gray-200 dropdown-header">
               <!-- Total Number of Users -->
               <div>Total Users: {{ filteredUsers.length }}</div>
               
