@@ -61,7 +61,7 @@ class CheckDispositionJob implements ShouldQueue
                     $this->tries++;
     
                     // Re-dispatch the job with a 15-second delay
-                    self::dispatch($this->client, $this->uniqueCallId)->delay(now()->addSeconds(15));
+                    self::dispatch($this->user, $this->client, $this->uniqueCallId)->delay(now()->addSeconds(15));
                 } else {
                     // Log when the status is set
                     Log::info("Disposition status set for client {$this->client->id} - {$this->client->status}");
