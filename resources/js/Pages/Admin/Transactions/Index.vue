@@ -161,6 +161,20 @@ let filteredUsers = computed(() => {
     return user.email.toLowerCase().includes(filterTerm);
   });
 });
+
+
+let selectUser = (user) => {
+  paymentSubmitedBy.value = user.id;
+  userFilterTerm.value = '';
+};
+
+let paymentSubmitedByLabel = computed(() => {
+  let user = users.find(user => user.id === paymentSubmitedBy.value);
+  if (user) {
+    return `${user.first_name} ${user.last_name}`;
+  }
+  return 'Payment Submited By';
+});
 </script>
 <style src="@vueform/multiselect/themes/default.css"></style>
 <style scoped>
@@ -265,7 +279,7 @@ input[type="number"] {
                 type="button"
                 class="text-left h-full w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               >
-                Payment Submitted By
+                Payment Submitted By {{ paymentSubmitedByLabel }}
               </button>
             </PopoverButton>
 
@@ -321,7 +335,7 @@ input[type="number"] {
                 <div style="max-height: 300px; overflow-y: scroll;" class="mt-3">
                   <ul class="max-w-md divide-y divide-gray-200">
                     <li v-for="user in filteredUsers" :key="user.id">
-                      <div class="cursor-pointer flex items-center space-x-4 rtl:space-x-reverse hover:bg-gray-50 p-2">
+                      <div @click.prevent="selectUser(user)" class="cursor-pointer flex items-center space-x-4 rtl:space-x-reverse hover:bg-gray-50 p-2">
                         <div class="flex-1 min-w-0">
                           <p class="text-sm font-medium text-gray-900 truncate">
                             {{ user.first_name }} {{ user.last_name }}
