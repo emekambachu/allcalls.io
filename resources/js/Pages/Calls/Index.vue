@@ -153,7 +153,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
                       String(call.call_duration_in_seconds % 60).padStart(2, "0")
                     }}
                   </td>
-                  <th class="text-gray-600 px-4 py-3">{{ moment(moment(call.call_taken).utc().format("YYYY-MM-DD HH:mm:ss")).tz(timezone).format("YYYY-MM-DD HH:mm:ss") }}</th>
+                  <th class="text-gray-600 px-4 py-3">{{ call.call_taken }}</th>
                   <td class="text-gray-600 px-4 py-3">{{ call.amount_spent }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ call.call_type.type }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ call.from }}</td>
