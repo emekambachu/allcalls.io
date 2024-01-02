@@ -123,7 +123,7 @@ const formatRange = (range) => {
   const formattedEndDate = formatDate(endDate);
 
   // Return the combined string representing the date range
-  return `Selected date range is ${formattedStartDate} to ${formattedEndDate}`;
+  return `${formattedStartDate} to ${formattedEndDate}`;
 }
 
 </script>
