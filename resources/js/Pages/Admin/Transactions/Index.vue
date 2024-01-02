@@ -305,7 +305,7 @@ input[type="number"] {
                 <div style="max-height: 300px; overflow-y: scroll;" class="mt-3">
                   <ul class="max-w-md divide-y divide-gray-200">
                     <li class="pb-3 sm:pb-4">
-                      <div class="cursor-pointer flex items-center space-x-4 rtl:space-x-reverse">
+                      <div class="cursor-pointer flex items-center space-x-4 rtl:space-x-reverse hover:bg-gray-50">
                         <div class="flex-1 min-w-0">
                           <p class="text-sm font-medium text-gray-900 truncate">
                             Neil Sims
