@@ -52,7 +52,7 @@ class CheckDispositionJob implements ShouldQueue
     
                 // Check the client's disposition status
                 if ($this->client->status === null || $this->client->status === '' || $this->client->status == 'not_sold') {
-                    // The status is still not set, and the max number of attempts hasn't been reached
+                    Log::info("The status is still not set, and the max number of attempts hasn't been reached");
                     
                     // Send a reminder notification to the client
                     $this->user->notify(new ClientDispositionReminder());
