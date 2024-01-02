@@ -286,7 +286,10 @@ class CustomerController extends Controller
                 unset($transaction->card->year);
             }
         }
-        $users = User::whereHas('cards')->whereHas('transactions')->get();
+        // $users = User::whereHas('cards')->whereHas('transactions')->get();
+
+        $users = User::get(['id', 'email', 'first_name', 'last_name', 'phone']);
+
         // dd($users);
         return Inertia::render('Admin/Transactions/Index', [
             'transactions' => $transactions,

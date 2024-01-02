@@ -13,9 +13,8 @@ let { transactions, requestData, users } = defineProps({
     requestData: Object,
 })
 
-console.log('Request Data', page.props.requestData);
-console.log('Start Date', page.props.requestData.transaction_date_start);
-console.log('End Date', page.props.requestData.transaction_date_end);
+
+console.log('Users: ', users);
 
 let dateRange = ref([new Date('01-01-2023'), null]);
 
