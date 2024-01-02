@@ -242,7 +242,7 @@ input[type="number"] {
             </option>
           </select> -->
 
-          <Popover class="relative mr-2 block w-full">
+          <Popover class="relative mr-2 block w-full flex">
             <PopoverButton class="h-full w-full">
               <button
                 type="button"
