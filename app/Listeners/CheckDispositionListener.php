@@ -32,7 +32,7 @@ class CheckDispositionListener
             // Assuming there's a 'client' relationship set up on your Call model
             $client = $call->client;
 
-            if ($client && ($client->status === null || $client->status === '')) {
+            if ($client && ($client->status === null || $client->status === '' || $client->status === 'not_sold')) {
                 // The client's status is not set, dispatch the job to handle further checks and notifications
                 CheckDispositionJob::dispatch($user, $client, $event->uniqueCallId);
             }
