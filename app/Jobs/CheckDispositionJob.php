@@ -46,7 +46,7 @@ class CheckDispositionJob implements ShouldQueue
     public function handle(): void
     {
         try {
-            if ($this->attempts() <= 10) {
+            if ($this->tries <= 10) {
                 // Log the attempt
                 Log::info("Checking disposition for client {$this->client->id} on attempt {$this->tries}");
     
@@ -62,7 +62,7 @@ class CheckDispositionJob implements ShouldQueue
                     $this->tries++;
     
                     // Re-dispatch the job with a 15-second delay
-                    self::dispatch($this->user, $this->client, $this->uniqueCallId, $this->tries)->delay(now()->addSeconds(35));
+                    self::dispatch($this->user, $this->client, $this->uniqueCallId, $this->tries+1)->delay(now()->addSeconds(35));
                 } else {
                     // Log when the status is set
                     Log::info("Disposition status set for client {$this->client->id} - {$this->client->status}");
