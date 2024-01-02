@@ -252,7 +252,7 @@ input[type="number"] {
               </button>
             </PopoverButton>
 
-            <PopoverPanel class="absolute z-10" style="width: 400px;">
+            <PopoverPanel class="absolute z-10" style="width: 450px;">
               <div class="border border-gray-100 p-3 shadow bg-white mt-2 rounded-md">
                 <ul
                   class="items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:flex"
