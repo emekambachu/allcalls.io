@@ -152,6 +152,16 @@ onMounted(() => {
     console.log('submited_by exists in the query string and IS actually a user id');
     paymentSubmitedBy.value = Number(page.props.requestData.submited_by);
   }
+
+
+  // check if transaction_start_date and transaction_end_date exists in the query string:
+  if (page.props.requestData.transaction_date_start && page.props.requestData.transaction_date_end) {
+    console.log('transaction_start_date and transaction_end_date exists in the query string');
+    dateRange.value = [
+      new Date(page.props.requestData.transaction_date_start),
+      new Date(page.props.requestData.transaction_date_end),
+    ];
+  }
 });
 
 let filterUserBy = ref('email');
