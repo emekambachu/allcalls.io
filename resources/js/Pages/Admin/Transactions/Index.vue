@@ -175,6 +175,13 @@ let paymentSubmitedByLabel = computed(() => {
   }
   return '';
 });
+
+onMounted(() => {
+  // check if submited_by exists in the query string and IS actually a user id:
+  if (page.props.requestData.submited_by && users.find(user => user.id === page.props.requestData.submited_by)) {
+    paymentSubmitedBy.value = page.props.requestData.submited_by;
+  }
+});
 </script>
 <style src="@vueform/multiselect/themes/default.css"></style>
 <style scoped>
