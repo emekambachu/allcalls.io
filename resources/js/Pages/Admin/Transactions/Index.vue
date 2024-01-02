@@ -302,7 +302,7 @@ input[type="number"] {
                   />
                 </div>
 
-                <div style="max-height: 300px; overflow-y: scroll;">
+                <div style="max-height: 300px; overflow-y: scroll;" class="mt-3">
                   <ul class="max-w-md divide-y divide-gray-200">
                     <li class="pb-3 sm:pb-4">
                       <div class="flex items-center space-x-4 rtl:space-x-reverse">
