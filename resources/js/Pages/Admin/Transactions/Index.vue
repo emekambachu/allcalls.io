@@ -144,6 +144,8 @@ const formatRange = (range) => {
   // Return the combined string representing the date range
   return `${formattedStartDate} to ${formattedEndDate}`;
 };
+
+let filterUserBy = ref('email');
 </script>
 <style src="@vueform/multiselect/themes/default.css"></style>
 <style scoped>
@@ -292,6 +294,8 @@ input[type="number"] {
                     </div>
                   </li>
                 </ul>
+
+                
               </div>
             </PopoverPanel>
           </Popover>
