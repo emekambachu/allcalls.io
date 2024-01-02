@@ -145,7 +145,7 @@ const formatRange = (range) => {
   return `${formattedStartDate} to ${formattedEndDate}`;
 };
 
-let filterUserBy = ref('email');
+let filterUserBy = ref("email");
 </script>
 <style src="@vueform/multiselect/themes/default.css"></style>
 <style scoped>
@@ -296,9 +296,66 @@ input[type="number"] {
                 </ul>
 
                 <div class="mt-2">
-                  <input :placeholder="`Filter by ${filterUserBy}`" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                  <input
+                    :placeholder="`Filter by ${filterUserBy}`"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                  />
                 </div>
-                
+
+                <div style="max-height: 300px; overflow-y: scroll;">
+                  <ul class="max-w-md divide-y divide-gray-200">
+                    <li class="pb-3 sm:pb-4">
+                      <div class="flex items-center space-x-4 rtl:space-x-reverse">
+                        <div class="flex-1 min-w-0">
+                          <p class="text-sm font-medium text-gray-900 truncate">
+                            Neil Sims
+                          </p>
+                          <p class="text-sm text-gray-500 truncate">email@flowbite.com</p>
+                        </div>
+                      </div>
+                    </li>
+                    <li class="py-3 sm:py-4">
+                      <div class="flex items-center space-x-4 rtl:space-x-reverse">
+                        <div class="flex-1 min-w-0">
+                          <p class="text-sm font-medium text-gray-900 truncate">
+                            Bonnie Green
+                          </p>
+                          <p class="text-sm text-gray-500 truncate">email@flowbite.com</p>
+                        </div>
+                      </div>
+                    </li>
+                    <li class="py-3 sm:py-4">
+                      <div class="flex items-center space-x-4 rtl:space-x-reverse">
+                        <div class="flex-1 min-w-0">
+                          <p class="text-sm font-medium text-gray-900 truncate">
+                            Michael Gough
+                          </p>
+                          <p class="text-sm text-gray-500 truncate">email@flowbite.com</p>
+                        </div>
+                      </div>
+                    </li>
+                    <li class="py-3 sm:py-4">
+                      <div class="flex items-center space-x-4 rtl:space-x-reverse">
+                        <div class="flex-1 min-w-0">
+                          <p class="text-sm font-medium text-gray-900 truncate">
+                            Thomas Lean
+                          </p>
+                          <p class="text-sm text-gray-500 truncate">email@flowbite.com</p>
+                        </div>
+                      </div>
+                    </li>
+                    <li class="pt-3 pb-0 sm:pt-4">
+                      <div class="flex items-center space-x-4 rtl:space-x-reverse">
+                        <div class="flex-1 min-w-0">
+                          <p class="text-sm font-medium text-gray-900 truncate">
+                            Lana Byrd
+                          </p>
+                          <p class="text-sm text-gray-500 truncate">email@flowbite.com</p>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </PopoverPanel>
           </Popover>
