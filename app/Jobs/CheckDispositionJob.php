@@ -20,7 +20,7 @@ class CheckDispositionJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public User $user;
+    public $user;
     public $client;
     public $uniqueCallId;
     public $tries = 0; // to keep track of the number of attempts
