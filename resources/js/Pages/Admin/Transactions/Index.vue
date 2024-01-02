@@ -105,7 +105,26 @@ let RefundPayment = (val) => {
 let maxDate = ref(new Date)
 maxDate.value.setHours(23, 59, 59, 999);   
 
+// Function to format a date range
+const formatRange = (range) => {
+  const startDate = range[0];
+  const endDate = range[1];
 
+  // Function to format an individual date
+  const formatDate = (date) => {
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
+  // Format both start and end dates
+  const formattedStartDate = formatDate(startDate);
+  const formattedEndDate = formatDate(endDate);
+
+  // Return the combined string representing the date range
+  return `${formattedStartDate} to ${formattedEndDate}`;
+}
 
 </script>
 <style src="@vueform/multiselect/themes/default.css"></style>
@@ -197,7 +216,7 @@ input[type="number"] {
                             user?.last_name }}</option>
                     </select>
 
-                    <VueDatePicker v-model="dateRange" placeholder="Select Date Range" range />
+                    <VueDatePicker v-model="dateRange" placeholder="Select Date Range" :format="formatRange" range />
 
                     <div>
                         <PrimaryButton type="button" class="ml-2" @click.prevent="fetchData">
