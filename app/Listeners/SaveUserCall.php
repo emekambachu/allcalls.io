@@ -5,6 +5,7 @@ namespace App\Listeners;
 use Exception;
 use App\Models\Call;
 use App\Models\Client;
+use App\Models\UserActivity;
 use App\Events\RingingCallEvent;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -37,6 +38,14 @@ class SaveUserCall
             'from' => $event->from,
         ]);
 
+        UserActivity::create([
+            'action' => 'Call taken.',
+            'data' => json_encode([]),
+            'platform' => 'web',
+            'user_id' => $event->user->id,
+            'ip_address' => request()->ip() ?? 'N/A',
+            'user_agent' => request()->header('User-Agent') ?? 'N/A',
+        ]);
 
         // Save the last_called_at timestamp on the user.
         $event->user->last_called_at = now();
