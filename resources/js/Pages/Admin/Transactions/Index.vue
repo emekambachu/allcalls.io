@@ -145,7 +145,22 @@ const formatRange = (range) => {
   return `${formattedStartDate} to ${formattedEndDate}`;
 };
 
-let filterUserBy = ref("email");
+let filterUserBy = ref('email');
+let userFilterTerm = ref('');
+let filteredUsers = computed(() => {
+  // Convert the filter term to lowercase for case-insensitive comparison
+  let filterTerm = userFilterTerm.value.toLowerCase();
+
+  // Filter the users array based on email
+  return users.filter(user => {
+    // Check if the user's email contains the filter term
+    // Assuming each user object has an 'email' property
+    if (filterUserBy.value === 'phone') {
+      return user.phone.toLowerCase().includes(filterTerm);
+    }
+    return user.email.toLowerCase().includes(filterTerm);
+  });
+});
 </script>
 <style src="@vueform/multiselect/themes/default.css"></style>
 <style scoped>
