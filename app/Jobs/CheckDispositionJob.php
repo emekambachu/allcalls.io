@@ -55,7 +55,7 @@ class CheckDispositionJob implements ShouldQueue
                     
                     // Send a reminder notification to the client
                     $this->user->notify(new ClientDispositionReminder());
-                    Log::info("Notification sent to client {$this->client->id} for call {$this->uniqueCallId}");
+                    Log::info("Notification sent to client {$this->client->id} for call {$this->uniqueCallId} on attempt {$this->tries}");
     
                     // Increment the number of tries
                     $this->tries++;
