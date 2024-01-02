@@ -17,7 +17,7 @@ console.log('Request Data', page.props.requestData);
 console.log('Start Date', page.props.requestData.transaction_date_start);
 console.log('End Date', page.props.requestData.transaction_date_end);
 
-let dateRange = ref([null, null]);
+let dateRange = ref([new Date('01-01-2023'), null]);
 
 if (page.props.requestData.transaction_date_start && page.props.requestData.transaction_date_end) {
     dateRange.value = [new Date(page.props.requestData.transaction_date_start), new Date(page.props.requestData.transaction_date_end)];
