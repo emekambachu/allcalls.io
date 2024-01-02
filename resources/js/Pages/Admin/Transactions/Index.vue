@@ -216,7 +216,7 @@ input[type="number"] {
                             user?.last_name }}</option>
                     </select>
 
-                    <VueDatePicker v-model="dateRange" placeholder="Select Date Range" formatRange range />
+                    <VueDatePicker v-model="dateRange" placeholder="Select Date Range" :format="formatRange" range />
 
                     <div>
                         <PrimaryButton type="button" class="ml-2" @click.prevent="fetchData">
