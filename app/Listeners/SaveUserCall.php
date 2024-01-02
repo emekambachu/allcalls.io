@@ -41,10 +41,10 @@ class SaveUserCall
         UserActivity::create([
             'action' => 'Call taken.',
             'data' => json_encode([]),
-            'platform' => 'web',
+            'platform' => 'N/A',
             'user_id' => $event->user->id,
-            'ip_address' => request()->ip() ?? 'N/A',
-            'user_agent' => request()->header('User-Agent') ?? 'N/A',
+            'ip_address' => 'N/A',
+            'user_agent' => 'N/A',
         ]);
 
         // Save the last_called_at timestamp on the user.
