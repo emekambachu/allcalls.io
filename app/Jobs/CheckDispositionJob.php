@@ -30,7 +30,7 @@ class CheckDispositionJob implements ShouldQueue
     //     $this->user = $user;
     // }
 
-    public function __construct(User $user, Client $client, $uniqueCallId, $tries)
+    public function __construct(User $user, Client $client, $uniqueCallId, $tries = 0)
     {
         $this->user = $user;
         $this->client = $client;
@@ -48,21 +48,21 @@ class CheckDispositionJob implements ShouldQueue
         try {
             if ($this->attempts() <= 10) {
                 // Log the attempt
-                Log::info("Checking disposition for client {$this->client->id} on attempt {$this->attempts()}");
+                Log::info("Checking disposition for client {$this->client->id} on attempt {$this->tries}");
     
                 // Check the client's disposition status
                 if ($this->client->status === null || $this->client->status === '' || $this->client->status == 'not_sold') {
-                    // The status is still not set, and the max number of attempts hasn't been reached
+                    Log::info("The status is still not set, and the max number of attempts hasn't been reached");
                     
                     // Send a reminder notification to the client
                     $this->user->notify(new ClientDispositionReminder());
-                    Log::info("Notification sent to client {$this->client->id} for call {$this->uniqueCallId} on attempt {$this->attempts()}");
+                    Log::info("Notification sent to client {$this->client->id} for call {$this->uniqueCallId} on attempt {$this->tries}");
     
                     // Increment the number of tries
                     $this->tries++;
     
                     // Re-dispatch the job with a 15-second delay
-                    self::dispatch($this->user, $this->client, $this->uniqueCallId)->delay(now()->addSeconds(35));
+                    self::dispatch($this->user, $this->client, $this->uniqueCallId, $this->tries)->delay(now()->addSeconds(35));
                 } else {
                     // Log when the status is set
                     Log::info("Disposition status set for client {$this->client->id} - {$this->client->status}");
