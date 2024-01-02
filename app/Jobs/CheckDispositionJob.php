@@ -30,11 +30,12 @@ class CheckDispositionJob implements ShouldQueue
     //     $this->user = $user;
     // }
 
-    public function __construct(User $user, Client $client, $uniqueCallId)
+    public function __construct(User $user, Client $client, $uniqueCallId, $tries)
     {
         $this->user = $user;
         $this->client = $client;
         $this->uniqueCallId = $uniqueCallId;
+        $this->tries = $tries; // Set the initial tries count
     }
 
 
@@ -45,9 +46,9 @@ class CheckDispositionJob implements ShouldQueue
     public function handle(): void
     {
         try {
-            if ($this->tries < 10) {
+            if ($this->attempts() <= 10) {
                 // Log the attempt
-                Log::info("Checking disposition for client {$this->client->id} on attempt {$this->tries}");
+                Log::info("Checking disposition for client {$this->client->id} on attempt {$this->attempts()}");
     
                 // Check the client's disposition status
                 if ($this->client->status === null || $this->client->status === '' || $this->client->status == 'not_sold') {
@@ -55,13 +56,13 @@ class CheckDispositionJob implements ShouldQueue
                     
                     // Send a reminder notification to the client
                     $this->user->notify(new ClientDispositionReminder());
-                    Log::info("Notification sent to client {$this->client->id} for call {$this->uniqueCallId} on attempt {$this->tries}");
+                    Log::info("Notification sent to client {$this->client->id} for call {$this->uniqueCallId} on attempt {$this->attempts()}");
     
                     // Increment the number of tries
                     $this->tries++;
     
                     // Re-dispatch the job with a 15-second delay
-                    self::dispatch($this->user, $this->client, $this->uniqueCallId)->delay(now()->addSeconds(15));
+                    self::dispatch($this->user, $this->client, $this->uniqueCallId)->delay(now()->addSeconds(35));
                 } else {
                     // Log when the status is set
                     Log::info("Disposition status set for client {$this->client->id} - {$this->client->status}");
@@ -69,6 +70,7 @@ class CheckDispositionJob implements ShouldQueue
             } else {
                 // Log when max attempts are reached
                 Log::warning("Max attempts reached for client {$this->client->id} without disposition being set");
+                $this->delete();
             }
         } catch (\Exception $e) {
             // Log any exceptions
