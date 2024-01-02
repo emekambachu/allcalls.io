@@ -73,7 +73,7 @@ class EventServiceProvider extends ServiceProvider
             ChargeUserForCompletedCall::class,
             UnlockClientForUser::class,
             AddCompletedCallUserActivity::class,
-            CheckDispositionListener::class,
+            // CheckDispositionListener::class,
         ],
 
         FundsAdded::class => [
