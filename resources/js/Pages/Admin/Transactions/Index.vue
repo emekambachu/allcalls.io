@@ -246,14 +246,14 @@ input[type="number"] {
             <PopoverButton>
               <button
                 type="button"
-                class="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               >
                 Payment Submitted By
               </button>
             </PopoverButton>
 
             <PopoverPanel class="absolute z-10">
-              <div class="border border-gray-100 p-3 shadow bg-white mt-2">
+              <div class="border border-gray-100 p-3 shadow bg-white mt-2 rounded-md">
                 Payment submitted by filter
               </div>
             </PopoverPanel>
