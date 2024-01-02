@@ -48,7 +48,7 @@ class CheckDispositionJob implements ShouldQueue
         try {
             if ($this->attempts() <= 10) {
                 // Log the attempt
-                Log::info("Checking disposition for client {$this->client->id} on attempt {$this->attempts()}");
+                Log::info("Checking disposition for client {$this->client->id} on attempt {$this->tries}");
     
                 // Check the client's disposition status
                 if ($this->client->status === null || $this->client->status === '' || $this->client->status == 'not_sold') {
@@ -56,7 +56,7 @@ class CheckDispositionJob implements ShouldQueue
                     
                     // Send a reminder notification to the client
                     $this->user->notify(new ClientDispositionReminder());
-                    Log::info("Notification sent to client {$this->client->id} for call {$this->uniqueCallId} on attempt {$this->attempts()}");
+                    Log::info("Notification sent to client {$this->client->id} for call {$this->uniqueCallId} on attempt {$this->tries}");
     
                     // Increment the number of tries
                     $this->tries++;
