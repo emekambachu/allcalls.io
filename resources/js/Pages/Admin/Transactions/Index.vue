@@ -326,7 +326,7 @@ input[type="number"] {
                           <p class="text-sm font-medium text-gray-900 truncate">
                             {{ user.first_name }} {{ user.last_name }}
                           </p>
-                          <p class="text-sm text-gray-500 truncate">{{ user.email }}</p>
+                          <p class="text-sm text-gray-500 truncate">{{ user.email }} - {{ user.phone }}</p>
                         </div>
                       </div>
                     </li>
