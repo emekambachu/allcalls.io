@@ -171,9 +171,9 @@ let selectUser = (user) => {
 let paymentSubmitedByLabel = computed(() => {
   let user = users.find(user => user.id === paymentSubmitedBy.value);
   if (user) {
-    return `${user.first_name} ${user.last_name}`;
+    return `- ${user.first_name} ${user.last_name}`;
   }
-  return 'Payment Submited By';
+  return '';
 });
 </script>
 <style src="@vueform/multiselect/themes/default.css"></style>
