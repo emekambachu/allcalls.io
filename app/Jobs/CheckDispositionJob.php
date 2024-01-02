@@ -30,7 +30,7 @@ class CheckDispositionJob implements ShouldQueue
     //     $this->user = $user;
     // }
 
-    public function __construct(User $user, Client $client, $uniqueCallId, $tries)
+    public function __construct(User $user, Client $client, $uniqueCallId, $tries = 0)
     {
         $this->user = $user;
         $this->client = $client;
