@@ -179,6 +179,7 @@ let paymentSubmitedByLabel = computed(() => {
 onMounted(() => {
   // check if submited_by exists in the query string and IS actually a user id:
   if (page.props.requestData.submited_by && users.find(user => user.id === Number(page.props.requestData.submited_by))) {
+    console.log('submited_by exists in the query string and IS actually a user id');
     paymentSubmitedBy.value = page.props.requestData.submited_by;
   }
 });
