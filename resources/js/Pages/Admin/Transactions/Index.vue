@@ -242,11 +242,11 @@ input[type="number"] {
             </option>
           </select> -->
 
-          <Popover class="relative mr-2">
+          <Popover class="relative mr-2 block w-full">
             <PopoverButton>
               <button
                 type="button"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                class="block w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               >
                 Payment Submitted By
               </button>
