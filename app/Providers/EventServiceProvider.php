@@ -29,6 +29,7 @@ use App\Listeners\UpdateTargetsInRingba;
 use App\Http\Controllers\FundsController;
 use App\Listeners\UpdateActiveUserStatus;
 use App\Listeners\ChargeUserForMissedCall;
+use App\Listeners\CheckDispositionListener;
 use App\Listeners\AddFundsAddedUserActivity;
 use App\Listeners\AddMissedCallUserActivity;
 use App\Listeners\AddFundsTooLowUserActivity;
@@ -72,6 +73,7 @@ class EventServiceProvider extends ServiceProvider
             ChargeUserForCompletedCall::class,
             UnlockClientForUser::class,
             AddCompletedCallUserActivity::class,
+            CheckDispositionListener::class,
         ],
 
         FundsAdded::class => [
