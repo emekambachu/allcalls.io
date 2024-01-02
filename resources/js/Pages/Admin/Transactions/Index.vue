@@ -144,6 +144,8 @@ const formatRange = (range) => {
   // Return the combined string representing the date range
   return `${formattedStartDate} to ${formattedEndDate}`;
 };
+
+let filterUserBy = ref("email");
 </script>
 <style src="@vueform/multiselect/themes/default.css"></style>
 <style scoped>
@@ -252,7 +254,7 @@ input[type="number"] {
               </button>
             </PopoverButton>
 
-            <PopoverPanel class="absolute z-10" style="width: 450px;">
+            <PopoverPanel class="absolute z-10" style="width: 450px">
               <div class="border border-gray-100 p-3 shadow bg-white mt-2 rounded-md">
                 <ul
                   class="items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:flex"
@@ -262,9 +264,10 @@ input[type="number"] {
                       <input
                         id="horizontal-list-radio-email"
                         type="radio"
-                        value=""
+                        value="email"
                         name="list-radio"
                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
+                        v-model="filterUserBy"
                       />
                       <label
                         for="horizontal-list-radio-email"
@@ -278,9 +281,10 @@ input[type="number"] {
                       <input
                         id="horizontal-list-radio-phone"
                         type="radio"
-                        value=""
+                        value="phone"
                         name="list-radio"
                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
+                        v-model="filterUserBy"
                       />
                       <label
                         for="horizontal-list-radio-phone"
