@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import creditCardType from "credit-card-type";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Multiselect from "@vueform/multiselect";
@@ -145,7 +145,57 @@ const formatRange = (range) => {
   return `${formattedStartDate} to ${formattedEndDate}`;
 };
 
-let filterUserBy = ref("email");
+
+onMounted(() => {
+  // check if submited_by exists in the query string and IS actually a user id:
+  if (page.props.requestData.submited_by && users.find(user => user.id === Number(page.props.requestData.submited_by))) {
+    console.log('submited_by exists in the query string and IS actually a user id');
+    paymentSubmitedBy.value = Number(page.props.requestData.submited_by);
+  }
+
+
+  // check if transaction_start_date and transaction_end_date exists in the query string:
+  if (page.props.requestData.transaction_date_start && page.props.requestData.transaction_date_end) {
+    console.log('transaction_start_date and transaction_end_date exists in the query string');
+    dateRange.value = [
+      new Date(page.props.requestData.transaction_date_start),
+      new Date(page.props.requestData.transaction_date_end),
+    ];
+  }
+});
+
+let filterUserBy = ref('email');
+let userFilterTerm = ref('');
+let filteredUsers = computed(() => {
+  // Convert the filter term to lowercase for case-insensitive comparison
+  let filterTerm = userFilterTerm.value.toLowerCase();
+
+  // Filter the users array based on email
+  return users.filter(user => {
+    // Check if the user's email contains the filter term
+    // Assuming each user object has an 'email' property
+    if (filterUserBy.value === 'phone') {
+      return user.phone.toLowerCase().includes(filterTerm);
+    }
+    return user.email.toLowerCase().includes(filterTerm);
+  });
+});
+
+
+let selectUser = (user) => {
+  paymentSubmitedBy.value = user.id;
+  userFilterTerm.value = '';
+};
+
+let paymentSubmitedByLabel = computed(() => {
+  let user = users.find(user => user.id === paymentSubmitedBy.value);
+  if (user) {
+    return `- ${user.first_name} ${user.last_name}`;
+  }
+  return '';
+});
+
+
 </script>
 <style src="@vueform/multiselect/themes/default.css"></style>
 <style scoped>
@@ -250,7 +300,7 @@ input[type="number"] {
                 type="button"
                 class="text-left h-full w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               >
-                Payment Submitted By
+                Payment Submitted By {{ paymentSubmitedByLabel }}
               </button>
             </PopoverButton>
 
@@ -297,6 +347,7 @@ input[type="number"] {
 
                 <div class="mt-2">
                   <input
+                    v-model="userFilterTerm"
                     :placeholder="`Filter by ${filterUserBy}`"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                   />
@@ -304,13 +355,13 @@ input[type="number"] {
 
                 <div style="max-height: 300px; overflow-y: scroll;" class="mt-3">
                   <ul class="max-w-md divide-y divide-gray-200">
-                    <li class="pb-3 sm:pb-4">
-                      <div class="cursor-pointer flex items-center space-x-4 rtl:space-x-reverse hover:bg-gray-50">
+                    <li v-for="user in filteredUsers" :key="user.id">
+                      <div @click.prevent="selectUser(user)" class="cursor-pointer flex items-center space-x-4 rtl:space-x-reverse hover:bg-gray-50 p-2">
                         <div class="flex-1 min-w-0">
                           <p class="text-sm font-medium text-gray-900 truncate">
-                            Neil Sims
+                            {{ user.first_name }} {{ user.last_name }}
                           </p>
-                          <p class="text-sm text-gray-500 truncate">email@flowbite.com</p>
+                          <p class="text-sm text-gray-500 truncate">{{ user.email }} - {{ user.phone }}</p>
                         </div>
                       </div>
                     </li>
