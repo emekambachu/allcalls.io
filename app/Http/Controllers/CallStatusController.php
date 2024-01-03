@@ -130,9 +130,9 @@ class CallStatusController extends Controller
                 Log::debug('Call duration: ' . $callDuration);
 
                 // Manually instantiate and invoke CheckDispositionListener
-                $checkDispositionListener = new CheckDispositionListener();
-                $checkDispositionListener->handle(new CompletedCallEvent($user, $call->callType, $call->unique_call_id));
-                Log::debug("CheckDispositionListener invoked manually for user {$request->user_id} and call {$call->unique_call_id}");
+                // $checkDispositionListener = new CheckDispositionListener();
+                // $checkDispositionListener->handle(new CompletedCallEvent($user, $call->callType, $call->unique_call_id));
+                // Log::debug("CheckDispositionListener invoked manually for user {$request->user_id} and call {$call->unique_call_id}");
             
 
                 // ========================================
