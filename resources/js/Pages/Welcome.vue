@@ -269,7 +269,7 @@ if (page.props.flash.error) {
                 <div
                   class="text-sm lg:text-lg text-gray-400 drop-shadow-wxl mt-2"
                 >
-                  Starting as Low as $25 / Call
+                  <!-- Starting as Low as $25 / Call -->
                 </div>
               </a>
             </div>
