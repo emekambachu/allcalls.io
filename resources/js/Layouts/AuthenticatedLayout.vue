@@ -670,18 +670,6 @@ let appDownloadModal = ref(false);
               </ResponsiveNavLink>
             </div>
 
-            <div
-              class="pt-2 pb-3 space-y-1"
-              v-if="$page.props.auth.role === 'internal-agent'"
-            >
-              <ResponsiveNavLink
-                :href="route('promotion-guidelines.show')"
-                :active="route().current('promotion-guidelines.show')"
-              >
-                Promotion Guidelines
-              </ResponsiveNavLink>
-            </div>
-
             <div class="pt-2 pb-3 space-y-1">
               <ResponsiveNavLink
                 :href="route('admin.notifications.create')"
@@ -1421,6 +1409,15 @@ let appDownloadModal = ref(false);
               >
                 My Agency
               </ResponsiveNavLink>
+
+              <ResponsiveNavLink
+                v-if="$page.props.auth.role === 'internal-agent'"
+                :href="route('internal-agent.agent-agency.index')"
+                :active="route().current('internal-agent.agent-agency.index')"
+              >
+                Promotion Guidelines
+              </ResponsiveNavLink>
+
               <!-- <ResponsiveNavLink v-if="$page.props.auth.role === 'internal-agent'" :href="route('internal-agent.my-agent.index')" :active="route().current('internal-agent.my-agent.index')">
                 Registered Agents
               </ResponsiveNavLink> -->
