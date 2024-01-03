@@ -670,6 +670,18 @@ let appDownloadModal = ref(false);
               </ResponsiveNavLink>
             </div>
 
+            <div
+              class="pt-2 pb-3 space-y-1"
+              v-if="$page.props.auth.role === 'internal-agent'"
+            >
+              <ResponsiveNavLink
+                :href="route('promotion-guidelines.show')"
+                :active="route().current('promotion-guidelines.show')"
+              >
+                Promotion Guidelines
+              </ResponsiveNavLink>
+            </div>
+
             <div class="pt-2 pb-3 space-y-1">
               <ResponsiveNavLink
                 :href="route('admin.notifications.create')"
