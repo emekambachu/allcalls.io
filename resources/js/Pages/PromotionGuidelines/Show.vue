@@ -24,7 +24,7 @@ let openLiveChat = () => {
     </template>
 
     <div>
-        <img style="max-width: 100%;" src="/img/promotion-guidelines/External 1.png">
+        <img style="max-width: 100%; transform: scale(1.01);" src="/img/promotion-guidelines/External 1.png">
     </div>
   </AuthenticatedLayout>
 </template>
