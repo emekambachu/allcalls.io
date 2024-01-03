@@ -28,9 +28,6 @@ class CallController extends Controller
         ->average('call_duration_in_seconds');
         $states = State::all();
 
-
-        dd($calls);
-
         return Inertia::render('Calls/Index', [
             'calls' => $calls,
             'totalCalls' => $totalCalls,
