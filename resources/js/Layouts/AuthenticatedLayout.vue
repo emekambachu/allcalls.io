@@ -1417,7 +1417,7 @@ let appDownloadModal = ref(false);
                 :href="route('calls.index')"
                 :active="route().current('calls.index')"
               >
-                Reporting
+                Call Reporting
               </ResponsiveNavLink>
 
               <ResponsiveNavLink
@@ -2040,7 +2040,7 @@ let appDownloadModal = ref(false);
                 />
               </svg>
 
-              Reporting
+              Call Reporting
             </NavLink>
 
             <NavLink
