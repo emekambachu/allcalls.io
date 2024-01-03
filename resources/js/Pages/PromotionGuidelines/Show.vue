@@ -2,7 +2,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 
 let props = defineProps(["showChart"]);
 
