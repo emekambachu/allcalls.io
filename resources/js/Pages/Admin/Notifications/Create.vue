@@ -219,6 +219,10 @@ const forceUpdate = () => {
   });
 };
 
+const selectAllUsers = () => { 
+  selectedUserIds.value = filteredUsers.value.map(user => user.id);
+};
+
 
 // Toggle dropdown visibility
 const toggleDropdown = (event) => {
@@ -229,7 +233,10 @@ const toggleDropdown = (event) => {
 
 // Close the dropdown when clicking outside
 function handleClickOutside(event) {
-  if (!event.target.closest('.dropdown-container')) {
+  const withinDropdownContainer = event.target.closest('.dropdown-container');
+  const withinDropdownHeader = event.target.closest('.dropdown-header');
+  
+  if (!withinDropdownContainer && !withinDropdownHeader) {
     showDropdown.value = false;
   }
 }
@@ -309,6 +316,21 @@ if (page.props.flash.message) {
 
           <!-- Dropdown for Filtered User List -->
           <div v-if="showDropdown" class="border rounded max-h-60 overflow-y-auto">
+            
+            <!-- Header Row -->
+            <div class="flex justify-between items-center p-2 bg-gray-200 dropdown-header">
+              <!-- Total Number of Users -->
+              <div>Total Users: {{ filteredUsers.length }}</div>
+              
+              <!-- Select All Button -->
+              <div 
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded-full cursor-pointer"
+                @click="selectAllUsers"
+              >
+                Select All
+              </div>
+            </div>
+
             <div 
               v-for="user in filteredUsers"
               :key="user.id" 
