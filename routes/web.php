@@ -36,6 +36,7 @@ use App\Http\Controllers\TwilioDeviceTokenController;
 use App\Http\Controllers\TwilioDialerTokenController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CallUserResponseAPIController;
+use App\Http\Controllers\PromotionGuidelinesController;
 use App\Http\Controllers\AgentStatusPriceDocsController;
 use App\Http\Controllers\TakeCallsOnlineUsersController;
 use App\Http\Controllers\ZoomMeetingNotificationController;
@@ -234,3 +235,5 @@ Route::get('/equis-api', [EquisAPIController::class, 'show']);
 
 
 Route::middleware('auth:sanctum')->post('/web-api/calls/{uniqueCallId}/reject', [CallHungUpController::class, 'updateForWeb'])->middleware(['auth', 'verified', 'registration-step-check']);
+
+Route::get('/promotion-guidlines', [PromotionGuidelinesController::class, 'show'])->middleware(['auth', 'verified', 'registration-step-check']);
