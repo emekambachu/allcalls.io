@@ -4,20 +4,17 @@ import { Head } from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { ref } from "vue";
 
-let props = defineProps(['showChart'])
+let props = defineProps(["showChart"]);
 
 let guidelinesImg = ref(null);
 
 onMounted(() => {
-    if (props.showChart === 'small') {
-        guidelinesImg.value = '/img/promotion-guidelines/Internal 1.png';
-    } else if (props.showChart === 'large') {
-        guidelinesImg.value = '/img/promotion-guidelines/External 1.png';
-    }
-}
-
-
-})
+  if (props.showChart === "small") {
+    guidelinesImg.value = "/img/promotion-guidelines/Internal 1.png";
+  } else if (props.showChart === "large") {
+    guidelinesImg.value = "/img/promotion-guidelines/External 1.png";
+  }
+});
 </script>
 
 <template>
