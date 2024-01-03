@@ -22,7 +22,7 @@ class PromotionGuidelinesController extends Controller
         $showChart = "unknown";
 
         // Check for Internal levels
-        if (in_array('AC ', ["Internal 1", "Internal 2", "Internal 3", "Internal 4", "Internal 5"])) {
+        if (in_array($level->name, ["Internal 1", "Internal 2", "Internal 3", "Internal 4", "Internal 5"])) {
             $showChart = "small";
         }
         // Check for AC levels
