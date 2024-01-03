@@ -27,6 +27,10 @@ class CallController extends Controller
         $averageCallDuration = Call::where('user_id', $user_id)
         ->average('call_duration_in_seconds');
         $states = State::all();
+
+
+        dd($calls);
+
         return Inertia::render('Calls/Index', [
             'calls' => $calls,
             'totalCalls' => $totalCalls,
