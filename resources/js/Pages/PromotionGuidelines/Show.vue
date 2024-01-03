@@ -24,7 +24,7 @@ let openLiveChat = () => {
     </template>
 
     <div class="px-2 py-4">
-        PNG should go here.
+        <img style="max-width: 100%;" src="/img/promotion-guidelines/External 1.png">
     </div>
   </AuthenticatedLayout>
 </template>
