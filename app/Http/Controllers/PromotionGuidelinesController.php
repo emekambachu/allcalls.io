@@ -23,7 +23,7 @@ class PromotionGuidelinesController extends Controller
             $showChart = "small";
         }
         // Check for AC levels
-        elseif (preg_match('/^AC (\d+)$/', $level->name, $matches)) {
+        elseif (preg_match('/^AC (\d+)$/', 'AC 2', $matches)) {
             $acLevel = intval($matches[1]);
             if ($acLevel >= 1 && $acLevel <= 11) {
                 $showChart = "large";
