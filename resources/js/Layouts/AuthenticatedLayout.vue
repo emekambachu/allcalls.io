@@ -1873,8 +1873,8 @@ let appDownloadModal = ref(false);
             <NavLink
               v-if="$page.props.auth.role === 'internal-agent'"
               class="mb-10 gap-2"
-              :href="route('agent.my.business')"
-              :active="route().current('agent.my.business')"
+              :href="route('promotion-guidelines.show')"
+              :active="route().current('promotion-guidelines.show')"
             >
               <svg
                 fill="#fff"
