@@ -15,9 +15,6 @@ class PromotionGuidelinesController extends Controller
             return abort(401);
         }
 
-
-        dd($level->name);
-
         // Initialize $showChart as 'unknown' by default
         $showChart = "unknown";
 
