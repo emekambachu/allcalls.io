@@ -7,8 +7,12 @@ use Illuminate\Http\Request;
 
 class PromotionGuidelinesController extends Controller
 {
-    public function show()
+    public function show(Request $request)
     {
+        $level = $request->user()->getAgentLevel;
+
+        dd($level->name);
+
         return Inertia::render('PromotionGuidelines/Show');
     }
 }
