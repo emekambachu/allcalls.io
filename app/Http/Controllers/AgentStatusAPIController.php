@@ -246,19 +246,35 @@ class AgentStatusAPIController extends Controller
         } else {
             $stateModel = State::whereFullName($state)->firstOrFail();
         }
-
+    
         // Query for the call type
         $callTypeModel = CallType::whereType($vertical)->firstOrFail();
-
-        // Check for online users matching the criteria
-        $onlineUsers = OnlineUser::byCallTypeAndState($callTypeModel, $stateModel)
-            ->withSufficientBalance($callTypeModel)
-            ->withCallStatusWaiting()
-            ->get();
-
-        // Here you can put your actual logic to determine if an agent is available
-        return $onlineUsers->count() > 0;
-    }
+    
+        // Initial Online Users Query
+        $onlineUsersQuery = OnlineUser::query();
+    
+        // Apply byCallTypeAndState scope and log count
+        $onlineUsersQuery->byCallTypeAndState($callTypeModel, $stateModel);
+        $countAfterStateAndCallType = $onlineUsersQuery->count();
+        Log::debug('Count after applying byCallTypeAndState', ['count' => $countAfterStateAndCallType]);
+    
+        // Apply withSufficientBalance scope and log count
+        $onlineUsersQuery->withSufficientBalance($callTypeModel);
+        $countAfterSufficientBalance = $onlineUsersQuery->count();
+        Log::debug('Count after applying withSufficientBalance', ['count' => $countAfterSufficientBalance]);
+    
+        // Apply withCallStatusWaiting scope and log count
+        $onlineUsersQuery->withCallStatusWaiting();
+        $countAfterCallStatusWaiting = $onlineUsersQuery->count();
+        Log::debug('Count after applying withCallStatusWaiting', ['count' => $countAfterCallStatusWaiting]);
+    
+        // Final count
+        $finalCount = $onlineUsersQuery->count();
+        Log::debug('Final count of online users', ['count' => $finalCount]);
+    
+        // Return true if there are any users, false otherwise
+        return $finalCount > 0;
+    }    
 
     private function getPriceForVertical(string $vertical): float
     {
