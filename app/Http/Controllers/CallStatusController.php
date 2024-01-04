@@ -155,8 +155,8 @@ class CallStatusController extends Controller
                 }
 
 
-                // If the call duration is more than 10 seconds
-                if ($callDuration > 10) {
+                // If the call duration is more than 0 seconds
+                if ($callDuration > 0) {
                     try {
                         // End the parent call if it's still going
                         if ($parentCallSid) {
