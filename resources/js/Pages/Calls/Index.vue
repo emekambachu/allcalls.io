@@ -172,7 +172,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
                   <td class="text-gray-600 px-4 py-3">{{ call.call_type.type }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ call.from }}</td>
                   <td class="text-gray-600 px-4 py-3">
-                    <span v-if="call.get_client.status">{{
+                    <span v-if="call.get_client">{{
                       call.get_client.status
                     }}</span>
                     <span v-else>N/A</span>
