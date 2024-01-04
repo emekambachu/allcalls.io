@@ -74,20 +74,20 @@ class IncomingCallController extends Controller
     private function getFromAttribute($fromString)
     {
         Log::debug('Entered getFromAttribute function. Input: ' . $fromString);
-        
+
         // Check if the string starts with 'client:'
         if (strpos($fromString, 'client:') === 0) {
             Log::debug('String starts with "client:". Processing accordingly.');
             // return '2055551234';  // Return a dummy number
             return '4793860440'; // from AR
         }
-    
+
         // If it's a phone number
         if (strpos($fromString, '+1') === 0) {
             Log::debug('String starts with "+1". Processing as phone number.');
             return substr($fromString, 2);
         }
-    
+
         Log::debug('Returning the string as-is.');
         return $fromString;  // Return as-is
     }
@@ -107,10 +107,42 @@ class IncomingCallController extends Controller
         $stateModel = State::whereName($phoneState)->first();
         $callType = CallType::find($availableNumber->call_type_id);
 
-        $onlineUsers = OnlineUser::byCallTypeAndState($callType, $stateModel)
-            ->withSufficientBalance($callType)
-            ->withCallStatusWaiting()
-            ->get();
+
+
+
+
+        // Start the query
+        $onlineUsersQuery = OnlineUser::query();
+
+        // Apply byCallTypeAndState scope and log count
+        $onlineUsersQuery->byCallTypeAndState($callType, $stateModel);
+        $countAfterStateAndCallType = $onlineUsersQuery->count();
+        Log::debug('Count after applying byCallTypeAndState', ['count' => $countAfterStateAndCallType]);
+
+        // Apply withSufficientBalance scope and log count
+        $onlineUsersQuery->withSufficientBalance($callType);
+        $countAfterSufficientBalance = $onlineUsersQuery->count();
+        Log::debug('Count after applying withSufficientBalance', ['count' => $countAfterSufficientBalance]);
+
+        // Apply withCallStatusWaiting scope and log count
+        $onlineUsersQuery->withCallStatusWaiting();
+        $countAfterCallStatusWaiting = $onlineUsersQuery->count();
+        Log::debug('Count after applying withCallStatusWaiting', ['count' => $countAfterCallStatusWaiting]);
+
+        // Get the final collection
+        $onlineUsers = $onlineUsersQuery->get();
+        Log::debug('Final count of online users after get()', ['count' => $onlineUsers->count()]);
+
+        // $onlineUsers is now ready to be used as before
+
+
+
+
+
+
+
+
+
 
         // $onlineUsers = OnlineUser::prioritizeInternalAgents($onlineUsers);
         $onlineUsers = OnlineUser::sortByCallPriority($onlineUsers, $callType);
@@ -142,7 +174,7 @@ class IncomingCallController extends Controller
 
             $statusCallbackBaseUrl = env('APP_URL') . '/api/handle-call-status';
             $recordingStatusCallBackBaseUrl = env('APP_URL') . '/api/handle-call-recording';
-            
+
             $twimlBody .= '<Dial record="record-from-answer" recordingStatusCallbackMethod="GET" recordingStatusCallbackEvent="completed" recordingStatusCallback="' . $recordingStatusCallBackBaseUrl . '?user_id=' . $user_id . '&amp;call_type_id=' . $call_type_id . '&amp;unique_call_id=' . $uniqueCallId . '&amp;from=' . urlencode($availableNumber->from) . '" callerId="+12518626328" timeout="20">';
             $twimlBody .= '<Client statusCallbackMethod="GET" statusCallbackEvent="initiated ringing answered completed" statusCallback="' . $statusCallbackBaseUrl . '?user_id=' . $user_id . '&amp;call_type_id=' . $call_type_id . '&amp;from=' . urlencode($availableNumber->from) . '&amp;unique_call_id=' . $uniqueCallId . '">';
             $twimlBody .= '<Identity>' . $user_id . '</Identity>';
@@ -179,11 +211,39 @@ class IncomingCallController extends Controller
         Log::debug($stateModel->toArray());
 
 
-        // Fetch all online users who have selected the same call type and state
-        $onlineUsers = OnlineUser::byCallTypeAndState($callType, $stateModel)
-            ->withSufficientBalance($callType)
-            ->withCallStatusWaiting()
-            ->get();
+
+
+
+        // Start the query
+        $onlineUsersQuery = OnlineUser::query();
+
+        // Apply byCallTypeAndState scope and log count
+        $onlineUsersQuery->byCallTypeAndState($callType, $stateModel);
+        $countAfterStateAndCallType = $onlineUsersQuery->count();
+        Log::debug('Count after applying byCallTypeAndState', ['count' => $countAfterStateAndCallType]);
+
+        // Apply withSufficientBalance scope and log count
+        $onlineUsersQuery->withSufficientBalance($callType);
+        $countAfterSufficientBalance = $onlineUsersQuery->count();
+        Log::debug('Count after applying withSufficientBalance', ['count' => $countAfterSufficientBalance]);
+
+        // Apply withCallStatusWaiting scope and log count
+        $onlineUsersQuery->withCallStatusWaiting();
+        $countAfterCallStatusWaiting = $onlineUsersQuery->count();
+        Log::debug('Count after applying withCallStatusWaiting', ['count' => $countAfterCallStatusWaiting]);
+
+        // Get the final collection
+        $onlineUsers = $onlineUsersQuery->get();
+        Log::debug('Final count of online users after get()', ['count' => $onlineUsers->count()]);
+
+        // $onlineUsers is now ready to be used as before
+
+
+
+
+
+
+
 
 
         Log::debug('onlineUsers:', [
@@ -316,7 +376,7 @@ class IncomingCallController extends Controller
             })
             ->first();
 
-        if ( $availableNumber ) {
+        if ($availableNumber) {
             Log::debug('Updating call type id for available number', [
                 'user_id' => $userId,
                 'call_type_id' => $callTypeId,
@@ -342,10 +402,10 @@ class IncomingCallController extends Controller
             $availableNumber->user_id = $userId;
             $availableNumber->call_type_id = $callTypeId;
         }
-        
+
         $availableNumber->from = $from;
         $availableNumber->save();
-        
+
         return $availableNumber;
     }
 
