@@ -86,7 +86,7 @@ const deleteFile = file => {
 }
 </style>
 <template>
-  <Head title="Dashboard" />
+  <Head title="Agent Information" />
   <AuthenticatedLayout>
     <div class="pt-14">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">

@@ -315,7 +315,7 @@ let paginate = (url) => {
                     ${{ call.amount_spent }}
                   </td>
                   <td class="text-gray-600">
-                    <div v-if="call.client && call.client.unlocked == 1">
+                    <div v-if="call.client">
                       {{ call.client.status }}
                     </div>
                     <div v-else>N/A</div>

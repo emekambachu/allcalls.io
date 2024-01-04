@@ -204,6 +204,16 @@ return [
             ],
         ],
 
+        'staging' => [
+            'supervisor-1' => [
+                'connection' => 'redis',
+                'queue' => ['staging'], // Unique queue for staging
+                'balance' => 'auto',
+                'maxProcesses' => 10,
+                // ... other settings
+            ],
+        ],
+
         'local' => [
             'supervisor-1' => [
                 'maxProcesses' => 3,

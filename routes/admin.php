@@ -40,6 +40,10 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
     Route::get('/customer/detail/{id}', [CustomerController::class, 'show'])->name('admin.customer.detail');
 
+    Route::get('/transactions', [CustomerController::class, 'getAllTransaction'])->name('admin.transactions');
+
+
+
     Route::get('/customer/transactions/{id}', [CustomerController::class, 'getTransaction']);
 
     Route::get('/customer/calls/{id}', [CustomerController::class, 'getUserCall']);

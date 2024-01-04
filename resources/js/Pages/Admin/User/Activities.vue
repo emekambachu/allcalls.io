@@ -77,9 +77,9 @@ let clearAll = async () => {
   <animation-slider :slidingLoader="slidingLoader" />
   <section v-if="activities.data?.length && slidingLoader == false" class="p-3">
     <div class="flex items-center justify-end mb-3 sm:px-12">
-      <button @click.prevent="clearAll" class="button-custom-back px-3 py-2 rounded-md mr-2">
+      <!-- <button @click.prevent="clearAll" class="button-custom-back px-3 py-2 rounded-md mr-2">
         Clear All
-      </button>
+      </button> -->
     </div>
     <div class="mx-auto max-w-screen-xl sm:px-12">
 

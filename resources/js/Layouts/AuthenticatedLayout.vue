@@ -96,6 +96,7 @@ let showIncomingCall = (conn) => {
       .then((response) => {
         console.log(response.data.client);
         connectedClient.value = response.data.client;
+        localStorage.setItem("latestClientId", connectedClient.value.id);
 
         console.log("connected client now: ");
         console.log(connectedClient.value);
@@ -199,6 +200,7 @@ let refetchClient = () => {
     .then((response) => {
       console.log(response.data.client);
       connectedClient.value = response.data.client;
+      localStorage.setItem("latestClientId", connectedClient.value.id);
 
       console.log("connected client now: ");
       console.log(connectedClient.value);
@@ -249,9 +251,62 @@ let disconnectCall = () => {
   if (call) {
     call.disconnect();
     showOngoing.value = false;
+    showUpdateDispositionModal();
   } else {
     console.log("call not found while disconnecting");
   }
+};
+
+let latestClientDisposition = ref("Sale - Simplified Issue");
+let repeatedNotificationToUpdateDispositionTimeout = ref(null);
+
+let startTimeoutForRepeatedDispositionNotifications = () => {
+  console.log("Starting timeout for repeated disposition notifications.");
+
+  if (repeatedNotificationToUpdateDispositionTimeout.value) {
+    console.log("Clearing the previous interval.");
+    clearInterval(repeatedNotificationToUpdateDispositionTimeout.value);
+    repeatedNotificationToUpdateDispositionTimeout.value = null;
+  }
+
+  console.log("Setting new timeout for disposition notifications");
+  repeatedNotificationToUpdateDispositionTimeout.value = setInterval(() => {
+    console.log("Send Notification To Update Disposition");
+    toaster("success", "Please update the disposition for the client.");
+  }, 15000);
+};
+
+let clearTimeoutForRepeatedDispositionNotifications = () => {
+  console.log("Clearing timeout for repeated disposition notifications.");
+  clearTimeout(repeatedNotificationToUpdateDispositionTimeout.value);
+  repeatedNotificationToUpdateDispositionTimeout.value = null;
+};
+
+let updateLatestClientDisposition = () => {
+  if (!localStorage.getItem("latestClientId")) {
+    console.log("latestClientId is null");
+    return;
+  }
+
+  let latestClientId = Number(localStorage.getItem("latestClientId"));
+
+  axios
+    .post(`/web-api/clients/${latestClientId}/disposition`, {
+      status: latestClientDisposition.value,
+    })
+    .then((response) => {
+      console.log("Client disposition update response:");
+      console.log(response.data);
+      localStorage.removeItem("latestClientId");
+      localStorage.removeItem("showDispositionModal");
+      showUpdateDispositionForLastClient.value = false;
+      toaster("success", "Client disposition updated.");
+      clearTimeoutForRepeatedDispositionNotifications();
+    })
+    .catch((error) => {
+      console.log("Error updating client disposition:");
+      console.log(error);
+    });
 };
 
 let setupTwilioDevice = () => {
@@ -298,6 +353,7 @@ let setupTwilioDevice = () => {
       console.log("Call should disconnect now.");
       // showRinging.value = false;
       showOngoing.value = false;
+      showUpdateDispositionModal();
     });
 
     device.addListener("disconnect", (device) => {
@@ -319,6 +375,37 @@ let setupTwilioDevice = () => {
   });
 };
 
+let showUpdateDispositionForLastClient = ref(false);
+
+let showUpdateDispositionModal = () => {
+  // // Check if 'showDispositionModal' exists in localStorage
+  // if (localStorage.getItem("showDispositionModal") === null) {
+  //   // If not, create the variable in localStorage with a value (e.g., 'true')
+  //   localStorage.setItem("showDispositionModal", "true");
+  //   console.log("'showDispositionModal' variable created in localStorage.");
+  //   showUpdateDispositionForLastClient.value = true;
+  //   startTimeoutForRepeatedDispositionNotifications();
+  //   return
+  // }
+  // console.log("'showDispositionModal' variable already exists in localStorage.");
+  // showUpdateDispositionForLastClient.value = true;
+  // startTimeoutForRepeatedDispositionNotifications();
+};
+
+let makeDispositionModalNull = () => {
+  // localStorage.setItem("showDispositionModal", null);
+  // console.log("'showDispositionModal' variable set to null in localStorage.");
+  // showUpdateDispositionForLastClient.value = false;
+};
+
+onMounted(() => {
+  // if the showDispositionModal is not null, display the modal
+  // if (localStorage.getItem("showDispositionModal") !== null) {
+  //   showUpdateDispositionForLastClient.value = true;
+  //   startTimeoutForRepeatedDispositionNotifications();
+  // }
+});
+
 onMounted(() => {
   console.log("mounted AuthenticatedLayout");
   Echo.private("calls." + page.props.auth.user.id).listenForWhisper("psst", (e) => {
@@ -332,6 +419,7 @@ onMounted(() => {
     }
     showRinging.value = false;
     showOngoing.value = false;
+    showUpdateDispositionModal();
   });
 
   console.log("Attaching call accepted or rejected listener:");
@@ -350,6 +438,7 @@ onMounted(() => {
       }
       showRinging.value = false;
       showOngoing.value = false;
+      showUpdateDispositionModal();
     }
   );
 
@@ -536,6 +625,14 @@ let appDownloadModal = ref(false);
             </div>
             <div class="pt-2 pb-3 space-y-1">
               <ResponsiveNavLink
+                :href="route('admin.transactions')"
+                :active="route().current('admin.transactions')"
+              >
+                Transactions
+              </ResponsiveNavLink>
+            </div>
+            <div class="pt-2 pb-3 space-y-1">
+              <ResponsiveNavLink
                 :href="route('admin.agent.index')"
                 :active="
                   route().current('admin.agent.index') ||
@@ -683,6 +780,37 @@ let appDownloadModal = ref(false);
               </svg>
 
               Customers
+            </NavLink>
+
+            <NavLink
+              class="mb-10 gap-2"
+              :href="route('admin.transactions')"
+              :active="route().current('admin.transactions')"
+            >
+              <!-- <svg class="w-8 h-8 mr-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
+
+                <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+
+                <g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M15.2929 3.29289C15.6834 2.90237 16.3166 2.90237 16.7071 3.29289L22.3657 8.95147C23.1216 9.70743 22.5862 11 21.5172 11H2C1.44772 11 1 10.5523 1 10C1 9.44772 1.44772 9 2 9H19.5858L15.2929 4.70711C14.9024 4.31658 14.9024 3.68342 15.2929 3.29289ZM4.41421 15H22C22.5523 15 23 14.5523 23 14C23 13.4477 22.5523 13 22 13H2.48284C1.41376 13 0.878355 14.2926 1.63431 15.0485L7.29289 20.7071C7.68342 21.0976 8.31658 21.0976 8.70711 20.7071C9.09763 20.3166 9.09763 19.6834 8.70711 19.2929L4.41421 15Z" fill="#0F0F0F"/> </g>
+
+                </svg> -->
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-8 h-8 mr-2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"
+                />
+              </svg>
+              Transactions
             </NavLink>
 
             <NavLink
@@ -1281,6 +1409,15 @@ let appDownloadModal = ref(false);
               >
                 My Agency
               </ResponsiveNavLink>
+
+              <ResponsiveNavLink
+                v-if="$page.props.auth.role === 'internal-agent'"
+                :href="route('internal-agent.agent-agency.index')"
+                :active="route().current('internal-agent.agent-agency.index')"
+              >
+                Promotion Guidelines
+              </ResponsiveNavLink>
+
               <!-- <ResponsiveNavLink v-if="$page.props.auth.role === 'internal-agent'" :href="route('internal-agent.my-agent.index')" :active="route().current('internal-agent.my-agent.index')">
                 Registered Agents
               </ResponsiveNavLink> -->
@@ -1288,7 +1425,7 @@ let appDownloadModal = ref(false);
                 :href="route('calls.index')"
                 :active="route().current('calls.index')"
               >
-                Reporting
+                Call Reporting
               </ResponsiveNavLink>
 
               <ResponsiveNavLink
@@ -1741,6 +1878,7 @@ let appDownloadModal = ref(false);
               </svg>
               My Business
             </NavLink>
+
             <!--
             <NavLink v-if="$page.props.auth.role === 'internal-agent'" class="mb-10 gap-2" :href="route('internal-agent.my-agent.index')"
               :active="route().current('internal-agent.my-agent.index')">
@@ -1911,7 +2049,7 @@ let appDownloadModal = ref(false);
                 />
               </svg>
 
-              Reporting
+              Call Reporting
             </NavLink>
 
             <NavLink
@@ -1959,6 +2097,30 @@ let appDownloadModal = ref(false);
               </svg>
 
               Support
+            </NavLink>
+
+            <NavLink
+              v-if="$page.props.auth.role === 'internal-agent'"
+              class="mb-10 gap-2"
+              :href="route('promotion-guidelines.show')"
+              :active="route().current('promotion-guidelines.show')"
+            >
+              <svg
+                class="w-8 h-8 mr-2"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z"
+                />
+              </svg>
+
+              Promotion Guidelines
             </NavLink>
 
             <NavLink
@@ -2417,6 +2579,42 @@ let appDownloadModal = ref(false);
           >
             Hang Up
           </button>
+        </div>
+      </div>
+    </Modal>
+
+    <Modal :show="showUpdateDispositionForLastClient" :closeable="false">
+      <div class="bg-white">
+        <div class="p-4 my-3">
+          <div class="mb-3">
+            <label class="mb-2">Please update the client disposition for the call:</label>
+            <select class="select-custom" v-model="latestClientDisposition">
+              <option value="Sale - Simplified Issue">Sale - Simplified Issue</option>
+              <option value="Sale - Guaranteed Issue">Sale - Guaranteed Issue</option>
+              <option value="Follow Up Needed">Follow Up Needed</option>
+              <option value="Quoted - Not Interested">Quoted - Not Interested</option>
+              <option value="Not Interested">Not Interested</option>
+              <option value="Transfer Handoff Too Long">Transfer Handoff Too Long</option>
+              <option value="Client Hung Up">Client Hung Up</option>
+              <option value="No Income">No Income</option>
+              <option value="Wrong State">Wrong State</option>
+              <option value="Not Qualified Age">Not Qualified Age</option>
+              <option value="Not Qualified Nursing Home">
+                Not Qualified Nursing Home
+              </option>
+              <option value="Not Qualified Memory Issues">
+                Not Qualified Memory Issues
+              </option>
+              <option value="Language Barrier">Language Barrier</option>
+              <option value="Do Not Call">Do Not Call</option>
+            </select>
+          </div>
+
+          <div class="flex justify-end">
+            <PrimaryButton @click.prevent="updateLatestClientDisposition"
+              >Save Disposition</PrimaryButton
+            >
+          </div>
         </div>
       </div>
     </Modal>
