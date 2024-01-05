@@ -9,7 +9,7 @@ class FEAgentStatusDocsController extends Controller
 {
     public function show()
     {
-        return Inertia::render('Docs/Ping/Show', [
+        return Inertia::render('Docs/AgentStatus/Show', [
             'domain' => 'https://feagentping.com',
             'brandName' => 'FEAgentPing',
         ]);
