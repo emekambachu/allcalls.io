@@ -16,7 +16,7 @@ import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 
 let page = usePage();
 
-console.log(page.props.auth.user)
+console.log(page.props.auth.user_level)
 
 let showMobileNotifications = ref(false);
 let userNotifications = ref(page.props.auth.notifications);
