@@ -16,10 +16,8 @@ import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 
 let page = usePage();
 
-console.log(page.props.auth.user_level);
-
-if (page.props.auth.user.user_level && page.props.auth.user.user_level.name && page.props.auth.user.user_level.name.startsWith('Internal')) {
-  console.log('It is internal!!!');
+if (page.props.auth.user_level && page.props.auth.user_level.name && page.props.auth.user_level.name.startsWith('Internal')) {
+  console.log('It is internal!!!', page.props.auth.user_level);
 } else {
   console.log('It is not internal!!!');
 }
