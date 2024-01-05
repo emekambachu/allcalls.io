@@ -37,7 +37,6 @@ let props = defineProps({
   levels: Array,
 });
 
-
 console.log(props.agents);
 
 let contractModal = ref(false);
@@ -181,40 +180,38 @@ let downloadCSV = (jsonData, fileName) => {
   const csvString = jsonToCSV(jsonData);
 
   // Create a Blob from the CSV String
-  const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+  const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
 
   // Create a link and trigger download
-  const link = document.createElement('a');
+  const link = document.createElement("a");
   const url = URL.createObjectURL(blob);
   link.href = url;
   link.download = fileName;
-  link.style.visibility = 'hidden';
+  link.style.visibility = "hidden";
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
-}
+};
 
-
-let exportCSV = agent => {
-  let includeColumns = ['id', 'first_name', 'last_name', 'email', 'phone'];
+let exportCSV = (agent) => {
+  let includeColumns = ["id", "first_name", "last_name", "email", "phone"];
 
   // Create a new object with only the included columns
   let filteredAgent = {};
-  includeColumns.forEach(key => {
+  includeColumns.forEach((key) => {
     if (agent[key] !== undefined) {
       filteredAgent[key] = agent[key];
     }
   });
 
-  console.log('EXPORT CSV', jsonToCSV(filteredAgent));
-  downloadCSV(filteredAgent, 'agent.csv');
+  console.log("EXPORT CSV", jsonToCSV(filteredAgent));
+  downloadCSV(filteredAgent, "agent.csv");
 };
-let agentTreeModal = ref(false)
+let agentTreeModal = ref(false);
 let inviteAgentTree = (agent) => {
   userData.value = agent;
-  agentTreeModal.value = true
- 
-}
+  agentTreeModal.value = true;
+};
 </script>
 <style scoped>
 .modal {
@@ -239,21 +236,21 @@ let inviteAgentTree = (agent) => {
   width: 30%;
 }
 .button-custom-back {
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 150ms;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    font-weight: 600;
-    border-width: 1px;
-    align-items: center;
-    display: inline-flex;
-    border-color: rgb(107 114 128 / var(--tw-border-opacity));
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
+  border-width: 1px;
+  align-items: center;
+  display: inline-flex;
+  border-color: rgb(107 114 128 / var(--tw-border-opacity));
 }
 
 .button-custom-back:hover {
-    background-color: #03243d;
-    color: #3cfa7a;
-    transition-duration: 150ms;
+  background-color: #03243d;
+  color: #3cfa7a;
+  transition-duration: 150ms;
 }
 </style>
 <template>
@@ -270,7 +267,12 @@ let inviteAgentTree = (agent) => {
         <div class="text-4xl text-custom-sky font-bold mb-6">Agents</div>
       </div>
       <div>
-        <button class="button-custom-back px-4 py-3 rounded-md mr-4" @click="inviteAgentTree(page.props.auth.user)">View Complete Tree</button>
+        <button
+          class="button-custom-back px-4 py-3 rounded-md mr-4"
+          @click="inviteAgentTree(page.props.auth.user)"
+        >
+          View Complete Tree
+        </button>
 
         <PrimaryButton @click="addAgentModal(agents.current_page)">Add New</PrimaryButton>
       </div>
@@ -309,7 +311,11 @@ let inviteAgentTree = (agent) => {
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="agent in agents.data" :key="agent.id" class="border-b border-gray-500">
+                <tr
+                  v-for="agent in agents.data"
+                  :key="agent.id"
+                  class="border-b border-gray-500"
+                >
                   <td class="text-gray-600 px-4 py-3">{{ agent.id }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ agent.first_name }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ agent.last_name }}</td>
@@ -318,12 +324,25 @@ let inviteAgentTree = (agent) => {
                     {{ agent.progress ? agent.progress : "-" }}
                   </td>
                   <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
-                    <a title="View Agent" :href="route('admin.agent.detail', agent.id)"><svg
-                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="w-5 h-5">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                          d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <a title="View Agent" :href="route('admin.agent.detail', agent.id)"
+                      ><svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        class="w-5 h-5"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
+                        />
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
                       </svg>
                     </a>
 
@@ -331,81 +350,152 @@ let inviteAgentTree = (agent) => {
                       title="Edit Agent"
                       @click="editAgentModal(agent, agents.current_page)"
                       class="inline-flex items-center mx-2 p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
-                      type="button">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="w-4 h-4">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                          d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                      type="button"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        class="w-4 h-4"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+                        />
                       </svg>
                     </button>
-                    <button class="mr-2" title="Onboarding info"
-                      v-show="agent.internal_agent_contract && agent.legacy_key === 1" @click="openContractModal(agent)">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="w-5 h-5">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                          d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
+                    <button
+                      class="mr-2"
+                      title="Onboarding info"
+                      v-show="agent.internal_agent_contract && agent.legacy_key === 1"
+                      @click="openContractModal(agent)"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        class="w-5 h-5"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z"
+                        />
                       </svg>
                     </button>
 
-                    <button class="ml-2" @click="viewPdfData(agent)"
-                      v-show="agent.internal_agent_contract && agent.legacy_key === 1" title="Contracting">
-                      <svg fill="#000000" class="w-4 h-4" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 237.783 237.783" xmlns:xlink="http://www.w3.org/1999/xlink"
-                        enable-background="new 0 0 237.783 237.783">
+                    <button
+                      class="ml-2"
+                      @click="viewPdfData(agent)"
+                      v-show="agent.internal_agent_contract && agent.legacy_key === 1"
+                      title="Contracting"
+                    >
+                      <svg
+                        fill="#000000"
+                        class="w-4 h-4"
+                        version="1.1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 237.783 237.783"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        enable-background="new 0 0 237.783 237.783"
+                      >
                         <g>
                           <path
-                            d="m42.735,50.071h96.959c3.313,0 6,2.687 6,6s-2.687,6-6,6h-96.959c-3.313,0-6-2.687-6-6s2.686-6 6-6zm0,25.934h96.959c3.313,0 6,2.687 6,6s-2.687,6-6,6h-96.959c-3.313,0-6-2.687-6-6s2.686-6 6-6zm0,25.935h96.959c3.313,0 6,2.687 6,6s-2.687,6-6,6h-96.959c-3.313,0-6-2.687-6-6s2.686-6 6-6zm0,25.935h96.959c3.313,0 6,2.687 6,6s-2.687,6-6,6h-96.959c-3.313,0-6-2.687-6-6s2.686-6 6-6z" />
+                            d="m42.735,50.071h96.959c3.313,0 6,2.687 6,6s-2.687,6-6,6h-96.959c-3.313,0-6-2.687-6-6s2.686-6 6-6zm0,25.934h96.959c3.313,0 6,2.687 6,6s-2.687,6-6,6h-96.959c-3.313,0-6-2.687-6-6s2.686-6 6-6zm0,25.935h96.959c3.313,0 6,2.687 6,6s-2.687,6-6,6h-96.959c-3.313,0-6-2.687-6-6s2.686-6 6-6zm0,25.935h96.959c3.313,0 6,2.687 6,6s-2.687,6-6,6h-96.959c-3.313,0-6-2.687-6-6s2.686-6 6-6z"
+                          />
                           <path
-                            d="m42.735,62.071h96.959c3.313,0 6-2.687 6-6s-2.687-6-6-6h-96.959c-3.313,0-6,2.687-6,6s2.686,6 6,6z" />
+                            d="m42.735,62.071h96.959c3.313,0 6-2.687 6-6s-2.687-6-6-6h-96.959c-3.313,0-6,2.687-6,6s2.686,6 6,6z"
+                          />
                           <path
-                            d="m42.735,88.005h96.959c3.313,0 6-2.687 6-6s-2.687-6-6-6h-96.959c-3.313,0-6,2.687-6,6s2.686,6 6,6z" />
+                            d="m42.735,88.005h96.959c3.313,0 6-2.687 6-6s-2.687-6-6-6h-96.959c-3.313,0-6,2.687-6,6s2.686,6 6,6z"
+                          />
                           <path
-                            d="m42.735,113.94h96.959c3.313,0 6-2.687 6-6s-2.687-6-6-6h-96.959c-3.313,0-6,2.687-6,6s2.686,6 6,6z" />
+                            d="m42.735,113.94h96.959c3.313,0 6-2.687 6-6s-2.687-6-6-6h-96.959c-3.313,0-6,2.687-6,6s2.686,6 6,6z"
+                          />
                           <path
-                            d="m42.735,139.875h96.959c3.313,0 6-2.687 6-6s-2.687-6-6-6h-96.959c-3.313,0-6,2.687-6,6s2.686,6 6,6z" />
+                            d="m42.735,139.875h96.959c3.313,0 6-2.687 6-6s-2.687-6-6-6h-96.959c-3.313,0-6,2.687-6,6s2.686,6 6,6z"
+                          />
                           <path
-                            d="m237.783,98.361c0-1.591-0.632-3.117-1.757-4.243l-16.356-16.355c-1.125-1.125-2.651-1.757-4.243-1.757s-3.117,0.632-4.243,1.757l-28.756,28.756v-88.117c0-3.313-2.686-6-6-6h-170.428c-3.314,0-6,2.687-6,6v200.979c0,3.313 2.686,6 6,6h170.429c3.314,0 6-2.687 6-6v-63.18l53.597-53.597c1.125-1.125 1.757-2.651 1.757-4.243zm-225.783,115.02v-188.979h158.429v94.117l-35.291,35.291h-92.403c-3.313,0-6,2.687-6,6s2.687,6 6,6h80.403l-1.033,1.033c-0.777,0.777-1.326,1.753-1.586,2.821l-4.157,17.05h-25.148c-3.313,0-6,2.687-6,6s2.687,6 6,6c0,0 29.714,0 29.86,0 0.473,0 0.95-0.056 1.421-0.171l21.629-5.273c1.068-0.26 2.044-0.809 2.821-1.586l23.482-23.482v45.181h-158.427zm127.649-31.374l-10.408,2.538 2.538-10.408 83.648-83.648 7.871,7.871-83.649,83.647z" />
+                            d="m237.783,98.361c0-1.591-0.632-3.117-1.757-4.243l-16.356-16.355c-1.125-1.125-2.651-1.757-4.243-1.757s-3.117,0.632-4.243,1.757l-28.756,28.756v-88.117c0-3.313-2.686-6-6-6h-170.428c-3.314,0-6,2.687-6,6v200.979c0,3.313 2.686,6 6,6h170.429c3.314,0 6-2.687 6-6v-63.18l53.597-53.597c1.125-1.125 1.757-2.651 1.757-4.243zm-225.783,115.02v-188.979h158.429v94.117l-35.291,35.291h-92.403c-3.313,0-6,2.687-6,6s2.687,6 6,6h80.403l-1.033,1.033c-0.777,0.777-1.326,1.753-1.586,2.821l-4.157,17.05h-25.148c-3.313,0-6,2.687-6,6s2.687,6 6,6c0,0 29.714,0 29.86,0 0.473,0 0.95-0.056 1.421-0.171l21.629-5.273c1.068-0.26 2.044-0.809 2.821-1.586l23.482-23.482v45.181h-158.427zm127.649-31.374l-10.408,2.538 2.538-10.408 83.648-83.648 7.871,7.871-83.649,83.647z"
+                          />
                         </g>
                       </svg>
                     </button>
-                    <button class="ml-2" @click="agent.is_locked !== 0 ? ApproveAgent(agent) : null"
+                    <button
+                      class="ml-2"
+                      @click="agent.is_locked !== 0 ? ApproveAgent(agent) : null"
                       v-show="agent.internal_agent_contract && agent.legacy_key === 1"
-                      :title="agent.is_locked === 0 ? 'Approved' : 'Approve Agent'">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" :class="{ 'text-green-400': agent.is_locked === 0 }" class="w-5 h-5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                      :title="agent.is_locked === 0 ? 'Approved' : 'Approve Agent'"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        :class="{ 'text-green-400': agent.is_locked === 0 }"
+                        class="w-5 h-5"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M4.5 12.75l6 6 9-13.5"
+                        />
                       </svg>
                     </button>
                     <button class="ml-2" @click="progressFun(agent)" title="Progress">
-                      <svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512.000000 512.000000"
-                        preserveAspectRatio="xMidYMid meet" class="w-5 h-5">
-                        <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" fill="#000000"
-                          stroke="none">
-                          <path d="M2320 5109 c-146 -15 -259 -36 -293 -57 -74 -42 -119 -141 -103 -225
+                      <svg
+                        version="1.0"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 512.000000 512.000000"
+                        preserveAspectRatio="xMidYMid meet"
+                        class="w-5 h-5"
+                      >
+                        <g
+                          transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
+                          fill="#000000"
+                          stroke="none"
+                        >
+                          <path
+                            d="M2320 5109 c-146 -15 -259 -36 -293 -57 -74 -42 -119 -141 -103 -225
                               8 -45 50 -108 89 -134 51 -35 103 -42 198 -26 127 20 436 28 570 14 645 -68
                               1213 -419 1579 -976 74 -113 172 -319 219 -460 77 -231 111 -440 111 -687 0
                               -573 -218 -1098 -624 -1504 -351 -351 -795 -564 -1285 -615 -134 -14 -443 -6
                               -570 14 -130 21 -200 -3 -255 -87 -49 -76 -47 -167 7 -238 43 -56 80 -76 173
                               -92 225 -40 551 -45 779 -12 463 67 912 263 1260 551 514 424 831 996 927
                               1670 17 118 17 512 0 630 -70 491 -250 916 -544 1284 -142 179 -376 395 -560
-                              519 -325 219 -690 360 -1083 418 -124 18 -468 26 -595 13z" />
-                          <path d="M1338 4799 c-81 -19 -340 -199 -503 -350 -175 -161 -372 -397 -430
+                              519 -325 219 -690 360 -1083 418 -124 18 -468 26 -595 13z"
+                          />
+                          <path
+                            d="M1338 4799 c-81 -19 -340 -199 -503 -350 -175 -161 -372 -397 -430
                             -513 -55 -110 -13 -230 99 -288 31 -16 53 -19 102 -16 83 5 129 37 194 133
                             152 225 363 429 613 592 143 94 174 130 184 211 12 102 -52 198 -150 227 -56
-                            17 -57 17 -109 4z" />
-                          <path d="M3538 3394 c-26 -11 -218 -208 -704 -722 -368 -389 -671 -707 -674
+                            17 -57 17 -109 4z"
+                          />
+                          <path
+                            d="M3538 3394 c-26 -11 -218 -208 -704 -722 -368 -389 -671 -707 -674
                               -707 -3 0 -128 129 -278 287 -257 271 -276 288 -325 303 -105 31 -204 -11
                               -252 -109 -31 -64 -32 -124 -2 -186 10 -19 158 -183 330 -365 285 -302 318
                               -333 380 -364 61 -31 78 -35 147 -35 69 0 86 4 147 35 64 32 106 74 784 791
-                              394 417 721 770 728 784 65 142 -38 305 -191 303 -29 0 -69 -7 -90 -15z" />
-                          <path d="M222 3300 c-56 -13 -110 -58 -136 -114 -44 -91 -86 -400 -86 -626 0
+                              394 417 721 770 728 784 65 142 -38 305 -191 303 -29 0 -69 -7 -90 -15z"
+                          />
+                          <path
+                            d="M222 3300 c-56 -13 -110 -58 -136 -114 -44 -91 -86 -400 -86 -626 0
                               -226 42 -535 86 -626 64 -134 240 -161 341 -51 61 66 70 118 44 249 -31 158
                               -41 258 -41 428 0 170 9 268 42 432 18 95 19 113 7 155 -18 67 -78 129 -142
-                              148 -55 16 -66 17 -115 5z" />
-                          <path d="M505 1473 c-113 -59 -155 -180 -100 -289 58 -116 255 -352 430 -513
+                              148 -55 16 -66 17 -115 5z"
+                          />
+                          <path
+                            d="M505 1473 c-113 -59 -155 -180 -100 -289 58 -116 255 -352 430 -513
                               172 -159 423 -331 510 -351 93 -21 187 27 231 117 23 45 26 62 21 109 -9 87
                               -38 121 -184 217 -220 144 -425 334 -558 517 -33 45 -73 101 -90 123 -42 56
-                              -104 87 -174 87 -31 -1 -69 -8 -86 -17z" />
+                              -104 87 -174 87 -31 -1 -69 -8 -86 -17z"
+                          />
                         </g>
                       </svg>
                     </button>
@@ -436,7 +526,19 @@ let inviteAgentTree = (agent) => {
                   <th class="text-gray-600 px-4 py-3">
                     {{ agent.get_agent_level?.name }}
                   </th>
-                  <th class="text-gray-600 px-4 py-3">{{ agent.upline_id }}</th>
+                  <th class="text-gray-600 px-4 py-3">
+                    <span
+                      v-if="
+                        agent.invited_by &&
+                        agent.invited_by.first_name &&
+                        agent.invited_by.last_name
+                      "
+                    >
+                      <span>{{
+                        agent.invited_by.first_name + " " + agent.invited_by.last_name
+                      }}</span>
+                    </span>
+                  </th>
                   <th class="text-gray-600 px-4 py-3">{{ agent.email }}</th>
                   <td class="text-gray-600 px-4 py-3">
                     ${{ formatMoney(agent.balance) }}
@@ -469,23 +571,30 @@ let inviteAgentTree = (agent) => {
               </div>
 
               <ul class="inline-flex -space-x-px text-base h-10">
-                <li v-for="(link, index) in agents.links" :key="link.label"
-                  :class="{ disabled: link.url === null }">
-                  <a href="#" @click.prevent="paginate(link.url)" :class="[
-                    'flex items-center justify-center px-4 h-10 border border-gray-300',
-                    link.active
-                      ? 'text-blue-600 bg-blue-50 hover:bg-blue-100 hover:text-blue-700'
-                      : 'leading-tight text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700',
-                    {
-                      'rounded-l-lg': index === 0,
-                      'rounded-r-lg': index === agents.links.length - 1,
-                    },
-                  ]" v-html="link.label"></a>
+                <li
+                  v-for="(link, index) in agents.links"
+                  :key="link.label"
+                  :class="{ disabled: link.url === null }"
+                >
+                  <a
+                    href="#"
+                    @click.prevent="paginate(link.url)"
+                    :class="[
+                      'flex items-center justify-center px-4 h-10 border border-gray-300',
+                      link.active
+                        ? 'text-blue-600 bg-blue-50 hover:bg-blue-100 hover:text-blue-700'
+                        : 'leading-tight text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700',
+                      {
+                        'rounded-l-lg': index === 0,
+                        'rounded-r-lg': index === agents.links.length - 1,
+                      },
+                    ]"
+                    v-html="link.label"
+                  ></a>
                 </li>
               </ul>
             </nav>
-            <br>
-
+            <br />
           </div>
         </div>
       </div>
@@ -495,18 +604,33 @@ let inviteAgentTree = (agent) => {
       <p class="text-center text-gray-600">No clients yet.</p>
     </section>
 
-    <ContractSteps v-if="contractModal" @close="contractModal = false" :states="states" :userData="userData" />
+    <ContractSteps
+      v-if="contractModal"
+      @close="contractModal = false"
+      :states="states"
+      :userData="userData"
+    />
 
     <Modal :show="viewModalpdf" @close="viewModalpdf = false">
       <ViewPdfindex @close="viewModalpdf = false" :userData="userData.value" />
     </Modal>
 
-    <AgentTree v-if="agentTreeModal" :treeRoute="'/admin/internal-agent/tree/'" :agentTreeModal="agentTreeModal"
-      @close="agentTreeModal = false" :userData="userData.value" />
+    <AgentTree
+      v-if="agentTreeModal"
+      :treeRoute="'/admin/internal-agent/tree/'"
+      :agentTreeModal="agentTreeModal"
+      @close="agentTreeModal = false"
+      :userData="userData.value"
+    />
 
     <Modal :show="progressModal" @close="progressModal = false">
-      <ProgressView @close="progressModal = false" :statuses="statuses" :isLoading="isLoading"
-        @updateProgress="updateProgress" :userData="userData.value" />
+      <ProgressView
+        @close="progressModal = false"
+        :statuses="statuses"
+        :isLoading="isLoading"
+        @updateProgress="updateProgress"
+        :userData="userData.value"
+      />
     </Modal>
 
     <Modal :show="showModal" @close="showModal = false">
@@ -525,12 +649,24 @@ let inviteAgentTree = (agent) => {
     </Modal>
 
     <Modal :show="agentModal" @close="agentModal = false">
-      <Create :levels="levels" :agentModal="agentModal" :agents="agents.data" :currentPage="currentPage" :callTypes="callTypes" :states="states"
-        @close="agentModal = false"></Create>
+      <Create
+        :levels="levels"
+        :agentModal="agentModal"
+        :agents="agents.data"
+        :currentPage="currentPage"
+        :callTypes="callTypes"
+        :states="states"
+        @close="agentModal = false"
+      ></Create>
     </Modal>
 
-    <ApproveConfirm @close="showModalConfirm = false" :showModalConfirm="showModalConfirm" @onApprove="onApprove"
-      :isLoading="isLoading" @onCancel="onCancel" />
+    <ApproveConfirm
+      @close="showModalConfirm = false"
+      :showModalConfirm="showModalConfirm"
+      @onApprove="onApprove"
+      :isLoading="isLoading"
+      @onCancel="onCancel"
+    />
   </AuthenticatedLayout>
 </template>
 
