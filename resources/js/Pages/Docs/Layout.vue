@@ -1,5 +1,18 @@
 <script setup>
 import { Link, Head } from "@inertiajs/vue3";
+
+defineProps({
+  domain: {
+    type: String,
+    required: false,
+    default: "https://allcalls.io",
+  },
+  brandName: {
+    type: String,
+    required: false,
+    default: "AllCalls.io",
+  },
+});
 </script>
 
 <template>
@@ -8,7 +21,7 @@ import { Link, Head } from "@inertiajs/vue3";
     <div class="mb-8 flex items-center justify-between">
       <div class="flex items-center space-x-4">
         <div>
-          <p class="text-lg font-semibold">AllCalls.io</p>
+          <p class="text-lg font-semibold" v-text="brandName"></p>
           <div class="flex items-center space-x-2">
             <p class="text-sm text-gray-500">API Documentation</p>
           </div>

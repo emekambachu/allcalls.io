@@ -8,12 +8,17 @@ defineProps({
     type: String,
     required: false,
     default: "https://allcalls.io",
-  }
+  },
+  brandName: {
+    type: String,
+    required: false,
+    default: "AllCalls.io",
+  },
 });
 </script>
 <template>
   <Head title="/api/ping" />
-  <Layout>
+  <Layout :domain="domain" :brandName="brandName">
     <!-- Main Content -->
     <div class="ml-80 mt-5">
       <h1 class="mb-3 text-2xl font-semibold">/api/ping Endpoint</h1>
