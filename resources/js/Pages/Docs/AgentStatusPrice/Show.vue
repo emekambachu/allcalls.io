@@ -2,7 +2,7 @@
 import { Link, Head } from "@inertiajs/vue3";
 import Layout from "@/Pages/Docs/Layout.vue";
 
-defineProps({
+let { domain, brandName } = defineProps({
   domain: {
     type: String,
     required: false,
@@ -18,7 +18,7 @@ defineProps({
 
 <template>
   <Head title="/api/agent-status-price" />
-  <Layout :domain="domain">
+  <Layout :domain="domain" :brandName="brandName">
     <!-- Main Content -->
     <div class="ml-80 mt-5">
       <h1 class="mb-3 text-2xl font-semibold">/api/agent-status-price Endpoint</h1>
