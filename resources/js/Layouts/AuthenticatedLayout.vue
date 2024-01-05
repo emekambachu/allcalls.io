@@ -16,6 +16,12 @@ import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 
 let page = usePage();
 
+let isInternalLevel = ref(false);
+
+if (page.props.auth.user_level && page.props.auth.user_level.name && page.props.auth.user_level.name.startsWith('Internal')) {
+  isInternalLevel.value = true;
+}
+
 let showMobileNotifications = ref(false);
 let userNotifications = ref(page.props.auth.notifications);
 
@@ -1435,6 +1441,7 @@ let appDownloadModal = ref(false);
                   route().current('billing.cards.index') ||
                   route().current('billing.autopay.index')
                 "
+                v-if="!isInternalLevel"
               >
                 <div class="row pb-3 flex">
                   <div class="columns-6 flex">Add Funds</div>
@@ -1905,6 +1912,7 @@ let appDownloadModal = ref(false);
                   route().current('billing.cards.index') ||
                   route().current('billing.autopay.index'),
               }"
+              v-if="!isInternalLevel"
             >
               <img src="/img/billing.png" alt="" />
               Add Funds
