@@ -31,7 +31,7 @@ let { domain, brandName } = defineProps({
         <h2 class="text-lg font-semibold">Endpoint:</h2>
         <p>
           <strong>URL:</strong>
-          <code>https://allcalls.io/api/agent-status-price</code>
+          <code>{{ domain }}/api/agent-status-price</code>
         </p>
         <p><strong>Methods:</strong> <code>GET</code>, <code>POST</code></p>
       </div>
@@ -112,7 +112,7 @@ let { domain, brandName } = defineProps({
           <p><strong>Request:</strong></p>
           <div class="rounded bg-gray-100 p-3">
             <pre class="text-sm">
-GET https://allcalls.io/api/agent-status-price?phone=1234567890&vertical=auto_insurance&affiliate_id=YOUR_AFFILIATE_ID&api_key=YOUR_API_KEY
+GET {{ domain }}/api/agent-status-price?phone=1234567890&vertical=auto_insurance&affiliate_id=YOUR_AFFILIATE_ID&api_key=YOUR_API_KEY
 </pre
             >
           </div>
