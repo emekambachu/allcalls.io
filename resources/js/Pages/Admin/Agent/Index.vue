@@ -36,6 +36,10 @@ let props = defineProps({
   statuses: Array,
   levels: Array,
 });
+
+
+console.log(props.agents);
+
 let contractModal = ref(false);
 let formData = ref({
   name: props.requestData.name,

@@ -79,6 +79,7 @@ class InternalAgentController extends Controller
             ->with('states')
             ->with('callTypes')
             ->with('getAgentLevel')
+            ->with('invitedBy')
             ->orderBy('created_at', 'desc')
             ->paginate(100);
 
