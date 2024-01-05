@@ -1,6 +1,15 @@
 <script setup>
 import Layout from "@/Pages/Docs/Layout.vue";
 import { Head } from "@inertiajs/vue3";
+
+
+defineProps({
+  domain: {
+    type: String,
+    required: false,
+    default: "http://allcalls.io",
+  }
+});
 </script>
 <template>
   <Head title="/api/ping" />
@@ -16,7 +25,7 @@ import { Head } from "@inertiajs/vue3";
       <!-- Endpoint Details -->
       <div class="mb-5 rounded bg-white p-5 shadow-lg">
         <h2 class="text-lg font-semibold">Endpoint:</h2>
-        <p><strong>URL:</strong> <code>https://allcalls.io/api/ping</code></p>
+        <p><strong>URL:</strong> <code>{{ domain }}/api/ping</code></p>
         <p>
           <strong>Supported Methods:</strong> <code>GET</code>,
           <code>POST</code>
