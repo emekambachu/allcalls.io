@@ -1,11 +1,24 @@
 <script setup>
 import { Link, Head } from "@inertiajs/vue3";
 import Layout from "@/Pages/Docs/Layout.vue";
+
+let { domain, brandName } = defineProps({
+  domain: {
+    type: String,
+    required: false,
+    default: "https://allcalls.io",
+  },
+  brandName: {
+    type: String,
+    required: false,
+    default: "AllCalls.io",
+  },
+});
 </script>
 
 <template>
   <Head title="/api/agent-status" />
-  <Layout>
+  <Layout :domain="domain" :brandName="brandName">
     <!-- Main Content -->
     <div class="ml-80 mt-5">
       <h1 class="mb-3 text-2xl font-semibold">/api/agent-status Endpoint</h1>
@@ -18,7 +31,7 @@ import Layout from "@/Pages/Docs/Layout.vue";
         <h2 class="text-lg font-semibold">Endpoint:</h2>
         <p>
           <strong>URL:</strong>
-          <code>https://allcalls.io/api/agent-status</code>
+          <code>{{ domain }}/api/agent-status</code>
         </p>
         <p><strong>Methods:</strong> <code>GET</code>, <code>POST</code></p>
       </div>
@@ -94,7 +107,7 @@ import Layout from "@/Pages/Docs/Layout.vue";
           <p><strong>Request:</strong></p>
           <div class="rounded bg-gray-100 p-3">
             <pre class="text-sm">
-GET https://allcalls.io/api/agent-status?phone=1234567890&vertical=auto_insurance&affiliate_id=YOUR_AFFILIATE_ID&api_key=YOUR_API_KEY
+GET {{ domain }}/api/agent-status?phone=1234567890&vertical=auto_insurance&affiliate_id=YOUR_AFFILIATE_ID&api_key=YOUR_API_KEY
 </pre
             >
           </div>

@@ -1,5 +1,34 @@
 <script setup>
 import { Link, Head } from "@inertiajs/vue3";
+import { ref, computed } from "vue";
+
+let { domain, brandName } = defineProps({
+  domain: {
+    type: String,
+    required: false,
+    default: "https://allcalls.io",
+  },
+  brandName: {
+    type: String,
+    required: false,
+    default: "AllCalls.io",
+  },
+});
+
+
+
+let baseUrlForDocs = computed(() => {
+
+  if (domain === 'https://allcalls.io') {
+    return '/'
+  }
+
+  // remove the protocol and other stuff and only take the domain:
+  let domainPassed = domain.replace(/(^\w+:|^)\/\//, '');
+  return `/${domainPassed}/`;
+});
+
+
 </script>
 
 <template>
@@ -8,7 +37,7 @@ import { Link, Head } from "@inertiajs/vue3";
     <div class="mb-8 flex items-center justify-between">
       <div class="flex items-center space-x-4">
         <div>
-          <p class="text-lg font-semibold">AllCalls.io</p>
+          <p class="text-lg font-semibold" v-text="brandName"></p>
           <div class="flex items-center space-x-2">
             <p class="text-sm text-gray-500">API Documentation</p>
           </div>
@@ -27,13 +56,13 @@ import { Link, Head } from "@inertiajs/vue3";
                 'text-gray-500': !route().current('docs.ping.show'),
                 'text-blue-500': route().current('docs.ping.show'),
               }"
-              :href="route('docs.ping.show')"
+              :href="`${baseUrlForDocs}docs/ping`"
               >/api/ping</Link
             >
           </li>
           <li class="cursor-pointer">
             <Link
-              :href="route('docs.agent-status.show')"
+              :href="`${baseUrlForDocs}docs/agent-status`"
               :class="{
                 'text-gray-500': !route().current('docs.agent-status.show'),
                 'text-blue-500': route().current('docs.agent-status.show'),
@@ -43,7 +72,7 @@ import { Link, Head } from "@inertiajs/vue3";
           </li>
           <li class="cursor-pointer">
             <Link
-              :href="route('docs.agent-status-price.show')"
+              :href="`${baseUrlForDocs}docs/agent-status-price`"
               :class="{
                 'text-gray-500': !route().current('docs.agent-status-price.show'),
                 'text-blue-500': route().current('docs.agent-status-price.show'),
