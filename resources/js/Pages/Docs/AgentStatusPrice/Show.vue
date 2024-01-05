@@ -1,6 +1,14 @@
 <script setup>
 import { Link, Head } from "@inertiajs/vue3";
 import Layout from "@/Pages/Docs/Layout.vue";
+
+defineProps({
+  domain: {
+    type: String,
+    required: false,
+    default: "https://allcalls.io",
+  }
+});
 </script>
 
 <template>

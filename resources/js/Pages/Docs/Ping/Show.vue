@@ -7,7 +7,7 @@ defineProps({
   domain: {
     type: String,
     required: false,
-    default: "http://allcalls.io",
+    default: "https://allcalls.io",
   }
 });
 </script>
