@@ -56,13 +56,13 @@ let baseUrlForDocs = computed(() => {
                 'text-gray-500': !route().current('docs.ping.show'),
                 'text-blue-500': route().current('docs.ping.show'),
               }"
-              :href="`${baseUrlForDocs}docs/api/ping`"
+              :href="`${baseUrlForDocs}docs/ping`"
               >/api/ping</Link
             >
           </li>
           <li class="cursor-pointer">
             <Link
-              :href="`${baseUrlForDocs}docs/api/agent-status`"
+              :href="`${baseUrlForDocs}docs/agent-status`"
               :class="{
                 'text-gray-500': !route().current('docs.agent-status.show'),
                 'text-blue-500': route().current('docs.agent-status.show'),
@@ -72,7 +72,7 @@ let baseUrlForDocs = computed(() => {
           </li>
           <li class="cursor-pointer">
             <Link
-              :href="`${baseUrlForDocs}docs/api/agent-status-price`"
+              :href="`${baseUrlForDocs}docs/agent-status-price`"
               :class="{
                 'text-gray-500': !route().current('docs.agent-status-price.show'),
                 'text-blue-500': route().current('docs.agent-status-price.show'),
