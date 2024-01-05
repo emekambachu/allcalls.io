@@ -1,7 +1,8 @@
 <script setup>
 import { Link, Head } from "@inertiajs/vue3";
+import { ref, computed } from "vue";
 
-defineProps({
+let { domain, brandName } = defineProps({
   domain: {
     type: String,
     required: false,
@@ -13,6 +14,21 @@ defineProps({
     default: "AllCalls.io",
   },
 });
+
+
+
+let baseUrlForDocs = computed(() => {
+
+  if (domain === 'https://allcalls.io') {
+    return '/'
+  }
+
+  // remove the protocol and other stuff and only take the domain:
+  let domainPassed = domain.replace(/(^\w+:|^)\/\//, '');
+  return `/${domainPassed}/`;
+});
+
+
 </script>
 
 <template>
@@ -40,13 +56,13 @@ defineProps({
                 'text-gray-500': !route().current('docs.ping.show'),
                 'text-blue-500': route().current('docs.ping.show'),
               }"
-              :href="route('docs.ping.show')"
+              :href="`${baseUrlForDocs}api/ping`"
               >/api/ping</Link
             >
           </li>
           <li class="cursor-pointer">
             <Link
-              :href="route('docs.agent-status.show')"
+              :href="`${baseUrlForDocs}api/agent-status`"
               :class="{
                 'text-gray-500': !route().current('docs.agent-status.show'),
                 'text-blue-500': route().current('docs.agent-status.show'),
@@ -56,7 +72,7 @@ defineProps({
           </li>
           <li class="cursor-pointer">
             <Link
-              :href="route('docs.agent-status-price.show')"
+              :href="`${baseUrlForDocs}api/agent-status-price`"
               :class="{
                 'text-gray-500': !route().current('docs.agent-status-price.show'),
                 'text-blue-500': route().current('docs.agent-status-price.show'),
