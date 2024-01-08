@@ -31,6 +31,8 @@ use App\Http\Controllers\WebAPIClientsController;
 use App\Http\Controllers\CallClientInfoController;
 use App\Http\Controllers\AdditionalFilesController;
 use App\Http\Controllers\AgentStatusDocsController;
+use App\Http\Controllers\FEAgentPingDocsController;
+use App\Http\Controllers\FEAgentStatusDocsController;
 use App\Http\Controllers\NotificationGroupController;
 use App\Http\Controllers\TwilioDeviceTokenController;
 use App\Http\Controllers\TwilioDialerTokenController;
@@ -39,6 +41,7 @@ use App\Http\Controllers\CallUserResponseAPIController;
 use App\Http\Controllers\PromotionGuidelinesController;
 use App\Http\Controllers\AgentStatusPriceDocsController;
 use App\Http\Controllers\TakeCallsOnlineUsersController;
+use App\Http\Controllers\FEAgentStatusPriceDocsController;
 use App\Http\Controllers\ZoomMeetingNotificationController;
 
 /*
@@ -167,6 +170,14 @@ Route::get('/docs', function() {
 Route::get('/docs/ping', [PingDocsController::class, 'show'])->name('docs.ping.show');
 Route::get('/docs/agent-status', [AgentStatusDocsController::class, 'show'])->name('docs.agent-status.show');
 Route::get('/docs/agent-status-price', [AgentStatusPriceDocsController::class, 'show'])->name('docs.agent-status-price.show');
+
+
+Route::get('/docs', function() {
+    return redirect('/feagentping.com/docs/ping');
+});
+Route::get('/feagentping.com/docs/ping', [FEAgentPingDocsController::class, 'show'])->name('feagentping.docs.ping.show');
+Route::get('/feagentping.com/docs/agent-status', [FEAgentStatusDocsController::class, 'show'])->name('feagentping.docs.agent-status.show');
+Route::get('/feagentping.com/docs/agent-status-price', [FEAgentStatusPriceDocsController::class, 'show'])->name('feagentping.docs.agent-status-price.show');
 
 Route::get('/notification-groups', [NotificationGroupController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check']);
 Route::post('/notification-groups', [NotificationGroupController::class, 'store'])->middleware(['auth', 'verified', 'registration-step-check']);

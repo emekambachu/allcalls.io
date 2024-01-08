@@ -155,8 +155,8 @@ class CallStatusController extends Controller
                 }
 
 
-                // If the call duration is more than 10 seconds
-                if ($callDuration > 10) {
+                // If the call duration is more than 0 seconds
+                // if ($callDuration > 0) {
                     try {
                         // End the parent call if it's still going
                         if ($parentCallSid) {
@@ -173,7 +173,7 @@ class CallStatusController extends Controller
                         // Log the exception for debugging
                         Log::debug('Error while trying to terminate call chain: ' . $e->getMessage());
                     }
-                }
+                // }
                 // ========================================
                 // END: Terminate Call Chain Block
                 // ========================================

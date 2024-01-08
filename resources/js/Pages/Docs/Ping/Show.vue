@@ -1,10 +1,24 @@
 <script setup>
 import Layout from "@/Pages/Docs/Layout.vue";
 import { Head } from "@inertiajs/vue3";
+
+
+defineProps({
+  domain: {
+    type: String,
+    required: false,
+    default: "https://allcalls.io",
+  },
+  brandName: {
+    type: String,
+    required: false,
+    default: "AllCalls.io",
+  },
+});
 </script>
 <template>
   <Head title="/api/ping" />
-  <Layout>
+  <Layout :domain="domain" :brandName="brandName">
     <!-- Main Content -->
     <div class="ml-80 mt-5">
       <h1 class="mb-3 text-2xl font-semibold">/api/ping Endpoint</h1>
@@ -16,7 +30,7 @@ import { Head } from "@inertiajs/vue3";
       <!-- Endpoint Details -->
       <div class="mb-5 rounded bg-white p-5 shadow-lg">
         <h2 class="text-lg font-semibold">Endpoint:</h2>
-        <p><strong>URL:</strong> <code>https://allcalls.io/api/ping</code></p>
+        <p><strong>URL:</strong> <code>{{ domain }}/api/ping</code></p>
         <p>
           <strong>Supported Methods:</strong> <code>GET</code>,
           <code>POST</code>
