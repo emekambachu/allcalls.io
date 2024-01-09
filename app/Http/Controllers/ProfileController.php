@@ -180,7 +180,7 @@ class ProfileController extends Controller
     public function uploadProfilePicture(Request $request)
     {
         $request->validate([
-            'profile_picture' => 'required|image|mimes:jpg,jpeg,png|max:5120', // 5MB Max
+            'profile_picture' => 'required|image|mimes:jpg,jpeg,png', // 5MB Max |max:5120
         ]);
     
         $user = Auth::user();
@@ -188,11 +188,8 @@ class ProfileController extends Controller
         // Get the file extension of the uploaded file
         $extension = $request->file('profile_picture')->getClientOriginalExtension();
     
-        // Sanitize the email to create a valid filename
-        $sanitizedEmail = str_replace(['@', '.'], ['_at_', '_dot_'], $user->email);
-    
-        // Create a filename using the user's email
-        $filename = $sanitizedEmail . '.' . $extension;
+        // Create a filename using the user's ID
+        $filename = $user->id . '.' . $extension;
     
         // Store the file in the 'profile_pictures' directory with the new filename
         $path = $request->file('profile_picture')->storeAs('profile_pictures', $filename, 'public');
@@ -202,11 +199,20 @@ class ProfileController extends Controller
             Storage::disk('public')->delete($user->profile_picture);
         }
     
-        $user->profile_picture = $path;
+        // Update the user's profile picture in the database
+        $profileUrl = Storage::url($path);
+        $user->profile_picture = $profileUrl;
         $user->save();
     
-        return redirect()->back()->with('success', 'Profile picture updated successfully.');
+        // Return a JSON response
+        return response()->json([
+            'success' => true,
+            'message' => 'Profile picture updated successfully.',
+            'profile_picture_url' => $profileUrl,
+        ]);
     }
+    
+    
     
 
     /**
