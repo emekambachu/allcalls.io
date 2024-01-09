@@ -43,6 +43,7 @@ use App\Http\Controllers\CustomBroadcastingAuthController;
 use App\Http\Controllers\ActiveUsersPusherWebhookController;
 use App\Http\Controllers\CallCenterDispositionAPIController;
 use App\Http\Controllers\FundsController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TwilioAndroidAccessTokenController;
 use App\Http\Controllers\TwilioIOSAccessTokenGuestController;
 use App\Http\Controllers\TwilioIOSSandboxAccessTokenController;
@@ -240,6 +241,8 @@ Route::middleware('auth:sanctum')->post('/calls/{uniqueCallId}/reject', [CallHun
 Route::middleware('auth:sanctum')->post('/sendbird-user/create', [SendBirdUserController::class, 'createSendBirdUser']);
 Route::middleware('auth:sanctum')->get('/sendbird-user/check', [SendBirdUserController::class, 'checkSendBirdUser']);
 Route::middleware('auth:sanctum')->delete('/sendbird-user/delete', [SendBirdUserController::class, 'deleteSendBirdUser']);
+
+Route::middleware('auth:sanctum')->post('/profile/upload-image', [ProfileController::class, 'uploadProfilePicture']);
 
 Route::post('/sendbird-user/blahblahblah', function (Request $request){
     return response()->json([
