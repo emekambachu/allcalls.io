@@ -55,7 +55,6 @@ class CustomerController extends Controller
                 }
             }
         }
-        // dd($matchedCardsFirstSix, $matchedCardsLastFour);
         $excludeRoles = Role::whereIn('name', ['admin', 'internal-agent', 'user'])->pluck('id');
         $roles = Role::get();
         $users = User::select('users.*', 'role_user.role_id')->leftjoin('role_user', 'role_user.user_id', 'users.id')
