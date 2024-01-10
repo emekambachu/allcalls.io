@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Models\Call;
 use App\Models\CallType;
+use App\Models\Card;
 use App\Models\Client;
 use App\Models\InternalAgentContractSigned;
 use App\Models\Role;
@@ -26,11 +27,33 @@ use Illuminate\Http\Client\Response;
 use Inertia\Inertia;
 use App\Models\InternalAgentLevel as AgentLevel;
 use App\Models\UserActivity;
+use Illuminate\Support\Facades\Crypt;
 
 class InternalAgentController extends Controller
 {
     public function index(Request $request)
     {
+        $matchedCardsFirstSix = [];
+        $matchedCardsLastFour = [];
+        if (isset($request->first_six_card_no) && $request->first_six_card_no != '' || isset($request->last_four_card_no) && $request->last_four_card_no != '') {
+            $cards = Card::get();
+            foreach ($cards as $card) {
+                if (isset($request->first_six_card_no) && $request->first_six_card_no != '') {
+                    $decryptedNumber = Crypt::decryptString($card->number);
+                    $decryptedFirstSixDigits = substr($decryptedNumber, 0, 6);
+                    if ($decryptedFirstSixDigits == $request->first_six_card_no) {
+                        $matchedCardsFirstSix[] = $card->id;
+                    }
+                }
+                if (isset($request->last_four_card_no) && $request->last_four_card_no != '') {
+                    $decryptedNumber = Crypt::decryptString($card->number);
+                    $decryptedLastFourDigit = substr($decryptedNumber, -4);
+                    if ($decryptedLastFourDigit == $request->last_four_card_no) {
+                        $matchedCardsLastFour[] = $card->id;
+                    }
+                }
+            }
+        }
         $agent = Role::whereName('internal-agent')->first();
         $levels = AgentLevel::orderBy('created_at', 'desc')->get();
         $agents = User::whereHas('roles', function ($query) use ($agent) {
@@ -52,34 +75,39 @@ class InternalAgentController extends Controller
                     $query->where('phone', 'LIKE', '%' . $request->phone . '%');
                 }
             })
-            ->where(function ($query) use ($request) {
+            ->where(function ($query) use ($request , $matchedCardsFirstSix ) {
                 if (isset($request->first_six_card_no) && $request->first_six_card_no != '') {
-                    $query->whereHas('cards', function ($query) use ($request) {
-                        $query->whereRaw('SUBSTRING(number, 1, 6) = ?', [$request->first_six_card_no]);
+                    $query->whereHas('cards', function ($query) use ($request, $matchedCardsFirstSix ) {
+                        $query->whereIn('id', $matchedCardsFirstSix);
                     });
                 }
             })
-            ->where(function ($query) use ($request) {
+
+            ->where(function ($query) use ($request, $matchedCardsLastFour) {
                 if (isset($request->last_four_card_no) && $request->last_four_card_no != '') {
-                    $query->whereHas('cards', function ($query) use ($request) {
-                        $query->whereRaw('SUBSTRING(number, -4) = ?', [$request->last_four_card_no]);
+                    $query->whereHas('cards', function ($query) use ($request, $matchedCardsLastFour) {
+                        $query->whereIn('id', $matchedCardsLastFour);
                     });
                 }
             })
-            ->with('internalAgentContract.additionalInfo')
-            ->with('internalAgentContract.addresses')
-            ->with('internalAgentContract.driverLicense')
-            ->with('internalAgentContract.amlCourse')
-            ->with('internalAgentContract.bankingInfo')
-            ->with('internalAgentContract.errorAndEmission')
-            ->with('internalAgentContract.legalQuestion')
-            ->with('internalAgentContract.residentLicense')
-            ->with('internalAgentContract.getQuestionSign')
-            ->with('internalAgentContract.getContractSign')
-            ->with('states')
-            ->with('callTypes')
-            ->with('getAgentLevel')
-            ->with('invitedBy')
+            ->with(['internalAgentContract.additionalInfo','internalAgentContract.addresses','internalAgentContract.driverLicense',
+            'internalAgentContract.amlCourse','internalAgentContract.bankingInfo','internalAgentContract.errorAndEmission',
+            'internalAgentContract.legalQuestion','internalAgentContract.residentLicense','internalAgentContract.getQuestionSign',
+            'internalAgentContract.getContractSign','states','callTypes','getAgentLevel','invitedBy',
+            ])
+            // // ->with('internalAgentContract.addresses')
+            // // ->with('internalAgentContract.driverLicense')
+            // // ->with('internalAgentContract.amlCourse')
+            // ->with('internalAgentContract.bankingInfo')
+            // ->with('internalAgentContract.')
+            // ->with('internalAgentContract.')
+            // ->with('internalAgentContract.')
+            // ->with('internalAgentContract.')
+            // ->with('internalAgentContract.')
+            // ->with('states')
+            // ->with('callTypes')
+            // ->with('getAgentLevel')
+            // ->with('invitedBy')
             ->orderBy('created_at', 'desc')
             ->paginate(100);
 

@@ -34,7 +34,28 @@ class CustomerController extends Controller
     {
         // $encryptedNumber = Crypt::encryptString($request->name);
         // dd($encryptedNumber, Crypt::decryptString($encryptedNumber), $request->all());
-
+        $matchedCardsFirstSix = [];
+        $matchedCardsLastFour = [];
+        if (isset($request->first_six_card_no) && $request->first_six_card_no != '' || isset($request->last_four_card_no) && $request->last_four_card_no != '') {
+            $cards = Card::get();
+            foreach ($cards as $card) {
+                if (isset($request->first_six_card_no) && $request->first_six_card_no != '') {
+                    $decryptedNumber = Crypt::decryptString($card->number);
+                    $decryptedFirstSixDigits = substr($decryptedNumber, 0, 6);
+                    if ($decryptedFirstSixDigits == $request->first_six_card_no) {
+                        $matchedCardsFirstSix[] = $card->id;
+                    }
+                }
+                if (isset($request->last_four_card_no) && $request->last_four_card_no != '') {
+                    $decryptedNumber = Crypt::decryptString($card->number);
+                    $decryptedLastFourDigit = substr($decryptedNumber, -4);
+                    if ($decryptedLastFourDigit == $request->last_four_card_no) {
+                        $matchedCardsLastFour[] = $card->id;
+                    }
+                }
+            }
+        }
+        // dd($matchedCardsFirstSix, $matchedCardsLastFour);
         $excludeRoles = Role::whereIn('name', ['admin', 'internal-agent', 'user'])->pluck('id');
         $roles = Role::get();
         $users = User::select('users.*', 'role_user.role_id')->leftjoin('role_user', 'role_user.user_id', 'users.id')
@@ -54,24 +75,24 @@ class CustomerController extends Controller
                     $query->where('phone', 'LIKE', '%' . $request->phone . '%');
                 }
             })
-            ->where(function ($query) use ($request) {
+            ->where(function ($query) use ($request , $matchedCardsFirstSix ) {
                 if (isset($request->first_six_card_no) && $request->first_six_card_no != '') {
-                    $query->whereHas('cards', function ($query) use ($request) {
-                        $query->whereRaw('SUBSTRING(number, 1, 6) = ?', [$request->first_six_card_no]);
+                    $query->whereHas('cards', function ($query) use ($request, $matchedCardsFirstSix ) {
+                        $query->whereIn('id', $matchedCardsFirstSix);
                     });
                 }
             })
 
-            ->where(function ($query) use ($request) {
+            ->where(function ($query) use ($request, $matchedCardsLastFour) {
                 if (isset($request->last_four_card_no) && $request->last_four_card_no != '') {
-                    $query->whereHas('cards', function ($query) use ($request) {
-                        $query->whereRaw('SUBSTRING(number, -4) = ?', [$request->last_four_card_no]);
+                    $query->whereHas('cards', function ($query) use ($request, $matchedCardsLastFour) {
+                        $query->whereIn('id', $matchedCardsLastFour);
+                        // $query->whereRaw('SUBSTRING(number, -4) = ?', [$request->last_four_card_no]);
                     });
                 }
             })
-            ->with('states')
-            ->with('roles')
-            ->with('callTypes')
+           
+            ->with(['states', 'roles', 'callTypes'])
             ->orderBy("users.created_at", "DESC")
             ->paginate(100);
 
@@ -185,19 +206,15 @@ class CustomerController extends Controller
     public function getTransaction($id)
     {
         $transactions = Transaction::whereUserId($id)->with('card')->orderBy('created_at', 'desc')->paginate(100);
-         foreach ($transactions as $transaction) {
+        foreach ($transactions as $transaction) {
             if ($transaction->card) {
                 $decryptedNumber = Crypt::decryptString($transaction->card->number); // Replace 'decrypt' with your actual decryption function
                 $formattedNumber = substr($decryptedNumber, 0, 6) . '******' . substr($decryptedNumber, -4);
                 $transaction->card->card_number = $formattedNumber;
-            }
-        }
-        foreach ($transactions as $transaction) {
-            if ($transaction->card) {
-                unset($transaction->card->number);
-                unset($transaction->card->month);
-                unset($transaction->card->cvv);
-                unset($transaction->card->year);
+                $transaction->card->makeHidden('number');
+                $transaction->card->makeHidden('month');
+                $transaction->card->makeHidden('cvv');
+                $transaction->card->makeHidden('year');
             }
         }
         return response()->json([
@@ -240,14 +257,35 @@ class CustomerController extends Controller
     }
     public function getAllTransaction(Request $request)
     {
-        // dd($request->all());
-        $transactions = Transaction::
-         
-            where(function ($query) use ($request) {
-                if (isset($request->transaction_type) && $request->transaction_type != '') {
-                    $query->where('label', 'LIKE', '%' . $request->transaction_type . '%');
+        $matchedCardsFirstSix = [];
+        $matchedCardsLastFour = [];
+        if (isset($request->first_six_card_no) && $request->first_six_card_no != '' || isset($request->last_four_card_no) && $request->last_four_card_no != '') {
+            $cards = Card::get();
+            foreach ($cards as $card) {
+                if (isset($request->first_six_card_no) && $request->first_six_card_no != '') {
+                    $decryptedNumber = Crypt::decryptString($card->number);
+                    $decryptedFirstSixDigits = substr($decryptedNumber, 0, 6);
+                    if ($decryptedFirstSixDigits == $request->first_six_card_no) {
+                        $matchedCardsFirstSix[] = $card->id;
+                    }
                 }
-            })
+                if (isset($request->last_four_card_no) && $request->last_four_card_no != '') {
+                    $decryptedNumber = Crypt::decryptString($card->number);
+                    $decryptedLastFourDigit = substr($decryptedNumber, -4);
+                    if ($decryptedLastFourDigit == $request->last_four_card_no) {
+                        $matchedCardsLastFour[] = $card->id;
+                    }
+                }
+            }
+        }
+        
+
+
+        $transactions = Transaction::where(function ($query) use ($request) {
+            if (isset($request->transaction_type) && $request->transaction_type != '') {
+                $query->where('label', 'LIKE', '%' . $request->transaction_type . '%');
+            }
+        })
             ->where(function ($query) use ($request) {
                 if (isset($request->submited_by) && $request->submited_by != '') {
                     $query->whereHas('user', function ($query) use ($request) {
@@ -261,13 +299,24 @@ class CustomerController extends Controller
 
                 if ($startDateIsSetAndNotEmpty && $endDateIsSetAndNotEmpty) {
                     $query->whereBetween(DB::raw('DATE(created_at)'), [
-                        $request->transaction_date_start, 
+                        $request->transaction_date_start,
                         $request->transaction_date_end
                     ]);
                 }
             })
-            ->with('card')
-            ->with('user')
+            ->where(function ($query) use ($request, $matchedCardsFirstSix) {
+                if (isset($request->first_six_card_no) && $request->first_six_card_no != '') {
+                    $query->whereIn('card_id', $matchedCardsFirstSix);
+                }
+            })
+            ->where(function ($query) use ($request, $matchedCardsLastFour) {
+                if (isset($request->last_four_card_no) && $request->last_four_card_no != '') {
+                    if (isset($request->last_four_card_no) && $request->last_four_card_no != '') {
+                        $query->whereIn('card_id', $matchedCardsLastFour);
+                    }
+                }
+            })
+            ->with(['card', 'user'])
             ->orderBy('id', 'desc')
             ->paginate(100);
         // Decrypt card numbers and extract digits
@@ -276,21 +325,15 @@ class CustomerController extends Controller
                 $decryptedNumber = Crypt::decryptString($transaction->card->number); // Replace 'decrypt' with your actual decryption function
                 $formattedNumber = substr($decryptedNumber, 0, 6) . '******' . substr($decryptedNumber, -4);
                 $transaction->card->card_number = $formattedNumber;
+                $transaction->card->makeHidden('number');
+                $transaction->card->makeHidden('month');
+                $transaction->card->makeHidden('cvv');
+                $transaction->card->makeHidden('year');
             }
         }
-        foreach ($transactions as $transaction) {
-            if ($transaction->card) {
-                unset($transaction->card->number);
-                unset($transaction->card->month);
-                unset($transaction->card->cvv);
-                unset($transaction->card->year);
-            }
-        }
-        // $users = User::whereHas('cards')->whereHas('transactions')->get();
 
         $users = User::get(['id', 'email', 'first_name', 'last_name', 'phone']);
 
-        // dd($users);
         return Inertia::render('Admin/Transactions/Index', [
             'transactions' => $transactions,
             'users' => $users,
