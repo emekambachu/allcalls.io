@@ -7,16 +7,18 @@ use Inertia\Inertia;
 use App\Models\State;
 use Inertia\Response;
 use App\Models\CallType;
+use App\Models\Timezone;
 use Illuminate\Http\Request;
 use App\Models\UserCallTypeState;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Support\Facades\Storage;
-use App\Models\Timezone;
+
 class ProfileController extends Controller
 {
     /**
@@ -199,11 +201,17 @@ class ProfileController extends Controller
             Storage::disk('public')->delete($user->profile_picture);
         }
     
+        
         // Update the user's profile picture in the database
         $profileUrl = Storage::url($path);
         $user->profile_picture = $profileUrl;
         $user->save();
-    
+        
+        Log::info("User profile picture request came in for: " . $user->email);
+        Log::info("Filename: " . $filename);
+        Log::info("Path: " . $path);
+        Log::info("Profile URL: " . $profileUrl);
+        
         // Return a JSON response
         return response()->json([
             'success' => true,
