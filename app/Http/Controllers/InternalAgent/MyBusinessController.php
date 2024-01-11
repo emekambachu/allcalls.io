@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\InternalAgent;
 
 use App\Http\Controllers\Controller;
+use App\Models\Client;
 use App\Models\InternalAgentMyBusiness;
 use App\Models\State;
 use Illuminate\Http\Request;
@@ -24,10 +25,15 @@ class MyBusinessController extends Controller
             })->orderBy('created_at', 'desc')
             ->paginate(100);
         $states = State::get();
+        $clients = Client::where('user_id', auth()->user()->id)
+                        ->where('unlocked', true)
+                        ->orderBy('created_at', 'desc')
+                        ->get();
         // dd($businesses);
         return Inertia::render('InternalAgent/MyBusiness/Index', [
             'businesses' => $businesses,
             'states' => $states,
+            'clients' => $clients,
             'requestData' =>  $request->all()
         ]);
     }

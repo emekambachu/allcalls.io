@@ -49,7 +49,7 @@ const presetDates = ref([
 
 
 
-let { agentInvites, states, requestData, agents } = defineProps({
+let { agentInvites, states, requestData, agents , clients } = defineProps({
     businesses: {
         required: true,
         type: Array,
@@ -57,8 +57,8 @@ let { agentInvites, states, requestData, agents } = defineProps({
     states: Array,
     requestData: Array,
     agents: Array,
+    clients:Array,
 });
-
 
 let slidingLoader = ref(false)
 
@@ -315,7 +315,7 @@ let ClearFilter = () => {
             </div>
         </div>
 
-        <AddModal v-if="addBusinessModal" :agents="agents" :states="states" :addBusinessModal="addBusinessModal"
+        <AddModal v-if="addBusinessModal" :agents="agents" :states="states" :clients="clients" :addBusinessModal="addBusinessModal"
             @close="addBusinessModal = false" :businessData="businessData" :reIniteAgent="reIniteAgent" />
 
 
