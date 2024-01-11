@@ -7,16 +7,18 @@ use Inertia\Inertia;
 use App\Models\State;
 use Inertia\Response;
 use App\Models\CallType;
+use App\Models\Timezone;
 use Illuminate\Http\Request;
 use App\Models\UserCallTypeState;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Support\Facades\Storage;
-use App\Models\Timezone;
+
 class ProfileController extends Controller
 {
     /**
@@ -180,7 +182,7 @@ class ProfileController extends Controller
     public function uploadProfilePicture(Request $request)
     {
         $request->validate([
-            'profile_picture' => 'required|image|mimes:jpg,jpeg,png|max:5120', // 5MB Max
+            'profile_picture' => 'required|image|mimes:jpg,jpeg,png', // 5MB Max |max:5120
         ]);
     
         $user = Auth::user();
@@ -188,11 +190,8 @@ class ProfileController extends Controller
         // Get the file extension of the uploaded file
         $extension = $request->file('profile_picture')->getClientOriginalExtension();
     
-        // Sanitize the email to create a valid filename
-        $sanitizedEmail = str_replace(['@', '.'], ['_at_', '_dot_'], $user->email);
-    
-        // Create a filename using the user's email
-        $filename = $sanitizedEmail . '.' . $extension;
+        // Create a filename using the user's ID
+        $filename = $user->id . '.' . $extension;
     
         // Store the file in the 'profile_pictures' directory with the new filename
         $path = $request->file('profile_picture')->storeAs('profile_pictures', $filename, 'public');
@@ -202,11 +201,26 @@ class ProfileController extends Controller
             Storage::disk('public')->delete($user->profile_picture);
         }
     
-        $user->profile_picture = $path;
+        
+        // Update the user's profile picture in the database
+        $profileUrl = Storage::url($path);
+        $user->profile_picture = $profileUrl;
         $user->save();
-    
-        return redirect()->back()->with('success', 'Profile picture updated successfully.');
+        
+        Log::info("User profile picture request came in for: " . $user->email);
+        Log::info("Filename: " . $filename);
+        Log::info("Path: " . $path);
+        Log::info("Profile URL: " . $profileUrl);
+        
+        // Return a JSON response
+        return response()->json([
+            'success' => true,
+            'message' => 'Profile picture updated successfully.',
+            'profile_picture_url' => $profileUrl,
+        ]);
     }
+    
+    
     
 
     /**

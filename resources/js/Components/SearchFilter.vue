@@ -61,6 +61,18 @@ let ClearFilter = () => {
 
     }
 }
+let firstSixDigit = (e) => {
+    if (e.target.value.length > 6) {
+        e.target.value = e.target.value.slice(0, 6);
+        formData.value.first_six_card_no = e.target.value
+    }
+}
+let lastFourDigit = (e) => {
+    if (e.target.value.length > 4) {
+        e.target.value = e.target.value.slice(0, 4);
+        formData.value.last_four_card_no = e.target.value
+    }
+}
 let filterInputs = ref([
     {
         placeholder:'name',
@@ -84,13 +96,13 @@ let filterInputs = ref([
         placeholder:'First 6 digit  of  card number',
         name:'first_six_card_no',
         type:'number',
-        fun:'firstSixDigit',
+        fun:firstSixDigit,
     },
     {
         placeholder:'Last 4 digit of  card number',
         name:'last_four_card_no',
         type:'number',
-        fun:'lastFourDigit',
+        fun:lastFourDigit,
     },  
 ])
 const emit = defineEmits();
@@ -103,18 +115,7 @@ onMounted(() => {
     //     last_four_card_no: formData.value.last_four_card_no,
     // });
 })
-let firstSixDigit = (e) => {
-    if (e.target.value.length > 6) {
-        e.target.value = e.target.value.slice(0, 6);
-        formData.value.first_six_card_no = e.target.value
-    }
-}
-let lastFourDigit = (e) => {
-    if (e.target.value.length > 4) {
-        e.target.value = e.target.value.slice(0, 4);
-        formData.value.last_four_card_no = e.target.value
-    }
-}
+
 </script>
 <style scoped>
 .button-custom-back {
@@ -140,7 +141,7 @@ let lastFourDigit = (e) => {
         <div v-for="filterInput in filterInputs">
             <InputLabel :for="filterInput.name" :value="filterInput.name" />
 
-            <TextInput :id="filterInput.name" :type="filterInput.type" :placeholder="filterInput.placeholder" @input="`${filterInput.fun}`" class="mt-1 block w-full" v-model="formData[filterInput.name]" required
+            <TextInput :id="filterInput.name" :type="filterInput.type" :placeholder="filterInput.placeholder" @input="filterInput.fun" class="mt-1 block w-full" v-model="formData[filterInput.name]" required
                 autofocus />
                 <div v-if="firstStepErrors[filterInput.name]" class="text-red-500" v-text="firstStepErrors[filterInput.name][0]"></div>
 
