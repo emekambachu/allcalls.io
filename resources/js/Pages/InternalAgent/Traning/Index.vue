@@ -19,7 +19,7 @@ let basicTrainingSteps = ref([
         id: 1,
         video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
         pdf: '/Agent Training/dummy.pdf',
-        title: 'Finishing Your Contracting dd',
+        title: 'Finishing Your Contracting',
         thumbnail: '/Agent Training/dummy-thumnail.png'
     },
     {
