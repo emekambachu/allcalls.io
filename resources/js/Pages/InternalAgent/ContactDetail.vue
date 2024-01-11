@@ -27,6 +27,7 @@ let form = ref({
     driver_license_no: null,
     driver_license_state: 'Choose',
     address: null,
+    address_line_2: null,
     city: null,
     state: "Choose",
     zip: null,
@@ -318,6 +319,17 @@ let formatSSN = (event) => {
                     <span style="font-size: 14px;">Include Apt/Unit #</span>
                 </div>
                 <div v-if="firstStepErrors.address" class="text-red-500" v-text="firstStepErrors.address[0]"></div>
+            </div>
+            <div>
+                <label for="last_name" class="block mb-2 text-sm font-black text-gray-900 "> Address Line 2
+                    (optional)</label>
+                <div>
+                    <input type="text" v-model="form.address_line_2" id="default-input"
+                        :disabled="page.props.auth.role === 'admin'"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
+                    
+                </div>
+                <div v-if="firstStepErrors.address_line_2" class="text-red-500" v-text="firstStepErrors.address_line_2[0]"></div>
             </div>
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">City<span
