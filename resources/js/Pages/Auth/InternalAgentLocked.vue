@@ -1,22 +1,27 @@
 <script setup>
 import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
-import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
+import { Head, Link, router, useForm, usePage } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import BasicTraning from "@/Pages/Traning/BasicTraning.vue";
+import BasicTraining from "@/Pages/InternalAgent/Traning/BasicTraining.vue";
 let props = defineProps({
 
 });
 let page = usePage();
 
-let StepsModal = ref(true)
-let basicTraningModal = ref(false)
+let StepsModal = ref(false)
+
+let basicTrainingModal = ref(true)
+if(page.props.auth.user.basic_training === 1){
+    basicTrainingModal.value = false
+    router.visit("/training")
+}
 let basisTraning = () => {
     StepsModal.value = false
-    basicTraningModal.value = true
+    basicTrainingModal.value = true
 }
-let closeBasicTraning = () => {
-    StepsModal.value = true
-    basicTraningModal.value = false
+let closeBasicTraining = () => {
+    // StepsModal.value = true
+    basicTrainingModal.value = false
 }
 </script>
 <style scoped>
@@ -67,11 +72,11 @@ let closeBasicTraning = () => {
                                 24 - 48 hours.
                             </p>
 
-                            <button @click="basisTraning" class="font-medium">- <span class="text-blue-600 dark:text-blue-500 hover:underline">Basic Training</span></button>
+                            <!-- <button @click="basisTraning" class="font-medium">- <span class="text-blue-600 dark:text-blue-500 hover:underline">Basic Training</span></button>
                             <br>
                             <a href="#" class="font-medium"> - <span class="text-blue-600 dark:text-blue-500 hover:underline">Intermediate Training</span></a>
                             <br>
-                            <a href="#" class="font-medium"> - <span class="text-blue-600 dark:text-blue-500 hover:underline">Advanced Training</span></a>
+                            <a href="#" class="font-medium"> - <span class="text-blue-600 dark:text-blue-500 hover:underline">Advanced Training</span></a> -->
 
 
                         </div>
@@ -81,5 +86,5 @@ let closeBasicTraning = () => {
             
         </Transition>
     </AuthenticatedLayout>
-    <BasicTraning v-if="basicTraningModal" @close="closeBasicTraning" :basicTraningModal="basicTraningModal" />
+    <BasicTraining v-if="basicTrainingModal" @close="closeBasicTraining" :basicTrainingModal="basicTrainingModal" />
 </template>
