@@ -4,6 +4,7 @@ namespace App\Http;
 
 use App\Http\Middleware\AgentTokenIsValid;
 use App\Http\Middleware\InternalAgent;
+use App\Http\Middleware\IsBasicTraining;
 use App\Http\Middleware\IsLocked;
 use App\Http\Middleware\notBanned;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -80,5 +81,6 @@ class Kernel extends HttpKernel
         'internal-agent' => InternalAgent::class,
         'isLocked' => IsLocked::class,
         'agentTokenValid' => AgentTokenIsValid::class,
+        'IsBasicTraining' => IsBasicTraining::class,
     ];
 }
