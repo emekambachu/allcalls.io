@@ -17,35 +17,35 @@ let step = ref(1)
 let basicTrainingSteps = ref([
     {
         id: 1,
-        video_url: '/Agent Training/dummy.mp4',
+        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
         pdf: '/Agent Training/dummy.pdf',
-        title: 'Finishing Your Contracting',
+        title: 'Finishing Your Contracting dd',
         thumbnail: '/Agent Training/dummy-thumnail.png'
     },
     {
         id: 2,
-        video_url: '/Agent Training/dummy.mp4',
+        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
         pdf: '/Agent Training/1) Understanding Final Expense.pdf',
         title: 'Understanding Final Expense',
         thumbnail: '/Agent Training/dummy-thumnail.png'
     },
     {
         id: 3,
-        video_url: '/Agent Training/dummy.mp4',
+        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
         pdf: '/Agent Training/2) Understanding the Process.pdf',
         title: 'Understanding The Process',
         thumbnail: '/Agent Training/dummy-thumnail.png'
     },
     {
         id: 4,
-        video_url: '/Agent Training/dummy.mp4',
+        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
         pdf: '/Agent Training/3) Final Expense Products.pdf',
         title: 'Final Expense Products',
         thumbnail: '/Agent Training/dummy-thumnail.png'
     },
     {
         id: 5,
-        video_url: '/Agent Training/dummy.mp4',
+        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
         pdf: '/Agent Training/dummy.pdf',
         title: 'Taking Calls ddd',
         thumbnail: '/Agent Training/Taking-Calls-Thumbnail.png'
@@ -53,42 +53,42 @@ let basicTrainingSteps = ref([
 
     {
         id: 6,
-        video_url: '/Agent Training/dummy.mp4',
+        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
         pdf: '/Agent Training/4) FE CALL Script Worksheet .pdf',
         title: 'My Script',
         thumbnail: '/Agent Training/dummy-thumnail.png'
     },
     {
         id: 7,
-        video_url: '/Agent Training/dummy.mp4',
+        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
         pdf: '/Agent Training/dummy.pdf',
         title: 'Underwriting Toolkit',
         thumbnail: '/Agent Training/dummy-thumnail.png'
     },
     {
         id: 8,
-        video_url: '/Agent Training/dummy.mp4',
+        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
         pdf: '/Agent Training/9) Request for Coverage Process.pdf',
         title: 'Completing The Request For Coverage',
         thumbnail: '/Agent Training/Completing The Request For Coverage Thumbnail .png'
     },
     {
         id: 9,
-        video_url: '/Agent Training/dummy.mp4',
+        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
         pdf: '/Agent Training/dummy.pdf',
         title: 'Live Call Examples',
         thumbnail: '/Agent Training/dummy-thumnail.png'
     },
     {
         id: 10,
-        video_url: '/Agent Training/dummy.mp4',
+        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
         pdf: '/Agent Training/dummy.pdf',
         title: 'Reporting Your Business',
         thumbnail: '/Agent Training/dummy-thumnail.png'
     },
     {
         id: 11,
-        video_url: '/Agent Training/dummy.mp4',
+        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
         pdf: '/Agent Training/dummy.pdf',
         title: 'Set Yourself Up for Success',
         thumbnail: '/Agent Training/dummy-thumnail.png'
