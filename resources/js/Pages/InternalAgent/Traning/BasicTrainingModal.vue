@@ -7,9 +7,15 @@ let { videoDataModal, videoData } = defineProps({
     videoDataModal: Boolean,
     videoData: Object,
 });
-console.log('videoData', videoData);
 let close = () => {
     emits('close')
+}
+let downloadPDF = async (pdfPath) => {
+    const fileName = pdfPath.substring(pdfPath.lastIndexOf('/') + 1);
+    const link = document.createElement('a');
+    link.href = pdfPath;
+    link.download = fileName;
+    link.click();
 }
 </script>
 <template>
@@ -55,8 +61,8 @@ let close = () => {
                                     class="font-medium  text-blue-600  cursor-pointer dark:text-blue-500 hover:underline">Download
                                     pdf
                                 </a>
-                                <a target="_blank" :href="videoData.pdf" title="Download pdf"
-                                    class="inline-flex  ml-2 items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">
+                                <a @click="downloadPDF(basicTraning.pdf)" title="Download pdf"
+                                    class="inline-flex cursor-pointer  ml-2 items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-blue-600">
                                         <path stroke-linecap="round" stroke-linejoin="round"

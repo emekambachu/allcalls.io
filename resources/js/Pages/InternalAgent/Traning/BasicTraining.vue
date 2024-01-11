@@ -3,6 +3,7 @@ import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
 import { Head, Link, router, useForm, usePage } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { toaster } from "@/helper.js";
+import { basicTrainingSteps } from "@/constants.js";
 
 let props = defineProps({
     basicTrainingModal: Boolean,
@@ -43,115 +44,15 @@ let done = () => {
 }
 let downloadPDF = async (pdfPath) => {
     const fileName = pdfPath.substring(pdfPath.lastIndexOf('/') + 1);
-
-    console.log(fileName); // Output: 'dummy.pdf'
     const link = document.createElement('a');
     link.href = pdfPath;
     link.download = fileName;
     link.click();
-    // const fileName = pdfPath.substring(pdfPath.lastIndexOf('/') + 1);
-    // console.log(fileName); // Output: 'dummy.pdf'
-    // // Create an anchor element
-    // const anchor = document.createElement('a');
-
-    // // Set the href attribute to the file path
-    // anchor.href = pdfPath;
-
-    // // Set the download attribute with the desired file name
-    // anchor.download = fileName;
-
-    // // Append the anchor to the document
-    // document.body.appendChild(anchor);
-
-    // // Trigger a click event on the anchor to initiate the download
-    // anchor.click();
-
-    // // Remove the anchor from the document
-    // document.body.removeChild(anchor);
-
 }
 let step = ref(1)
 let NextStep = () => {
     step.value += 1;
-
 };
-let basicTrainingSteps = ref([
-    {
-        id: 1,
-        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        pdf: '/Agent Training/dummy.pdf',
-        title: 'Finishing Your Contracting',
-    },
-    {
-        id: 2,
-        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        pdf: '/Agent Training/1) Understanding Final Expense.pdf',
-        title: 'Understanding Final Expense',
-    },
-    {
-        id: 3,
-        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        pdf: '/Agent Training/2) Understanding the Process.pdf',
-        title: 'Understanding The Process',
-    },
-    {
-        id: 4,
-        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        pdf: '/Agent Training/3) Final Expense Products.pdf',
-        title: 'Final Expense Products',
-    },
-    {
-        id: 5,
-        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        pdf: '/Agent Training/dummy.pdf',
-        title: 'Taking Calls',
-    },
-
-    {
-        id: 6,
-        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        pdf: '/Agent Training/4) FE CALL Script Worksheet .pdf',
-        title: 'My Script',
-    },
-    {
-        id: 7,
-        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        pdf: '/Agent Training/dummy.pdf',
-        title: 'Underwriting Toolkit',
-    },
-    {
-        id: 8,
-        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        pdf: '/Agent Training/9) Request for Coverage Process.pdf',
-        title: 'Completing The Request For Coverage',
-    },
-    {
-        id: 9,
-        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        pdf: '/Agent Training/dummy.pdf',
-        title: 'Live Call Examples',
-    },
-    {
-        id: 10,
-        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        pdf: '/Agent Training/dummy.pdf',
-        title: 'Reporting Your Business',
-    },
-    {
-        id: 11,
-        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        pdf: '/Agent Training/dummy.pdf',
-        title: 'Set Yourself Up for Success',
-    },
-    {
-        id: 12,
-        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        pdf: '/Agent Training/dummy.pdf',
-        title: '',
-    },
-
-])
-
 let goBack = () => {
     step.value -= 1;
 };
@@ -471,8 +372,8 @@ let updateItemsToShow = () => {
                                         class="font-medium  text-blue-600 cursor-pointer  dark:text-blue-500 hover:underline">Download
                                         pdf
                                     </a>
-                                    <a target="_blank" :href="basicTraning.pdf" title="Download pdf"
-                                        class="inline-flex  ml-2 items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">
+                                    <a @click="downloadPDF(basicTraning.pdf)" title="Download pdf"
+                                        class="inline-flex  cursor-pointer ml-2 items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-blue-600">
                                             <path stroke-linecap="round" stroke-linejoin="round"

@@ -5,6 +5,7 @@ import BasicTraining from "@/Pages/InternalAgent/Traning/BasicTraining.vue";
 import BasicTrainingModal from "@/Pages/InternalAgent/Traning/BasicTrainingModal.vue";
 import 'vue3-carousel/dist/carousel.css'
 import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
+import { basicTrainingSteps } from "@/constants.js";
 
 let basicTrainingModal = ref(false)
 let basisTraning = () => {
@@ -14,88 +15,7 @@ let closeBasicTraining = () => {
     basicTrainingModal.value = false
 }
 let step = ref(1)
-let basicTrainingSteps = ref([
-    {
-        id: 1,
-        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        pdf: '/Agent Training/dummy.pdf',
-        title: 'Finishing Your Contracting',
-        thumbnail: '/Agent Training/dummy-thumnail.png'
-    },
-    {
-        id: 2,
-        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        pdf: '/Agent Training/1) Understanding Final Expense.pdf',
-        title: 'Understanding Final Expense',
-        thumbnail: '/Agent Training/dummy-thumnail.png'
-    },
-    {
-        id: 3,
-        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        pdf: '/Agent Training/2) Understanding the Process.pdf',
-        title: 'Understanding The Process',
-        thumbnail: '/Agent Training/dummy-thumnail.png'
-    },
-    {
-        id: 4,
-        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        pdf: '/Agent Training/3) Final Expense Products.pdf',
-        title: 'Final Expense Products',
-        thumbnail: '/Agent Training/dummy-thumnail.png'
-    },
-    {
-        id: 5,
-        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        pdf: '/Agent Training/dummy.pdf',
-        title: 'Taking Calls ddd',
-        thumbnail: '/Agent Training/Taking-Calls-Thumbnail.png'
-    },
 
-    {
-        id: 6,
-        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        pdf: '/Agent Training/4) FE CALL Script Worksheet .pdf',
-        title: 'My Script',
-        thumbnail: '/Agent Training/dummy-thumnail.png'
-    },
-    {
-        id: 7,
-        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        pdf: '/Agent Training/dummy.pdf',
-        title: 'Underwriting Toolkit',
-        thumbnail: '/Agent Training/dummy-thumnail.png'
-    },
-    {
-        id: 8,
-        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        pdf: '/Agent Training/9) Request for Coverage Process.pdf',
-        title: 'Completing The Request For Coverage',
-        thumbnail: '/Agent Training/Completing The Request For Coverage Thumbnail .png'
-    },
-    {
-        id: 9,
-        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        pdf: '/Agent Training/dummy.pdf',
-        title: 'Live Call Examples',
-        thumbnail: '/Agent Training/dummy-thumnail.png'
-    },
-    {
-        id: 10,
-        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        pdf: '/Agent Training/dummy.pdf',
-        title: 'Reporting Your Business',
-        thumbnail: '/Agent Training/dummy-thumnail.png'
-    },
-    {
-        id: 11,
-        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        pdf: '/Agent Training/dummy.pdf',
-        title: 'Set Yourself Up for Success',
-        thumbnail: '/Agent Training/dummy-thumnail.png'
-    },
-
-
-])
 onMounted(() => {
 
 })
@@ -139,6 +59,10 @@ let breakpoints = ref({
         itemsToShow: 3,
     },
 })
+const filteredAgens = computed(() => {
+    return basicTrainingSteps.filter(basicTraining => basicTraining.title !== '');
+});
+console.log('filteredAgens', filteredAgens);
 </script>
 
 <template>
@@ -165,8 +89,8 @@ let breakpoints = ref({
                     Training</span></button>
             <Carousel v-bind="settings" :autoplay="autoplayTime"  :wrapAround="true" :breakpoints="breakpoints">
                 <Slide @mouseenter="onMouseEnter" @mouseleave="onMouseLeave"
-                    v-for="(basicTraining, index) in basicTrainingSteps" :key="basicTraining.id">
-                    <div class="thumbnail cursor-pointer" @click="slideTo(index, basicTraining)">
+                    v-for="(basicTraining, index) in filteredAgens" :key="basicTraining.id" >
+                    <div  class="thumbnail cursor-pointer" @click="slideTo(index, basicTraining)">
 
                         <img class="thumbnail-img " :src="basicTraining.thumbnail" alt="Thumbnail">
                         <div class="svg-container">
@@ -210,7 +134,7 @@ let breakpoints = ref({
             <a href="#" class="font-medium"><span class="text-blue-600 dark:text-blue-500 hover:underline">Advanced
                     Training</span></a>
         </div>
-        <BasicTraining v-if="basicTrainingModal" :unlocked="'unlocked'" @close="closeBasicTraining"
+        <BasicTraining v-if="basicTrainingModal" :basicTrainingSteps="basicTrainingSteps" :unlocked="'unlocked'" @close="closeBasicTraining"
             :basicTrainingModal="basicTrainingModal" />
         <BasicTrainingModal v-if="videoDataModal" @close="videoDataModal = false" :videoData="videoData"
             :videoDataModal="videoDataModal" />
