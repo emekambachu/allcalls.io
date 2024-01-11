@@ -80,5 +80,6 @@ class Kernel extends HttpKernel
         'internal-agent' => InternalAgent::class,
         'isLocked' => IsLocked::class,
         'agentTokenValid' => AgentTokenIsValid::class,
+        'IsBasicTraining' => IsBasicTraining::class,
     ];
 }
