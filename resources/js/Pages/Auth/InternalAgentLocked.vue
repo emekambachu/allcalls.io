@@ -1,13 +1,28 @@
 <script setup>
 import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
-import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
+import { Head, Link, router, useForm, usePage } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import BasicTraining from "@/Pages/InternalAgent/Traning/BasicTraining.vue";
 let props = defineProps({
 
 });
 let page = usePage();
 
-let StepsModal = ref(true)
+let StepsModal = ref(false)
+
+let basicTrainingModal = ref(true)
+if(page.props.auth.user.basic_training === 1){
+    basicTrainingModal.value = false
+    router.visit("/training")
+}
+let basisTraning = () => {
+    StepsModal.value = false
+    basicTrainingModal.value = true
+}
+let closeBasicTraining = () => {
+    // StepsModal.value = true
+    basicTrainingModal.value = false
+}
 </script>
 <style scoped>
 .active\:bg-gray-900:active {
@@ -18,6 +33,7 @@ let StepsModal = ref(true)
     background-color: white;
     color: black;
 }
+
 .blurred-overlay {
     backdrop-filter: blur(10px);
     /* Adjust the blur intensity as needed */
@@ -49,17 +65,26 @@ let StepsModal = ref(true)
                         <div class="px-12 py-2">
                             <h1 class=" text-gray-800 text-3xl font-bold">Welcome to AllCalls.io!</h1>
                         </div>
-                        <div>
-                            <p class="px-12 pt-3 pb-10">
+                        <div class="px-12 pt-3 pb-10">
+                            <p class="mb-5">
                                 Thank you for completing onboarding. Our contracting team will reach out to you within the
                                 next
                                 24 - 48 hours.
                             </p>
 
+                            <!-- <button @click="basisTraning" class="font-medium">- <span class="text-blue-600 dark:text-blue-500 hover:underline">Basic Training</span></button>
+                            <br>
+                            <a href="#" class="font-medium"> - <span class="text-blue-600 dark:text-blue-500 hover:underline">Intermediate Training</span></a>
+                            <br>
+                            <a href="#" class="font-medium"> - <span class="text-blue-600 dark:text-blue-500 hover:underline">Advanced Training</span></a> -->
+
+
                         </div>
                     </div>
                 </div>
             </div>
+            
         </Transition>
     </AuthenticatedLayout>
+    <BasicTraining v-if="basicTrainingModal" @close="closeBasicTraining" :basicTrainingModal="basicTrainingModal" />
 </template>

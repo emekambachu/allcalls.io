@@ -82,7 +82,7 @@ Route::middleware(['auth', 'verified', 'notBanned', 'isLocked'])->group(function
 });
 
 
-Route::middleware(['auth', 'verified', 'registration-step-check', 'notBanned'])->group(function () {
+Route::middleware(['auth', 'verified', 'registration-step-check', 'notBanned' , 'IsBasicTraining' ])->group(function () {
     //User Routes
     Route::get('/dashboard', [DashboardController::class, 'show'])->name('dashboard');
     Route::get('/transactions', [TransactionsController::class, 'index'])->name('transactions.index');
@@ -143,8 +143,8 @@ Route::get('/device/incoming', function () {
     return view('incoming');
 })->middleware('auth');
 
-Route::get('/clients', [ClientsController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.index');
-Route::patch('/clients/{client}', [ClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.update');
+Route::get('/clients', [ClientsController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check', 'IsBasicTraining'])->name('clients.index');
+Route::patch('/clients/{client}', [ClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check', 'IsBasicTraining'])->name('clients.update');
 Route::patch('/web-api/clients/{client}', [WebAPIClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.web-api.update');
 Route::post('/web-api/clients/{client}/disposition', [WebAPIClientsController::class, 'updateDispositionOnly'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.web-api.update-disposition-only');
 Route::patch('/web-api/calls/{uniqueCallId}/user-response', [CallUserResponseAPIController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check']);
