@@ -4,23 +4,26 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use App\Models\Bid;
+use Filament\Panel;
 use App\Models\Card;
 use App\Models\State;
 use App\Models\Activity;
 use App\Models\CallType;
 use App\Models\ActiveUser;
 use App\Models\Transaction;
+use App\Models\SendBirdUser;
 use Laravel\Cashier\Billable;
 use App\Models\AdditionalFile;
 use App\Models\UserCallTypeState;
-use App\Models\SendBirdUser;
 use Laravel\Sanctum\HasApiTokens;
+use Filament\Models\Contracts\HasName;
 use Illuminate\Notifications\Notifiable;
+use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, FilamentUser, HasName
 {
     use HasApiTokens, HasFactory, Notifiable, Billable;
 
@@ -209,5 +212,20 @@ class User extends Authenticatable implements MustVerifyEmail
     public function sendbirdUser()
     {
         return $this->hasOne(SendbirdUser::class);
+    }
+
+
+    public function getFilamentName(): string
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        if ($this->hasRole('admin')) {
+            return true;
+        }
+
+        return false;
     }
 }
