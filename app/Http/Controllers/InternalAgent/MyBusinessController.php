@@ -22,7 +22,9 @@ class MyBusinessController extends Controller
                     $endDate = Carbon::parse($request->to)->endOfDay();
                     $query->whereBetween('created_at', [$startDate, $endDate]);
                 }
-            })->orderBy('created_at', 'desc')
+            })
+            ->with('client')
+            ->orderBy('created_at', 'desc')
             ->paginate(100);
         $states = State::get();
         $clients = Client::where('user_id', auth()->user()->id)
