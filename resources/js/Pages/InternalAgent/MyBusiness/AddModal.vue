@@ -24,10 +24,11 @@ let step = ref(1);
 
 
 let page = usePage();
+console.log('page', page.props.auth.user);
 let form = ref({
-  agent_id: page.props.auth.role === "internal-agent" ? page.props.auth.user.id : "",
-  client_full_name: "",
-  agent_email: "",
+  agent_id: page.props.auth.user.id,
+  agent_full_name: page.props.auth.user.first_name + ' ' + page.props.auth.user.last_name,
+  agent_email: page.props.auth.user.email,
   insurance_company: "AETNA/CVS",
   product_name: "Select",
   application_date: "",
@@ -48,6 +49,8 @@ let form = ref({
   notes: "",
   dob: "",
   gender: "Select",
+  client_full_name: "",
+  client_id: "",
   client_street_address_1: "",
   client_street_address_2: "",
   client_city: "",
@@ -60,7 +63,7 @@ let form = ref({
 let edit_data = ref(false)
 if (props.businessData) {
   form.value = props.businessData
-  if(!props.businessData.source_of_lead){
+  if (!props.businessData.source_of_lead) {
     form.value.source_of_lead = 'Select'
   }
   edit_data.value = true
@@ -78,7 +81,7 @@ let checkRequiredField = () => {
     }
   }
   let requiredFields = [
-    "client_full_name",
+    "agent_full_name",
     "agent_email",
     "agent_id",
     "insurance_company",
@@ -91,6 +94,7 @@ let checkRequiredField = () => {
     "premium_volumn",
     "this_app_from_lead",
     "policy_draft_date",
+    'client_full_name',
     "first_name",
     "last_name",
     "beneficiary_name",
@@ -175,7 +179,7 @@ const Next = (data) => {
 let Previous = (data) => {
   step.value -= 1;
 };
-let dateFormat = (val) =>  {
+let dateFormat = (val) => {
   const date = new Date(val);
   const toMonth = date.getMonth() + 1;
   const toDate = date.getDate();
@@ -188,7 +192,7 @@ let dateFormat = (val) =>  {
 // save business data start
 let isLoading = ref(false);
 let SaveBussinessData = async () => {
-  form.value.application_date =  dateFormat(form.value.application_date)
+  form.value.application_date = dateFormat(form.value.application_date)
   form.value.policy_draft_date = dateFormat(form.value.policy_draft_date)
   form.value.dob = dateFormat(form.value.dob)
   isLoading.value = true
@@ -215,7 +219,7 @@ let SaveBussinessData = async () => {
 // update business data start
 let isLoading2 = ref(false)
 let UpdateBussinessData = async () => {
-  form.value.application_date =  dateFormat(form.value.application_date)
+  form.value.application_date = dateFormat(form.value.application_date)
   form.value.policy_draft_date = dateFormat(form.value.policy_draft_date)
   form.value.dob = dateFormat(form.value.dob)
   isLoading2.value = true
@@ -347,12 +351,31 @@ const handleOutsideClick = (event) => {
   }
 
 };
+let disabledDob = ref(false)
+let updateFormAndDisableElement = (property, value, elementId, formObject, disabledFlag) => {
+  if (value && property !== 'dob') {
+    formObject[property] = value;
+    var element = document.getElementById(elementId);
+    if (element) {
+      element.disabled = true;
+    }
+  }else if(value && property == 'dob'){
+    formObject[property] = value;
+    disabledDob.value = true
+  }
+};
 let selectclient = (client) => {
+  console.log('client', client);
+  updateFormAndDisableElement('client_street_address_1', client.address, 'client_street_address_1', form.value, disabledDob);
+  updateFormAndDisableElement('dob', client.dob, 'dob', form.value, disabledDob);
+  updateFormAndDisableElement('client_email', client.email, 'client_email', form.value);
+  updateFormAndDisableElement('first_name', client.first_name, 'first_name', form.value);
+  updateFormAndDisableElement('last_name', client.last_name, 'last_name', form.value);
+  updateFormAndDisableElement('client_zipcode', client.zipCode, 'client_zipcode', form.value);
+  updateFormAndDisableElement('client_phone_no', client.phone, 'client_phone_no', form.value);
   form.value.client_full_name = client.first_name + ' ' + client.last_name
-  form.value.client_email = client.email
   form.value.client_id = client.id
   isOpen2.value = false;
-
 }
 </script>
 <style scoped>
@@ -455,58 +478,52 @@ let selectclient = (client) => {
               <form @submit.prevent="" class="question-card-list">
                 <div class="question-card animate__animated" style="position: relative">
                   <div v-show="step == 1">
-                    <div >
-                      <h1 style="background-color: #134576" class="my-0 text-center rounded-md py-2 text-white">
-                        Agent Information
-                      </h1>
-                      <div class="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-x-8">
-                        <div id="dropdown_main_id">
-                          <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Select
-                            Client<span class="text-red-400">*</span></label>
-                          <button @click="SugestAgent"
-                            class="bg-gray-50 mt-1 mb-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 flex"
-                            id="states-button" data-dropdown-toggle="dropdown-states" type="button">
 
-                            <span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke-width="1.5" stroke="currentColor" class="w-4 mt-1 h-4">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                              </svg></span><span v-if="!form.client_full_name" class="ml-2">Select Client</span>
-                            <span class="ml-2">{{ form.client_full_name }}</span>
-                          </button>
-
-                          <div v-if="firstStepErrors.client_full_name" class="text-red-500"
-                            v-text="firstStepErrors.client_full_name[0]">
-                          </div>
-
-                          <div v-if="isOpen2 > 0" class="items-center justify-center ">
-
-                            <div class="relative">
-
-
-                              <ul style="width: 100%; max-height:250px;"
-                                class="absolute z-10 pb-2    overflow-auto bg-white rounded-md shadow-md">
-                                <div class="mx-2 mt-1">
-                                  <input v-model="search" autocomplete="off" type="text" id="client_full_name"
-                                    class="bg-gray-50  mb-1  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="" required />
-                                </div>
-                                <li v-for="(client, index) in filteredClients" :key="index" @click="selectclient(client)"
-                                  class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                                  {{ client.first_name }} {{ client.last_name }}
-
-                                </li>
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
 
                     <h1 style="background-color: #134576" class="mt-5 text-center rounded-md py-2 text-white">
                       Client Information
                     </h1>
 
                     <div class="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-x-8">
+                      <div id="dropdown_main_id">
+                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Select
+                          Client<span class="text-red-400">*</span></label>
+                        <button @click="SugestAgent"
+                          class="bg-gray-50 mt-1 mb-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 flex"
+                          id="states-button" data-dropdown-toggle="dropdown-states" type="button">
+
+                          <span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                              stroke="currentColor" class="w-4 mt-1 h-4">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                            </svg></span><span v-if="!form.client_full_name" class="ml-2">Select Client</span>
+                          <span class="ml-2">{{ form.client_full_name }}</span>
+                        </button>
+
+                        <div v-if="firstStepErrors.client_full_name" class="text-red-500"
+                          v-text="firstStepErrors.client_full_name[0]">
+                        </div>
+
+                        <div v-if="isOpen2 > 0" class="items-center justify-center ">
+
+                          <div class="relative">
+
+
+                            <ul style="width: 100%; max-height:250px;"
+                              class="absolute z-10 pb-2    overflow-auto bg-white rounded-md shadow-md">
+                              <div class="mx-2 mt-1">
+                                <input v-model="search" autocomplete="off" type="text" id="client_full_name"
+                                  class="bg-gray-50  mb-1  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                  placeholder="" required />
+                              </div>
+                              <li v-for="(client, index) in filteredClients" :key="index" @click="selectclient(client)"
+                                class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                {{ client.first_name }} {{ client.last_name }}
+
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
                       <div>
                         <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">First Name<span
                             class="text-red-400">*</span></label>
@@ -592,7 +609,7 @@ let selectclient = (client) => {
                         <label for="EFNumber"
                           class="block mb-2 mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">State<span
                             class="text-red-400">*</span></label>
-                        <select v-model="form.client_state" @change="StateChange(this)" id="countries"
+                        <select v-model="form.client_state" @change="StateChange(this)" id="client_state"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                           <option disabled>Select</option>
                           <option v-for="state in states" :value="state.id">
@@ -619,7 +636,7 @@ let selectclient = (client) => {
                           class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Client Phone
                           Number<span class="text-red-400">*</span></label>
 
-                        <input v-model="form.client_phone_no" type="text" maxLength="15" @input="
+                        <input v-model="form.client_phone_no" type="text" id="client_phone_no" maxLength="15" @input="
                           CurrencyValidation(form.client_phone_no, 'client_phone_no')
                           "
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -659,7 +676,7 @@ let selectclient = (client) => {
                           class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Date of Birth<span
                             class="text-red-400">*</span></label>
 
-                        <VueDatePicker v-model="form.dob" format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply>
+                        <VueDatePicker v-model="form.dob" :disabled="disabledDob"  format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply>
                         </VueDatePicker>
                         <div v-if="firstStepErrors.dob" class="text-red-500" v-text="firstStepErrors.dob[0]"></div>
                       </div>
