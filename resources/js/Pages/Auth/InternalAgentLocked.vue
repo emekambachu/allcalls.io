@@ -8,10 +8,10 @@ let props = defineProps({
 });
 let page = usePage();
 
-let StepsModal = ref(false)
+let StepsModal = ref(true)
 
-let basicTrainingModal = ref(true)
-if(page.props.auth.user.basic_training === 1){
+let basicTrainingModal = ref(false)
+if (page.props.auth.user.basic_training === 1) {
     basicTrainingModal.value = false
     router.visit("/training")
 }
@@ -72,9 +72,16 @@ let closeBasicTraining = () => {
                                 24 - 48 hours.
                             </p>
 
-                            <!-- <button @click="basisTraning" class="font-medium">- <span class="text-blue-600 dark:text-blue-500 hover:underline">Basic Training</span></button>
+                          
+
                             <br>
-                            <a href="#" class="font-medium"> - <span class="text-blue-600 dark:text-blue-500 hover:underline">Intermediate Training</span></a>
+
+
+                            <button @click="basisTraning" class="font-medium">- <span
+                                    class="text-blue-600 dark:text-blue-500 hover:underline">Schedule
+                                    Training</span></button>
+                            <br>
+                            <!-- <a href="#" class="font-medium"> - <span class="text-blue-600 dark:text-blue-500 hover:underline">Intermediate Training</span></a>
                             <br>
                             <a href="#" class="font-medium"> - <span class="text-blue-600 dark:text-blue-500 hover:underline">Advanced Training</span></a> -->
 
@@ -83,7 +90,7 @@ let closeBasicTraining = () => {
                     </div>
                 </div>
             </div>
-            
+
         </Transition>
     </AuthenticatedLayout>
     <BasicTraining v-if="basicTrainingModal" @close="closeBasicTraining" :basicTrainingModal="basicTrainingModal" />
