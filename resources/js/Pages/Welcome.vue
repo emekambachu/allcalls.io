@@ -172,7 +172,7 @@ if (page.props.flash.error) {
                   ><li>How It Works</li></a
                 >
                 <a
-                  href="https://www.financialservicecareers.com/unlicensedstart"
+                  href="https://656a16294c31011321a8129b--stupendous-trifle-525211.netlify.app/"
                   class="hover:text-custom-green"
                   ><li>Careers</li></a
                 >
@@ -216,7 +216,7 @@ if (page.props.flash.error) {
                 How It Works
               </li></a
             >
-            <a href="https://www.financialservicecareers.com/unlicensedstart"
+            <a href="https://656a16294c31011321a8129b--stupendous-trifle-525211.netlify.app/"
               ><li
                 class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2"
               >
