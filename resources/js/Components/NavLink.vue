@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue';
+import { computed , ref } from 'vue';
 import { Link } from '@inertiajs/vue3';
 
 const props = defineProps({
@@ -10,18 +10,25 @@ const props = defineProps({
     active: {
         type: Boolean,
     },
+    disabledNavLink:Boolean,
 });
-
 const classes = computed(() =>
     props.active
         ? 'inline-flex items-center px-1 pt-1 border-indigo-400 font-semibold text-lg leading-27 leading-none text-custom-green transition duration-150 ease-in-out'
         : 'inline-flex items-center px-1 pt-1 border-transparent text-lg font-medium leading-5 text-custom-white hover:text-custom-green hover:border-gray-300 focus:outline-none focus:text-custom-sky dark:focus:text-gray-300 focus:border-gray-300 dark:focus:border-gray-700 transition duration-150 ease-in-out'
 );
+
 </script>
 
 <template>
-    <Link :href="href" :class="classes">
-        <slot />
+    <Link :href="href" :class="[classes, {'disabledNavLink': disabledNavLink }]"    >
+        <slot  />
 
     </Link>
 </template>
+<style>
+.disabledNavLink{
+    pointer-events: none;
+   
+};
+</style>
