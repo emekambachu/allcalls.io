@@ -228,4 +228,9 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
 
         return false;
     }
+
+    public function level()
+    {
+        return $this->belongsTo(InternalAgentLevel::class, 'level_id', 'id');
+    }
 }
