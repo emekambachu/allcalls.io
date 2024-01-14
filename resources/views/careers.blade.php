@@ -262,18 +262,10 @@
 
     <div class="calendly-modal modal">
         <h3>Schedule a Call With Our Team!</h3>
-        <div class="calendly-inline-widget" data-url="https://calendly.com/d/4c2-5rz-64m/life-insurance-telesales-position" style="position: relative;min-width:320px;height:700px;" data-processed="true">
-            <div class="calendly-spinner">
-                <div class="calendly-bounce1"></div>
-                <div class="calendly-bounce2"></div>
-                <div class="calendly-bounce3"></div>
-            </div><iframe src="/careers_files/life-insurance-telesales-position.html" width="100%" height="100%" frameborder="0" title="Select a Date &amp; Time - Calendly"></iframe>
-        </div>
-        <script type="text/javascript" src="/careers_files/widget.js" async=""></script>
-        <div class="close-btn">
-            <span class="line"></span>
-            <span class="line"></span>
-        </div>
+        <!-- Calendly inline widget begin -->
+        <div class="calendly-inline-widget" data-url="https://calendly.com/d/4c2-5rz-64m/life-insurance-telesales-position" style="min-width:320px;height:700px;"></div>
+        <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+        <!-- Calendly inline widget end -->
     </div>
 
 
