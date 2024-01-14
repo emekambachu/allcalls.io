@@ -175,6 +175,7 @@ Route::middleware('auth:sanctum')->post('/call-client-info', [LiveCallClientCont
 
 Route::middleware('auth:sanctum')->get('/callTypes', [CallTypesAPIController::class, 'index']);
 Route::middleware('auth:sanctum')->get('/call-types/selected', [CallTypesSelectedAPIController::class, 'index']);
+Route::middleware('auth:sanctum')->get('/call-types/states/update', [CallTypesSelectedAPIController::class, 'updateUserStates']);
 
 // Route::middleware('auth:sanctum')->patch('/active-users', [ActiveUsersController::class, 'update']);
 // Route::patch('/active-users', [ActiveUsersController::class, 'update']);

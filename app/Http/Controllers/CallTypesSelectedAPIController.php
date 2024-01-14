@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\State;
 use App\Models\CallType;
 use Illuminate\Http\Request;
+use App\Models\UserCallTypeState;
+use Illuminate\Support\Facades\Log;
 
 class CallTypesSelectedAPIController extends Controller
 {
@@ -64,4 +66,28 @@ class CallTypesSelectedAPIController extends Controller
         
         return $selectedCallTypes;
     }
+
+
+    public function updateUserStates(Request $request)
+{
+    try {
+        $user = $request->user();
+        Log::info('Updating user states', ['user_id' => $user->id]);
+
+        $incomingData = $this->buildIncomingData($request->input('selected_states'));
+        Log::debug('Incoming data for state update', ['data' => $incomingData]);
+
+        UserCallTypeState::updateUserCallTypeState($user, $incomingData);
+
+        Log::info('User states updated successfully', ['user_id' => $user->id]);
+        return response()->json(['message' => 'User states updated successfully']);
+    } catch (\Exception $e) {
+        Log::error('Error updating user states', [
+            'user_id' => $user->id ?? null,
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return response()->json(['message' => 'Failed to update user states'], 500);
+    }
+}
 }
