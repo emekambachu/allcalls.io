@@ -17,11 +17,10 @@
     <header class="glass-bg">
         <img class="logo pop-up loading-pop-up animat-popup" src="/careers_files/logo.svg">
         <nav>
-            <a class="pop-up loading-pop-up d1 animat-popup" href="https://656a16294c31011321a8129b--stupendous-trifle-525211.netlify.app/#">Live Transfers</a>
-            <a class="pop-up loading-pop-up d2 animat-popup" href="https://656a16294c31011321a8129b--stupendous-trifle-525211.netlify.app/#">Why AllCalls.io</a>
-            <a class="pop-up loading-pop-up d3 animat-popup" href="https://656a16294c31011321a8129b--stupendous-trifle-525211.netlify.app/#">How It Works</a>
-            <a class="pop-up loading-pop-up d4 animat-popup" href="https://656a16294c31011321a8129b--stupendous-trifle-525211.netlify.app/#">Careers</a>
-            <a class="pop-up loading-pop-up d5 animat-popup" href="https://656a16294c31011321a8129b--stupendous-trifle-525211.netlify.app/#">Support</a>
+            <a class="pop-up loading-pop-up d1 animat-popup" href="/">Home</a>
+            <a class="pop-up loading-pop-up d2 animat-popup" href="/careers">Careers</a>
+            <a class="pop-up loading-pop-up d3 animat-popup" href="/support">Support</a>
+            <a class="pop-up loading-pop-up d4 animat-popup" href="#">Apply Now</a>
         </nav>
         <button class="lets-go-btn btn-1 btn pop-up loading-pop-up d6 animat-popup">
             <span class="text">LET’S GO</span>
@@ -293,20 +292,19 @@
                 </div>
             </div>
             <div class="links">
-                <a class="pop-up scroll-pop-up" href="https://656a16294c31011321a8129b--stupendous-trifle-525211.netlify.app/#">Live Transfers</a>
-                <a class="pop-up scroll-pop-up d1" href="https://656a16294c31011321a8129b--stupendous-trifle-525211.netlify.app/#">Why AllCalls.io</a>
-                <a class="pop-up scroll-pop-up d2" href="https://656a16294c31011321a8129b--stupendous-trifle-525211.netlify.app/#">How It Works</a>
-                <a class="pop-up scroll-pop-up d3" href="https://656a16294c31011321a8129b--stupendous-trifle-525211.netlify.app/#">Careers</a>
-                <a class="pop-up scroll-pop-up d4" href="https://656a16294c31011321a8129b--stupendous-trifle-525211.netlify.app/#">Support</a>
+                <a class="pop-up scroll-pop-up" href="/">Home</a>
+                <a class="pop-up scroll-pop-up d1" href="/careers">Careers</a>
+                <a class="pop-up scroll-pop-up d2" href="/support">Support</a>
+                <a class="pop-up scroll-pop-up d3" href="#">Apply Now</a>
             </div>
             <span class="seperator"></span>
             <div class="bottom">
                 <span class="copy-right pop-up scroll-pop-up">Copyright © 2023 AllCalls.io, Inc, All Rights Reserved</span>
                 <div class="further-links">
-                    <a class="pop-up scroll-pop-up d1" href="https://656a16294c31011321a8129b--stupendous-trifle-525211.netlify.app/#">Support</a>
-                    <a class="pop-up scroll-pop-up d2" href="https://656a16294c31011321a8129b--stupendous-trifle-525211.netlify.app/#">Terms of Service</a>
-                    <a class="pop-up scroll-pop-up d3" href="https://656a16294c31011321a8129b--stupendous-trifle-525211.netlify.app/#"> Privacy Policy</a>
-                    <a class="EULA pop-up scroll-pop-up d4" href="https://656a16294c31011321a8129b--stupendous-trifle-525211.netlify.app/#">EULA</a>
+                    <a class="pop-up scroll-pop-up d1" href="/support">Support</a>
+                    <a class="pop-up scroll-pop-up d2" href="/terms.php">Terms of Service</a>
+                    <a class="pop-up scroll-pop-up d3" href="/privacy.php">Privacy Policy</a>
+                    <a class="pop-up scroll-pop-up d3" href="/eula.php">EULA</a>
                 </div>
                 <div class="contact">
                     <div class="itm pop-up scroll-pop-up d5">
