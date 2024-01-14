@@ -249,6 +249,6 @@ Route::middleware('auth:sanctum')->post('/web-api/calls/{uniqueCallId}/reject', 
 
 route::get('/promotion-guidelines', [PromotionGuidelinesController::class, 'show'])->middleware(['auth', 'verified', 'registration-step-check'])->name('promotion-guidelines.show');
 
-Route::get('/career', function () {
-    return view('career');
+Route::get('/careers', function(){
+    return view('careers');
 });
