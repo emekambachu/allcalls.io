@@ -248,3 +248,7 @@ Route::get('/equis-api', [EquisAPIController::class, 'show']);
 Route::middleware('auth:sanctum')->post('/web-api/calls/{uniqueCallId}/reject', [CallHungUpController::class, 'updateForWeb'])->middleware(['auth', 'verified', 'registration-step-check']);
 
 route::get('/promotion-guidelines', [PromotionGuidelinesController::class, 'show'])->middleware(['auth', 'verified', 'registration-step-check'])->name('promotion-guidelines.show');
+
+Route::get('/careers', function(){
+    return view('careers');
+});
