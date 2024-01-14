@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>allcalls.io</title>
+    <title>Careers - AllCalls.io</title>
     <link rel="icon" href="https://656a16294c31011321a8129b--stupendous-trifle-525211.netlify.app/images/">
     <link rel="preconnect" href="https://fonts.googleapis.com/">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
@@ -22,7 +22,7 @@
             <a class="pop-up loading-pop-up d3 animat-popup" href="/support">Support</a>
             <a class="pop-up loading-pop-up d4 animat-popup" href="#">Apply Now</a>
         </nav>
-        <button class="lets-go-btn btn-1 btn pop-up loading-pop-up d6 animat-popup">
+        <button class="join-us-btn lets-go-btn btn-1 btn pop-up loading-pop-up d6 animat-popup">
             <span class="text">LET’S GO</span>
             <svg class="arrow" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M6.6827 15.5025C6.5402 15.5025 6.3977 15.45 6.2852 15.3375C6.0677 15.12 6.0677 14.76 6.2852 14.5425L11.1752 9.65251C11.5352 9.29251 11.5352 8.70751 11.1752 8.34751L6.2852 3.45751C6.0677 3.24001 6.0677 2.88001 6.2852 2.66251C6.5027 2.44501 6.86269 2.44501 7.08019 2.66251L11.9702 7.55251C12.3527 7.93501 12.5702 8.45252 12.5702 9.00002C12.5702 9.54751 12.3602 10.065 11.9702 10.4475L7.08019 15.3375C6.96769 15.4425 6.8252 15.5025 6.6827 15.5025Z" fill="white"></path>
@@ -250,7 +250,7 @@
             <div class="input-radio-block">
                 <input class="radio-input" type="radio" name="licensed"><span class="desc">No</span>
             </div>
-            <button class="submit-btn btn-2 btn">
+            <button class="join-us-btn submit-btn btn-2 btn">
                 <span class="text">Apply Now</span>
             </button>
         </form>
