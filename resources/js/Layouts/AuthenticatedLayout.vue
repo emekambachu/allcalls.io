@@ -194,7 +194,7 @@ let saveClient = () => {
       address: connectedClient.value.address,
       state: connectedClient.value.state,
       zipCode: connectedClient.value.zipCode,
-      status: connectedClient.value.status,
+      // status: connectedClient.value.status,
       dob: connectedClient.value.dob,
     })
     .then((response) => {
