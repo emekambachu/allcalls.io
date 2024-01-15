@@ -16,7 +16,7 @@ import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 
 let page = usePage();
 
-console.log('PAGE:', page);
+console.log('showDispositionModal:', page.props.auth.showDispositionUpdateOption);
 
 let isInternalLevel = ref(false);
 
