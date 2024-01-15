@@ -47,9 +47,10 @@ const presetDates = ref([
 
 ]);
 
+let page = usePage();
 
 
-let { agentInvites, states, requestData, agents , clients } = defineProps({
+let { agentInvites, states, requestData, agents , clients , is_client , client , userNotFound} = defineProps({
     businesses: {
         required: true,
         type: Array,
@@ -58,13 +59,18 @@ let { agentInvites, states, requestData, agents , clients } = defineProps({
     requestData: Array,
     agents: Array,
     clients:Array,
+    is_client:Boolean,
+    userNotFound:String,
+    client:Object,
 });
-
+console.log('is_client', is_client);
+if(userNotFound !== null && page.props.auth.role === 'internal-agent'){
+  toaster('error', userNotFound)
+}
 let slidingLoader = ref(false)
 
 
 
-let page = usePage();
 if (page.props.flash.message) {
     toaster("success", page.props.flash.message);
 }
@@ -126,10 +132,18 @@ let ViewDetail = (business_data) => {
     businessData.value = business_data
     viewDetailModal.value = true
 }
+let AttachClientData = ref(null)
+const  AttachClient = (business) => {
+    addBusinessModal.value = true
+    AttachClientData.value = business
+}
 
 let addBusiness = () => {
     businessData.value = null
     addBusinessModal.value = true
+}
+if(is_client){
+    addBusiness()
 }
 let EditBusiness = (business_data) => {
     addBusinessModal.value = true
@@ -319,8 +333,8 @@ let ClearFilter = () => {
             </div>
         </div>
 
-        <AddModal v-if="addBusinessModal" :agents="agents" :states="states" :clients="clients" :addBusinessModal="addBusinessModal"
-            @close="addBusinessModal = false" :businessData="businessData" :reIniteAgent="reIniteAgent" />
+        <AddModal v-if="addBusinessModal" :agents="agents" :is_client="is_client" :clientData="client" :userNotFound="userNotFound" :states="states"  :addBusinessModal="addBusinessModal"
+            @close="addBusinessModal = false" :businessData="businessData" :AttachClientData="AttachClientData" :reIniteAgent="reIniteAgent" />
 
 
         <ViewDetailCom v-if="viewDetailModal" :viewDetailModal="viewDetailModal" @close="viewDetailModal = false"

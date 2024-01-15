@@ -14,6 +14,10 @@ class InternalAgentMyBusiness extends Model
     public function client(){
         return $this->belongsTo(Client::class,'client_id', 'id');
     }
+    public function clientState(){
+        return $this->belongsTo(State::class,'client_state', 'id');
+    }
+    
 
     public function getApplicationDateAttribute($value)
     {
