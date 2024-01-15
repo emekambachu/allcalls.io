@@ -108,7 +108,7 @@
             <img class="middle-bright-gradients bright-gradient " src="/careers_files/join-us-middle-gradients.svg">
             <img class="right-bright-gradient bright-gradient " src="/careers_files/join-us-right-gradients.svg">
         </div>
-        <button class="start-money-btn btn-2 btn pop-up scroll-pop-up animat-popup">
+        <button class="join-us-btn start-money-btn btn-2 btn pop-up scroll-pop-up animat-popup">
             <span class="text">START YOUR JOURNEY HERE</span>
             <svg class="arrow" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M6.6827 15.5025C6.5402 15.5025 6.3977 15.45 6.2852 15.3375C6.0677 15.12 6.0677 14.76 6.2852 14.5425L11.1752 9.65251C11.5352 9.29251 11.5352 8.70751 11.1752 8.34751L6.2852 3.45751C6.0677 3.24001 6.0677 2.88001 6.2852 2.66251C6.5027 2.44501 6.86269 2.44501 7.08019 2.66251L11.9702 7.55251C12.3527 7.93501 12.5702 8.45252 12.5702 9.00002C12.5702 9.54751 12.3602 10.065 11.9702 10.4475L7.08019 15.3375C6.96769 15.4425 6.8252 15.5025 6.6827 15.5025Z" fill="black"></path>
@@ -172,7 +172,7 @@
                 <p class="pop-up scroll-pop-up d2 animat-popup">We offer a lead subsidy for all of our agents to help them increase their ROI for their business.</p>
             </div>
         </div>
-        <button class="click-upply-btn btn-2 btn pop-up scroll-pop-up animat-popup">
+        <button class="join-us-btn click-upply-btn btn-2 btn pop-up scroll-pop-up animat-popup">
             <span class="text">CLICK TO APPLY</span>
             <svg class="arrow" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M6.6827 15.5025C6.5402 15.5025 6.3977 15.45 6.2852 15.3375C6.0677 15.12 6.0677 14.76 6.2852 14.5425L11.1752 9.65251C11.5352 9.29251 11.5352 8.70751 11.1752 8.34751L6.2852 3.45751C6.0677 3.24001 6.0677 2.88001 6.2852 2.66251C6.5027 2.44501 6.86269 2.44501 7.08019 2.66251L11.9702 7.55251C12.3527 7.93501 12.5702 8.45252 12.5702 9.00002C12.5702 9.54751 12.3602 10.065 11.9702 10.4475L7.08019 15.3375C6.96769 15.4425 6.8252 15.5025 6.6827 15.5025Z" fill="black"></path>
@@ -202,7 +202,7 @@
                 <img class="training-onboarding-gradients-bottom-mobile bright-gradient bright-gradient-mobile" src="/careers_files/training-onboarding-gradients-bottom-mobile.svg">
             </div>
         </div>
-        <button class="get-started-btn btn-2 btn pop-up scroll-pop-up animat-popup">
+        <button class="join-us-btn get-started-btn btn-2 btn pop-up scroll-pop-up animat-popup">
             <span class="text">GET STARTED NOW</span>
             <svg class="arrow" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M6.6827 15.5025C6.5402 15.5025 6.3977 15.45 6.2852 15.3375C6.0677 15.12 6.0677 14.76 6.2852 14.5425L11.1752 9.65251C11.5352 9.29251 11.5352 8.70751 11.1752 8.34751L6.2852 3.45751C6.0677 3.24001 6.0677 2.88001 6.2852 2.66251C6.5027 2.44501 6.86269 2.44501 7.08019 2.66251L11.9702 7.55251C12.3527 7.93501 12.5702 8.45252 12.5702 9.00002C12.5702 9.54751 12.3602 10.065 11.9702 10.4475L7.08019 15.3375C6.96769 15.4425 6.8252 15.5025 6.6827 15.5025Z" fill="black"></path>
@@ -225,7 +225,7 @@
                     <path d="M6.6827 15.5025C6.5402 15.5025 6.3977 15.45 6.2852 15.3375C6.0677 15.12 6.0677 14.76 6.2852 14.5425L11.1752 9.65251C11.5352 9.29251 11.5352 8.70751 11.1752 8.34751L6.2852 3.45751C6.0677 3.24001 6.0677 2.88001 6.2852 2.66251C6.5027 2.44501 6.86269 2.44501 7.08019 2.66251L11.9702 7.55251C12.3527 7.93501 12.5702 8.45252 12.5702 9.00002C12.5702 9.54751 12.3602 10.065 11.9702 10.4475L7.08019 15.3375C6.96769 15.4425 6.8252 15.5025 6.6827 15.5025Z" fill="black"></path>
                 </svg>
             </button>
-            <button class="get-licenced-btn btn-2 btn pop-up scroll-pop-up d1 animat-popup">
+            <button class="join-us-btn get-licenced-btn btn-2 btn pop-up scroll-pop-up d1 animat-popup">
                 <span class="text">GET LICENSED</span>
                 <svg class="arrow" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M6.6827 15.5025C6.5402 15.5025 6.3977 15.45 6.2852 15.3375C6.0677 15.12 6.0677 14.76 6.2852 14.5425L11.1752 9.65251C11.5352 9.29251 11.5352 8.70751 11.1752 8.34751L6.2852 3.45751C6.0677 3.24001 6.0677 2.88001 6.2852 2.66251C6.5027 2.44501 6.86269 2.44501 7.08019 2.66251L11.9702 7.55251C12.3527 7.93501 12.5702 8.45252 12.5702 9.00002C12.5702 9.54751 12.3602 10.065 11.9702 10.4475L7.08019 15.3375C6.96769 15.4425 6.8252 15.5025 6.6827 15.5025Z" fill="black"></path>
