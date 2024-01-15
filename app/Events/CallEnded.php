@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\Call;
 use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
@@ -15,8 +16,8 @@ class CallEnded implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public User $user;
-    public $uniqueCallId;
+    public $user;
+    public $call;
 
     /**
      * Create a new event instance.
@@ -24,7 +25,10 @@ class CallEnded implements ShouldBroadcast
     public function __construct(User $user, $uniqueCallId)
     {
         $this->user = $user;
-        $this->uniqueCallId = $uniqueCallId;
+
+        $call = Call::whereUniqueCallId($uniqueCallId)->first();
+
+        $this->call = $call ?? null;
     }
 
     /**
