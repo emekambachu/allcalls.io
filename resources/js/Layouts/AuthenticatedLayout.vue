@@ -436,13 +436,16 @@ onMounted(() => {
   Echo.private('calls.' + page.props.auth.user.id).listen('CallEnded', (event) => {
     console.log('CallEnded:', event);
     if (event.client && event.client.status === null) {
-      console.log('Status null, show the modal.');
+      showUpdateDispositionForLastClient.value = true;
+      startTimeoutForRepeatedDispositionNotifications();
     }
   });
 
   Echo.private('calls.' + page.props.auth.user.id).listen('UserSavedNonNullStatus', (event) => {
     console.log('UserSavedNonNullStatus:', event);
     console.log('So, we can drop the modal now.')
+    showUpdateDispositionForLastClient.value = false;
+    clearTimeoutForRepeatedDispositionNotifications();
   });
 
 
