@@ -56,12 +56,20 @@ class HandleInertiaRequests extends Middleware
             });
         }
 
+
+        if (auth()->user() && auth()->user()->clients()->latest()->first() && auth()->user()->clients()->latest()->first()->status === null) {
+            $showDispositionUpdateOption = true;
+        } else {
+            $showDispositionUpdateOption = false;
+        }
+
         return array_merge(parent::share($request), [
             'auth' => [
                 'user' => $request->user(),
                 'role' => $role,
                 'user_level' => $user_level,
                 'notifications' => $notifications,
+                'showDispositionUpdateOption' =>  $showDispositionUpdateOption,
             ],
 
             'ziggy' => function () use ($request) {

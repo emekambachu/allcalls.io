@@ -9,9 +9,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FundsController;
 use App\Http\Controllers\IOSLogController;
 use App\Http\Controllers\PingAPIController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserRoleController;
+use App\Http\Controllers\AppEventsController;
 use App\Http\Controllers\CallRejectedByAgent;
 use App\Http\Controllers\CallHungUpController;
 use App\Http\Controllers\CallStatusController;
@@ -42,8 +45,6 @@ use App\Http\Controllers\TwilioIOSAccessTokenController;
 use App\Http\Controllers\CustomBroadcastingAuthController;
 use App\Http\Controllers\ActiveUsersPusherWebhookController;
 use App\Http\Controllers\CallCenterDispositionAPIController;
-use App\Http\Controllers\FundsController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TwilioAndroidAccessTokenController;
 use App\Http\Controllers\TwilioIOSAccessTokenGuestController;
 use App\Http\Controllers\TwilioIOSSandboxAccessTokenController;
@@ -174,6 +175,7 @@ Route::middleware('auth:sanctum')->post('/call-client-info', [LiveCallClientCont
 
 Route::middleware('auth:sanctum')->get('/callTypes', [CallTypesAPIController::class, 'index']);
 Route::middleware('auth:sanctum')->get('/call-types/selected', [CallTypesSelectedAPIController::class, 'index']);
+Route::middleware('auth:sanctum')->get('/call-types/states/update', [CallTypesSelectedAPIController::class, 'updateUserStates']);
 
 // Route::middleware('auth:sanctum')->patch('/active-users', [ActiveUsersController::class, 'update']);
 // Route::patch('/active-users', [ActiveUsersController::class, 'update']);

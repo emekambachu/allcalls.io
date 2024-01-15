@@ -7,6 +7,7 @@ use App\Models\Call;
 use App\Models\User;
 use Twilio\Rest\Client;
 use App\Models\CallType;
+use App\Events\CallEnded;
 use Illuminate\Http\Request;
 use App\Events\MissedCallEvent;
 use App\Events\RingingCallEvent;
@@ -117,6 +118,8 @@ class CallStatusController extends Controller
                 
 
             case 'completed':
+
+
                 Log::debug('completed event for user ' . $request->user_id);
                 CallAcceptedOrRejected::dispatch(User::find($request->user_id));
                 $callDuration = (int) $request->input('CallDuration');
@@ -125,6 +128,10 @@ class CallStatusController extends Controller
                 $call = Call::where('unique_call_id', $request->unique_call_id)->first();
                 $call->completed_at = now();
                 $call->save();
+
+
+                $client = $call->client ?? null;
+                CallEnded::dispatch(User::find($request->user_id), $call, $client);
 
                 Log::debug('Call completed_at updated.');
                 Log::debug('Call duration: ' . $callDuration);

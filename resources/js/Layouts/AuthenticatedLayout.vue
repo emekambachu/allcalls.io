@@ -16,6 +16,8 @@ import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 
 let page = usePage();
 
+console.log('showDispositionModal:', page.props.auth.showDispositionUpdateOption);
+
 let isInternalLevel = ref(false);
 
 if (page.props.auth.user_level && page.props.auth.user_level.name && page.props.auth.user_level.name.startsWith('Internal')) {
@@ -192,7 +194,7 @@ let saveClient = () => {
       address: connectedClient.value.address,
       state: connectedClient.value.state,
       zipCode: connectedClient.value.zipCode,
-      status: connectedClient.value.status,
+      // status: connectedClient.value.status,
       dob: connectedClient.value.dob,
     })
     .then((response) => {
@@ -390,6 +392,12 @@ let setupTwilioDevice = () => {
 
 let showUpdateDispositionForLastClient = ref(false);
 
+if (page.props.auth.showDispositionUpdateOption) {
+  showUpdateDispositionForLastClient.value = true;
+  startTimeoutForRepeatedDispositionNotifications();
+}
+// console.log('showDispositionModal:', page.props.auth.showDispositionUpdateOption);
+
 let showUpdateDispositionModal = () => {
   // // Check if 'showDispositionModal' exists in localStorage
   // if (localStorage.getItem("showDispositionModal") === null) {
@@ -421,6 +429,26 @@ onMounted(() => {
 
 onMounted(() => {
   console.log("mounted AuthenticatedLayout");
+
+
+
+  console.log('Listening for completed call event.');
+  Echo.private('calls.' + page.props.auth.user.id).listen('CallEnded', (event) => {
+    console.log('CallEnded:', event);
+    if (event.client && event.client.status === null && !showUpdateDispositionForLastClient.value) {
+      showUpdateDispositionForLastClient.value = true;
+      startTimeoutForRepeatedDispositionNotifications();
+    }
+  });
+
+  Echo.private('calls.' + page.props.auth.user.id).listen('UserSavedNonNullStatus', (event) => {
+    console.log('UserSavedNonNullStatus:', event);
+    console.log('So, we can drop the modal now.')
+    showUpdateDispositionForLastClient.value = false;
+    clearTimeoutForRepeatedDispositionNotifications();
+  });
+
+
   Echo.private("calls." + page.props.auth.user.id).listenForWhisper("psst", (e) => {
     console.log("call event:");
     console.log(e);

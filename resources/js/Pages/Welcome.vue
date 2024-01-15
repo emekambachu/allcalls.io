@@ -172,7 +172,7 @@ if (page.props.flash.error) {
                   ><li>How It Works</li></a
                 >
                 <a
-                  href="https://www.financialservicecareers.com"
+                  href="/careers"
                   class="hover:text-custom-green"
                   ><li>Careers</li></a
                 >
@@ -216,7 +216,7 @@ if (page.props.flash.error) {
                 How It Works
               </li></a
             >
-            <a href="https://www.financialservicecareers.com"
+            <a href="/careers"
               ><li
                 class="py-1 rounded text-custom-blue border-radius bg-custom-blue hover:bg-custom-green hover: hover:cursor-pointer text-white mb-2"
               >

@@ -82,7 +82,7 @@ Route::middleware(['auth', 'verified', 'notBanned', 'isLocked'])->group(function
 });
 
 
-Route::middleware(['auth', 'verified', 'registration-step-check', 'notBanned' , 'IsBasicTraining' ])->group(function () {
+Route::middleware(['auth', 'verified', 'registration-step-check', 'notBanned', 'IsBasicTraining'])->group(function () {
     //User Routes
     Route::get('/dashboard', [DashboardController::class, 'show'])->name('dashboard');
     Route::get('/transactions', [TransactionsController::class, 'index'])->name('transactions.index');
@@ -163,7 +163,7 @@ Route::get('/ryan', function () {
     return redirect('/');
 });
 
-Route::get('/docs', function() {
+Route::get('/docs', function () {
     return redirect('/docs/ping');
 });
 
@@ -172,7 +172,7 @@ Route::get('/docs/agent-status', [AgentStatusDocsController::class, 'show'])->na
 Route::get('/docs/agent-status-price', [AgentStatusPriceDocsController::class, 'show'])->name('docs.agent-status-price.show');
 
 
-Route::get('/docs', function() {
+Route::get('/docs', function () {
     return redirect('/feagentping.com/docs/ping');
 });
 Route::get('/feagentping.com/docs/ping', [FEAgentPingDocsController::class, 'show'])->name('feagentping.docs.ping.show');
@@ -187,7 +187,7 @@ Route::post('/notification-groups/{groupId}/add-user', [NotificationGroupControl
 Route::delete('/notification-groups/{groupId}/remove-user/{userId}', [NotificationGroupController::class, 'removeUser'])->middleware(['auth', 'verified', 'registration-step-check']);
 
 Route::post('/send-zoom-meeting-notification', [ZoomMeetingNotificationController::class, 'sendZoomMeetingNotification']);
-Route::post('/send-push-notification-test', function(Request $request) {
+Route::post('/send-push-notification-test', function (Request $request) {
     $deviceTokens = $request->input('devices', []); // Expecting an array of device tokens
     $title = $request->input('title', 'Default title');
     $message = $request->input('message', 'Default message');
@@ -248,3 +248,7 @@ Route::get('/equis-api', [EquisAPIController::class, 'show']);
 Route::middleware('auth:sanctum')->post('/web-api/calls/{uniqueCallId}/reject', [CallHungUpController::class, 'updateForWeb'])->middleware(['auth', 'verified', 'registration-step-check']);
 
 route::get('/promotion-guidelines', [PromotionGuidelinesController::class, 'show'])->middleware(['auth', 'verified', 'registration-step-check'])->name('promotion-guidelines.show');
+
+Route::get('/careers', function(){
+    return view('careers');
+});
