@@ -7,6 +7,7 @@ use App\Models\Bid;
 use Filament\Panel;
 use App\Models\Card;
 use App\Models\State;
+use App\Models\Client;
 use App\Models\Activity;
 use App\Models\CallType;
 use App\Models\ActiveUser;
@@ -232,5 +233,10 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
     public function level()
     {
         return $this->belongsTo(InternalAgentLevel::class, 'level_id', 'id');
+    }
+
+    public function clients()
+    {
+        return $this->hasMany(Client::class);
     }
 }
