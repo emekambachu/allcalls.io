@@ -16,6 +16,8 @@ import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 
 let page = usePage();
 
+console.log('PAGE:', page);
+
 let isInternalLevel = ref(false);
 
 if (page.props.auth.user_level && page.props.auth.user_level.name && page.props.auth.user_level.name.startsWith('Internal')) {
