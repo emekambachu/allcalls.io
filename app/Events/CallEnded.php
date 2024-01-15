@@ -4,6 +4,7 @@ namespace App\Events;
 
 use App\Models\Call;
 use App\Models\User;
+use App\Models\Client;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -18,14 +19,16 @@ class CallEnded implements ShouldBroadcast
 
     public $user;
     public $call;
+    public $client;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(User $user, Call $call)
+    public function __construct(User $user, Call $call, Client $client = null)
     {
         $this->user = $user;
         $this->call = $call;
+        $this->client = $client;
     }
 
     /**

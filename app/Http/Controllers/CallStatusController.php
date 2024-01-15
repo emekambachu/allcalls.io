@@ -130,8 +130,8 @@ class CallStatusController extends Controller
                 $call->save();
 
 
-
-                CallEnded::dispatch(User::find($request->user_id), $call);
+                $client = $call->client ?? null;
+                CallEnded::dispatch(User::find($request->user_id), $call, $client);
 
                 Log::debug('Call completed_at updated.');
                 Log::debug('Call duration: ' . $callDuration);
