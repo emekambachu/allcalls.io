@@ -25,10 +25,7 @@ class CallEnded implements ShouldBroadcast
     public function __construct(User $user, $uniqueCallId)
     {
         $this->user = $user;
-
-        $call = Call::whereUniqueCallId($uniqueCallId)->first();
-
-        $this->call = $call ?? null;
+        $this->call = Call::where('unique_call_id', $uniqueCallId)->first() ?? null;
     }
 
     /**
