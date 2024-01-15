@@ -22,10 +22,10 @@ class CallEnded implements ShouldBroadcast
     /**
      * Create a new event instance.
      */
-    public function __construct(User $user, $uniqueCallId)
+    public function __construct(User $user, Call $call)
     {
         $this->user = $user;
-        $this->call = Call::where('unique_call_id', $uniqueCallId)->first() ?? null;
+        $this->call = $call;
     }
 
     /**
