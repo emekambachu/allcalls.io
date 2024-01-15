@@ -429,6 +429,12 @@ onMounted(() => {
   console.log('Listening for completed call event.');
   Echo.private('calls.' + page.props.auth.user.id).listen('CallEnded', (event) => {
     console.log('CallEnded:', event);
+    console.log('Show the modal so that the user can update the dispostion.');
+  });
+
+  Echo.private('calls.' + page.props.auth.user.id).listen('UserSavedNonNullStatus', (event) => {
+    console.log('UserSavedNonNullStatus:', event);
+    console.log('So, we can drop the modal now.')
   });
 
 
