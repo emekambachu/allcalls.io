@@ -429,7 +429,7 @@ onMounted(() => {
   console.log('Listening for completed call event.');
   Echo.private('calls.' + page.props.auth.user.id).listen('CallEnded', (event) => {
     console.log('CallEnded:', event);
-    if (event.call && event.call.client && event.call.client.status === null) {
+    if (event.client && event.client.status === null) {
       console.log('Status null, show the modal.');
     }
   });
