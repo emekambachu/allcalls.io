@@ -426,6 +426,7 @@ onMounted(() => {
 
 
 
+  console.log('Listening for completed call event.');
   Echo.private('calls.' + page.props.auth.user.id).listen('CompletedCallEvent', (event) => {
     console.log('CompletedCallEvent:', event);
   });
