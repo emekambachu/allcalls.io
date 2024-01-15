@@ -392,6 +392,12 @@ let setupTwilioDevice = () => {
 
 let showUpdateDispositionForLastClient = ref(false);
 
+if (page.props.auth.showDispositionUpdateOption) {
+  showUpdateDispositionForLastClient.value = true;
+  startTimeoutForRepeatedDispositionNotifications();
+}
+// console.log('showDispositionModal:', page.props.auth.showDispositionUpdateOption);
+
 let showUpdateDispositionModal = () => {
   // // Check if 'showDispositionModal' exists in localStorage
   // if (localStorage.getItem("showDispositionModal") === null) {
