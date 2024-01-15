@@ -38,7 +38,7 @@ class CompletedCallEvent
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('channel-name'),
+            new PrivateChannel('calls.' . $this->user->id),
         ];
     }
 }

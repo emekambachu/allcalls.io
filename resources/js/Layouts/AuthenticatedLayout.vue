@@ -423,6 +423,14 @@ onMounted(() => {
 
 onMounted(() => {
   console.log("mounted AuthenticatedLayout");
+
+
+
+  Echo.private('calls.' + page.props.auth.user.id).listen('CompletedCallEvent', (event) => {
+    console.log('CompletedCallEvent:', event);
+  });
+
+
   Echo.private("calls." + page.props.auth.user.id).listenForWhisper("psst", (e) => {
     console.log("call event:");
     console.log(e);

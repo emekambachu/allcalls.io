@@ -39,6 +39,7 @@ use App\Listeners\NotifyUserForLowFundsViaSMS;
 use App\Listeners\AddCompletedCallUserActivity;
 use App\Listeners\NotifyUserForLowFundsViaEmail;
 use App\Listeners\InviteAgent as ListenersInviteAgent;
+use App\Listeners\DispatchDispositionUpdateNotification;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -73,6 +74,7 @@ class EventServiceProvider extends ServiceProvider
             ChargeUserForCompletedCall::class,
             UnlockClientForUser::class,
             AddCompletedCallUserActivity::class,
+            // DispatchDispositionUpdateNotification::class,
             // CheckDispositionListener::class,
         ],
 
