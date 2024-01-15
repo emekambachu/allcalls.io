@@ -65,6 +65,8 @@ class WebAPIClientsController extends Controller
             "status" => $request->status,
         ]);
 
+        UserSavedNonNullStatus::dispatch($client->user, $client->status);
+
         // return a json response
         return response()->json([
             'message' => 'Client disposition updated successfully.',
