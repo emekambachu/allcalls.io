@@ -45,7 +45,8 @@ class WebAPIClientsController extends Controller
 
         // return a json response
         return response()->json([
-            'message' => 'Client updated successfully.'
+            'message' => 'Client updated successfully.',
+            'client' => $client,
         ]);
     }
 

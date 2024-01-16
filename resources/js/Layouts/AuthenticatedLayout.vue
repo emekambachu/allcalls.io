@@ -313,6 +313,12 @@ let updateLatestClientDisposition = () => {
       .then((response) => {
         console.log("Client disposition update response:");
         console.log(response.data);
+        console.log('Status of the client that was updated: ', response.data.client.status)
+
+        if (response.data.client.status.startsWith("Sale")) {
+          console.log("Sale detected!");
+        }
+
         localStorage.removeItem("latestClientId");
         localStorage.removeItem("showDispositionModal");
         showUpdateDispositionForLastClient.value = false;
