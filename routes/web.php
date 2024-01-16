@@ -24,6 +24,7 @@ use App\Http\Controllers\DefaultCardController;
 use App\Http\Controllers\TwilioTokenController;
 use App\Http\Controllers\WebCallsAPIController;
 use App\Http\Controllers\CallTypeBidsController;
+use App\Http\Controllers\LatestClientController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\UsageActivityController;
@@ -252,3 +253,5 @@ route::get('/promotion-guidelines', [PromotionGuidelinesController::class, 'show
 Route::get('/careers', function(){
     return view('careers');
 });
+
+Route::get('/web-api/latest-client', [LatestClientController::class, 'show'])->middleware(['auth', 'verified', 'registration-step-check']);
