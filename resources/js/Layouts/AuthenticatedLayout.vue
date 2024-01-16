@@ -313,9 +313,9 @@ let updateLatestClientDisposition = () => {
       .then((response) => {
         console.log("Client disposition update response:");
         console.log(response.data);
-        console.log('Status of the client that was updated: ', response.data.client.status)
+        console.log('Status of the client that was updated: ', response.data.status)
 
-        if (response.data.client.status.startsWith("Sale")) {
+        if (response.data.status.startsWith("Sale")) {
           console.log("Sale detected!");
         }
 
