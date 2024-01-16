@@ -317,6 +317,8 @@ let updateLatestClientDisposition = () => {
 
         if (response.data.status.startsWith("Sale")) {
           console.log("Sale detected!");
+          // router.visit('/my-business/')
+          router.visit(`/internal-agent/my-business?clientId=${response.data.clientId}`);
         }
 
         localStorage.removeItem("latestClientId");
