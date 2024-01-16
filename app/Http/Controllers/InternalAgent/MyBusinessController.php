@@ -180,4 +180,5 @@ class MyBusinessController extends Controller
             'clients' => $clients
         ]);
     }
+    
 }

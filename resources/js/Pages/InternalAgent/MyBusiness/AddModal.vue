@@ -16,7 +16,7 @@ let props = defineProps({
   businessData: Object,
   is_client: Boolean,
   clientData: Object,
-  AttachClientData:Object,
+  AttachClientData: Object,
 });
 let firstStepErrors = ref({});
 
@@ -95,14 +95,14 @@ let updateFormAndDisableElement = (property, value, elementId, formObject, disab
 };
 if (props.businessData) {
   form.value = props.businessData
-  if(props.businessData?.client){
+  if (props.businessData?.client) {
     form.value.client_id = props.businessData?.client.id
   }
   // form.value.client_id = props.businessData?.client.id
 
-  if (!props.businessData.source_of_lead) {
-    form.value.source_of_lead = 'Select'
-  }
+  // if (props.businessData.this_app_from_lead == 'NO') {
+  //   form.value.source_of_lead = 'Select'
+  // }
   edit_data.value = true
 }
 let attactClientEdit = ref(false)
@@ -120,13 +120,13 @@ if (props.AttachClientData) {
   form.value.source_of_lead = props.AttachClientData.source_of_lead
   form.value.policy_draft_date = props.AttachClientData.policy_draft_date
   form.value.label = props.AttachClientData.label
-  
+
 
   if (!props.AttachClientData.source_of_lead) {
     form.value.source_of_lead = 'Select'
   }
   attactClientEdit.value = true
-  
+
 }
 
 
@@ -155,7 +155,6 @@ let checkRequiredField = () => {
     "premium_volumn",
     "this_app_from_lead",
     "policy_draft_date",
-    'client_full_name',
     "first_name",
     "last_name",
     "beneficiary_name",
@@ -214,6 +213,12 @@ let checkRequiredField = () => {
     (errors) => errors.length > 0
   );
 
+  // if (page.props.auth.role !== 'admin') {
+  //   if (!form.value.client_full_name) {
+  //     firstStepErrors.value.client_full_name = ["This  field is required."];
+  //   }
+  // }
+
   if (hasErrors) {
     var element = document.getElementById("modal_main_id");
     element.scrollIntoView();
@@ -264,7 +269,7 @@ let SaveBussinessData = async () => {
     })
     .catch((error) => {
       isLoading.value = false;
-      if(error.response.status !== 400){
+      if (error.response.status !== 400) {
         firstStepErrors.value = error.response.data.errors;
       }
       toaster("error", error.response.data.error);
@@ -427,15 +432,33 @@ const getClientByName = () => {
   clientsLoader.value = true
   axios.post('/internal-agent/get-client-by-name', { 'client_name': search2.value })
     .then((response) => {
-      console.log('response', response);
       clients.value = response.data.clients
-      console.log('clients.value', clients.value);
       clientsLoader.value = false
     }).catch((error) => {
       console.log('error', error);
       clientsLoader.value = false
     })
 }
+let filteredAgents = ref(null)
+let agentLoader = ref(false)
+const getAgentByName = () => {
+  agentLoader.value = true
+  axios.post('/admin/get-agent-by-name', { 'agent_name': search.value })
+    .then((response) => {
+      filteredAgents.value = response.data.agents
+      agentLoader.value = false
+    }).catch((error) => {
+      console.log('error', error);
+      agentLoader.value = false
+    })
+}
+watch(() => search.value,
+  (newVal) => {
+    if (newVal) {
+      getAgentByName();
+    }
+  }
+);
 watch(() => search3.value,
   (newVal) => {
     if (newVal) {
@@ -451,54 +474,65 @@ watch(() => search2.value,
   }
 );
 
-const filteredAgents = computed(() => {
-  return props.agents.filter((agent) => {
-    return (
-      agent.upline_id !== null &&
-      (agent.first_name.toLowerCase().includes(search.value.toLowerCase()) ||
-        agent.last_name.toLowerCase().includes(search.value.toLowerCase()))
-    );
-  });
-});
+// const filteredAgents = computed(() => {
+//   return props.agents.filter((agent) => {
+//     return (
+//       agent.upline_id !== null &&
+//       (agent.first_name.toLowerCase().includes(search.value.toLowerCase()) ||
+//         agent.last_name.toLowerCase().includes(search.value.toLowerCase()))
+//     );
+//   });
+// });
 
 onMounted(() => {
   document.addEventListener("click", handleOutsideClick);
   ChangeFrequency(form.value.premium_frequency)
   if (props.businessData?.client) {
-    updateFormAndDisableElement('client_street_address_1', props.businessData.client.address, 'client_street_address_1', form.value, disabledDob);
-    updateFormAndDisableElement('dob', props.businessData.client.dob, 'dob', form.value, disabledDob);
-    updateFormAndDisableElement('client_email', props.businessData.client.email, 'client_email', form.value);
-    updateFormAndDisableElement('first_name', props.businessData.client.first_name, 'first_name', form.value);
-    updateFormAndDisableElement('last_name', props.businessData.client.last_name, 'last_name', form.value);
-    updateFormAndDisableElement('client_zipcode', props.businessData.client.zipCode, 'client_zipcode', form.value);
-    updateFormAndDisableElement('client_phone_no', props.businessData.client.phone, 'client_phone_no', form.value);
+    if (page.props.auth.role === 'internal-agent') {
+      updateFormAndDisableElement('client_street_address_1', props.businessData.client.address, 'client_street_address_1', form.value, disabledDob);
+      updateFormAndDisableElement('dob', props.businessData.client.dob, 'dob', form.value, disabledDob);
+      updateFormAndDisableElement('client_email', props.businessData.client.email, 'client_email', form.value);
+      updateFormAndDisableElement('first_name', props.businessData.client.first_name, 'first_name', form.value);
+      updateFormAndDisableElement('last_name', props.businessData.client.last_name, 'last_name', form.value);
+      updateFormAndDisableElement('client_zipcode', props.businessData.client.zipCode, 'client_zipcode', form.value);
+      updateFormAndDisableElement('client_phone_no', props.businessData.client.phone, 'client_phone_no', form.value);
+    }
+
     form.value.client_full_name = props.businessData.client.first_name + ' ' + props.businessData.client.last_name
-   
+
   }
 
   if (props.clientData) {
     selectClient(props.clientData)
   }
-  if(props.AttachClientData){
-    
+  if (props.AttachClientData) {
+
     var element = document.getElementById('label');
     if (element) {
       element.disabled = true;
     }
 
     let policy_validation = ref([
-    'insurance_company', 'product_name', 'application_date', 'coverage_amount', 'coverage_length',
-    'premium_frequency', 'premium_amount', 'premium_volumn', 'carrier_writing_number', 'this_app_from_lead',
-    'source_of_lead', 'policy_draft_date'
-  ])
-  policy_validation.value.forEach((key) => {
-    if (form.value.hasOwnProperty(key)) {
-      const value = form.value[key];
-      updateFormAndDisableElement(key, value, key, form.value);
-    }
-  })
+      'insurance_company', 'product_name', 'application_date', 'coverage_amount', 'coverage_length',
+      'premium_frequency', 'premium_amount', 'premium_volumn', 'carrier_writing_number', 'this_app_from_lead',
+      'source_of_lead', 'policy_draft_date'
+    ])
+    policy_validation.value.forEach((key) => {
+      if (form.value.hasOwnProperty(key)) {
+        const value = form.value[key];
+        updateFormAndDisableElement(key, value, key, form.value);
+      }
+    })
   }
-  
+  if (page.props.auth.role === 'admin') {
+    getAgentByName()
+  }
+  if (page.props.auth.role === 'internal-agent' && !props.is_client) {
+    getClientByName()
+  }
+  if (props.is_client && page.props.auth.role === 'internal-agent') {
+    GetBusinessbyLabel()
+  }
 });
 
 onUnmounted(() => {
@@ -580,7 +614,7 @@ let selectBusiness = (business) => {
   let policy_validation = ref([
     'insurance_company', 'product_name', 'application_date', 'coverage_amount', 'coverage_length',
     'premium_frequency', 'premium_amount', 'premium_volumn', 'carrier_writing_number', 'this_app_from_lead',
-    'source_of_lead', 'policy_draft_date',
+    'source_of_lead', 'policy_draft_date'
   ])
   policy_validation.value.forEach((key) => {
     if (form.value.hasOwnProperty(key)) {
@@ -597,6 +631,73 @@ let selectBusiness = (business) => {
   // }
   console.log('business', business);
   console.log('form', form.value);
+}
+let updateFormAndEnableElement = (property, value, elementId, formObject, disabledFlag) => {
+  if (value && property !== 'dob' && property !== 'policy_draft_date' && property !== 'application_date' && property !== 'this_app_from_lead') {
+    formObject[property] = value;
+    var element = document.getElementById(elementId);
+    if (element) {
+      element.disabled = false;
+    }
+  } else if (value && property == 'policy_draft_date') {
+    formObject[property] = value;
+    disabledPolicydraftdate.value = false
+  } else if (value && property == 'application_date') {
+    formObject[property] = value;
+    applicationDate.value = false
+  } else if (value && property == 'this_app_from_lead') {
+    if (value == 'NO') {
+      var element = document.getElementById('source_of_lead');
+      if (element) {
+        element.disabled = true;
+      }
+      var element2 = document.getElementById(elementId);
+      if (element2) {
+        element2.disabled = false;
+      }
+    }
+  }
+}
+let resetValue = (key) => {
+  form.value[key] = ''
+  if (key == 'insurance_company') {
+    form.value[key] = "AETNA/CVS"
+  }
+  if (key == 'product_name') {
+    form.value[key] = "Select"
+  }
+  if (key == 'coverage_length') {
+    form.value[key] = "Select"
+  }
+  if (key == 'premium_frequency') {
+    form.value[key] = "Select"
+  }
+  if (key == 'this_app_from_lead') {
+    form.value[key] = "Select"
+  }
+  if (key == 'source_of_lead') {
+    form.value[key] = "Select"
+  }
+  form.value.business_label = ''
+  form.value.id = ''
+}
+let existingBusiness = () => {
+  console.log('change here');
+  if (!form.value.existing_business) {
+    let policy_validation = ref([
+      'insurance_company', 'product_name', 'application_date', 'coverage_amount', 'coverage_length',
+      'premium_frequency', 'premium_amount', 'premium_volumn', 'carrier_writing_number', 'this_app_from_lead',
+      'source_of_lead', 'policy_draft_date', 'label'
+    ])
+    policy_validation.value.forEach((key) => {
+      if (form.value.hasOwnProperty(key)) {
+        const value = form.value[key];
+        updateFormAndEnableElement(key, value, key, form.value);
+        resetValue(key);
+      }
+    })
+  }
+
 }
 </script>
 <style scoped>
@@ -681,7 +782,8 @@ let selectBusiness = (business) => {
       <div style="width: 80%; height: 90%" class="relative" id="modal_main_id">
         <div class="relative bg-white rounded-lg shadow-lg transition-all">
           <div class="flex justify-between">
-            <h3 class="text-xl font-small ml-5 mt-5 text-gray-700"> <span v-if="edit_data">Edit</span> <span v-if="attactClientEdit">Attach Client</span> <span v-if="!attactClientEdit">Report Application</span> 
+            <h3 class="text-xl font-small ml-5 mt-5 text-gray-700"> <span v-if="edit_data">Edit</span> <span
+                v-if="attactClientEdit">Attach Client</span> <span v-if="!attactClientEdit">Report Application</span>
             </h3>
             <button v-if="!is_client" @click="close" type="button"
               class="text-gray-400 bg-transparent mr-2 mt-2 hover:bg-gray-200 hover:text-gray-700 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
@@ -704,15 +806,15 @@ let selectBusiness = (business) => {
                     <div v-if="is_client"
                       class="grid xl:grid-cols-4 mb-3 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-x-8">
                       <div class="flex items-center mb-4">
-                        <input id="default-radio-1" v-model="form.existing_business" type="radio" :value="false"
-                          name="existing_business"
+                        <input id="default-radio-1" v-model="form.existing_business" @change="existingBusiness()"
+                          type="radio" :value="false" name="existing_business"
                           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                         <label for="default-radio-1" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">New
                           Business</label>
                       </div>
                       <div class="flex items-center mb-4">
-                        <input id="default-radio-2" v-model="form.existing_business" type="radio" :value="true"
-                          name="existing_business"
+                        <input id="default-radio-2" v-model="form.existing_business" @change="existingBusiness()"
+                          type="radio" :value="true" name="existing_business"
                           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                         <label for="default-radio-2"
                           class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Existing Business</label>
@@ -807,8 +909,9 @@ let selectBusiness = (business) => {
                                     class="bg-gray-50  mb-1  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="" required />
                                 </div>
-                                <li v-for="(agent, index) in filteredAgents" :key="index" @click="selectagent(agent)"
-                                  class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                <global-spinner class="text-center" :spinner="agentLoader" />
+                                <li v-if="!agentLoader" v-for="(agent, index) in filteredAgents" :key="index"
+                                  @click="selectagent(agent)" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                                   {{ agent.first_name }} {{ agent.last_name }}
 
                                 </li>
@@ -830,7 +933,7 @@ let selectBusiness = (business) => {
                         <div v-if="$page.props.auth.role === 'internal-agent'">
                           <label id="select_client"
                             class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Select
-                            Client <span class="text-red-400">*</span></label>
+                            Client </label>
                           <button @click="SugestClient" :disabled="is_client"
                             class="bg-gray-50 mt-1 mb-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 flex"
                             id="states-button" data-dropdown-toggle="dropdown-states" type="button">
@@ -859,12 +962,13 @@ let selectBusiness = (business) => {
                                     class="bg-gray-50  mb-1  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="" required />
                                 </div>
-                                <li v-if="!is_client" v-for="(client, index) in clients" :key="index"
+                                <global-spinner class="text-center" :spinner="clientsLoader" />
+                                <li v-if="!is_client && !clientsLoader" v-for="(client, index) in clients" :key="index"
                                   @click="selectClient(client)" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                                   <div>{{ client.first_name }} {{ client.last_name }}</div>
 
                                 </li>
-                                <li v-if="is_client" v-for="(client, index) in clients" :key="index"
+                                <li v-if="is_client && !clientsLoader" v-for="(client, index) in clients" :key="index"
                                   @click="selectClient(client)" v-show="clientData?.id == client.id"
                                   class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                                   <div>{{ client.first_name }} {{ client.last_name }}</div>
@@ -1239,7 +1343,8 @@ let selectBusiness = (business) => {
                     <button v-if="step === 2 && !edit_data" :class="{ 'opacity-25': isLoading === true }"
                       :disabled="isLoading == true" @click="SaveBussinessData()"
                       class="button-custom px-3 py-2 rounded-md flex items-center" href="#">
-                      <global-spinner :spinner="isLoading" /> <span v-if="!attactClientEdit">Confirm</span> <span v-if="attactClientEdit">Update</span> 
+                      <global-spinner :spinner="isLoading" /> <span v-if="!attactClientEdit">Confirm</span> <span
+                        v-if="attactClientEdit">Update</span>
                     </button>
                     <button v-if="step === 2 && edit_data" :class="{ 'opacity-25': isLoading2 === true }"
                       :disabled="isLoading2 == true" @click="UpdateBussinessData()"
