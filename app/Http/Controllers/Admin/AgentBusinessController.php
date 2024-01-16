@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Client;
 use App\Models\InternalAgentMyBusiness;
 use App\Models\Role;
 use App\Models\State;
@@ -22,8 +23,10 @@ class AgentBusinessController extends Controller
                 $endDate = Carbon::parse($request->to)->endOfDay();
                 $query->whereBetween('created_at', [$startDate, $endDate]);
             }
-        })->orderBy('created_at', 'desc')
-        ->paginate(100);
+        })
+            ->with('client')
+            ->orderBy('created_at', 'desc')
+            ->paginate(100);
 
         $states = State::get();
 
@@ -33,10 +36,15 @@ class AgentBusinessController extends Controller
             $query->where('role_id', $agentRole->id);
         })->get();
 
+        $clients = Client::where('unlocked', true)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         // dd($businesses);
         return Inertia::render('InternalAgent/MyBusiness/Index', [
             'businesses' => $businesses,
             'states' => $states,
+            'clients' => $clients,
             'requestData' =>  $request->all(),
             'agents' => $agents
         ]);
@@ -79,9 +87,8 @@ class AgentBusinessController extends Controller
                 'errors' => $validate->errors(),
             ], 400);
         }
-       
         InternalAgentMyBusiness::create([
-            'agent_id' => $request->agent_id,
+            'agent_id' => auth()->user()->id,
             'agent_full_name' => $request->agent_full_name,
             'agent_email' => $request->agent_email,
             'insurance_company' => $request->insurance_company,
@@ -96,6 +103,7 @@ class AgentBusinessController extends Controller
             'this_app_from_lead' => $request->this_app_from_lead,
             'source_of_lead' => $request->this_app_from_lead == 'NO' ? null : $request->source_of_lead,
             'policy_draft_date' => Carbon::parse($request->policy_draft_date),
+            'label' => $request->label,
             'first_name' => $request->first_name,
             'mi' => $request->mi,
             'last_name' => $request->last_name,
@@ -158,8 +166,8 @@ class AgentBusinessController extends Controller
             ], 400);
         }
         $InternalAgentMyBusiness = InternalAgentMyBusiness::find($request->id);
-      
-        if($InternalAgentMyBusiness){
+
+        if ($InternalAgentMyBusiness) {
             $InternalAgentMyBusiness->update([
                 'agent_id' => $request->agent_id,
                 'agent_full_name' => $request->agent_full_name,
@@ -176,6 +184,7 @@ class AgentBusinessController extends Controller
                 'this_app_from_lead' => $request->this_app_from_lead,
                 'source_of_lead' => $request->this_app_from_lead === 'NO' ? null : $request->source_of_lead,
                 'policy_draft_date' => Carbon::parse($request->policy_draft_date),
+                'client_id' => $request->client_id,
                 'first_name' => $request->first_name,
                 'mi' => $request->mi,
                 'last_name' => $request->last_name,
@@ -196,15 +205,30 @@ class AgentBusinessController extends Controller
                 'success' => true,
                 'message' => 'Bussiness updated Successfully!',
             ], 200);
-        }else{
+        } else {
             return response()->json([
                 'success' => false,
                 'message' => 'Bussiness Not found!',
             ], 401);
         }
-
-       
-       
     }
 
+    public function getAgentByName(Request $request)
+    {
+        $agentRole = Role::whereName('internal-agent')->first();
+
+        $agents = User::whereHas('roles', function ($query) use ($agentRole) {
+            $query->where('role_id', $agentRole->id);
+        })
+        ->where(function ($query) use ($request) {
+            if (isset($request->agent_name) && $request->agent_name != '') {
+                $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ['%' . $request->agent_name . '%']);
+            }
+        })
+        ->orderBy('created_at', 'desc')
+        ->get();
+        return response()->json([
+            'agents' => $agents
+        ]);
+    }
 }

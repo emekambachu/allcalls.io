@@ -7,12 +7,16 @@ import { toaster } from "@/helper.js";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { companies, coverageLengthArray, questions, uplineManagerArray, currentQuestion } from "@/constants.js";
+import axios from "axios";
 let emits = defineEmits();
 let props = defineProps({
   addBusinessModal: Boolean,
   agents: Array,
   states: Array,
   businessData: Object,
+  is_client: Boolean,
+  clientData: Object,
+  AttachClientData: Object,
 });
 let firstStepErrors = ref({});
 
@@ -43,6 +47,8 @@ let form = ref({
   this_app_from_lead: "Select",
   source_of_lead: "Select",
   policy_draft_date: "",
+  client_id: '',
+  client_full_name: '',
   first_name: "",
   mi: "",
   last_name: "",
@@ -59,21 +65,76 @@ let form = ref({
   client_zipcode: "",
   client_phone_no: "",
   client_email: "",
+  label: '',
+  business_label: '',
+  business_id: '',
+  existing_business: false
 });
+
 let edit_data = ref(false)
+let disabledDob = ref(false)
+let disabledPolicydraftdate = ref(false)
+let applicationDate = ref(false)
+let updateFormAndDisableElement = (property, value, elementId, formObject, disabledFlag) => {
+  if (value && property !== 'dob' && property !== 'policy_draft_date' && property !== 'application_date') {
+    formObject[property] = value;
+    var element = document.getElementById(elementId);
+    if (element) {
+      element.disabled = true;
+    }
+  } else if (value && property == 'dob') {
+    formObject[property] = value;
+    disabledDob.value = true
+  } else if (value && property == 'policy_draft_date') {
+    formObject[property] = value;
+    disabledPolicydraftdate.value = true
+  } else if (value && property == 'application_date') {
+    formObject[property] = value;
+    applicationDate.value = true
+  }
+};
 if (props.businessData) {
   form.value = props.businessData
-  if(!props.businessData.source_of_lead){
-    form.value.source_of_lead = 'Select'
+  if (props.businessData?.client) {
+    form.value.client_id = props.businessData?.client.id
   }
+  // form.value.client_id = props.businessData?.client.id
+
+  // if (props.businessData.this_app_from_lead == 'NO') {
+  //   form.value.source_of_lead = 'Select'
+  // }
   edit_data.value = true
 }
+let attactClientEdit = ref(false)
+if (props.AttachClientData) {
+  form.value.insurance_company = props.AttachClientData.insurance_company
+  form.value.product_name = props.AttachClientData.product_name
+  form.value.application_date = props.AttachClientData.application_date
+  form.value.coverage_amount = props.AttachClientData.coverage_amount
+  form.value.coverage_length = props.AttachClientData.coverage_length
+  form.value.premium_frequency = props.AttachClientData.premium_frequency
+  form.value.premium_amount = props.AttachClientData.premium_amount
+  form.value.premium_volumn = props.AttachClientData.premium_volumn
+  form.value.carrier_writing_number = props.AttachClientData.carrier_writing_number
+  form.value.this_app_from_lead = props.AttachClientData.this_app_from_lead
+  form.value.source_of_lead = props.AttachClientData.source_of_lead
+  form.value.policy_draft_date = props.AttachClientData.policy_draft_date
+  form.value.label = props.AttachClientData.label
+
+
+  if (!props.AttachClientData.source_of_lead) {
+    form.value.source_of_lead = 'Select'
+  }
+  attactClientEdit.value = true
+
+}
+
+
 const isValidEmail = (email) => {
   // Regular expression for validating an Email address
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 };
-
 let checkRequiredField = () => {
   for (const key in firstStepErrors.value) {
     if (firstStepErrors.value.hasOwnProperty(key)) {
@@ -152,6 +213,12 @@ let checkRequiredField = () => {
     (errors) => errors.length > 0
   );
 
+  // if (page.props.auth.role !== 'admin') {
+  //   if (!form.value.client_full_name) {
+  //     firstStepErrors.value.client_full_name = ["This  field is required."];
+  //   }
+  // }
+
   if (hasErrors) {
     var element = document.getElementById("modal_main_id");
     element.scrollIntoView();
@@ -178,7 +245,7 @@ const Next = (data) => {
 let Previous = (data) => {
   step.value -= 1;
 };
-let dateFormat = (val) =>  {
+let dateFormat = (val) => {
   const date = new Date(val);
   const toMonth = date.getMonth() + 1;
   const toDate = date.getDate();
@@ -191,19 +258,21 @@ let dateFormat = (val) =>  {
 // save business data start
 let isLoading = ref(false);
 let SaveBussinessData = async () => {
-  form.value.application_date =  dateFormat(form.value.application_date)
+  form.value.application_date = dateFormat(form.value.application_date)
   form.value.policy_draft_date = dateFormat(form.value.policy_draft_date)
   form.value.dob = dateFormat(form.value.dob)
   isLoading.value = true
   await axios.post(page.url, form.value)
     .then((response) => {
       toaster("success", response.data.message);
-      router.visit(page.url);
+      router.visit('/internal-agent/my-business');
     })
     .catch((error) => {
-      console.log("error", error);
       isLoading.value = false;
-      firstStepErrors.value = error.response.data.errors;
+      if (error.response.status !== 400) {
+        firstStepErrors.value = error.response.data.errors;
+      }
+      toaster("error", error.response.data.error);
       console.log("firstStepErrors.value", firstStepErrors.value);
       console.log("error.response.data.errors", error.response.data.errors);
       if (firstStepErrors.value) {
@@ -218,7 +287,7 @@ let SaveBussinessData = async () => {
 // update business data start
 let isLoading2 = ref(false)
 let UpdateBussinessData = async () => {
-  form.value.application_date =  dateFormat(form.value.application_date)
+  form.value.application_date = dateFormat(form.value.application_date)
   form.value.policy_draft_date = dateFormat(form.value.policy_draft_date)
   form.value.dob = dateFormat(form.value.dob)
   isLoading2.value = true
@@ -294,6 +363,7 @@ watch(
     }
   }
 );
+
 let setAnnualPremium = () => {
   if (form.value.premium_amount && numberOfmonth.value) {
     form.value.premium_volumn = Number(form.value.premium_amount) * numberOfmonth.value;
@@ -320,41 +390,313 @@ let changeSpliteScalte = () => {
     form.value.split_sale_type = "Select";
   }
 }
+
+let isOpen = ref(false)
 let isOpen2 = ref(false)
+let isOpen3 = ref(false)
 let search = ref('')
+let search2 = ref('')
+let search3 = ref('')
+let get_client_by_name = ref('')
 const SugestAgent = () => {
-  isOpen2.value = !isOpen2.value;
+  isOpen.value = !isOpen.value;
   search.value = ''
 };
-const filteredAgents = computed(() => {
-  return props.agents.filter((agent) => {
-    return (
-      agent.upline_id !== null &&
-      (agent.first_name.toLowerCase().includes(search.value.toLowerCase()) ||
-        agent.last_name.toLowerCase().includes(search.value.toLowerCase()))
-    );
-  });
-});
+const SugestClient = () => {
+  if (!props.is_client) {
+    isOpen2.value = !isOpen2.value;
+    search2.value = ''
+  }
+};
+let SugestBusiness = () => {
+  isOpen3.value = !isOpen3.value;
+  search3.value = ''
+}
+let filterBusiness = ref([])
+let businessLoader = ref(false)
+let GetBusinessbyLabel = () => {
+  businessLoader.value = true
+  axios.post('/internal-agent/business-by-label', { 'business_label': search3.value })
+    .then((response) => {
+      console.log('response', response);
+      filterBusiness.value = response.data.businesses
+      businessLoader.value = false
+    }).catch((error) => {
+      console.log('error', error);
+      businessLoader.value = false
+    })
+}
+let clients = ref([])
+let clientsLoader = ref(false)
+const getClientByName = () => {
+  clientsLoader.value = true
+  axios.post('/internal-agent/get-client-by-name', { 'client_name': search2.value })
+    .then((response) => {
+      clients.value = response.data.clients
+      clientsLoader.value = false
+    }).catch((error) => {
+      console.log('error', error);
+      clientsLoader.value = false
+    })
+}
+let filteredAgents = ref(null)
+let agentLoader = ref(false)
+const getAgentByName = () => {
+  agentLoader.value = true
+  axios.post('/admin/get-agent-by-name', { 'agent_name': search.value })
+    .then((response) => {
+      filteredAgents.value = response.data.agents
+      agentLoader.value = false
+    }).catch((error) => {
+      console.log('error', error);
+      agentLoader.value = false
+    })
+}
+watch(() => search.value,
+  (newVal) => {
+    if (newVal) {
+      getAgentByName();
+    }
+  }
+);
+watch(() => search3.value,
+  (newVal) => {
+    if (newVal) {
+      GetBusinessbyLabel();
+    }
+  }
+);
+watch(() => search2.value,
+  (newVal) => {
+    if (newVal) {
+      getClientByName();
+    }
+  }
+);
+
+// const filteredAgents = computed(() => {
+//   return props.agents.filter((agent) => {
+//     return (
+//       agent.upline_id !== null &&
+//       (agent.first_name.toLowerCase().includes(search.value.toLowerCase()) ||
+//         agent.last_name.toLowerCase().includes(search.value.toLowerCase()))
+//     );
+//   });
+// });
+
 onMounted(() => {
   document.addEventListener("click", handleOutsideClick);
   ChangeFrequency(form.value.premium_frequency)
+  if (props.businessData?.client) {
+    if (page.props.auth.role === 'internal-agent') {
+      updateFormAndDisableElement('client_street_address_1', props.businessData.client.address, 'client_street_address_1', form.value, disabledDob);
+      updateFormAndDisableElement('dob', props.businessData.client.dob, 'dob', form.value, disabledDob);
+      updateFormAndDisableElement('client_email', props.businessData.client.email, 'client_email', form.value);
+      updateFormAndDisableElement('first_name', props.businessData.client.first_name, 'first_name', form.value);
+      updateFormAndDisableElement('last_name', props.businessData.client.last_name, 'last_name', form.value);
+      updateFormAndDisableElement('client_zipcode', props.businessData.client.zipCode, 'client_zipcode', form.value);
+      updateFormAndDisableElement('client_phone_no', props.businessData.client.phone, 'client_phone_no', form.value);
+    }
+
+    form.value.client_full_name = props.businessData.client.first_name + ' ' + props.businessData.client.last_name
+
+  }
+
+  if (props.clientData) {
+    selectClient(props.clientData)
+  }
+  if (props.AttachClientData) {
+
+    var element = document.getElementById('label');
+    if (element) {
+      element.disabled = true;
+    }
+
+    let policy_validation = ref([
+      'insurance_company', 'product_name', 'application_date', 'coverage_amount', 'coverage_length',
+      'premium_frequency', 'premium_amount', 'premium_volumn', 'carrier_writing_number', 'this_app_from_lead',
+      'source_of_lead', 'policy_draft_date'
+    ])
+    policy_validation.value.forEach((key) => {
+      if (form.value.hasOwnProperty(key)) {
+        const value = form.value[key];
+        updateFormAndDisableElement(key, value, key, form.value);
+      }
+    })
+  }
+  if (page.props.auth.role === 'admin') {
+    getAgentByName()
+  }
+  if (page.props.auth.role === 'internal-agent' && !props.is_client) {
+    getClientByName()
+  }
+  if (props.is_client && page.props.auth.role === 'internal-agent') {
+    GetBusinessbyLabel()
+  }
 });
 
 onUnmounted(() => {
   document.removeEventListener("click", handleOutsideClick);
 });
 const handleOutsideClick = (event) => {
-  const dropdownElement = document.getElementById("dropdown_main_id");
-  if (!dropdownElement.contains(event.target)) {
-    isOpen2.value = false;
+  if (page.props.auth.role === 'admin') {
+    const dropdownElement = document.getElementById("dropdown_main_id");
+    if (!dropdownElement.contains(event.target)) {
+      isOpen.value = false;
+    }
   }
+  if (form.value.existing_business) {
+    const dropdownElement3 = document.getElementById("dropdown_main_id3");
+
+    if (!dropdownElement3.contains(event.target)) {
+      isOpen3.value = false;
+    }
+  }
+  if (page.props.auth.role === 'internal-agent') {
+    const dropdownElement2 = document.getElementById("dropdown_main_id2");
+
+    if (!dropdownElement2.contains(event.target)) {
+      isOpen2.value = false;
+    }
+  }
+
+
 
 };
 let selectagent = (agent) => {
   form.value.agent_full_name = agent.first_name + ' ' + agent.last_name
   form.value.agent_email = agent.email
   form.value.agent_id = agent.id
+  isOpen.value = false;
+
+}
+
+let selectClient = (client) => {
+  updateFormAndDisableElement('client_street_address_1', client.address, 'client_street_address_1', form.value, disabledDob);
+  updateFormAndDisableElement('dob', client.dob, 'dob', form.value, disabledDob);
+  updateFormAndDisableElement('client_email', client.email, 'client_email', form.value);
+  updateFormAndDisableElement('first_name', client.first_name, 'first_name', form.value);
+  updateFormAndDisableElement('last_name', client.last_name, 'last_name', form.value);
+  updateFormAndDisableElement('client_zipcode', client.zipCode, 'client_zipcode', form.value);
+  updateFormAndDisableElement('client_phone_no', client.phone, 'client_phone_no', form.value);
+  form.value.client_full_name = client.first_name + ' ' + client.last_name
+  form.value.client_id = client.id
+  form.value.beneficiary_name = ''
+  form.value.beneficiary_relationship = ''
+  form.value.client_street_address_2 = ''
+  form.value.client_city = ''
+  form.value.client_state = ''
+  form.value.gender = ''
   isOpen2.value = false;
+
+}
+
+let selectBusiness = (business) => {
+  isOpen3.value = false;
+  form.value.insurance_company = business.insurance_company
+  form.value.product_name = business.product_name
+  form.value.application_date = business.application_date
+  form.value.coverage_amount = business.coverage_amount
+  form.value.coverage_length = business.coverage_length
+  form.value.premium_frequency = business.premium_frequency
+  form.value.premium_amount = business.premium_amount
+  form.value.premium_volumn = business.premium_volumn
+  form.value.carrier_writing_number = business.carrier_writing_number
+  form.value.this_app_from_lead = business.this_app_from_lead
+  form.value.source_of_lead = business.source_of_lead
+  form.value.policy_draft_date = business.policy_draft_date
+  form.value.business_label = business.label ? business.label : business.insurance_company + ' - ' + business.product_name
+  form.value.label = business.label ? business.label : ''
+  if (business.this_app_from_lead == 'NO') {
+    form.value.source_of_lead = 'Select'
+  }
+  form.value.business_id = business.id
+  let policy_validation = ref([
+    'insurance_company', 'product_name', 'application_date', 'coverage_amount', 'coverage_length',
+    'premium_frequency', 'premium_amount', 'premium_volumn', 'carrier_writing_number', 'this_app_from_lead',
+    'source_of_lead', 'policy_draft_date'
+  ])
+  policy_validation.value.forEach((key) => {
+    if (form.value.hasOwnProperty(key)) {
+      const value = form.value[key];
+      updateFormAndDisableElement(key, value, key, form.value);
+    }
+  })
+  // for (const key in form.value) {
+  //   if (form.value.hasOwnProperty(key)) {
+  //     const value = form.value[key];
+  //     // console.log(`Key: ${key}, Value: ${value}`);
+  //     updateFormAndDisableElement(key, value, key, form.value);
+  //   }
+  // }
+  console.log('business', business);
+  console.log('form', form.value);
+}
+let updateFormAndEnableElement = (property, value, elementId, formObject, disabledFlag) => {
+  if (value && property !== 'dob' && property !== 'policy_draft_date' && property !== 'application_date' && property !== 'this_app_from_lead') {
+    formObject[property] = value;
+    var element = document.getElementById(elementId);
+    if (element) {
+      element.disabled = false;
+    }
+  } else if (value && property == 'policy_draft_date') {
+    formObject[property] = value;
+    disabledPolicydraftdate.value = false
+  } else if (value && property == 'application_date') {
+    formObject[property] = value;
+    applicationDate.value = false
+  } else if (value && property == 'this_app_from_lead') {
+    if (value == 'NO') {
+      var element = document.getElementById('source_of_lead');
+      if (element) {
+        element.disabled = true;
+      }
+      var element2 = document.getElementById(elementId);
+      if (element2) {
+        element2.disabled = false;
+      }
+    }
+  }
+}
+let resetValue = (key) => {
+  form.value[key] = ''
+  if (key == 'insurance_company') {
+    form.value[key] = "AETNA/CVS"
+  }
+  if (key == 'product_name') {
+    form.value[key] = "Select"
+  }
+  if (key == 'coverage_length') {
+    form.value[key] = "Select"
+  }
+  if (key == 'premium_frequency') {
+    form.value[key] = "Select"
+  }
+  if (key == 'this_app_from_lead') {
+    form.value[key] = "Select"
+  }
+  if (key == 'source_of_lead') {
+    form.value[key] = "Select"
+  }
+  form.value.business_label = ''
+  form.value.id = ''
+}
+let existingBusiness = () => {
+  console.log('change here');
+  if (!form.value.existing_business) {
+    let policy_validation = ref([
+      'insurance_company', 'product_name', 'application_date', 'coverage_amount', 'coverage_length',
+      'premium_frequency', 'premium_amount', 'premium_volumn', 'carrier_writing_number', 'this_app_from_lead',
+      'source_of_lead', 'policy_draft_date', 'label'
+    ])
+    policy_validation.value.forEach((key) => {
+      if (form.value.hasOwnProperty(key)) {
+        const value = form.value[key];
+        updateFormAndEnableElement(key, value, key, form.value);
+        resetValue(key);
+      }
+    })
+  }
 
 }
 </script>
@@ -439,10 +781,11 @@ let selectagent = (agent) => {
       <!-- This is the overlay -->
       <div style="width: 80%; height: 90%" class="relative" id="modal_main_id">
         <div class="relative bg-white rounded-lg shadow-lg transition-all">
-          <div class="flex justify-end">
-            <h3 class="text-xl font-small ml-5 mt-5 text-gray-700"> <span v-if="edit_data">Edit</span> Report Application
+          <div class="flex justify-between">
+            <h3 class="text-xl font-small ml-5 mt-5 text-gray-700"> <span v-if="edit_data">Edit</span> <span
+                v-if="attactClientEdit">Attach Client</span> <span v-if="!attactClientEdit">Report Application</span>
             </h3>
-            <button @click="close" type="button"
+            <button v-if="!is_client" @click="close" type="button"
               class="text-gray-400 bg-transparent mr-2 mt-2 hover:bg-gray-200 hover:text-gray-700 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
               data-modal-hide="defaultModal">
               <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
@@ -451,6 +794,7 @@ let selectagent = (agent) => {
               </svg>
               <span class="sr-only">Close modal</span>
             </button>
+
           </div>
           <div class="px-12 py-2">
             <br />
@@ -458,6 +802,78 @@ let selectagent = (agent) => {
               <form @submit.prevent="" class="question-card-list">
                 <div class="question-card animate__animated" style="position: relative">
                   <div v-show="step == 1">
+
+                    <div v-if="is_client"
+                      class="grid xl:grid-cols-4 mb-3 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-x-8">
+                      <div class="flex items-center mb-4">
+                        <input id="default-radio-1" v-model="form.existing_business" @change="existingBusiness()"
+                          type="radio" :value="false" name="existing_business"
+                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        <label for="default-radio-1" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">New
+                          Business</label>
+                      </div>
+                      <div class="flex items-center mb-4">
+                        <input id="default-radio-2" v-model="form.existing_business" @change="existingBusiness()"
+                          type="radio" :value="true" name="existing_business"
+                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        <label for="default-radio-2"
+                          class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Existing Business</label>
+                      </div>
+                    </div>
+
+                    <div class="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-x-8">
+                      <div id="dropdown_main_id3">
+                        <!-- <global-spinner :spinner="isLoading" /> -->
+
+                        <div v-if="form.existing_business">
+                          <label class="block  text-sm mb-2 font-medium text-gray-900 dark:text-black">Select
+                            Business<span class="text-red-400">*</span></label>
+                          <button @click="SugestBusiness"
+                            class="bg-gray-50 mt-1 mb-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 flex"
+                            id="states-button" data-dropdown-toggle="dropdown-states" type="button">
+
+                            <span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="w-4 mt-1 h-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                              </svg></span><span v-if="!form.business_label" class="ml-2">Select Business</span>
+                            <span class="ml-2"> {{ form.business_label }}</span>
+                          </button>
+
+
+                          <div v-if="firstStepErrors.business_label" class="text-red-500"
+                            v-text="firstStepErrors.business_label[0]">
+                          </div>
+
+                          <div v-if="isOpen3 > 0" class="items-center justify-center ">
+
+                            <div class="relative">
+
+
+                              <ul style="width: 100%; max-height:250px;"
+                                class="absolute z-10 pb-2    overflow-auto bg-white rounded-md shadow-md">
+
+
+                                <div class="mx-2 mt-1">
+                                  <input v-model="search3" autocomplete="off" type="text" id="agent_full_name"
+                                    class="bg-gray-50  mb-1  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="" required />
+                                </div>
+                                <global-spinner class="text-center" :spinner="businessLoader" />
+                                <li v-if="!businessLoader" v-for="(business, index) in filterBusiness" :key="index"
+                                  @click="selectBusiness(business)" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                  {{ business.label ? business.label : business.insurance_company + ' -' +
+                                    business.product_name }}
+
+                                </li>
+                                <!-- <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer ">Clear</li> -->
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+
                     <div v-if="$page.props.auth.role === 'admin'">
                       <h1 style="background-color: #134576" class="my-0 text-center rounded-md py-2 text-white">
                         Agent Information
@@ -481,7 +897,7 @@ let selectagent = (agent) => {
                             v-text="firstStepErrors.agent_full_name[0]">
                           </div>
 
-                          <div v-if="isOpen2 > 0" class="items-center justify-center ">
+                          <div v-if="isOpen > 0" class="items-center justify-center ">
 
                             <div class="relative">
 
@@ -493,8 +909,9 @@ let selectagent = (agent) => {
                                     class="bg-gray-50  mb-1  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="" required />
                                 </div>
-                                <li v-for="(agent, index) in filteredAgents" :key="index" @click="selectagent(agent)"
-                                  class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                <global-spinner class="text-center" :spinner="agentLoader" />
+                                <li v-if="!agentLoader" v-for="(agent, index) in filteredAgents" :key="index"
+                                  @click="selectagent(agent)" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                                   {{ agent.first_name }} {{ agent.last_name }}
 
                                 </li>
@@ -505,11 +922,64 @@ let selectagent = (agent) => {
                       </div>
                     </div>
 
+
+
                     <h1 style="background-color: #134576" class="mt-5 text-center rounded-md py-2 text-white">
                       Client Information
                     </h1>
 
                     <div class="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-x-8">
+                      <div v-if="$page.props.auth.role === 'internal-agent'" id="dropdown_main_id2">
+                        <div v-if="$page.props.auth.role === 'internal-agent'">
+                          <label id="select_client"
+                            class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Select
+                            Client </label>
+                          <button @click="SugestClient" :disabled="is_client"
+                            class="bg-gray-50 mt-1 mb-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 flex"
+                            id="states-button" data-dropdown-toggle="dropdown-states" type="button">
+
+                            <span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="w-4 mt-1 h-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                              </svg></span><span v-if="!form.client_full_name" class="ml-2">Select Client</span>
+                            <span class="ml-2">{{ form.client_full_name }}</span>
+                          </button>
+
+
+                          <div v-if="firstStepErrors.client_full_name" class="text-red-500"
+                            v-text="firstStepErrors.client_full_name[0]">
+                          </div>
+
+                          <div v-if="isOpen2 > 0" class="items-center justify-center ">
+                            <div class="relative">
+
+
+                              <ul style="width: 100%; max-height:250px;"
+                                class="absolute z-10 pb-2    overflow-auto bg-white rounded-md shadow-md">
+                                <div class="mx-2 mt-1">
+                                  <input v-if="!is_client" v-model="search2" autocomplete="off" type="text"
+                                    id="agent_full_name"
+                                    class="bg-gray-50  mb-1  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="" required />
+                                </div>
+                                <global-spinner class="text-center" :spinner="clientsLoader" />
+                                <li v-if="!is_client && !clientsLoader" v-for="(client, index) in clients" :key="index"
+                                  @click="selectClient(client)" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                  <div>{{ client.first_name }} {{ client.last_name }}</div>
+
+                                </li>
+                                <li v-if="is_client && !clientsLoader" v-for="(client, index) in clients" :key="index"
+                                  @click="selectClient(client)" v-show="clientData?.id == client.id"
+                                  class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                  <div>{{ client.first_name }} {{ client.last_name }}</div>
+
+                                </li>
+                                <!-- <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer ">Clear</li> -->
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                       <div>
                         <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">First Name<span
                             class="text-red-400">*</span></label>
@@ -595,7 +1065,7 @@ let selectagent = (agent) => {
                         <label for="EFNumber"
                           class="block mb-2 mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">State<span
                             class="text-red-400">*</span></label>
-                        <select v-model="form.client_state" @change="StateChange(this)" id="countries"
+                        <select v-model="form.client_state" @change="StateChange(this)" id="client_state"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                           <option disabled>Select</option>
                           <option v-for="state in states" :value="state.id">
@@ -622,7 +1092,7 @@ let selectagent = (agent) => {
                           class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Client Phone
                           Number<span class="text-red-400">*</span></label>
 
-                        <input v-model="form.client_phone_no" type="text" maxLength="15" @input="
+                        <input v-model="form.client_phone_no" type="text" id="client_phone_no" maxLength="15" @input="
                           CurrencyValidation(form.client_phone_no, 'client_phone_no')
                           "
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -647,7 +1117,7 @@ let selectagent = (agent) => {
                           class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Gender<span
                             class="text-red-400">*</span></label>
 
-                        <select v-model="form.gender" id="countries"
+                        <select v-model="form.gender" id="gender"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                           <option disabled>Select</option>
                           <option value="Male">Male</option>
@@ -662,7 +1132,8 @@ let selectagent = (agent) => {
                           class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Date of Birth<span
                             class="text-red-400">*</span></label>
 
-                        <VueDatePicker v-model="form.dob" format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply>
+                        <VueDatePicker v-model="form.dob" :disabled="disabledDob" format="dd-MMM-yyyy" :maxDate="maxDate"
+                          auto-apply>
                         </VueDatePicker>
                         <div v-if="firstStepErrors.dob" class="text-red-500" v-text="firstStepErrors.dob[0]"></div>
                       </div>
@@ -670,7 +1141,7 @@ let selectagent = (agent) => {
 
                     <label for="message"
                       class="block mt-5 mb-2 text-sm font-medium text-gray-900 dark:text-white">Notes</label>
-                    <textarea v-model="form.notes" rows="5"
+                    <textarea v-model="form.notes" id="notes" rows="5"
                       class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="Write your thoughts here..."></textarea>
                     <div v-if="firstStepErrors.notes" class="text-red-500" v-text="firstStepErrors.notes[0]"></div>
@@ -681,9 +1152,17 @@ let selectagent = (agent) => {
 
                     <div class="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-x-8">
                       <div>
+                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Business
+                          Label</label>
+                        <input v-model="form.label" type="text" id="label"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          placeholder="" required />
+                        <div v-if="firstStepErrors.label" class="text-red-500" v-text="firstStepErrors.label[0]"></div>
+                      </div>
+                      <div>
                         <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Insurance
                           Company<span class="text-red-400">*</span></label>
-                        <select v-model="form.insurance_company" id="countries" @change="ChangeProducName()"
+                        <select v-model="form.insurance_company" id="insurance_company" @change="ChangeProducName()"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                           <option disabled>Select</option>
                           <option v-for="option in getInsuranceCompanyOptions()" v-text="option"></option>
@@ -695,7 +1174,7 @@ let selectagent = (agent) => {
                       <div>
                         <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Product Name<span
                             class="text-red-400">*</span></label>
-                        <select v-model="form.product_name" id="countries"
+                        <select v-model="form.product_name" id="product_name"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                           <option disabled>Select</option>
                           <option v-for="option in getProductNameOptions()" :value="option" v-text="option"></option>
@@ -707,7 +1186,8 @@ let selectagent = (agent) => {
                       <div>
                         <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Application
                           Date<span class="text-red-400">*</span></label>
-                        <VueDatePicker v-model="form.application_date" format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply>
+                        <VueDatePicker v-model="form.application_date" :disabled="applicationDate" format="dd-MMM-yyyy"
+                          :maxDate="maxDate" auto-apply>
                         </VueDatePicker>
                         <div v-if="firstStepErrors.application_date" class="text-red-500"
                           v-text="firstStepErrors.application_date[0]"></div>
@@ -718,7 +1198,7 @@ let selectagent = (agent) => {
                           Amount<span class="text-red-400">*</span></label>
                         <input v-model="form.coverage_amount" @input="
                           CurrencyValidation(form.coverage_amount, 'coverage_amount')
-                          " type="text" id="text"
+                          " type="text" id="coverage_amount"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="$ 0.00" required />
                         <div v-if="firstStepErrors.coverage_amount" class="text-red-500"
@@ -728,7 +1208,7 @@ let selectagent = (agent) => {
                       <div>
                         <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Coverage
                           Length<span class="text-red-400">*</span></label>
-                        <select v-model="form.coverage_length" id="countries"
+                        <select v-model="form.coverage_length" id="coverage_length"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                           <option disabled>Select</option>
                           <option v-for="option in coverageLengthArray" :value="option" v-text="option"></option>
@@ -741,7 +1221,7 @@ let selectagent = (agent) => {
                         <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Premium
                           Frequency<span class="text-red-400">*</span></label>
                         <select v-model="form.premium_frequency" @change="ChangeFrequency(form.premium_frequency)"
-                          id="countries"
+                          id="premium_frequency"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                           <option disabled>Select</option>
                           <option value="Monthly">Monthly</option>
@@ -762,7 +1242,7 @@ let selectagent = (agent) => {
                           Premium Amount<span class="text-red-400">*</span></label>
                         <input v-model="form.premium_amount" @input="
                           CurrencyValidation(form.premium_amount, 'premium_amount')
-                          " type="text" id="text"
+                          " type="text" id="premium_amount"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="$ 0.00" required />
                         <div v-if="firstStepErrors.premium_amount" class="text-red-500"
@@ -774,7 +1254,7 @@ let selectagent = (agent) => {
                           Volume<span class="text-red-400">*</span></label>
                         <input v-model="form.premium_volumn" disabled @input="
                           CurrencyValidation(form.premium_volumn, 'premium_volumn')
-                          " type="text" id="text"
+                          " type="text" id="premium_volumn"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="$ 0.00" required />
                         <div v-if="firstStepErrors.premium_volumn" class="text-red-500"
@@ -808,7 +1288,7 @@ let selectagent = (agent) => {
                       <div>
                         <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Was this app from
                           a lead?<span class="text-red-400">*</span></label>
-                        <select v-model="form.this_app_from_lead" @change="changeAppLead()" id="countries"
+                        <select v-model="form.this_app_from_lead" @change="changeAppLead()" id="this_app_from_lead"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                           <option disabled>Select</option>
                           <option value="YES">YES</option>
@@ -825,7 +1305,7 @@ let selectagent = (agent) => {
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="" required /> -->
                         <select v-model="form.source_of_lead" :class="{ 'bg-slate-300': form.this_app_from_lead == 'NO' }"
-                          :disabled="form.this_app_from_lead == 'NO'" id="countries"
+                          :disabled="form.this_app_from_lead == 'NO'" id="source_of_lead"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                           <option disabled>Select</option>
                           <option value="Allcalls Client">Allcalls</option>
@@ -838,7 +1318,8 @@ let selectagent = (agent) => {
                       <div>
                         <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">What Is the
                           Policy Draft Date?<span class="text-red-400">*</span></label>
-                        <VueDatePicker v-model="form.policy_draft_date" format="dd-MMM-yyyy" auto-apply>
+                        <VueDatePicker v-model="form.policy_draft_date" :disabled="disabledPolicydraftdate"
+                          format="dd-MMM-yyyy" auto-apply>
                         </VueDatePicker>
                         <div v-if="firstStepErrors.policy_draft_date" class="text-red-500"
                           v-text="firstStepErrors.policy_draft_date[0]"></div>
@@ -862,7 +1343,8 @@ let selectagent = (agent) => {
                     <button v-if="step === 2 && !edit_data" :class="{ 'opacity-25': isLoading === true }"
                       :disabled="isLoading == true" @click="SaveBussinessData()"
                       class="button-custom px-3 py-2 rounded-md flex items-center" href="#">
-                      <global-spinner :spinner="isLoading" /> Confirm
+                      <global-spinner :spinner="isLoading" /> <span v-if="!attactClientEdit">Confirm</span> <span
+                        v-if="attactClientEdit">Update</span>
                     </button>
                     <button v-if="step === 2 && edit_data" :class="{ 'opacity-25': isLoading2 === true }"
                       :disabled="isLoading2 == true" @click="UpdateBussinessData()"

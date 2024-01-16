@@ -47,9 +47,10 @@ const presetDates = ref([
 
 ]);
 
+let page = usePage();
 
 
-let { agentInvites, states, requestData, agents } = defineProps({
+let { agentInvites, states, requestData, agents , clients , is_client , client , userNotFound} = defineProps({
     businesses: {
         required: true,
         type: Array,
@@ -57,14 +58,18 @@ let { agentInvites, states, requestData, agents } = defineProps({
     states: Array,
     requestData: Array,
     agents: Array,
+    clients:Array,
+    is_client:Boolean,
+    userNotFound:String,
+    client:Object,
 });
-
-
+if(userNotFound !== null && page.props.auth.role === 'internal-agent'){
+  toaster('error', userNotFound)
+}
 let slidingLoader = ref(false)
 
 
 
-let page = usePage();
 if (page.props.flash.message) {
     toaster("success", page.props.flash.message);
 }
@@ -126,10 +131,19 @@ let ViewDetail = (business_data) => {
     businessData.value = business_data
     viewDetailModal.value = true
 }
+let AttachClientData = ref(null)
+const  AttachClient = (business) => {
+    addBusinessModal.value = true
+    AttachClientData.value = business
+}
 
 let addBusiness = () => {
     businessData.value = null
+    AttachClientData.value = null
     addBusinessModal.value = true
+}
+if(is_client){
+    addBusiness()
 }
 let EditBusiness = (business_data) => {
     addBusinessModal.value = true
@@ -229,7 +243,7 @@ let ClearFilter = () => {
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">App Type</th>
                                     <th v-if="$page.props.auth.role == 'internal-agent'" scope="col"
                                         style="min-width: 150px;" class="px-4 py-3">Agent Name</th>
-                                    <th scope="col" style="min-width: 100px;" class="px-4 py-3">Action</th>
+                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -268,6 +282,12 @@ let ClearFilter = () => {
                                                 stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                                            </svg>
+                                        </button>
+                                        <button title="Attach Client" v-if="$page.props.auth.role === 'internal-agent'" class="ml-3"
+                                            @click="AttachClient(businesse)">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
                                             </svg>
                                         </button>
 
@@ -315,8 +335,8 @@ let ClearFilter = () => {
             </div>
         </div>
 
-        <AddModal v-if="addBusinessModal" :agents="agents" :states="states" :addBusinessModal="addBusinessModal"
-            @close="addBusinessModal = false" :businessData="businessData" :reIniteAgent="reIniteAgent" />
+        <AddModal v-if="addBusinessModal" :agents="agents" :is_client="is_client" :clientData="client" :userNotFound="userNotFound" :states="states"  :addBusinessModal="addBusinessModal"
+            @close="addBusinessModal = false" :businessData="businessData" :AttachClientData="AttachClientData" :reIniteAgent="reIniteAgent" />
 
 
         <ViewDetailCom v-if="viewDetailModal" :viewDetailModal="viewDetailModal" @close="viewDetailModal = false"

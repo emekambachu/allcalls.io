@@ -51,6 +51,8 @@ Route::prefix('internal-agent')->middleware(['auth', 'verified', 'internal-agent
     Route::get('/agent/tree/{id}', [MyAgencyController::class, 'getAgentTree'])->name('agent.tree')->middleware(['registration-step-check', 'IsBasicTraining']);
 
     Route::get('/my-business', [MyBusinessController::class, 'index'])->name('agent.my.business')->middleware(['registration-step-check', 'IsBasicTraining']);
+    Route::post('/business-by-label', [MyBusinessController::class, 'businessByLabel'])->name('business.bylabel')->middleware(['registration-step-check', 'IsBasicTraining']);
+    Route::post('/get-client-by-name', [MyBusinessController::class, 'getClientByName'])->name('getclient.byname')->middleware(['registration-step-check', 'IsBasicTraining']);
     Route::post('/my-business', [MyBusinessController::class, 'store'])->name('agent.my.business.store')->middleware(['registration-step-check', 'IsBasicTraining']);
     Route::get('/download-pdf/{fileName}', [TrainingController::class, 'downloadPdf'])->name('download-pdf')->middleware(['registration-step-check', 'IsBasicTraining']);;
 });
