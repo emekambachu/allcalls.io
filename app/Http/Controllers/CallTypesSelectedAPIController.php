@@ -87,7 +87,12 @@ class CallTypesSelectedAPIController extends Controller
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-            return response()->json(['message' => 'Failed to update user states'], 500);
+            return response()->json([
+                'message' => 'Failed to update user states',
+                'user_id' => $user->id ?? null,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ], 500);
         }
     }
 
