@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\InternalAgentController;
 use App\Http\Controllers\AdminUserActivitiesController;
 use App\Http\Controllers\InternalAgentExportController;
 use App\Http\Controllers\Admin\AvailableNumberController;
+use App\Http\Controllers\Admin\ClientsController;
 use App\Http\Controllers\AdminAvaialbleNumbersController;
 use App\Http\Controllers\Admin\LegalQuestionPdfController;
 use App\Http\Controllers\AvailableNumberReleaseController;
@@ -42,6 +43,8 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
     Route::get('/transactions', [CustomerController::class, 'getAllTransaction'])->name('admin.transactions');
 
+    Route::get('/clients',[ClientsController::class,'index'])->name('admin.clients');
+    Route::patch('/clients/{client}', [ClientsController::class, 'update'])->name('clients.update');
 
 
     Route::get('/customer/transactions/{id}', [CustomerController::class, 'getTransaction']);

@@ -3,7 +3,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Transactions from "@/Pages/Admin/User/Transactions.vue";
 import Calls from "@/Pages/Admin/User/Calls.vue";
 import Activities from "@/Pages/Admin/User/Activities.vue";
-import Clients from "@/Pages/Admin/Clients/Index.vue";
+import Clients from "@/Pages/Admin/ClientsByUser/Index.vue";
 import { Head } from "@inertiajs/vue3";
 import { Bar } from "vue-chartjs";
 import { ref } from "vue";

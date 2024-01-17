@@ -174,7 +174,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
       <p class="text-center text-gray-600">No clients yet.</p>
     </section>
     <Modal :show="showModal" @close="showModal = false">
-      <ClientModal :showModal="showModal" :ClientDetail="ClientDetail" :states="states" @close="showModal = false">
+      <ClientModal :showModal="showModal" :route="'/clients'" :ClientDetail="ClientDetail" :states="states" @close="showModal = false">
       </ClientModal>
     </Modal>
   </AuthenticatedLayout>
