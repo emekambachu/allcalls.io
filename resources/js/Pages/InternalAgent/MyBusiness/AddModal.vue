@@ -274,8 +274,6 @@ let SaveBussinessData = async () => {
         firstStepErrors.value = error.response.data.errors;
       }
       toaster("error", error.response.data.error);
-      console.log("firstStepErrors.value", firstStepErrors.value);
-      console.log("error.response.data.errors", error.response.data.errors);
       if (firstStepErrors.value) {
         step.value = 1;
         var element = document.getElementById("modal_main_id");
@@ -297,11 +295,8 @@ let UpdateBussinessData = async () => {
       toaster("success", response.data.message);
       router.visit(page.url)
     }).catch((error) => {
-      console.log('error', error);
       if (error.response.status == 400) {
         firstStepErrors.value = error.response.data.errors
-        console.log('firstStepErrors.value', firstStepErrors.value);
-        console.log('error.response.data.errors', error.response.data.errors);
       }
       if (error.response.status == 401) {
         toaster("error", error.response.data.message);
@@ -575,15 +570,6 @@ let selectBusiness = (business) => {
       updateFormAndDisableElement(key, value, key, form.value);
     }
   })
-  // for (const key in form.value) {
-  //   if (form.value.hasOwnProperty(key)) {
-  //     const value = form.value[key];
-  //     // console.log(`Key: ${key}, Value: ${value}`);
-  //     updateFormAndDisableElement(key, value, key, form.value);
-  //   }
-  // }
-  console.log('business', business);
-  console.log('form', form.value);
 }
 let updateFormAndEnableElement = (property, value, elementId, formObject, disabledFlag) => {
   if (value && property !== 'dob' && property !== 'policy_draft_date' && property !== 'application_date' && property !== 'this_app_from_lead') {
@@ -635,7 +621,6 @@ let resetValue = (key) => {
   form.value.id = ''
 }
 let existingBusiness = () => {
-  console.log('change here');
   if (!form.value.existing_business) {
     let policy_validation = ref([
       'insurance_company', 'product_name', 'application_date', 'coverage_amount', 'coverage_length',
