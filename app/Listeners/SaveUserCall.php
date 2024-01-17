@@ -80,17 +80,17 @@ class SaveUserCall
         Log::debug($results);
 
         $client = Client::create([
-            'first_name' => $potentialLead->firstName,
-            'last_name' => $potentialLead->lastName,
+            'first_name' => $potentialLead->firstName ?? 'N/A',
+            'last_name' => $potentialLead->lastName ?? 'N/A',
             'phone' => $event->from,
-            'zipCode' => $potentialLead->zipCode,
-            'email' => $potentialLead->email,
-            'address' => $potentialLead->address,
-            'dob' => $potentialLead->dob,
+            'zipCode' => $potentialLead->zipCode ?? 'N/A',
+            'email' => $potentialLead->email ?? 'N/A',
+            'address' => $potentialLead->address ?? 'N/A',
+            'dob' => $potentialLead->dob ?? 'N/A',
             'call_id' => $call->id,
             'user_id' => $event->user->id,
             'call_type_id' => $event->callTypeId,
-            'state' => $potentialLead->state,
+            'state' => $potentialLead->state ?? 'N/A',
         ]);
 
         Log::debug('Client saved.');
