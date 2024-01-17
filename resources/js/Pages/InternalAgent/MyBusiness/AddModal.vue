@@ -432,13 +432,19 @@ let filteredBusiness = computed(() => {
 });
 
 let filteredClients = computed(() => {
+  // return props.clients.filter(user => {
+  //   return (user.phone.toLowerCase().includes(search2.value.toLowerCase())
+  //     // ||
+  //     //  user.first_name.toLowerCase().includes(search2.value) ||
+  //     //  user.last_name.toLowerCase().includes(search2.value) 
+  //   )
+  // });
+  const sanitizedSearch = search2.value.replace(/\D/g, ''); // Remove non-digit characters
   return props.clients.filter(user => {
-    return (user.phone.toLowerCase().includes(search2.value.toLowerCase())
-      // ||
-      //  user.first_name.toLowerCase().includes(search2.value) ||
-      //  user.last_name.toLowerCase().includes(search2.value) 
-    )
-  });
+    const sanitizedPhone = user.phone.replace(/\D/g, ''); // Remove non-digit characters
+
+    return sanitizedPhone.includes(sanitizedSearch);
+  })
 });
 
 onMounted(() => {
@@ -845,7 +851,7 @@ let existingBusiness = () => {
                                 <div class="mx-2 mt-1">
                                   <input v-model="search" autocomplete="off" type="text" id="agent_full_name"
                                     class="bg-gray-50  mb-1  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="" required />
+                                    placeholder="Filter By Name" required />
                                 </div>
                                 <global-spinner class="text-center" :spinner="agentLoader" />
                                 <li v-if="!agentLoader" v-for="(agent, index) in filteredAgents" :key="index"
@@ -898,7 +904,7 @@ let existingBusiness = () => {
                                   <input v-if="!is_client" v-model="search2" autocomplete="off" type="text"
                                     id="agent_full_name"
                                     class="bg-gray-50  mb-1  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="" required />
+                                    placeholder="Filter By Phone" required />
                                 </div>
                                 <global-spinner class="text-center" :spinner="clientsLoader" />
                                 <ul class="max-w-md divide-y divide-gray-200">
