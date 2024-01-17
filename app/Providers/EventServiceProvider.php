@@ -29,7 +29,9 @@ use App\Listeners\UpdateTargetsInRingba;
 use App\Http\Controllers\FundsController;
 use App\Listeners\UpdateActiveUserStatus;
 use App\Listeners\ChargeUserForMissedCall;
+use Illuminate\Mail\Events\MessageSending;
 use App\Listeners\CheckDispositionListener;
+use App\Listeners\PreventBlacklistedEmails;
 use App\Listeners\AddFundsAddedUserActivity;
 use App\Listeners\AddMissedCallUserActivity;
 use App\Listeners\AddFundsTooLowUserActivity;
@@ -51,6 +53,10 @@ class EventServiceProvider extends ServiceProvider
      * @var array<class-string, array<int, class-string>>
      */
     protected $listen = [
+        MessageSending::class => [
+            PreventBlacklistedEmails::class,
+        ],
+    
         Registered::class => [
             SendEmailVerificationNotification::class,
             SendWelcomeEmail::class,
