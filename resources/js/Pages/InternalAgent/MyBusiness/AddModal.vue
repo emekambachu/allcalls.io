@@ -432,19 +432,19 @@ let filteredBusiness = computed(() => {
 });
 
 let filteredClients = computed(() => {
-  // return props.clients.filter(user => {
-  //   return (user.phone.toLowerCase().includes(search2.value.toLowerCase())
-  //     // ||
-  //     //  user.first_name.toLowerCase().includes(search2.value) ||
-  //     //  user.last_name.toLowerCase().includes(search2.value) 
-  //   )
-  // });
-  const sanitizedSearch = search2.value.replace(/\D/g, ''); // Remove non-digit characters
   return props.clients.filter(user => {
-    const sanitizedPhone = user.phone.replace(/\D/g, ''); // Remove non-digit characters
+    return (user.phone.toLowerCase().includes(search2.value.toLowerCase())
+      // ||
+      //  user.first_name.toLowerCase().includes(search2.value) ||
+      //  user.last_name.toLowerCase().includes(search2.value) 
+    )
+  });
+  // const sanitizedSearch = search2.value.replace(/\D/g, ''); // Remove non-digit characters
+  // return props.clients.filter(user => {
+  //   const sanitizedPhone = user.phone.replace(/\D/g, ''); // Remove non-digit characters
 
-    return sanitizedPhone.includes(sanitizedSearch);
-  })
+  //   return sanitizedPhone.includes(sanitizedSearch);
+  // })
 });
 
 onMounted(() => {
@@ -543,6 +543,22 @@ let selectClient = (client) => {
   form.value.gender = ''
   isOpen2.value = false;
 
+}
+let clearClient = () => {
+  isOpen2.value = false
+  disabledDob.value = false
+  form.value.client_full_name = ''
+  let policy_validation = ref([
+      'client_street_address_1', 'dob', 'client_email', 'first_name', 'last_name',
+      'client_zipcode', 'client_phone_no'
+    ])
+    policy_validation.value.forEach((key) => {
+      if (form.value.hasOwnProperty(key)) {
+        const value = form.value[key];
+        updateFormAndEnableElement(key, value, key, form.value);
+        resetValue(key);
+      }
+    })
 }
 
 let selectBusiness = (business) => {
@@ -908,6 +924,9 @@ let existingBusiness = () => {
                                 </div>
                                 <global-spinner class="text-center" :spinner="clientsLoader" />
                                 <ul class="max-w-md divide-y divide-gray-200">
+                                  <li >
+                                    <div  @click="clearClient()" class="cursor-pointer flex items-center space-x-4 rtl:space-x-reverse hover:bg-gray-50 p-2">Clear</div>
+                                  </li>
                                   <li v-for="client in filteredClients" :key="client.id">
                                     <div @click.prevent="selectClient(client)"
                                       class="cursor-pointer flex items-center space-x-4 rtl:space-x-reverse hover:bg-gray-50 p-2">
