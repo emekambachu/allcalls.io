@@ -58,12 +58,12 @@ let formatDate = date => {
                 <div class="ml-2">{{ form.first_name }} </div>
             </div>
             <div class="flex">
-                <div><strong>MI:</strong></div>
-                <div class="ml-2">{{ form.mi }} </div>
-            </div>
-            <div class="flex">
                 <div><strong>Last Name:</strong></div>
                 <div class="ml-2">{{ form.last_name }} </div>
+            </div>
+            <div class="flex">
+                <div><strong>MI:</strong></div>
+                <div class="ml-2">{{ form.mi }} </div>
             </div>
 
         </div>
@@ -85,7 +85,7 @@ let formatDate = date => {
         </div>
         <hr>
 
-        <div class="grid my-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1">
+        <div class="grid my-3 xl:grid-cols-2 lg:grid-cols-2 sm:grid-cols-1">
             <div class="flex">
                 <div><strong>Street Address 1:</strong></div>
                 <div class="ml-2">{{ form.client_street_address_1 }} </div>
@@ -94,15 +94,15 @@ let formatDate = date => {
                 <div><strong>Street Address 2:</strong></div>
                 <div class="ml-2">{{ form.client_street_address_2 }} </div>
             </div>
-            <div class="flex">
-                <div><strong>City:</strong></div>
-                <div class="ml-2">{{ form.client_city }} </div>
-            </div>
         </div>
         <hr>
 
 
-        <div class="grid my-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1">
+        <div class="grid my-3 xl:grid-cols-4 lg:grid-cols-2 sm:grid-cols-1">
+            <div class="flex">
+                <div><strong>City:</strong></div>
+                <div class="ml-2">{{ form.client_city }} </div>
+            </div>
             <div class="flex">
                 <div><strong>State:</strong></div>
                 <div class="ml-2">{{ form.client_state_name }} </div>
@@ -112,13 +112,17 @@ let formatDate = date => {
                 <div class="ml-2">{{ form.client_zipcode }} </div>
             </div>
             <div class="flex">
-                <div><strong>Client Phone Number:</strong></div>
-                <div class="ml-2">{{ form.client_phone_no }} </div>
+                <div><strong>Date of Birth:</strong></div>
+                <div class="ml-2">{{ formatDate(form.dob) }} </div>
             </div>
         </div>
         <hr>
 
         <div class="grid my-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1">
+            <div class="flex">
+                <div><strong>Client Phone Number:</strong></div>
+                <div class="ml-2">{{ form.client_phone_no }} </div>
+            </div>
             <div class="flex">
                 <div><strong>Client Email:</strong></div>
                 <div class="ml-2">{{ form.client_email }} </div>
@@ -127,10 +131,7 @@ let formatDate = date => {
                 <div><strong>Gender:</strong></div>
                 <div class="ml-2">{{ form.gender === 'Select' ? '' : form.gender }} </div>
             </div>
-            <div class="flex">
-                <div><strong>Date of Birth:</strong></div>
-                <div class="ml-2">{{ formatDate(form.dob) }} </div>
-            </div>
+           
         </div>
         <hr>
         <div class="grid my-3 xl:grid-cols-1 lg:grid-cols-1 sm:grid-cols-1">
@@ -146,6 +147,10 @@ let formatDate = date => {
         </h1>
         <div class="grid my-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1">
             <div class="flex ">
+                <div class="flex"><strong>Business Label:</strong></div>
+                <div class="ml-2">{{ form.label }} </div>
+            </div>
+            <div class="flex ">
                 <div class="flex"><strong>Insurance Company:</strong></div>
                 <div class="ml-2">{{ form.insurance_company }} </div>
             </div>
@@ -153,14 +158,15 @@ let formatDate = date => {
                 <div><strong>Product Name:</strong></div>
                 <div class="ml-2">{{ form.product_name === 'Select' ? '' : form.product_name }} </div>
             </div>
-            <div class="flex">
-                <div><strong>Application Date :</strong></div>
-                <div class="ml-2">{{ formatDate(form.application_date) }} </div>
-            </div>
+           
         </div>
         <hr>
 
         <div class="grid my-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1">
+            <div class="flex">
+                <div><strong>Application Date :</strong></div>
+                <div class="ml-2">{{ formatDate(form.application_date) }} </div>
+            </div>
             <div class="flex">
                 <div class="flex"><strong>Coverage Amount:</strong></div>
                 <div class="ml-2">{{ form.coverage_amount }} </div>
@@ -169,14 +175,14 @@ let formatDate = date => {
                 <div><strong>Coverage Length:</strong></div>
                 <div class="ml-2">{{ form.coverage_length === 'Select' ? '' : form.coverage_length }} </div>
             </div>
-            <div class="flex">
-                <div><strong>Premium Frequency</strong></div>
-                <div class="ml-2">{{ form.premium_frequency === 'Select' ? '' : form.premium_frequency }} </div>
-            </div>
         </div>
         <hr>
 
         <div class="grid my-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1">
+            <div class="flex">
+                <div><strong>Premium Frequency</strong></div>
+                <div class="ml-2">{{ form.premium_frequency === 'Select' ? '' : form.premium_frequency }} </div>
+            </div>
             <div class="flex">
                 <div class="flex"><strong>{{ form.premium_frequency != 'Select' ? form.premium_frequency : '' }} Premium
                         Amount:</strong></div>
@@ -185,10 +191,6 @@ let formatDate = date => {
             <div class="flex">
                 <div><strong>Annual Premium Volume:</strong></div>
                 <div class="ml-2">{{ form.premium_volumn }} </div>
-            </div>
-            <div class="flex">
-                <!-- <div ><strong>Equis writing number:</strong></div>
-                <div class="ml-2">{{ form.equis_writing_number_carrier === 'Select' ? '' : form.equis_writing_number_carrier }} </div> -->
             </div>
         </div>
         <hr>
