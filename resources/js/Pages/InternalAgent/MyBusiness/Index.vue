@@ -50,7 +50,7 @@ const presetDates = ref([
 let page = usePage();
 
 
-let { agentInvites, states, requestData, agents , clients , is_client , client , userNotFound} = defineProps({
+let { agentInvites, states, requestData, agents , clients , is_client , client , userNotFound , businessesFilter} = defineProps({
     businesses: {
         required: true,
         type: Array,
@@ -62,6 +62,7 @@ let { agentInvites, states, requestData, agents , clients , is_client , client ,
     is_client:Boolean,
     userNotFound:String,
     client:Object,
+    businessesFilter:Array,
 });
 if(userNotFound !== null && page.props.auth.role === 'internal-agent'){
   toaster('error', userNotFound)
@@ -335,7 +336,7 @@ let ClearFilter = () => {
             </div>
         </div>
 
-        <AddModal v-if="addBusinessModal" :agents="agents" :is_client="is_client" :clientData="client" :userNotFound="userNotFound" :states="states"  :addBusinessModal="addBusinessModal"
+        <AddModal v-if="addBusinessModal" :agents="agents" :is_client="is_client" :clientData="client" :clients="clients" :businessesFilter="businessesFilter" :userNotFound="userNotFound" :states="states"  :addBusinessModal="addBusinessModal"
             @close="addBusinessModal = false" :businessData="businessData" :AttachClientData="AttachClientData" :reIniteAgent="reIniteAgent" />
 
 

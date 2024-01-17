@@ -7,7 +7,6 @@ import { toaster } from "@/helper.js";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { companies, coverageLengthArray, questions, uplineManagerArray, currentQuestion } from "@/constants.js";
-import axios from "axios";
 let emits = defineEmits();
 let props = defineProps({
   addBusinessModal: Boolean,
@@ -17,6 +16,8 @@ let props = defineProps({
   is_client: Boolean,
   clientData: Object,
   AttachClientData: Object,
+  clients: Array,
+  businessesFilter: Array,
 });
 let firstStepErrors = ref({});
 
@@ -273,8 +274,6 @@ let SaveBussinessData = async () => {
         firstStepErrors.value = error.response.data.errors;
       }
       toaster("error", error.response.data.error);
-      console.log("firstStepErrors.value", firstStepErrors.value);
-      console.log("error.response.data.errors", error.response.data.errors);
       if (firstStepErrors.value) {
         step.value = 1;
         var element = document.getElementById("modal_main_id");
@@ -296,11 +295,8 @@ let UpdateBussinessData = async () => {
       toaster("success", response.data.message);
       router.visit(page.url)
     }).catch((error) => {
-      console.log('error', error);
       if (error.response.status == 400) {
         firstStepErrors.value = error.response.data.errors
-        console.log('firstStepErrors.value', firstStepErrors.value);
-        console.log('error.response.data.errors', error.response.data.errors);
       }
       if (error.response.status == 401) {
         toaster("error", error.response.data.message);
@@ -412,77 +408,38 @@ let SugestBusiness = () => {
   isOpen3.value = !isOpen3.value;
   search3.value = ''
 }
-let filterBusiness = ref([])
-let businessLoader = ref(false)
-let GetBusinessbyLabel = () => {
-  businessLoader.value = true
-  axios.post('/internal-agent/business-by-label', { 'business_label': search3.value })
-    .then((response) => {
-      console.log('response', response);
-      filterBusiness.value = response.data.businesses
-      businessLoader.value = false
-    }).catch((error) => {
-      console.log('error', error);
-      businessLoader.value = false
-    })
-}
-let clients = ref([])
-let clientsLoader = ref(false)
-const getClientByName = () => {
-  clientsLoader.value = true
-  axios.post('/internal-agent/get-client-by-name', { 'client_name': search2.value })
-    .then((response) => {
-      clients.value = response.data.clients
-      clientsLoader.value = false
-    }).catch((error) => {
-      console.log('error', error);
-      clientsLoader.value = false
-    })
-}
-let filteredAgents = ref(null)
-let agentLoader = ref(false)
-const getAgentByName = () => {
-  agentLoader.value = true
-  axios.post('/admin/get-agent-by-name', { 'agent_name': search.value })
-    .then((response) => {
-      filteredAgents.value = response.data.agents
-      agentLoader.value = false
-    }).catch((error) => {
-      console.log('error', error);
-      agentLoader.value = false
-    })
-}
-watch(() => search.value,
-  (newVal) => {
-    if (newVal) {
-      getAgentByName();
-    }
-  }
-);
-watch(() => search3.value,
-  (newVal) => {
-    if (newVal) {
-      GetBusinessbyLabel();
-    }
-  }
-);
-watch(() => search2.value,
-  (newVal) => {
-    if (newVal) {
-      getClientByName();
-    }
-  }
-);
 
-// const filteredAgents = computed(() => {
-//   return props.agents.filter((agent) => {
-//     return (
-//       agent.upline_id !== null &&
-//       (agent.first_name.toLowerCase().includes(search.value.toLowerCase()) ||
-//         agent.last_name.toLowerCase().includes(search.value.toLowerCase()))
-//     );
-//   });
-// });
+const filteredAgents = computed(() => {
+  return props.agents.filter((agent) => {
+    return (
+      agent.upline_id !== null &&
+      (agent.first_name.toLowerCase().includes(search.value.toLowerCase()) ||
+        agent.last_name.toLowerCase().includes(search.value.toLowerCase()))
+    );
+  });
+});
+
+let filteredBusiness = computed(() => {
+  return props.businessesFilter.filter(business => {
+    const searchValue = search3.value.toLowerCase();
+    return (
+      (business.agent_full_name && business.agent_full_name.toLowerCase().includes(searchValue)) ||
+      (business.label && business.label.toLowerCase().includes(searchValue)) ||
+      (business.product_name && business.product_name.toLowerCase().includes(searchValue)) ||
+      (business.insurance_company && business.insurance_company.toLowerCase().includes(searchValue))
+    );
+  });
+});
+
+let filteredClients = computed(() => {
+  return props.clients.filter(user => {
+    return (user.phone.toLowerCase().includes(search2.value.toLowerCase())
+      // ||
+      //  user.first_name.toLowerCase().includes(search2.value) ||
+      //  user.last_name.toLowerCase().includes(search2.value) 
+    )
+  });
+});
 
 onMounted(() => {
   document.addEventListener("click", handleOutsideClick);
@@ -523,15 +480,6 @@ onMounted(() => {
         updateFormAndDisableElement(key, value, key, form.value);
       }
     })
-  }
-  if (page.props.auth.role === 'admin') {
-    getAgentByName()
-  }
-  if (page.props.auth.role === 'internal-agent' && !props.is_client) {
-    getClientByName()
-  }
-  if (props.is_client && page.props.auth.role === 'internal-agent') {
-    GetBusinessbyLabel()
   }
 });
 
@@ -622,15 +570,6 @@ let selectBusiness = (business) => {
       updateFormAndDisableElement(key, value, key, form.value);
     }
   })
-  // for (const key in form.value) {
-  //   if (form.value.hasOwnProperty(key)) {
-  //     const value = form.value[key];
-  //     // console.log(`Key: ${key}, Value: ${value}`);
-  //     updateFormAndDisableElement(key, value, key, form.value);
-  //   }
-  // }
-  console.log('business', business);
-  console.log('form', form.value);
 }
 let updateFormAndEnableElement = (property, value, elementId, formObject, disabledFlag) => {
   if (value && property !== 'dob' && property !== 'policy_draft_date' && property !== 'application_date' && property !== 'this_app_from_lead') {
@@ -682,7 +621,6 @@ let resetValue = (key) => {
   form.value.id = ''
 }
 let existingBusiness = () => {
-  console.log('change here');
   if (!form.value.existing_business) {
     let policy_validation = ref([
       'insurance_company', 'product_name', 'application_date', 'coverage_amount', 'coverage_length',
@@ -859,7 +797,7 @@ let existingBusiness = () => {
                                     placeholder="" required />
                                 </div>
                                 <global-spinner class="text-center" :spinner="businessLoader" />
-                                <li v-if="!businessLoader" v-for="(business, index) in filterBusiness" :key="index"
+                                <li v-if="!businessLoader" v-for="(business, index) in filteredBusiness" :key="index"
                                   @click="selectBusiness(business)" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                                   {{ business.label ? business.label : business.insurance_company + ' -' +
                                     business.product_name }}
@@ -942,7 +880,7 @@ let existingBusiness = () => {
                                 stroke-width="1.5" stroke="currentColor" class="w-4 mt-1 h-4">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                               </svg></span><span v-if="!form.client_full_name" class="ml-2">Select Client</span>
-                            <span class="ml-2">{{ form.client_full_name }}</span>
+                            <span class="ml-2">{{ form.client_full_name }} </span>
                           </button>
 
 
@@ -963,17 +901,19 @@ let existingBusiness = () => {
                                     placeholder="" required />
                                 </div>
                                 <global-spinner class="text-center" :spinner="clientsLoader" />
-                                <li v-if="!is_client && !clientsLoader" v-for="(client, index) in clients" :key="index"
-                                  @click="selectClient(client)" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                                  <div>{{ client.first_name }} {{ client.last_name }}</div>
-
-                                </li>
-                                <li v-if="is_client && !clientsLoader" v-for="(client, index) in clients" :key="index"
-                                  @click="selectClient(client)" v-show="clientData?.id == client.id"
-                                  class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                                  <div>{{ client.first_name }} {{ client.last_name }}</div>
-
-                                </li>
+                                <ul class="max-w-md divide-y divide-gray-200">
+                                  <li v-for="client in filteredClients" :key="client.id">
+                                    <div @click.prevent="selectClient(client)"
+                                      class="cursor-pointer flex items-center space-x-4 rtl:space-x-reverse hover:bg-gray-50 p-2">
+                                      <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-medium text-gray-900 truncate">
+                                          {{ client.first_name }} {{ client.last_name }}
+                                        </p>
+                                        <p class="text-sm text-gray-500 truncate"> {{ client.phone }}</p>
+                                      </div>
+                                    </div>
+                                  </li>
+                                </ul>
                                 <!-- <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer ">Clear</li> -->
                               </ul>
                             </div>
