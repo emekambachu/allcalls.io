@@ -60,10 +60,11 @@ class HandleInertiaRequests extends Middleware
         if (auth()->user() && auth()->user()->clients()->latest()->first() && auth()->user()->clients()->latest()->first()->status === null) {
             $callDuration = auth()->user()->clients()->latest()->first()->call->call_duration_in_seconds;
 
-            if ($callDuration > 0) {
-                $showDispositionUpdateOption = true;
-            } else {
+            // if the call duration is null or 0 (missed call) then don't show the disposition update option
+            if (! $callDuration) {
                 $showDispositionUpdateOption = false;
+            } else {
+                $showDispositionUpdateOption = true;
             }
 
             $showDispositionUpdateOption = true;
