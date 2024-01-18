@@ -44,6 +44,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::get('/transactions', [CustomerController::class, 'getAllTransaction'])->name('admin.transactions');
 
     Route::get('/clients',[ClientsController::class,'index'])->name('admin.clients');
+    Route::post('/clients',[ClientsController::class,'getClients']);
     Route::patch('/clients/{client}', [ClientsController::class, 'update'])->name('clients.update');
 
 

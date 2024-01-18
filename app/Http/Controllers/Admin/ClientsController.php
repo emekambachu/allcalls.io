@@ -16,12 +16,27 @@ class ClientsController extends Controller
      */
     public function index(Request $request)
     {
-
         $Clients = Client::orderBy('created_at', 'desc')
+            ->where(function ($query) use ($request) {
+                if (isset($request->email) && $request->email != '') {
+                    $query->where('email', 'LIKE', '%' . $request->email . '%');
+                }
+            })
+            ->where(function ($query) use ($request) {
+                if (isset($request->phone) && $request->phone != '') {
+                    $query->where('phone', 'LIKE', '%' . $request->phone . '%');
+                }
+            })
+            ->where(function ($query) use ($request) {
+                if (isset($request->name) && $request->name != '') {
+                    $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ['%' . $request->name . '%']);
+                }
+            })
             ->paginate(100);
 
         $allClients = Client::orderBy('created_at', 'desc')
-            ->get();
+            ->take(100)->get();
+
         $totalClients = Client::count();
         $states = State::all();
         return Inertia::render('Admin/Clients/Index', [
@@ -29,6 +44,34 @@ class ClientsController extends Controller
             'allClients' => $allClients,
             'totalClients' => $totalClients,
             'states' => $states,
+            'requestData' => $request->all() ? $request->all() : ''
+        ]);
+    }
+
+    public function getClients(Request $request)
+    {
+        // dd($request->all(), empty($request->all()));
+        $allClients = Client::orderBy('created_at', 'desc')
+            ->when(isset($request->email) && $request->email != '', function ($query) use ($request) {
+                // Conditionally add the email filter if it is set
+                $query->where('email', 'LIKE', '%' . $request->email . '%');
+            })
+            ->when(isset($request->phone) && $request->phone != '', function ($query) use ($request) {
+                // Conditionally add the phone filter if it is set
+                $query->where('phone', 'LIKE', '%' . $request->phone . '%');
+            })
+            ->when(isset($request->name) && $request->name != '', function ($query) use ($request) {
+                // Conditionally add the name filter if it is set
+                $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ['%' . $request->name . '%']);
+            })
+            // ->when(empty($request->all()), function ($query) {
+            //     dd('sd');
+            //     // Add the take condition only when no filters are set
+            //     $query->take(1);
+            // })
+            ->get();
+        return response()->json([
+            'allClients' => $allClients
         ]);
     }
 
@@ -39,6 +82,7 @@ class ClientsController extends Controller
     {
         //
     }
+
 
     /**
      * Store a newly created resource in storage.
