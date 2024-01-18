@@ -78,6 +78,7 @@ class HandleInertiaRequests extends Middleware
                 'user_level' => $user_level,
                 'notifications' => $notifications,
                 'showDispositionUpdateOption' =>  $showDispositionUpdateOption,
+                'last_client' =>  (auth()->user()->clients()->latest()->first() && auth()->user()->clients()->latest()->first()->client) ? auth()->user()->clients()->latest()->first()->client : null,
             ],
 
             'ziggy' => function () use ($request) {
