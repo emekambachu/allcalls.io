@@ -58,6 +58,14 @@ class HandleInertiaRequests extends Middleware
 
 
         if (auth()->user() && auth()->user()->clients()->latest()->first() && auth()->user()->clients()->latest()->first()->status === null) {
+            $callDuration = auth()->user()->clients()->latest()->first()->call->call_duration_in_seconds;
+
+            if ($callDuration > 0) {
+                $showDispositionUpdateOption = true;
+            } else {
+                $showDispositionUpdateOption = false;
+            }
+
             $showDispositionUpdateOption = true;
         } else {
             $showDispositionUpdateOption = false;
