@@ -265,7 +265,7 @@ let SaveBussinessData = async () => {
   await axios.post(page.url, form.value)
     .then((response) => {
       toaster("success", response.data.message);
-      router.visit('/internal-agent/my-business');
+      router.visit(page.url);
     })
     .catch((error) => {
       isLoading.value = false;
@@ -518,6 +518,7 @@ let selectagent = (agent) => {
   form.value.agent_full_name = agent.first_name + ' ' + agent.last_name
   form.value.agent_email = agent.email
   form.value.agent_id = agent.id
+  console.log('form.value',form.value);
   isOpen.value = false;
 
 }

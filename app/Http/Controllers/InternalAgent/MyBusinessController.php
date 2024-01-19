@@ -44,9 +44,10 @@ class MyBusinessController extends Controller
                     $query->whereBetween('created_at', [$startDate, $endDate]);
                 }
             })
-            ->with('client')
+            ->with(['client', 'client.call'])
             ->orderBy('created_at', 'desc')
             ->paginate(100);
+            
         $clients = Client::where('user_id', auth()->user()->id)
             ->where('unlocked', true)
             ->where(function ($query) use ($request) {
