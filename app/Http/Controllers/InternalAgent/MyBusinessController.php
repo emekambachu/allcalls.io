@@ -24,13 +24,6 @@ class MyBusinessController extends Controller
             $clientdata = Client::find($_GET['clientId']);
             if ($clientdata) {
                 $isClient = true;
-                $businessesFilter = InternalAgentMyBusiness::whereIn('agent_id', getInviteeIds(auth()->user()))
-                    ->where(function ($query) use ($request) {
-                        if (isset($request->business_label) && $request->business_label != '') {
-                            $query->where('agent_full_name', 'LIKE', '%' . $request->business_label . '%');
-                        }
-                    })
-                    ->get();
             } else {
                 $userNotFound = 'User Not Found.';
             }
@@ -47,17 +40,11 @@ class MyBusinessController extends Controller
             ->with(['client', 'client.call'])
             ->orderBy('created_at', 'desc')
             ->paginate(100);
-            
+
         $clients = Client::where('user_id', auth()->user()->id)
             ->where('unlocked', true)
-            ->where(function ($query) use ($request) {
-                if (isset($request->client_name) && $request->client_name != '') {
-                    $query->where('phone', 'LIKE', '%' . $request->business_label . '%');
-                    // $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ['%' . $request->client_name . '%']);
-                }
-            })
-
             ->orderBy('created_at', 'desc')
+            ->take(20)
             ->get();
         $states = State::get();
         return Inertia::render('InternalAgent/MyBusiness/Index', [
