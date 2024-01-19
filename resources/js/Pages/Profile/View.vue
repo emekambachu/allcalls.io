@@ -1,6 +1,5 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import DeleteUserForm from "./Partials/DeleteUserForm.vue";
 import { reactive, computed, ref } from "vue";
 import { Link, Head, router, usePage } from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
@@ -256,11 +255,6 @@ const uploadImage = () => {
           </div>
 
 
-        </div>
-
-
-        <div class="flex p-4 sm:p-8 sm:rounded-lg">
-          <DeleteUserForm class="max-w-xl" />
         </div>
       </div>
     </div>
