@@ -105,6 +105,7 @@ let saveBids = () => {
 
             <div>
               <PrimaryButton @click="saveBids">Save</PrimaryButton>
+              <Link href="/profile/view">Cancel</Link>
             </div>
           </div>
         </div>
