@@ -24,7 +24,7 @@ class AgentBusinessController extends Controller
                 $query->whereBetween('created_at', [$startDate, $endDate]);
             }
         })
-            ->with('client')
+        ->with(['client', 'client.call'])
             ->orderBy('created_at', 'desc')
             ->paginate(100);
 
@@ -51,6 +51,7 @@ class AgentBusinessController extends Controller
     }
     public function store(Request $request)
     {
+        // dd($request->all());
         $validate = Validator::make($request->all(), [
             'agent_full_name' => 'required',
             'agent_email' => 'required',
