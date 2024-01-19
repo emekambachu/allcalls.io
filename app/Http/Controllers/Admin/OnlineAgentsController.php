@@ -27,9 +27,16 @@ class OnlineAgentsController extends Controller
             ->orderBy("created_at", "DESC")
             ->paginate(100);
 
-        $onlineStats = State::whereHas('users.onlineUser')->withCount(['users as user_count' => function ($query) {
-            $query->whereHas('onlineUser')->select(DB::raw('count(*)'));
-        }])->get();
+        $onlineUsers->getCollection()->transform(function ($onlineUser) {
+            $onlineUser->user->setRelation('states', $onlineUser->user->states->unique('id')->values());
+            return $onlineUser;
+        });
+
+        $onlineStats = State::whereHas('users.onlineUser')
+        ->withCount(['users as user_count' => function ($query) {
+            $query->select(DB::raw('count(DISTINCT user_id)'))->whereHas('onlineUser');
+        }])
+        ->get();
 
         // dd($onlineStats);
         $filters = $request->all();

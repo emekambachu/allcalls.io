@@ -6,6 +6,8 @@ import { Head, router, usePage } from "@inertiajs/vue3";
 import { ref } from "vue";
 import { toaster } from "@/helper.js";
 import Modal from "@/Components/Modal.vue";
+import ClientSearchFilter from "@/Components/ClientSearchFilter.vue";
+
 let page = usePage();
 if (page.props.flash.message) {
   toaster("success", page.props.flash.message);
@@ -20,6 +22,8 @@ let props = defineProps({
     type: Number,
   },
   states: Array,
+  allClients:Array,
+  requestData:Array,
 });
 
 
@@ -95,6 +99,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
         </h2>
       </div>
     </div>
+    <ClientSearchFilter :allClients="allClients" :requestData="requestData" :route="'/clients'" />
 
     <section v-if="Clients.data.length" class="p-3">
       <div class="mx-auto max-w-screen-xl sm:px-12">
@@ -174,7 +179,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
       <p class="text-center text-gray-600">No clients yet.</p>
     </section>
     <Modal :show="showModal" @close="showModal = false">
-      <ClientModal :showModal="showModal" :ClientDetail="ClientDetail" :states="states" @close="showModal = false">
+      <ClientModal :showModal="showModal" :route="'/clients'" :ClientDetail="ClientDetail" :states="states" @close="showModal = false">
       </ClientModal>
     </Modal>
   </AuthenticatedLayout>

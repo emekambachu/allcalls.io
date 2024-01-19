@@ -101,6 +101,7 @@ Route::middleware(['auth', 'verified', 'registration-step-check', 'notBanned', '
     Route::post('/billing/autopay', [AutoPayController::class, 'store'])->name('billing.autopay.store');
     Route::get('/usage-activities', [UsageActivityController::class, 'index'])->name('activities.index');
     Route::get('/clients', [ClientsController::class, 'index'])->name('clients.index');
+    Route::post('/clients', [ClientsController::class, 'getClients']);
     Route::patch('/clients/{client}', [ClientsController::class, 'update'])->name('clients.update');
     Route::get('/support', [SupportController::class, 'index'])->name('support.index');
     Route::get('/calls', [CallController::class, 'index'])->name('calls.index');
