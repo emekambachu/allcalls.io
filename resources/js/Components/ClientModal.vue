@@ -8,6 +8,8 @@ import { ref, reactive, defineEmits, onMounted } from "vue";
 import TextInput from "@/Components/TextInput.vue";
 import { router } from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import { toaster } from "@/helper.js";
+
 let props = defineProps({
     showModal: {
         type: Boolean,
@@ -17,6 +19,7 @@ let props = defineProps({
         type: Object,
     },
     states: Array,
+    route:String,
 });
 
 
@@ -36,7 +39,7 @@ let close = () => {
 let isLoading = ref(false);
 let saveChanges = () => {
     isLoading.value = true;
-    router.visit(`/clients/${form.id}`, {
+    router.visit(`${props.route}/${form.id}`, {
         method: "PATCH",
         data: form,
     });
