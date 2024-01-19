@@ -235,6 +235,7 @@ let ClearFilter = () => {
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">Client Name</th>
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">Application Date</th>
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">Draft Date</th>
+                                    <th scope="col" style="min-width: 150px;" class="px-4 py-3">Status</th>
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">URL</th>
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">Carrier</th>
                                     <th scope="col" style="min-width: 150px;" class="px-4 py-3">Product</th>
@@ -260,6 +261,7 @@ let ClearFilter = () => {
                                     </td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.application_date"></td>
                                     <td class="text-gray-600 px-4 py-3" v-text="businesse?.policy_draft_date"></td>
+                                    <td class="text-gray-600 px-4 py-3" v-text="businesse?.status"></td>
                                     <td class="text-gray-600">
                                         <a v-if="businesse.client?.call?.recording_url" target="_blank" :href="businesse.client?.call?.recording_url"
                                             class="flex"><svg xmlns="http://www.w3.org/2000/svg" height="1.5em" class="pr-1"

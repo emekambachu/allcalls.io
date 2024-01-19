@@ -133,12 +133,14 @@ class MyBusinessController extends Controller
         } else {
             $internalAgentBusiness = new InternalAgentMyBusiness();
         }
-
-        $internalAgentBusiness->agent_id = auth()->user()->id;
+        if(isset($internalAgentBusiness) && !$internalAgentBusiness->agent_id) {
+            $internalAgentBusiness->agent_id = auth()->user()->id;
+            $internalAgentBusiness->agent_full_name = $request->agent_full_name;
+            $internalAgentBusiness->agent_email = $request->agent_email;
+        }   
         $internalAgentBusiness->client_id = $request->client_id;
-        $internalAgentBusiness->agent_full_name = $request->agent_full_name;
         $internalAgentBusiness->label = $request->label;
-        $internalAgentBusiness->agent_email = $request->agent_email;
+        $internalAgentBusiness->status = $request->status;
         $internalAgentBusiness->insurance_company = $request->insurance_company;
         $internalAgentBusiness->product_name = $request->product_name;
         $internalAgentBusiness->application_date = Carbon::parse($request->application_date);
