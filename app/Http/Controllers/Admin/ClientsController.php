@@ -64,6 +64,7 @@ class ClientsController extends Controller
                 // Conditionally add the name filter if it is set
                 $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ['%' . $request->name . '%']);
             })
+            // ->skip($request->offset)->take($request->limit)
             // ->when(empty($request->all()), function ($query) {
             //     dd('sd');
             //     // Add the take condition only when no filters are set

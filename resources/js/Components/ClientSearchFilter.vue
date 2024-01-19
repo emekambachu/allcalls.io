@@ -15,7 +15,7 @@ let { route, allClients, requestData } = defineProps({
 });
 let form = ref({});
 let users = ref([])
-if(allClients){
+if (allClients) {
     users.value = allClients
 }
 const userPopoverRef = ref(null);
@@ -29,15 +29,37 @@ if (requestData) {
 }
 let clientsLoader = ref(false)
 let userFilterTerm = ref('');
+let offset = ref(0)
+let limit = ref(2)
+let hasMoreRecords = ref(true)
+
 let getClient = async () => {
     clientsLoader.value = true
     await axios.post(route, {
-        [filterUserBy.value]: userFilterTerm.value
+        [filterUserBy.value]: userFilterTerm.value,
+        // 'offset': offset.value,
+        // 'limit': limit.value,
+
     }).then((response) => {
         console.log('response', response);
         users.value = response.data.allClients
         clientsLoader.value = false
-    }).catch((error)=>{
+    }).catch((error) => {
+        clientsLoader.value = false
+    })
+}
+let loadMoreRecords = async  () => {
+    clientsLoader.value = true
+    await axios.post(route, {
+        [filterUserBy.value]: userFilterTerm.value,
+        'offset': offset.value,
+        'limit': limit.value,
+
+    }).then((response) => {
+        console.log('response', response);
+        users.value = response.data.allClients
+        clientsLoader.value = false
+    }).catch((error) => {
         clientsLoader.value = false
     })
 }
@@ -195,6 +217,9 @@ let ClearFilter = () => {
                                 </li>
                             </ul>
                         </div>
+                        <!-- <div>
+                            <button class="text-blue-600 mt-4" @click="loadMoreRecords">See More</button>
+                        </div> -->
                     </div>
                 </PopoverPanel>
             </Popover>
