@@ -272,7 +272,7 @@ let isLoading = ref(false);
 let SaveBussinessData = async () => {
   console.log("SAVE BUSINESS DATA", {
     currentUrl: page.url,
-    // redirectUrl: new URL(page.url).origin + new URL(page.url).pathname,
+    redirectUrl: new URL(window.location.href).origin + new URL(window.location.href).pathname,
   });
 
   form.value.application_date = dateFormat(form.value.application_date);
@@ -284,8 +284,8 @@ let SaveBussinessData = async () => {
     .then((response) => {
       toaster("success", response.data.message);
 
-      console.log("Redirect URL", new URL(page.url).origin + new URL(page.url).pathname);
-      router.visit(new URL(page.url).origin + new URL(page.url).pathname);
+      console.log("Redirect URL", new URL(window.location.href).origin + new URL(window.location.href).pathname);
+      router.visit(new URL(window.location.href).origin + new URL(window.location.href).pathname);
     })
     .catch((error) => {
       isLoading.value = false;
