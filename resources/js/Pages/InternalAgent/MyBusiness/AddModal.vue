@@ -265,7 +265,8 @@ let SaveBussinessData = async () => {
   await axios.post(page.url, form.value)
     .then((response) => {
       toaster("success", response.data.message);
-      // router.visit(page.url);
+
+      console.log('Rediction URL', new URL(page.url).origin + new URL(page.url).pathname);
       router.visit(new URL(page.url).origin + new URL(page.url).pathname);
     })
     .catch((error) => {
@@ -294,6 +295,7 @@ let UpdateBussinessData = async () => {
     .then((response) => {
       toaster("success", response.data.message);
       // router.visit(page.url)
+      console.log('Rediction URL', new URL(page.url).origin + new URL(page.url).pathname);
       router.visit(new URL(page.url).origin + new URL(page.url).pathname);
     }).catch((error) => {
       if (error.response.status == 400) {
