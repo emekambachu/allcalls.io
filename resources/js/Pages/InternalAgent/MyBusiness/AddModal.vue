@@ -163,7 +163,6 @@ let checkRequiredField = () => {
     "dob",
     "gender",
     "client_street_address_1",
-    "client_street_address_2",
     "client_city",
     "client_state",
     "client_zipcode",
@@ -266,7 +265,7 @@ let SaveBussinessData = async () => {
   await axios.post(page.url, form.value)
     .then((response) => {
       toaster("success", response.data.message);
-      router.visit('/internal-agent/my-business');
+      router.visit(page.url);
     })
     .catch((error) => {
       isLoading.value = false;
@@ -399,10 +398,8 @@ const SugestAgent = () => {
   search.value = ''
 };
 const SugestClient = () => {
-  if (!props.is_client) {
     isOpen2.value = !isOpen2.value;
     search2.value = ''
-  }
 };
 let SugestBusiness = () => {
   isOpen3.value = !isOpen3.value;
@@ -521,26 +518,37 @@ let selectagent = (agent) => {
   form.value.agent_full_name = agent.first_name + ' ' + agent.last_name
   form.value.agent_email = agent.email
   form.value.agent_id = agent.id
+  console.log('form.value',form.value);
   isOpen.value = false;
 
 }
 
 let selectClient = (client) => {
-  updateFormAndDisableElement('client_street_address_1', client.address, 'client_street_address_1', form.value, disabledDob);
-  updateFormAndDisableElement('dob', client.dob, 'dob', form.value, disabledDob);
-  updateFormAndDisableElement('client_email', client.email, 'client_email', form.value);
-  updateFormAndDisableElement('first_name', client.first_name, 'first_name', form.value);
-  updateFormAndDisableElement('last_name', client.last_name, 'last_name', form.value);
-  updateFormAndDisableElement('client_zipcode', client.zipCode, 'client_zipcode', form.value);
+  // updateFormAndDisableElement('client_street_address_1', client.address, 'client_street_address_1', form.value, disabledDob);
+  // updateFormAndDisableElement('dob', client.dob, 'dob', form.value, disabledDob);
+  // updateFormAndDisableElement('client_email', client.email, 'client_email', form.value);
+  // updateFormAndDisableElement('first_name', client.first_name, 'first_name', form.value);
+  // updateFormAndDisableElement('last_name', client.last_name, 'last_name', form.value);
+  // updateFormAndDisableElement('client_zipcode', client.zipCode, 'client_zipcode', form.value);
   updateFormAndDisableElement('client_phone_no', client.phone, 'client_phone_no', form.value);
+
   form.value.client_full_name = client.first_name + ' ' + client.last_name
   form.value.client_id = client.id
-  form.value.beneficiary_name = ''
-  form.value.beneficiary_relationship = ''
-  form.value.client_street_address_2 = ''
-  form.value.client_city = ''
-  form.value.client_state = ''
-  form.value.gender = ''
+
+  form.value.client_street_address_1 = client.address
+  form.value.dob = client.dob
+  form.value.client_email = client.email
+  form.value.first_name = client.first_name
+  form.value.last_name = client.last_name
+  form.value.client_zipcode = client.zipCode
+
+
+  // form.value.beneficiary_name = ''
+  // form.value.beneficiary_relationship = ''
+  // form.value.client_street_address_2 = ''
+  // form.value.client_city = ''
+  // form.value.client_state = ''
+  // form.value.gender = ''
   isOpen2.value = false;
 
 }
@@ -548,9 +556,11 @@ let clearClient = () => {
   isOpen2.value = false
   disabledDob.value = false
   form.value.client_full_name = ''
+  form.value.client_id = ''
   let policy_validation = ref([
       'client_street_address_1', 'dob', 'client_email', 'first_name', 'last_name',
-      'client_zipcode', 'client_phone_no'
+      'client_zipcode', 'client_phone_no', 'mi' , 'beneficiary_name',"beneficiary_relationship",
+      'client_street_address_2',"client_city","client_state","gender",'notes'
     ])
     policy_validation.value.forEach((key) => {
       if (form.value.hasOwnProperty(key)) {
@@ -575,8 +585,8 @@ let selectBusiness = (business) => {
   form.value.this_app_from_lead = business.this_app_from_lead
   form.value.source_of_lead = business.source_of_lead
   form.value.policy_draft_date = business.policy_draft_date
-  form.value.business_label = business.label ? business.label : business.insurance_company + ' - ' + business.product_name
-  form.value.label = business.label ? business.label : ''
+  // form.value.business_label = business.label ? business.label : business.insurance_company + ' - ' + business.product_name
+  // form.value.label = business.label ? business.label : ''
   if (business.this_app_from_lead == 'NO') {
     form.value.source_of_lead = 'Select'
   }
@@ -637,6 +647,12 @@ let resetValue = (key) => {
     form.value[key] = "Select"
   }
   if (key == 'source_of_lead') {
+    form.value[key] = "Select"
+  }
+  if (key == 'client_state') {
+    form.value[key] = "Select"
+  }
+  if (key == 'gender') {
     form.value[key] = "Select"
   }
   form.value.business_label = ''
@@ -763,7 +779,7 @@ let existingBusiness = () => {
                 <div class="question-card animate__animated" style="position: relative">
                   <div v-show="step == 1">
 
-                    <div v-if="is_client"
+                    <!-- <div v-if="is_client"
                       class="grid xl:grid-cols-4 mb-3 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-x-8">
                       <div class="flex items-center mb-4">
                         <input id="default-radio-1" v-model="form.existing_business" @change="existingBusiness()"
@@ -779,11 +795,10 @@ let existingBusiness = () => {
                         <label for="default-radio-2"
                           class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Existing Business</label>
                       </div>
-                    </div>
+                    </div> -->
 
-                    <div class="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-x-8">
+                    <!-- <div class="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-x-8">
                       <div id="dropdown_main_id3">
-                        <!-- <global-spinner :spinner="isLoading" /> -->
 
                         <div v-if="form.existing_business">
                           <label class="block  text-sm mb-2 font-medium text-gray-900 dark:text-black">Select
@@ -825,14 +840,13 @@ let existingBusiness = () => {
                                     business.product_name }}
 
                                 </li>
-                                <!-- <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer ">Clear</li> -->
                               </ul>
                             </div>
                           </div>
                         </div>
 
                       </div>
-                    </div>
+                    </div> -->
 
                     <div v-if="$page.props.auth.role === 'admin'">
                       <h1 style="background-color: #134576" class="my-0 text-center rounded-md py-2 text-white">
@@ -1006,8 +1020,7 @@ let existingBusiness = () => {
 
                       <div>
                         <label for="EFNumber"
-                          class="block mb-2 mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Street Address
-                          2<span class="text-red-400">*</span></label>
+                          class="block mb-2 mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Street Address 2</label>
                         <input v-model="form.client_street_address_2" type="text" id="client_street_address_2"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="" required />
@@ -1116,14 +1129,14 @@ let existingBusiness = () => {
                     </h1>
 
                     <div class="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-x-8">
-                      <div>
+                      <!-- <div>
                         <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Business
                           Label</label>
                         <input v-model="form.label" type="text" id="label"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="" required />
                         <div v-if="firstStepErrors.label" class="text-red-500" v-text="firstStepErrors.label[0]"></div>
-                      </div>
+                      </div> -->
                       <div>
                         <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Insurance
                           Company<span class="text-red-400">*</span></label>

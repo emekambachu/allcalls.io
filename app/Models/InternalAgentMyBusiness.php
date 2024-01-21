@@ -18,7 +18,6 @@ class InternalAgentMyBusiness extends Model
         return $this->belongsTo(State::class,'client_state', 'id');
     }
     
-
     public function getApplicationDateAttribute($value)
     {
         $date = Carbon::parse($value);
