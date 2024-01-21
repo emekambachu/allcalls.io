@@ -134,7 +134,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
                                                     </svg>
 
                                                 </div>
-                                                <span class="ml-5">UnBlocked</span>
+                                                <span class="ml-5">Unlocked</span>
                                             </div>
                                             <div v-if="!Client.unlocked"
                                                 class="relative grid items-center px-2 py-1 font-sans text-xs font-bold text-red-900 uppercase rounded-md select-none whitespace-nowrap bg-red-500/20">
@@ -143,7 +143,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
                                                         <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636" />
                                                     </svg>
                                                 </div>
-                                                <span class="ml-5">Blocked</span>
+                                                <span class="ml-5">Locked</span>
                                             </div>
                                         </div>
                                     </td>
