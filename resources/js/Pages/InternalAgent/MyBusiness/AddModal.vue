@@ -265,7 +265,8 @@ let SaveBussinessData = async () => {
   await axios.post(page.url, form.value)
     .then((response) => {
       toaster("success", response.data.message);
-      router.visit(page.url);
+      // router.visit(page.url);
+      router.visit(new URL(page.url).origin + new URL(page.url).pathname);
     })
     .catch((error) => {
       isLoading.value = false;
@@ -292,7 +293,8 @@ let UpdateBussinessData = async () => {
   await axios.post(`${page.url}/update`, form.value)
     .then((response) => {
       toaster("success", response.data.message);
-      router.visit(page.url)
+      // router.visit(page.url)
+      router.visit(new URL(page.url).origin + new URL(page.url).pathname);
     }).catch((error) => {
       if (error.response.status == 400) {
         firstStepErrors.value = error.response.data.errors
