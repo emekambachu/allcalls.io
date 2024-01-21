@@ -272,7 +272,7 @@ let isLoading = ref(false);
 let SaveBussinessData = async () => {
   console.log("SAVE BUSINESS DATA", {
     currentUrl: page.url,
-    redirectUrl: new URL(page.url).origin + new URL(page.url).pathname,
+    // redirectUrl: new URL(page.url).origin + new URL(page.url).pathname,
   });
 
   form.value.application_date = dateFormat(form.value.application_date);
