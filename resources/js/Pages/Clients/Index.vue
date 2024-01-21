@@ -121,12 +121,25 @@ let capitalizeAndReplaceUnderscore = (str) => {
                   <td class="text-gray-600 px-4 py-3">{{ Client.first_name }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ Client.last_name }}</td>
                   <td class="text-gray-600 px-4 py-3">
-                    <span v-if="Client.status == 'not_sold'"
-                      class="bg-red-600 text-white text-xs px-2 py-1 rounded-2xl">Not Sold</span>
-                    <span v-else-if="Client.status == 'sold'"
-                      class="bg-green-600 text-white text-xs px-2 py-1 rounded-2xl">Sold</span>
-                    <span v-else-if="Client.status" class="bg-yellow-600 text-white text-xs px-2 py-1 rounded-2xl">{{
-                      Client.status }}</span>
+                    <span
+                      v-if="
+                        ['Sale - Simplified Issue', 'Sale - Guaranteed Issue'].includes(
+                          Client.status
+                        )
+                      "
+                      class="bg-green-600 text-white text-xs px-2 py-1 rounded-2xl"
+                      >{{ Client.status }}</span
+                    >
+                    <span
+                      v-else-if="Client.status == 'Follow Up Needed'"
+                      class="bg-yellow-600 text-white text-xs px-2 py-1 rounded-2xl"
+                      >Follow Up Needed</span
+                    >
+                    <span
+                      v-else-if="Client.status"
+                      class="bg-red-600 text-white text-xs px-2 py-1 rounded-2xl"
+                      >{{ Client.status }}</span
+                    >
                     <span v-else>-</span>
                   </td>
                   <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
