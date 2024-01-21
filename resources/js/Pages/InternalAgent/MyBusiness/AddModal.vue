@@ -585,8 +585,8 @@ let selectBusiness = (business) => {
   form.value.this_app_from_lead = business.this_app_from_lead
   form.value.source_of_lead = business.source_of_lead
   form.value.policy_draft_date = business.policy_draft_date
-  form.value.business_label = business.label ? business.label : business.insurance_company + ' - ' + business.product_name
-  form.value.label = business.label ? business.label : ''
+  // form.value.business_label = business.label ? business.label : business.insurance_company + ' - ' + business.product_name
+  // form.value.label = business.label ? business.label : ''
   if (business.this_app_from_lead == 'NO') {
     form.value.source_of_lead = 'Select'
   }
@@ -1129,14 +1129,14 @@ let existingBusiness = () => {
                     </h1>
 
                     <div class="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-x-8">
-                      <div>
+                      <!-- <div>
                         <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Business
                           Label</label>
                         <input v-model="form.label" type="text" id="label"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="" required />
                         <div v-if="firstStepErrors.label" class="text-red-500" v-text="firstStepErrors.label[0]"></div>
-                      </div>
+                      </div> -->
                       <div>
                         <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Insurance
                           Company<span class="text-red-400">*</span></label>
