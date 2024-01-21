@@ -124,7 +124,7 @@ class MyBusinessController extends Controller
         $internalAgentBusiness->agent_id = auth()->user()->id;
         $internalAgentBusiness->client_id = $request->client_id;
         $internalAgentBusiness->agent_full_name = $request->agent_full_name;
-        $internalAgentBusiness->label = $request->label;
+        $internalAgentBusiness->label = $request->label ?? null;
         $internalAgentBusiness->agent_email = $request->agent_email;
         $internalAgentBusiness->insurance_company = $request->insurance_company;
         $internalAgentBusiness->product_name = $request->product_name;
