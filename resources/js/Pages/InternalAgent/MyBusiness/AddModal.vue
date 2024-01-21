@@ -258,6 +258,9 @@ let dateFormat = (val) => {
 // save business data start
 let isLoading = ref(false);
 let SaveBussinessData = async () => {
+
+  console.log('SAVE BUSINESS DATA', form.value);
+
   form.value.application_date = dateFormat(form.value.application_date)
   form.value.policy_draft_date = dateFormat(form.value.policy_draft_date)
   form.value.dob = dateFormat(form.value.dob)
@@ -266,7 +269,7 @@ let SaveBussinessData = async () => {
     .then((response) => {
       toaster("success", response.data.message);
 
-      console.log('Rediction URL', new URL(page.url).origin + new URL(page.url).pathname);
+      console.log('Redirect URL', new URL(page.url).origin + new URL(page.url).pathname);
       router.visit(new URL(page.url).origin + new URL(page.url).pathname);
     })
     .catch((error) => {
@@ -295,7 +298,7 @@ let UpdateBussinessData = async () => {
     .then((response) => {
       toaster("success", response.data.message);
       // router.visit(page.url)
-      console.log('Rediction URL', new URL(page.url).origin + new URL(page.url).pathname);
+      console.log('Redirect URL', new URL(page.url).origin + new URL(page.url).pathname);
       router.visit(new URL(page.url).origin + new URL(page.url).pathname);
     }).catch((error) => {
       if (error.response.status == 400) {

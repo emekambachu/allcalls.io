@@ -156,7 +156,7 @@ class MyBusinessController extends Controller
         $internalAgentBusiness->save();
         return response()->json([
             'success' => true,
-            'message' => 'Bussiness Added Successfully!',
+            'message' => 'Business added successfully.',
         ], 200);
     }
     public function businessByLabel(Request $request)
