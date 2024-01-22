@@ -60,6 +60,7 @@ class EventServiceProvider extends ServiceProvider
         ],
     
         Registered::class => [
+            AddUnsubscribeTokenToUser::class,
             SendEmailVerificationNotification::class,
             SendWelcomeEmail::class,
         ],

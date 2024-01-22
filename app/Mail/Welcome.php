@@ -40,8 +40,6 @@ class Welcome extends Mailable
      */
     public function content(): Content
     {
-        Log::debug('Passing user to email view', ['user' => $this->user]);
-
         return new Content(
         markdown: 'emails.welcome',
             with: [
