@@ -36,10 +36,10 @@ class AddUnsubscribeTokenToUser
 
         Log::debug('AddUnsubscribeToken: Checking if user exists', [
             'email' => $email, 'exists' => $user,
-            'Not unsubscribe token' => !$user->unsubscribeToken(),
+            'Unsubscribe token does not exist' => !$user->unsubscribeToken,
         ]);
 
-        if ($user && !$user->unsubscribeToken()) {
+        if ($user && !$user->unsubscribeToken) {
             Log::debug('AddUnsubscribeToken: Generating unsubscribe token for user', ['email' => $email]);
             $user->generateUnsubscribeToken();
         }
