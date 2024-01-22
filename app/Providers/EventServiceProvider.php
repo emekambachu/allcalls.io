@@ -55,7 +55,7 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         MessageSending::class => [
-            AddUnsubscribeTokenToUser::class,
+            // AddUnsubscribeTokenToUser::class,
             PreventBlacklistedEmails::class,
         ],
     
