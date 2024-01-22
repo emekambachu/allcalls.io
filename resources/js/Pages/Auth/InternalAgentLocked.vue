@@ -77,10 +77,10 @@ let closeBasicTraining = () => {
                             <br>
 
 
-                            <button @click="basisTraning" class="font-medium">- <span
+                            <!-- <button @click="basisTraning" class="font-medium">- <span
                                     class="text-blue-600 dark:text-blue-500 hover:underline">Schedule
                                     Training</span></button>
-                            <br>
+                            <br> -->
                             <!-- <a href="#" class="font-medium"> - <span class="text-blue-600 dark:text-blue-500 hover:underline">Intermediate Training</span></a>
                             <br>
                             <a href="#" class="font-medium"> - <span class="text-blue-600 dark:text-blue-500 hover:underline">Advanced Training</span></a> -->
