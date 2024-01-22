@@ -10,7 +10,7 @@
 
 <body class="bg-gray-100">
     <div class="flex min-h-screen items-center justify-center">
-        <div class="mt-4 rounded-md bg-white px-8 py-6 text-left shadow-lg">
+        <div class="mt-4 rounded-md bg-white px-8 py-6 text-left shadow-lg mt-10">
             <h3 class="text-center text-2xl font-bold">Unsubscribe AllCalls.io Emails</h3>
             <form action="#">
                 <div class="mt-4">
