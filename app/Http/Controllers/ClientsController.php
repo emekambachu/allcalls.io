@@ -36,7 +36,7 @@ class ClientsController extends Controller
             ->paginate(100);
         $allClients = Client::where('user_id', $user_id)->where('unlocked', true)->orderBy('created_at', 'desc')
             ->take(100)->get();
-        $totalClients = Client::where('user_id', $user_id)->count();
+        $totalClients = Client::where('user_id', $user_id)->where('unlocked', true)->count();
         $states = State::all();
         return Inertia::render('Clients/Index', [
             'Clients' => $Clients,
