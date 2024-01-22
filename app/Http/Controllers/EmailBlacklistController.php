@@ -17,6 +17,25 @@ class EmailBlacklistController extends Controller
             return redirect()->route('take-calls.show')->with(['message' => 'Invalid unsubscribe token.']);
         }
 
-        return view('unsubscribe-email');
+        return view('unsubscribe-email', ['token' => $token]);
+    }
+
+    public function store(Request $request, $token)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $user = UnsubscribeToken::where('token', $token)->firstOrFail()->user;
+
+        if ($user->email !== $request->email) {
+            return redirect()->back()->with(['message' => 'Invalid email address.']);
+        }
+
+        EmailBlacklist::create([
+            'email' => $request->email,
+        ]);
+
+        return redirect()->back()->with(['message' => 'You have been unsubscribed.']);
     }
 }

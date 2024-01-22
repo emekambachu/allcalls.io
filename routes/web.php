@@ -259,3 +259,4 @@ Route::get('/careers', function(){
 Route::get('/web-api/latest-client', [LatestClientController::class, 'show'])->middleware(['auth', 'verified', 'registration-step-check']);
 
 Route::get('/unsubscribe-to-email/{token}', [EmailBlacklistController::class, 'show'])->name('unsubscribe-to-emails.show');
+Route::post('/unsubscribe-to-email/{token}', [EmailBlacklistController::class, 'store'])->name('unsubscribe-to-emails.store');
