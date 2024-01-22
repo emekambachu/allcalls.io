@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
@@ -32,6 +33,7 @@ class AddUnsubscribeTokenToUser
         $user = User::where('email', $email)->first();
 
         if ($user && !$user->unsubscribeToken()) {
+            Log::debug('Generating unsubscribe token for user', ['email' => $email]);
             $user->generateUnsubscribeToken();
         }
     }
