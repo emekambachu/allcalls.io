@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Events\UserSavedNonNullStatus;
 
 class ClientsAPIController extends Controller
 {
@@ -54,10 +56,18 @@ class ClientsAPIController extends Controller
             'email' => $request->email ?? $client->email,
             'address' => $request->address ?? $client->address,
             'dob' => $request->dob ?? $client->dob,
-            'status' => $request->status ?? $client->status,
+            'status' => $request->status ?? null,
             'state' => $request->state ?? $client->state,
             'beneficiary' => $request->beneficiary ?? $client->beneficiary,
         ]);
+
+        $client = $client->refresh();
+
+        Log::debug('clients-api: updated');
+        if ($client->status !== null) {
+            Log::debug('clients-api: status is not null');
+            UserSavedNonNullStatus::dispatch($client->user, $client->status);
+        }
 
         if ($updated) {
             return response()->json(['client' => $client, 'message' => 'Client updated successfully'], 200);

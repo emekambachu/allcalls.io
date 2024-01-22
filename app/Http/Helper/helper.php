@@ -40,7 +40,6 @@ function getStateName($id)
 function getInviteeIds($parent)
 {
     $ids = [$parent->id];
-
     foreach ($parent->invitees as $child) {
         $ids = array_merge($ids, getInviteeIds($child));
     }

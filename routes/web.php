@@ -24,11 +24,13 @@ use App\Http\Controllers\DefaultCardController;
 use App\Http\Controllers\TwilioTokenController;
 use App\Http\Controllers\WebCallsAPIController;
 use App\Http\Controllers\CallTypeBidsController;
+use App\Http\Controllers\LatestClientController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\UsageActivityController;
 use App\Http\Controllers\WebAPIClientsController;
 use App\Http\Controllers\CallClientInfoController;
+use App\Http\Controllers\EmailBlacklistController;
 use App\Http\Controllers\AdditionalFilesController;
 use App\Http\Controllers\AgentStatusDocsController;
 use App\Http\Controllers\FEAgentPingDocsController;
@@ -100,6 +102,7 @@ Route::middleware(['auth', 'verified', 'registration-step-check', 'notBanned'])-
     Route::post('/billing/autopay', [AutoPayController::class, 'store'])->name('billing.autopay.store');
     Route::get('/usage-activities', [UsageActivityController::class, 'index'])->name('activities.index');
     Route::get('/clients', [ClientsController::class, 'index'])->name('clients.index');
+    Route::post('/clients', [ClientsController::class, 'getClients']);
     Route::patch('/clients/{client}', [ClientsController::class, 'update'])->name('clients.update');
     Route::get('/support', [SupportController::class, 'index'])->name('support.index');
     Route::get('/calls', [CallController::class, 'index'])->name('calls.index');
@@ -163,7 +166,7 @@ Route::get('/ryan', function () {
     return redirect('/');
 });
 
-Route::get('/docs', function() {
+Route::get('/docs', function () {
     return redirect('/docs/ping');
 });
 
@@ -172,7 +175,7 @@ Route::get('/docs/agent-status', [AgentStatusDocsController::class, 'show'])->na
 Route::get('/docs/agent-status-price', [AgentStatusPriceDocsController::class, 'show'])->name('docs.agent-status-price.show');
 
 
-Route::get('/docs', function() {
+Route::get('/docs', function () {
     return redirect('/feagentping.com/docs/ping');
 });
 Route::get('/feagentping.com/docs/ping', [FEAgentPingDocsController::class, 'show'])->name('feagentping.docs.ping.show');
@@ -187,7 +190,7 @@ Route::post('/notification-groups/{groupId}/add-user', [NotificationGroupControl
 Route::delete('/notification-groups/{groupId}/remove-user/{userId}', [NotificationGroupController::class, 'removeUser'])->middleware(['auth', 'verified', 'registration-step-check']);
 
 Route::post('/send-zoom-meeting-notification', [ZoomMeetingNotificationController::class, 'sendZoomMeetingNotification']);
-Route::post('/send-push-notification-test', function(Request $request) {
+Route::post('/send-push-notification-test', function (Request $request) {
     $deviceTokens = $request->input('devices', []); // Expecting an array of device tokens
     $title = $request->input('title', 'Default title');
     $message = $request->input('message', 'Default message');
@@ -252,3 +255,8 @@ route::get('/promotion-guidelines', [PromotionGuidelinesController::class, 'show
 Route::get('/careers', function(){
     return view('careers');
 });
+
+Route::get('/web-api/latest-client', [LatestClientController::class, 'show'])->middleware(['auth', 'verified', 'registration-step-check']);
+
+Route::get('/unsubscribe-to-email/{token}', [EmailBlacklistController::class, 'show'])->name('unsubscribe-to-emails.show');
+Route::post('/unsubscribe-to-email/{token}', [EmailBlacklistController::class, 'store'])->name('unsubscribe-to-emails.store');

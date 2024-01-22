@@ -7,6 +7,7 @@ use App\Models\Call;
 use App\Models\User;
 use Twilio\Rest\Client;
 use App\Models\CallType;
+use App\Events\CallEnded;
 use Illuminate\Http\Request;
 use App\Events\MissedCallEvent;
 use App\Events\RingingCallEvent;
@@ -117,6 +118,8 @@ class CallStatusController extends Controller
                 
 
             case 'completed':
+
+
                 Log::debug('completed event for user ' . $request->user_id);
                 CallAcceptedOrRejected::dispatch(User::find($request->user_id));
                 $callDuration = (int) $request->input('CallDuration');
@@ -126,13 +129,17 @@ class CallStatusController extends Controller
                 $call->completed_at = now();
                 $call->save();
 
+
+                $client = $call->client ?? null;
+                CallEnded::dispatch(User::find($request->user_id), $call, $client);
+
                 Log::debug('Call completed_at updated.');
                 Log::debug('Call duration: ' . $callDuration);
 
                 // Manually instantiate and invoke CheckDispositionListener
-                // $checkDispositionListener = new CheckDispositionListener();
-                // $checkDispositionListener->handle(new CompletedCallEvent($user, $call->callType, $call->unique_call_id));
-                // Log::debug("CheckDispositionListener invoked manually for user {$request->user_id} and call {$call->unique_call_id}");
+                $checkDispositionListener = new CheckDispositionListener();
+                $checkDispositionListener->handle(new CompletedCallEvent($user, $call->callType, $call->unique_call_id));
+                Log::debug("CheckDispositionListener invoked manually for user {$request->user_id} and call {$call->unique_call_id}");
             
 
                 // ========================================

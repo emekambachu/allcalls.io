@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\State;
 use App\Models\CallType;
 use Illuminate\Http\Request;
+use App\Models\UserCallTypeState;
+use Illuminate\Support\Facades\Log;
 
 class CallTypesSelectedAPIController extends Controller
 {
@@ -50,7 +53,6 @@ class CallTypesSelectedAPIController extends Controller
             })->toArray();
 
             return $callType;
-
         });
 
         $selectedCallTypes = $userCallTypesWithStates->filter(function ($type) {
@@ -61,7 +63,64 @@ class CallTypesSelectedAPIController extends Controller
                 'type' => $type->type,
             ];
         })->unique('id')->values();  // Use unique method to remove duplicates based on 'id'
-        
+
         return $selectedCallTypes;
+    }
+
+
+    public function updateUserStates(Request $request)
+    {
+        try {
+            $user = $request->user();
+            Log::info('Updating user states', ['user_id' => $user->id]);
+
+            $incomingData = $this->buildIncomingData($request->input('selected_states'));
+            Log::debug('Incoming data for state update', ['data' => $incomingData]);
+
+            UserCallTypeState::updateUserCallTypeState($user, $incomingData);
+
+            Log::info('User states updated successfully', ['user_id' => $user->id]);
+            return response()->json(['message' => 'User states updated successfully']);
+        } catch (Exception $e) {
+            Log::error('Error updating user states', [
+                'user_id' => $user->id ?? null,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return response()->json([
+                'message' => 'Failed to update user states',
+                'user_id' => $user->id ?? null,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ], 500);
+        }
+    }
+
+
+    private function buildIncomingData($selectedStates): array
+    {
+        // Initialize an empty array to store the call type and state combinations.
+        $incomingData = [];
+
+        // For each selected state item in the provided list
+        foreach ($selectedStates as $item) {
+            // Extract the call type ID
+            $typeId = $item['typeId'];
+            // Extract the list of selected state IDs
+            $stateIds = $item['selectedStateIds'];
+
+            // For each state ID in the list of selected state IDs
+            foreach ($stateIds as $stateId) {
+                // Add a new entry to the incoming data with the current call type ID and state ID.
+                // Each entry represents a combination of a call type and state that the user has selected.
+                $incomingData[] = [
+                    'call_type_id' => $typeId,
+                    'state_id' => $stateId,
+                ];
+            }
+        }
+
+        // Return the populated incoming data array.
+        return $incomingData;
     }
 }

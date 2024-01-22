@@ -16,9 +16,15 @@ import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 
 let page = usePage();
 
+console.log('auth', page.props.auth)
+
 let isInternalLevel = ref(false);
 
-if (page.props.auth.user_level && page.props.auth.user_level.name && page.props.auth.user_level.name.startsWith('Internal')) {
+if (
+  page.props.auth.user_level &&
+  page.props.auth.user_level.name &&
+  page.props.auth.user_level.name.startsWith("Internal")
+) {
   isInternalLevel.value = true;
 }
 
@@ -30,6 +36,11 @@ let unreadNotifications = ref(
     return notification.read_at === null;
   })
 );
+let disabledNavLink = ref(false);
+if (page.props.auth.role === "internal-agent" && page.props.auth.user.is_locked) {
+  disabledNavLink.value = true;
+  console.log("agent here", disabledNavLink.value);
+}
 
 let markAllAsRead = () => {
   axios.post("/notifications/mark-all-as-read").then((response) => {
@@ -186,7 +197,7 @@ let saveClient = () => {
       address: connectedClient.value.address,
       state: connectedClient.value.state,
       zipCode: connectedClient.value.zipCode,
-      status: connectedClient.value.status,
+      // status: connectedClient.value.status,
       dob: connectedClient.value.dob,
     })
     .then((response) => {
@@ -284,35 +295,43 @@ let startTimeoutForRepeatedDispositionNotifications = () => {
 
 let clearTimeoutForRepeatedDispositionNotifications = () => {
   console.log("Clearing timeout for repeated disposition notifications.");
-  clearTimeout(repeatedNotificationToUpdateDispositionTimeout.value);
+  clearInterval(repeatedNotificationToUpdateDispositionTimeout.value);
   repeatedNotificationToUpdateDispositionTimeout.value = null;
 };
 
 let updateLatestClientDisposition = () => {
-  if (!localStorage.getItem("latestClientId")) {
-    console.log("latestClientId is null");
-    return;
-  }
+  // fetch latestClientId from axios get request to /web-api/latest-client
+  axios.get("/web-api/latest-client").then((response) => {
+    console.log("Latest client:");
+    console.log(response.data.client.id);
+    let latestClientId = response.data.client.id;
 
-  let latestClientId = Number(localStorage.getItem("latestClientId"));
+    axios
+      .post(`/web-api/clients/${latestClientId}/disposition`, {
+        status: latestClientDisposition.value,
+      })
+      .then((response) => {
+        console.log("Client disposition update response:");
+        console.log(response.data);
+        console.log('Status of the client that was updated: ', response.data.status)
 
-  axios
-    .post(`/web-api/clients/${latestClientId}/disposition`, {
-      status: latestClientDisposition.value,
-    })
-    .then((response) => {
-      console.log("Client disposition update response:");
-      console.log(response.data);
-      localStorage.removeItem("latestClientId");
-      localStorage.removeItem("showDispositionModal");
-      showUpdateDispositionForLastClient.value = false;
-      toaster("success", "Client disposition updated.");
-      clearTimeoutForRepeatedDispositionNotifications();
-    })
-    .catch((error) => {
-      console.log("Error updating client disposition:");
-      console.log(error);
-    });
+        if (response.data.status.startsWith("Sale")) {
+          console.log("Sale detected!");
+          // router.visit('/my-business/')
+          router.visit(`/internal-agent/my-business?clientId=${response.data.clientId}`);
+        }
+
+        localStorage.removeItem("latestClientId");
+        localStorage.removeItem("showDispositionModal");
+        showUpdateDispositionForLastClient.value = false;
+        toaster("success", "Client disposition updated.");
+        clearTimeoutForRepeatedDispositionNotifications();
+      })
+      .catch((error) => {
+        console.log("Error updating client disposition:");
+        console.log(error);
+      });
+  });
 };
 
 let setupTwilioDevice = () => {
@@ -383,6 +402,12 @@ let setupTwilioDevice = () => {
 
 let showUpdateDispositionForLastClient = ref(false);
 
+if (page.props.auth.showDispositionUpdateOption) {
+  showUpdateDispositionForLastClient.value = true;
+  startTimeoutForRepeatedDispositionNotifications();
+}
+// console.log('showDispositionModal:', page.props.auth.showDispositionUpdateOption);
+
 let showUpdateDispositionModal = () => {
   // // Check if 'showDispositionModal' exists in localStorage
   // if (localStorage.getItem("showDispositionModal") === null) {
@@ -414,6 +439,30 @@ onMounted(() => {
 
 onMounted(() => {
   console.log("mounted AuthenticatedLayout");
+
+  console.log("Listening for completed call event.");
+  Echo.private("calls." + page.props.auth.user.id).listen("CallEnded", (event) => {
+    console.log("CallEnded:", event);
+    if (
+      event.client &&
+      event.client.status === null &&
+      !showUpdateDispositionForLastClient.value
+    ) {
+      showUpdateDispositionForLastClient.value = true;
+      startTimeoutForRepeatedDispositionNotifications();
+    }
+  });
+
+  Echo.private("calls." + page.props.auth.user.id).listen(
+    "UserSavedNonNullStatus",
+    (event) => {
+      console.log("UserSavedNonNullStatus:", event);
+      console.log("So, we can drop the modal now.");
+      showUpdateDispositionForLastClient.value = false;
+      clearTimeoutForRepeatedDispositionNotifications();
+    }
+  );
+
   Echo.private("calls." + page.props.auth.user.id).listenForWhisper("psst", (e) => {
     console.log("call event:");
     console.log(e);
@@ -620,6 +669,16 @@ let appDownloadModal = ref(false);
             </div>
             <div class="pt-2 pb-3 space-y-1">
               <ResponsiveNavLink
+                :href="route('admin.clients')"
+                :active="
+                  route().current('admin.clients') 
+                "
+              >
+                Clients
+              </ResponsiveNavLink>
+            </div>
+            <div class="pt-2 pb-3 space-y-1">
+              <ResponsiveNavLink
                 :href="route('admin.customer.index')"
                 :active="
                   route().current('admin.customer.index') ||
@@ -761,6 +820,30 @@ let appDownloadModal = ref(false);
               </svg>
 
               Calls
+            </NavLink>
+            <NavLink
+              class="mb-10 gap-2"
+              :href="route('admin.clients')"
+              :active="
+                route().current('admin.clients')
+              "
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-8 h-8 mr-2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"
+                />
+              </svg>
+
+              Clients
             </NavLink>
             <NavLink
               class="mb-10 gap-2"
@@ -1397,42 +1480,201 @@ let appDownloadModal = ref(false);
           >
             <div class="pt-2 pb-3 space-y-1">
               <ResponsiveNavLink
-                :href="route('dashboard')"
-                :active="route().current('dashboard')"
+                :href="route('take-calls.show')"
+                :class="{ 'opacity-50': disabledNavLink === true }"
+                :disabledNavLink="disabledNavLink"
+                :active="route().current('take-calls.show')"
               >
-                Dashboard
+                Take Calls
               </ResponsiveNavLink>
 
               <ResponsiveNavLink
                 :href="route('clients.index')"
+                :class="{ 'opacity-50': disabledNavLink === true }"
+                :disabledNavLink="disabledNavLink"
                 :active="route().current('clients.index')"
               >
                 Clients
               </ResponsiveNavLink>
               <ResponsiveNavLink
                 v-if="$page.props.auth.role === 'internal-agent'"
+                :class="{ 'opacity-50': disabledNavLink === true }"
+                :disabledNavLink="disabledNavLink"
                 :href="route('internal-agent.agent-agency.index')"
                 :active="route().current('internal-agent.agent-agency.index')"
               >
                 My Agency
               </ResponsiveNavLink>
-
               <ResponsiveNavLink
                 v-if="$page.props.auth.role === 'internal-agent'"
-                :href="route('promotion-guidelines.show')"
-                :active="route().current('promotion-guidelines.show')"
+                :class="{ 'opacity-50': disabledNavLink === true }"
+                :disabledNavLink="disabledNavLink"
+                :href="route('agent.my.business')"
+                :active="route().current('agent.my.business')"
               >
-                Promotion Guidelines
+                My Business
               </ResponsiveNavLink>
+              <!-- <ResponsiveNavLink
+                v-if="$page.props.auth.role === 'internal-agent'"
+                :href="route('training.index')"
+                :active="route().current('training.index')"
+              >
+                Training
+              </ResponsiveNavLink> -->
 
               <!-- <ResponsiveNavLink v-if="$page.props.auth.role === 'internal-agent'" :href="route('internal-agent.my-agent.index')" :active="route().current('internal-agent.my-agent.index')">
                 Registered Agents
               </ResponsiveNavLink> -->
+
               <ResponsiveNavLink
+                :class="{ 'opacity-50': disabledNavLink === true }"
+                :disabledNavLink="disabledNavLink"
+                :href="route('billing.funds.index')"
+                :active="
+                  route().current('billing.funds.index') ||
+                  route().current('billing.cards.index') ||
+                  route().current('billing.autopay.index')
+                "
+                v-if="!isInternalLevel"
+              >
+                <div class="row pb-3 flex">
+                  <div class="columns-6 flex">Add Funds</div>
+                  <div class="columns-6 flex pl-20">
+                    <svg
+                      v-if="
+                        route().current('billing.funds.index') ||
+                        route().current('billing.cards.index') ||
+                        route().current('billing.autopay.index')
+                      "
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-6 h-6"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div
+                  v-if="
+                    route().current('billing.funds.index') ||
+                    route().current('billing.cards.index') ||
+                    route().current('billing.autopay.index')
+                  "
+                  class="pl-14 text-white text-xs mb-5"
+                >
+                  <ul>
+                    <li class="mb-3">
+                      <Link
+                        href="/billing/funds"
+                        class="inline-flex items-center rounded-t-lg hover:text-custom-green"
+                        :class="{
+                          'text-custom-green': route().current('billing.funds.index'),
+                        }"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          class="w-4 h-4 mr-2"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z"
+                          />
+                        </svg>
+
+                        <span>Add Funds</span>
+                      </Link>
+                    </li>
+
+                    <li class="mb-3">
+                      <Link
+                        aria-current="page"
+                        class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
+                        :class="{
+                          'text-custom-green': route().current('billing.autopay.index'),
+                        }"
+                        href=""
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          class="w-4 h-4 mr-2"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+                          />
+                        </svg>
+                        <span>Autopay</span>
+                        <div class="p-2">
+                          <span
+                            class="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20"
+                            >Soon</span
+                          >
+                        </div>
+                      </Link>
+                    </li>
+                    <li class="mb-3">
+                      <Link
+                        href="/billing/cards"
+                        class="inline-flex items-center rounded-t-lg hover:text-custom-green"
+                        :class="{
+                          'text-custom-green': route().current('billing.cards.index'),
+                        }"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          class="w-4 h-4 mr-2"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z"
+                          />
+                        </svg>
+
+                        <span>Saved Cards</span>
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+              </ResponsiveNavLink>
+
+              <ResponsiveNavLink
+                :class="{ 'opacity-50': disabledNavLink === true }"
+                :disabledNavLink="disabledNavLink"
                 :href="route('calls.index')"
                 :active="route().current('calls.index')"
               >
                 Call Reporting
+              </ResponsiveNavLink>
+
+              <ResponsiveNavLink
+                :class="{ 'opacity-50': disabledNavLink === true }"
+                :disabledNavLink="disabledNavLink"
+                :href="route('additional-files.index')"
+                :active="route().current('additional-files.index')"
+              >
+                Additional Files
               </ResponsiveNavLink>
 
               <ResponsiveNavLink
@@ -1548,6 +1790,16 @@ let appDownloadModal = ref(false);
               </ResponsiveNavLink>
 
               <ResponsiveNavLink
+                v-if="$page.props.auth.role === 'internal-agent'"
+                :href="route('promotion-guidelines.show')"
+                :active="route().current('promotion-guidelines.show')"
+                :class="{ 'opacity-50': disabledNavLink === true }"
+                :disabledNavLink="disabledNavLink"
+              >
+                Promotion Guidelines
+              </ResponsiveNavLink>
+
+              <ResponsiveNavLink
                 :href="route('activities.index')"
                 :active="
                   route().current('activities.index') ||
@@ -1620,9 +1872,13 @@ let appDownloadModal = ref(false);
 
                     <li class="mb-3">
                       <Link
+                        :style="{
+                          'pointer-events': disabledNavLink ? 'none' : 'pointer',
+                        }"
                         href="/transactions"
                         class="inline-flex items-center rounded-t-lg hover:text-custom-green"
                         :class="{
+                          'opacity-25': disabledNavLink === true,
                           'text-custom-green': route().current('transactions.index'),
                         }"
                       >
@@ -1814,6 +2070,8 @@ let appDownloadModal = ref(false);
           <div class="py-12 hidden sm:-my-px sm:ml-10 col-span-1 md:flex md:flex-col">
             <NavLink
               class="mb-10 gap-2"
+              :class="{ 'opacity-50': disabledNavLink === true }"
+              :disabledNavLink="disabledNavLink"
               :href="route('take-calls.show')"
               :active="route().current('take-calls.show')"
             >
@@ -1836,6 +2094,8 @@ let appDownloadModal = ref(false);
 
             <NavLink
               class="mb-10 gap-2"
+              :class="{ 'opacity-50': disabledNavLink === true }"
+              :disabledNavLink="disabledNavLink"
               :href="route('clients.index')"
               :active="route().current('clients.index')"
             >
@@ -1845,6 +2105,8 @@ let appDownloadModal = ref(false);
 
             <NavLink
               v-if="$page.props.auth.role === 'internal-agent'"
+              :class="{ 'opacity-50': disabledNavLink === true }"
+              :disabledNavLink="disabledNavLink"
               class="mb-10 gap-2"
               :href="route('internal-agent.agent-agency.index')"
               :active="route().current('internal-agent.agent-agency.index')"
@@ -1868,6 +2130,8 @@ let appDownloadModal = ref(false);
 
             <NavLink
               v-if="$page.props.auth.role === 'internal-agent'"
+              :class="{ 'opacity-50': disabledNavLink === true }"
+              :disabledNavLink="disabledNavLink"
               class="mb-10 gap-2"
               :href="route('agent.my.business')"
               :active="route().current('agent.my.business')"
@@ -1887,6 +2151,64 @@ let appDownloadModal = ref(false);
               My Business
             </NavLink>
 
+            <!-- <NavLink
+              v-if="$page.props.auth.role === 'internal-agent'"
+              class="mb-10 gap-2"
+              :href="route('training.index')"
+              :active="route().current('training.index')"
+            >
+              <svg
+                fill="#fff"
+                class="w-8 h-8 mr-2"
+                version="1.1"
+                id="Layer_1"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                viewBox="0 0 496 496"
+                xml:space="preserve"
+              >
+                <g>
+                  <g>
+                    <g>
+                      <path
+                        d="M432,336h-10.84c16.344-13.208,26.84-33.392,26.84-56v-32c0-30.872-25.128-56-56-56h-32c-2.72,0-5.376,0.264-8,0.64V48
+                      h16V0H0v48h16v232H0v48h187.056l40,80H304v88h192v-96C496,364.712,467.288,336,432,336z M422.584,371.328l-32.472,13.92
+                      L412.28,352h5.472L422.584,371.328z M358.944,352h34.112L376,377.576L358.944,352z M361.872,385.248l-32.472-13.92L334.24,352
+                      h5.472L361.872,385.248z M432.008,280C432,310.872,406.872,336,376,336s-56-25.128-56-56h37.424
+                      c14.12,0,27.392-5.504,37.368-15.48l4.128-4.128c8.304,10.272,20.112,16.936,33.088,18.92V280z M48,192v72h107.176
+                      c0.128,0.28,0.176,0.584,0.312,0.856L163.056,280H32V48h304v149.48c-18.888,9.008-32,28.24-32,50.52v32h-65.064l-24.816-46.528
+                      C208.368,222.696,197.208,216,185,216c-10.04,0-18.944,4.608-25,11.712V192H48z M144,208v40H64v-40H144z M360,208h32
+                      c22.056,0,40,17.944,40,40v15.072c-9.168-2.032-17.32-7.48-22.656-15.48l-8.104-12.152l-17.768,17.768
+                      c-6.96,6.96-16.208,10.792-26.048,10.792H320v-16C320,225.944,337.944,208,360,208z M16,16h336v16H16V16z M16,312v-16h155.056
+                      l8,16H16z M256,392h-19.056L169.8,257.712c-1.176-2.36-1.8-4.992-1.8-7.608V249c0-9.376,7.624-17,17-17c6.288,0,12.04,3.456,15,9
+                      l56,104.992V392z M247.464,296h58.392c1.28,5.616,3.232,10.968,5.744,16H256L247.464,296z M264.536,328h57.952
+                      c2.584,2.872,5.352,5.568,8.36,8H268.8L264.536,328z M480,480h-32v-32h32V480z M480,432h-32v-32h-16v80H320v-88h-48v-40h45.76
+                      l-7.168,28.672L376,408.704l65.416-28.032l-7.144-28.56C459.68,353.312,480,374.296,480,400V432z"
+                      />
+                      <path
+                        d="M160,128v-16h-16.808c-1.04-5.096-3.072-9.832-5.856-14.024l11.92-11.92l-11.312-11.312l-11.92,11.92
+                      c-4.192-2.784-8.928-4.816-14.024-5.856V64H96v16.808c-5.096,1.04-9.832,3.072-14.024,5.856l-11.92-11.92L58.744,86.056
+                      l11.92,11.92c-2.784,4.192-4.816,8.928-5.856,14.024H48v16h16.808c1.04,5.096,3.072,9.832,5.856,14.024l-11.92,11.92
+                      l11.312,11.312l11.92-11.92c4.192,2.784,8.928,4.816,14.024,5.856V176h16v-16.808c5.096-1.04,9.832-3.072,14.024-5.856
+                      l11.92,11.92l11.312-11.312l-11.92-11.92c2.784-4.192,4.816-8.928,5.856-14.024H160z M104,144c-13.232,0-24-10.768-24-24
+                      s10.768-24,24-24s24,10.768,24,24S117.232,144,104,144z"
+                      />
+                      <polygon
+                        points="244.28,80 272,80 272,64 235.72,64 203.72,112 176,112 176,128 212.28,128 			"
+                      />
+                      <rect x="288" y="64" width="32" height="16" />
+                      <path d="M224,144h-48v48h48V144z M208,176h-16v-16h16V176z" />
+                      <rect x="240" y="160" width="32" height="16" />
+                      <rect x="288" y="160" width="32" height="16" />
+                    </g>
+                  </g>
+                </g>
+              </svg>
+              Training
+            </NavLink> -->
+
+            
+
             <!--
             <NavLink v-if="$page.props.auth.role === 'internal-agent'" class="mb-10 gap-2" :href="route('internal-agent.my-agent.index')"
               :active="route().current('internal-agent.my-agent.index')">
@@ -1898,7 +2220,33 @@ let appDownloadModal = ref(false);
               Registered Agents
             </NavLink> -->
 
+            <!-- <NavLink class="mb-10 gap-2" id="billing-nav-link" :disabledNavLink="disabledNavLink"
+              :href="route('billing.funds.index')" :active="route().current('billing.funds.index') ||
+                route().current('billing.cards.index') ||
+                route().current('billing.autopay.index')
+                " :class="{
+                'opacity-25': disabledNavLink === true,
+                'mb-5':
+                  route().current('billing.funds.index') ||
+                  route().current('billing.cards.index') ||
+                  route().current('billing.autopay.index'),
+              }"
+              v-if="!isInternalLevel"
+            >
+              <img src="/img/billing.png" alt="" />
+              Add Funds 
+
+              <svg v-if="route().current('billing.funds.index') ||
+                route().current('billing.cards.index') ||
+                route().current('billing.autopay.index')
+                " xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+              </svg>
+            </NavLink> -->
+
             <NavLink
+              v-if="!isInternalLevel"
               class="mb-10 gap-2"
               id="billing-nav-link"
               :href="route('billing.funds.index')"
@@ -1913,7 +2261,6 @@ let appDownloadModal = ref(false);
                   route().current('billing.cards.index') ||
                   route().current('billing.autopay.index'),
               }"
-              v-if="!isInternalLevel"
             >
               <img src="/img/billing.png" alt="" />
               Add Funds
@@ -2040,6 +2387,8 @@ let appDownloadModal = ref(false);
 
             <NavLink
               class="mb-10 gap-2"
+              :class="{ 'opacity-50': disabledNavLink === true }"
+              :disabledNavLink="disabledNavLink"
               :href="route('calls.index')"
               :active="route().current('calls.index')"
             >
@@ -2063,6 +2412,8 @@ let appDownloadModal = ref(false);
 
             <NavLink
               v-if="$page.props.auth.role === 'internal-agent'"
+              :class="{ 'opacity-50': disabledNavLink === true }"
+              :disabledNavLink="disabledNavLink"
               class="mb-10 gap-2"
               :href="route('additional-files.index')"
               :active="route().current('additional-files.index')"
@@ -2110,6 +2461,8 @@ let appDownloadModal = ref(false);
 
             <NavLink
               v-if="$page.props.auth.role === 'internal-agent'"
+              :class="{ 'opacity-50': disabledNavLink === true }"
+              :disabledNavLink="disabledNavLink"
               class="mb-10 gap-2"
               :href="route('promotion-guidelines.show')"
               :active="route().current('promotion-guidelines.show')"
@@ -2230,11 +2583,13 @@ let appDownloadModal = ref(false);
                   </Link>
                 </li>
 
-                <li class="mb-3">
+                <li v-if="$page.props.auth.role === 'internal-agent'" class="mb-3">
                   <Link
+                    :style="{ 'pointer-events': disabledNavLink ? 'none' : 'pointer' }"
                     aria-current="page"
                     class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
                     :class="{
+                      'opacity-25': disabledNavLink === true,
                       'text-custom-green': route().current('transactions.index'),
                     }"
                     :href="route('transactions.index')"

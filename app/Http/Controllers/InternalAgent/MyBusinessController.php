@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\InternalAgent;
 
 use App\Http\Controllers\Controller;
+use App\Models\Client;
 use App\Models\InternalAgentMyBusiness;
 use App\Models\State;
 use Illuminate\Http\Request;
@@ -14,6 +15,20 @@ class MyBusinessController extends Controller
 {
     public function index(Request $request)
     {
+        $isClient = false;
+        $clientdata = null;
+        $userNotFound = null;
+        $businessesFilter = null;
+
+        if (isset($_GET['clientId']) && $_GET['clientId'] != '') {
+            $clientdata = Client::find($_GET['clientId']);
+            if ($clientdata) {
+                $isClient = true;
+            } else {
+                $userNotFound = 'User Not Found.';
+            }
+        }
+
         $businesses = InternalAgentMyBusiness::whereIn('agent_id', getInviteeIds(auth()->user()))
             ->where(function ($query) use ($request) {
                 if (isset($request->from) && $request->from != '' && isset($request->to) && $request->to != '') {
@@ -21,20 +36,31 @@ class MyBusinessController extends Controller
                     $endDate = Carbon::parse($request->to)->endOfDay();
                     $query->whereBetween('created_at', [$startDate, $endDate]);
                 }
-            })->orderBy('created_at', 'desc')
+            })
+            ->with(['client', 'client.call'])
+            ->orderBy('created_at', 'desc')
             ->paginate(100);
+
+        $clients = Client::where('user_id', auth()->user()->id)
+            ->where('unlocked', true)
+            ->orderBy('created_at', 'desc')
+            ->take(20)
+            ->get();
         $states = State::get();
-        // dd($businesses);
         return Inertia::render('InternalAgent/MyBusiness/Index', [
             'businesses' => $businesses,
+            'businessesFilter' => $businessesFilter,
             'states' => $states,
-            'requestData' =>  $request->all()
+            'client' => $clientdata,
+            'clients' => $clients,
+            'is_client' => $isClient,
+            'requestData' =>  $request->all(),
+            'userNotFound' => $userNotFound,
         ]);
     }
 
     public function store(Request $request)
     {
-        // dd($request->all());
         $validate = Validator::make($request->all(), [
             'agent_full_name' => 'required',
             'agent_email' => 'required',
@@ -72,41 +98,98 @@ class MyBusinessController extends Controller
             ], 400);
         }
 
-        InternalAgentMyBusiness::create([
-            'agent_id' => auth()->user()->id,
-            'agent_full_name' => $request->agent_full_name,
-            'agent_email' => $request->agent_email,
-            'insurance_company' => $request->insurance_company,
-            'product_name' => $request->product_name,
-            'application_date' => Carbon::parse($request->application_date),
-            'coverage_amount' => $request->coverage_amount,
-            'coverage_length' => $request->coverage_length,
-            'premium_frequency' => $request->premium_frequency,
-            'premium_amount' => $request->premium_amount,
-            'premium_volumn' => $request->premium_volumn,
-            'carrier_writing_number' => $request->carrier_writing_number,
-            'this_app_from_lead' => $request->this_app_from_lead,
-            'source_of_lead' => $request->this_app_from_lead == 'NO' ? null : $request->source_of_lead,
-            'policy_draft_date' => Carbon::parse($request->policy_draft_date),
-            'first_name' => $request->first_name,
-            'mi' => $request->mi,
-            'last_name' => $request->last_name,
-            'beneficiary_name' => $request->beneficiary_name,
-            'beneficiary_relationship' => $request->beneficiary_relationship,
-            'notes' => $request->notes,
-            'dob' => Carbon::parse($request->dob),
-            'gender' => $request->gender,
-            'client_street_address_1' => $request->client_street_address_1,
-            'client_street_address_2' => $request->client_street_address_2,
-            'client_city' => $request->client_city,
-            'client_state' => $request->client_state,
-            'client_zipcode' => $request->client_zipcode,
-            'client_phone_no' => $request->client_phone_no,
-            'client_email' => $request->client_email,
-        ]);
+        if (isset($request->client_id)) {
+
+            $business = InternalAgentMyBusiness::where('client_id', $request->client_id)->first();
+            if ($business) {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'This client already contain a business. Please select new one.',
+                ], 400);
+            }
+        }
+
+        if (isset($request->business_id)) {
+            $internalAgentBusiness = InternalAgentMyBusiness::find($request->business_id);
+            if (!$internalAgentBusiness) {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'This business is not found in the record.',
+                ], 400);
+            }
+        } else {
+            $internalAgentBusiness = new InternalAgentMyBusiness();
+        }
+        if(isset($internalAgentBusiness) && !$internalAgentBusiness->agent_id) {
+            $internalAgentBusiness->agent_id = auth()->user()->id;
+            $internalAgentBusiness->agent_full_name = $request->agent_full_name;
+            $internalAgentBusiness->agent_email = $request->agent_email;
+        }   
+        $internalAgentBusiness->client_id = $request->client_id;
+        $internalAgentBusiness->label = $request->label ?? null;
+        $internalAgentBusiness->status = $request->status;
+        $internalAgentBusiness->insurance_company = $request->insurance_company;
+        $internalAgentBusiness->product_name = $request->product_name;
+        $internalAgentBusiness->application_date = Carbon::parse($request->application_date);
+        $internalAgentBusiness->coverage_amount = $request->coverage_amount;
+        $internalAgentBusiness->coverage_length = $request->coverage_length;
+        $internalAgentBusiness->premium_frequency = $request->premium_frequency;
+        $internalAgentBusiness->premium_amount = $request->premium_amount;
+        $internalAgentBusiness->premium_volumn = $request->premium_volumn;
+        $internalAgentBusiness->carrier_writing_number = $request->carrier_writing_number;
+        $internalAgentBusiness->this_app_from_lead = $request->this_app_from_lead;
+        $internalAgentBusiness->source_of_lead = $request->this_app_from_lead == 'NO' ? null : $request->source_of_lead;
+        $internalAgentBusiness->policy_draft_date = Carbon::parse($request->policy_draft_date);
+        $internalAgentBusiness->first_name = $request->first_name;
+        $internalAgentBusiness->mi = $request->mi;
+        $internalAgentBusiness->last_name = $request->last_name;
+        $internalAgentBusiness->beneficiary_name = $request->beneficiary_name;
+        $internalAgentBusiness->beneficiary_relationship = $request->beneficiary_relationship;
+        $internalAgentBusiness->notes = $request->notes;
+        $internalAgentBusiness->dob = Carbon::parse($request->dob);
+        $internalAgentBusiness->gender = $request->gender;
+        $internalAgentBusiness->client_street_address_1 = $request->client_street_address_1;
+        $internalAgentBusiness->client_street_address_2 = $request->client_street_address_2;
+        $internalAgentBusiness->client_city = $request->client_city;
+        $internalAgentBusiness->client_state = $request->client_state;
+        $internalAgentBusiness->client_zipcode = $request->client_zipcode;
+        $internalAgentBusiness->client_phone_no = $request->client_phone_no;
+        $internalAgentBusiness->client_email = $request->client_email;
+        $internalAgentBusiness->save();
         return response()->json([
             'success' => true,
-            'message' => 'Bussiness Added Successfully!',
+            'message' => 'Business added successfully.',
         ], 200);
+    }
+    public function businessByLabel(Request $request)
+    {
+        $businesses = InternalAgentMyBusiness::whereIn('agent_id', getInviteeIds(auth()->user()))
+            ->where(function ($query) use ($request) {
+                if (isset($request->business_label) && $request->business_label != '') {
+                    $query->where('agent_full_name', 'LIKE', '%' . $request->business_label . '%');
+                }
+            })
+            ->get();
+        return response()->json([
+            'businesses' => $businesses
+        ]);
+    }
+
+    public function getClientByName(Request $request)
+    {
+        $clients = Client::where('user_id', auth()->user()->id)
+            ->where('unlocked', true)
+            ->where(function ($query) use ($request) {
+                if (isset($request->client_name) && $request->client_name != '') {
+                    $query->where('phone', 'LIKE', '%' . $request->business_label . '%');
+                    // $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ['%' . $request->client_name . '%']);
+                }
+            })
+
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return response()->json([
+            'clients' => $clients
+        ]);
     }
 }

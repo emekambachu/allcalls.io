@@ -10,6 +10,7 @@ const props = defineProps({
     active: {
         type: Boolean,
     },
+    disabledNavLink:Boolean,
 });
 
 const classes = computed(() =>
@@ -20,7 +21,13 @@ const classes = computed(() =>
 </script>
 
 <template>
-    <Link :href="href" :class="classes">
+    <Link :href="href" :class="[classes, {'disabledNavLink': disabledNavLink }]" >
         <slot />
     </Link>
 </template>
+<style>
+.disabledNavLink{
+    pointer-events: none;
+   
+};
+</style>

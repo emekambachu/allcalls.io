@@ -29,9 +29,12 @@ use App\Listeners\UpdateTargetsInRingba;
 use App\Http\Controllers\FundsController;
 use App\Listeners\UpdateActiveUserStatus;
 use App\Listeners\ChargeUserForMissedCall;
+use Illuminate\Mail\Events\MessageSending;
 use App\Listeners\CheckDispositionListener;
+use App\Listeners\PreventBlacklistedEmails;
 use App\Listeners\AddFundsAddedUserActivity;
 use App\Listeners\AddMissedCallUserActivity;
+use App\Listeners\AddUnsubscribeTokenToUser;
 use App\Listeners\AddFundsTooLowUserActivity;
 use App\Listeners\ChargeUserForCompletedCall;
 use App\Listeners\OnboardingCompletedTrigger;
@@ -39,6 +42,7 @@ use App\Listeners\NotifyUserForLowFundsViaSMS;
 use App\Listeners\AddCompletedCallUserActivity;
 use App\Listeners\NotifyUserForLowFundsViaEmail;
 use App\Listeners\InviteAgent as ListenersInviteAgent;
+use App\Listeners\DispatchDispositionUpdateNotification;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -50,12 +54,19 @@ class EventServiceProvider extends ServiceProvider
      * @var array<class-string, array<int, class-string>>
      */
     protected $listen = [
+        MessageSending::class => [
+            // AddUnsubscribeTokenToUser::class,
+            PreventBlacklistedEmails::class,
+        ],
+    
         Registered::class => [
+            AddUnsubscribeTokenToUser::class,
             SendEmailVerificationNotification::class,
             SendWelcomeEmail::class,
         ],
 
         InviteAgent::class => [
+            AddUnsubscribeTokenToUser::class,
             ListenersInviteAgent::class,
         ],
 
@@ -73,6 +84,7 @@ class EventServiceProvider extends ServiceProvider
             ChargeUserForCompletedCall::class,
             UnlockClientForUser::class,
             AddCompletedCallUserActivity::class,
+            // DispatchDispositionUpdateNotification::class,
             // CheckDispositionListener::class,
         ],
 

@@ -12,20 +12,39 @@ class ClientsController extends Controller
 {
     public function index(Request $request)
     {
-        
+
         $user_id = $request->user()->id;
-        
         $Clients = Client::where('user_id', $user_id)
-                        ->where('unlocked', true)
-                        ->orderBy('created_at', 'desc')
-                        ->paginate(100);
-        
-        $totalClients = Client::where('user_id', $user_id)->count();
+            ->where('unlocked', true)
+            ->orderBy('created_at', 'desc')
+            ->where(function ($query) use ($request) {
+                if (isset($request->email) && $request->email != '') {
+                    $query->where('email', 'LIKE', '%' . $request->email . '%');
+                }
+            })
+            ->where(function ($query) use ($request) {
+                if (isset($request->phone) && $request->phone != '') {
+                    $query->where('phone', 'LIKE', '%' . $request->phone . '%');
+                }
+            })
+            ->where(function ($query) use ($request) {
+                if (isset($request->name) && $request->name != '') {
+                    $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ['%' . $request->name . '%']);
+                }
+            })
+            ->with('call')
+            ->paginate(100);
+        $allClients = Client::where('user_id', $user_id)->where('unlocked', true)->orderBy('created_at', 'desc')
+            ->take(100)->get();
+        $totalClients = Client::where('user_id', $user_id)->where('unlocked', true)->count();
         $states = State::all();
         return Inertia::render('Clients/Index', [
             'Clients' => $Clients,
+            'allClients' => $allClients,
             'totalClients' => $totalClients,
             'states' => $states,
+            'requestData' => $request->all() ? $request->all() : ''
+
         ]);
     }
 
@@ -58,5 +77,31 @@ class ClientsController extends Controller
         return redirect()->back()->with([
             'message' => 'Client updated successfully.'
         ]);
+    }
+    public function getClients(Request $request)
+    {
+        $user_id = $request->user()->id;
+        $allClients = Client::orderBy('created_at', 'desc')->where('user_id', $user_id)->where('unlocked', true)
+        ->when(isset($request->email) && $request->email != '', function ($query) use ($request) {
+            // Conditionally add the email filter if it is set
+            $query->where('email', 'LIKE', '%' . $request->email . '%');
+        })
+        ->when(isset($request->phone) && $request->phone != '', function ($query) use ($request) {
+            // Conditionally add the phone filter if it is set
+            $query->where('phone', 'LIKE', '%' . $request->phone . '%');
+        })
+        ->when(isset($request->name) && $request->name != '', function ($query) use ($request) {
+            // Conditionally add the name filter if it is set
+            $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ['%' . $request->name . '%']);
+        })
+        ->when(!isset($request->phone) && $request->phone != '' && isset($request->name) && $request->name != '' && isset($request->email) && $request->email != '', function ($query) use ($request) {
+            // Conditionally add the phone filter if it is set
+            $query->take(1);
+        })
+         // Always take the first 10 records
+        ->get(); // Execute the query and retrieve the results
+            return response()->json([
+                'allClients' => $allClients
+            ]);
     }
 }

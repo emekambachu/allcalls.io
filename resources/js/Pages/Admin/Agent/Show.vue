@@ -6,7 +6,7 @@ import Activities from "@/Pages/Admin/Agent/Activities.vue";
 import { Head, usePage, router } from "@inertiajs/vue3";
 import { ref } from "vue";
 import { toaster } from "@/helper.js";
-import Clients from "@/Pages/Admin/Clients/Index.vue";
+import Clients from "@/Pages/Admin/ClientsByUser/Index.vue";
 let page = usePage();
 const tab = ref(0);
 

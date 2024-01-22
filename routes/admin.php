@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\InternalAgentController;
 use App\Http\Controllers\AdminUserActivitiesController;
 use App\Http\Controllers\InternalAgentExportController;
 use App\Http\Controllers\Admin\AvailableNumberController;
+use App\Http\Controllers\Admin\ClientsController;
 use App\Http\Controllers\AdminAvaialbleNumbersController;
 use App\Http\Controllers\Admin\LegalQuestionPdfController;
 use App\Http\Controllers\AvailableNumberReleaseController;
@@ -42,6 +43,9 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
     Route::get('/transactions', [CustomerController::class, 'getAllTransaction'])->name('admin.transactions');
 
+    Route::get('/clients',[ClientsController::class,'index'])->name('admin.clients');
+    Route::post('/clients',[ClientsController::class,'getClients']);
+    Route::patch('/clients/{client}', [ClientsController::class, 'update'])->name('clients.update');
 
 
     Route::get('/customer/transactions/{id}', [CustomerController::class, 'getTransaction']);
@@ -90,6 +94,8 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::get('/my-business', [AgentBusinessController::class, 'index'])->name('admin.my-business.index');
     Route::post('/my-business', [AgentBusinessController::class, 'store'])->name('admin.my-business.store');
     Route::post('/my-business/update', [AgentBusinessController::class, 'update'])->name('admin.my-business.update');
+    Route::post('/get-agent-by-name', [AgentBusinessController::class, 'getAgentByName'])->name('getagent.byname')->middleware(['registration-step-check', 'IsBasicTraining']);
+
 
     // Available Number
     Route::get('/available-numbers',[AvailableNumberController::class,'index'])->name('admin.available-number.index');

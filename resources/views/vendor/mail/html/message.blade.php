@@ -1,4 +1,6 @@
-<x-mail::layout>
+@props(['user' => null])
+
+<x-mail::layout :user="$user ?? null">
     {{-- Header --}}
     <x-slot:header>
         <x-mail::header :url="config('app.url')">
@@ -11,17 +13,21 @@
 
     {{-- Subcopy --}}
     @isset($subcopy)
-        <x-slot:subcopy>
-            <x-mail::subcopy>
-                {{ $subcopy }}
-            </x-mail::subcopy>
-        </x-slot:subcopy>
+    <x-slot:subcopy>
+        <x-mail::subcopy>
+            {{ $subcopy }}
+        </x-mail::subcopy>
+    </x-slot:subcopy>
     @endisset
 
     {{-- Footer --}}
     <x-slot:footer>
         <x-mail::footer>
             © {{ date('Y') }} {{ config('app.name') }}. @lang('All rights reserved.')
+            <!-- @if(isset($user) && isset($user->unsubscribeToken))
+            <a href="{{ url('/unsubscribe-to-email/' . $user->unsubscribeToken->token) }}" style="color: #999999; text-decoration: underline;">Unsubscribe</a>
+            <br>
+            @endif -->
         </x-mail::footer>
     </x-slot:footer>
 </x-mail::layout>

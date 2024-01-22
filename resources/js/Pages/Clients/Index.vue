@@ -6,6 +6,8 @@ import { Head, router, usePage } from "@inertiajs/vue3";
 import { ref } from "vue";
 import { toaster } from "@/helper.js";
 import Modal from "@/Components/Modal.vue";
+import ClientSearchFilter from "@/Components/ClientSearchFilter.vue";
+
 let page = usePage();
 if (page.props.flash.message) {
   toaster("success", page.props.flash.message);
@@ -20,6 +22,8 @@ let props = defineProps({
     type: Number,
   },
   states: Array,
+  allClients: Array,
+  requestData: Array,
 });
 
 
@@ -95,6 +99,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
         </h2>
       </div>
     </div>
+    <ClientSearchFilter :allClients="allClients" :requestData="requestData" :route="'/clients'" />
 
     <section v-if="Clients.data.length" class="p-3">
       <div class="mx-auto max-w-screen-xl sm:px-12">
@@ -106,6 +111,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
                   <th scope="col" class="px-4 py-3">ID</th>
                   <th scope="col" class="px-4 py-3">First Name</th>
                   <th scope="col" class="px-4 py-3">Last Name</th>
+                  <th scope="col" class="px-4 py-3">URL</th>
                   <th scope="col" class="px-4 py-3">Status</th>
                   <th scope="col" class="px-4 py-3 text-end">Actions</th>
                 </tr>
@@ -115,12 +121,24 @@ let capitalizeAndReplaceUnderscore = (str) => {
                   <td class="text-gray-600 px-4 py-3">{{ Client.id }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ Client.first_name }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ Client.last_name }}</td>
+                  <td class="text-gray-600">
+                    <a v-if="Client?.call?.recording_url" target="_blank"
+                      :href="Client?.call?.recording_url" class="flex"><svg xmlns="http://www.w3.org/2000/svg"
+                        height="1.5em" class="pr-1" viewBox="0 0 512 512">
+                        <path
+                          d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm256-96a96 96 0 1 1 0 192 96 96 0 1 1 0-192zm0 224a128 128 0 1 0 0-256 128 128 0 1 0 0 256zm0-96a32 32 0 1 0 0-64 32 32 0 1 0 0 64z" />
+                      </svg>Open Recording
+                    </a>
+                    <a class="text-center" v-else>_</a>
+                  </td>
                   <td class="text-gray-600 px-4 py-3">
-                    <span v-if="Client.status == 'not_sold'"
-                      class="bg-red-600 text-white text-xs px-2 py-1 rounded-2xl">Not Sold</span>
-                    <span v-else-if="Client.status == 'sold'"
-                      class="bg-green-600 text-white text-xs px-2 py-1 rounded-2xl">Sold</span>
-                    <span v-else-if="Client.status" class="bg-yellow-600 text-white text-xs px-2 py-1 rounded-2xl">{{
+                    <span v-if="['Sale - Simplified Issue', 'Sale - Guaranteed Issue'].includes(
+                      Client.status
+                    )
+                      " class="bg-green-600 text-white text-xs px-2 py-1 rounded-2xl">{{ Client.status }}</span>
+                    <span v-else-if="Client.status == 'Follow Up Needed'"
+                      class="bg-yellow-600 text-white text-xs px-2 py-1 rounded-2xl">Follow Up Needed</span>
+                    <span v-else-if="Client.status" class="bg-red-600 text-white text-xs px-2 py-1 rounded-2xl">{{
                       Client.status }}</span>
                     <span v-else>-</span>
                   </td>
@@ -148,8 +166,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
               </div>
 
               <ul class="inline-flex -space-x-px text-base h-10">
-                <li v-for="(link, index) in Clients.links" :key="link.label"
-                  :class="{ disabled: link.url === null }">
+                <li v-for="(link, index) in Clients.links" :key="link.label" :class="{ disabled: link.url === null }">
                   <a href="#" @click.prevent="paginate(link.url)" :class="[
                     'flex items-center justify-center px-4 h-10 border border-gray-300',
                     link.active
@@ -164,7 +181,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
               </ul>
             </nav>
             <br>
-            
+
           </div>
         </div>
       </div>
@@ -174,7 +191,8 @@ let capitalizeAndReplaceUnderscore = (str) => {
       <p class="text-center text-gray-600">No clients yet.</p>
     </section>
     <Modal :show="showModal" @close="showModal = false">
-      <ClientModal :showModal="showModal" :ClientDetail="ClientDetail" :states="states" @close="showModal = false">
+      <ClientModal :showModal="showModal" :route="'/clients'" :ClientDetail="ClientDetail" :states="states"
+        @close="showModal = false">
       </ClientModal>
     </Modal>
   </AuthenticatedLayout>
