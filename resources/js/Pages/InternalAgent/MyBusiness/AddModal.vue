@@ -884,7 +884,6 @@ let existingBusiness = () => {
               <span v-if="!attactClientEdit">Report Application</span>
             </h3>
             <button
-              v-if="!is_client"
               @click="close"
               type="button"
               class="text-gray-400 bg-transparent mr-2 mt-2 hover:bg-gray-200 hover:text-gray-700 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
