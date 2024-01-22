@@ -71,10 +71,11 @@ let form = ref({
   client_zipcode: "",
   client_phone_no: "",
   client_email: "",
-  label: "",
-  business_label: "",
-  business_id: "",
-  existing_business: false,
+  label: '',
+  business_label: '',
+  status: 'Submitted',
+  business_id: '',
+  existing_business: false
 });
 
 let edit_data = ref(false);
@@ -97,7 +98,9 @@ let updateFormAndDisableElement = (
     formObject[property] = value;
     var element = document.getElementById(elementId);
     if (element) {
-      element.disabled = true;
+      if (formObject[property] !== 'Select') {
+        element.disabled = true;
+      }
     }
   } else if (value && property == "dob") {
     formObject[property] = value;
@@ -122,21 +125,33 @@ if (props.businessData) {
   // }
   edit_data.value = true;
 }
-let attactClientEdit = ref(false);
+
+let getInsuranceCompanyOptions = () => {
+  return Object.keys(companies);
+};
+let getProductNameOptions = () => {
+  console.log('form.value.insurance_company',form.value.insurance_company);
+  console.log('form.value.product_name',form.value.product_name);
+  return Object.keys(companies[form.value.insurance_company]);
+};
+
+let attactClientEdit = ref(false)
 if (props.AttachClientData) {
-  form.value.insurance_company = props.AttachClientData.insurance_company;
-  form.value.product_name = props.AttachClientData.product_name;
-  form.value.application_date = props.AttachClientData.application_date;
-  form.value.coverage_amount = props.AttachClientData.coverage_amount;
-  form.value.coverage_length = props.AttachClientData.coverage_length;
-  form.value.premium_frequency = props.AttachClientData.premium_frequency;
-  form.value.premium_amount = props.AttachClientData.premium_amount;
-  form.value.premium_volumn = props.AttachClientData.premium_volumn;
-  form.value.carrier_writing_number = props.AttachClientData.carrier_writing_number;
-  form.value.this_app_from_lead = props.AttachClientData.this_app_from_lead;
-  form.value.source_of_lead = props.AttachClientData.source_of_lead;
-  form.value.policy_draft_date = props.AttachClientData.policy_draft_date;
-  form.value.label = props.AttachClientData.label;
+  form.value.business_id = props.AttachClientData.id
+  form.value.insurance_company = props.AttachClientData.insurance_company
+  form.value.product_name = props.AttachClientData.product_name
+  form.value.application_date = props.AttachClientData.application_date
+  form.value.coverage_amount = props.AttachClientData.coverage_amount
+  form.value.coverage_length = props.AttachClientData.coverage_length
+  form.value.premium_frequency = props.AttachClientData.premium_frequency
+  form.value.premium_amount = props.AttachClientData.premium_amount
+  form.value.premium_volumn = props.AttachClientData.premium_volumn
+  form.value.carrier_writing_number = props.AttachClientData.carrier_writing_number
+  form.value.this_app_from_lead = props.AttachClientData.this_app_from_lead
+  form.value.source_of_lead = props.AttachClientData.source_of_lead
+  form.value.policy_draft_date = props.AttachClientData.policy_draft_date
+  form.value.label = props.AttachClientData.label
+  form.value.status = props.AttachClientData.status ? props.AttachClientData.status : 'Select'
 
   if (!props.AttachClientData.source_of_lead) {
     form.value.source_of_lead = "Select";
@@ -181,6 +196,7 @@ let checkRequiredField = () => {
     "client_zipcode",
     "client_phone_no",
     "client_email",
+    'status'
   ];
   const addFieldIfPresent = (field, condition, value) => {
     if (condition) {
@@ -242,12 +258,6 @@ let checkRequiredField = () => {
 
 let ChangeProducName = () => {
   form.value.product_name = "Select";
-};
-let getInsuranceCompanyOptions = () => {
-  return Object.keys(companies);
-};
-let getProductNameOptions = () => {
-  return Object.keys(companies[form.value.insurance_company]);
 };
 
 const Next = (data) => {
@@ -423,7 +433,7 @@ const SugestAgent = () => {
 };
 const SugestClient = () => {
   isOpen2.value = !isOpen2.value;
-  search2.value = "";
+  search2.value = ''
 };
 let SugestBusiness = () => {
   isOpen3.value = !isOpen3.value;
@@ -469,6 +479,33 @@ let filteredClients = computed(() => {
   //   return sanitizedPhone.includes(sanitizedSearch);
   // })
 });
+
+let updateFormAndEnableElement = (property, value, elementId, formObject, disabledFlag) => {
+  if (value && property !== 'dob' && property !== 'policy_draft_date' && property !== 'application_date' && property !== 'this_app_from_lead') {
+    formObject[property] = value;
+    var element = document.getElementById(elementId);
+    if (element) {
+      element.disabled = false;
+    }
+  } else if (value && property == 'policy_draft_date') {
+    formObject[property] = value;
+    disabledPolicydraftdate.value = false
+  } else if (value && property == 'application_date') {
+    formObject[property] = value;
+    applicationDate.value = false
+  } else if (value && property == 'this_app_from_lead') {
+    if (value == 'NO') {
+      var element = document.getElementById('source_of_lead');
+      if (element) {
+        element.disabled = true;
+      }
+      var element2 = document.getElementById(elementId);
+      if (element2) {
+        element2.disabled = false;
+      }
+    }
+  }
+}
 
 onMounted(() => {
   document.addEventListener("click", handleOutsideClick);
@@ -535,19 +572,10 @@ onMounted(() => {
     }
 
     let policy_validation = ref([
-      "insurance_company",
-      "product_name",
-      "application_date",
-      "coverage_amount",
-      "coverage_length",
-      "premium_frequency",
-      "premium_amount",
-      "premium_volumn",
-      "carrier_writing_number",
-      "this_app_from_lead",
-      "source_of_lead",
-      "policy_draft_date",
-    ]);
+      'insurance_company', 'product_name', 'application_date', 'coverage_amount', 'coverage_length',
+      'premium_frequency', 'premium_amount', 'premium_volumn', 'carrier_writing_number', 'this_app_from_lead',
+      'source_of_lead', 'policy_draft_date', 'status'
+    ])
     policy_validation.value.forEach((key) => {
       if (form.value.hasOwnProperty(key)) {
         const value = form.value[key];
@@ -583,10 +611,10 @@ const handleOutsideClick = (event) => {
   }
 };
 let selectagent = (agent) => {
-  form.value.agent_full_name = agent.first_name + " " + agent.last_name;
-  form.value.agent_email = agent.email;
-  form.value.agent_id = agent.id;
-  console.log("form.value", form.value);
+  form.value.agent_full_name = agent.first_name + ' ' + agent.last_name
+  form.value.agent_email = agent.email
+  form.value.agent_id = agent.id
+  console.log('form.value', form.value);
   isOpen.value = false;
 };
 
@@ -628,30 +656,18 @@ let clearClient = () => {
   form.value.client_full_name = "";
   form.value.client_id = "";
   let policy_validation = ref([
-    "client_street_address_1",
-    "dob",
-    "client_email",
-    "first_name",
-    "last_name",
-    "client_zipcode",
-    "client_phone_no",
-    "mi",
-    "beneficiary_name",
-    "beneficiary_relationship",
-    "client_street_address_2",
-    "client_city",
-    "client_state",
-    "gender",
-    "notes",
-  ]);
+    'client_street_address_1', 'dob', 'client_email', 'first_name', 'last_name',
+    'client_zipcode', 'client_phone_no', 'mi', 'beneficiary_name', "beneficiary_relationship",
+    'client_street_address_2', "client_city", "client_state", "gender", 'notes'
+  ])
   policy_validation.value.forEach((key) => {
     if (form.value.hasOwnProperty(key)) {
       const value = form.value[key];
       updateFormAndEnableElement(key, value, key, form.value);
       resetValue(key);
     }
-  });
-};
+  })
+}
 
 let selectBusiness = (business) => {
   isOpen3.value = false;
@@ -692,46 +708,8 @@ let selectBusiness = (business) => {
       const value = form.value[key];
       updateFormAndDisableElement(key, value, key, form.value);
     }
-  });
-};
-let updateFormAndEnableElement = (
-  property,
-  value,
-  elementId,
-  formObject,
-  disabledFlag
-) => {
-  if (
-    value &&
-    property !== "dob" &&
-    property !== "policy_draft_date" &&
-    property !== "application_date" &&
-    property !== "this_app_from_lead"
-  ) {
-    formObject[property] = value;
-    var element = document.getElementById(elementId);
-    if (element) {
-      element.disabled = false;
-    }
-  } else if (value && property == "policy_draft_date") {
-    formObject[property] = value;
-    disabledPolicydraftdate.value = false;
-  } else if (value && property == "application_date") {
-    formObject[property] = value;
-    applicationDate.value = false;
-  } else if (value && property == "this_app_from_lead") {
-    if (value == "NO") {
-      var element = document.getElementById("source_of_lead");
-      if (element) {
-        element.disabled = true;
-      }
-      var element2 = document.getElementById(elementId);
-      if (element2) {
-        element2.disabled = false;
-      }
-    }
-  }
-};
+  })
+}
 let resetValue = (key) => {
   form.value[key] = "";
   if (key == "insurance_company") {
@@ -1145,12 +1123,9 @@ let existingBusiness = () => {
                                 />
                                 <ul class="max-w-md divide-y divide-gray-200">
                                   <li>
-                                    <div
-                                      @click="clearClient()"
-                                      class="cursor-pointer flex items-center space-x-4 rtl:space-x-reverse hover:bg-gray-50 p-2"
-                                    >
-                                      Clear
-                                    </div>
+                                    <div @click="clearClient()"
+                                      class="cursor-pointer flex items-center space-x-4 rtl:space-x-reverse hover:bg-gray-50 p-2">
+                                      Clear</div>
                                   </li>
                                   <li v-for="client in filteredClients" :key="client.id">
                                     <div
@@ -1300,15 +1275,10 @@ let existingBusiness = () => {
                       </div>
 
                       <div>
-                        <label
-                          for="EFNumber"
-                          class="block mb-2 mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black"
-                          >Street Address 2</label
-                        >
-                        <input
-                          v-model="form.client_street_address_2"
-                          type="text"
-                          id="client_street_address_2"
+                        <label for="EFNumber"
+                          class="block mb-2 mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Street Address
+                          2</label>
+                        <input v-model="form.client_street_address_2" type="text" id="client_street_address_2"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder=""
                           required
@@ -1509,14 +1479,30 @@ let existingBusiness = () => {
                     <div
                       class="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-x-8"
                     >
-                      <!-- <div>
+                      <div>
                         <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Business
                           Label</label>
                         <input v-model="form.label" type="text" id="label"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="" required />
                         <div v-if="firstStepErrors.label" class="text-red-500" v-text="firstStepErrors.label[0]"></div>
-                      </div> -->
+                      </div>
+
+                      <div>
+                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Status<span
+                            class="text-red-400">*</span></label>
+                        <select v-model="form.status" id="status"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                          <option disabled>Select</option>
+                          <option value="Submitted">Submitted</option>
+                          <option value="Approved">Approved</option>
+                          <option value="Paid">Paid</option>
+                          <option value="Lapsed">Lapsed</option>
+                          <option value="Declined">Declined</option>
+                          <option value="Carrier Missing Information">Carrier Missing Information</option>
+                        </select>
+                        <div v-if="firstStepErrors.status" class="text-red-500" v-text="firstStepErrors.status[0]"></div>
+                      </div>
                       <div>
                         <label
                           class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black"
