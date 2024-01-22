@@ -21,8 +21,12 @@ class PreventBlacklistedEmails
      */
     public function handle($event): void
     {
-        Log::debug('PreventBlacklistedEmails listener fired', [
-            'event' => $event,
-        ]);
+        // Check if 'user' and 'email' keys are available in the event data
+        if (isset($event->data['user']['email'])) {
+            $email = $event->data['user']['email'];
+            Log::debug('Extracted email from event', ['email' => $email]);
+        } else {
+            Log::debug('Email key not found in event data');
+        }
     }
 }
