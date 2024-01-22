@@ -295,7 +295,7 @@ let startTimeoutForRepeatedDispositionNotifications = () => {
 
 let clearTimeoutForRepeatedDispositionNotifications = () => {
   console.log("Clearing timeout for repeated disposition notifications.");
-  clearTimeout(repeatedNotificationToUpdateDispositionTimeout.value);
+  clearInterval(repeatedNotificationToUpdateDispositionTimeout.value);
   repeatedNotificationToUpdateDispositionTimeout.value = null;
 };
 
