@@ -10,6 +10,9 @@ class EmailBlacklistController extends Controller
 {
     public function store(Request $request)
     {
+        dd($request->input('token') ?? 'No token found');
+
+
         $exists = EmailBlacklist::where('email', $request->user()->email)->exists();
 
         if ($exists) {
