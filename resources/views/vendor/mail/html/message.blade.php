@@ -23,8 +23,9 @@
         <x-mail::footer>
             © {{ date('Y') }} {{ config('app.name') }}. @lang('All rights reserved.')
             @if(isset($user))
-            <a href="{{ url('/unsubscribe-to-emails/' . $user->unsubscribeToken) }}" style="color: #999999; text-decoration: underline;">Unsubscribe</a>
-            <br>
+            <!-- <a href="{{ url('/unsubscribe-to-emails/' . $user->unsubscribeToken) }}" style="color: #999999; text-decoration: underline;">Unsubscribe</a>
+            <br> -->
+            Unsubscribe
             @endif
 
 
