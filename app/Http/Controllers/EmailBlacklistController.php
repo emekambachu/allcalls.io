@@ -8,9 +8,9 @@ use DocuSign\eSign\Model\Email;
 
 class EmailBlacklistController extends Controller
 {
-    public function store(Request $request)
+    public function store(Request $request, $token)
     {
-        dd($request->input('token') ?? 'No token found');
+        dd($token ?? 'No token found');
 
 
         $exists = EmailBlacklist::where('email', $request->user()->email)->exists();
