@@ -146,10 +146,10 @@ let formatDate = date => {
             Policy Information
         </h1>
         <div class="grid my-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1">
-            <!-- <div class="flex ">
+            <div class="flex ">
                 <div class="flex"><strong>Business Label:</strong></div>
                 <div class="ml-2">{{ form.label }} </div>
-            </div> -->
+            </div>
             <div class="flex ">
                 <div class="flex"><strong>Insurance Company:</strong></div>
                 <div class="ml-2">{{ form.insurance_company }} </div>
