@@ -1514,13 +1514,13 @@ let appDownloadModal = ref(false);
               >
                 My Business
               </ResponsiveNavLink>
-              <ResponsiveNavLink
+              <!-- <ResponsiveNavLink
                 v-if="$page.props.auth.role === 'internal-agent'"
                 :href="route('training.index')"
                 :active="route().current('training.index')"
               >
                 Training
-              </ResponsiveNavLink>
+              </ResponsiveNavLink> -->
 
               <!-- <ResponsiveNavLink v-if="$page.props.auth.role === 'internal-agent'" :href="route('internal-agent.my-agent.index')" :active="route().current('internal-agent.my-agent.index')">
                 Registered Agents
@@ -2151,7 +2151,7 @@ let appDownloadModal = ref(false);
               My Business
             </NavLink>
 
-            <NavLink
+            <!-- <NavLink
               v-if="$page.props.auth.role === 'internal-agent'"
               class="mb-10 gap-2"
               :href="route('training.index')"
@@ -2205,7 +2205,9 @@ let appDownloadModal = ref(false);
                 </g>
               </svg>
               Training
-            </NavLink>
+            </NavLink> -->
+
+            
 
             <!--
             <NavLink v-if="$page.props.auth.role === 'internal-agent'" class="mb-10 gap-2" :href="route('internal-agent.my-agent.index')"
