@@ -26,7 +26,7 @@
             © {{ date('Y') }} {{ config('app.name') }}. @lang('All rights reserved.') | Unsubscribe
             @isset($user)
             <br>
-            <p>{{ $user->unsubscribeToken() }}</p>
+            <p>{{ $user->unsubscribeToken->token }}</p>
 
             @endisset
         </x-mail::footer>
