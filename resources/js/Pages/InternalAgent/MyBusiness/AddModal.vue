@@ -1479,14 +1479,14 @@ let existingBusiness = () => {
                     <div
                       class="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-x-8"
                     >
-                      <div>
+                      <!-- <div>
                         <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Business
                           Label</label>
                         <input v-model="form.label" type="text" id="label"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="" required />
                         <div v-if="firstStepErrors.label" class="text-red-500" v-text="firstStepErrors.label[0]"></div>
-                      </div>
+                      </div> -->
 
                       <div>
                         <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Status<span
