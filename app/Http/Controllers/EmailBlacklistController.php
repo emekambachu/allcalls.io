@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\EmailBlacklist;
 use DocuSign\eSign\Model\Email;
 use App\Models\UnsubscribeToken;
+use Illuminate\Support\Facades\Log;
 
 class EmailBlacklistController extends Controller
 {
@@ -29,11 +30,15 @@ class EmailBlacklistController extends Controller
         $user = UnsubscribeToken::where('token', $token)->firstOrFail()->user;
 
         if ($user->email !== $request->email) {
+            Log::debug('EmailBlacklistController: Email does not match user email', [
+                'email' => $request->email,
+                'user' => $user,
+            ]);
             return redirect()->back()->with(['error' => 'Invalid email address.']);
         }
 
         EmailBlacklist::create([
-            'email' => $request->email,
+            'email' => $user->email,
         ]);
 
         return redirect()->back()->with(['message' => 'You have been unsubscribed.']);

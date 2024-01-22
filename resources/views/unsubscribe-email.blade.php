@@ -30,7 +30,7 @@
                 <div class="mt-4">
                     <div>
                         <label class="block" for="email">Email Address</label>
-                        <input type="email" placeholder="Enter your email" class="mt-2 w-full rounded-md border px-4 py-2 focus:outline-none focus:ring-1 focus:ring-blue-600" />
+                        <input type="email" placeholder="Enter your email" name="email" class="mt-2 w-full rounded-md border px-4 py-2 focus:outline-none focus:ring-1 focus:ring-blue-600" />
                     </div>
                     <div class="mt-4 flex items-center justify-between">
                         <button class="rounded-lg bg-blue-600 px-6 py-2 text-white hover:bg-blue-900">Unsubscribe</button>
