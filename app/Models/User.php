@@ -12,9 +12,11 @@ use App\Models\Activity;
 use App\Models\CallType;
 use App\Models\ActiveUser;
 use App\Models\Transaction;
+use Illuminate\Support\Str;
 use App\Models\SendBirdUser;
 use Laravel\Cashier\Billable;
 use App\Models\AdditionalFile;
+use App\Models\UnsubscribeToken;
 use App\Models\UserCallTypeState;
 use Laravel\Sanctum\HasApiTokens;
 use Filament\Models\Contracts\HasName;
@@ -238,5 +240,17 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
     public function clients()
     {
         return $this->hasMany(Client::class);
+    }
+
+
+    public function unsubscribeToken()
+    {
+        return $this->hasOne(UnsubscribeToken::class);
+    }
+    
+    public function generateUnsubscribeToken()
+    {
+        $token = Str::random(40); // Or any other secure token generation method
+        $this->unsubscribeToken()->create(['token' => $token]);
     }
 }

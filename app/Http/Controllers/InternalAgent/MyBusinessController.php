@@ -126,7 +126,7 @@ class MyBusinessController extends Controller
             $internalAgentBusiness->agent_email = $request->agent_email;
         }   
         $internalAgentBusiness->client_id = $request->client_id;
-        $internalAgentBusiness->label = $request->label;
+        $internalAgentBusiness->label = $request->label ?? null;
         $internalAgentBusiness->status = $request->status;
         $internalAgentBusiness->insurance_company = $request->insurance_company;
         $internalAgentBusiness->product_name = $request->product_name;
@@ -158,7 +158,7 @@ class MyBusinessController extends Controller
         $internalAgentBusiness->save();
         return response()->json([
             'success' => true,
-            'message' => 'Bussiness Added Successfully!',
+            'message' => 'Business added successfully.',
         ], 200);
     }
     public function businessByLabel(Request $request)
