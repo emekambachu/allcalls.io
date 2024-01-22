@@ -5,6 +5,7 @@ namespace App\Mail;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Envelope;
@@ -39,6 +40,8 @@ class Welcome extends Mailable
      */
     public function content(): Content
     {
+        Log::debug('Passing user to email view', ['user' => $this->user]);
+
         return new Content(
         markdown: 'emails.welcome',
             with: [
