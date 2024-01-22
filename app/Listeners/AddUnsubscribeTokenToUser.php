@@ -22,6 +22,8 @@ class AddUnsubscribeTokenToUser
      */
     public function handle(object $event)
     {
+        Log::debug('AddUnsubscribeToken: Handling event');
+
         // Check if 'user' and 'email' keys are available in the event data
         if (!isset($event->data['user']['email'])) {
             Log::debug('AddUnsubscribeToken: No email found in event data');
