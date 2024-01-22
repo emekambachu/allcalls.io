@@ -150,6 +150,12 @@ let formatDate = date => {
                 <div class="flex"><strong>Business Label:</strong></div>
                 <div class="ml-2">{{ form.label }} </div>
             </div>
+
+            <div class="flex ">
+                <div class="flex"><strong>Status:</strong></div>
+                <div class="ml-2">{{ form.status }} </div>
+            </div>
+
             <div class="flex ">
                 <div class="flex"><strong>Insurance Company:</strong></div>
                 <div class="ml-2">{{ form.insurance_company }} </div>
