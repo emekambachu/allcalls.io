@@ -37,6 +37,13 @@ class EmailBlacklistController extends Controller
             return redirect()->back()->with(['error' => 'Invalid email address.']);
         }
 
+        if (EmailBlacklist::where('email', $user->email)->exists()) {
+            Log::debug('EmailBlacklistController: Email already blacklisted', [
+                'email' => $user->email,
+            ]);
+            return redirect()->back()->with(['error' => 'You have already been unsubscribed.']);
+        }
+
         EmailBlacklist::create([
             'email' => $user->email,
         ]);
