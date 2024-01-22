@@ -30,6 +30,7 @@ use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\UsageActivityController;
 use App\Http\Controllers\WebAPIClientsController;
 use App\Http\Controllers\CallClientInfoController;
+use App\Http\Controllers\EmailBlacklistController;
 use App\Http\Controllers\AdditionalFilesController;
 use App\Http\Controllers\AgentStatusDocsController;
 use App\Http\Controllers\FEAgentPingDocsController;
@@ -256,3 +257,5 @@ Route::get('/careers', function(){
 });
 
 Route::get('/web-api/latest-client', [LatestClientController::class, 'show'])->middleware(['auth', 'verified', 'registration-step-check']);
+
+Route::get('/unsubscribe-to-email', [EmailBlacklistController::class, 'store'])->name('unsubscribe-to-emails.show')->middleware(['auth', 'verified', 'registration-step-check']);
