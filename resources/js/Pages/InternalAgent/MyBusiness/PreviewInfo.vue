@@ -150,25 +150,22 @@ let formatDate = date => {
                 <div class="flex"><strong>Business Label:</strong></div>
                 <div class="ml-2">{{ form.label }} </div>
             </div>
-
             <div class="flex ">
                 <div class="flex"><strong>Status:</strong></div>
                 <div class="ml-2">{{ form.status }} </div>
             </div>
-
             <div class="flex ">
                 <div class="flex"><strong>Insurance Company:</strong></div>
                 <div class="ml-2">{{ form.insurance_company }} </div>
             </div>
-            <div class="flex">
-                <div><strong>Product Name:</strong></div>
-                <div class="ml-2">{{ form.product_name === 'Select' ? '' : form.product_name }} </div>
-            </div>
-           
         </div>
         <hr>
 
         <div class="grid my-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1">
+            <div class="flex">
+                <div><strong>Product Name:</strong></div>
+                <div class="ml-2">{{ form.product_name === 'Select' ? '' : form.product_name }} </div>
+            </div>
             <div class="flex">
                 <div><strong>Application Date :</strong></div>
                 <div class="ml-2">{{ formatDate(form.application_date) }} </div>
@@ -177,14 +174,15 @@ let formatDate = date => {
                 <div class="flex"><strong>Coverage Amount:</strong></div>
                 <div class="ml-2">{{ form.coverage_amount }} </div>
             </div>
-            <div class="flex">
-                <div><strong>Coverage Length:</strong></div>
-                <div class="ml-2">{{ form.coverage_length === 'Select' ? '' : form.coverage_length }} </div>
-            </div>
+           
         </div>
         <hr>
 
         <div class="grid my-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1">
+            <div class="flex">
+                <div><strong>Coverage Length:</strong></div>
+                <div class="ml-2">{{ form.coverage_length === 'Select' ? '' : form.coverage_length }} </div>
+            </div>
             <div class="flex">
                 <div><strong>Premium Frequency</strong></div>
                 <div class="ml-2">{{ form.premium_frequency === 'Select' ? '' : form.premium_frequency }} </div>
@@ -194,14 +192,15 @@ let formatDate = date => {
                         Amount:</strong></div>
                 <div class="ml-2">{{ form.premium_amount }} </div>
             </div>
-            <div class="flex">
-                <div><strong>Annual Premium Volume:</strong></div>
-                <div class="ml-2">{{ form.premium_volumn }} </div>
-            </div>
+          
         </div>
         <hr>
 
         <div class="grid my-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1">
+            <div class="flex">
+                <div><strong>Annual Premium Volume:</strong></div>
+                <div class="ml-2">{{ form.premium_volumn }} </div>
+            </div>
             <div class="flex">
                 <div class="flex"><strong>Carrier Writing Number:</strong></div>
                 <div class="ml-2">{{ form.carrier_writing_number }} </div>
@@ -211,17 +210,19 @@ let formatDate = date => {
                 <div v-if="form.this_app_from_lead == 0 || form.this_app_from_lead == 1" class="ml-2">{{ form.this_app_from_lead == '0' ? 'NO' : 'YES' }} </div>
                 <div v-else class="ml-2">{{ form.this_app_from_lead }} </div>
             </div>
-            <div class="flex">
-                <div><strong>Source of the lead:</strong></div>
-                <div class="ml-2">{{ form.this_app_from_lead === 'YES' ? form.source_of_lead : "" }} </div>
-            </div>
+           
         </div>
         <hr>
         <div class="grid my-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1">
             <div class="flex">
+                <div><strong>Source of the lead:</strong></div>
+                <div class="ml-2">{{ form.this_app_from_lead === 'YES' ? form.source_of_lead : "" }} </div>
+            </div>
+            <div class="flex">
                 <div><strong>Policy Draft Date:</strong></div>
                 <div class="ml-2">{{ formatDate(form.policy_draft_date) }} </div>
             </div>
+           
         </div>
         <hr>
         <br>
