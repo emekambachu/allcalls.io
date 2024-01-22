@@ -1,4 +1,6 @@
-<x-mail::layout>
+@props(['user' => null])
+
+<x-mail::layout :user="$user ?? null">
     {{-- Header --}}
     <x-slot:header>
         <x-mail::header :url="config('app.url')">
@@ -27,8 +29,6 @@
             <p>{{ $user->first_name }} {{ $user->last_name }}</p>
 
             @endisset
-
-
         </x-mail::footer>
     </x-slot:footer>
 </x-mail::layout>
