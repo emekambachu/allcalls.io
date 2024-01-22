@@ -23,7 +23,7 @@
         <x-mail::footer>
             © {{ date('Y') }} {{ config('app.name') }}. @lang('All rights reserved.')
             <br>
-            <a href="#" style="color: #999999; text-decoration: underline;">Unsubscribe</a>
+            <a href="{{ secure_url('/unsubscribe-to-email') }}" style="color: #999999; text-decoration: underline;">Unsubscribe</a>
         </x-mail::footer>
     </x-slot:footer>
 </x-mail::layout>
