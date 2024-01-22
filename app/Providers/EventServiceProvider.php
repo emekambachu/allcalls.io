@@ -66,6 +66,7 @@ class EventServiceProvider extends ServiceProvider
         ],
 
         InviteAgent::class => [
+            AddUnsubscribeTokenToUser::class,
             ListenersInviteAgent::class,
         ],
 
