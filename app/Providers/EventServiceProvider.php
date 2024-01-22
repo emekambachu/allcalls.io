@@ -34,6 +34,7 @@ use App\Listeners\CheckDispositionListener;
 use App\Listeners\PreventBlacklistedEmails;
 use App\Listeners\AddFundsAddedUserActivity;
 use App\Listeners\AddMissedCallUserActivity;
+use App\Listeners\AddUnsubscribeTokenToUser;
 use App\Listeners\AddFundsTooLowUserActivity;
 use App\Listeners\ChargeUserForCompletedCall;
 use App\Listeners\OnboardingCompletedTrigger;
@@ -54,6 +55,7 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         MessageSending::class => [
+            AddUnsubscribeTokenToUser::class,
             PreventBlacklistedEmails::class,
         ],
     
