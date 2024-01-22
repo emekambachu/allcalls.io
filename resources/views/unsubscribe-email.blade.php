@@ -12,6 +12,19 @@
     <div class="flex min-h-screen items-center justify-center">
         <div class="mt-10 rounded-md bg-white px-8 py-6 text-left shadow-lg">
             <h3 class="text-center text-2xl font-bold">Unsubscribe AllCalls.io Emails</h3>
+
+            <!-- Flash Messages -->
+            @if (session('message'))
+                <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800" role="alert">
+                    {{ session('message') }}
+                </div>
+            @endif
+            @if (session('error'))
+                <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800" role="alert">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <form action="{{ route('unsubscribe-to-emails.store', $token) }}" method="POST">
                 @csrf
                 <div class="mt-4">

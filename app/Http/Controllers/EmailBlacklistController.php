@@ -29,7 +29,7 @@ class EmailBlacklistController extends Controller
         $user = UnsubscribeToken::where('token', $token)->firstOrFail()->user;
 
         if ($user->email !== $request->email) {
-            return redirect()->back()->with(['message' => 'Invalid email address.']);
+            return redirect()->back()->with(['error' => 'Invalid email address.']);
         }
 
         EmailBlacklist::create([
