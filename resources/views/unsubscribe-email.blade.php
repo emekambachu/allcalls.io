@@ -12,7 +12,7 @@
     <div class="flex min-h-screen items-center justify-center">
         <div class="mt-10 rounded-md bg-white px-8 py-6 text-left shadow-lg">
             <h3 class="text-center text-2xl font-bold">Unsubscribe AllCalls.io Emails</h3>
-            <form action="{{ url('unsubscribe-to-emails.store', $token) }}" method="POST">
+            <form action="{{ route('unsubscribe-to-emails.store', $token) }}" method="POST">
                 @csrf
                 <div class="mt-4">
                     <div>
