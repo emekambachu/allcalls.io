@@ -24,6 +24,7 @@ class AddUnsubscribeTokenToUser
     {
         // Check if 'user' and 'email' keys are available in the event data
         if (!isset($event->data['user']['email'])) {
+            Log::debug('AddUnsubscribeToken: No email found in event data');
             return true;
         }
 
@@ -33,7 +34,7 @@ class AddUnsubscribeTokenToUser
         $user = User::where('email', $email)->first();
 
         if ($user && !$user->unsubscribeToken()) {
-            Log::debug('Generating unsubscribe token for user', ['email' => $email]);
+            Log::debug('AddUnsubscribeToken: Generating unsubscribe token for user', ['email' => $email]);
             $user->generateUnsubscribeToken();
         }
     }
