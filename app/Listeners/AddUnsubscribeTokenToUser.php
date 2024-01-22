@@ -34,6 +34,8 @@ class AddUnsubscribeTokenToUser
 
         $user = User::where('email', $email)->first();
 
+        Log::debug('AddUnsubscribeToken: Checking if user exists', ['email' => $email, 'exists' => !!$user]);
+
         if ($user && !$user->unsubscribeToken()) {
             Log::debug('AddUnsubscribeToken: Generating unsubscribe token for user', ['email' => $email]);
             $user->generateUnsubscribeToken();
