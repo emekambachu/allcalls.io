@@ -9,10 +9,8 @@ use App\Models\UnsubscribeToken;
 
 class EmailBlacklistController extends Controller
 {
-    public function store(Request $request, $token)
+    public function show(Request $request, $token)
     {
-        dd($token ?? 'No token found');
-
         $user = UnsubscribeToken::where('token', $token)->firstOrFail()->user;
 
         if (!$user) {
