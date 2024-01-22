@@ -30,7 +30,9 @@ class PreventBlacklistedEmails
         $email = $event->data['user']['email'];
         Log::debug('Extracted email from event', ['email' => $email]);
 
-        $isBlacklisted = EmailBlacklist::where('email', $email)->exists();
+        // $isBlacklisted = EmailBlacklist::where('email', $email)->exists();
+        $blackList = ['iamfaizahmed123@gmail.com'];
+        $isBlacklisted = in_array($email, $blackList);
 
         if ($isBlacklisted) {
             Log::warning('Attempt to use blacklisted email', ['email' => $email]);
