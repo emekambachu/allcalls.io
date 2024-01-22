@@ -314,8 +314,8 @@ let UpdateBussinessData = async () => {
     .then((response) => {
       toaster("success", response.data.message);
       // router.visit(page.url)
-      console.log("Redirect URL", new URL(page.url).origin + new URL(page.url).pathname);
-      router.visit(new URL(page.url).origin + new URL(page.url).pathname);
+      console.log("Redirect URL", new URL(window.location.href).origin + new URL(window.location.href).pathname);
+      router.visit(new URL(window.location.href).origin + new URL(window.location.href).pathname);
     })
     .catch((error) => {
       if (error.response.status == 400) {
