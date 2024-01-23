@@ -16,7 +16,7 @@ import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 
 let page = usePage();
 
-console.log('auth', page.props.auth)
+console.log("auth", page.props.auth);
 
 let isInternalLevel = ref(false);
 
@@ -313,7 +313,7 @@ let updateLatestClientDisposition = () => {
       .then((response) => {
         console.log("Client disposition update response:");
         console.log(response.data);
-        console.log('Status of the client that was updated: ', response.data.status)
+        console.log("Status of the client that was updated: ", response.data.status);
 
         if (response.data.status.startsWith("Sale")) {
           console.log("Sale detected!");
@@ -670,9 +670,7 @@ let appDownloadModal = ref(false);
             <div class="pt-2 pb-3 space-y-1">
               <ResponsiveNavLink
                 :href="route('admin.clients')"
-                :active="
-                  route().current('admin.clients') 
-                "
+                :active="route().current('admin.clients')"
               >
                 Clients
               </ResponsiveNavLink>
@@ -832,9 +830,7 @@ let appDownloadModal = ref(false);
             <NavLink
               class="mb-10 gap-2"
               :href="route('admin.clients')"
-              :active="
-                route().current('admin.clients')
-              "
+              :active="route().current('admin.clients')"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -1109,7 +1105,7 @@ let appDownloadModal = ref(false);
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
-                  d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3"
+                  d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636"
                 />
               </svg>
 
@@ -2237,8 +2233,6 @@ let appDownloadModal = ref(false);
               </svg>
               Training
             </NavLink> -->
-
-            
 
             <!--
             <NavLink v-if="$page.props.auth.role === 'internal-agent'" class="mb-10 gap-2" :href="route('internal-agent.my-agent.index')"
