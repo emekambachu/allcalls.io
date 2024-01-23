@@ -90,11 +90,11 @@ let openEdit = () => {
               <strong class="text-lg">Last Name: </strong>
               {{ ClientDetail.last_name }}
             </div>
-            <div v-if="ClientDetail.unlocked === 1">
+            <div v-if="ClientDetail.unlocked === 1 || $page.props.auth.role == 'admin'">
               <strong class="text-lg">Date of Birth: </strong>
               {{ ClientDetail.dob || "N/A" }}
             </div>
-            <div v-if="ClientDetail.unlocked !== 1">
+            <div v-if="ClientDetail.unlocked !== 1 || $page.props.auth.role == 'admin'">
               <strong class="text-lg">Status: </strong>
               <span v-if="ClientDetail.status == 'not_sold'"
                 class="bg-red-600 text-white text-xs px-2 py-1 rounded-2xl">Not Sold</span>

@@ -225,6 +225,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
     <section v-else class="p-3">
       <p class="text-center text-gray-600">No clients yet.</p>
     </section>
+    
     <Modal :show="showModal" @close="showModal = false">
       <ClientModal :showModal="showModal" :route="'/admin/clients'" :ClientDetail="ClientDetail" :states="states"
         @close="showModal = false">
