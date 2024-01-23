@@ -157,22 +157,71 @@ let deleteBlacklisted = (id) => {
     </section>
 
     <Modal :show="showModal" @close="showModal = false">
-      <div>
-        <GuestInputLabel for="email" value="Enter Email Address" />
-        <TextInput type="email" id="email" v-model="newEmail" minlength="2" required />
-      </div>
+      <div class="relative w-full max-w-4xl max-h-full mx-auto">
+        <div class="relative bg-white border border-gray-300 rounded-lg shadow-lg">
+          <div
+            class="flex items-start justify-between p-4 border-b border-gray-300 rounded-t"
+          >
+            <h3 class="text-xl font-small text-gray-700">Add Email To Blacklist</h3>
+            <button
+              @click="showModal = false"
+              type="button"
+              class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-700 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
+              data-modal-hide="defaultModal"
+            >
+              <svg
+                class="w-3 h-3"
+                fill="none"
+                viewBox="0 0 14 14"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                />
+              </svg>
+              <span class="sr-only">Close modal</span>
+            </button>
+          </div>
 
-      <div class="flex justify-end mt-6">
-        <PrimaryButton type="button" @click="addEmailToBlacklist">
-          <global-spinner :spinner="isLoading" /> Submit
-        </PrimaryButton>
+          <div class="p-6">
+            <div>
+              <div>
+                <label for="email" class="block text-sm font-medium text-gray-700"
+                  >Enter Email Address</label
+                >
+                <input
+                  type="email"
+                  id="email"
+                  v-model="newEmail"
+                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  placeholder="example@example.com"
+                  required
+                />
+              </div>
 
-        <button
-          class="button-custom-back ml-2 px-3 py-2 rounded-md"
-          @click.prevent="showModal = false"
-        >
-          Cancel
-        </button>
+              <div class="flex justify-end mt-6">
+                <PrimaryButton
+                  type="button"
+                  @click="addEmailToBlacklist"
+                  :disabled="newEmail.value === ''"
+                >
+                  <global-spinner :spinner="isLoading" /> Submit
+                </PrimaryButton>
+
+                <button
+                  class="button-custom-back ml-2 px-3 py-2 rounded-md"
+                  @click.prevent="showModal = false"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </Modal>
 
