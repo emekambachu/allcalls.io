@@ -16,4 +16,11 @@ class AdminEmailBlacklistController extends Controller
             'blacklist' => $blacklist
         ]);
     }
+
+    public function destroy(EmailBlacklist $emailBlacklist)
+    {
+        $emailBlacklist->delete();
+
+        return redirect()->back()->with('message', 'Email has been removed from the blacklist.');
+    }
 }

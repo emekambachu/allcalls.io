@@ -138,4 +138,5 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::get('/web-api/calls', [WebCallsAPIController::class, 'index']);
 
     Route::get('/email-blacklist', [AdminEmailBlacklistController::class, 'index'])->name('admin.email-blacklist.index');
+    Route::delete('/email-blacklist/{emailBlacklist}', [AdminEmailBlacklistController::class, 'destroy'])->name('admin.email-blacklist.destroy');
 });
