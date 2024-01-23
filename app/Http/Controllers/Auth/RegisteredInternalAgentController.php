@@ -69,6 +69,8 @@ class RegisteredInternalAgentController extends Controller
                 'invited_by' => $request->invited_by,
             ]);
 
+            $user->generateUnsubscribeToken();
+
             $agentRole = Role::whereName('internal-agent')->first();
 
             DB::table('role_user')->insert([

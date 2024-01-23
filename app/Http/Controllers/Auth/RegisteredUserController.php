@@ -105,6 +105,9 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+
+        $user->generateUnsubscribeToken();
+
         if ($request->agentToken && AgentInvite::verify($request->agentToken)) {
             $user->markEmailAsVerified();
 
