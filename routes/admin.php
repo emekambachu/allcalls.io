@@ -5,17 +5,18 @@ use App\Http\Controllers\ActiveUsersController;
 use App\Http\Controllers\Admin\CallsController;
 use App\Http\Controllers\WebCallsAPIController;
 use App\Http\Controllers\AgentInvitesController;
+use App\Http\Controllers\Admin\ClientsController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\InternalAgentLevel;
 use App\Http\Controllers\ActiveUserChannelController;
-use App\Http\Controllers\Admin\AgentBusinessController;
 use App\Http\Controllers\Admin\OnlineAgentsController;
 use App\Http\Controllers\AdminNotificationsController;
+use App\Http\Controllers\Admin\AgentBusinessController;
 use App\Http\Controllers\Admin\InternalAgentController;
+use App\Http\Controllers\AdminEmailBlacklistController;
 use App\Http\Controllers\AdminUserActivitiesController;
 use App\Http\Controllers\InternalAgentExportController;
 use App\Http\Controllers\Admin\AvailableNumberController;
-use App\Http\Controllers\Admin\ClientsController;
 use App\Http\Controllers\AdminAvaialbleNumbersController;
 use App\Http\Controllers\Admin\LegalQuestionPdfController;
 use App\Http\Controllers\AvailableNumberReleaseController;
@@ -135,4 +136,6 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
    
     Route::get('/web-api/calls', [WebCallsAPIController::class, 'index']);
+
+    Route::get('/email-blacklist', [AdminEmailBlacklistController::class, 'index'])->name('admin.email-blacklist.index');
 });
