@@ -2,27 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
 use App\Notifications\ZoomMeeting;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class ZoomMeetingNotificationController extends Controller
 {
     public function sendZoomMeetingNotification(Request $request)
     {
         // Validate the request
-        $request->validate([
-            'user_ids' => 'required',
+        $validator = Validator::make($request->all(), [
+            'user_ids' => 'required|array',
             'title' => 'required|string',
             'message' => 'required|string',
             'zoomLink' => 'nullable|url',
             'sendEmail' => 'required|boolean',
-            'emailData.subject' => 'nullable|string',    // Optional subject
+            'emailData.subject' => 'nullable|string',    
             'emailData.title' => 'required_if:sendEmail,true|string',
-            'emailData.buttonText' => 'nullable|string', // Optional
-            'emailData.buttonUrl' => 'nullable|url',     // Optional
+            'emailData.buttonText' => 'nullable|string',
+            'emailData.buttonUrl' => 'nullable|url',
             'emailData.description' => 'required_if:sendEmail,true|string',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
 
         // Extract request data
         $userIds = $request->user_ids;
@@ -32,26 +39,16 @@ class ZoomMeetingNotificationController extends Controller
         $sendEmail = $request->sendEmail;
         $emailData = $sendEmail ? $request->emailData : null;
 
-        // Convert user_ids to an array if it's not already
-        if (!is_array($userIds)) {
-            $userIds = [$userIds];
+        // Use Eloquent's whereIn method to retrieve all valid users in a single query
+        $users = User::whereIn('id', $userIds)->get();
+
+        // Send notification in batches to avoid overloading the system
+        $batchSize = 50; // You can adjust this number based on your server capacity
+        foreach ($users->chunk($batchSize) as $batch) {
+            // Queue notifications for each user in the batch
+            Notification::send($batch, new ZoomMeeting($title, $message, $zoomLink, $emailData));
         }
 
-        // Validate each user ID
-        foreach ($userIds as $userId) {
-            if (!User::where('id', $userId)->exists()) {
-                return response()->json(['message' => 'Invalid user ID: ' . $userId], 422);
-            }
-        }
-
-        // Send notification to each user
-        foreach ($userIds as $userId) {
-            $user = User::find($userId);
-            if ($user) {
-                $user->notify(new ZoomMeeting($title, $message, $zoomLink, $emailData));
-            }
-        }
-
-        return response()->json(['message' => 'Notifications sent successfully!']);
+        return response()->json(['message' => 'Notifications queued for sending.']);
     }
 }
