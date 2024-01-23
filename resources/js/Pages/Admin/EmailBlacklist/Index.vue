@@ -78,7 +78,7 @@ let currentPage = ref(null);
               </tbody>
             </table>
 
-            <nav class="flex justify-between my-4" v-if=".links">
+            <nav class="flex justify-between my-4" v-if="blacklist.links">
               <div v-if="blacklist">
                 <span class="text-sm text-gray-700">
                   Showing
