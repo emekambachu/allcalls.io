@@ -94,7 +94,7 @@ Route::post('/sanctum/token', function (Request $request) {
     return $user->createToken($request->device_name)->plainTextToken;
 });
 
-Route::middleware('auth:sanctum')->delete('/sanctum/token', function(Request $request) {
+Route::middleware(['auth:sanctum', 'notBanned'])->delete('/sanctum/token', function(Request $request) {
 
     Log::debug('devices-log:sign-out', [
         'user' => $request->user()->toArray(),
