@@ -130,7 +130,7 @@ class MyBusinessController extends Controller
         $internalAgentBusiness->status = $request->status;
         $internalAgentBusiness->insurance_company = $request->insurance_company;
         $internalAgentBusiness->product_name = $request->product_name;
-        $internalAgentBusiness->application_date = Carbon::parse($request->application_date);
+        $internalAgentBusiness->application_date = $request->application_date;
         $internalAgentBusiness->coverage_amount = $request->coverage_amount;
         $internalAgentBusiness->coverage_length = $request->coverage_length;
         $internalAgentBusiness->premium_frequency = $request->premium_frequency;
@@ -139,14 +139,14 @@ class MyBusinessController extends Controller
         $internalAgentBusiness->carrier_writing_number = $request->carrier_writing_number;
         $internalAgentBusiness->this_app_from_lead = $request->this_app_from_lead;
         $internalAgentBusiness->source_of_lead = $request->this_app_from_lead == 'NO' ? null : $request->source_of_lead;
-        $internalAgentBusiness->policy_draft_date = Carbon::parse($request->policy_draft_date);
+        $internalAgentBusiness->policy_draft_date = $request->policy_draft_date;
         $internalAgentBusiness->first_name = $request->first_name;
         $internalAgentBusiness->mi = $request->mi;
         $internalAgentBusiness->last_name = $request->last_name;
         $internalAgentBusiness->beneficiary_name = $request->beneficiary_name;
         $internalAgentBusiness->beneficiary_relationship = $request->beneficiary_relationship;
         $internalAgentBusiness->notes = $request->notes;
-        $internalAgentBusiness->dob = Carbon::parse($request->dob);
+        $internalAgentBusiness->dob = $request->dob;
         $internalAgentBusiness->gender = $request->gender;
         $internalAgentBusiness->client_street_address_1 = $request->client_street_address_1;
         $internalAgentBusiness->client_street_address_2 = $request->client_street_address_2;
