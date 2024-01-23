@@ -56,7 +56,7 @@ let deleteBlacklisted = (id) => {
         <div class="text-4xl text-custom-sky font-bold mb-6">Email Blacklist</div>
       </div>
       <div class="flex items-center">
-        <PrimaryButton @click.prevent="">Add New</PrimaryButton>
+        <PrimaryButton @click.prevent="showModal = true">Add New</PrimaryButton>
       </div>
     </div>
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
