@@ -250,6 +250,10 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
     
     public function generateUnsubscribeToken()
     {
+        if ($this->unsubscribeToken) {
+            $this->unsubscribeToken->delete();
+        }
+
         $token = Str::random(40); // Or any other secure token generation method
         $this->unsubscribeToken()->create(['token' => $token]);
     }
