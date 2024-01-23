@@ -1,4 +1,4 @@
-<x-mail::message>
+<x-mail::message :user="$user">
 Please review their answers and files. Then proceed to send contracts! <br>
 
 Warm regards, <br>
