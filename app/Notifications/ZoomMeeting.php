@@ -80,6 +80,7 @@ class ZoomMeeting extends Notification
 
         // Prepare data to be passed to the email view
         $viewData = [
+            'user' => $notifiable,
             'greeting' => $this->emailData['greeting'] ?? null,
             'introLines' => [$this->message], // Assuming this is your intro line
             'actionText' => $this->emailData['buttonText'] ?? null,
