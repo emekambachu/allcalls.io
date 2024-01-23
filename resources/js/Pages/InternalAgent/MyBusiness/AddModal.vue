@@ -1500,6 +1500,7 @@ let existingBusiness = () => {
                           <option value="Paid">Paid</option>
                           <option value="Lapsed">Lapsed</option>
                           <option value="Declined">Declined</option>
+                          <option value="Canceled/Withdrawn">Canceled/Withdrawn</option>
                           <option value="Carrier Missing Information">Carrier Missing Information</option>
                         </select>
                         <div v-if="firstStepErrors.status" class="text-red-500" v-text="firstStepErrors.status[0]"></div>
