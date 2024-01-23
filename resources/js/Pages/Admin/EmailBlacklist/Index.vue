@@ -30,6 +30,8 @@ let currentPage = ref(null);
 let addEmailToBlacklist = () => {
   router.post("/admin/email-blacklist", {
     email: newEmail.value,
+  }, {
+    preserveState: false,
   });
 };
 
