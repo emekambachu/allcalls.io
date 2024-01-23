@@ -23,8 +23,15 @@ let paginate = (url) => {
   router.visit(url);
 };
 
-// let showModal = ref(false);
+let showModal = ref(false);
+let newEmail = ref("");
 let currentPage = ref(null);
+
+let addEmailToBlacklist = () => {
+  router.post("/admin/email-blacklist", {
+    email: newEmail.value,
+  });
+};
 
 let deleteBlacklisted = (id) => {
   // First, confirm:
@@ -149,17 +156,25 @@ let deleteBlacklisted = (id) => {
       <p class="text-center text-gray-600">No numbers in blacklist yet.</p>
     </section>
 
-    <!-- <Modal :show="showModal" @close="showModal = false">
-      <Edit
-        :showModal="showModal"
-        :user="user"
-        :currentPage="currentPage"
-        @close="showModal = false"
-        :callTypes="callTypes"
-        :availableNumber="availableNumber"
-        :route="'/admin/available-numbers'"
-      ></Edit>
-    </Modal> -->
+    <Modal :show="showModal" @close="showModal = false">
+      <div>
+        <GuestInputLabel for="email" value="Enter Email Address" />
+        <TextInput type="email" id="email" v-model="newEmail" minlength="2" required />
+      </div>
+
+      <div class="flex justify-end mt-6">
+        <PrimaryButton type="button" @click="addEmailToBlacklist">
+          <global-spinner :spinner="isLoading" /> Submit
+        </PrimaryButton>
+
+        <button
+          class="button-custom-back ml-2 px-3 py-2 rounded-md"
+          @click.prevent="showModal = false"
+        >
+          Cancel
+        </button>
+      </div>
+    </Modal>
 
     <!-- <Modal :show="availableNumberModal" @close="availableNumberModal = false">
       <Create
