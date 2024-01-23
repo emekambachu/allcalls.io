@@ -87,7 +87,7 @@ class ZoomMeeting extends Notification
             'actionUrl' => $this->emailData['buttonUrl'] ?? null,
             'outroLines' => ['Thank you for using our application!'],
             'salutation' => $this->emailData['salutation'] ?? null,
-            'level' => 'success', // Define the level (success, error, etc.) if applicable
+            // 'level' => 'success', // Define the level (success, error, etc.) if applicable
             // Add any other necessary data you want to include in the email
         ];
 
