@@ -23,11 +23,11 @@
     {{-- Footer --}}
     <x-slot:footer>
         <x-mail::footer>
-            © {{ date('Y') }} {{ config('app.name') }}. @lang('All rights reserved.')
             @if(isset($user) && isset($user->unsubscribeToken))
             If you do not wish to receive any more emails you can <a href="{{ url('/unsubscribe-to-email/' . $user->unsubscribeToken->token) }}" style="text-decoration: underline; font-style: italic;">unsubscribe</a> at any time, <a href="{{ url('/unsubscribe-to-email/' . $user->unsubscribeToken->token) }}" style="text-decoration: underline;">by clicking here</a>.
             <br>
             @endif
+            © {{ date('Y') }} {{ config('app.name') }}. @lang('All rights reserved.')
         </x-mail::footer>
     </x-slot:footer>
 </x-mail::layout>
