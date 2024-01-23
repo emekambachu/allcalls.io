@@ -275,7 +275,8 @@ let dateFormat = (val) => {
   const toYear = date.getFullYear();
 
   // Format the components as desired (e.g., as "MM-DD-YYYY")
-  return `${toMonth}/${toDate}/${toYear}`;
+  // return `${toMonth}/${toDate}/${toYear}`;
+  return `${toYear}-${toMonth}-${toDate}`;
 };
 // save business data start
 let isLoading = ref(false);
