@@ -10,8 +10,10 @@ class AdminEmailBlacklistController extends Controller
 {
     public function index()
     {
-        $emails = EmailBlacklist::all();
-        return '';
-        // return Inertia::render('Admin/EmailBlacklist/Index');
+        $blacklist = EmailBlacklist::paginate(100);
+
+        return Inertia::render('Admin/EmailBlacklist/Index', [
+            'blacklist' => $blacklist
+        ]);
     }
 }
