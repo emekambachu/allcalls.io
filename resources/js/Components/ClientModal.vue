@@ -53,47 +53,32 @@ let openEdit = () => {
 <template>
   <div v-if="!editScreen" class="relative w-full max-w-4xl max-h-full mx-auto">
     <div class="relative bg-white rounded-lg shadow-lg">
-      <div
-        class="flex items-start justify-between p-4 border-b rounded-t border-gray-600"
-      >
+      <div class="flex items-start justify-between p-4 border-b rounded-t border-gray-600">
         <h3 class="text-xl font-small text-custom-blue">Client Details</h3>
 
-        <button
-          @click="close"
-          type="button"
+        <button @click="close" type="button"
           class="text-gray-500 bg-transparent hover:bg-gray-200 hover:text-gray-700 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
-          data-modal-hide="defaultModal"
-        >
-          <svg
-            class="w-3 h-3"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 14 14"
-          >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-            />
+          data-modal-hide="defaultModal">
+          <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
           </svg>
           <span class="sr-only">Close modal</span>
         </button>
       </div>
       <div class="p-6">
         <div v-if="ClientDetail">
-          <span class="spnClassLocked" v-if="ClientDetail.unlocked === 0"
-            >Client is locked</span
-          >
-          <div
-            class="flex justify-between items-center"
-            v-if="ClientDetail.unlocked !== 0"
-          >
+
+          <div class="flex justify-between items-center"
+            v-if="ClientDetail.unlocked !== 0 || $page.props.auth.role == 'admin'">
             <h4 class="text-2xl font-small text-custom-sky mb-2">Personal Details</h4>
 
-            <PrimaryButton @click="openEdit"> Edit Client </PrimaryButton>
+            <PrimaryButton @click="openEdit"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+              </svg>
+            </PrimaryButton>
           </div>
 
           <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-10">
@@ -111,36 +96,48 @@ let openEdit = () => {
             </div>
             <div v-if="ClientDetail.unlocked !== 1">
               <strong class="text-lg">Status: </strong>
-              <span
-                v-if="ClientDetail.status == 'not_sold'"
-                class="bg-red-600 text-white text-xs px-2 py-1 rounded-2xl"
-                >Not Sold</span
-              >
-              <span
-                v-else-if="ClientDetail.status == 'sold'"
-                class="bg-green-600 text-white text-xs px-2 py-1 rounded-2xl"
-                >Sold</span
-              >
-              <span
-                v-else-if="ClientDetail.status"
-                class="bg-yellow-600 text-white text-xs px-2 py-1 rounded-2xl"
-                >{{ ClientDetail.status }}</span
-              >
+              <span v-if="ClientDetail.status == 'not_sold'"
+                class="bg-red-600 text-white text-xs px-2 py-1 rounded-2xl">Not Sold</span>
+              <span v-else-if="ClientDetail.status == 'sold'"
+                class="bg-green-600 text-white text-xs px-2 py-1 rounded-2xl">Sold</span>
+              <span v-else-if="ClientDetail.status" class="bg-yellow-600 text-white text-xs px-2 py-1 rounded-2xl">{{
+                ClientDetail.status }}</span>
               <span v-else>-</span>
+            </div>
+            <div v-if="$page.props.auth.role == 'admin'" class="flex">
+              <strong class="text-lg">Locked </strong>
+              <div class="ml-3">
+                <div
+                  :class="ClientDetail.unlocked ? 'relative grid items-center px-2 py-1 font-sans text-xs font-bold text-green-900 uppercase rounded-md select-none whitespace-nowrap bg-green-500/20' : 'relative grid items-center px-2 py-1 font-sans text-xs font-bold text-red-900 uppercase rounded-md select-none whitespace-nowrap bg-red-500/20'">
+                  <div class="flex">
+                    <svg v-if="ClientDetail.unlocked" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                      stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                      <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M13.5 10.5V6.75a4.5 4.5 0 1 1 9 0v3.75M3.75 21.75h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H3.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                    </svg>
+                    <svg v-if="!ClientDetail.unlocked" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                      stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                      <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636" />
+                    </svg>
+                    <span class="ml-2" v-text="ClientDetail.unlocked ? 'Unlocked' : 'Locked'"></span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
           <h4 class="text-2xl font-small text-custom-sky mb-2">Contact Information</h4>
           <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-10">
-            <div v-if="ClientDetail.unlocked === 1">
+            <div v-if="ClientDetail.unlocked === 1 || $page.props.auth.role == 'admin'">
               <strong class="text-lg">Phone: </strong>
               {{ ClientDetail.phone }}
             </div>
-            <div v-if="ClientDetail.unlocked === 1">
+            <div v-if="ClientDetail.unlocked === 1 || $page.props.auth.role == 'admin'">
               <strong class="text-lg">Email: </strong>
               {{ ClientDetail.email || "N/A" }}
             </div>
-            <div v-if="ClientDetail.unlocked === 1">
+            <div v-if="ClientDetail.unlocked === 1 || $page.props.auth.role == 'admin'">
               <strong class="text-lg">Address: </strong>
               {{ ClientDetail.address || "N/A" }}
             </div>
@@ -148,9 +145,65 @@ let openEdit = () => {
               <strong class="text-lg">State: </strong>
               {{ ClientDetail.state || "N/A" }}
             </div>
-            <div v-if="ClientDetail.unlocked === 1">
+            <div v-if="ClientDetail.unlocked === 1 || $page.props.auth.role == 'admin'">
               <strong class="text-lg">Zip Code: </strong>
               {{ ClientDetail.zipCode || "N/A" }}
+            </div>
+          </div>
+
+          <h4 v-if="$page.props.auth.role == 'admin'" class="text-2xl font-small text-custom-sky mb-2">User Information
+          </h4>
+          <div v-if="$page.props.auth.role == 'admin'"
+            class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-10">
+            <div>
+              <strong class="text-lg">Phone: </strong>
+              {{ ClientDetail.user?.phone }}
+            </div>
+            <div>
+              <strong class="text-lg">Name: </strong>
+              {{ ClientDetail.user?.first_name }} {{ ClientDetail.user?.last_name }}
+            </div>
+            <div>
+              <strong class="text-lg">Email: </strong>
+              {{ ClientDetail.user?.email }}
+            </div>
+          </div>
+
+          <h4 v-if="$page.props.auth.role == 'admin'" class="text-2xl font-small text-custom-sky mb-2">Call Information
+          </h4>
+          <div v-if="$page.props.auth.role == 'admin'"
+            class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-10">
+            <div>
+              <strong class="text-lg">Call Date: </strong>
+              {{ ClientDetail.call?.call_taken }}
+            </div>
+            <div>
+              <strong class="text-lg">Ring Duration: </strong>
+              {{
+                String(Math.floor(ClientDetail.call?.ringing_duration / 60)).padStart(
+                  2,
+                  "0"
+                ) +
+                ":" +
+                String(ClientDetail.call?.ringing_duration % 60).padStart(2, "0")
+              }}
+            </div>
+            <div>
+              <strong class="text-lg">Connected Duration: </strong>
+              {{
+                String(
+                  Math.floor(ClientDetail.call?.call_duration_in_seconds / 60)
+                ).padStart(2, "0") +
+                ":" +
+                String(ClientDetail.call?.call_duration_in_seconds % 60).padStart(
+                  2,
+                  "0"
+                )
+              }}
+            </div>
+            <div>
+              <strong class="text-lg">Vertical: </strong>
+              {{ ClientDetail.call?.call_type?.type }}
             </div>
           </div>
         </div>
@@ -164,30 +217,14 @@ let openEdit = () => {
 
   <div v-else class="relative w-full max-w-4xl max-h-full mx-auto">
     <div class="relative bg-white border border-gray-300 rounded-lg shadow-lg">
-      <div
-        class="flex items-start justify-between p-4 border-b border-gray-300 rounded-t"
-      >
+      <div class="flex items-start justify-between p-4 border-b border-gray-300 rounded-t">
         <h3 class="text-xl font-small text-gray-700">Edit Client Details</h3>
-        <button
-          @click="close"
-          type="button"
+        <button @click="close" type="button"
           class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-700 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
-          data-modal-hide="defaultModal"
-        >
-          <svg
-            class="w-3 h-3"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 14 14"
-          >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-            />
+          data-modal-hide="defaultModal">
+          <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
           </svg>
           <span class="sr-only">Close modal</span>
         </button>
@@ -197,38 +234,17 @@ let openEdit = () => {
         <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-10">
           <div>
             <label class="text-lg">First Name:</label>
-            <TextInput
-              type="text"
-              name="first_name"
-              id="first_name"
-              class="w-full"
-              placeholder="John"
-              required
-              v-model="form.first_name"
-            />
+            <TextInput type="text" name="first_name" id="first_name" class="w-full" placeholder="John" required
+              v-model="form.first_name" />
           </div>
           <div>
             <label class="text-lg">Last Name:</label>
-            <TextInput
-              type="text"
-              name="last_name"
-              id="last_name"
-              class="w-full"
-              placeholder="Doe"
-              required
-              v-model="form.last_name"
-            />
+            <TextInput type="text" name="last_name" id="last_name" class="w-full" placeholder="Doe" required
+              v-model="form.last_name" />
           </div>
           <div>
             <label class="text-lg">Date of Birth:</label>
-            <TextInput
-              type="text"
-              name="dob"
-              id="dob"
-              class="w-full"
-              required
-              v-model="form.dob"
-            />
+            <TextInput type="text" name="dob" id="dob" class="w-full" required v-model="form.dob" />
           </div>
         </div>
 
@@ -236,70 +252,30 @@ let openEdit = () => {
         <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-10">
           <div>
             <label class="text-lg">Phone:</label>
-            <TextInput
-              type="text"
-              name="phone"
-              id="phone"
-              class="w-full"
-              required
-              v-model="form.phone"
-            />
+            <TextInput type="text" name="phone" id="phone" class="w-full" required v-model="form.phone" />
           </div>
           <div>
             <label class="text-lg">Email:</label>
-            <TextInput
-              type="email"
-              name="email"
-              id="email"
-              class="w-full"
-              placeholder="john@example.com"
-              required
-              v-model="form.email"
-            />
+            <TextInput type="email" name="email" id="email" class="w-full" placeholder="john@example.com" required
+              v-model="form.email" />
           </div>
           <div>
             <label class="text-lg">Address:</label>
-            <TextInput
-              type="text"
-              name="address"
-              id="address"
-              class="w-full"
-              placeholder="10001"
-              required
-              v-model="form.address"
-            />
+            <TextInput type="text" name="address" id="address" class="w-full" placeholder="10001" required
+              v-model="form.address" />
           </div>
           <div class="w-full">
-            <label for="state" class="block mb-2 text-sm font-medium text-gray-700"
-              >State</label
-            >
-            <select
-              name="state"
-              id="state"
-              class="select-custom"
-              v-model="form.state"
-              required
-            >
-              <option
-                v-for="(state, index) in states"
-                :key="index"
-                :value="state.full_name"
-              >
+            <label for="state" class="block mb-2 text-sm font-medium text-gray-700">State</label>
+            <select name="state" id="state" class="select-custom" v-model="form.state" required>
+              <option v-for="(state, index) in states" :key="index" :value="state.full_name">
                 {{ state.full_name }}
               </option>
             </select>
           </div>
           <div>
             <label class="text-lg">Zip Code:</label>
-            <TextInput
-              type="text"
-              name="zip"
-              id="zip"
-              class="w-full"
-              placeholder="10001"
-              required
-              v-model="form.zipCode"
-            />
+            <TextInput type="text" name="zip" id="zip" class="w-full" placeholder="10001" required
+              v-model="form.zipCode" />
           </div>
         </div>
 
@@ -307,13 +283,7 @@ let openEdit = () => {
         <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-10">
           <div>
             <label class="text-lg">Status:</label>
-            <select
-              name="status"
-              id="status"
-              class="select-custom"
-              v-model="form.status"
-              required
-            >
+            <select name="status" id="status" class="select-custom" v-model="form.status" required>
               <option selected="" disabled="" value="">Select status</option>
               <option value="Sale - Simplified Issue">Sale - Simplified Issue</option>
               <option value="Sale - Guaranteed Issue">Sale - Guaranteed Issue</option>
