@@ -27,6 +27,10 @@ let paginate = (url) => {
 let currentPage = ref(null);
 
 let deleteBlacklisted = (id) => {
+  // First, confirm:
+  if (!confirm("Are you sure you want to delete this blacklisted email?")) {
+    return;
+  }
   router.delete("/admin/email-blacklist/" + id);
 };
 </script>
