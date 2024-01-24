@@ -24,9 +24,12 @@ console.log(page.props.auth.user.balance);
 let showLowBalanceModal = ref(false);
 if (page.props.auth.role !== 'admin' && page.props.auth.user.balance < 35) {
   console.log('Display the low balance modal now.');
-  // showLowBalanceModal.value = true;
+  showLowBalanceModal.value = true;
 }
 
+let onLowBalanceModalClick = () => {
+  window.location.href = 'https://calendly.com/insurancecareers/new-agent-call-review';
+}
 
 
 let isInternalLevel = ref(false);
@@ -2999,7 +3002,7 @@ let appDownloadModal = ref(false);
         <div class="flex flex-col justify-center">
           <h4 class="mb-4 text-lg">You Just Ran Out Of Credits. Schedule a one on one review to continue.</h4>
           <div class="flex justify-center">
-            <PrimaryButton>Schedule Live Training</PrimaryButton>
+            <PrimaryButton @click.prevent="onLowBalanceModalClick">Schedule Live Training</PrimaryButton>
           </div>
         </div>
       </div>
