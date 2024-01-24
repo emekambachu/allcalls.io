@@ -28,7 +28,9 @@ if (page.props.auth.role !== 'admin' && page.props.auth.user.balance < 35) {
 }
 
 let onLowBalanceModalClick = () => {
-  window.location.href = 'https://calendly.com/insurancecareers/new-agent-call-review';
+  window.open('https://calendly.com/insurancecareers/new-agent-call-review', '_blank');
+
+  showLowBalanceModal.value = false;
 }
 
 
