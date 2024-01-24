@@ -106,10 +106,10 @@ let openLiveChat = () => {
       <div class="font-bold text-gray-700 mb-2 text-lg">AllCalls LLC</div>
       <div class="flex justify-between">
             <div>1309 COFFEEN AVE STE 11246<br>SHERIDAN, WY 82801, USA</div>
-          <div style="width: 50%;">
+          <!-- <div style="width: 50%;">
             <strong class="text-gray-600">Toll Free Customer Service Phone: <br> </strong>
             (855) 815-0382
-          </div>
+          </div> -->
       </div>
 
       <div class="flex justify-between">
