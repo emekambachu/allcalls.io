@@ -67,8 +67,9 @@ Route::middleware(['auth:sanctum', 'notBanned'])->get('/user', function (Request
 });
 Route::middleware(['auth:sanctum', 'notBanned'])->get('user/roles', [UserRoleController::class, 'getUserRoles']);
 
+//middleware(['notBanned'])->
 
-Route::middleware(['notBanned'])->post('/sanctum/token', function (Request $request) {
+Route::post('/sanctum/token', function (Request $request) {
     $request->validate([
         'email' => 'required|email',
         'password' => 'required',
