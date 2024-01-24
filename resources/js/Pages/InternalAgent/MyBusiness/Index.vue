@@ -172,6 +172,18 @@ let ClearFilter = () => {
     router.visit(baseUrl);
   } catch (error) {}
 };
+
+function formatCurrency(number) {
+    // First, round the number to two decimal places
+    let rounded = Number(number).toFixed(2);
+
+    // Then, format it as currency
+    return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 2,
+    }).format(rounded);
+}
 </script>
 <style scoped>
 /deep/ .dp__pointer {
@@ -252,6 +264,22 @@ let ClearFilter = () => {
               <p class="mb-1 text-sm text-gray-300">Total Apps</p>
               <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
                 {{ $page.props.totalAppsSubmitted }}
+              </h2>
+            </div>
+            <div
+              class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative"
+            >
+              <p class="mb-1 text-sm text-gray-300">Total APV</p>
+              <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
+                {{ formatCurrency($page.props.totalAPV) }}
+              </h2>
+            </div>
+            <div
+              class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative"
+            >
+              <p class="mb-1 text-sm text-gray-300">Average APV</p>
+              <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
+                {{ formatCurrency($page.props.averageAPV) }}
               </h2>
             </div>
           </div>
