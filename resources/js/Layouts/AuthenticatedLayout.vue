@@ -18,6 +18,9 @@ let page = usePage();
 
 console.log('auth', page.props.auth)
 
+console.log(page.props.auth.role);
+console.log(page.props.auth.user.balance);
+
 if (page.props.auth.role !== 'admin' && page.props.auth.user.balance < 35) {
   console.log('Display the low balance modal now.');
 }
