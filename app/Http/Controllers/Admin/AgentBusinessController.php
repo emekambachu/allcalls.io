@@ -17,14 +17,21 @@ class AgentBusinessController extends Controller
 {
     public function index(Request $request)
     {
-        $businesses = InternalAgentMyBusiness::where(function ($query) use ($request) {
-            if (isset($request->from) && $request->from != '' && isset($request->to) && $request->to != '') {
-                $startDate = Carbon::parse($request->from)->startOfDay();
-                $endDate = Carbon::parse($request->to)->endOfDay();
-                $query->whereBetween('created_at', [$startDate, $endDate]);
-            }
-        })
-        ->with(['client', 'client.call'])
+        $query = InternalAgentMyBusiness::query();
+
+        if (isset($request->from) && $request->from != '' && isset($request->to) && $request->to != '') {
+            $startDate = Carbon::parse($request->from)->startOfDay();
+            $endDate = Carbon::parse($request->to)->endOfDay();
+            $query->whereBetween('created_at', [$startDate, $endDate]);
+        }
+
+        $totalAppsSubmitted = $query->count();
+
+        $averageAPV = $query->average('premium_volume');
+
+        $totalAPV = $query->sum('premium_volume');
+
+        $businesses = $query->with(['client', 'client.call'])
             ->orderBy('created_at', 'desc')
             ->paginate(100);
 
@@ -40,13 +47,15 @@ class AgentBusinessController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // dd($businesses);
         return Inertia::render('InternalAgent/MyBusiness/Index', [
             'businesses' => $businesses,
             'states' => $states,
             'clients' => $clients,
             'requestData' =>  $request->all(),
-            'agents' => $agents
+            'agents' => $agents,
+            'totalAppsSubmitted' => $totalAppsSubmitted,
+            'averageAPV' => $averageAPV,
+            'totalAPV' => $totalAPV
         ]);
     }
     public function store(Request $request)
@@ -223,13 +232,13 @@ class AgentBusinessController extends Controller
         $agents = User::whereHas('roles', function ($query) use ($agentRole) {
             $query->where('role_id', $agentRole->id);
         })
-        ->where(function ($query) use ($request) {
-            if (isset($request->agent_name) && $request->agent_name != '') {
-                $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ['%' . $request->agent_name . '%']);
-            }
-        })
-        ->orderBy('created_at', 'desc')
-        ->get();
+            ->where(function ($query) use ($request) {
+                if (isset($request->agent_name) && $request->agent_name != '') {
+                    $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ['%' . $request->agent_name . '%']);
+                }
+            })
+            ->orderBy('created_at', 'desc')
+            ->get();
         return response()->json([
             'agents' => $agents
         ]);
