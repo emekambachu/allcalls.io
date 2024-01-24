@@ -27,9 +27,9 @@ class AgentBusinessController extends Controller
 
         $totalAppsSubmitted = $query->count();
 
-        $averageAPV = $query->average('premium_volume');
+        $averageAPV = $query->average('premium_volumn');
 
-        $totalAPV = $query->sum('premium_volume');
+        $totalAPV = $query->sum('premium_volumn');
 
         $businesses = $query->with(['client', 'client.call'])
             ->orderBy('created_at', 'desc')
