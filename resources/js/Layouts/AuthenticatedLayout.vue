@@ -2997,7 +2997,7 @@ let appDownloadModal = ref(false);
       </div>
     </Modal>
 
-    <Modal :show="showLowBalanceModal" :closeable="false">
+    <Modal :show="showLowBalanceModal" :closeable="true" @close="showLowBalanceModal = false">
       <div class="bg-white py-6 flex justify-center">
         <div class="flex flex-col justify-center">
           <h4 class="mb-4 text-lg">You Just Ran Out Of Credits. Schedule a one on one review to continue.</h4>
