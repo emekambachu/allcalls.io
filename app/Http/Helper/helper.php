@@ -26,7 +26,7 @@ function systemEmails() {
     if (str_contains($currentUrl, 'staging.allcalls.io')) {
         return ['awaisamir23@gmail.com'];
     } else {
-        return ['contracting@allcalls.io', 'maria@allcalls.io', 'kat@allcalls.io'];
+        return ['contracting@allcalls.io', 'maria@allcalls.io', 'ema@allcalls.io'];
     }
 }
 
