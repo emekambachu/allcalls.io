@@ -60,7 +60,7 @@ const presetDates = ref([
 
 let page = usePage();
 
-console.log('PROPS', page.props);
+console.log("PROPS", page.props);
 
 let {
   businesses,
@@ -244,6 +244,18 @@ let ClearFilter = () => {
             </button>
           </div>
           <hr class="mb-4" />
+
+          <div class="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <div
+              class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative"
+            >
+              <p class="mb-1 text-sm text-gray-300">Total Apps</p>
+              <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
+                {{ $page.props.totalAppsSubmitted }}
+              </h2>
+            </div>
+          </div>
+
           <div class="mx-auto max-w-screen-xl sm:px-12">
             <div class="relative sm:rounded-lg overflow-hidden"></div>
           </div>
