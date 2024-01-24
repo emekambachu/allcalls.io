@@ -21,8 +21,10 @@ console.log('auth', page.props.auth)
 console.log(page.props.auth.role);
 console.log(page.props.auth.user.balance);
 
+let showLowBalanceModal = ref(false);
 if (page.props.auth.role !== 'admin' && page.props.auth.user.balance < 35) {
   console.log('Display the low balance modal now.');
+  showLowBalanceModal.value = true;
 }
 
 let isInternalLevel = ref(false);
@@ -2985,6 +2987,17 @@ let appDownloadModal = ref(false);
             <PrimaryButton @click.prevent="updateLatestClientDisposition"
               >Save Disposition</PrimaryButton
             >
+          </div>
+        </div>
+      </div>
+    </Modal>
+
+    <Modal :show="showLowBalanceModal" :closeable="false">
+      <div class="bg-white py-6 flex justify-center">
+        <div class="flex flex-col justify-center">
+          <h4 class="mb-4 text-lg">You Just Ran Out Of Credits. Schedule a one on one review to continue.</h4>
+          <div class="flex justify-center">
+            <PrimaryButton>Schedule Live Training</PrimaryButton>
           </div>
         </div>
       </div>
