@@ -29,15 +29,23 @@ class MyBusinessController extends Controller
             }
         }
 
-        $businesses = InternalAgentMyBusiness::whereIn('agent_id', getInviteeIds(auth()->user()))
-            ->where(function ($query) use ($request) {
-                if (isset($request->from) && $request->from != '' && isset($request->to) && $request->to != '') {
-                    $startDate = Carbon::parse($request->from)->startOfDay();
-                    $endDate = Carbon::parse($request->to)->endOfDay();
-                    $query->whereBetween('created_at', [$startDate, $endDate]);
-                }
-            })
-            ->with(['client', 'client.call'])
+        $query = InternalAgentMyBusiness::whereIn('agent_id', getInviteeIds(auth()->user()));
+
+        if ($isClient) {
+            $query->where('client_id', $_GET['clientId']);
+        }
+
+        if (isset($request->from) && $request->from != '' && isset($request->to) && $request->to != '') {
+            $startDate = Carbon::parse($request->from)->startOfDay();
+            $endDate = Carbon::parse($request->to)->endOfDay();
+            $query->whereBetween('created_at', [$startDate, $endDate]);
+        }
+
+        $totalAppsSubmitted = $query->count();
+        $averageAPV = $query->average('premium_volume');
+        $totalAPV = $query->sum('premium_volume');
+
+        $businesses = $query->with(['client', 'client.call'])
             ->orderBy('created_at', 'desc')
             ->paginate(100);
 
@@ -46,7 +54,9 @@ class MyBusinessController extends Controller
             ->orderBy('created_at', 'desc')
             ->take(20)
             ->get();
+
         $states = State::get();
+
         return Inertia::render('InternalAgent/MyBusiness/Index', [
             'businesses' => $businesses,
             'businessesFilter' => $businessesFilter,
@@ -56,8 +66,12 @@ class MyBusinessController extends Controller
             'is_client' => $isClient,
             'requestData' =>  $request->all(),
             'userNotFound' => $userNotFound,
+            'totalAppsSubmitted' => $totalAppsSubmitted,
+            'averageAPV' => $averageAPV,
+            'totalAPV' => $totalAPV
         ]);
     }
+
 
     public function store(Request $request)
     {
@@ -120,11 +134,11 @@ class MyBusinessController extends Controller
         } else {
             $internalAgentBusiness = new InternalAgentMyBusiness();
         }
-        if(isset($internalAgentBusiness) && !$internalAgentBusiness->agent_id) {
+        if (isset($internalAgentBusiness) && !$internalAgentBusiness->agent_id) {
             $internalAgentBusiness->agent_id = auth()->user()->id;
             $internalAgentBusiness->agent_full_name = $request->agent_full_name;
             $internalAgentBusiness->agent_email = $request->agent_email;
-        }   
+        }
         $internalAgentBusiness->client_id = $request->client_id;
         $internalAgentBusiness->label = $request->label ?? null;
         $internalAgentBusiness->status = $request->status;
