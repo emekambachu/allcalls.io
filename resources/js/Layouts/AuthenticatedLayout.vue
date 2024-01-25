@@ -192,9 +192,9 @@ let acceptCall = () => {
       let now = new Date();
       let differenceInSeconds = (now - callConnectionTime) / 1000;
 
-      if (differenceInSeconds >= 60 && !hasSixtySecondsPassed.value) {
+      if (differenceInSeconds >= 80 && !hasSixtySecondsPassed.value) {
         hasSixtySecondsPassed.value = true;
-        console.log("Sixty seconds have passed!");
+        console.log("Eighty seconds have passed now!");
       }
     }, 1000);
   } else {
