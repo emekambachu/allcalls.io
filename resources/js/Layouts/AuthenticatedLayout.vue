@@ -589,6 +589,9 @@ let appDownloadModal = ref(false);
                     </template>
 
                     <template #content>
+                      <DropdownLink :href="route('profile.view')" method="get" as="button">
+                        Profile
+                      </DropdownLink>
                       <DropdownLink :href="route('logout')" method="post" as="button">
                         Log Out
                       </DropdownLink>
@@ -782,8 +785,12 @@ let appDownloadModal = ref(false);
               </div>
 
               <div class="mt-3 space-y-1">
+                <ResponsiveNavLink :href="route('profile.view')" method="get" as="button">
+                  Profile
+                </ResponsiveNavLink>
+
                 <ResponsiveNavLink :href="route('logout')" method="post" as="button">
-                  Log Out
+                  Log Out 
                 </ResponsiveNavLink>
               </div>
             </div>
@@ -1445,7 +1452,14 @@ let appDownloadModal = ref(false);
                       </span>
                     </template>
 
+                    
+
                     <template #content>
+
+                      <DropdownLink :href="route('profile.view')" method="get" as="button">
+                        Profile
+                      </DropdownLink>
+
                       <DropdownLink :href="route('logout')" method="post" as="button">
                         Log Out
                       </DropdownLink>
@@ -2084,6 +2098,9 @@ let appDownloadModal = ref(false);
               </div>
 
               <div class="mt-3 space-y-1">
+                <ResponsiveNavLink :href="route('profile.view')" method="get" as="button">
+                  Profile
+                </ResponsiveNavLink>
                 <ResponsiveNavLink :href="route('logout')" method="post" as="button">
                   Log Out
                 </ResponsiveNavLink>
