@@ -98,11 +98,9 @@ const uploadImage = () => {
   });
 };
 let formatAgentLevel = (agentLevel) => {
-
   if (agentLevel && agentLevel.name) {
     // Extract the type and level number
-    const match = agentLevel.name.match(/^(.+?) Level (\d+)$/);
-    console.log('match',match);
+    const match = agentLevel.name.match(/^(\w+) (\d+)$/);
     if (match) {
       const [, type, levelNumber] = match;
       return type === 'AC' ? `${type} ${levelNumber}` : `Level ${levelNumber}`;
@@ -110,7 +108,7 @@ let formatAgentLevel = (agentLevel) => {
   }
   // Return a default value if agentLevel is not defined
   return 'Unknown Level';
-}
+};
 
 </script>
 <style scoped>
