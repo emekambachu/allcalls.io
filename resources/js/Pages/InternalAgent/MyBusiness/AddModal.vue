@@ -275,7 +275,8 @@ let dateFormat = (val) => {
   const toYear = date.getFullYear();
 
   // Format the components as desired (e.g., as "MM-DD-YYYY")
-  return `${toMonth}/${toDate}/${toYear}`;
+  // return `${toMonth}/${toDate}/${toYear}`;
+  return `${toYear}-${toMonth}-${toDate}`;
 };
 // save business data start
 let isLoading = ref(false);
@@ -1499,6 +1500,7 @@ let existingBusiness = () => {
                           <option value="Paid">Paid</option>
                           <option value="Lapsed">Lapsed</option>
                           <option value="Declined">Declined</option>
+                          <option value="Canceled/Withdrawn">Canceled/Withdrawn</option>
                           <option value="Carrier Missing Information">Carrier Missing Information</option>
                         </select>
                         <div v-if="firstStepErrors.status" class="text-red-500" v-text="firstStepErrors.status[0]"></div>

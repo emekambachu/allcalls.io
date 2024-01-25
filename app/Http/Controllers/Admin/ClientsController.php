@@ -32,7 +32,7 @@ class ClientsController extends Controller
                     $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ['%' . $request->name . '%']);
                 }
             })
-            ->with('call')
+            ->with(['call', 'user', 'call.callType'])
             ->paginate(100);
 
         $allClients = Client::orderBy('created_at', 'desc')

@@ -1,4 +1,4 @@
-<x-mail::message>
+<x-mail::message :user="$user">
 Dear {{ $user->first_name }},
 
 We hope you are finding great value in connecting with potential clients through **AllCalls.io**. Our system recently detected that your account balance has fallen below the required minimum.

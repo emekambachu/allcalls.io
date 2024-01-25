@@ -1,4 +1,4 @@
-<x-mail::message>
+<x-mail::message :user="$user">
 # Order Confirmation
 
 **Dear {{ $user->first_name }},**

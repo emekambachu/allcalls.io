@@ -90,14 +90,25 @@ const uploadImage = () => {
     // Inertia handles multipart/form-data automatically,
     // so you don't need to set Content-Type header.
     onSuccess: () => {
-        console.log('Image uploaded successfully');
+      console.log('Image uploaded successfully');
     },
     onError: errors => {
-        console.error('Error uploading image:', errors);
+      console.error('Error uploading image:', errors);
     }
   });
 };
-
+let formatAgentLevel = (agentLevel) => {
+  if (agentLevel && agentLevel.name) {
+    // Extract the type and level number
+    const match = agentLevel.name.match(/^(\w+) (\d+)$/);
+    if (match) {
+      const [, type, levelNumber] = match;
+      return type === 'AC' ? `${type} ${levelNumber}` : `Level ${levelNumber}`;
+    }
+  }
+  // Return a default value if agentLevel is not defined
+  return 'Unknown Level';
+};
 
 </script>
 <style scoped>
@@ -144,21 +155,21 @@ const uploadImage = () => {
               <span class="text-5xl font-medium text-center text-custom-white">{{ getFirstLetter(user.first_name)
               }}{{ getFirstLetter(user.last_name) }}</span>
             </div>
-              <!-- Check if user has a profile picture -->
-              <!-- <img v-if="user.profile_picture" :src="`/storage/profile_pictures/${user.profile_picture}`" class="w-full h-full rounded-full"> -->
-              <!-- Display placeholder with initials if no profile picture -->
-              <!-- <span v-else class="text-5xl font-medium text-center text-custom-white">
+            <!-- Check if user has a profile picture -->
+            <!-- <img v-if="user.profile_picture" :src="`/storage/profile_pictures/${user.profile_picture}`" class="w-full h-full rounded-full"> -->
+            <!-- Display placeholder with initials if no profile picture -->
+            <!-- <span v-else class="text-5xl font-medium text-center text-custom-white">
                   {{ getFirstLetter(user.first_name) }}{{ getFirstLetter(user.last_name) }}
               </span> -->
             <!-- <div class="relative inline-flex items-center justify-center w-28 h-28 overflow-hidden rounded-full bg-custom-blue group">
 
               <div class="absolute inset-0 flex items-center justify-center w-full h-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <div class="absolute inset-0 w-full h-full bg-black bg-opacity-80 rounded-full"></div> Reduced opacity -->
-                  <!-- Centered SVG icon with higher z-index -->
-                  <!-- <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-white z-10">
+            <!-- Centered SVG icon with higher z-index -->
+            <!-- <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-white z-10">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
                   </svg> -->
-              <!-- </div>
+            <!-- </div>
               <input type="file" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" @change="handleImageUpload" accept="image/jpeg,image/jpg,image/png">
             </div> -->
 
@@ -180,9 +191,15 @@ const uploadImage = () => {
                   ${{ formatMoney(user.balance) }}
                 </div>
               </div>
+              <div v-if="$page.props.auth.role == 'internal-agent' && user.get_agent_level" style="background-color: #239dfa;"
+                class="relative text-center grid items-center mt-3 lg:mr-24 md:mr-0  px-2 py-1 font-sans text-xs font-bold  uppercase rounded-md select-none whitespace-nowrap ">
+                {{ formatAgentLevel(user.get_agent_level) }}
+              </div>
+              <!-- <button type="button"  style="background-color: #239dfa;" class="px-2 py-1  text-xs font-bold uppercase   text-center text-white bg-blue-700 rounded-md  focus:ring-4 focus:outline-none focus:ring-blue-300  ">{{ formatAgentLevel(user.get_agent_level) }}</button> -->
             </div>
             <Link href="/profile/edit" class="button-custom px-4 py-3 rounded-md  absolute right-0">Edit Profile</Link>
           </div>
+          <!-- <div class="ml-10">{{ formatAgentLevel(user.get_agent_level) }}</div> -->
 
           <!-- <div>
                         <input class="text-white" type="file" ref="fileInput" accept="image/*" />
@@ -191,7 +208,7 @@ const uploadImage = () => {
 
           <hr class="sm:hidden mb-10" />
 
-          <div class="text-4xl text-custom-sky font-small mb-6">
+          <div class="text-4xl text-custom-sky font-small mb-6 mt-6">
             Personal Information
           </div>
           <hr class="mb-4" />

@@ -29,15 +29,23 @@ class MyBusinessController extends Controller
             }
         }
 
-        $businesses = InternalAgentMyBusiness::whereIn('agent_id', getInviteeIds(auth()->user()))
-            ->where(function ($query) use ($request) {
-                if (isset($request->from) && $request->from != '' && isset($request->to) && $request->to != '') {
-                    $startDate = Carbon::parse($request->from)->startOfDay();
-                    $endDate = Carbon::parse($request->to)->endOfDay();
-                    $query->whereBetween('created_at', [$startDate, $endDate]);
-                }
-            })
-            ->with(['client', 'client.call'])
+        $query = InternalAgentMyBusiness::whereIn('agent_id', getInviteeIds(auth()->user()));
+
+        if ($isClient) {
+            $query->where('client_id', $_GET['clientId']);
+        }
+
+        if (isset($request->from) && $request->from != '' && isset($request->to) && $request->to != '') {
+            $startDate = Carbon::parse($request->from)->startOfDay();
+            $endDate = Carbon::parse($request->to)->endOfDay();
+            $query->whereBetween('created_at', [$startDate, $endDate]);
+        }
+
+        $totalAppsSubmitted = $query->count();
+        $averageAPV = $query->average('premium_volumn');
+        $totalAPV = $query->sum('premium_volumn');
+
+        $businesses = $query->with(['client', 'client.call'])
             ->orderBy('created_at', 'desc')
             ->paginate(100);
 
@@ -46,7 +54,9 @@ class MyBusinessController extends Controller
             ->orderBy('created_at', 'desc')
             ->take(20)
             ->get();
+
         $states = State::get();
+
         return Inertia::render('InternalAgent/MyBusiness/Index', [
             'businesses' => $businesses,
             'businessesFilter' => $businessesFilter,
@@ -56,8 +66,12 @@ class MyBusinessController extends Controller
             'is_client' => $isClient,
             'requestData' =>  $request->all(),
             'userNotFound' => $userNotFound,
+            'totalAppsSubmitted' => $totalAppsSubmitted,
+            'averageAPV' => $averageAPV,
+            'totalAPV' => $totalAPV
         ]);
     }
+
 
     public function store(Request $request)
     {
@@ -120,17 +134,17 @@ class MyBusinessController extends Controller
         } else {
             $internalAgentBusiness = new InternalAgentMyBusiness();
         }
-        if(isset($internalAgentBusiness) && !$internalAgentBusiness->agent_id) {
+        if (isset($internalAgentBusiness) && !$internalAgentBusiness->agent_id) {
             $internalAgentBusiness->agent_id = auth()->user()->id;
             $internalAgentBusiness->agent_full_name = $request->agent_full_name;
             $internalAgentBusiness->agent_email = $request->agent_email;
-        }   
+        }
         $internalAgentBusiness->client_id = $request->client_id;
         $internalAgentBusiness->label = $request->label ?? null;
         $internalAgentBusiness->status = $request->status;
         $internalAgentBusiness->insurance_company = $request->insurance_company;
         $internalAgentBusiness->product_name = $request->product_name;
-        $internalAgentBusiness->application_date = Carbon::parse($request->application_date);
+        $internalAgentBusiness->application_date = $request->application_date;
         $internalAgentBusiness->coverage_amount = $request->coverage_amount;
         $internalAgentBusiness->coverage_length = $request->coverage_length;
         $internalAgentBusiness->premium_frequency = $request->premium_frequency;
@@ -139,14 +153,14 @@ class MyBusinessController extends Controller
         $internalAgentBusiness->carrier_writing_number = $request->carrier_writing_number;
         $internalAgentBusiness->this_app_from_lead = $request->this_app_from_lead;
         $internalAgentBusiness->source_of_lead = $request->this_app_from_lead == 'NO' ? null : $request->source_of_lead;
-        $internalAgentBusiness->policy_draft_date = Carbon::parse($request->policy_draft_date);
+        $internalAgentBusiness->policy_draft_date = $request->policy_draft_date;
         $internalAgentBusiness->first_name = $request->first_name;
         $internalAgentBusiness->mi = $request->mi;
         $internalAgentBusiness->last_name = $request->last_name;
         $internalAgentBusiness->beneficiary_name = $request->beneficiary_name;
         $internalAgentBusiness->beneficiary_relationship = $request->beneficiary_relationship;
         $internalAgentBusiness->notes = $request->notes;
-        $internalAgentBusiness->dob = Carbon::parse($request->dob);
+        $internalAgentBusiness->dob = $request->dob;
         $internalAgentBusiness->gender = $request->gender;
         $internalAgentBusiness->client_street_address_1 = $request->client_street_address_1;
         $internalAgentBusiness->client_street_address_2 = $request->client_street_address_2;

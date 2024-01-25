@@ -52,23 +52,50 @@ class ZoomMeeting extends Notification
     /**
      * Get the mail representation of the notification.
      */
-    public function toMail(object $notifiable): MailMessage
+    // public function toMail(object $notifiable): MailMessage
+    // {
+    //     $subject = $this->emailData['subject'] ?? 'AllCalls Notification'; // Use the provided subject or a default
+
+    //     $mailMessage = (new MailMessage)
+    //         ->from('notifications@allcalls.io', 'AllCalls Notifications')
+    //         ->subject($subject)
+    //         ->line($this->emailData['title'] ?? 'The introduction to the notification.');
+
+    //     if (isset($this->emailData['buttonText']) && isset($this->emailData['buttonUrl'])) {
+    //         $mailMessage->action($this->emailData['buttonText'], $this->emailData['buttonUrl']);
+    //     }
+
+    //     $mailMessage->line($this->emailData['description'] ?? 'Thank you for using our application!');
+
+    //     return $mailMessage;
+    // }
+
+
+    /**
+     * Get the mail representation of the notification.
+     */
+    public function toMail(object $notifiable): \Illuminate\Notifications\Messages\MailMessage
     {
         $subject = $this->emailData['subject'] ?? 'AllCalls Notification'; // Use the provided subject or a default
 
-        $mailMessage = (new MailMessage)
-            ->from('notifications@allcalls.io', 'AllCalls Notifications')
+        // Prepare data to be passed to the email view
+        $viewData = [
+            'user' => $notifiable,
+            'greeting' => $this->emailData['greeting'] ?? null,
+            'introLines' => [$this->message], // Assuming this is your intro line
+            'actionText' => $this->emailData['buttonText'] ?? null,
+            'actionUrl' => $this->emailData['buttonUrl'] ?? null,
+            'outroLines' => ['Thank you for using our application!'],
+            'salutation' => $this->emailData['salutation'] ?? null,
+            // 'level' => 'success', // Define the level (success, error, etc.) if applicable
+            // Add any other necessary data you want to include in the email
+        ];
+
+        return (new MailMessage)
             ->subject($subject)
-            ->line($this->emailData['title'] ?? 'The introduction to the notification.');
-    
-        if (isset($this->emailData['buttonText']) && isset($this->emailData['buttonUrl'])) {
-            $mailMessage->action($this->emailData['buttonText'], $this->emailData['buttonUrl']);
-        }
-    
-        $mailMessage->line($this->emailData['description'] ?? 'Thank you for using our application!');
-    
-        return $mailMessage;
+            ->markdown('emails.custom-zoom-meeting', $viewData); // Assuming your Blade view is named 'emails.custom_zoom_meeting'
     }
+
 
     /**
      * Get the array representation of the notification.

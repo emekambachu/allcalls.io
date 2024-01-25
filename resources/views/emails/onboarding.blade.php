@@ -1,4 +1,4 @@
-<x-mail::message>
+<x-mail::message :user="$user">
 Dear {{ $user->first_name }},
 
 We're thrilled to have you onboard! Welcome to AllCalls.io.

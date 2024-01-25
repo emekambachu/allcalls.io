@@ -16,7 +16,7 @@ import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 
 let page = usePage();
 
-console.log('auth', page.props.auth)
+console.log("auth", page.props.auth);
 
 console.log(page.props.auth.role);
 console.log(page.props.auth.user.balance);
@@ -332,7 +332,7 @@ let updateLatestClientDisposition = () => {
       .then((response) => {
         console.log("Client disposition update response:");
         console.log(response.data);
-        console.log('Status of the client that was updated: ', response.data.status)
+        console.log("Status of the client that was updated: ", response.data.status);
 
         if (response.data.status.startsWith("Sale")) {
           console.log("Sale detected!");
@@ -609,6 +609,9 @@ let appDownloadModal = ref(false);
                     </template>
 
                     <template #content>
+                      <DropdownLink :href="route('profile.view')" method="get" as="button">
+                        Profile
+                      </DropdownLink>
                       <DropdownLink :href="route('logout')" method="post" as="button">
                         Log Out
                       </DropdownLink>
@@ -690,9 +693,7 @@ let appDownloadModal = ref(false);
             <div class="pt-2 pb-3 space-y-1">
               <ResponsiveNavLink
                 :href="route('admin.clients')"
-                :active="
-                  route().current('admin.clients') 
-                "
+                :active="route().current('admin.clients')"
               >
                 Clients
               </ResponsiveNavLink>
@@ -780,6 +781,14 @@ let appDownloadModal = ref(false);
                 Available Numbers
               </ResponsiveNavLink>
             </div>
+            <div class="pt-2 pb-3 space-y-1">
+              <ResponsiveNavLink
+                :href="route('admin.email-blacklist.index')"
+                :active="route().current('admin.email-blacklist.index')"
+              >
+                Email Blacklist
+              </ResponsiveNavLink>
+            </div>
             <!-- Responsive Settings Options -->
             <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
               <div class="px-4">
@@ -796,8 +805,12 @@ let appDownloadModal = ref(false);
               </div>
 
               <div class="mt-3 space-y-1">
+                <ResponsiveNavLink :href="route('profile.view')" method="get" as="button">
+                  Profile
+                </ResponsiveNavLink>
+
                 <ResponsiveNavLink :href="route('logout')" method="post" as="button">
-                  Log Out
+                  Log Out 
                 </ResponsiveNavLink>
               </div>
             </div>
@@ -844,9 +857,7 @@ let appDownloadModal = ref(false);
             <NavLink
               class="mb-10 gap-2"
               :href="route('admin.clients')"
-              :active="
-                route().current('admin.clients')
-              "
+              :active="route().current('admin.clients')"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -1103,6 +1114,29 @@ let appDownloadModal = ref(false);
               </svg>
 
               Available Numbers
+            </NavLink>
+
+            <NavLink
+              class="mb-10 gap-2"
+              :href="route('admin.email-blacklist.index')"
+              :active="route().current('admin.email-blacklist.index')"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-8 h-8 mr-2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636"
+                />
+              </svg>
+
+              Email Blacklist
             </NavLink>
 
             <NavLink
@@ -1438,7 +1472,14 @@ let appDownloadModal = ref(false);
                       </span>
                     </template>
 
+                    
+
                     <template #content>
+
+                      <DropdownLink :href="route('profile.view')" method="get" as="button">
+                        Profile
+                      </DropdownLink>
+
                       <DropdownLink :href="route('logout')" method="post" as="button">
                         Log Out
                       </DropdownLink>
@@ -2077,6 +2118,9 @@ let appDownloadModal = ref(false);
               </div>
 
               <div class="mt-3 space-y-1">
+                <ResponsiveNavLink :href="route('profile.view')" method="get" as="button">
+                  Profile
+                </ResponsiveNavLink>
                 <ResponsiveNavLink :href="route('logout')" method="post" as="button">
                   Log Out
                 </ResponsiveNavLink>
@@ -2226,8 +2270,6 @@ let appDownloadModal = ref(false);
               </svg>
               Training
             </NavLink> -->
-
-            
 
             <!--
             <NavLink v-if="$page.props.auth.role === 'internal-agent'" class="mb-10 gap-2" :href="route('internal-agent.my-agent.index')"
