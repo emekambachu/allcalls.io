@@ -17,6 +17,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 class ProfileController extends Controller
@@ -26,7 +27,7 @@ class ProfileController extends Controller
      */
     public function view(Request $request): Response
     {
-        $user = $request->user();
+        $user = User::with('getAgentLevel')->find($request->user()->id);
         $internalAgent=$user->hasRole('internal-agent');
         // Get user's call types with states
         $userCallTypesWithStates = $user->callTypes()->with('states')->get();
