@@ -191,7 +191,7 @@ let formatAgentLevel = (agentLevel) => {
                   ${{ formatMoney(user.balance) }}
                 </div>
               </div>
-              <div v-if="$page.props.auth.role == 'internal-agent'" style="background-color: #239dfa;"
+              <div v-if="$page.props.auth.role == 'internal-agent' && user.get_agent_level" style="background-color: #239dfa;"
                 class="relative text-center grid items-center mt-3 lg:mr-24 md:mr-0  px-2 py-1 font-sans text-xs font-bold  uppercase rounded-md select-none whitespace-nowrap ">
                 {{ formatAgentLevel(user.get_agent_level) }}
               </div>
