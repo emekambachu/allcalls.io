@@ -108,22 +108,8 @@ let formatAgentLevel = (agentLevel) => {
       return type === 'AC' ? `${type} ${levelNumber}` : `Level ${levelNumber}`;
     }
   }
-
   // Return a default value if agentLevel is not defined
   return 'Unknown Level';
-  // Check if the agentLevel is defined
-  // if (agentLevel && agentLevel.name) {
-  //   // Extract the type and level number
-  //   const match = agentLevel.name.match(/^(.+?) Level (\d+)$/);
-
-  //   if (match) {
-  //     const [, type, levelNumber] = match;
-  //     return `${type} ${levelNumber}`;
-  //   }
-  // }
-
-  // // Return a default value if agentLevel is not defined
-  // return 'Unknown Level';
 }
 
 </script>
