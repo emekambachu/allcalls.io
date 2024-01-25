@@ -29,7 +29,7 @@ class OnboardingCompleted extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "$this->name Has Completed Their Onboarding Paperwork",
+            subject: "$this->name Waiting for Contracting Review",
         );
     }
 

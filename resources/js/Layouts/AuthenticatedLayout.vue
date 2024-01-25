@@ -18,6 +18,22 @@ let page = usePage();
 
 console.log("auth", page.props.auth);
 
+console.log(page.props.auth.role);
+console.log(page.props.auth.user.balance);
+
+let showLowBalanceModal = ref(false);
+if (page.props.auth.role !== 'admin' && page.props.auth.user.balance < 35) {
+  console.log('Display the low balance modal now.');
+  // showLowBalanceModal.value = true;
+}
+
+let onLowBalanceModalClick = () => {
+  window.open('https://calendly.com/insurancecareers/new-agent-call-review', '_blank');
+
+  showLowBalanceModal.value = false;
+}
+
+
 let isInternalLevel = ref(false);
 
 if (
@@ -247,6 +263,7 @@ let rejectCall = () => {
 let disconnectCall = () => {
   console.log("disconnect call now");
 
+
   // send reject to the web-api to track who disconnected the call
   axios
     .post("/web-api/calls/" + connectedUniqueCallId.value + "/reject", {
@@ -267,7 +284,9 @@ let disconnectCall = () => {
   });
   if (call) {
     call.disconnect();
+
     showOngoing.value = false;
+    hasSixtySecondsPassed.value = false;
     showUpdateDispositionModal();
   } else {
     console.log("call not found while disconnecting");
@@ -378,6 +397,7 @@ let setupTwilioDevice = () => {
       console.log("Call should disconnect now.");
       // showRinging.value = false;
       showOngoing.value = false;
+      hasSixtySecondsPassed.value = false;
       showUpdateDispositionModal();
     });
 
@@ -3020,6 +3040,17 @@ let appDownloadModal = ref(false);
             <PrimaryButton @click.prevent="updateLatestClientDisposition"
               >Save Disposition</PrimaryButton
             >
+          </div>
+        </div>
+      </div>
+    </Modal>
+
+    <Modal :show="showLowBalanceModal" :closeable="true" @close="showLowBalanceModal = false">
+      <div class="bg-white py-6 flex justify-center">
+        <div class="flex flex-col justify-center">
+          <h4 class="mb-4 text-lg">You Just Ran Out Of Credits. Schedule a one on one review to continue.</h4>
+          <div class="flex justify-center">
+            <PrimaryButton @click.prevent="onLowBalanceModalClick">Schedule Live Training</PrimaryButton>
           </div>
         </div>
       </div>
