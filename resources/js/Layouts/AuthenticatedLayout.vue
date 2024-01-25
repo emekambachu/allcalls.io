@@ -263,6 +263,7 @@ let rejectCall = () => {
 let disconnectCall = () => {
   console.log("disconnect call now");
 
+
   // send reject to the web-api to track who disconnected the call
   axios
     .post("/web-api/calls/" + connectedUniqueCallId.value + "/reject", {
@@ -283,7 +284,9 @@ let disconnectCall = () => {
   });
   if (call) {
     call.disconnect();
+
     showOngoing.value = false;
+    hasSixtySecondsPassed.value = false;
     showUpdateDispositionModal();
   } else {
     console.log("call not found while disconnecting");
@@ -394,6 +397,7 @@ let setupTwilioDevice = () => {
       console.log("Call should disconnect now.");
       // showRinging.value = false;
       showOngoing.value = false;
+      hasSixtySecondsPassed.value = false;
       showUpdateDispositionModal();
     });
 
