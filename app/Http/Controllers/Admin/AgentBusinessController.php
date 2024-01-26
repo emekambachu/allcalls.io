@@ -245,8 +245,8 @@ class AgentBusinessController extends Controller
 
     public function testReportApplication($id) {
         $business = InternalAgentMyBusiness::findOrFail($id);
-        $business->application_date = '2024-01-26';
-        $business->policy_draft_date = '2024-01-27';
+        $business->application_date = '2024-01-27';
+        $business->policy_draft_date = '2024-01-29';
         $business->save();
         dd($business);
     }
