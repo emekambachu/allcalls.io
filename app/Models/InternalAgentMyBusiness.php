@@ -21,27 +21,27 @@ class InternalAgentMyBusiness extends Model
         return $this->belongsTo(State::class,'client_state', 'id');
     }
     
-    public function getApplicationDateAttribute($value)
-    {
-        $date = Carbon::parse($value);
+    // public function getApplicationDateAttribute($value)
+    // {
+    //     $date = Carbon::parse($value);
     
-        if (auth()->user()) {
-            $timezone = auth()->user()->timezone;
-            $date->timezone($timezone);
-        }
+    //     if (auth()->user()) {
+    //         $timezone = auth()->user()->timezone;
+    //         $date->timezone($timezone);
+    //     }
     
-        return $date->format('m/d/Y');
-    }
+    //     return $date->format('m/d/Y');
+    // }
     
-    public function getPolicyDraftDateAttribute($value)
-    {
-        $date = Carbon::parse($value);
+    // public function getPolicyDraftDateAttribute($value)
+    // {
+    //     $date = Carbon::parse($value);
     
-        if (auth()->user()) {
-            $timezone = auth()->user()->timezone;
-            $date->timezone($timezone);
-        }
+    //     if (auth()->user()) {
+    //         $timezone = auth()->user()->timezone;
+    //         $date->timezone($timezone);
+    //     }
     
-        return $date->format('m/d/Y');
-    }
+    //     return $date->format('m/d/Y');
+    // }
 }
