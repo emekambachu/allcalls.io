@@ -15,6 +15,7 @@ class ZoomMeeting extends Notification
 
     protected $title;
     protected $message;
+    protected $sendNotification;
     protected $zoomLink;
     protected $emailData;
 
@@ -26,10 +27,11 @@ class ZoomMeeting extends Notification
      * @param string|null $zoomLink
      * @param array|null $emailData
      */
-    public function __construct(string $title, string $message, ?string $zoomLink = null, ?array $emailData = null)
+    public function __construct(string $title, string $message, ?bool $sendNotification = false, ?string $zoomLink = null, ?array $emailData = null)
     {
         $this->title = $title;
         $this->message = $message;
+        $this->sendNotification = $sendNotification;
         $this->zoomLink = $zoomLink;
         $this->emailData = $emailData;
     }
@@ -42,7 +44,12 @@ class ZoomMeeting extends Notification
      */
     public function via(object $notifiable): array
     {
-        $channels = ['database', PushChannel::class];
+        $channels = [];
+        if ($this->sendNotification) {
+            $channels[] = 'database';
+            $channels[] = PushChannel::class;
+        }
+        
         if ($this->emailData) {
             $channels[] = 'mail';
         }
