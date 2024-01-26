@@ -56,6 +56,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::get('/customer/banned/{id}',[CustomerController::class,'banUser'])->name('admin.ban.customer');
 
     Route::get('/customer/activities/{id}', [CustomerController::class, 'getActivity']);
+
     Route::delete('/customer/activities/{id}', [CustomerController::class, 'deleteActivity']);
 
     Route::get('/customer/clients/{id}', [CustomerController::class, 'getCustomerClients']);
@@ -64,7 +65,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
     //Agents
     Route::get('/agents', [InternalAgentController::class, 'index'])->name('admin.agent.index');
-    
+
     Route::get('/internal-agent/tree/{id}', [InternalAgentController::class, 'getAgentTree'])->name('admin.get.agent.tree');
 
     Route::post('/agent', [InternalAgentController::class, 'store'])->name('admin.agent.store');
@@ -91,7 +92,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
     Route::post('/progress-internal-agent', [InternalAgentController::class, 'internalAgentProgress'])->name('admin.internal.agent.update.progress');
 
-    /// My business 
+    /// My business
     Route::get('/my-business', [AgentBusinessController::class, 'index'])->name('admin.my-business.index');
     Route::post('/my-business', [AgentBusinessController::class, 'store'])->name('admin.my-business.store');
     Route::post('/my-business/update', [AgentBusinessController::class, 'update'])->name('admin.my-business.update');
@@ -134,7 +135,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
     Route::delete('/user-activities/clear-all', [AdminUserActivitiesController::class, 'clearAll'])->name('admin.user-activities.clearAll');
 
-   
+
     Route::get('/web-api/calls', [WebCallsAPIController::class, 'index']);
 
     Route::get('/email-blacklist', [AdminEmailBlacklistController::class, 'index'])->name('admin.email-blacklist.index');

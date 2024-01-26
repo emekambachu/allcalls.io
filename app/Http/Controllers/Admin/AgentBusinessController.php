@@ -133,7 +133,7 @@ class AgentBusinessController extends Controller
         ]);
         return response()->json([
             'success' => true,
-            'message' => 'Bussiness Added Successfully!',
+            'message' => 'Business Added Successfully!',
         ], 200);
     }
 
@@ -215,12 +215,12 @@ class AgentBusinessController extends Controller
             ]);
             return response()->json([
                 'success' => true,
-                'message' => 'Bussiness updated Successfully!',
+                'message' => 'Business updated Successfully!',
             ], 200);
         } else {
             return response()->json([
                 'success' => false,
-                'message' => 'Bussiness Not found!',
+                'message' => 'Business Not found!',
             ], 401);
         }
     }
