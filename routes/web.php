@@ -42,6 +42,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CallUserResponseAPIController;
 use App\Http\Controllers\PromotionGuidelinesController;
 use App\Http\Controllers\AgentStatusPriceDocsController;
+use App\Http\Controllers\CareersController;
 use App\Http\Controllers\TakeCallsOnlineUsersController;
 use App\Http\Controllers\FEAgentStatusPriceDocsController;
 use App\Http\Controllers\ZoomMeetingNotificationController;
@@ -117,6 +118,7 @@ Route::middleware(['auth', 'verified', 'registration-step-check', 'notBanned'])-
 
     Route::get('/twilio-device-token', [TwilioDeviceTokenController::class, 'show']);
     Route::get('/call-client-info', [CallClientInfoController::class, 'show']);
+    Route::post('/web-api/careers', [CareersController::class, 'careers']);
 });
 
 Route::middleware(['auth', 'notBanned'])->group(function () {
@@ -252,7 +254,7 @@ Route::middleware('auth:sanctum')->post('/web-api/calls/{uniqueCallId}/reject', 
 
 route::get('/promotion-guidelines', [PromotionGuidelinesController::class, 'show'])->middleware(['auth', 'verified', 'registration-step-check'])->name('promotion-guidelines.show');
 
-Route::get('/careers', function(){
+Route::get('/careers', function () {
     return view('careers');
 });
 

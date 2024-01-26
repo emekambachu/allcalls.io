@@ -30,6 +30,15 @@ function systemEmails() {
     }
 }
 
+function recruitingEmail() {
+    $currentUrl = trim(url()->current());
+    if (str_contains($currentUrl, 'staging.allcalls.io')) {
+        return ['josov49837@flexvio.com'];
+    } else {
+        return ['josov49837@flexvio.com'];
+    }
+}
+
 function getStateName($id)
 {
     $state = \App\Models\State::find($id);

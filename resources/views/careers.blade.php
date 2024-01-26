@@ -20,7 +20,7 @@
             <a class="pop-up loading-pop-up d1 animat-popup" href="/">Home</a>
             <a class="pop-up loading-pop-up d2 animat-popup" href="/careers">Careers</a>
             <a class="pop-up loading-pop-up d3 animat-popup" href="/support">Support</a>
-            <a class="pop-up loading-pop-up d4 animat-popup" href="#">Apply Now</a>
+            <a class="pop-up loading-pop-up d4 animat-popup" href="#">Apply Now </a>
         </nav>
         <button class="join-us-btn lets-go-btn btn-1 btn pop-up loading-pop-up d6 animat-popup">
             <span class="text">LET’S GO</span>
@@ -287,7 +287,7 @@
                 <a class="pop-up scroll-pop-up" href="/">Home</a>
                 <a class="pop-up scroll-pop-up d1" href="/careers">Careers</a>
                 <a class="pop-up scroll-pop-up d2" href="/support">Support</a>
-                <a class="pop-up scroll-pop-up d3" href="#">Apply Now</a>
+                <a class="pop-up scroll-pop-up d3" href="#">Apply Now </a>
             </div>
             <span class="seperator"></span>
             <div class="bottom">

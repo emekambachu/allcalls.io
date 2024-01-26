@@ -10,6 +10,7 @@ use App\Events\MissedCallEvent;
 use App\Listeners\SaveUserCall;
 use App\Events\RingingCallEvent;
 use App\Events\CallStatusUpdated;
+use App\Events\CareerEvent;
 use App\Listeners\AddDefaultBids;
 use App\Events\CompletedCallEvent;
 use App\Listeners\MakeUserOffline;
@@ -40,6 +41,7 @@ use App\Listeners\ChargeUserForCompletedCall;
 use App\Listeners\OnboardingCompletedTrigger;
 use App\Listeners\NotifyUserForLowFundsViaSMS;
 use App\Listeners\AddCompletedCallUserActivity;
+use App\Listeners\CareerListener;
 use App\Listeners\NotifyUserForLowFundsViaEmail;
 use App\Listeners\InviteAgent as ListenersInviteAgent;
 use App\Listeners\DispatchDispositionUpdateNotification;
@@ -106,6 +108,10 @@ class EventServiceProvider extends ServiceProvider
 
         OnboardingCompleted::class => [
             OnboardingCompletedTrigger::class,
+        ],
+
+        CareerEvent::class => [
+            CareerListener::class,
         ],
     ];
 

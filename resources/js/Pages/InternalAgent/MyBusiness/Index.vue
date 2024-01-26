@@ -22,6 +22,7 @@ import {
   endOfQuarter,
   subQuarters,
 } from "date-fns";
+// import axios from "axios";
 
 const presetDates = ref([
   { label: "Today", value: [new Date(), new Date()] },
@@ -183,6 +184,20 @@ function formatCurrency(number) {
         currency: 'USD',
         minimumFractionDigits: 2,
     }).format(rounded);
+} 
+let AddCarrears = async () => {
+  await axios.post('/web-api/careers', {
+    first_name:'test',
+    last_name:'user 1',
+    email:'vacola7773@wentcity.com',
+    phone:'65464654654',
+    life_insurance:'sssssss',
+  })
+  .then((response)=>{
+    console.log('res', response);
+  }).catch((error)=>{
+    console.log(error);
+  })
 }
 </script>
 <style scoped>
@@ -230,6 +245,8 @@ function formatCurrency(number) {
 
             <div>
               <PrimaryButton @click="addBusiness()">Report Application </PrimaryButton>
+              <PrimaryButton class="ml-5" @click="AddCarrears()">Web Carrears </PrimaryButton>
+
             </div>
           </div>
           <div class="flex mb-5">
