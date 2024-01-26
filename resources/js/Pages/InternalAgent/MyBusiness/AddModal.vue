@@ -147,7 +147,7 @@ if (props.businessData) {
 
   form.value.agent_full_name = props.businessData.agent_full_name
   form.value.agent_email = props.businessData.agent_email
-  form.value.agent_id = props.businessData.id
+  form.value.agent_id = props.businessData.agent_id
 
   if (props.businessData?.client) {
     form.value.client_id = props.businessData?.client.id;
