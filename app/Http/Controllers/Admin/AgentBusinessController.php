@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\admin;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Client;
@@ -60,7 +60,6 @@ class AgentBusinessController extends Controller
     }
     public function store(Request $request)
     {
-        // dd($request->all());
         $validate = Validator::make($request->all(), [
             'agent_full_name' => 'required',
             'agent_email' => 'required',
@@ -133,7 +132,7 @@ class AgentBusinessController extends Controller
         ]);
         return response()->json([
             'success' => true,
-            'message' => 'Bussiness Added Successfully!',
+            'message' => 'Business Added Successfully!',
         ], 200);
     }
 
@@ -176,7 +175,7 @@ class AgentBusinessController extends Controller
                 'errors' => $validate->errors(),
             ], 400);
         }
-        $InternalAgentMyBusiness = InternalAgentMyBusiness::find($request->id);
+        $InternalAgentMyBusiness = InternalAgentMyBusiness::find($request->business_id);
 
         if ($InternalAgentMyBusiness) {
             $InternalAgentMyBusiness->update([
@@ -215,12 +214,12 @@ class AgentBusinessController extends Controller
             ]);
             return response()->json([
                 'success' => true,
-                'message' => 'Bussiness updated Successfully!',
+                'message' => 'Business updated Successfully!',
             ], 200);
         } else {
             return response()->json([
                 'success' => false,
-                'message' => 'Bussiness Not found!',
+                'message' => 'Business Not found!',
             ], 401);
         }
     }
