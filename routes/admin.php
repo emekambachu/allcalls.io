@@ -96,7 +96,8 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::get('/my-business', [AgentBusinessController::class, 'index'])->name('admin.my-business.index');
     Route::post('/my-business', [AgentBusinessController::class, 'store'])->name('admin.my-business.store');
     Route::post('/my-business/update', [AgentBusinessController::class, 'update'])->name('admin.my-business.update');
-    Route::post('/get-agent-by-name', [AgentBusinessController::class, 'getAgentByName'])->name('getagent.byname')->middleware(['registration-step-check', 'IsBasicTraining']);
+    Route::post('/get-agent-by-name', [AgentBusinessController::class, 'getAgentByName'])->name('getagent.byname');
+    Route::get('/testReportApplication/{id}', [AgentBusinessController::class, 'testReportApplication']);
 
 
     // Available Number

@@ -60,7 +60,6 @@ class AgentBusinessController extends Controller
     }
     public function store(Request $request)
     {
-        // dd($request->all());
         $validate = Validator::make($request->all(), [
             'agent_full_name' => 'required',
             'agent_email' => 'required',
@@ -242,5 +241,12 @@ class AgentBusinessController extends Controller
         return response()->json([
             'agents' => $agents
         ]);
+    }
+
+    public function testReportApplication($id) {
+        $business = InternalAgentMyBusiness::findOrFail($id);
+        $business->application_date = Carbon::now();
+        $business->policy_draft_date = Carbon::now()->addDay();
+        $business->save();
     }
 }
