@@ -16,6 +16,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserRoleController;
 use App\Http\Controllers\AppEventsController;
 use App\Http\Controllers\CallRejectedByAgent;
+use App\Http\Controllers\TwilioSMSController;
 use App\Http\Controllers\CallHungUpController;
 use App\Http\Controllers\CallStatusController;
 use App\Http\Controllers\ClientsAPIController;
@@ -256,3 +257,5 @@ Route::post('/sendbird-user/blahblahblah', function (Request $request){
 Route::get('/test-call', function() {
     return 'All good!';
 });
+
+Route::post('/twilio/sms/receive', 'TwilioSMSController@receiveSMS');
