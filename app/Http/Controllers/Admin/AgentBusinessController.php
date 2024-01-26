@@ -245,8 +245,9 @@ class AgentBusinessController extends Controller
 
     public function testReportApplication($id) {
         $business = InternalAgentMyBusiness::findOrFail($id);
-        $business->application_date = Carbon::now();
-        $business->policy_draft_date = Carbon::now()->addDay();
+        $business->application_date = Carbon::now()->addDay();
+        $business->policy_draft_date = Carbon::now()->addWeek();
         $business->save();
+        dd($business);
     }
 }
