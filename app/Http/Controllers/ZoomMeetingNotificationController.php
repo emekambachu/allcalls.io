@@ -16,8 +16,9 @@ class ZoomMeetingNotificationController extends Controller
         // Validate the request
         $validator = Validator::make($request->all(), [
             'user_ids' => 'required|array',
-            'title' => 'required|string',
-            'message' => 'required|string',
+            'title' => 'nullable|string',
+            'message' => 'nullable|string',
+            'sendNotification' => 'required|boolean',
             'zoomLink' => 'nullable|url',
             'sendEmail' => 'required|boolean',
             'emailData.subject' => 'nullable|string',    
