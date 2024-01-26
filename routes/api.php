@@ -258,4 +258,4 @@ Route::get('/test-call', function() {
     return 'All good!';
 });
 
-Route::post('/twilio/sms/receive', 'TwilioSMSController@receiveSMS');
+Route::post('/twilio/sms/receive', [TwilioSMSController::class, 'receiveSMS']);
