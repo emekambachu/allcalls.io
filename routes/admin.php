@@ -97,8 +97,6 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::post('/my-business', [AgentBusinessController::class, 'store'])->name('admin.my-business.store');
     Route::post('/my-business/update', [AgentBusinessController::class, 'update'])->name('admin.my-business.update');
     Route::post('/get-agent-by-name', [AgentBusinessController::class, 'getAgentByName'])->name('getagent.byname');
-    Route::get('/testReportApplication/{id}', [AgentBusinessController::class, 'testReportApplication']);
-
 
     // Available Number
     Route::get('/available-numbers',[AvailableNumberController::class,'index'])->name('admin.available-number.index');
