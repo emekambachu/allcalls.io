@@ -244,6 +244,7 @@ class AgentBusinessController extends Controller
     }
 
     public function testReportApplication($id) {
+        dd(date_default_timezone_set(config('app.timezone')));
         $business = InternalAgentMyBusiness::findOrFail($id);
         $business->application_date = '2024-01-27';
         $business->policy_draft_date = '2024-01-29';
