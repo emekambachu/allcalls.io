@@ -15,6 +15,8 @@ class TwilioSMSController extends Controller
         Log::debug('TwilioSMSController method receiveSMS is being executed');
         // Get the SMS data from the request
 
+        Log::debug($request);
+
         $response = new MessagingResponse();
         Log::debug('Twilio new instance' . $response);
 
