@@ -27,11 +27,12 @@ class TextMessageController extends Controller
 
     public function sendMessage(Request $request)
     {
-        $accountId = 'your_account_id';  // Replace with your actual account ID
-        $username = 'your_username';      // Replace with your Commio username
-        $token = 'your_token';            // Replace with your Commio token
-
-        $authString = base64_encode("{$username}:{$token}");
+        $accountId = env('COMMIO_ACCOUNT_ID');  // Replace with your actual account ID
+        // $username = 'your_username';      // Replace with your Commio username
+        // $token = 'your_token';            // Replace with your Commio token
+        // $authString = base64_encode("{$username}:{$token}");
+        
+        $authString = env('COMMIO_AUTH_STRING');
 
         $response = Http::withHeaders([
             'Authorization' => 'Basic ' . $authString,
