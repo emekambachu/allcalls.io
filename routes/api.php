@@ -46,6 +46,7 @@ use App\Http\Controllers\TwilioIOSAccessTokenController;
 use App\Http\Controllers\CustomBroadcastingAuthController;
 use App\Http\Controllers\ActiveUsersPusherWebhookController;
 use App\Http\Controllers\CallCenterDispositionAPIController;
+use App\Http\Controllers\TextMessageController;
 use App\Http\Controllers\TwilioAndroidAccessTokenController;
 use App\Http\Controllers\TwilioIOSAccessTokenGuestController;
 use App\Http\Controllers\TwilioIOSSandboxAccessTokenController;
@@ -259,3 +260,4 @@ Route::get('/test-call', function() {
 });
 
 Route::post('/twilio/sms/receive', [TwilioSMSController::class, 'receiveSMS']);
+Route::post('/commio/sms/send', [TextMessageController::class, 'sendMessage']);
