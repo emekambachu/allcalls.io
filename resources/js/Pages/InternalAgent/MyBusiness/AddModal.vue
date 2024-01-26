@@ -114,7 +114,41 @@ let updateFormAndDisableElement = (
   }
 };
 if (props.businessData) {
-  form.value = props.businessData;
+  form.value.insurance_company = props.businessData.insurance_company ? props.businessData.insurance_company : 'AETNA/CVS';
+  form.value.product_name = props.businessData.product_name ? props.businessData.product_name : 'Select';
+  form.value.application_date = props.businessData.application_date;
+  form.value.coverage_amount = props.businessData.coverage_amount;
+  form.value.coverage_length = props.businessData.coverage_length ? props.businessData.coverage_length : 'Select';
+  form.value.premium_frequency = props.businessData.premium_frequency ? props.businessData.premium_frequency : 'Select';
+  form.value.premium_amount = props.businessData.premium_amount;
+  form.value.premium_volumn = props.businessData.premium_volumn;
+  form.value.carrier_writing_number = props.businessData.carrier_writing_number;
+  form.value.this_app_from_lead = props.businessData.this_app_from_lead ? props.businessData.this_app_from_lead : 'Select' ;
+  form.value.source_of_lead = props.businessData.source_of_lead ? props.businessData.source_of_lead : 'Select' ;
+  form.value.policy_draft_date = props.businessData.policy_draft_date;
+  form.value.first_name = props.businessData.first_name;
+  form.value.mi = props.businessData.mi;
+  form.value.last_name = props.businessData.last_name;
+  form.value.beneficiary_name = props.businessData.beneficiary_name;
+  form.value.beneficiary_relationship = props.businessData.beneficiary_relationship;
+  form.value.notes = props.businessData.notes;
+  form.value.dob = props.businessData.dob;
+  form.value.gender = props.businessData.gender ? props.businessData.gender : 'Select';
+  form.value.client_street_address_1 = props.businessData.client_street_address_1;
+  form.value.client_street_address_2 = props.businessData.client_street_address_2;
+  form.value.client_city = props.businessData.client_city;
+  form.value.client_state = props.businessData.client_state;
+  form.value.client_zipcode = props.businessData.client_zipcode;
+  form.value.client_phone_no = props.businessData.client_phone_no;
+  form.value.client_email = props.businessData.client_email;
+  form.value.status = props.businessData.status ? props.businessData.status : 'Submitted' ;
+  form.value.label = props.businessData.label;
+  form.value.business_id = props.businessData.id;
+
+  form.value.agent_full_name = props.businessData.agent_full_name
+  form.value.agent_email = props.businessData.agent_email
+  form.value.agent_id = props.businessData.id
+
   if (props.businessData?.client) {
     form.value.client_id = props.businessData?.client.id;
   }
@@ -130,8 +164,8 @@ let getInsuranceCompanyOptions = () => {
   return Object.keys(companies);
 };
 let getProductNameOptions = () => {
-  console.log('form.value.insurance_company',form.value.insurance_company);
-  console.log('form.value.product_name',form.value.product_name);
+  // console.log('form.value.insurance_company',form.value.insurance_company);
+  // console.log('form.value.product_name',form.value.product_name);
   return Object.keys(companies[form.value.insurance_company]);
 };
 
@@ -241,7 +275,6 @@ let checkRequiredField = () => {
   const hasErrors = Object.values(firstStepErrors.value).some(
     (errors) => errors.length > 0
   );
-
   // if (page.props.auth.role !== 'admin') {
   //   if (!form.value.client_full_name) {
   //     firstStepErrors.value.client_full_name = ["This  field is required."];
@@ -280,7 +313,14 @@ let dateFormat = (val) => {
 };
 // save business data start
 let isLoading = ref(false);
+
 let SaveBussinessData = async () => {
+  let route = ''
+  if(page.props.auth.role == 'admin'){
+    route = '/admin/my-business'
+  }else if(page.props.auth.role == 'internal-agent'){
+    route = '/internal-agent/my-business'
+  }
   console.log("SAVE BUSINESS DATA", {
     currentUrl: page.url,
     redirectUrl: new URL(window.location.href).origin + new URL(window.location.href).pathname,
@@ -291,7 +331,7 @@ let SaveBussinessData = async () => {
   form.value.dob = dateFormat(form.value.dob);
   isLoading.value = true;
   await axios
-    .post(page.url, form.value)
+    .post(route, form.value)
     .then((response) => {
       toaster("success", response.data.message);
 
@@ -316,12 +356,18 @@ let SaveBussinessData = async () => {
 // update business data start
 let isLoading2 = ref(false);
 let UpdateBussinessData = async () => {
+  let route = ''
+  if(page.props.auth.role == 'admin'){
+    route = '/admin/my-business'
+  }else if(page.props.auth.role == 'internal-agent'){
+    route = '/internal-agent/my-business'
+  }
   form.value.application_date = dateFormat(form.value.application_date);
   form.value.policy_draft_date = dateFormat(form.value.policy_draft_date);
   form.value.dob = dateFormat(form.value.dob);
   isLoading2.value = true;
   await axios
-    .post(`${page.url}/update`, form.value)
+    .post(`${route}/update`, form.value)
     .then((response) => {
       toaster("success", response.data.message);
       // router.visit(page.url)
@@ -858,7 +904,7 @@ let existingBusiness = () => {
         <div class="relative bg-white rounded-lg shadow-lg transition-all">
           <div class="flex justify-between">
             <h3 class="text-xl font-small ml-5 mt-5 text-gray-700">
-              <span v-if="edit_data">Edit</span>
+              <span v-if="edit_data">Edit </span>
               <span v-if="attactClientEdit">Attach Client</span>
               <span v-if="!attactClientEdit">Report Application</span>
             </h3>

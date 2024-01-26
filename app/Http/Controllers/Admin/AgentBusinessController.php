@@ -176,7 +176,7 @@ class AgentBusinessController extends Controller
                 'errors' => $validate->errors(),
             ], 400);
         }
-        $InternalAgentMyBusiness = InternalAgentMyBusiness::find($request->id);
+        $InternalAgentMyBusiness = InternalAgentMyBusiness::find($request->business_id);
 
         if ($InternalAgentMyBusiness) {
             $InternalAgentMyBusiness->update([
