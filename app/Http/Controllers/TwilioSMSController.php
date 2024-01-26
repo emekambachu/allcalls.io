@@ -10,6 +10,7 @@ class TwilioSMSController extends Controller
     //
     public function receiveSMS(Request $request)
     {
+        Log::debug('TwilioSMSController method receiveSMS is being executed');
         // Get the SMS data from the request
         $senderNumber = $request->input('From');
         $messageBody = $request->input('Body');
