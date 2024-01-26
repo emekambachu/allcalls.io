@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Twilio\TwiML\MessagingResponse;
+
 
 class TwilioSMSController extends Controller
 {
@@ -12,6 +14,10 @@ class TwilioSMSController extends Controller
     {
         Log::debug('TwilioSMSController method receiveSMS is being executed');
         // Get the SMS data from the request
+
+        $response = new MessagingResponse();
+        Log::debug('Twilio new instance' . $response);
+
         $senderNumber = $request->input('From');
         $messageBody = $request->input('Body');
 
