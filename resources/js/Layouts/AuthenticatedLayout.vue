@@ -3028,11 +3028,10 @@ let appDownloadModal = ref(false);
               ensure accurate tracking and follow-up actions.
             </p>
 
-            <!-- <p class="mb-4 mt-1.5">
-              <span class="font-bold">Client Name:</span> Rusty Colins
-            </p> -->
+            <p class="mb-4 mt-1.5" v-if="connectedClient">
+              <span class="font-bold">Client Name:</span> {{ connectedClient.first_name + " " + connectedClient.last_name }}
+            </p>
 
-            <pre class="mb-4 mt-1.5">{{ connectedClient }}</pre>
             <!-- <ul class="list-inside list-disc">
               <li><span class="font-bold">First Name:</span> Rusty</li>
               <li><span class="font-bold">Last Name:</span> Colins</li>
