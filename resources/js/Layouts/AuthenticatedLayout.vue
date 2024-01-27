@@ -3022,7 +3022,7 @@ let appDownloadModal = ref(false);
           </svg>
           <span class="sr-only">Info</span>
           <div>
-            <span class="font-medium">Attention Required:</span>
+            <span class="font-bold">Attention Required:</span>
             <p class="mb-4 mt-1.5">
               You've just completed a call. Please update the client's disposition to
               ensure accurate tracking and follow-up actions:
