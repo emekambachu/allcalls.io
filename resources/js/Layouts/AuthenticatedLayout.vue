@@ -22,17 +22,16 @@ console.log(page.props.auth.role);
 console.log(page.props.auth.user.balance);
 
 let showLowBalanceModal = ref(false);
-if (page.props.auth.role !== 'admin' && page.props.auth.user.balance < 35) {
-  console.log('Display the low balance modal now.');
+if (page.props.auth.role !== "admin" && page.props.auth.user.balance < 35) {
+  console.log("Display the low balance modal now.");
   // showLowBalanceModal.value = true;
 }
 
 let onLowBalanceModalClick = () => {
-  window.open('https://calendly.com/insurancecareers/new-agent-call-review', '_blank');
+  window.open("https://calendly.com/insurancecareers/new-agent-call-review", "_blank");
 
   showLowBalanceModal.value = false;
-}
-
+};
 
 let isInternalLevel = ref(false);
 
@@ -262,7 +261,6 @@ let rejectCall = () => {
 
 let disconnectCall = () => {
   console.log("disconnect call now");
-
 
   // send reject to the web-api to track who disconnected the call
   axios
@@ -600,7 +598,11 @@ let appDownloadModal = ref(false);
                     </template>
 
                     <template #content>
-                      <DropdownLink :href="route('profile.view')" method="get" as="button">
+                      <DropdownLink
+                        :href="route('profile.view')"
+                        method="get"
+                        as="button"
+                      >
                         Profile
                       </DropdownLink>
                       <DropdownLink :href="route('logout')" method="post" as="button">
@@ -801,7 +803,7 @@ let appDownloadModal = ref(false);
                 </ResponsiveNavLink>
 
                 <ResponsiveNavLink :href="route('logout')" method="post" as="button">
-                  Log Out 
+                  Log Out
                 </ResponsiveNavLink>
               </div>
             </div>
@@ -1463,11 +1465,12 @@ let appDownloadModal = ref(false);
                       </span>
                     </template>
 
-                    
-
                     <template #content>
-
-                      <DropdownLink :href="route('profile.view')" method="get" as="button">
+                      <DropdownLink
+                        :href="route('profile.view')"
+                        method="get"
+                        as="button"
+                      >
                         Profile
                       </DropdownLink>
 
@@ -3001,10 +3004,24 @@ let appDownloadModal = ref(false);
     </Modal>
 
     <Modal :show="showUpdateDispositionForLastClient" :closeable="false">
-      <div class="bg-white p-4">
-        <div class="mb-3">
-          <label class="mb-2">Please update the client disposition for the call:</label>
-          <select class="select-custom" v-model="latestClientDisposition">
+      <div class="bg-white p-6 rounded-lg shadow">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Update Call Disposition</h2>
+        <p class="text-gray-700 mb-6">
+          You've just completed a call. Please update the client's disposition to ensure
+          accurate tracking and follow-up actions.
+        </p>
+
+        <div class="mb-6">
+          <label
+            for="clientDisposition"
+            class="block mb-2 text-sm font-medium text-gray-900"
+            >Client Disposition:</label
+          >
+          <select
+            id="clientDisposition"
+            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            v-model="latestClientDisposition"
+          >
             <option value="Sale - Simplified Issue">Sale - Simplified Issue</option>
             <option value="Sale - Guaranteed Issue">Sale - Guaranteed Issue</option>
             <option value="Follow Up Needed">Follow Up Needed</option>
@@ -3015,9 +3032,7 @@ let appDownloadModal = ref(false);
             <option value="No Income">No Income</option>
             <option value="Wrong State">Wrong State</option>
             <option value="Not Qualified Age">Not Qualified Age</option>
-            <option value="Not Qualified Nursing Home">
-              Not Qualified Nursing Home
-            </option>
+            <option value="Not Qualified Nursing Home">Not Qualified Nursing Home</option>
             <option value="Not Qualified Memory Issues">
               Not Qualified Memory Issues
             </option>
@@ -3027,19 +3042,30 @@ let appDownloadModal = ref(false);
         </div>
 
         <div class="flex justify-end">
-          <PrimaryButton @click.prevent="updateLatestClientDisposition"
-            >Save Disposition</PrimaryButton
+          <button
+            @click.prevent="updateLatestClientDisposition"
+            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
           >
+            Save Disposition
+          </button>
         </div>
       </div>
     </Modal>
 
-    <Modal :show="showLowBalanceModal" :closeable="true" @close="showLowBalanceModal = false">
+    <Modal
+      :show="showLowBalanceModal"
+      :closeable="true"
+      @close="showLowBalanceModal = false"
+    >
       <div class="bg-white py-6 flex justify-center">
         <div class="flex flex-col justify-center">
-          <h4 class="mb-4 text-lg">You Just Ran Out Of Credits. Schedule a one on one review to continue.</h4>
+          <h4 class="mb-4 text-lg">
+            You Just Ran Out Of Credits. Schedule a one on one review to continue.
+          </h4>
           <div class="flex justify-center">
-            <PrimaryButton @click.prevent="onLowBalanceModalClick">Schedule Live Training</PrimaryButton>
+            <PrimaryButton @click.prevent="onLowBalanceModalClick"
+              >Schedule Live Training</PrimaryButton
+            >
           </div>
         </div>
       </div>
