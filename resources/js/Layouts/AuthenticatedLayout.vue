@@ -3021,7 +3021,7 @@ let appDownloadModal = ref(false);
               You've just completed a call. Please update the client's disposition to
               ensure accurate tracking and follow-up actions.
             </p>
-            <h4 class="mt-4 text-md font-medium">Client Information</h4>
+            <h4 class="mt-4 text-md font-bold">Client Information</h4>
             <p class="mt-1">
               Name: {{ connectedClient.first_name + " " + connectedClient.last_name }}
             </p>
