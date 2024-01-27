@@ -10,7 +10,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class ZoomMeeting extends Notification implements ShouldQueue
+class ZoomMeeting extends Notification
 {
     use Queueable;
 
