@@ -3001,8 +3001,8 @@ let appDownloadModal = ref(false);
     </Modal>
 
     <Modal :show="showUpdateDispositionForLastClient" :closeable="false">
-      <div class="bg-white">
-        <div class="p-4 my-3">
+      <div class="bg-white p-4 my-3">
+        <div>
           <div class="mb-3">
             <label class="mb-2">Please update the client disposition for the call:</label>
             <select class="select-custom" v-model="latestClientDisposition">
