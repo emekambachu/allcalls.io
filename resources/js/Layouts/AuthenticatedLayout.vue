@@ -3028,8 +3028,8 @@ let appDownloadModal = ref(false);
               ensure accurate tracking and follow-up actions:
             </p>
             <ul class="list-inside list-disc">
-              <li><span class="font-bold">First Name:</span> John</li>
-              <li><span class="font-bold">Last Name:</span> Doe</li>
+              <li><span class="font-bold">First Name:</span> Rusty</li>
+              <li><span class="font-bold">Last Name:</span> Colins</li>
             </ul>
           </div>
         </div>
@@ -3067,7 +3067,6 @@ let appDownloadModal = ref(false);
         <div class="flex justify-end">
           <PrimaryButton
             @click.prevent="updateLatestClientDisposition"
-            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
           >
             Save Disposition
           </PrimaryButton>
