@@ -3025,12 +3025,16 @@ let appDownloadModal = ref(false);
             <span class="font-bold">Attention Required:</span>
             <p class="mb-4 mt-1.5">
               You've just completed a call. Please update the client's disposition to
-              ensure accurate tracking and follow-up actions:
+              ensure accurate tracking and follow-up actions.
             </p>
-            <ul class="list-inside list-disc">
+
+            <p class="mb-4 mt-1.5">
+              <span class="font-bold">Client Name:</span> Rusty Colins
+            </p>
+            <!-- <ul class="list-inside list-disc">
               <li><span class="font-bold">First Name:</span> Rusty</li>
               <li><span class="font-bold">Last Name:</span> Colins</li>
-            </ul>
+            </ul> -->
           </div>
         </div>
 
