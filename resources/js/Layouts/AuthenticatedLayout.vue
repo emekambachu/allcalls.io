@@ -13,6 +13,7 @@ import { toaster } from "@/helper.js";
 import { Device } from "@twilio/voice-sdk";
 import { usePage, router } from "@inertiajs/vue3";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
+import GlobalSpinner from "@/Components/GlobalSpinner.vue";
 
 let page = usePage();
 
@@ -315,42 +316,32 @@ let clearTimeoutForRepeatedDispositionNotifications = () => {
   clearInterval(repeatedNotificationToUpdateDispositionTimeout.value);
   repeatedNotificationToUpdateDispositionTimeout.value = null;
 };
-
+let dispositionUpdating = ref(false);
 let updateLatestClientDisposition = () => {
-  // fetch latestClientId from axios get request to /web-api/latest-client
-  axios.get("/web-api/latest-client").then((response) => {
-    console.log("Latest client:");
-    console.log(response.data.client.id);
-    let latestClientId = response.data.client.id;
+  dispositionUpdating.value = true;
+  axios
+    .post(`/web-api/clients/${connectedClient.value.id}/disposition`, {
+      status: latestClientDisposition.value,
+    })
+    .then((response) => {
+      dispositionUpdating.value = false;
+      console.log("Client disposition update response:");
+      console.log(response.data);
+      console.log("Status of the client that was updated: ", response.data.status);
 
-    axios
-      .post(`/web-api/clients/${latestClientId}/disposition`, {
-        status: latestClientDisposition.value,
-      })
-      .then((response) => {
-        console.log("Client disposition update response:");
-        console.log(response.data);
-        console.log("Status of the client that was updated: ", response.data.status);
+      if (response.data.status.startsWith("Sale")) {
+        console.log("Sale detected!", {
+          redirectUrl: `/internal-agent/my-business?clientId=${response.data.clientId}`,
+        });
 
-        if (response.data.status.startsWith("Sale")) {
-          console.log("Sale detected!", {
-            redirectUrl: `/internal-agent/my-business?clientId=${response.data.clientId}`,
-          });
-
-          router.visit(`/internal-agent/my-business?clientId=${response.data.clientId}`);
-        }
-
-        localStorage.removeItem("latestClientId");
-        localStorage.removeItem("showDispositionModal");
-        // showUpdateDispositionForLastClient.value = false;
-        // toaster("success", "Client disposition updated.");
-        // clearTimeoutForRepeatedDispositionNotifications();
-      })
-      .catch((error) => {
-        console.log("Error updating client disposition:");
-        console.log(error);
-      });
-  });
+        router.visit(`/internal-agent/my-business?clientId=${response.data.clientId}`);
+      }
+    })
+    .catch((error) => {
+      dispositionUpdating.value = false;
+      console.log("Error updating client disposition:");
+      console.log(error);
+    });
 };
 
 let setupTwilioDevice = () => {
@@ -3029,7 +3020,8 @@ let appDownloadModal = ref(false);
             </p>
 
             <p class="mb-4 mt-1.5" v-if="connectedClient">
-              <span class="font-bold">Client Name:</span> {{ connectedClient.first_name + " " + connectedClient.last_name }}
+              <span class="font-bold">Client Name:</span>
+              {{ connectedClient.first_name + " " + connectedClient.last_name }}
             </p>
 
             <!-- <ul class="list-inside list-disc">
@@ -3071,6 +3063,7 @@ let appDownloadModal = ref(false);
 
         <div class="flex justify-end">
           <PrimaryButton @click.prevent="updateLatestClientDisposition">
+            <GlobalSpinner :spinner="dispositionUpdating" />
             Save Disposition
           </PrimaryButton>
         </div>
