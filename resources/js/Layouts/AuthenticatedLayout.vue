@@ -3019,6 +3019,8 @@ let appDownloadModal = ref(false);
               ensure accurate tracking and follow-up actions.
             </p>
 
+            <h3 class="text-lg font-medium">Client Information</h3>
+
             <p class="mb-4 mt-1.5" v-if="connectedClient">
               <span class="font-bold">Client Name:</span>
               {{ connectedClient.first_name + " " + connectedClient.last_name }}
