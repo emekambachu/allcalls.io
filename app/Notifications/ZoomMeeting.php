@@ -22,12 +22,12 @@ class ZoomMeeting extends Notification
     /**
      * Zoom Meeting Notification instance.
      *
-     * @param string $title
-     * @param string $message
+     * @param string|null $title
+     * @param string|null $message
      * @param string|null $zoomLink
      * @param array|null $emailData
      */
-    public function __construct(string $title, string $message, ?bool $sendNotification = false, ?string $zoomLink = null, ?array $emailData = null)
+    public function __construct(?string $title, ?string $message, ?bool $sendNotification = false, ?string $zoomLink = null, ?array $emailData = null)
     {
         $this->title = $title;
         $this->message = $message;
