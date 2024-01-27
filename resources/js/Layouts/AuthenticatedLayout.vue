@@ -3023,7 +3023,7 @@ let appDownloadModal = ref(false);
             </p>
             <h4 class="mt-4 text-md font-bold">Client Information</h4>
             <p class="mt-1">
-              Name: {{ connectedClient.first_name + " " + connectedClient.last_name }}
+              <span class="font-bold">Name:</span> <span class="font-italic">{{ connectedClient.first_name + " " + connectedClient.last_name }}</span>
             </p>
           </div>
           <button
