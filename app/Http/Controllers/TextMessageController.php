@@ -49,6 +49,8 @@ class TextMessageController extends Controller
 
     public function receiveMessage(Request $request)
     {
-        Log::debug($request);
+        Log::debug('New message received for number "3073428126" successfully');
+        
+        Log::debug('Message data object:' . $request);
     }
 }
