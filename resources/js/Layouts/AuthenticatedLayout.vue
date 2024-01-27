@@ -344,9 +344,9 @@ let updateLatestClientDisposition = () => {
 
         localStorage.removeItem("latestClientId");
         localStorage.removeItem("showDispositionModal");
-        showUpdateDispositionForLastClient.value = false;
-        toaster("success", "Client disposition updated.");
-        clearTimeoutForRepeatedDispositionNotifications();
+        // showUpdateDispositionForLastClient.value = false;
+        // toaster("success", "Client disposition updated.");
+        // clearTimeoutForRepeatedDispositionNotifications();
       })
       .catch((error) => {
         console.log("Error updating client disposition:");
@@ -424,10 +424,10 @@ let setupTwilioDevice = () => {
 
 let showUpdateDispositionForLastClient = ref(false);
 
-if (page.props.auth.showDispositionUpdateOption) {
-  showUpdateDispositionForLastClient.value = true;
-  startTimeoutForRepeatedDispositionNotifications();
-}
+// if (page.props.auth.showDispositionUpdateOption) {
+//   showUpdateDispositionForLastClient.value = true;
+//   startTimeoutForRepeatedDispositionNotifications();
+// }
 // console.log('showDispositionModal:', page.props.auth.showDispositionUpdateOption);
 
 let showUpdateDispositionModal = () => {
@@ -470,8 +470,8 @@ onMounted(() => {
       event.client.status === null &&
       !showUpdateDispositionForLastClient.value
     ) {
-      showUpdateDispositionForLastClient.value = true;
-      startTimeoutForRepeatedDispositionNotifications();
+      // showUpdateDispositionForLastClient.value = true;
+      // startTimeoutForRepeatedDispositionNotifications();
     }
   });
 
@@ -480,8 +480,8 @@ onMounted(() => {
     (event) => {
       console.log("UserSavedNonNullStatus:", event);
       console.log("So, we can drop the modal now.");
-      showUpdateDispositionForLastClient.value = false;
-      clearTimeoutForRepeatedDispositionNotifications();
+      // showUpdateDispositionForLastClient.value = false;
+      // clearTimeoutForRepeatedDispositionNotifications();
     }
   );
 
