@@ -3001,37 +3001,35 @@ let appDownloadModal = ref(false);
     </Modal>
 
     <Modal :show="showUpdateDispositionForLastClient" :closeable="false">
-      <div class="bg-white p-4 my-3">
-        <div>
-          <div class="mb-3">
-            <label class="mb-2">Please update the client disposition for the call:</label>
-            <select class="select-custom" v-model="latestClientDisposition">
-              <option value="Sale - Simplified Issue">Sale - Simplified Issue</option>
-              <option value="Sale - Guaranteed Issue">Sale - Guaranteed Issue</option>
-              <option value="Follow Up Needed">Follow Up Needed</option>
-              <option value="Quoted - Not Interested">Quoted - Not Interested</option>
-              <option value="Not Interested">Not Interested</option>
-              <option value="Transfer Handoff Too Long">Transfer Handoff Too Long</option>
-              <option value="Client Hung Up">Client Hung Up</option>
-              <option value="No Income">No Income</option>
-              <option value="Wrong State">Wrong State</option>
-              <option value="Not Qualified Age">Not Qualified Age</option>
-              <option value="Not Qualified Nursing Home">
-                Not Qualified Nursing Home
-              </option>
-              <option value="Not Qualified Memory Issues">
-                Not Qualified Memory Issues
-              </option>
-              <option value="Language Barrier">Language Barrier</option>
-              <option value="Do Not Call">Do Not Call</option>
-            </select>
-          </div>
+      <div class="bg-white p-4">
+        <div class="mb-3">
+          <label class="mb-2">Please update the client disposition for the call:</label>
+          <select class="select-custom" v-model="latestClientDisposition">
+            <option value="Sale - Simplified Issue">Sale - Simplified Issue</option>
+            <option value="Sale - Guaranteed Issue">Sale - Guaranteed Issue</option>
+            <option value="Follow Up Needed">Follow Up Needed</option>
+            <option value="Quoted - Not Interested">Quoted - Not Interested</option>
+            <option value="Not Interested">Not Interested</option>
+            <option value="Transfer Handoff Too Long">Transfer Handoff Too Long</option>
+            <option value="Client Hung Up">Client Hung Up</option>
+            <option value="No Income">No Income</option>
+            <option value="Wrong State">Wrong State</option>
+            <option value="Not Qualified Age">Not Qualified Age</option>
+            <option value="Not Qualified Nursing Home">
+              Not Qualified Nursing Home
+            </option>
+            <option value="Not Qualified Memory Issues">
+              Not Qualified Memory Issues
+            </option>
+            <option value="Language Barrier">Language Barrier</option>
+            <option value="Do Not Call">Do Not Call</option>
+          </select>
+        </div>
 
-          <div class="flex justify-end">
-            <PrimaryButton @click.prevent="updateLatestClientDisposition"
-              >Save Disposition</PrimaryButton
-            >
-          </div>
+        <div class="flex justify-end">
+          <PrimaryButton @click.prevent="updateLatestClientDisposition"
+            >Save Disposition</PrimaryButton
+          >
         </div>
       </div>
     </Modal>
