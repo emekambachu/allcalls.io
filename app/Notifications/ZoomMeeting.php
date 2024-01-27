@@ -5,6 +5,7 @@ namespace App\Notifications;
 use Illuminate\Bus\Queueable;
 use App\Notifications\PushChannel;
 use Illuminate\Support\Facades\Log;
+use App\Broadcasting\TextMessageChannel;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -16,6 +17,7 @@ class ZoomMeeting extends Notification
     protected $title;
     protected $message;
     protected $sendNotification;
+    protected $textMessageString;
     protected $zoomLink;
     protected $emailData;
 
@@ -27,11 +29,12 @@ class ZoomMeeting extends Notification
      * @param string|null $zoomLink
      * @param array|null $emailData
      */
-    public function __construct(?string $title, ?string $message, ?bool $sendNotification = false, ?string $zoomLink = null, ?array $emailData = null)
+    public function __construct(?string $title, ?string $message, ?bool $sendNotification = false, ?string $textMessageString, ?string $zoomLink = null, ?array $emailData = null)
     {
         $this->title = $title;
         $this->message = $message;
         $this->sendNotification = $sendNotification;
+        $this->textMessageString = $textMessageString;
         $this->zoomLink = $zoomLink;
         $this->emailData = $emailData;
     }
@@ -48,6 +51,10 @@ class ZoomMeeting extends Notification
         if ($this->sendNotification) {
             $channels[] = 'database';
             $channels[] = PushChannel::class;
+        }
+
+        if ($this->textMessageString) {
+            $channels[] = TextMessageChannel::class;
         }
         
         if ($this->emailData) {
@@ -129,5 +136,21 @@ class ZoomMeeting extends Notification
     {
         // Implement the logic to send the notification via your PushChannel, using the data provided.
         return $this->toArray($notifiable);
+    }
+
+    
+    /**
+     * Get the SMS representation of the notification.
+     *
+     * @param mixed $notifiable
+     * @return array
+     */
+    public function toTextMessage($notifiable)
+    {
+        // Format your SMS message here
+        return [
+            'fromDID' => '3073428120', // Replace with your sender's number
+            'textMessageString' => $this->textMessageString // Your message content
+        ];
     }
 }

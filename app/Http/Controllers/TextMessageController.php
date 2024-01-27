@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use Plivo\RestClient;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 
 class TextMessageController extends Controller
 {
@@ -44,5 +45,10 @@ class TextMessageController extends Controller
         ]);
 
         return $response->body();
+    }
+
+    public function receiveMessage(Request $request)
+    {
+        Log::debug($request);
     }
 }

@@ -261,3 +261,4 @@ Route::get('/test-call', function() {
 
 Route::post('/twilio/sms/receive', [TwilioSMSController::class, 'receiveSMS']);
 Route::post('/commio/sms/send', [TextMessageController::class, 'sendMessage']);
+Route::post('/commio/sms/receive', [TextMessageController::class, 'receiveMessage']);

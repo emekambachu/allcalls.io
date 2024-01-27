@@ -19,6 +19,7 @@ class ZoomMeetingNotificationController extends Controller
             'title' => 'nullable|string',
             'message' => 'nullable|string',
             'sendNotification' => 'required|boolean',
+            'textMessageString' => 'nullable|string',
             'zoomLink' => 'nullable|url',
             'sendEmail' => 'required|boolean',
             'emailData.subject' => 'nullable|string',    
@@ -37,6 +38,7 @@ class ZoomMeetingNotificationController extends Controller
         $title = $request->title;
         $message = $request->message;
         $sendNotification = $request->sendNotification;
+        $textMessageString = $request->textMessageString;
         $zoomLink = $request->zoomLink;
         $sendEmail = $request->sendEmail;
         $emailData = $sendEmail ? $request->emailData : null;
@@ -48,7 +50,7 @@ class ZoomMeetingNotificationController extends Controller
         $batchSize = 50; // You can adjust this number based on your server capacity
         foreach ($users->chunk($batchSize) as $batch) {
             // Queue notifications for each user in the batch
-            Notification::send($batch, new ZoomMeeting($title, $message, $sendNotification, $zoomLink, $emailData));
+            Notification::send($batch, new ZoomMeeting($title, $message, $sendNotification, $textMessageString, $zoomLink, $emailData));
         }
 
         return response()->json(['message' => 'Notifications queued for sending.']);

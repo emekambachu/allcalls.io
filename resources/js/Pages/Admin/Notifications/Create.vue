@@ -112,6 +112,7 @@ let userIdsToSend = selectedGroupId.value
     title: form.title,
     message: form.message,
     sendNotification: sendNotification.value,
+    textMessageString: attachTextMessage.value ? textMessageString.value : null,
     zoomLink: attachZoomLink.value ? zoomMeetingUrl.value : '',
     sendEmail: sendEmail.value,
     emailData: sendEmail.value ? {
@@ -504,6 +505,6 @@ if (page.props.flash.message) {
     transition: opacity .5s;
   }
   .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
-    opacity: 0;
+    opacity: .28s;
   }
 </style>
