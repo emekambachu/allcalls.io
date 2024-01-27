@@ -431,18 +431,7 @@ let showUpdateDispositionForLastClient = ref(false);
 // console.log('showDispositionModal:', page.props.auth.showDispositionUpdateOption);
 
 let showUpdateDispositionModal = () => {
-  // // Check if 'showDispositionModal' exists in localStorage
-  // if (localStorage.getItem("showDispositionModal") === null) {
-  //   // If not, create the variable in localStorage with a value (e.g., 'true')
-  //   localStorage.setItem("showDispositionModal", "true");
-  //   console.log("'showDispositionModal' variable created in localStorage.");
-  //   showUpdateDispositionForLastClient.value = true;
-  //   startTimeoutForRepeatedDispositionNotifications();
-  //   return
-  // }
-  // console.log("'showDispositionModal' variable already exists in localStorage.");
-  // showUpdateDispositionForLastClient.value = true;
-  // startTimeoutForRepeatedDispositionNotifications();
+  showUpdateDispositionForLastClient.value = true;
 };
 
 let makeDispositionModalNull = () => {
