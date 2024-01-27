@@ -2997,40 +2997,55 @@ let appDownloadModal = ref(false);
     <Modal :show="showUpdateDispositionForLastClient" :closeable="false">
       <div class="bg-white p-6 rounded-lg shadow">
         <div
-          class="mb-4 flex rounded-lg bg-blue-50 p-4 text-sm text-blue-800"
+          class="mb-4 flex flex-col md:flex-row rounded-lg bg-blue-100 p-4 text-blue-900"
           role="alert"
         >
           <svg
-            class="me-3 mt-[2px] inline h-4 w-4 flex-shrink-0"
-            aria-hidden="true"
+            class="mr-4 h-6 w-6 flex-shrink-0 text-blue-500"
             xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 20 20"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            aria-hidden="true"
           >
             <path
-              d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <span class="sr-only">Info</span>
-          <div>
-            <span class="font-bold">Attention Required:</span>
-            <p class="mb-4 mt-1.5">
+          <div class="flex-1">
+            <h3 class="text-lg font-semibold">Attention Required</h3>
+            <p class="mt-1">
               You've just completed a call. Please update the client's disposition to
               ensure accurate tracking and follow-up actions.
             </p>
-
-            <h3 class="text-lg font-medium">Client Information</h3>
-
-            <p class="mb-2 mt-1.5" v-if="connectedClient">
-              <span class="font-bold">Name:</span>
-              {{ connectedClient.first_name + " " + connectedClient.last_name }}
+            <h4 class="mt-4 text-md font-medium">Client Information</h4>
+            <p class="mt-1">
+              Name: {{ connectedClient.first_name + " " + connectedClient.last_name }}
             </p>
-
-            <!-- <ul class="list-inside list-disc">
-              <li><span class="font-bold">First Name:</span> Rusty</li>
-              <li><span class="font-bold">Last Name:</span> Colins</li>
-            </ul> -->
           </div>
+          <button
+            class="ml-auto mt-4 md:mt-0 self-start rounded-md p-1.5 text-blue-600 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            aria-label="Close"
+          >
+            <svg
+              class="h-5 w-5"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
         </div>
 
         <div class="mb-6">
