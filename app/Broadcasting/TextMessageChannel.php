@@ -24,7 +24,7 @@ class TextMessageChannel
         $accountId = env('COMMIO_ACCOUNT_ID'); // Replace with your actual account ID
         $authString = env('COMMIO_AUTH_STRING'); // Your encoded auth string
     
-        $userPhone = formatPhoneNumber($notifiable->phone);
+        $userPhone = $this->formatPhoneNumber($notifiable->phone);
         Log::info('Sending SMS via TextMessageChannel', ['to' => $userPhone, 'from' => $data['fromDID']]);
         
         try {
@@ -50,13 +50,13 @@ class TextMessageChannel
         // Remove any non-numeric characters
         $phoneNumber = preg_replace('/[^0-9]/', '', $phoneNumber);
 
-        // Check if the number has the correct length
-        if (strlen($phoneNumber) == 10) {
-            return $phoneNumber;
-        } else {
-            // Handle error if the phone number is not 10 digits
-            // You might want to throw an exception or handle this differently
-            throw new Exception("Invalid phone number format");
-        }
+        // // Check if the number has the correct length
+        // if (strlen($phoneNumber) == 10) {
+        //     return $phoneNumber;
+        // } else {
+        //     // Handle error if the phone number is not 10 digits
+        //     // You might want to throw an exception or handle this differently
+        //     throw new Exception("Invalid phone number format");
+        // }
     }
 }
