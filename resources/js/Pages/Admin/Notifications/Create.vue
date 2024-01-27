@@ -26,6 +26,9 @@ const emailButtonText = ref('');
 const emailButtonUrl = ref('');
 const emailDescription = ref('');
 // const selectedDevices = ref([]);
+const sendNotification = ref(false);
+const attachTextMessage = ref(false);
+const textMessageString = ref('');
 const attachZoomLink = ref(false); // State to track if Zoom link should be attached
 const zoomMeetingUrl = ref(''); // The actual Zoom meeting URL
 const shouldShowZoomLinkInput = computed(() => attachZoomLink.value);
@@ -108,6 +111,8 @@ let userIdsToSend = selectedGroupId.value
     user_ids: userIdsToSend, // Send array of user IDs
     title: form.title,
     message: form.message,
+    sendNotification: sendNotification.value,
+    textMessageString: attachTextMessage.value ? textMessageString.value : null,
     zoomLink: attachZoomLink.value ? zoomMeetingUrl.value : '',
     sendEmail: sendEmail.value,
     emailData: sendEmail.value ? {
@@ -415,14 +420,41 @@ if (page.props.flash.message) {
         
         <!-- Notification Form -->
         <div class="mt-4">
-          <InputLabel for="title" value="Notification Title:" />
-          <TextInput id="title" type="text" v-model="form.title" required autofocus class="w-full p-2 border rounded" />
+          <label class="flex items-center">
+            <input type="checkbox" v-model="sendNotification" class="form-checkbox">
+            <span class="ml-2">Attach Push Notification</span>
+          </label>
         </div>
-        
+
+        <transition name="fade">
+          <div class="mt-4" v-if="sendNotification">
+            <div class="mt-4">
+              <InputLabel for="title" value="Notification Title:" />
+              <TextInput id="title" type="text" v-model="form.title" required autofocus class="w-full p-2 border rounded" />
+            </div>
+            
+            <div class="mt-4">
+              <InputLabel for="message" value="Notification Message:" />
+              <TextInput id="message" type="text" v-model="form.message" required class="w-full p-2 border rounded" />
+            </div>
+          </div>
+        </transition>
+
         <div class="mt-4">
-          <InputLabel for="message" value="Notification Message:" />
-          <TextInput id="message" type="text" v-model="form.message" required class="w-full p-2 border rounded" />
+          <label class="flex items-center">
+            <input type="checkbox" v-model="attachTextMessage" class="form-checkbox">
+            <span class="ml-2">Attach Text Message</span>
+          </label>
         </div>
+
+        <transition name="fade">
+          <div class="mt-4" v-if="attachTextMessage">
+            <div class="mt-4">
+              <InputLabel for="textMessage" value="Text Message String:" />
+              <TextInput id="textMessage" type="text" v-model="textMessageString" required class="w-full p-2 border rounded" />
+            </div>
+          </div>
+        </transition>
 
         <div class="mt-4">
           <label class="inline-flex items-center">
@@ -431,12 +463,14 @@ if (page.props.flash.message) {
           </label>
 
           <!-- Conditional TextInput for Zoom Meeting URL -->
-          <TextInput 
-            v-if="shouldShowZoomLinkInput" 
-            v-model="zoomMeetingUrl" 
-            placeholder="Enter Zoom Meeting URL" 
-            class="w-full p-2 border rounded mt-2"
-          />
+          <transition name="fade">
+            <TextInput 
+              v-if="shouldShowZoomLinkInput" 
+              v-model="zoomMeetingUrl" 
+              placeholder="Enter Zoom Meeting URL" 
+              class="w-full p-2 border rounded mt-2"
+            />
+          </transition>
         </div>
 
         <div class="mt-4">
@@ -446,13 +480,15 @@ if (page.props.flash.message) {
           </label>
         </div>
 
-        <div v-if="sendEmail" class="mt-4">
-          <TextInput v-model="emailSubject" placeholder="Email Subject" class="mb-4" />
-          <TextInput v-model="emailTitle" placeholder="Email Title" class="mb-4" />
-          <TextInput v-model="emailButtonText" placeholder="Action Button Text" class="mb-4" />
-          <TextInput v-model="emailButtonUrl" placeholder="Action Button URL" class="mb-4" />
-          <TextInput v-model="emailDescription" placeholder="Email Description" class="mb-4" />
-        </div>
+        <transition name="fade">
+          <div v-if="sendEmail" class="mt-4">
+            <TextInput v-model="emailSubject" placeholder="Email Subject" class="mb-4" />
+            <TextInput v-model="emailTitle" placeholder="Email Title" class="mb-4" />
+            <TextInput v-model="emailButtonText" placeholder="Action Button Text" class="mb-4" />
+            <TextInput v-model="emailButtonUrl" placeholder="Action Button URL" class="mb-4" />
+            <TextInput v-model="emailDescription" placeholder="Email Description" class="mb-4" />
+          </div>
+        </transition>
         
         <div class="mt-6">
           <PrimaryButton @click="sendPushNotification" :disabled="form.processing" class="px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded">
@@ -463,3 +499,12 @@ if (page.props.flash.message) {
     </section>
   </AuthenticatedLayout>
 </template>
+
+<style>
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+    opacity: .28s;
+  }
+</style>

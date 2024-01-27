@@ -198,7 +198,7 @@ class ProfileController extends Controller
         $path = $request->file('profile_picture')->storeAs('profile_pictures', $filename, 'public');
     
         // Optionally delete the old image if it exists and is different from the new one
-        if ($user->profile_picture && $user->profile_picture != $path) {
+        if ($user->profile_picture && $user->profile_picture == $path) {
             Storage::disk('public')->delete($user->profile_picture);
         }
     
