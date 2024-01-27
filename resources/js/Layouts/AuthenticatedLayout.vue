@@ -335,8 +335,10 @@ let updateLatestClientDisposition = () => {
         console.log("Status of the client that was updated: ", response.data.status);
 
         if (response.data.status.startsWith("Sale")) {
-          console.log("Sale detected!");
-          // router.visit('/my-business/')
+          console.log("Sale detected!", {
+            redirectUrl: `/internal-agent/my-business?clientId=${response.data.clientId}`,
+          });
+
           router.visit(`/internal-agent/my-business?clientId=${response.data.clientId}`);
         }
 
