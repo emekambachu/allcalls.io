@@ -32,7 +32,7 @@ let policies = reactive([
       leave-from-class="transform scale-100 opacity-100"
       leave-to-class="transform scale-95 opacity-0"
     >
-      <Disclosure v-slot="{ open }">
+      <Disclosure defaultOpen v-slot="{ open }">
         <DisclosureButton
           class="flex justify-between items-center text-xl font-semibold text-gray-900 bg-gray-50 p-3 rounded-lg w-full"
         >
