@@ -3023,29 +3023,12 @@ let appDownloadModal = ref(false);
             </p>
             <h4 class="mt-4 text-md font-bold">Client Information</h4>
             <p class="mt-1">
-              <span class="font-bold">Name:</span> <span class="font-italic">{{ connectedClient.first_name + " " + connectedClient.last_name }}</span>
+              <span class="font-bold">Name:</span>
+              <span class="font-italic">{{
+                connectedClient.first_name + " " + connectedClient.last_name
+              }}</span>
             </p>
           </div>
-          <button
-            class="ml-auto mt-4 md:mt-0 self-start rounded-md p-1.5 text-blue-600 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            aria-label="Close"
-          >
-            <svg
-              class="h-5 w-5"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
         </div>
 
         <div class="mb-6">
