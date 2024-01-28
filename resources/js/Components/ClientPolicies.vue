@@ -32,7 +32,7 @@ let policies = ref([
         </thead>
         <tbody>
           <!-- Iterate over each policy -->
-          <tr v-for="policy in policies" class="bg-white border-b hover:bg-gray-50">
+          <tr v-for="policy in policies" class="bg-white border-b hover:bg-gray-50" :key="policy.id">
             <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">
               {{ policy.id }}
             </th>
