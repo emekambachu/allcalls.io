@@ -71,11 +71,11 @@ let form = ref({
   client_zipcode: "",
   client_phone_no: "",
   client_email: "",
-  label: '',
-  business_label: '',
-  status: 'Submitted',
-  business_id: '',
-  existing_business: false
+  label: "",
+  business_label: "",
+  status: "Submitted",
+  business_id: "",
+  existing_business: false,
 });
 
 let edit_data = ref(false);
@@ -98,7 +98,7 @@ let updateFormAndDisableElement = (
     formObject[property] = value;
     var element = document.getElementById(elementId);
     if (element) {
-      if (formObject[property] !== 'Select') {
+      if (formObject[property] !== "Select") {
         element.disabled = true;
       }
     }
@@ -114,17 +114,29 @@ let updateFormAndDisableElement = (
   }
 };
 if (props.businessData) {
-  form.value.insurance_company = props.businessData.insurance_company ? props.businessData.insurance_company : 'AETNA/CVS';
-  form.value.product_name = props.businessData.product_name ? props.businessData.product_name : 'Select';
+  form.value.insurance_company = props.businessData.insurance_company
+    ? props.businessData.insurance_company
+    : "AETNA/CVS";
+  form.value.product_name = props.businessData.product_name
+    ? props.businessData.product_name
+    : "Select";
   form.value.application_date = props.businessData.application_date;
   form.value.coverage_amount = props.businessData.coverage_amount;
-  form.value.coverage_length = props.businessData.coverage_length ? props.businessData.coverage_length : 'Select';
-  form.value.premium_frequency = props.businessData.premium_frequency ? props.businessData.premium_frequency : 'Select';
+  form.value.coverage_length = props.businessData.coverage_length
+    ? props.businessData.coverage_length
+    : "Select";
+  form.value.premium_frequency = props.businessData.premium_frequency
+    ? props.businessData.premium_frequency
+    : "Select";
   form.value.premium_amount = props.businessData.premium_amount;
   form.value.premium_volumn = props.businessData.premium_volumn;
   form.value.carrier_writing_number = props.businessData.carrier_writing_number;
-  form.value.this_app_from_lead = props.businessData.this_app_from_lead ? props.businessData.this_app_from_lead : 'Select' ;
-  form.value.source_of_lead = props.businessData.source_of_lead ? props.businessData.source_of_lead : 'Select' ;
+  form.value.this_app_from_lead = props.businessData.this_app_from_lead
+    ? props.businessData.this_app_from_lead
+    : "Select";
+  form.value.source_of_lead = props.businessData.source_of_lead
+    ? props.businessData.source_of_lead
+    : "Select";
   form.value.policy_draft_date = props.businessData.policy_draft_date;
   form.value.first_name = props.businessData.first_name;
   form.value.mi = props.businessData.mi;
@@ -133,7 +145,7 @@ if (props.businessData) {
   form.value.beneficiary_relationship = props.businessData.beneficiary_relationship;
   form.value.notes = props.businessData.notes;
   form.value.dob = props.businessData.dob;
-  form.value.gender = props.businessData.gender ? props.businessData.gender : 'Select';
+  form.value.gender = props.businessData.gender ? props.businessData.gender : "Select";
   form.value.client_street_address_1 = props.businessData.client_street_address_1;
   form.value.client_street_address_2 = props.businessData.client_street_address_2;
   form.value.client_city = props.businessData.client_city;
@@ -141,13 +153,13 @@ if (props.businessData) {
   form.value.client_zipcode = props.businessData.client_zipcode;
   form.value.client_phone_no = props.businessData.client_phone_no;
   form.value.client_email = props.businessData.client_email;
-  form.value.status = props.businessData.status ? props.businessData.status : 'Submitted' ;
+  form.value.status = props.businessData.status ? props.businessData.status : "Submitted";
   form.value.label = props.businessData.label;
   form.value.business_id = props.businessData.id;
 
-  form.value.agent_full_name = props.businessData.agent_full_name
-  form.value.agent_email = props.businessData.agent_email
-  form.value.agent_id = props.businessData.agent_id
+  form.value.agent_full_name = props.businessData.agent_full_name;
+  form.value.agent_email = props.businessData.agent_email;
+  form.value.agent_id = props.businessData.agent_id;
 
   if (props.businessData?.client) {
     form.value.client_id = props.businessData?.client.id;
@@ -169,23 +181,25 @@ let getProductNameOptions = () => {
   return Object.keys(companies[form.value.insurance_company]);
 };
 
-let attactClientEdit = ref(false)
+let attactClientEdit = ref(false);
 if (props.AttachClientData) {
-  form.value.business_id = props.AttachClientData.id
-  form.value.insurance_company = props.AttachClientData.insurance_company
-  form.value.product_name = props.AttachClientData.product_name
-  form.value.application_date = props.AttachClientData.application_date
-  form.value.coverage_amount = props.AttachClientData.coverage_amount
-  form.value.coverage_length = props.AttachClientData.coverage_length
-  form.value.premium_frequency = props.AttachClientData.premium_frequency
-  form.value.premium_amount = props.AttachClientData.premium_amount
-  form.value.premium_volumn = props.AttachClientData.premium_volumn
-  form.value.carrier_writing_number = props.AttachClientData.carrier_writing_number
-  form.value.this_app_from_lead = props.AttachClientData.this_app_from_lead
-  form.value.source_of_lead = props.AttachClientData.source_of_lead
-  form.value.policy_draft_date = props.AttachClientData.policy_draft_date
-  form.value.label = props.AttachClientData.label
-  form.value.status = props.AttachClientData.status ? props.AttachClientData.status : 'Select'
+  form.value.business_id = props.AttachClientData.id;
+  form.value.insurance_company = props.AttachClientData.insurance_company;
+  form.value.product_name = props.AttachClientData.product_name;
+  form.value.application_date = props.AttachClientData.application_date;
+  form.value.coverage_amount = props.AttachClientData.coverage_amount;
+  form.value.coverage_length = props.AttachClientData.coverage_length;
+  form.value.premium_frequency = props.AttachClientData.premium_frequency;
+  form.value.premium_amount = props.AttachClientData.premium_amount;
+  form.value.premium_volumn = props.AttachClientData.premium_volumn;
+  form.value.carrier_writing_number = props.AttachClientData.carrier_writing_number;
+  form.value.this_app_from_lead = props.AttachClientData.this_app_from_lead;
+  form.value.source_of_lead = props.AttachClientData.source_of_lead;
+  form.value.policy_draft_date = props.AttachClientData.policy_draft_date;
+  form.value.label = props.AttachClientData.label;
+  form.value.status = props.AttachClientData.status
+    ? props.AttachClientData.status
+    : "Select";
 
   if (!props.AttachClientData.source_of_lead) {
     form.value.source_of_lead = "Select";
@@ -230,7 +244,7 @@ let checkRequiredField = () => {
     "client_zipcode",
     "client_phone_no",
     "client_email",
-    'status'
+    "status",
   ];
   const addFieldIfPresent = (field, condition, value) => {
     if (condition) {
@@ -315,15 +329,16 @@ let dateFormat = (val) => {
 let isLoading = ref(false);
 
 let SaveBussinessData = async () => {
-  let route = ''
-  if(page.props.auth.role == 'admin'){
-    route = '/admin/my-business'
-  }else if(page.props.auth.role == 'internal-agent'){
-    route = '/internal-agent/my-business'
+  let route = "";
+  if (page.props.auth.role == "admin") {
+    route = "/admin/my-business";
+  } else if (page.props.auth.role == "internal-agent") {
+    route = "/internal-agent/my-business";
   }
   console.log("SAVE BUSINESS DATA", {
     currentUrl: page.url,
-    redirectUrl: new URL(window.location.href).origin + new URL(window.location.href).pathname,
+    redirectUrl:
+      new URL(window.location.href).origin + new URL(window.location.href).pathname,
   });
 
   form.value.application_date = dateFormat(form.value.application_date);
@@ -335,8 +350,13 @@ let SaveBussinessData = async () => {
     .then((response) => {
       toaster("success", response.data.message);
 
-      console.log("Redirect URL", new URL(window.location.href).origin + new URL(window.location.href).pathname);
-      router.visit(new URL(window.location.href).origin + new URL(window.location.href).pathname);
+      console.log(
+        "Redirect URL",
+        new URL(window.location.href).origin + new URL(window.location.href).pathname
+      );
+      router.visit(
+        new URL(window.location.href).origin + new URL(window.location.href).pathname
+      );
     })
     .catch((error) => {
       isLoading.value = false;
@@ -356,11 +376,11 @@ let SaveBussinessData = async () => {
 // update business data start
 let isLoading2 = ref(false);
 let UpdateBussinessData = async () => {
-  let route = ''
-  if(page.props.auth.role == 'admin'){
-    route = '/admin/my-business'
-  }else if(page.props.auth.role == 'internal-agent'){
-    route = '/internal-agent/my-business'
+  let route = "";
+  if (page.props.auth.role == "admin") {
+    route = "/admin/my-business";
+  } else if (page.props.auth.role == "internal-agent") {
+    route = "/internal-agent/my-business";
   }
   form.value.application_date = dateFormat(form.value.application_date);
   form.value.policy_draft_date = dateFormat(form.value.policy_draft_date);
@@ -371,8 +391,13 @@ let UpdateBussinessData = async () => {
     .then((response) => {
       toaster("success", response.data.message);
       // router.visit(page.url)
-      console.log("Redirect URL", new URL(window.location.href).origin + new URL(window.location.href).pathname);
-      router.visit(new URL(window.location.href).origin + new URL(window.location.href).pathname);
+      console.log(
+        "Redirect URL",
+        new URL(window.location.href).origin + new URL(window.location.href).pathname
+      );
+      router.visit(
+        new URL(window.location.href).origin + new URL(window.location.href).pathname
+      );
     })
     .catch((error) => {
       if (error.response.status == 400) {
@@ -480,7 +505,7 @@ const SugestAgent = () => {
 };
 const SugestClient = () => {
   isOpen2.value = !isOpen2.value;
-  search2.value = ''
+  search2.value = "";
 };
 let SugestBusiness = () => {
   isOpen3.value = !isOpen3.value;
@@ -527,22 +552,34 @@ let filteredClients = computed(() => {
   // })
 });
 
-let updateFormAndEnableElement = (property, value, elementId, formObject, disabledFlag) => {
-  if (value && property !== 'dob' && property !== 'policy_draft_date' && property !== 'application_date' && property !== 'this_app_from_lead') {
+let updateFormAndEnableElement = (
+  property,
+  value,
+  elementId,
+  formObject,
+  disabledFlag
+) => {
+  if (
+    value &&
+    property !== "dob" &&
+    property !== "policy_draft_date" &&
+    property !== "application_date" &&
+    property !== "this_app_from_lead"
+  ) {
     formObject[property] = value;
     var element = document.getElementById(elementId);
     if (element) {
       element.disabled = false;
     }
-  } else if (value && property == 'policy_draft_date') {
+  } else if (value && property == "policy_draft_date") {
     formObject[property] = value;
-    disabledPolicydraftdate.value = false
-  } else if (value && property == 'application_date') {
+    disabledPolicydraftdate.value = false;
+  } else if (value && property == "application_date") {
     formObject[property] = value;
-    applicationDate.value = false
-  } else if (value && property == 'this_app_from_lead') {
-    if (value == 'NO') {
-      var element = document.getElementById('source_of_lead');
+    applicationDate.value = false;
+  } else if (value && property == "this_app_from_lead") {
+    if (value == "NO") {
+      var element = document.getElementById("source_of_lead");
       if (element) {
         element.disabled = true;
       }
@@ -552,7 +589,7 @@ let updateFormAndEnableElement = (property, value, elementId, formObject, disabl
       }
     }
   }
-}
+};
 
 onMounted(() => {
   document.addEventListener("click", handleOutsideClick);
@@ -619,10 +656,20 @@ onMounted(() => {
     }
 
     let policy_validation = ref([
-      'insurance_company', 'product_name', 'application_date', 'coverage_amount', 'coverage_length',
-      'premium_frequency', 'premium_amount', 'premium_volumn', 'carrier_writing_number', 'this_app_from_lead',
-      'source_of_lead', 'policy_draft_date', 'status'
-    ])
+      "insurance_company",
+      "product_name",
+      "application_date",
+      "coverage_amount",
+      "coverage_length",
+      "premium_frequency",
+      "premium_amount",
+      "premium_volumn",
+      "carrier_writing_number",
+      "this_app_from_lead",
+      "source_of_lead",
+      "policy_draft_date",
+      "status",
+    ]);
     policy_validation.value.forEach((key) => {
       if (form.value.hasOwnProperty(key)) {
         const value = form.value[key];
@@ -658,10 +705,10 @@ const handleOutsideClick = (event) => {
   }
 };
 let selectagent = (agent) => {
-  form.value.agent_full_name = agent.first_name + ' ' + agent.last_name
-  form.value.agent_email = agent.email
-  form.value.agent_id = agent.id
-  console.log('form.value', form.value);
+  form.value.agent_full_name = agent.first_name + " " + agent.last_name;
+  form.value.agent_email = agent.email;
+  form.value.agent_id = agent.id;
+  console.log("form.value", form.value);
   isOpen.value = false;
 };
 
@@ -703,18 +750,30 @@ let clearClient = () => {
   form.value.client_full_name = "";
   form.value.client_id = "";
   let policy_validation = ref([
-    'client_street_address_1', 'dob', 'client_email', 'first_name', 'last_name',
-    'client_zipcode', 'client_phone_no', 'mi', 'beneficiary_name', "beneficiary_relationship",
-    'client_street_address_2', "client_city", "client_state", "gender", 'notes'
-  ])
+    "client_street_address_1",
+    "dob",
+    "client_email",
+    "first_name",
+    "last_name",
+    "client_zipcode",
+    "client_phone_no",
+    "mi",
+    "beneficiary_name",
+    "beneficiary_relationship",
+    "client_street_address_2",
+    "client_city",
+    "client_state",
+    "gender",
+    "notes",
+  ]);
   policy_validation.value.forEach((key) => {
     if (form.value.hasOwnProperty(key)) {
       const value = form.value[key];
       updateFormAndEnableElement(key, value, key, form.value);
       resetValue(key);
     }
-  })
-}
+  });
+};
 
 let selectBusiness = (business) => {
   isOpen3.value = false;
@@ -755,8 +814,8 @@ let selectBusiness = (business) => {
       const value = form.value[key];
       updateFormAndDisableElement(key, value, key, form.value);
     }
-  })
-}
+  });
+};
 let resetValue = (key) => {
   form.value[key] = "";
   if (key == "insurance_company") {
@@ -932,6 +991,45 @@ let existingBusiness = () => {
               <span class="sr-only">Close modal</span>
             </button>
           </div>
+
+          <div v-if="is_client">
+            <div
+              class="mb-4 flex flex-col md:flex-row rounded-lg bg-blue-100 p-4 text-blue-900"
+              role="alert"
+            >
+              <svg
+                class="mr-4 h-6 w-6 flex-shrink-0 text-blue-500"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <div class="flex-1">
+                <h3 class="text-lg font-semibold">Attention Required</h3>
+                <p class="mt-1 text-sm">
+                  Please review the pre-filled client information for accuracy and
+                  complete the necessary policy details.
+                </p>
+                <ul class="list-disc pl-5 mt-2 text-sm">
+                  <li>Verify the accuracy of the auto-filled client details.</li>
+                  <li>
+                    Fill in the remaining sections with the appropriate policy
+                    information.
+                  </li>
+                  <li>Double-check all data to ensure there are no errors.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
           <div class="px-12 py-2">
             <br />
             <div class="mb-3">
@@ -1170,9 +1268,12 @@ let existingBusiness = () => {
                                 />
                                 <ul class="max-w-md divide-y divide-gray-200">
                                   <li>
-                                    <div @click="clearClient()"
-                                      class="cursor-pointer flex items-center space-x-4 rtl:space-x-reverse hover:bg-gray-50 p-2">
-                                      Clear</div>
+                                    <div
+                                      @click="clearClient()"
+                                      class="cursor-pointer flex items-center space-x-4 rtl:space-x-reverse hover:bg-gray-50 p-2"
+                                    >
+                                      Clear
+                                    </div>
                                   </li>
                                   <li v-for="client in filteredClients" :key="client.id">
                                     <div
@@ -1322,10 +1423,15 @@ let existingBusiness = () => {
                       </div>
 
                       <div>
-                        <label for="EFNumber"
-                          class="block mb-2 mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Street Address
-                          2</label>
-                        <input v-model="form.client_street_address_2" type="text" id="client_street_address_2"
+                        <label
+                          for="EFNumber"
+                          class="block mb-2 mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black"
+                          >Street Address 2</label
+                        >
+                        <input
+                          v-model="form.client_street_address_2"
+                          type="text"
+                          id="client_street_address_2"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder=""
                           required
@@ -1536,10 +1642,15 @@ let existingBusiness = () => {
                       </div> -->
 
                       <div>
-                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Status<span
-                            class="text-red-400">*</span></label>
-                        <select v-model="form.status" id="status"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <label
+                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black"
+                          >Status<span class="text-red-400">*</span></label
+                        >
+                        <select
+                          v-model="form.status"
+                          id="status"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        >
                           <option disabled>Select</option>
                           <option value="Submitted">Submitted</option>
                           <option value="Approved">Approved</option>
@@ -1547,9 +1658,15 @@ let existingBusiness = () => {
                           <option value="Lapsed">Lapsed</option>
                           <option value="Declined">Declined</option>
                           <option value="Canceled/Withdrawn">Canceled/Withdrawn</option>
-                          <option value="Carrier Missing Information">Carrier Missing Information</option>
+                          <option value="Carrier Missing Information">
+                            Carrier Missing Information
+                          </option>
                         </select>
-                        <div v-if="firstStepErrors.status" class="text-red-500" v-text="firstStepErrors.status[0]"></div>
+                        <div
+                          v-if="firstStepErrors.status"
+                          class="text-red-500"
+                          v-text="firstStepErrors.status[0]"
+                        ></div>
                       </div>
                       <div>
                         <label
