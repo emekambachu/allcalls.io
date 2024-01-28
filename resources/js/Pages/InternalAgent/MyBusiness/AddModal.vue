@@ -1031,7 +1031,7 @@ let existingBusiness = () => {
             </div>
           </div>
 
-          <div v-if="is_client">
+          <div v-if="is_client" class="mx-12 mt-4">
             <ClientPolicies :clientId="clientData" />
           </div>
 
