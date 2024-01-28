@@ -30,6 +30,7 @@ use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\UsageActivityController;
 use App\Http\Controllers\WebAPIClientsController;
 use App\Http\Controllers\CallClientInfoController;
+use App\Http\Controllers\ClientPoliciesController;
 use App\Http\Controllers\EmailBlacklistController;
 use App\Http\Controllers\AdditionalFilesController;
 use App\Http\Controllers\AgentStatusDocsController;
@@ -260,3 +261,5 @@ Route::get('/web-api/latest-client', [LatestClientController::class, 'show'])->m
 
 Route::get('/unsubscribe-to-email/{token}', [EmailBlacklistController::class, 'show'])->name('unsubscribe-to-emails.show');
 Route::post('/unsubscribe-to-email/{token}', [EmailBlacklistController::class, 'store'])->name('unsubscribe-to-emails.store');
+
+Route::get('/web-api/policies/{client}', [ClientPoliciesController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check']);
