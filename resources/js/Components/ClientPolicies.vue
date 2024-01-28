@@ -14,10 +14,10 @@ let { clientId } = defineProps({
   },
 });
 
-let policies = reactive([]);
+let policies = ref([]);
 onMounted(() => {
   axios.get(`/web-api/policies/${clientId}`).then((response) => {
-    policies = response.data.policies;
+    policies.value = response.data.policies;
   });
 });
 </script>
