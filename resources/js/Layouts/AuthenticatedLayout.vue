@@ -329,6 +329,8 @@ let updateLatestClientDisposition = () => {
       console.log(response.data);
       console.log("Status of the client that was updated: ", response.data.status);
 
+      toaster("success", `Disposition updated for ${connectedClient.value.first_name} ${connectedClient.value.last_name}.`);
+
       if (response.data.status.startsWith("Sale")) {
         console.log("Sale detected!", {
           redirectUrl: `/internal-agent/my-business?clientId=${response.data.clientId}`,
@@ -3024,7 +3026,7 @@ let appDownloadModal = ref(false);
             <h4 class="mt-4 text-md font-bold">Client Information</h4>
             <p class="mt-1">
               <span class="font-bold">Name: </span>
-              <span class="italic">{{
+              <span>{{
                 connectedClient.first_name + " " + connectedClient.last_name
               }}</span>
             </p>
