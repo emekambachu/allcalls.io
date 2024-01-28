@@ -52,7 +52,7 @@ class TextMessageChannel
 
         // // Check if the number has the correct length
         // if (strlen($phoneNumber) == 10) {
-        //     return $phoneNumber;
+        return $phoneNumber;
         // } else {
         //     // Handle error if the phone number is not 10 digits
         //     // You might want to throw an exception or handle this differently
