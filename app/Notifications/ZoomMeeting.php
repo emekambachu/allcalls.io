@@ -101,6 +101,8 @@ class ZoomMeeting extends Notification implements ShouldQueue
             'actionUrl' => $this->emailData['buttonUrl'] ?? null,
             'outroLines' => ['Thank you for using our application!'],
             'salutation' => $this->emailData['salutation'] ?? null,
+            'title' => $this->emailData['title'] ?? null,
+            'description' => $this->emailData['description'] ?? null,
             // 'level' => 'success', // Define the level (success, error, etc.) if applicable
             // Add any other necessary data you want to include in the email
         ];
