@@ -10,7 +10,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class ZoomMeeting extends Notification
+class ZoomMeeting extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -149,7 +149,7 @@ class ZoomMeeting extends Notification
     {
         // Format your SMS message here
         return [
-            'fromDID' => '3073428120', // Replace with your sender's number
+            'fromDID' => '3073428099', // Replace with your sender's number
             'textMessageString' => $this->textMessageString // Your message content
         ];
     }
