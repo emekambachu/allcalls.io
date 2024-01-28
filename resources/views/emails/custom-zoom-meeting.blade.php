@@ -25,6 +25,11 @@
 </x-mail::button>
 @endisset
 
+
+{{ $title }}
+
+{{ $description }}
+
 {{-- Outro Lines --}}
 @foreach ($outroLines as $line)
 {{ $line }}
