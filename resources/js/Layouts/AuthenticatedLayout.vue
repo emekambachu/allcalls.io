@@ -2804,7 +2804,7 @@ let appDownloadModal = ref(false);
         <!-- Info Populating After 60 seconds -->
         <div v-if="connectedClient && !hasSixtySecondsPassed" class="w-full">
           <p class="text-md text-center text-black mb-2">
-            Info will populate after 60 seconds
+            Info will populate after 80 seconds
           </p>
           <ul class="w-full p-4 bg-gray-100 rounded-md space-y-2">
             <li class="flex justify-between">
