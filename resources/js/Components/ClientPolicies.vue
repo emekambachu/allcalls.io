@@ -15,7 +15,6 @@ let { clientId } = defineProps({
 });
 
 let policies = reactive([]);
-
 onMounted(() => {
   axios.get(`/web-api/policies/${clientId}`).then((response) => {
     policies = response.data.policies;
@@ -89,18 +88,12 @@ onMounted(() => {
                 </tr>
               </thead>
               <tbody>
-                <!-- Iterate over each policy -->
                 <tr
                   v-for="policy in policies"
                   class="bg-white border-b hover:bg-gray-50"
                   :key="policy.id"
                 >
-                  <th
-                    scope="row"
-                    class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap"
-                  >
-                    {{ policy.id }}
-                  </th>
+                  <td class="py-4 px-6">{{ policy.id }}</td>
                   <td class="py-4 px-6">{{ policy.insurance_company }}</td>
                   <td class="py-4 px-6">{{ policy.premium_volumn }}</td>
                 </tr>
