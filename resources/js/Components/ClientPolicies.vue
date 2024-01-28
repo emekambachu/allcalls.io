@@ -14,8 +14,7 @@ let policies = reactive([
       <h2 class="text-xl font-semibold text-gray-900">Manage Attached Policies</h2>
       <p class="mt-2 text-gray-600">
         Below is a list of policies currently attached to this client. You can review
-        these existing policies to ensure accuracy and completeness. To attach additional
-        policies, please use the policy attachment feature provided in the CRM.
+        these existing policies to ensure accuracy and completeness.
       </p>
     </div>
 
