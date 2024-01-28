@@ -20,7 +20,7 @@ let policies = reactive([
 <template>
   <div>
     <Disclosure v-slot="{ open }">
-      <DisclosureButton class="flex items-center text-xl font-semibold text-gray-900 bg-gray-50 p-2 rounded-lg">
+      <DisclosureButton class="flex items-center text-xl font-semibold text-gray-900 bg-gray-50 p-3 rounded-lg w-full">
         <span class="mr-2"> Manage Attached Policies </span>
         <span v-if="!open">
           <svg
