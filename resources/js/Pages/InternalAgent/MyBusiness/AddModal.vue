@@ -1013,7 +1013,7 @@ let existingBusiness = () => {
                 />
               </svg>
               <div class="flex-1">
-                <h3 class="text-lg font-semibold">Congrats on your sale!</h3>
+                <h3 class="text-lg font-semibold">Attention Required</h3>
                 <p class="mt-1 text-sm">
                   Please review the pre-filled client information for accuracy and
                   complete the necessary policy details.
