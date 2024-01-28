@@ -1,13 +1,14 @@
 <script setup>
-import { ref } from 'vue';
-import axios from 'axios';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import GlobalSpinner from '@/Components/GlobalSpinner.vue';
+import { ref } from "vue";
+import axios from "axios";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import GlobalSpinner from "@/Components/GlobalSpinner.vue";
+
+let emit = defineEmits(['close']);
+let { client } = defineProps(["client"]);
 
 
-let { client } = defineProps(['client']);
-
-let latestClientDisposition = ref('');
+let latestClientDisposition = ref("");
 let dispositionUpdating = ref(false);
 let updateLatestClientDisposition = () => {
   dispositionUpdating.value = true;
@@ -17,8 +18,10 @@ let updateLatestClientDisposition = () => {
     })
     .then((response) => {
       dispositionUpdating.value = false;
-      showUpdateDispositionForLastClient.value = false;
-      console.log('Turn them back on for whatever vertical they turned off for.');
+      emit('close');
+      //   showUpdateDispositionForLastClient.value = false;
+      
+      console.log("Turn them back on for whatever vertical they turned off for.");
 
       toaster(
         "success",
@@ -30,13 +33,12 @@ let updateLatestClientDisposition = () => {
       }
     })
     .catch((error) => {
-      dispositionUpdating.value = false;
+      //   dispositionUpdating.value = false;
+      emit('close');
       console.log("Error updating client disposition:");
       console.log(error);
     });
 };
-
-
 </script>
 <template>
   <div class="bg-white p-6 rounded-lg shadow">
