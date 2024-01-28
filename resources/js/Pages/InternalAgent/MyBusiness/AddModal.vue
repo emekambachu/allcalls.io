@@ -6,6 +6,7 @@ import PreviewInfo from "@/Pages/InternalAgent/MyBusiness/PreviewInfo.vue";
 import { toaster } from "@/helper.js";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import ClientPolicies from "@/Components/ClientPolicies.vue";
 import {
   companies,
   coverageLengthArray,
@@ -992,7 +993,7 @@ let existingBusiness = () => {
             </button>
           </div>
 
-          <div v-if="is_client " class="mx-12 mt-4">
+          <div v-if="is_client" class="mx-12 mt-4">
             <div
               class="mb-4 flex flex-col md:flex-row rounded-lg bg-blue-100 p-4 text-blue-900"
               role="alert"
@@ -1028,6 +1029,10 @@ let existingBusiness = () => {
                 </ul>
               </div>
             </div>
+          </div>
+
+          <div v-if="is_client">
+            <ClientPolicies :clientId="clientData" />
           </div>
 
           <div class="px-12 py-2">
