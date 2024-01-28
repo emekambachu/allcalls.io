@@ -45,17 +45,23 @@ class SendBirdUserController extends Controller
         Log::debug('Validated request successfully!');
 
         // Handle Image Upload
-        $path = $request->file('profile_image')->storeAs(
-            'profile_pictures', $user->id . '.' . $request->file('profile_image')->extension(),
-            'public'
-        );
-        $profileUrl = Storage::url($path);
-        $fullUrl = url($profileUrl);
-        
-        // Update user's profile picture in the database
-        $user->profile_picture = $profileUrl;
-        $user->save();
-        Log::debug('Profile image uploaded. Path: ' . $path);
+       // Create a unique filename
+       $uniqueFilename = Str::random(10) . '.' . $request->file('profile_image')->extension();
+
+       // Create a directory path using the user's ID
+       $directory = 'profile_pictures/' . $user->id;
+
+       // Store the file in the created directory with the unique filename
+       $path = $request->file('profile_image')->storeAs($directory, $uniqueFilename, 'public');
+
+       // Generate a URL for the stored profile picture
+       $profileUrl = Storage::url($path);
+
+       // Update user's profile picture in the database
+       $user->profile_picture = $profileUrl;
+       $user->save();
+       Log::debug('Profile image uploaded. Path: ' . $path);
+       Log::debug('Profile image URL: ' . $profileUrl);
 
         $applicationId = env('SENDBIRD_APPLICATION_ID');
         $apiKey = env('SENDBIRD_API_TOKEN');
