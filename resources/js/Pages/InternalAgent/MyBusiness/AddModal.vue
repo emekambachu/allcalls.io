@@ -1022,7 +1022,7 @@ let existingBusiness = () => {
                   <li>Verify the accuracy of the auto-filled client details.</li>
                   <li>
                     Fill in the remaining sections with the appropriate policy
-                    information.
+                    information and click next.
                   </li>
                   <li>Double-check all data to ensure there are no errors.</li>
                 </ul>
