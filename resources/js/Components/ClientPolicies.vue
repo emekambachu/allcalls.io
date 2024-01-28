@@ -25,7 +25,7 @@ let policies = reactive([
       >
 
       <DisclosurePanel>
-        <p class="mt-2 text-gray-600">
+        <p class="my-2 text-gray-600">
           Below is a list of policies currently attached to this client. You can review
           these existing policies to ensure accuracy and completeness.
         </p>
