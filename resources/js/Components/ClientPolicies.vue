@@ -19,10 +19,43 @@ let policies = reactive([
 </script>
 <template>
   <div>
-    <Disclosure>
-      <DisclosureButton class="text-xl font-semibold text-gray-900"
-        >Manage Attached Policies</DisclosureButton
-      >
+    <Disclosure v-slot="{ open }">
+      <DisclosureButton class="flex text-xl font-semibold text-gray-900">
+        <span class="mr-2"> Manage Attached Policies </span>
+        <span v-if="!open">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="m4.5 15.75 7.5-7.5 7.5 7.5"
+            />
+          </svg>
+        </span>
+
+        <span v-if="open">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="m19.5 8.25-7.5 7.5-7.5-7.5"
+            />
+          </svg>
+        </span>
+      </DisclosureButton>
 
       <DisclosurePanel>
         <p class="my-2 text-gray-600 text-md">
