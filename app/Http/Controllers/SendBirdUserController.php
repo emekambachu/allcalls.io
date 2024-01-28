@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Support\Str;
 use App\Models\SendBirdUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
