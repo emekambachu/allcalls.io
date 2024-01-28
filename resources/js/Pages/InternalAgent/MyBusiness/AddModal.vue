@@ -962,7 +962,7 @@ let existingBusiness = () => {
       <div style="width: 80%; height: 90%" class="relative" id="modal_main_id">
         <div class="relative bg-white rounded-lg shadow-lg transition-all">
           <div class="flex justify-between">
-            <h3 class="text-xl font-small ml-5 mt-5 text-gray-700">
+            <h3 class="text-xl font-small mx-12 mt-5 text-gray-700">
               <span v-if="edit_data">Edit </span>
               <span v-if="attactClientEdit">Attach Client</span>
               <span v-if="!attactClientEdit">Report Application</span>
@@ -992,7 +992,7 @@ let existingBusiness = () => {
             </button>
           </div>
 
-          <div v-if="is_client">
+          <div v-if="is_client" class="mx-12">
             <div
               class="mb-4 flex flex-col md:flex-row rounded-lg bg-blue-100 p-4 text-blue-900"
               role="alert"
