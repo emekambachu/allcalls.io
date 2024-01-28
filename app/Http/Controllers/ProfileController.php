@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bid;
+use App\Models\User;
 use Inertia\Inertia;
 use App\Models\State;
 use Inertia\Response;
 use App\Models\CallType;
 use App\Models\Timezone;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\UserCallTypeState;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +19,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\ProfileUpdateRequest;
-use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 class ProfileController extends Controller
