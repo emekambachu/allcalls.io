@@ -1,4 +1,6 @@
 <script>
+import { ref } from 'vue';
+
 let policies = ref([
     { id: 1, insuranceCompany: 'State Farm', apv: 100000 },
     { id: 2, insuranceCompany: 'Allstate', apv: 200000 },
