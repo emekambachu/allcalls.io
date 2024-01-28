@@ -3062,7 +3062,7 @@ let appDownloadModal = ref(false);
         </div>
 
         <div class="flex justify-end">
-          <PrimaryButton @click.prevent="updateLatestClientDisposition">
+          <PrimaryButton :disabled="dispositionUpdating" @click.prevent="updateLatestClientDisposition">
             <GlobalSpinner :spinner="dispositionUpdating" />
             Save Disposition
           </PrimaryButton>
