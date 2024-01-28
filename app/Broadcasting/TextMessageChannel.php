@@ -50,13 +50,12 @@ class TextMessageChannel
         // Remove any non-numeric characters
         $phoneNumber = preg_replace('/[^0-9]/', '', $phoneNumber);
 
-        // Check if the number has the correct length
-        if (strlen($phoneNumber) == 10) {
-            return $phoneNumber;
-        } else {
-            // Handle error if the phone number is not 10 digits
-            // You might want to throw an exception or handle this differently
-            throw new Exception("Invalid phone number format");
+        // Check if the number has more than 10 digits and starts with '1' (country code for the US)
+        if (strlen($phoneNumber) > 10 && strpos($phoneNumber, '1') === 0) {
+            // Remove the leading '1' and return the first 10 digits
+            $phoneNumber = substr($phoneNumber, 1, 10);
         }
+
+        return $phoneNumber;
     }
 }
