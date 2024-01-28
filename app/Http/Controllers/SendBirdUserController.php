@@ -57,7 +57,8 @@ class SendBirdUserController extends Controller
 
        // Generate a URL for the stored profile picture
        $profileUrl = Storage::url($path);
-
+       $fullUrl = url($profileUrl);
+       
        // Update user's profile picture in the database
        $user->profile_picture = $profileUrl;
        $user->save();
