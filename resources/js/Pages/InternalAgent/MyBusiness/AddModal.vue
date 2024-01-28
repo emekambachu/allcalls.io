@@ -992,7 +992,7 @@ let existingBusiness = () => {
             </button>
           </div>
 
-          <div v-if="is_client" class="mx-12">
+          <div v-if="is_client" class="mx-12 mt-4">
             <div
               class="mb-4 flex flex-col md:flex-row rounded-lg bg-blue-100 p-4 text-blue-900"
               role="alert"
