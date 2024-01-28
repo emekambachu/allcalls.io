@@ -1,10 +1,20 @@
 <script setup>
-import { reactive } from 'vue';
+import { reactive } from "vue";
+
+let { clientId } = defineProps({
+  clientId: {
+    type: Number,
+    required: true,
+  },
+});
+
+console.log('ClientId:', clientId);
+
 
 let policies = reactive([
-    { id: 1, insuranceCompany: 'State Farm', apv: 100000 },
-    { id: 2, insuranceCompany: 'Allstate', apv: 200000 },
-    { id: 3, insuranceCompany: 'Progressive', apv: 300000 },
+  { id: 1, insuranceCompany: "State Farm", apv: 100000 },
+  { id: 2, insuranceCompany: "Allstate", apv: 200000 },
+  { id: 3, insuranceCompany: "Progressive", apv: 300000 },
 ]);
 </script>
 <template>
@@ -31,16 +41,18 @@ let policies = reactive([
         </thead>
         <tbody>
           <!-- Iterate over each policy -->
-          <tr v-for="policy in policies" class="bg-white border-b hover:bg-gray-50" :key="policy.id">
+          <tr
+            v-for="policy in policies"
+            class="bg-white border-b hover:bg-gray-50"
+            :key="policy.id"
+          >
             <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">
               {{ policy.id }}
             </th>
             <td class="py-4 px-6">{{ policy.insuranceCompany }}</td>
             <td class="py-4 px-6">{{ policy.apv }}</td>
             <td class="py-4 px-6">
-              <button
-                class="text-red-500 hover:text-red-700"
-              >
+              <button class="text-red-500 hover:text-red-700">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-5 w-5"
