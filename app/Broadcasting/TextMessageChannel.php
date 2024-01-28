@@ -56,13 +56,6 @@ class TextMessageChannel
             $phoneNumber = substr($phoneNumber, 1, 10);
         }
 
-        // Verify if the number now has exactly 10 digits
-        if (strlen($phoneNumber) == 10) {
-            return $phoneNumber;
-        } else {
-            // Handle error if the phone number is not 10 digits
-            // You might want to throw an exception or handle this differently
-            throw new Exception("Invalid phone number format");
-        }
+        return $phoneNumber;
     }
 }
