@@ -1,7 +1,7 @@
 <script>
 import { ref } from 'vue';
 
-let policies = ref([
+let policies = reactive([
     { id: 1, insuranceCompany: 'State Farm', apv: 100000 },
     { id: 2, insuranceCompany: 'Allstate', apv: 200000 },
     { id: 3, insuranceCompany: 'Progressive', apv: 300000 },
