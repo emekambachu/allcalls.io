@@ -325,17 +325,14 @@ let updateLatestClientDisposition = () => {
     })
     .then((response) => {
       dispositionUpdating.value = false;
-      console.log("Client disposition update response:");
-      console.log(response.data);
-      console.log("Status of the client that was updated: ", response.data.status);
+      showUpdateDispositionForLastClient.value = false;
 
-      toaster("success", `Disposition updated for ${connectedClient.value.first_name} ${connectedClient.value.last_name}.`);
+      toaster(
+        "success",
+        `Disposition updated for ${connectedClient.value.first_name} ${connectedClient.value.last_name}.`
+      );
 
       if (response.data.status.startsWith("Sale")) {
-        console.log("Sale detected!", {
-          redirectUrl: `/internal-agent/my-business?clientId=${response.data.clientId}`,
-        });
-
         router.visit(`/internal-agent/my-business?clientId=${response.data.clientId}`);
       }
     })
@@ -3064,7 +3061,10 @@ let appDownloadModal = ref(false);
         </div>
 
         <div class="flex justify-end">
-          <PrimaryButton :disabled="dispositionUpdating" @click.prevent="updateLatestClientDisposition">
+          <PrimaryButton
+            :disabled="dispositionUpdating"
+            @click.prevent="updateLatestClientDisposition"
+          >
             <GlobalSpinner :spinner="dispositionUpdating" />
             Save Disposition
           </PrimaryButton>
