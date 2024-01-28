@@ -326,6 +326,7 @@ let updateLatestClientDisposition = () => {
     .then((response) => {
       dispositionUpdating.value = false;
       showUpdateDispositionForLastClient.value = false;
+      console.log('Turn them back on for whatever vertical they turned off for.');
 
       toaster(
         "success",
@@ -419,6 +420,10 @@ let showUpdateDispositionForLastClient = ref(false);
 // console.log('showDispositionModal:', page.props.auth.showDispositionUpdateOption);
 
 let showUpdateDispositionModal = () => {
+
+  // Turn them offline for now:
+  console.log('Turn them offline.');
+
   showUpdateDispositionForLastClient.value = true;
 };
 
