@@ -58,7 +58,7 @@ let policies = reactive([
       </DisclosureButton>
 
       <DisclosurePanel class="p-3">
-        <p class="my-2 text-gray-600 text-md">
+        <p class="my-2 text-gray-600 text-sm">
           Below is a list of policies currently attached to this client. You can review
           these existing policies to ensure accuracy and completeness.
         </p>
