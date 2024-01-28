@@ -992,7 +992,7 @@ let existingBusiness = () => {
             </button>
           </div>
 
-          <div v-if="is_client" class="mx-12 mt-4">
+          <div v-if="is_client " class="mx-12 mt-4">
             <div
               class="mb-4 flex flex-col md:flex-row rounded-lg bg-blue-100 p-4 text-blue-900"
               role="alert"
@@ -1013,7 +1013,7 @@ let existingBusiness = () => {
                 />
               </svg>
               <div class="flex-1">
-                <h3 class="text-lg font-semibold">Attention Required</h3>
+                <h3 class="text-lg font-semibold">Congrats on your sale!</h3>
                 <p class="mt-1 text-sm">
                   Please review the pre-filled client information for accuracy and
                   complete the necessary policy details.
