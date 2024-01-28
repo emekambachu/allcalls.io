@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 
 let { clientId } = defineProps({
@@ -11,16 +11,21 @@ let { clientId } = defineProps({
     type: String,
     required: false,
     default: "",
-  }
+  },
 });
-
-console.log("ClientId from client policies component:", clientId);
 
 let policies = reactive([
   { id: 1, insuranceCompany: "State Farm", apv: 100000 },
   { id: 2, insuranceCompany: "Allstate", apv: 200000 },
   { id: 3, insuranceCompany: "Progressive", apv: 300000 },
 ]);
+
+onMounted(() => {
+  axios.get(`/web-api/policies/${clientId}`).then((response) => {
+    // policies = response.data;
+    console.log(response.data);
+  });
+});
 </script>
 <template>
   <div>
@@ -36,7 +41,9 @@ let policies = reactive([
         <DisclosureButton
           class="flex justify-between items-center text-xl font-semibold text-gray-900 bg-gray-50 p-3 rounded-lg w-full"
         >
-          <span class="mr-2">Policies <span v-if="clientName">for {{ clientName }}</span></span>
+          <span class="mr-2"
+            >Policies <span v-if="clientName">for {{ clientName }}</span></span
+          >
           <span v-if="!open">
             <svg
               xmlns="http://www.w3.org/2000/svg"
