@@ -1,5 +1,5 @@
 <script setup>
-import { reactive } from "vue";
+import { ref, reactive } from "vue";
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 
 let { clientId } = defineProps({
@@ -16,10 +16,12 @@ let policies = reactive([
   { id: 2, insuranceCompany: "Allstate", apv: 200000 },
   { id: 3, insuranceCompany: "Progressive", apv: 300000 },
 ]);
+
+let isDisclosureOpen = ref(true);
 </script>
 <template>
   <div>
-    <Disclosure v-slot="{ open }">
+    <Disclosure v-model="isDisclosureOpen" v-slot="{ open }">
       <DisclosureButton class="flex justify-between items-center text-xl font-semibold text-gray-900 bg-gray-50 p-3 rounded-lg w-full">
         <span class="mr-2"> Manage Attached Policies </span>
         <span v-if="!open">
