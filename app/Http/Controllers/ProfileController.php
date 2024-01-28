@@ -207,13 +207,14 @@ class ProfileController extends Controller
         }
         
         // Update the user's profile picture path in the database
-        $user->profile_picture = $path;
+        $profileUrl = Storage::url($path);
+        $user->profile_picture = $profileUrl;
         $user->save();
         
         Log::info("User profile picture request came in for: " . $user->email);
         Log::info("Filename: " . $uniqueFilename);
         Log::info("Path: " . $path);
-        Log::info("Profile URL: " . Storage::url($path));
+        Log::info("Profile URL: " . $profileUrl);
         
         
         // Return a JSON response
