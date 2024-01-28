@@ -400,7 +400,8 @@ let showUpdateDispositionModal = () => {
 
   // Turn them offline for now:
   console.log('Turn them offline.');
-
+  console.log('Vertical before showing the modal')
+  console.log(connectedClient.value.call_type_id);
   showUpdateDispositionForLastClient.value = true;
 };
 
