@@ -151,7 +151,7 @@ class ZoomMeeting extends Notification implements ShouldQueue
     {
         // Format your SMS message here
         return [
-            'fromDID' => '3073428120', // Replace with your sender's number
+            'fromDID' => '3073428099', // Replace with your sender's number
             'textMessageString' => $this->textMessageString // Your message content
         ];
     }
