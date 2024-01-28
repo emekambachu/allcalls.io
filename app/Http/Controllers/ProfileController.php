@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bid;
+use App\Models\User;
 use Inertia\Inertia;
 use App\Models\State;
 use Inertia\Response;
 use App\Models\CallType;
 use App\Models\Timezone;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\UserCallTypeState;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +19,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\ProfileUpdateRequest;
-use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 class ProfileController extends Controller
@@ -183,35 +184,38 @@ class ProfileController extends Controller
     public function uploadProfilePicture(Request $request)
     {
         $request->validate([
-            'profile_picture' => 'required|image|mimes:jpg,jpeg,png', // 5MB Max |max:5120
+            'profile_picture' => 'required|image|mimes:jpg,jpeg,png', // 5MB Max
         ]);
-    
+        
         $user = Auth::user();
-    
+        
         // Get the file extension of the uploaded file
         $extension = $request->file('profile_picture')->getClientOriginalExtension();
-    
-        // Create a filename using the user's ID
-        $filename = $user->id . '.' . $extension;
-    
-        // Store the file in the 'profile_pictures' directory with the new filename
-        $path = $request->file('profile_picture')->storeAs('profile_pictures', $filename, 'public');
-    
+        
+        // Create a unique filename
+        $uniqueFilename = Str::random(10) . '.' . $extension;
+        
+        // Create a directory path using the user's ID
+        $directory = 'profile_pictures/' . $user->id;
+        
+        // Store the file in the created directory with the unique filename
+        $path = $request->file('profile_picture')->storeAs($directory, $uniqueFilename, 'public');
+        
         // Optionally delete the old image if it exists and is different from the new one
-        if ($user->profile_picture && $user->profile_picture == $path) {
+        if ($user->profile_picture && Storage::disk('public')->exists($user->profile_picture)) {
             Storage::disk('public')->delete($user->profile_picture);
         }
-    
         
-        // Update the user's profile picture in the database
+        // Update the user's profile picture path in the database
         $profileUrl = Storage::url($path);
         $user->profile_picture = $profileUrl;
         $user->save();
         
         Log::info("User profile picture request came in for: " . $user->email);
-        Log::info("Filename: " . $filename);
+        Log::info("Filename: " . $uniqueFilename);
         Log::info("Path: " . $path);
         Log::info("Profile URL: " . $profileUrl);
+        
         
         // Return a JSON response
         return response()->json([
