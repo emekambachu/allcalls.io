@@ -1,5 +1,5 @@
-<script>
-import { ref } from 'vue';
+<script setup>
+import { reactive } from 'vue';
 
 let policies = reactive([
     { id: 1, insuranceCompany: 'State Farm', apv: 100000 },
