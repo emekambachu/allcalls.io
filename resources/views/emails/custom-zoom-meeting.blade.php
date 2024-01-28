@@ -6,6 +6,12 @@
 # @lang('Hello!')
 @endif
 
+
+
+{{ $title }}
+
+{{ $description }}
+
 {{-- Intro Lines --}}
 @foreach ($introLines as $line)
 {{ $line }}
@@ -24,11 +30,6 @@
 {{ $actionText }}
 </x-mail::button>
 @endisset
-
-
-{{ $title }}
-
-{{ $description }}
 
 {{-- Outro Lines --}}
 @foreach ($outroLines as $line)
