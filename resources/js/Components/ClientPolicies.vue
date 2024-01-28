@@ -41,7 +41,6 @@ let policies = ref([
             <td class="py-4 px-6">
               <button
                 class="text-red-500 hover:text-red-700"
-                @click="deletePolicy(policy.id)"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
