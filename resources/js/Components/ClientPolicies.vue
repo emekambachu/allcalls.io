@@ -1,5 +1,6 @@
 <script setup>
 import { reactive } from "vue";
+import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 
 let { clientId } = defineProps({
   clientId: {
@@ -8,8 +9,7 @@ let { clientId } = defineProps({
   },
 });
 
-console.log('ClientId:', clientId);
-
+console.log("ClientId:", clientId);
 
 let policies = reactive([
   { id: 1, insuranceCompany: "State Farm", apv: 100000 },
@@ -19,6 +19,12 @@ let policies = reactive([
 </script>
 <template>
   <div>
+    <Disclosure>
+      <DisclosureButton class="py-2"> Label? </DisclosureButton>
+      <DisclosurePanel class="text-gray-500">
+        This is some random content. Lorem ipsum dolor sit amet.
+      </DisclosurePanel>
+    </Disclosure>
     <!-- Introduction -->
     <div class="mb-8">
       <h2 class="text-xl font-semibold text-gray-900">Manage Attached Policies</h2>
