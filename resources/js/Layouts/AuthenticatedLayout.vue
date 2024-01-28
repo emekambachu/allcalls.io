@@ -14,7 +14,7 @@ import { Device } from "@twilio/voice-sdk";
 import { usePage, router } from "@inertiajs/vue3";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 import GlobalSpinner from "@/Components/GlobalSpinner.vue";
-import DispositionUpdateModal from "@/Components/DispositionUpdateModal.vue";
+import DispositionModal from "@/Components/DispositionModal.vue";
 
 let page = usePage();
 
@@ -2976,7 +2976,7 @@ let appDownloadModal = ref(false);
     </Modal>
 
     <Modal :show="showUpdateDispositionForLastClient" :closeable="false">
-      <DispositionUpdateModal :client="connectedClient" />
+      <DispositionModal :client="connectedClient" />
     </Modal>
 
     <Modal
