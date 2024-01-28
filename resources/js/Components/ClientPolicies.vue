@@ -14,16 +14,11 @@ let { clientId } = defineProps({
   },
 });
 
-let policies = reactive([
-  { id: 1, insuranceCompany: "State Farm", apv: 100000 },
-  { id: 2, insuranceCompany: "Allstate", apv: 200000 },
-  { id: 3, insuranceCompany: "Progressive", apv: 300000 },
-]);
+let policies = reactive([]);
 
 onMounted(() => {
   axios.get(`/web-api/policies/${clientId}`).then((response) => {
-    // policies = response.data;
-    console.log(response.data);
+    policies = response.data.policies;
   });
 });
 </script>
@@ -106,8 +101,8 @@ onMounted(() => {
                   >
                     {{ policy.id }}
                   </th>
-                  <td class="py-4 px-6">{{ policy.insuranceCompany }}</td>
-                  <td class="py-4 px-6">{{ policy.apv }}</td>
+                  <td class="py-4 px-6">{{ policy.insurance_company }}</td>
+                  <td class="py-4 px-6">{{ policy.premium_volumn }}</td>
                 </tr>
               </tbody>
             </table>
