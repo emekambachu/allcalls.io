@@ -84,6 +84,7 @@ onMounted(() => {
                 <tr>
                   <th scope="col" class="py-3 px-6">ID</th>
                   <th scope="col" class="py-3 px-6">Insurance Company</th>
+                  <th scope="col" class="py-3 px-6">Product Name</th>
                   <th scope="col" class="py-3 px-6">APV</th>
                 </tr>
               </thead>
@@ -95,6 +96,7 @@ onMounted(() => {
                 >
                   <td class="py-4 px-6">{{ policy.id }}</td>
                   <td class="py-4 px-6">{{ policy.insurance_company }}</td>
+                  <td class="py-4 px-6">{{ policy.product_name }}</td>
                   <td class="py-4 px-6">{{ policy.premium_volumn }}</td>
                 </tr>
               </tbody>
