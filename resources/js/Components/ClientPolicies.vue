@@ -24,7 +24,7 @@ let policies = reactive([
 </script>
 <template>
   <div>
-    <transition
+    <Transition
       enter-active-class="transition duration-100 ease-out"
       enter-from-class="transform scale-95 opacity-0"
       enter-to-class="transform scale-100 opacity-100"
@@ -126,6 +126,6 @@ let policies = reactive([
           </div>
         </DisclosurePanel>
       </Disclosure>
-    </transition>
+    </Transition>
   </div>
 </template>
