@@ -7,6 +7,11 @@ let { clientId } = defineProps({
     type: Number,
     required: true,
   },
+  clientName: {
+    type: String,
+    required: false,
+    default: "",
+  }
 });
 
 console.log("ClientId from client policies component:", clientId);
@@ -31,7 +36,7 @@ let policies = reactive([
         <DisclosureButton
           class="flex justify-between items-center text-xl font-semibold text-gray-900 bg-gray-50 p-3 rounded-lg w-full"
         >
-          <span class="mr-2"> Manage Attached Policies </span>
+          <span class="mr-2">Policies <span v-if="clientName">for {{ clientName }}</span></span>
           <span v-if="!open">
             <svg
               xmlns="http://www.w3.org/2000/svg"
