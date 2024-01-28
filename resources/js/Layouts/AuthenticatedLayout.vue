@@ -13,6 +13,7 @@ import { toaster } from "@/helper.js";
 import { Device } from "@twilio/voice-sdk";
 import { usePage, router } from "@inertiajs/vue3";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
+import GlobalSpinner from "@/Components/GlobalSpinner.vue";
 
 let page = usePage();
 
@@ -315,42 +316,32 @@ let clearTimeoutForRepeatedDispositionNotifications = () => {
   clearInterval(repeatedNotificationToUpdateDispositionTimeout.value);
   repeatedNotificationToUpdateDispositionTimeout.value = null;
 };
-
+let dispositionUpdating = ref(false);
 let updateLatestClientDisposition = () => {
-  // fetch latestClientId from axios get request to /web-api/latest-client
-  axios.get("/web-api/latest-client").then((response) => {
-    console.log("Latest client:");
-    console.log(response.data.client.id);
-    let latestClientId = response.data.client.id;
+  dispositionUpdating.value = true;
+  axios
+    .post(`/web-api/clients/${connectedClient.value.id}/disposition`, {
+      status: latestClientDisposition.value,
+    })
+    .then((response) => {
+      dispositionUpdating.value = false;
+      console.log("Client disposition update response:");
+      console.log(response.data);
+      console.log("Status of the client that was updated: ", response.data.status);
 
-    axios
-      .post(`/web-api/clients/${latestClientId}/disposition`, {
-        status: latestClientDisposition.value,
-      })
-      .then((response) => {
-        console.log("Client disposition update response:");
-        console.log(response.data);
-        console.log("Status of the client that was updated: ", response.data.status);
+      if (response.data.status.startsWith("Sale")) {
+        console.log("Sale detected!", {
+          redirectUrl: `/internal-agent/my-business?clientId=${response.data.clientId}`,
+        });
 
-        if (response.data.status.startsWith("Sale")) {
-          console.log("Sale detected!", {
-            redirectUrl: `/internal-agent/my-business?clientId=${response.data.clientId}`,
-          });
-
-          router.visit(`/internal-agent/my-business?clientId=${response.data.clientId}`);
-        }
-
-        localStorage.removeItem("latestClientId");
-        localStorage.removeItem("showDispositionModal");
-        // showUpdateDispositionForLastClient.value = false;
-        // toaster("success", "Client disposition updated.");
-        // clearTimeoutForRepeatedDispositionNotifications();
-      })
-      .catch((error) => {
-        console.log("Error updating client disposition:");
-        console.log(error);
-      });
-  });
+        router.visit(`/internal-agent/my-business?clientId=${response.data.clientId}`);
+      }
+    })
+    .catch((error) => {
+      dispositionUpdating.value = false;
+      console.log("Error updating client disposition:");
+      console.log(error);
+    });
 };
 
 let setupTwilioDevice = () => {
@@ -3006,36 +2997,37 @@ let appDownloadModal = ref(false);
     <Modal :show="showUpdateDispositionForLastClient" :closeable="false">
       <div class="bg-white p-6 rounded-lg shadow">
         <div
-          class="mb-4 flex rounded-lg bg-blue-50 p-4 text-sm text-blue-800"
+          class="mb-4 flex flex-col md:flex-row rounded-lg bg-blue-100 p-4 text-blue-900"
           role="alert"
         >
           <svg
-            class="me-3 mt-[2px] inline h-4 w-4 flex-shrink-0"
-            aria-hidden="true"
+            class="mr-4 h-6 w-6 flex-shrink-0 text-blue-500"
             xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 20 20"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            aria-hidden="true"
           >
             <path
-              d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <span class="sr-only">Info</span>
-          <div>
-            <span class="font-bold">Attention Required:</span>
-            <p class="mb-4 mt-1.5">
+          <div class="flex-1">
+            <h3 class="text-lg font-semibold">Attention Required</h3>
+            <p class="mt-1">
               You've just completed a call. Please update the client's disposition to
               ensure accurate tracking and follow-up actions.
             </p>
-
-            <p class="mb-4 mt-1.5" v-if="connectedClient">
-              <span class="font-bold">Client Name:</span> {{ connectedClient.first_name + " " + connectedClient.last_name }}
+            <h4 class="mt-4 text-md font-bold">Client Information</h4>
+            <p class="mt-1">
+              <span class="font-bold">Name: </span>
+              <span class="italic">{{
+                connectedClient.first_name + " " + connectedClient.last_name
+              }}</span>
             </p>
-
-            <!-- <ul class="list-inside list-disc">
-              <li><span class="font-bold">First Name:</span> Rusty</li>
-              <li><span class="font-bold">Last Name:</span> Colins</li>
-            </ul> -->
           </div>
         </div>
 
@@ -3070,7 +3062,8 @@ let appDownloadModal = ref(false);
         </div>
 
         <div class="flex justify-end">
-          <PrimaryButton @click.prevent="updateLatestClientDisposition">
+          <PrimaryButton :disabled="dispositionUpdating" @click.prevent="updateLatestClientDisposition">
+            <GlobalSpinner :spinner="dispositionUpdating" />
             Save Disposition
           </PrimaryButton>
         </div>
