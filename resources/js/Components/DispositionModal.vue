@@ -27,7 +27,7 @@ let updateLatestClientDisposition = () => {
 
       toaster(
         "success",
-        `Disposition updated for ${connectedClient.value.first_name} ${connectedClient.value.last_name}.`
+        `Disposition updated for ${client.first_name} ${connectedClient.last_name}.`
       );
 
       if (response.data.status.startsWith("Sale")) {
