@@ -3016,12 +3016,12 @@ let appDownloadModal = ref(false);
           </svg>
           <div class="flex-1">
             <h3 class="text-lg font-semibold">Attention Required</h3>
-            <p class="mt-1">
+            <p class="mt-1 text-sm">
               You've just completed a call. Please update the client's disposition to
               ensure accurate tracking and follow-up actions.
             </p>
-            <h4 class="mt-4 text-md font-bold">Client Information</h4>
-            <p class="mt-1">
+            <h4 class="mt-4 text-lg font-bold">Client Information</h4>
+            <p class="mt-1 text-sm">
               <span class="font-bold">Name: </span>
               <span>{{
                 connectedClient.first_name + " " + connectedClient.last_name
