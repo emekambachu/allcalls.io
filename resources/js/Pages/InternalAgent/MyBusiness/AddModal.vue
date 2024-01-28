@@ -1032,9 +1032,9 @@ let existingBusiness = () => {
             </div>
           </div>
 
-          <div v-if="is_client" class="mx-12 mt-4">
+          <!-- <div v-if="is_client" class="mx-12 mt-4">
             <ClientPolicies :clientId="clientData.id" :clientName="`${clientData.first_name} ${clientData.last_name}`" />
-          </div>
+          </div> -->
 
           <div class="px-12 py-2">
             <br />
