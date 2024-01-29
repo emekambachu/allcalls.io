@@ -382,9 +382,6 @@ let setupTwilioDevice = () => {
 
 let showUpdateDispositionForLastClient = ref(false);
 
-if (page.props.auth.showDispositionUpdateOption) {
-  showUpdateDispositionModal();
-}
 // console.log('showDispositionModal:', page.props.auth.showDispositionUpdateOption);
 
 let turnOff = () => {
@@ -410,6 +407,7 @@ let turnOff = () => {
       );
     });
 };
+
 let showUpdateDispositionModal = () => {
   // Turn them offline for now:
   turnOff();
@@ -417,6 +415,10 @@ let showUpdateDispositionModal = () => {
   // Show the disposition modal
   showUpdateDispositionForLastClient.value = true;
 };
+
+if (page.props.auth.showDispositionUpdateOption) {
+  showUpdateDispositionModal();
+}
 
 let makeDispositionModalNull = () => {
   // localStorage.setItem("showDispositionModal", null);
