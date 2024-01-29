@@ -38,10 +38,10 @@ let updateLatestClientDisposition = () => {
       );
 
       if (response.data.status.startsWith("Sale")) {
-        // After a second, redirect to the client's business page so they can report the sale.
+        // After two seconds, redirect to the client's business page so they can report the sale.
         setTimeout(() => {
           window.location.href = `/internal-agent/my-business?clientId=${response.data.clientId}`;
-        }, 1000);
+        }, 2000);
       }
     })
     .catch((error) => {
