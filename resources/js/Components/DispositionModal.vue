@@ -12,6 +12,7 @@ let { client } = defineProps(["client"]);
 let turnOnForCalls = () => {
   axios.post(`/web-api/calltype/${client.call.call_type_id}/online`).then((response) => {
     toaster("success", "You have been turned back online for receiving new calls.");
+    router.reload();
   });
 };
 
