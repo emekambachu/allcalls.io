@@ -500,7 +500,7 @@ onMounted(() => {
       }
       showRinging.value = false;
       showOngoing.value = false;
-      showUpdateDispositionModal();
+      // showUpdateDispositionModal();
     }
   );
 
