@@ -174,16 +174,32 @@ let ClearFilter = () => {
 };
 
 function formatCurrency(number) {
-    // First, round the number to two decimal places
-    let rounded = Number(number).toFixed(2);
+  // First, round the number to two decimal places
+  let rounded = Number(number).toFixed(2);
 
-    // Then, format it as currency
-    return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 2,
-    }).format(rounded);
+  // Then, format it as currency
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+  }).format(rounded);
 }
+
+let deleteApp = (policy) => {
+  if (!confirm("Are you sure you want to delete this app?")) {
+    return;
+  }
+
+  router.delete('/admin/policies/' + policy.id, {
+    preserveState: true,
+    onSuccess: () => {
+      toaster("success", "App deleted successfully.");
+    },
+    onError: () => {
+      toaster("error", "Something went wrong.");
+    },
+  });
+};
 </script>
 <style scoped>
 /deep/ .dp__pointer {
@@ -458,6 +474,13 @@ function formatCurrency(number) {
                         />
                       </svg>
                     </button>
+
+                    <button
+                      title="Delete App"
+                      v-if="$page.props.auth.role === 'admin'"
+                      class="ml-3"
+                      @click.prevent="deleteApp(businesse)"
+                    ></button>
                   </td>
                 </tr>
               </tbody>
