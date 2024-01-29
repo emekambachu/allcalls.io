@@ -401,24 +401,20 @@ let turnOff = () => {
     });
 };
 
-let showUpdateDispositionModal = (client = null) => {
+let showUpdateDispositionModal = () => {
   // Turn them offline for now:
   turnOff();
 
-  if (client) {
-    dispositionClient.value = client;
+  if (page.props.auth.show_disposition_update_option && page.props.auth.disposition_client) {
+    dispositionClient.value = page.props.auth.disposition_client;
   }
+
   // Show the disposition modal
   showUpdateDispositionForLastClient.value = true;
 };
 
 if (page.props.auth.show_disposition_update_option) {
-  if (page.props.auth.disposition_client) {
     showUpdateDispositionModal();
-  } else {
-    showUpdateDispositionModal(page.props.auth.disposition_client);
-  }
-
 }
 
 let makeDispositionModalNull = () => {
