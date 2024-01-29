@@ -478,8 +478,8 @@ onMounted(() => {
     showRinging.value = false;
     showOngoing.value = false;
 
-    console.log('Show Update Disposition Due To Whisper');
-    showUpdateDispositionModal();
+    console.log('Call was accepted on some other tab maybe');
+    // showUpdateDispositionModal();
   });
 
   console.log("Attaching call accepted or rejected listener:");
