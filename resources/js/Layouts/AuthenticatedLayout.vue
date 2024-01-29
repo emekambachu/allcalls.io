@@ -408,7 +408,7 @@ let turnOff = () => {
         "You have been temporarily paused to receive new calls until you update the disposition."
       );
 
-      router.reload();
+      router.reload({ only: ['callTypes', 'onlineCallType'] })
     });
 };
 let showUpdateDispositionModal = () => {
