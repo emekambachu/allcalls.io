@@ -1906,7 +1906,7 @@ let existingBusiness = () => {
                   <div v-show="step == 2">
                     <PreviewInfo
                       :form="form"
-                      :heading="'Please confirm all your information is correct?'"
+                      :heading="'Please confirm all your information is correct'"
                     />
                   </div>
 
