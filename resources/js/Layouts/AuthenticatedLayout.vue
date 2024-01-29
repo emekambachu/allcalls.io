@@ -399,8 +399,7 @@ if (page.props.auth.showDispositionUpdateOption) {
 let turnOff = () => {
   axios.post(`/web-api/calltype/${connectedClient.value.call.call_type_id}/offline`)
     .then(response => {
-      console.log('Agent turned off to receive calls.');
-      console.log(response.data);
+      toaster('info', 'You have been temporarily paused to receive new calls.');
     });
 };
 let showUpdateDispositionModal = () => {
