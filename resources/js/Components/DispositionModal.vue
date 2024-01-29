@@ -7,7 +7,9 @@ import { toaster } from "@/helper.js";
 import { router } from "@inertiajs/vue3";
 
 let emit = defineEmits(['close']);
-let { client } = defineProps(["client"]);
+let { client, callTypeId } = defineProps(["client", "callTypeId"]);
+
+console.log('CallTypeId', callTypeId);
 
 
 let latestClientDisposition = ref("");
@@ -24,6 +26,7 @@ let updateLatestClientDisposition = () => {
       //   showUpdateDispositionForLastClient.value = false;
       
       console.log("Turn them back on for whatever vertical they turned off for.");
+      turnOnForCalls();
 
       toaster(
         "success",
@@ -37,6 +40,7 @@ let updateLatestClientDisposition = () => {
     .catch((error) => {
       //   dispositionUpdating.value = false;
       emit('close');
+      turnOnForCalls();
       console.log("Error updating client disposition:");
       console.log(error);
     });
