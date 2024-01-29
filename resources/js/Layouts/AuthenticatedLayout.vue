@@ -488,8 +488,9 @@ onMounted(() => {
   Echo.private(`${page.props.auth.user.id}.notifications`).listen(
     "CallAcceptedOrRejected",
     (e) => {
-      // console.log("call accepted or rejected by one of the phone devices");
-      // console.log(e);
+      console.log('Ongoing screen right now', {
+        showOngoing: showOngoing.value,
+      });
       console.log('It was accepted or rejected on some other device OR it was a missed call.');
 
       if (ringingTimeout.value) {
