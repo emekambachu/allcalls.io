@@ -7,8 +7,13 @@ use Illuminate\Http\Request;
 
 class AdminPoliciesController extends Controller
 {
-    public function destroy(InternalAgentMyBusiness $policy)
+    public function destroy($policyId)
     {
+        $policy = InternalAgentMyBusiness::find($policyId);
+
         dd($policy);
+
+        $policy->delete();
+        return redirect()->back()->with('message', 'Policy deleted successfully.');
     }
 }

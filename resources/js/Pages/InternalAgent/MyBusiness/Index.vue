@@ -192,12 +192,6 @@ let deleteApp = (policy) => {
 
   router.delete("/admin/policies/" + policy.id, {
     preserveState: true,
-    onSuccess: () => {
-      toaster("success", "App deleted successfully.");
-    },
-    onError: () => {
-      toaster("error", "Something went wrong.");
-    },
   });
 };
 </script>
