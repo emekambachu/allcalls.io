@@ -38,9 +38,10 @@ let updateLatestClientDisposition = () => {
       );
 
       if (response.data.status.startsWith("Sale")) {
-        console.log(`It was a sale, so redirect to /internal-agent/my-business?clientId=${response.data.clientId}`)
-        window.location.href = `/internal-agent/my-business?clientId=${response.data.clientId}`;
-        // router.get(`/internal-agent/my-business?clientId=${response.data.clientId}`);
+        // After a second, redirect to the client's business page so they can report the sale.
+        setTimeout(() => {
+          window.location.href = `/internal-agent/my-business?clientId=${response.data.clientId}`;
+        }, 1000);
       }
     })
     .catch((error) => {
