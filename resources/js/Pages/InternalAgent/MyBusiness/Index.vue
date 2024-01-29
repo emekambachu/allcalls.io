@@ -190,9 +190,7 @@ let deleteApp = (policy) => {
     return;
   }
 
-  router.delete("/admin/policies/" + policy.id, {
-    preserveState: true,
-  });
+  router.delete("/admin/policies/" + policy.id);
 };
 </script>
 <style scoped>
