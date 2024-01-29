@@ -7,10 +7,10 @@ import { toaster } from "@/helper.js";
 import { router } from "@inertiajs/vue3";
 
 let emit = defineEmits(["close"]);
-let { client, callTypeId } = defineProps(["client", "callTypeId"]);
+let { client } = defineProps(["client"]);
 
 let turnOnForCalls = () => {
-  axios.post(`/web-api/calltype/${callTypeId}/offline`).then((response) => {
+  axios.post(`/web-api/calltype/${client.call.call_type_id}/offline`).then((response) => {
     toaster("success", "You have been turned back online for receiving new calls.");
   });
 };
