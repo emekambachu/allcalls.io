@@ -125,13 +125,13 @@ watchEffect(async () => {
           <h1 class="text-2xl font-bold mb-4 text-gray-700">Guidelines</h1>
           <ul class="pl-2 max-w-md text-gray-500 list-disc list-inside">
             <li>
-              Please keep in mind there is a 60-second qualifying timer before
+              Please keep in mind there is a 80-second qualifying timer before
               you are charged for a call.
             </li>
             <li>
               The client's name, state, and basic info is displayed on your call
               immediately upon answering. Clients personal contact information
-              will appear after 60 seconds of being connected to the call.
+              will appear after 80 seconds of being connected to the call.
             </li>
             <li>
               If you turn your status to active and miss a call, you will be

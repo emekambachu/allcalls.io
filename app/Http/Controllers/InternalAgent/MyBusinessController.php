@@ -112,16 +112,16 @@ class MyBusinessController extends Controller
             ], 400);
         }
 
-        if (isset($request->client_id)) {
+        // if (isset($request->client_id)) {
 
-            $business = InternalAgentMyBusiness::where('client_id', $request->client_id)->first();
-            if ($business) {
-                return response()->json([
-                    'success' => false,
-                    'error' => 'This client already contain a business. Please select new one.',
-                ], 400);
-            }
-        }
+            // $business = InternalAgentMyBusiness::where('client_id', $request->client_id)->first();
+            // if ($business) {
+            //     return response()->json([
+            //         'success' => false,
+            //         'error' => 'This client already contain a business. Please select new one.',
+            //     ], 400);
+            // }
+        // }
 
         if (isset($request->business_id)) {
             $internalAgentBusiness = InternalAgentMyBusiness::find($request->business_id);

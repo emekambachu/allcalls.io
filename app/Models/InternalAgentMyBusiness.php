@@ -11,37 +11,16 @@ class InternalAgentMyBusiness extends Model
     use HasFactory;
     protected $guarded = ['id'];
 
-    public function client(){
-        return $this->belongsTo(Client::class,'client_id', 'id');
-    }
-    public function agent(){
-        return $this->belongsTo(User::class,'agent_id', 'id');
-    }
-    public function clientState(){
-        return $this->belongsTo(State::class,'client_state', 'id');
-    }
-    
-    public function getApplicationDateAttribute($value)
+    public function client()
     {
-        $date = Carbon::parse($value);
-    
-        if (auth()->user()) {
-            $timezone = auth()->user()->timezone;
-            $date->timezone($timezone);
-        }
-    
-        return $date->format('m/d/Y');
+        return $this->belongsTo(Client::class, 'client_id', 'id');
     }
-    
-    public function getPolicyDraftDateAttribute($value)
+    public function agent()
     {
-        $date = Carbon::parse($value);
-    
-        if (auth()->user()) {
-            $timezone = auth()->user()->timezone;
-            $date->timezone($timezone);
-        }
-    
-        return $date->format('m/d/Y');
+        return $this->belongsTo(User::class, 'agent_id', 'id');
+    }
+    public function clientState()
+    {
+        return $this->belongsTo(State::class, 'client_state', 'id');
     }
 }

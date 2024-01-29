@@ -6,6 +6,7 @@ import PreviewInfo from "@/Pages/InternalAgent/MyBusiness/PreviewInfo.vue";
 import { toaster } from "@/helper.js";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import ClientPolicies from "@/Components/ClientPolicies.vue";
 import {
   companies,
   coverageLengthArray,
@@ -71,11 +72,11 @@ let form = ref({
   client_zipcode: "",
   client_phone_no: "",
   client_email: "",
-  label: '',
-  business_label: '',
-  status: 'Submitted',
-  business_id: '',
-  existing_business: false
+  label: "",
+  business_label: "",
+  status: "Submitted",
+  business_id: "",
+  existing_business: false,
 });
 
 let edit_data = ref(false);
@@ -98,7 +99,7 @@ let updateFormAndDisableElement = (
     formObject[property] = value;
     var element = document.getElementById(elementId);
     if (element) {
-      if (formObject[property] !== 'Select') {
+      if (formObject[property] !== "Select") {
         element.disabled = true;
       }
     }
@@ -114,17 +115,29 @@ let updateFormAndDisableElement = (
   }
 };
 if (props.businessData) {
-  form.value.insurance_company = props.businessData.insurance_company ? props.businessData.insurance_company : 'AETNA/CVS';
-  form.value.product_name = props.businessData.product_name ? props.businessData.product_name : 'Select';
+  form.value.insurance_company = props.businessData.insurance_company
+    ? props.businessData.insurance_company
+    : "AETNA/CVS";
+  form.value.product_name = props.businessData.product_name
+    ? props.businessData.product_name
+    : "Select";
   form.value.application_date = props.businessData.application_date;
   form.value.coverage_amount = props.businessData.coverage_amount;
-  form.value.coverage_length = props.businessData.coverage_length ? props.businessData.coverage_length : 'Select';
-  form.value.premium_frequency = props.businessData.premium_frequency ? props.businessData.premium_frequency : 'Select';
+  form.value.coverage_length = props.businessData.coverage_length
+    ? props.businessData.coverage_length
+    : "Select";
+  form.value.premium_frequency = props.businessData.premium_frequency
+    ? props.businessData.premium_frequency
+    : "Select";
   form.value.premium_amount = props.businessData.premium_amount;
   form.value.premium_volumn = props.businessData.premium_volumn;
   form.value.carrier_writing_number = props.businessData.carrier_writing_number;
-  form.value.this_app_from_lead = props.businessData.this_app_from_lead ? props.businessData.this_app_from_lead : 'Select' ;
-  form.value.source_of_lead = props.businessData.source_of_lead ? props.businessData.source_of_lead : 'Select' ;
+  form.value.this_app_from_lead = props.businessData.this_app_from_lead
+    ? props.businessData.this_app_from_lead
+    : "Select";
+  form.value.source_of_lead = props.businessData.source_of_lead
+    ? props.businessData.source_of_lead
+    : "Select";
   form.value.policy_draft_date = props.businessData.policy_draft_date;
   form.value.first_name = props.businessData.first_name;
   form.value.mi = props.businessData.mi;
@@ -133,7 +146,7 @@ if (props.businessData) {
   form.value.beneficiary_relationship = props.businessData.beneficiary_relationship;
   form.value.notes = props.businessData.notes;
   form.value.dob = props.businessData.dob;
-  form.value.gender = props.businessData.gender ? props.businessData.gender : 'Select';
+  form.value.gender = props.businessData.gender ? props.businessData.gender : "Select";
   form.value.client_street_address_1 = props.businessData.client_street_address_1;
   form.value.client_street_address_2 = props.businessData.client_street_address_2;
   form.value.client_city = props.businessData.client_city;
@@ -141,13 +154,13 @@ if (props.businessData) {
   form.value.client_zipcode = props.businessData.client_zipcode;
   form.value.client_phone_no = props.businessData.client_phone_no;
   form.value.client_email = props.businessData.client_email;
-  form.value.status = props.businessData.status ? props.businessData.status : 'Submitted' ;
+  form.value.status = props.businessData.status ? props.businessData.status : "Submitted";
   form.value.label = props.businessData.label;
   form.value.business_id = props.businessData.id;
 
-  form.value.agent_full_name = props.businessData.agent_full_name
-  form.value.agent_email = props.businessData.agent_email
-  form.value.agent_id = props.businessData.agent_id
+  form.value.agent_full_name = props.businessData.agent_full_name;
+  form.value.agent_email = props.businessData.agent_email;
+  form.value.agent_id = props.businessData.agent_id;
 
   if (props.businessData?.client) {
     form.value.client_id = props.businessData?.client.id;
@@ -169,23 +182,25 @@ let getProductNameOptions = () => {
   return Object.keys(companies[form.value.insurance_company]);
 };
 
-let attactClientEdit = ref(false)
+let attactClientEdit = ref(false);
 if (props.AttachClientData) {
-  form.value.business_id = props.AttachClientData.id
-  form.value.insurance_company = props.AttachClientData.insurance_company
-  form.value.product_name = props.AttachClientData.product_name
-  form.value.application_date = props.AttachClientData.application_date
-  form.value.coverage_amount = props.AttachClientData.coverage_amount
-  form.value.coverage_length = props.AttachClientData.coverage_length
-  form.value.premium_frequency = props.AttachClientData.premium_frequency
-  form.value.premium_amount = props.AttachClientData.premium_amount
-  form.value.premium_volumn = props.AttachClientData.premium_volumn
-  form.value.carrier_writing_number = props.AttachClientData.carrier_writing_number
-  form.value.this_app_from_lead = props.AttachClientData.this_app_from_lead
-  form.value.source_of_lead = props.AttachClientData.source_of_lead
-  form.value.policy_draft_date = props.AttachClientData.policy_draft_date
-  form.value.label = props.AttachClientData.label
-  form.value.status = props.AttachClientData.status ? props.AttachClientData.status : 'Select'
+  form.value.business_id = props.AttachClientData.id;
+  form.value.insurance_company = props.AttachClientData.insurance_company;
+  form.value.product_name = props.AttachClientData.product_name;
+  form.value.application_date = props.AttachClientData.application_date;
+  form.value.coverage_amount = props.AttachClientData.coverage_amount;
+  form.value.coverage_length = props.AttachClientData.coverage_length;
+  form.value.premium_frequency = props.AttachClientData.premium_frequency;
+  form.value.premium_amount = props.AttachClientData.premium_amount;
+  form.value.premium_volumn = props.AttachClientData.premium_volumn;
+  form.value.carrier_writing_number = props.AttachClientData.carrier_writing_number;
+  form.value.this_app_from_lead = props.AttachClientData.this_app_from_lead;
+  form.value.source_of_lead = props.AttachClientData.source_of_lead;
+  form.value.policy_draft_date = props.AttachClientData.policy_draft_date;
+  form.value.label = props.AttachClientData.label;
+  form.value.status = props.AttachClientData.status
+    ? props.AttachClientData.status
+    : "Select";
 
   if (!props.AttachClientData.source_of_lead) {
     form.value.source_of_lead = "Select";
@@ -230,7 +245,7 @@ let checkRequiredField = () => {
     "client_zipcode",
     "client_phone_no",
     "client_email",
-    'status'
+    "status",
   ];
   const addFieldIfPresent = (field, condition, value) => {
     if (condition) {
@@ -315,15 +330,17 @@ let dateFormat = (val) => {
 let isLoading = ref(false);
 
 let SaveBussinessData = async () => {
-  let route = ''
-  if(page.props.auth.role == 'admin'){
-    route = '/admin/my-business'
-  }else if(page.props.auth.role == 'internal-agent'){
-    route = '/internal-agent/my-business'
+  let route = "";
+  if (page.props.auth.role == "admin") {
+    route = "/admin/my-business";
+  } else if (page.props.auth.role == "internal-agent") {
+    route = "/internal-agent/my-business";
   }
   console.log("SAVE BUSINESS DATA", {
     currentUrl: page.url,
-    redirectUrl: new URL(window.location.href).origin + new URL(window.location.href).pathname,
+    redirectUrl:
+      new URL(window.location.href).origin + new URL(window.location.href).pathname,
+    formClientId: form.value.client_id,
   });
 
   form.value.application_date = dateFormat(form.value.application_date);
@@ -335,8 +352,13 @@ let SaveBussinessData = async () => {
     .then((response) => {
       toaster("success", response.data.message);
 
-      console.log("Redirect URL", new URL(window.location.href).origin + new URL(window.location.href).pathname);
-      router.visit(new URL(window.location.href).origin + new URL(window.location.href).pathname);
+      console.log(
+        "Redirect URL",
+        new URL(window.location.href).origin + new URL(window.location.href).pathname
+      );
+      router.visit(
+        new URL(window.location.href).origin + new URL(window.location.href).pathname
+      );
     })
     .catch((error) => {
       isLoading.value = false;
@@ -356,11 +378,11 @@ let SaveBussinessData = async () => {
 // update business data start
 let isLoading2 = ref(false);
 let UpdateBussinessData = async () => {
-  let route = ''
-  if(page.props.auth.role == 'admin'){
-    route = '/admin/my-business'
-  }else if(page.props.auth.role == 'internal-agent'){
-    route = '/internal-agent/my-business'
+  let route = "";
+  if (page.props.auth.role == "admin") {
+    route = "/admin/my-business";
+  } else if (page.props.auth.role == "internal-agent") {
+    route = "/internal-agent/my-business";
   }
   form.value.application_date = dateFormat(form.value.application_date);
   form.value.policy_draft_date = dateFormat(form.value.policy_draft_date);
@@ -371,8 +393,13 @@ let UpdateBussinessData = async () => {
     .then((response) => {
       toaster("success", response.data.message);
       // router.visit(page.url)
-      console.log("Redirect URL", new URL(window.location.href).origin + new URL(window.location.href).pathname);
-      router.visit(new URL(window.location.href).origin + new URL(window.location.href).pathname);
+      console.log(
+        "Redirect URL",
+        new URL(window.location.href).origin + new URL(window.location.href).pathname
+      );
+      router.visit(
+        new URL(window.location.href).origin + new URL(window.location.href).pathname
+      );
     })
     .catch((error) => {
       if (error.response.status == 400) {
@@ -480,7 +507,7 @@ const SugestAgent = () => {
 };
 const SugestClient = () => {
   isOpen2.value = !isOpen2.value;
-  search2.value = ''
+  search2.value = "";
 };
 let SugestBusiness = () => {
   isOpen3.value = !isOpen3.value;
@@ -527,22 +554,34 @@ let filteredClients = computed(() => {
   // })
 });
 
-let updateFormAndEnableElement = (property, value, elementId, formObject, disabledFlag) => {
-  if (value && property !== 'dob' && property !== 'policy_draft_date' && property !== 'application_date' && property !== 'this_app_from_lead') {
+let updateFormAndEnableElement = (
+  property,
+  value,
+  elementId,
+  formObject,
+  disabledFlag
+) => {
+  if (
+    value &&
+    property !== "dob" &&
+    property !== "policy_draft_date" &&
+    property !== "application_date" &&
+    property !== "this_app_from_lead"
+  ) {
     formObject[property] = value;
     var element = document.getElementById(elementId);
     if (element) {
       element.disabled = false;
     }
-  } else if (value && property == 'policy_draft_date') {
+  } else if (value && property == "policy_draft_date") {
     formObject[property] = value;
-    disabledPolicydraftdate.value = false
-  } else if (value && property == 'application_date') {
+    disabledPolicydraftdate.value = false;
+  } else if (value && property == "application_date") {
     formObject[property] = value;
-    applicationDate.value = false
-  } else if (value && property == 'this_app_from_lead') {
-    if (value == 'NO') {
-      var element = document.getElementById('source_of_lead');
+    applicationDate.value = false;
+  } else if (value && property == "this_app_from_lead") {
+    if (value == "NO") {
+      var element = document.getElementById("source_of_lead");
       if (element) {
         element.disabled = true;
       }
@@ -552,7 +591,7 @@ let updateFormAndEnableElement = (property, value, elementId, formObject, disabl
       }
     }
   }
-}
+};
 
 onMounted(() => {
   document.addEventListener("click", handleOutsideClick);
@@ -619,10 +658,20 @@ onMounted(() => {
     }
 
     let policy_validation = ref([
-      'insurance_company', 'product_name', 'application_date', 'coverage_amount', 'coverage_length',
-      'premium_frequency', 'premium_amount', 'premium_volumn', 'carrier_writing_number', 'this_app_from_lead',
-      'source_of_lead', 'policy_draft_date', 'status'
-    ])
+      "insurance_company",
+      "product_name",
+      "application_date",
+      "coverage_amount",
+      "coverage_length",
+      "premium_frequency",
+      "premium_amount",
+      "premium_volumn",
+      "carrier_writing_number",
+      "this_app_from_lead",
+      "source_of_lead",
+      "policy_draft_date",
+      "status",
+    ]);
     policy_validation.value.forEach((key) => {
       if (form.value.hasOwnProperty(key)) {
         const value = form.value[key];
@@ -658,10 +707,10 @@ const handleOutsideClick = (event) => {
   }
 };
 let selectagent = (agent) => {
-  form.value.agent_full_name = agent.first_name + ' ' + agent.last_name
-  form.value.agent_email = agent.email
-  form.value.agent_id = agent.id
-  console.log('form.value', form.value);
+  form.value.agent_full_name = agent.first_name + " " + agent.last_name;
+  form.value.agent_email = agent.email;
+  form.value.agent_id = agent.id;
+  console.log("form.value", form.value);
   isOpen.value = false;
 };
 
@@ -703,18 +752,30 @@ let clearClient = () => {
   form.value.client_full_name = "";
   form.value.client_id = "";
   let policy_validation = ref([
-    'client_street_address_1', 'dob', 'client_email', 'first_name', 'last_name',
-    'client_zipcode', 'client_phone_no', 'mi', 'beneficiary_name', "beneficiary_relationship",
-    'client_street_address_2', "client_city", "client_state", "gender", 'notes'
-  ])
+    "client_street_address_1",
+    "dob",
+    "client_email",
+    "first_name",
+    "last_name",
+    "client_zipcode",
+    "client_phone_no",
+    "mi",
+    "beneficiary_name",
+    "beneficiary_relationship",
+    "client_street_address_2",
+    "client_city",
+    "client_state",
+    "gender",
+    "notes",
+  ]);
   policy_validation.value.forEach((key) => {
     if (form.value.hasOwnProperty(key)) {
       const value = form.value[key];
       updateFormAndEnableElement(key, value, key, form.value);
       resetValue(key);
     }
-  })
-}
+  });
+};
 
 let selectBusiness = (business) => {
   isOpen3.value = false;
@@ -755,8 +816,8 @@ let selectBusiness = (business) => {
       const value = form.value[key];
       updateFormAndDisableElement(key, value, key, form.value);
     }
-  })
-}
+  });
+};
 let resetValue = (key) => {
   form.value[key] = "";
   if (key == "insurance_company") {
@@ -903,7 +964,7 @@ let existingBusiness = () => {
       <div style="width: 80%; height: 90%" class="relative" id="modal_main_id">
         <div class="relative bg-white rounded-lg shadow-lg transition-all">
           <div class="flex justify-between">
-            <h3 class="text-xl font-small ml-5 mt-5 text-gray-700">
+            <h3 class="text-xl font-small mx-12 mt-5 text-gray-700">
               <span v-if="edit_data">Edit </span>
               <span v-if="attactClientEdit">Attach Client</span>
               <span v-if="!attactClientEdit">Report Application</span>
@@ -932,81 +993,55 @@ let existingBusiness = () => {
               <span class="sr-only">Close modal</span>
             </button>
           </div>
+
+          <div v-if="is_client && step === 1" class="mx-12 mt-4">
+            <div
+              class="mb-4 flex flex-col md:flex-row rounded-lg bg-blue-100 p-4 text-blue-900"
+              role="alert"
+            >
+              <svg
+                class="mr-4 h-6 w-6 flex-shrink-0 text-blue-500"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <div class="flex-1">
+                <h3 class="text-lg font-semibold">Attention Required</h3>
+                <p class="mt-1 text-sm">
+                  Please review the pre-filled client information for accuracy and
+                  complete the necessary policy details.
+                </p>
+                <ul class="list-disc pl-5 mt-2 text-sm">
+                  <li>Verify the accuracy of the auto-filled client details.</li>
+                  <li>
+                    Fill in the remaining sections with the appropriate policy
+                    information and click next.
+                  </li>
+                  <li>Double-check all data to ensure there are no errors.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div v-if="is_client && step === 1" class="mx-12 mt-4">
+            <ClientPolicies :clientId="clientData.id" :clientName="`${clientData.first_name} ${clientData.last_name}`" />
+          </div>
+
           <div class="px-12 py-2">
             <br />
             <div class="mb-3">
               <form @submit.prevent="" class="question-card-list">
                 <div class="question-card animate__animated" style="position: relative">
                   <div v-show="step == 1">
-                    <!-- <div v-if="is_client"
-                      class="grid xl:grid-cols-4 mb-3 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-x-8">
-                      <div class="flex items-center mb-4">
-                        <input id="default-radio-1" v-model="form.existing_business" @change="existingBusiness()"
-                          type="radio" :value="false" name="existing_business"
-                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                        <label for="default-radio-1" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">New
-                          Business</label>
-                      </div>
-                      <div class="flex items-center mb-4">
-                        <input id="default-radio-2" v-model="form.existing_business" @change="existingBusiness()"
-                          type="radio" :value="true" name="existing_business"
-                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                        <label for="default-radio-2"
-                          class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Existing Business</label>
-                      </div>
-                    </div> -->
-
-                    <!-- <div class="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-x-8">
-                      <div id="dropdown_main_id3">
-
-                        <div v-if="form.existing_business">
-                          <label class="block  text-sm mb-2 font-medium text-gray-900 dark:text-black">Select
-                            Business<span class="text-red-400">*</span></label>
-                          <button @click="SugestBusiness"
-                            class="bg-gray-50 mt-1 mb-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 flex"
-                            id="states-button" data-dropdown-toggle="dropdown-states" type="button">
-
-                            <span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke-width="1.5" stroke="currentColor" class="w-4 mt-1 h-4">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                              </svg></span><span v-if="!form.business_label" class="ml-2">Select Business</span>
-                            <span class="ml-2"> {{ form.business_label }}</span>
-                          </button>
-
-
-                          <div v-if="firstStepErrors.business_label" class="text-red-500"
-                            v-text="firstStepErrors.business_label[0]">
-                          </div>
-
-                          <div v-if="isOpen3 > 0" class="items-center justify-center ">
-
-                            <div class="relative">
-
-
-                              <ul style="width: 100%; max-height:250px;"
-                                class="absolute z-10 pb-2    overflow-auto bg-white rounded-md shadow-md">
-
-
-                                <div class="mx-2 mt-1">
-                                  <input v-model="search3" autocomplete="off" type="text" id="agent_full_name"
-                                    class="bg-gray-50  mb-1  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="" required />
-                                </div>
-                                <global-spinner class="text-center" :spinner="businessLoader" />
-                                <li v-if="!businessLoader" v-for="(business, index) in filteredBusiness" :key="index"
-                                  @click="selectBusiness(business)" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                                  {{ business.label ? business.label : business.insurance_company + ' -' +
-                                    business.product_name }}
-
-                                </li>
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
-
-                      </div>
-                    </div> -->
-
                     <div v-if="$page.props.auth.role === 'admin'">
                       <h1
                         style="background-color: #134576"
@@ -1019,12 +1054,12 @@ let existingBusiness = () => {
                       >
                         <div id="dropdown_main_id">
                           <label
-                            class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black"
+                            class="block mt-5 text-sm mb-2 font-medium text-gray-900"
                             >Select Agent<span class="text-red-400">*</span></label
                           >
                           <button
                             @click="SugestAgent"
-                            class="bg-gray-50 mt-1 mb-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 flex"
+                            class="bg-gray-50 mt-1 mb-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 flex"
                             id="states-button"
                             data-dropdown-toggle="dropdown-states"
                             type="button"
@@ -1067,7 +1102,7 @@ let existingBusiness = () => {
                                     autocomplete="off"
                                     type="text"
                                     id="agent_full_name"
-                                    class="bg-gray-50 mb-1 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    class="bg-gray-50 mb-1 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full"
                                     placeholder="Filter By Name"
                                     required
                                   />
@@ -1109,13 +1144,13 @@ let existingBusiness = () => {
                         <div v-if="$page.props.auth.role === 'internal-agent'">
                           <label
                             id="select_client"
-                            class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black"
+                            class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
                             >Select Client
                           </label>
                           <button
                             @click="SugestClient"
                             :disabled="is_client"
-                            class="bg-gray-50 mt-1 mb-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 flex"
+                            class="bg-gray-50 mt-1 mb-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 flex"
                             id="states-button"
                             data-dropdown-toggle="dropdown-states"
                             type="button"
@@ -1159,7 +1194,7 @@ let existingBusiness = () => {
                                     autocomplete="off"
                                     type="text"
                                     id="agent_full_name"
-                                    class="bg-gray-50 mb-1 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    class="bg-gray-50 mb-1 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full"
                                     placeholder="Filter By Phone"
                                     required
                                   />
@@ -1170,9 +1205,12 @@ let existingBusiness = () => {
                                 />
                                 <ul class="max-w-md divide-y divide-gray-200">
                                   <li>
-                                    <div @click="clearClient()"
-                                      class="cursor-pointer flex items-center space-x-4 rtl:space-x-reverse hover:bg-gray-50 p-2">
-                                      Clear</div>
+                                    <div
+                                      @click="clearClient()"
+                                      class="cursor-pointer flex items-center space-x-4 rtl:space-x-reverse hover:bg-gray-50 p-2"
+                                    >
+                                      Clear
+                                    </div>
                                   </li>
                                   <li v-for="client in filteredClients" :key="client.id">
                                     <div
@@ -1200,14 +1238,14 @@ let existingBusiness = () => {
                       </div>
                       <div>
                         <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black"
+                          class="block mt-5 text-sm mb-2 font-medium text-gray-900"
                           >First Name<span class="text-red-400">*</span></label
                         >
                         <input
                           v-model="form.first_name"
                           type="text"
                           id="first_name"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                           placeholder=""
                           required
                         />
@@ -1220,14 +1258,14 @@ let existingBusiness = () => {
 
                       <div>
                         <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black"
+                          class="block mt-5 text-sm mb-2 font-medium text-gray-900"
                           >MI</label
                         >
                         <input
                           v-model="form.mi"
                           type="text"
                           id="mi"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                           placeholder=""
                           required
                         />
@@ -1240,14 +1278,14 @@ let existingBusiness = () => {
 
                       <div>
                         <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black"
+                          class="block mt-5 text-sm mb-2 font-medium text-gray-900"
                           >Last Name<span class="text-red-400">*</span></label
                         >
                         <input
                           v-model="form.last_name"
                           type="text"
                           id="last_name"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                           placeholder=""
                           required
                         />
@@ -1260,14 +1298,14 @@ let existingBusiness = () => {
 
                       <div>
                         <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black"
+                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
                           >Beneficiary Name<span class="text-red-400">*</span></label
                         >
                         <input
                           v-model="form.beneficiary_name"
                           type="text"
                           id="beneficiary_name"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                           placeholder=""
                           required
                         />
@@ -1280,7 +1318,7 @@ let existingBusiness = () => {
 
                       <div>
                         <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black"
+                          class="block mt-5 text-sm mb-2 font-medium text-gray-900"
                           >Beneficiary Relationship<span class="text-red-400"
                             >*</span
                           ></label
@@ -1289,7 +1327,7 @@ let existingBusiness = () => {
                           v-model="form.beneficiary_relationship"
                           type="text"
                           id="beneficiary_relationship"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                           placeholder=""
                           required
                         />
@@ -1303,14 +1341,14 @@ let existingBusiness = () => {
                       <div>
                         <label
                           for="EFNumber"
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black"
+                          class="block mt-5 text-sm mb-2 font-medium text-gray-900"
                           >Street Address 1<span class="text-red-400">*</span></label
                         >
                         <input
                           v-model="form.client_street_address_1"
                           type="text"
                           id="client_street_address_1"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                           placeholder=""
                           required
                         />
@@ -1322,11 +1360,16 @@ let existingBusiness = () => {
                       </div>
 
                       <div>
-                        <label for="EFNumber"
-                          class="block mb-2 mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Street Address
-                          2</label>
-                        <input v-model="form.client_street_address_2" type="text" id="client_street_address_2"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        <label
+                          for="EFNumber"
+                          class="block mb-2 mt-5 text-sm mb-2 font-medium text-gray-900 "
+                          >Street Address 2</label
+                        >
+                        <input
+                          v-model="form.client_street_address_2"
+                          type="text"
+                          id="client_street_address_2"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                           placeholder=""
                           required
                         />
@@ -1340,14 +1383,14 @@ let existingBusiness = () => {
                       <div>
                         <label
                           for="EFNumber"
-                          class="block mb-2 mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black"
+                          class="block mb-2 mt-5 text-sm mb-2 font-medium text-gray-900 "
                           >City<span class="text-red-400">*</span></label
                         >
                         <input
                           v-model="form.client_city"
                           type="text"
                           id="client_city"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                           placeholder=""
                           required
                         />
@@ -1361,14 +1404,14 @@ let existingBusiness = () => {
                       <div>
                         <label
                           for="EFNumber"
-                          class="block mb-2 mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black"
+                          class="block mb-2 mt-5 text-sm mb-2 font-medium text-gray-900 "
                           >State<span class="text-red-400">*</span></label
                         >
                         <select
                           v-model="form.client_state"
                           @change="StateChange(this)"
                           id="client_state"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                         >
                           <option disabled>Select</option>
                           <option v-for="state in states" :value="state.id">
@@ -1384,7 +1427,7 @@ let existingBusiness = () => {
                       <div>
                         <label
                           for=""
-                          class="block mb-2 mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black"
+                          class="block mb-2 mt-5 text-sm mb-2 font-medium text-gray-900 "
                           >Zip-code<span class="text-red-400">*</span></label
                         >
                         <input
@@ -1394,7 +1437,7 @@ let existingBusiness = () => {
                           "
                           type="text"
                           id="client_zipcode"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                           placeholder=""
                           required
                         />
@@ -1407,7 +1450,7 @@ let existingBusiness = () => {
                       <div>
                         <label
                           for="EFNumber"
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black"
+                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
                           >Client Phone Number<span class="text-red-400">*</span></label
                         >
 
@@ -1419,7 +1462,7 @@ let existingBusiness = () => {
                           @input="
                             CurrencyValidation(form.client_phone_no, 'client_phone_no')
                           "
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                           placeholder=""
                           required
                         />
@@ -1433,14 +1476,14 @@ let existingBusiness = () => {
                       <div>
                         <label
                           for="EFNumber"
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black"
+                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
                           >Client Email<span class="text-red-400">*</span></label
                         >
                         <input
                           v-model="form.client_email"
                           type="text"
                           id="client_email"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                           placeholder=""
                           required
                         />
@@ -1454,14 +1497,14 @@ let existingBusiness = () => {
                       <div>
                         <label
                           for="EFNumber"
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black"
+                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
                           >Gender<span class="text-red-400">*</span></label
                         >
 
                         <select
                           v-model="form.gender"
                           id="gender"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                         >
                           <option disabled>Select</option>
                           <option value="Male">Male</option>
@@ -1478,7 +1521,7 @@ let existingBusiness = () => {
                       <div>
                         <label
                           for="EFNumber"
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black"
+                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
                           >Date of Birth<span class="text-red-400">*</span></label
                         >
 
@@ -1500,14 +1543,14 @@ let existingBusiness = () => {
 
                     <label
                       for="message"
-                      class="block mt-5 mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      class="block mt-5 mb-2 text-sm font-medium text-gray-900"
                       >Notes</label
                     >
                     <textarea
                       v-model="form.notes"
                       id="notes"
                       rows="5"
-                      class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
                       placeholder="Write your thoughts here..."
                     ></textarea>
                     <div
@@ -1527,19 +1570,24 @@ let existingBusiness = () => {
                       class="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-x-8"
                     >
                       <!-- <div>
-                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Business
+                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 ">Business
                           Label</label>
                         <input v-model="form.label" type="text" id="label"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                           placeholder="" required />
                         <div v-if="firstStepErrors.label" class="text-red-500" v-text="firstStepErrors.label[0]"></div>
                       </div> -->
 
                       <div>
-                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Status<span
-                            class="text-red-400">*</span></label>
-                        <select v-model="form.status" id="status"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <label
+                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
+                          >Status<span class="text-red-400">*</span></label
+                        >
+                        <select
+                          v-model="form.status"
+                          id="status"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                        >
                           <option disabled>Select</option>
                           <option value="Submitted">Submitted</option>
                           <option value="Approved">Approved</option>
@@ -1547,20 +1595,26 @@ let existingBusiness = () => {
                           <option value="Lapsed">Lapsed</option>
                           <option value="Declined">Declined</option>
                           <option value="Canceled/Withdrawn">Canceled/Withdrawn</option>
-                          <option value="Carrier Missing Information">Carrier Missing Information</option>
+                          <option value="Carrier Missing Information">
+                            Carrier Missing Information
+                          </option>
                         </select>
-                        <div v-if="firstStepErrors.status" class="text-red-500" v-text="firstStepErrors.status[0]"></div>
+                        <div
+                          v-if="firstStepErrors.status"
+                          class="text-red-500"
+                          v-text="firstStepErrors.status[0]"
+                        ></div>
                       </div>
                       <div>
                         <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black"
+                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
                           >Insurance Company<span class="text-red-400">*</span></label
                         >
                         <select
                           v-model="form.insurance_company"
                           id="insurance_company"
                           @change="ChangeProducName()"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                         >
                           <option disabled>Select</option>
                           <option
@@ -1577,13 +1631,13 @@ let existingBusiness = () => {
 
                       <div>
                         <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black"
+                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
                           >Product Name<span class="text-red-400">*</span></label
                         >
                         <select
                           v-model="form.product_name"
                           id="product_name"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                         >
                           <option disabled>Select</option>
                           <option
@@ -1601,7 +1655,7 @@ let existingBusiness = () => {
 
                       <div>
                         <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black"
+                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
                           >Application Date<span class="text-red-400">*</span></label
                         >
                         <VueDatePicker
@@ -1621,7 +1675,7 @@ let existingBusiness = () => {
 
                       <div>
                         <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black"
+                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
                           >Coverage Amount<span class="text-red-400">*</span></label
                         >
                         <input
@@ -1631,7 +1685,7 @@ let existingBusiness = () => {
                           "
                           type="text"
                           id="coverage_amount"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                           placeholder="$ 0.00"
                           required
                         />
@@ -1644,13 +1698,13 @@ let existingBusiness = () => {
 
                       <div>
                         <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black"
+                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
                           >Coverage Length<span class="text-red-400">*</span></label
                         >
                         <select
                           v-model="form.coverage_length"
                           id="coverage_length"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                         >
                           <option disabled>Select</option>
                           <option
@@ -1668,14 +1722,14 @@ let existingBusiness = () => {
 
                       <div>
                         <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black"
+                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
                           >Premium Frequency<span class="text-red-400">*</span></label
                         >
                         <select
                           v-model="form.premium_frequency"
                           @change="ChangeFrequency(form.premium_frequency)"
                           id="premium_frequency"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                         >
                           <option disabled>Select</option>
                           <option value="Monthly">Monthly</option>
@@ -1692,7 +1746,7 @@ let existingBusiness = () => {
 
                       <div>
                         <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black"
+                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
                           >{{
                             form.premium_frequency != "Select"
                               ? form.premium_frequency
@@ -1707,7 +1761,7 @@ let existingBusiness = () => {
                           "
                           type="text"
                           id="premium_amount"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                           placeholder="$ 0.00"
                           required
                         />
@@ -1720,7 +1774,7 @@ let existingBusiness = () => {
 
                       <div>
                         <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black"
+                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
                           >Annual Premium Volume<span class="text-red-400">*</span></label
                         >
                         <input
@@ -1731,7 +1785,7 @@ let existingBusiness = () => {
                           "
                           type="text"
                           id="premium_volumn"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                           placeholder="$ 0.00"
                           required
                         />
@@ -1743,11 +1797,11 @@ let existingBusiness = () => {
                       </div>
 
                       <!-- <div>
-                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black">Do you have an
+                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 ">Do you have an
                           Equis
                           writing number with this carrier?<span class="text-red-400">*</span></label>
                         <select v-model="form.equis_writing_number_carrier" id="countries"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
                           <option disabled>Select</option>
                           <option value="YES">YES</option>
                           <option value="NO">NO</option>
@@ -1758,14 +1812,14 @@ let existingBusiness = () => {
 
                       <div>
                         <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black"
+                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
                           >Carrier Writing Number</label
                         >
                         <input
                           v-model="form.carrier_writing_number"
                           type="text"
                           id="carrier_writing_number"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                           placeholder=""
                           required
                         />
@@ -1778,7 +1832,7 @@ let existingBusiness = () => {
 
                       <div>
                         <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black"
+                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
                           >Was this app from a lead?<span class="text-red-400"
                             >*</span
                           ></label
@@ -1787,7 +1841,7 @@ let existingBusiness = () => {
                           v-model="form.this_app_from_lead"
                           @change="changeAppLead()"
                           id="this_app_from_lead"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                         >
                           <option disabled>Select</option>
                           <option value="YES">YES</option>
@@ -1802,18 +1856,18 @@ let existingBusiness = () => {
 
                       <div>
                         <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black"
+                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
                           >Source of the lead<span class="text-red-400">*</span></label
                         >
                         <!-- <input v-model="form.source_of_lead" :class="{'bg-slate-300': form.this_app_from_lead == 'NO'}" :disabled="form.this_app_from_lead == 'NO'" type="text" id="source_of_lead"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                           placeholder="" required /> -->
                         <select
                           v-model="form.source_of_lead"
                           :class="{ 'bg-slate-300': form.this_app_from_lead == 'NO' }"
                           :disabled="form.this_app_from_lead == 'NO'"
                           id="source_of_lead"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                         >
                           <option disabled>Select</option>
                           <option value="Allcalls Client">Allcalls</option>
@@ -1828,7 +1882,7 @@ let existingBusiness = () => {
 
                       <div>
                         <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 dark:text-black"
+                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
                           >What Is the Policy Draft Date?<span class="text-red-400"
                             >*</span
                           ></label
@@ -1852,7 +1906,7 @@ let existingBusiness = () => {
                   <div v-show="step == 2">
                     <PreviewInfo
                       :form="form"
-                      :heading="'Please confirm all your information is correct?'"
+                      :heading="'Please confirm all your information is correct'"
                     />
                   </div>
 

@@ -6,6 +6,12 @@
 # @lang('Hello!')
 @endif
 
+
+
+{{ $title }}
+
+{{ $description }}
+
 {{-- Intro Lines --}}
 @foreach ($introLines as $line)
 {{ $line }}
