@@ -401,11 +401,13 @@ let turnOff = () => {
     });
 };
 
-let showUpdateDispositionModal = () => {
+let showUpdateDispositionModal = (updateForOldClient) => {
   // Turn them offline for now:
   turnOff();
 
-  if (page.props.auth.show_disposition_update_option && page.props.auth.disposition_client) {
+  // If it is to open the modal for a client that the agent talked to before the last page refresh
+  // so grab the data from the props passed down from the server directly
+  if (updateForOldClient && page.props.auth.show_disposition_update_option && page.props.auth.disposition_client) {
     dispositionClient.value = page.props.auth.disposition_client;
   }
 
@@ -414,7 +416,7 @@ let showUpdateDispositionModal = () => {
 };
 
 if (page.props.auth.show_disposition_update_option) {
-    showUpdateDispositionModal();
+    showUpdateDispositionModal(true);
 }
 
 let makeDispositionModalNull = () => {
