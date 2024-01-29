@@ -416,9 +416,6 @@ let turnOff = () => {
         "info",
         "You have been temporarily paused to receive new calls until you update the disposition."
       );
-
-      console.log('Reloading..');
-      router.reload({ only: ['callTypes'] })
     });
 };
 let showUpdateDispositionModal = () => {
