@@ -9,7 +9,14 @@ import { router } from "@inertiajs/vue3";
 let emit = defineEmits(['close']);
 let { client, callTypeId } = defineProps(["client", "callTypeId"]);
 
-let turnOnForCalls = () => {}
+let turnOnForCalls = () => {
+  axios.post(`/web-api/calltype/${callTypeId}/offline`).then(response => {
+    toaster(
+        "info",
+        "You have been turned back online for receiving new calls."
+      );
+  });
+}
 
 
 let latestClientDisposition = ref("");
