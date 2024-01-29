@@ -20,7 +20,8 @@ class CallClientInfoController extends Controller
 
         if ($call) {
             // Fetch the related Client
-            $client = $call->client;
+            $client = $call->client()->with('call')->first();
+
 
             if ($client) {
                 // Return the client as a JSON response

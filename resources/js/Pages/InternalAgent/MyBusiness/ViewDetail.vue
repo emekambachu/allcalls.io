@@ -42,7 +42,7 @@ let close = () => {
               </button>
             </div>
             <div class="px-12 py-2">
-              <PreviewInfo :form="businessData" :heading="'Business Information'" />
+              <PreviewInfo :form="businessData" />
             </div>
           </div>
         </div>

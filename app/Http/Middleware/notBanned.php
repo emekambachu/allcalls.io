@@ -19,21 +19,26 @@ class notBanned
         if (auth()->user()->banned) {
             $user = Auth::user();
 
-            $sessionId = session()->getId();
 
-            Auth::guard('web')->logout();
+            // It is NOT an API request
+            if (!$request->expectsJson()) {
+                $sessionId = session()->getId();
 
-            $request->session()->invalidate();
+                Auth::guard('web')->logout();
 
-            $request->session()->regenerateToken();
+                $request->session()->invalidate();
 
-            $activity = $user->activities->where('session_id', $sessionId)->first();
+                $request->session()->regenerateToken();
 
-            if ($activity) {
-                $activity->update([
-                    'logout_time' => now()
-                ]);
+                $activity = $user->activities->where('session_id', $sessionId)->first();
+
+                if ($activity) {
+                    $activity->update([
+                        'logout_time' => now()
+                    ]);
+                }
             }
+
 
             // Handling API request
             if ($request->expectsJson()) {

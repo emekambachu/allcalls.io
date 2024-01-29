@@ -16,6 +16,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserRoleController;
 use App\Http\Controllers\AppEventsController;
 use App\Http\Controllers\CallRejectedByAgent;
+use App\Http\Controllers\TwilioSMSController;
 use App\Http\Controllers\CallHungUpController;
 use App\Http\Controllers\CallStatusController;
 use App\Http\Controllers\ClientsAPIController;
@@ -45,7 +46,11 @@ use App\Http\Controllers\TwilioIOSAccessTokenController;
 use App\Http\Controllers\CustomBroadcastingAuthController;
 use App\Http\Controllers\ActiveUsersPusherWebhookController;
 use App\Http\Controllers\CallCenterDispositionAPIController;
+<<<<<<< HEAD
 use App\Http\Controllers\CareersController;
+=======
+use App\Http\Controllers\TextMessageController;
+>>>>>>> 589b9f96700016212ba094cef6c6ad43b908f395
 use App\Http\Controllers\TwilioAndroidAccessTokenController;
 use App\Http\Controllers\TwilioIOSAccessTokenGuestController;
 use App\Http\Controllers\TwilioIOSSandboxAccessTokenController;
@@ -260,3 +265,7 @@ Route::post('/sendbird-user/blahblahblah', function (Request $request){
 Route::get('/test-call', function() {
     return 'All good!';
 });
+
+Route::post('/twilio/sms/receive', [TwilioSMSController::class, 'receiveSMS']);
+Route::post('/commio/sms/send', [TextMessageController::class, 'sendMessage']);
+Route::post('/commio/sms/receive', [TextMessageController::class, 'receiveMessage']);

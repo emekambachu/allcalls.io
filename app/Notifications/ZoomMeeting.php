@@ -5,31 +5,36 @@ namespace App\Notifications;
 use Illuminate\Bus\Queueable;
 use App\Notifications\PushChannel;
 use Illuminate\Support\Facades\Log;
+use App\Broadcasting\TextMessageChannel;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class ZoomMeeting extends Notification
+class ZoomMeeting extends Notification implements ShouldQueue
 {
     use Queueable;
 
     protected $title;
     protected $message;
+    protected $sendNotification;
+    protected $textMessageString;
     protected $zoomLink;
     protected $emailData;
 
     /**
      * Zoom Meeting Notification instance.
      *
-     * @param string $title
-     * @param string $message
+     * @param string|null $title
+     * @param string|null $message
      * @param string|null $zoomLink
      * @param array|null $emailData
      */
-    public function __construct(string $title, string $message, ?string $zoomLink = null, ?array $emailData = null)
+    public function __construct(?string $title, ?string $message, ?bool $sendNotification = false, ?string $textMessageString, ?string $zoomLink = null, ?array $emailData = null)
     {
         $this->title = $title;
         $this->message = $message;
+        $this->sendNotification = $sendNotification;
+        $this->textMessageString = $textMessageString;
         $this->zoomLink = $zoomLink;
         $this->emailData = $emailData;
     }
@@ -42,7 +47,16 @@ class ZoomMeeting extends Notification
      */
     public function via(object $notifiable): array
     {
-        $channels = ['database', PushChannel::class];
+        $channels = [];
+        if ($this->sendNotification) {
+            $channels[] = 'database';
+            $channels[] = PushChannel::class;
+        }
+
+        if ($this->textMessageString) {
+            $channels[] = TextMessageChannel::class;
+        }
+        
         if ($this->emailData) {
             $channels[] = 'mail';
         }
@@ -87,6 +101,8 @@ class ZoomMeeting extends Notification
             'actionUrl' => $this->emailData['buttonUrl'] ?? null,
             'outroLines' => ['Thank you for using our application!'],
             'salutation' => $this->emailData['salutation'] ?? null,
+            'title' => $this->emailData['title'] ?? null,
+            'description' => $this->emailData['description'] ?? null,
             // 'level' => 'success', // Define the level (success, error, etc.) if applicable
             // Add any other necessary data you want to include in the email
         ];
@@ -122,5 +138,21 @@ class ZoomMeeting extends Notification
     {
         // Implement the logic to send the notification via your PushChannel, using the data provided.
         return $this->toArray($notifiable);
+    }
+
+    
+    /**
+     * Get the SMS representation of the notification.
+     *
+     * @param mixed $notifiable
+     * @return array
+     */
+    public function toTextMessage($notifiable)
+    {
+        // Format your SMS message here
+        return [
+            'fromDID' => '3073428099', // Replace with your sender's number
+            'textMessageString' => $this->textMessageString // Your message content
+        ];
     }
 }

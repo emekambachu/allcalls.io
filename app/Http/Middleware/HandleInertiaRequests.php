@@ -58,7 +58,8 @@ class HandleInertiaRequests extends Middleware
 
 
         if (auth()->user() && auth()->user()->clients()->latest()->first() && auth()->user()->clients()->latest()->first()->status === null) {
-            $callDuration = auth()->user()->clients()->latest()->first()->call->call_duration_in_seconds;
+            $dispositionClient = auth()->user()->clients()->with('call')->latest()->first();
+            $callDuration = $dispositionClient->call->call_duration_in_seconds;
 
             if (! $callDuration) {
                 $showDispositionUpdateOption = false;
@@ -75,8 +76,9 @@ class HandleInertiaRequests extends Middleware
                 'role' => $role,
                 'user_level' => $user_level,
                 'notifications' => $notifications,
-                'showDispositionUpdateOption' =>  $showDispositionUpdateOption,
+                'show_disposition_update_option' =>  $showDispositionUpdateOption,
                 'last_call' =>  (auth()->user() && auth()->user()->clients()->latest()->first() && auth()->user()->clients()->latest()->first()->call) ? auth()->user()->clients()->latest()->first()->call : null,
+                'disposition_client' => $dispositionClient ?? null,
             ],
 
             'ziggy' => function () use ($request) {
