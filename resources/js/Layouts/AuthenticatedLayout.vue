@@ -402,6 +402,8 @@ let turnOff = () => {
 
   router.visit(`/take-calls/online-users/${connectedClient.value.call.call_type_id}`, {
     method: "DELETE",
+    preserveState: true,
+    preserveScroll: true,
   });
 
   // axios
