@@ -12,9 +12,6 @@ let { client, callTypeId } = defineProps(["client", "callTypeId"]);
 let turnOnForCalls = () => {
   axios.post(`/web-api/calltype/${callTypeId}/offline`).then((response) => {
     toaster("success", "You have been turned back online for receiving new calls.");
-
-    console.log("Reloading..");
-    router.reload({ only: ["callTypes", "onlineCallType"] });
   });
 };
 
