@@ -409,7 +409,7 @@ let showUpdateDispositionModal = (updateForOldClient) => {
   }
 
   // Check the call duration
-  console.log('Call duration before turning off', dispositionClient.value.call.call_duration_in_seconds);
+  console.log('dispositionClient before turning off', dispositionClient.value);
 
   // Turn them offline for now:
   turnOff();
