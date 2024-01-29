@@ -13,6 +13,6 @@ class AdminPoliciesController extends Controller
 
         $policy->delete();
 
-        return redirect()->back()->with('message', 'Policy deleted successfully.');
+        return redirect()->back()->with(['message' => 'Policy deleted successfully.']);
     }
 }
