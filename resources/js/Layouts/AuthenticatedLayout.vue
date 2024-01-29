@@ -407,6 +407,8 @@ let turnOff = () => {
         "info",
         "You have been temporarily paused to receive new calls until you update the disposition."
       );
+
+      router.reload();
     });
 };
 let showUpdateDispositionModal = () => {
