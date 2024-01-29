@@ -13,26 +13,22 @@ import { toaster } from "@/helper.js";
 import { Device } from "@twilio/voice-sdk";
 import { usePage, router } from "@inertiajs/vue3";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
+import GlobalSpinner from "@/Components/GlobalSpinner.vue";
+import DispositionModal from "@/Components/DispositionModal.vue";
 
 let page = usePage();
 
-console.log("auth", page.props.auth);
-
-console.log(page.props.auth.role);
-console.log(page.props.auth.user.balance);
-
 let showLowBalanceModal = ref(false);
-if (page.props.auth.role !== 'admin' && page.props.auth.user.balance < 35) {
-  console.log('Display the low balance modal now.');
+if (page.props.auth.role !== "admin" && page.props.auth.user.balance < 35) {
+  console.log("Display the low balance modal now.");
   // showLowBalanceModal.value = true;
 }
 
 let onLowBalanceModalClick = () => {
-  window.open('https://calendly.com/insurancecareers/new-agent-call-review', '_blank');
+  window.open("https://calendly.com/insurancecareers/new-agent-call-review", "_blank");
 
   showLowBalanceModal.value = false;
-}
-
+};
 
 let isInternalLevel = ref(false);
 
@@ -75,6 +71,7 @@ let clearAllNotifications = () => {
   });
 };
 
+let dispositionClient = ref(null);
 let connectedClient = ref(null);
 let callDuration = ref("00:00");
 let callConnectionTime = reactive(null);
@@ -127,8 +124,9 @@ let showIncomingCall = (conn) => {
     axios
       .get("/call-client-info?unique_call_id=" + connectedUniqueCallId.value)
       .then((response) => {
-        console.log(response.data.client);
         connectedClient.value = response.data.client;
+        dispositionClient.value = response.data.client;
+
         localStorage.setItem("latestClientId", connectedClient.value.id);
 
         console.log("connected client now: ");
@@ -263,7 +261,6 @@ let rejectCall = () => {
 let disconnectCall = () => {
   console.log("disconnect call now");
 
-
   // send reject to the web-api to track who disconnected the call
   axios
     .post("/web-api/calls/" + connectedUniqueCallId.value + "/reject", {
@@ -316,43 +313,6 @@ let clearTimeoutForRepeatedDispositionNotifications = () => {
   console.log("Clearing timeout for repeated disposition notifications.");
   clearInterval(repeatedNotificationToUpdateDispositionTimeout.value);
   repeatedNotificationToUpdateDispositionTimeout.value = null;
-};
-
-let updateLatestClientDisposition = () => {
-  // fetch latestClientId from axios get request to /web-api/latest-client
-  axios.get("/web-api/latest-client").then((response) => {
-    console.log("Latest client:");
-    console.log(response.data.client.id);
-    let latestClientId = response.data.client.id;
-
-    axios
-      .post(`/web-api/clients/${latestClientId}/disposition`, {
-        status: latestClientDisposition.value,
-      })
-      .then((response) => {
-        console.log("Client disposition update response:");
-        console.log(response.data);
-        console.log("Status of the client that was updated: ", response.data.status);
-
-        if (response.data.status.startsWith("Sale")) {
-          console.log("Sale detected!", {
-            redirectUrl: `/internal-agent/my-business?clientId=${response.data.clientId}`,
-          });
-
-          router.visit(`/internal-agent/my-business?clientId=${response.data.clientId}`);
-        }
-
-        localStorage.removeItem("latestClientId");
-        localStorage.removeItem("showDispositionModal");
-        showUpdateDispositionForLastClient.value = false;
-        toaster("success", "Client disposition updated.");
-        clearTimeoutForRepeatedDispositionNotifications();
-      })
-      .catch((error) => {
-        console.log("Error updating client disposition:");
-        console.log(error);
-      });
-  });
 };
 
 let setupTwilioDevice = () => {
@@ -424,26 +384,50 @@ let setupTwilioDevice = () => {
 
 let showUpdateDispositionForLastClient = ref(false);
 
-if (page.props.auth.showDispositionUpdateOption) {
-  showUpdateDispositionForLastClient.value = true;
-  startTimeoutForRepeatedDispositionNotifications();
-}
 // console.log('showDispositionModal:', page.props.auth.showDispositionUpdateOption);
 
-let showUpdateDispositionModal = () => {
-  // // Check if 'showDispositionModal' exists in localStorage
-  // if (localStorage.getItem("showDispositionModal") === null) {
-  //   // If not, create the variable in localStorage with a value (e.g., 'true')
-  //   localStorage.setItem("showDispositionModal", "true");
-  //   console.log("'showDispositionModal' variable created in localStorage.");
-  //   showUpdateDispositionForLastClient.value = true;
-  //   startTimeoutForRepeatedDispositionNotifications();
-  //   return
-  // }
-  // console.log("'showDispositionModal' variable already exists in localStorage.");
-  // showUpdateDispositionForLastClient.value = true;
-  // startTimeoutForRepeatedDispositionNotifications();
+let turnOff = () => {
+  if (showUpdateDispositionForLastClient.value || !dispositionClient.value) {
+    return;
+  }
+
+  axios
+    .post(`/web-api/calltype/${dispositionClient.value.call.call_type_id}/offline`)
+    .then((response) => {
+      toaster(
+        "info",
+        "You have been temporarily paused to receive new calls until you update the disposition."
+      );
+    });
 };
+
+let showUpdateDispositionModal = (updateForOldClient) => {
+  // If it is to open the modal for a client that the agent talked to before the last page refresh
+  // so grab the data from the props passed down from the server directly
+  if (updateForOldClient && page.props.auth.show_disposition_update_option && page.props.auth.disposition_client) {
+    dispositionClient.value = page.props.auth.disposition_client;
+  }
+
+
+  if (! updateForOldClient) {
+    // Check if it's a missed call
+    console.log('Is this a missed call?');
+    console.log(call.value);
+  }
+
+  // Check the call duration
+  console.log('dispositionClient before turning off', dispositionClient.value);
+
+  // Turn them offline for now:
+  turnOff();
+
+  // Show the disposition modal
+  showUpdateDispositionForLastClient.value = true;
+};
+
+if (page.props.auth.show_disposition_update_option) {
+    showUpdateDispositionModal(true);
+}
 
 let makeDispositionModalNull = () => {
   // localStorage.setItem("showDispositionModal", null);
@@ -470,8 +454,8 @@ onMounted(() => {
       event.client.status === null &&
       !showUpdateDispositionForLastClient.value
     ) {
-      showUpdateDispositionForLastClient.value = true;
-      startTimeoutForRepeatedDispositionNotifications();
+      // showUpdateDispositionForLastClient.value = true;
+      // startTimeoutForRepeatedDispositionNotifications();
     }
   });
 
@@ -480,15 +464,12 @@ onMounted(() => {
     (event) => {
       console.log("UserSavedNonNullStatus:", event);
       console.log("So, we can drop the modal now.");
-      showUpdateDispositionForLastClient.value = false;
-      clearTimeoutForRepeatedDispositionNotifications();
+      // showUpdateDispositionForLastClient.value = false;
+      // clearTimeoutForRepeatedDispositionNotifications();
     }
   );
 
   Echo.private("calls." + page.props.auth.user.id).listenForWhisper("psst", (e) => {
-    console.log("call event:");
-    console.log(e);
-
     if (ringingTimeout.value) {
       console.log("Clearing the previous timeout.");
       clearTimeout(ringingTimeout.value);
@@ -496,7 +477,9 @@ onMounted(() => {
     }
     showRinging.value = false;
     showOngoing.value = false;
-    showUpdateDispositionModal();
+
+    console.log('Call was accepted on some other tab maybe');
+    // showUpdateDispositionModal();
   });
 
   console.log("Attaching call accepted or rejected listener:");
@@ -505,8 +488,16 @@ onMounted(() => {
   Echo.private(`${page.props.auth.user.id}.notifications`).listen(
     "CallAcceptedOrRejected",
     (e) => {
-      console.log("call accepted or rejected by one of the phone devices");
-      console.log(e);
+      console.log('Ongoing screen right now', {
+        showOngoing: showOngoing.value,
+      });
+      console.log('It was accepted or rejected on some other device OR it was a missed call.');
+
+      // Client hung up but it is not a missed call.
+      if (showOngoing.value) {
+        console.log('Client hung up and it is not a missed call.');
+        showUpdateDispositionModal();
+      }
 
       if (ringingTimeout.value) {
         console.log("Clearing the previous timeout.");
@@ -515,7 +506,7 @@ onMounted(() => {
       }
       showRinging.value = false;
       showOngoing.value = false;
-      showUpdateDispositionModal();
+      // showUpdateDispositionModal();
     }
   );
 
@@ -611,7 +602,11 @@ let appDownloadModal = ref(false);
                     </template>
 
                     <template #content>
-                      <DropdownLink :href="route('profile.view')" method="get" as="button">
+                      <DropdownLink
+                        :href="route('profile.view')"
+                        method="get"
+                        as="button"
+                      >
                         Profile
                       </DropdownLink>
                       <DropdownLink :href="route('logout')" method="post" as="button">
@@ -812,7 +807,7 @@ let appDownloadModal = ref(false);
                 </ResponsiveNavLink>
 
                 <ResponsiveNavLink :href="route('logout')" method="post" as="button">
-                  Log Out 
+                  Log Out
                 </ResponsiveNavLink>
               </div>
             </div>
@@ -1474,11 +1469,12 @@ let appDownloadModal = ref(false);
                       </span>
                     </template>
 
-                    
-
                     <template #content>
-
-                      <DropdownLink :href="route('profile.view')" method="get" as="button">
+                      <DropdownLink
+                        :href="route('profile.view')"
+                        method="get"
+                        as="button"
+                      >
                         Profile
                       </DropdownLink>
 
@@ -2840,7 +2836,7 @@ let appDownloadModal = ref(false);
         <!-- Info Populating After 60 seconds -->
         <div v-if="connectedClient && !hasSixtySecondsPassed" class="w-full">
           <p class="text-md text-center text-black mb-2">
-            Info will populate after 60 seconds
+            Info will populate after 80 seconds
           </p>
           <ul class="w-full p-4 bg-gray-100 rounded-md space-y-2">
             <li class="flex justify-between">
@@ -3011,48 +3007,27 @@ let appDownloadModal = ref(false);
       </div>
     </Modal>
 
-    <Modal :show="showUpdateDispositionForLastClient" :closeable="false">
-      <div class="bg-white">
-        <div class="p-4 my-3">
-          <div class="mb-3">
-            <label class="mb-2">Please update the client disposition for the call:</label>
-            <select class="select-custom" v-model="latestClientDisposition">
-              <option value="Sale - Simplified Issue">Sale - Simplified Issue</option>
-              <option value="Sale - Guaranteed Issue">Sale - Guaranteed Issue</option>
-              <option value="Follow Up Needed">Follow Up Needed</option>
-              <option value="Quoted - Not Interested">Quoted - Not Interested</option>
-              <option value="Not Interested">Not Interested</option>
-              <option value="Transfer Handoff Too Long">Transfer Handoff Too Long</option>
-              <option value="Client Hung Up">Client Hung Up</option>
-              <option value="No Income">No Income</option>
-              <option value="Wrong State">Wrong State</option>
-              <option value="Not Qualified Age">Not Qualified Age</option>
-              <option value="Not Qualified Nursing Home">
-                Not Qualified Nursing Home
-              </option>
-              <option value="Not Qualified Memory Issues">
-                Not Qualified Memory Issues
-              </option>
-              <option value="Language Barrier">Language Barrier</option>
-              <option value="Do Not Call">Do Not Call</option>
-            </select>
-          </div>
-
-          <div class="flex justify-end">
-            <PrimaryButton @click.prevent="updateLatestClientDisposition"
-              >Save Disposition</PrimaryButton
-            >
-          </div>
-        </div>
-      </div>
+    <Modal :show="showUpdateDispositionForLastClient && dispositionClient" :closeable="false">
+      <DispositionModal
+        :client="dispositionClient"
+        @close="showUpdateDispositionForLastClient = false"
+      />
     </Modal>
 
-    <Modal :show="showLowBalanceModal" :closeable="true" @close="showLowBalanceModal = false">
+    <Modal
+      :show="showLowBalanceModal"
+      :closeable="true"
+      @close="showLowBalanceModal = false"
+    >
       <div class="bg-white py-6 flex justify-center">
         <div class="flex flex-col justify-center">
-          <h4 class="mb-4 text-lg">You Just Ran Out Of Credits. Schedule a one on one review to continue.</h4>
+          <h4 class="mb-4 text-lg">
+            You Just Ran Out Of Credits. Schedule a one on one review to continue.
+          </h4>
           <div class="flex justify-center">
-            <PrimaryButton @click.prevent="onLowBalanceModalClick">Schedule Live Training</PrimaryButton>
+            <PrimaryButton @click.prevent="onLowBalanceModalClick"
+              >Schedule Live Training</PrimaryButton
+            >
           </div>
         </div>
       </div>

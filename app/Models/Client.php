@@ -22,4 +22,9 @@ class Client extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function policies()
+    {
+        return $this->hasMany(InternalAgentMyBusiness::class, 'client_id');
+    }
 }

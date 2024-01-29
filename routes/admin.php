@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CallsController;
 use App\Http\Controllers\WebCallsAPIController;
 use App\Http\Controllers\AgentInvitesController;
 use App\Http\Controllers\Admin\ClientsController;
+use App\Http\Controllers\AdminPoliciesController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\InternalAgentLevel;
 use App\Http\Controllers\ActiveUserChannelController;
@@ -140,4 +141,6 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::get('/email-blacklist', [AdminEmailBlacklistController::class, 'index'])->name('admin.email-blacklist.index');
     Route::post('/email-blacklist', [AdminEmailBlacklistController::class, 'store'])->name('admin.email-blacklist.store');
     Route::delete('/email-blacklist/{emailBlacklist}', [AdminEmailBlacklistController::class, 'destroy'])->name('admin.email-blacklist.destroy');
+
+    Route::post('/policies/{policyId}/delete', [AdminPoliciesController::class, 'destroy'])->name('admin.policies.destroy');
 });
