@@ -2977,7 +2977,7 @@ let appDownloadModal = ref(false);
     </Modal>
 
     <Modal :show="showUpdateDispositionForLastClient" :closeable="false">
-      <DispositionModal :client="connectedClient" :callTypeId="connectedClient.call_type_id" @close="showUpdateDispositionForLastClient = false;" />
+      <DispositionModal :client="connectedClient" :callTypeId="connectedClient.call.call_type_id" @close="showUpdateDispositionForLastClient = false;" />
     </Modal>
 
     <Modal
