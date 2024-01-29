@@ -33,7 +33,7 @@ class AgentBusinessController extends Controller
 
         $businesses = $query->with(['client', 'client.call'])
             ->orderBy('created_at', 'desc')
-            ->paginate(100);
+            ->paginate(10);
 
         $states = State::get();
 
