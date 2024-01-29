@@ -408,6 +408,13 @@ let showUpdateDispositionModal = (updateForOldClient) => {
     dispositionClient.value = page.props.auth.disposition_client;
   }
 
+
+  if (! updateForOldClient) {
+    // Check if it's a missed call
+    console.log('Is this a missed call?');
+    console.log(call.value);
+  }
+
   // Check the call duration
   console.log('dispositionClient before turning off', dispositionClient.value);
 
@@ -482,8 +489,9 @@ onMounted(() => {
   Echo.private(`${page.props.auth.user.id}.notifications`).listen(
     "CallAcceptedOrRejected",
     (e) => {
-      console.log("call accepted or rejected by one of the phone devices");
-      console.log(e);
+      // console.log("call accepted or rejected by one of the phone devices");
+      // console.log(e);
+      console.log('It was accepted or rejected on some other device OR it was a missed call.');
 
       if (ringingTimeout.value) {
         console.log("Clearing the previous timeout.");
