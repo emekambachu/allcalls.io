@@ -71,6 +71,7 @@ let clearAllNotifications = () => {
   });
 };
 
+let dispositionClient = ref(null);
 let connectedClient = ref(null);
 let callDuration = ref("00:00");
 let callConnectionTime = reactive(null);
@@ -123,8 +124,9 @@ let showIncomingCall = (conn) => {
     axios
       .get("/call-client-info?unique_call_id=" + connectedUniqueCallId.value)
       .then((response) => {
-        console.log(response.data.client);
         connectedClient.value = response.data.client;
+        dispositionClient.value = response.data.client;
+
         localStorage.setItem("latestClientId", connectedClient.value.id);
 
         console.log("connected client now: ");
@@ -389,15 +391,6 @@ let turnOff = () => {
     return;
   }
 
-  console.log(`Redirecting to /take-calls/online-users/${connectedClient.value.call.call_type_id}`);
-  console.log(`/take-calls/online-users/${connectedClient.value.call.call_type_id}`);
-
-  // router.visit(`/take-calls/online-users/${connectedClient.value.call.call_type_id}`, {
-  //   method: "DELETE",
-  //   preserveState: true,
-  //   preserveScroll: true,
-  // });
-
   axios
     .post(`/web-api/calltype/${connectedClient.value.call.call_type_id}/offline`)
     .then((response) => {
@@ -408,16 +401,24 @@ let turnOff = () => {
     });
 };
 
-let showUpdateDispositionModal = () => {
+let showUpdateDispositionModal = (client = null) => {
   // Turn them offline for now:
   turnOff();
 
+  if (client) {
+    dispositionClient.value = client;
+  }
   // Show the disposition modal
   showUpdateDispositionForLastClient.value = true;
 };
 
-if (page.props.auth.showDispositionUpdateOption) {
-  showUpdateDispositionModal();
+if (page.props.auth.show_disposition_update_option) {
+  if (page.props.auth.disposition_client) {
+    showUpdateDispositionModal();
+  } else {
+    showUpdateDispositionModal(page.props.auth.disposition_client);
+  }
+
 }
 
 let makeDispositionModalNull = () => {
@@ -2993,7 +2994,7 @@ let appDownloadModal = ref(false);
 
     <Modal :show="showUpdateDispositionForLastClient" :closeable="false">
       <DispositionModal
-        :client="connectedClient"
+        :client="dispositionClient"
         :callTypeId="connectedClient.call.call_type_id"
         @close="showUpdateDispositionForLastClient = false"
       />
