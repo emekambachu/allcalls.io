@@ -26,7 +26,7 @@ let formatDate = (date) => {
 <template>
   <div
     v-if="heading"
-    class="mb-4 flex items-center rounded-lg bg-blue-50 p-4 text-sm text-blue-800"
+    class="flex items-center rounded-lg bg-blue-50 p-4 text-sm text-blue-800"
     role="alert"
   >
     <svg
