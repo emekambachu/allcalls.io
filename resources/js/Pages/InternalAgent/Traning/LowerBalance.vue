@@ -1,13 +1,48 @@
 <script setup>
 import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
-import { Head, Link, router, useForm, usePage } from "@inertiajs/vue3";
+import GuestTextInput from "@/Components/GuestTextInput.vue";
+import GuestInputLabel from "@/Components/GuestInputLabel.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { toaster } from "@/helper.js";
-import { basicTrainingSteps } from "@/constants.js";
+import { Head, Link, router, useForm, usePage } from "@inertiajs/vue3";
 
-let basicTrainingModal = ref(true)
+let emits = defineEmits()
+let props = defineProps({
+
+});
+let invitesModal = ref(true)
+let isLoading = ref(false)
+let firstStepErrors = ref({})
+let form = ref({
+    email: "",
+    level: "-- Select an option --",
+});
+console.log('');
+let validateEmail = (email) => {
+    return /\S+@\S+\.\S+/.test(email); // Simple regex for email validation
+};
+let uiEmailValidation = ref({
+    isValid: false,
+});
+let inviteAgent = () => {
+    props.firstStepErrors.email = [``];
+    props.firstStepErrors.level = [``];
+    if (validateEmail(form.value.email)) {
+        if (form.value.level && form.value.level !== "-- Select an option --") {
+            emits('inviteAgent', form.value)
+        } else {
+            props.firstStepErrors.level = [`Please select the level.`];
+        }
+    } else {
+        props.firstStepErrors.email = [`Please enter valid email address.`];
+    }
+}
+let ReinviteAgent = () => {
+    emits('ReinviteAgent')
+}
+let close = () => {
+    emits('close')
+}
 </script>
-
 <style scoped>
 .active\:bg-gray-900:active {
     color: white;
@@ -16,13 +51,6 @@ let basicTrainingModal = ref(true)
 .hover\:drop-shadow-2xl:hover {
     background-color: white;
     color: black;
-}
-
-.blurred-overlay {
-    backdrop-filter: blur(10px);
-    /* Adjust the blur intensity as needed */
-    background-color: rgba(0, 0, 0, 0.6);
-    /* Adjust the background color and opacity as needed */
 }
 
 .button-custom {
@@ -64,194 +92,11 @@ let basicTrainingModal = ref(true)
     transition-duration: 150ms;
 }
 
-.success-checkmark {
-    width: 120px;
-    /* Increase the width */
-    height: 170px;
-    /* Increase the height */
-    margin: 0 auto;
-
-    .check-icon {
-        width: 120px;
-        /* Increase the width */
-        height: 120px;
-        /* Increase the height */
-        position: relative;
-        border-radius: 50%;
-        box-sizing: content-box;
-        border: 6px solid #4CAF50;
-        /* Adjust the border thickness */
-
-        &::before {
-            top: 4px;
-            left: -3px;
-            width: 45px;
-            /* Increase the width */
-            transform-origin: 100% 50%;
-            border-radius: 100px 0 0 100px;
-        }
-
-        &::after {
-            top: 0;
-            left: 45px;
-            /* Increase the left position */
-            width: 90px;
-            /* Increase the width */
-            transform-origin: 0 50%;
-            border-radius: 0 100px 100px 0;
-            animation: rotate-circle 4.25s ease-in;
-        }
-
-        &::before,
-        &::after {
-            content: '';
-            height: 150px;
-            /* Increase the height */
-            position: absolute;
-            background: #FFFFFF;
-            transform: rotate(-45deg);
-        }
-
-        .icon-line {
-            height: 7.5px;
-            /* Increase the height */
-            background-color: #4CAF50;
-            display: block;
-            border-radius: 3px;
-            position: absolute;
-            z-index: 10;
-
-            &.line-tip {
-                top: 69px;
-                /* Increase the top position */
-                left: 21px;
-                /* Increase the left position */
-                width: 37.5px;
-                /* Increase the width */
-                transform: rotate(45deg);
-                animation: icon-line-tip 0.75s;
-            }
-
-            &.line-long {
-                top: 57px;
-                /* Increase the top position */
-                right: 12px;
-                /* Increase the right position */
-                width: 70.5px;
-                /* Increase the width */
-                transform: rotate(-45deg);
-                animation: icon-line-long 0.75s;
-            }
-        }
-
-        .icon-circle {
-            top: -6px;
-            /* Increase the top position */
-            left: -6px;
-            /* Increase the left position */
-            z-index: 10;
-            width: 120px;
-            /* Increase the width */
-            height: 120px;
-            /* Increase the height */
-            border-radius: 50%;
-            position: absolute;
-            box-sizing: content-box;
-            border: 6px solid rgba(76, 175, 80, .5);
-            /* Adjust the border thickness */
-        }
-
-        .icon-fix {
-            top: 12px;
-            /* Increase the top position */
-            width: 7.5px;
-            /* Increase the width */
-            left: 39px;
-            /* Increase the left position */
-            z-index: 1;
-            height: 127.5px;
-            /* Increase the height */
-            position: absolute;
-            transform: rotate(-45deg);
-            background-color: #FFFFFF;
-        }
-    }
-}
-
-@keyframes rotate-circle {
-    0% {
-        transform: rotate(-45deg);
-    }
-
-    5% {
-        transform: rotate(-45deg);
-    }
-
-    12% {
-        transform: rotate(-405deg);
-    }
-
-    100% {
-        transform: rotate(-405deg);
-    }
-}
-
-@keyframes icon-line-tip {
-    0% {
-        width: 0;
-        left: 1px;
-        top: 19px;
-    }
-
-    54% {
-        width: 0;
-        left: 1px;
-        top: 19px;
-    }
-
-    70% {
-        width: 50px;
-        left: -8px;
-        top: 37px;
-    }
-
-    84% {
-        width: 17px;
-        left: 21px;
-        top: 48px;
-    }
-
-    100% {
-        width: 25px;
-        left: 14px;
-        top: 45px;
-    }
-}
-
-@keyframes icon-line-long {
-    0% {
-        width: 0;
-        right: 46px;
-        top: 54px;
-    }
-
-    65% {
-        width: 0;
-        right: 46px;
-        top: 54px;
-    }
-
-    84% {
-        width: 55px;
-        right: 0px;
-        top: 35px;
-    }
-
-    100% {
-        width: 47px;
-        right: 8px;
-        top: 38px;
-    }
+.blurred-overlay {
+    backdrop-filter: blur(10px);
+    /* Adjust the blur intensity as needed */
+    background-color: rgba(0, 0, 0, 0.6);
+    /* Adjust the background color and opacity as needed */
 }
 </style>
 <template>
@@ -262,44 +107,76 @@ let basicTrainingModal = ref(true)
             leave-active-class="transition ease-in duration-200 transform"
             leave-from-class="opacity-100 translate-y-0 sm:scale-100"
             leave-to-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
-            <div id="defaultModal" v-if="basicTrainingModal" tabindex="-1"
+            <div id="defaultModal" v-if="invitesModal" tabindex="-1"
                 class="flex items-center justify-center fixed inset-0 z-50 w-full h-full overflow-x-hidden overflow-y-auto max-h-full mx-4 sm:mx-0">
                 <div class="fixed inset-0 bg-black opacity-90 blurred-overlay"></div>
 
                 <!-- This is the overlay -->
-                <div style="width: 60%;" class="relative w-full py-10  max-h-full mx-auto">
+                <div class="relative w-full max-w-xl max-h-full mx-auto">
                     <div class="relative bg-white rounded-lg shadow-lg transition-all">
-                        <div class="flex justify-between ">
-                            <div class="px-12 py-2 mt-2">
-                                <h1 class=" text-gray-800 text-xl font-bold"> <span> Basic
-                                        Training /11 )</span> </h1>
-                            </div>
-                            <button v-if="unlocked" @click="close" type="button"
-                                class="text-gray-400 bg-transparent mr-2 mt-2 hover:bg-gray-200 hover:text-gray-700 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
-                                data-modal-hide="defaultModal">
-                                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                    viewBox="0 0 14 14">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                                </svg>
-                                <span class="sr-only">Close modal</span>
-                            </button>
-                            <div v-else class="flex justify-end">
-                                <Link :href="route('logout')" method="post" as="button"
+                        <div class="flex justify-end">
+                            <Link :href="route('logout')" method="post" as="button"
                                     class="underline text-sm text-gray-600 mr-5 mt-2  dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
                                 Logout </Link>
+                        </div>
+                        <div class="px-12 py-2">
+                            <h1 class="text-gray-800 text-2xl font-bold">Low Balance</h1>
+                            <br>
 
+
+
+                            <div class="mb-3">
+                                <label for="Email" class="block mb-2 text-sm font-black text-gray-900 ">Email<span
+                                        class="text-red-500">*</span></label>
+                                <input type="email" v-model="form.email" id="default-input"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
+                                <div v-if="firstStepErrors.email" class="text-red-500" v-text="firstStepErrors.email[0]">
+                                </div>
+                                <!-- <div v-if="uiEmailValidation.isValid" class="text-red-500">
+                                Please enter valid email address.
+                            </div> -->
+                            </div>
+                            <!-- <div class="mb-3">
+                            <label for="Upline ID" class="block mb-2 text-sm font-black text-gray-900 ">Upline ID<span
+                                    class="text-red-500">*</span></label>
+                            <input type="text"  v-model="form.upline_id" id="default-input"
+                            
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
+                            <div v-if="firstStepErrors.upline_id" class="text-red-500" v-text="firstStepErrors.upline_id[0]"></div>
+                            
+                        </div> -->
+
+                            <div>
+                                <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 ">Agent
+                                    Level<span class="text-red-500">*</span></label>
+                                <select v-model="form.level" id="countries"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
+                                    <option disabled selected>-- Select an option -- </option>
+                                    <option>hello </option>
+                                </select>
+                                <div v-if="firstStepErrors.level" class="text-red-500" v-text="firstStepErrors.level[0]">
+                                </div>
                             </div>
 
+                            <div class=" mb-3 mt-2">
+                                <div class="flex justify-end">
+
+                                    <div class="mt-4">
+                                        <button type="button" @click="inviteAgent" :class="{ 'opacity-25': isLoading }"
+                                            :disabled="isLoading"
+                                            class="button-custom px-3 py-2 rounded-md flex items-center">
+                                            <global-spinner :spinner="isLoading" /> Invite
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                       <div class="p-20">
-                            <button>ddd</button>
-                       </div>
+
+
 
                     </div>
                 </div>
             </div>
-
         </Transition>
     </AuthenticatedLayout>
 </template>
