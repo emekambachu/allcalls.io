@@ -403,25 +403,23 @@ let turnOff = () => {
   console.log(`Redirecting to /take-calls/online-users/${connectedClient.value.call.call_type_id}`);
   console.log(`/take-calls/online-users/${connectedClient.value.call.call_type_id}`);
 
-  console.log('Page props right now: ', page.props);
+  // router.visit(`/take-calls/online-users/${connectedClient.value.call.call_type_id}`, {
+  //   method: "DELETE",
+  //   preserveState: true,
+  //   preserveScroll: true,
+  // });
 
-  router.visit(`/take-calls/online-users/${connectedClient.value.call.call_type_id}`, {
-    method: "DELETE",
-    preserveState: true,
-    preserveScroll: true,
-  });
+  axios
+    .post(`/web-api/calltype/${connectedClient.value.call.call_type_id}/offline`)
+    .then((response) => {
+      toaster(
+        "info",
+        "You have been temporarily paused to receive new calls until you update the disposition."
+      );
 
-  // axios
-  //   .post(`/web-api/calltype/${connectedClient.value.call.call_type_id}/offline`)
-  //   .then((response) => {
-  //     toaster(
-  //       "info",
-  //       "You have been temporarily paused to receive new calls until you update the disposition."
-  //     );
-
-  //     console.log('Reloading..');
-  //     router.reload({ only: ['callTypes', 'onlineCallType'] })
-  //   });
+      console.log('Reloading..');
+      router.reload({ only: ['callTypes'] })
+    });
 };
 let showUpdateDispositionModal = () => {
   // Turn them offline for now:
