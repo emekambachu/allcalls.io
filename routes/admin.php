@@ -142,5 +142,5 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::post('/email-blacklist', [AdminEmailBlacklistController::class, 'store'])->name('admin.email-blacklist.store');
     Route::delete('/email-blacklist/{emailBlacklist}', [AdminEmailBlacklistController::class, 'destroy'])->name('admin.email-blacklist.destroy');
 
-    Route::delete('/admin/policies/{policyId}', [AdminPoliciesController::class, 'destroy'])->name('admin.policies.destroy');
+    Route::delete('/policies/{policyId}', [AdminPoliciesController::class, 'destroy'])->name('admin.policies.destroy');
 });
