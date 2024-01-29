@@ -318,7 +318,6 @@ let clearTimeoutForRepeatedDispositionNotifications = () => {
   repeatedNotificationToUpdateDispositionTimeout.value = null;
 };
 
-
 let setupTwilioDevice = () => {
   axios.get("/twilio-device-token").then((response) => {
     let token = response.data.token;
@@ -391,15 +390,23 @@ let showUpdateDispositionForLastClient = ref(false);
 if (page.props.auth.showDispositionUpdateOption) {
   // showUpdateDispositionForLastClient.value = true;
   // startTimeoutForRepeatedDispositionNotifications();
-  console.log('Turn them offline for now.');
-  console.log('Show the modal for latest client disposition')
+  console.log("Turn them offline for now.");
+  console.log("Show the modal for latest client disposition");
 }
 // console.log('showDispositionModal:', page.props.auth.showDispositionUpdateOption);
 
 let turnOff = () => {
-  axios.post(`/web-api/calltype/${connectedClient.value.call.call_type_id}/offline`)
-    .then(response => {
-      toaster('info', 'You have been temporarily paused to receive new calls until you update the disposition.');
+  if (!showUpdateDispositionForLastClient.value) {
+    return;
+  }
+
+  axios
+    .post(`/web-api/calltype/${connectedClient.value.call.call_type_id}/offline`)
+    .then((response) => {
+      toaster(
+        "info",
+        "You have been temporarily paused to receive new calls until you update the disposition."
+      );
     });
 };
 let showUpdateDispositionModal = () => {
@@ -2982,7 +2989,11 @@ let appDownloadModal = ref(false);
     </Modal>
 
     <Modal :show="showUpdateDispositionForLastClient" :closeable="false">
-      <DispositionModal :client="connectedClient" :callTypeId="connectedClient.call.call_type_id" @close="showUpdateDispositionForLastClient = false;" />
+      <DispositionModal
+        :client="connectedClient"
+        :callTypeId="connectedClient.call.call_type_id"
+        @close="showUpdateDispositionForLastClient = false"
+      />
     </Modal>
 
     <Modal
