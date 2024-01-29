@@ -402,14 +402,17 @@ let turnOff = () => {
 };
 
 let showUpdateDispositionModal = (updateForOldClient) => {
-  // Turn them offline for now:
-  turnOff();
-
   // If it is to open the modal for a client that the agent talked to before the last page refresh
   // so grab the data from the props passed down from the server directly
   if (updateForOldClient && page.props.auth.show_disposition_update_option && page.props.auth.disposition_client) {
     dispositionClient.value = page.props.auth.disposition_client;
   }
+
+  // Check the call duration
+  console.log(dispositionClient.value.call.call_duration_in_seconds);
+
+  // Turn them offline for now:
+  turnOff();
 
   // Show the disposition modal
   showUpdateDispositionForLastClient.value = true;
