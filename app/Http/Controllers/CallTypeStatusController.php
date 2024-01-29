@@ -13,10 +13,6 @@ class CallTypeStatusController extends Controller
 {
     public function store(Request $request, CallType $callType)
     {
-        $request->validate([
-            'call_type_id' => 'required'
-        ]);
-
         if ($request->user()->balance < 35) {
             return redirect()->back()->withErrors([
                 'balance' => 'You must have at least $35 in your account to take calls.'

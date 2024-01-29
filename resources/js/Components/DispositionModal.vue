@@ -10,7 +10,7 @@ let emit = defineEmits(['close']);
 let { client, callTypeId } = defineProps(["client", "callTypeId"]);
 
 let turnOnForCalls = () => {
-  axios.post(`/web-api/calltype/${callTypeId}/online`).then(response => {
+  axios.post(`/web-api/calltype/${callTypeId}/offline`).then(response => {
     toaster(
         "success",
         "You have been turned back online for receiving new calls."
