@@ -396,12 +396,18 @@ if (page.props.auth.showDispositionUpdateOption) {
 }
 // console.log('showDispositionModal:', page.props.auth.showDispositionUpdateOption);
 
+let turnOff = () => {
+  axios.post(`/web-api/calltype/${connectedClient.value.call.call_type_id}/online`)
+    .then(response => {
+      console.log('Agent turned off to receive calls.');
+      console.log(response.data);
+    });
+};
 let showUpdateDispositionModal = () => {
-
   // Turn them offline for now:
-  console.log('Turn them offline.');
-  console.log('Vertical before showing the modal')
-  console.log(connectedClient.value.call_type_id);
+  turnOff();
+
+  // Show the disposition modal
   showUpdateDispositionForLastClient.value = true;
 };
 

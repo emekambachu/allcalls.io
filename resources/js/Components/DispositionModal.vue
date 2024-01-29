@@ -9,7 +9,7 @@ import { router } from "@inertiajs/vue3";
 let emit = defineEmits(['close']);
 let { client, callTypeId } = defineProps(["client", "callTypeId"]);
 
-console.log('Disposition Modal CallTypeId', callTypeId);
+let turnOnForCalls = () => {}
 
 
 let latestClientDisposition = ref("");
