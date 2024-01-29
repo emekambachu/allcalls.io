@@ -397,7 +397,7 @@ if (page.props.auth.showDispositionUpdateOption) {
 // console.log('showDispositionModal:', page.props.auth.showDispositionUpdateOption);
 
 let turnOff = () => {
-  axios.post(`/web-api/calltype/${connectedClient.value.call.call_type_id}/online`)
+  axios.post(`/web-api/calltype/${connectedClient.value.call.call_type_id}/offline`)
     .then(response => {
       console.log('Agent turned off to receive calls.');
       console.log(response.data);
