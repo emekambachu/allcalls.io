@@ -22,7 +22,7 @@ onMounted(() => {
 });
 </script>
 <template>
-  <div>
+  <div v-if="policies.length">
     <Disclosure defaultOpen v-slot="{ open }">
       <DisclosureButton
         class="flex justify-between items-center text-xl font-semibold text-gray-900 bg-gray-50 p-3 rounded-lg w-full"
