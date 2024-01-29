@@ -190,7 +190,9 @@ let deleteApp = (policy) => {
     return;
   }
 
-  router.delete("/admin/policies/" + policy.id);
+  router.visit("/admin/policies/" + policy.id + "/delete", {
+    method: "POST",
+  });
 };
 </script>
 <style scoped>
