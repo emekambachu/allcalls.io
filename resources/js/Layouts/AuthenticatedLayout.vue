@@ -400,6 +400,9 @@ let turnOff = () => {
     return;
   }
 
+  console.log('Redirecting to /take-calls/online-users/${connectedClient.value.call.call_type_id}');
+  console.log(`/take-calls/online-users/${connectedClient.value.call.call_type_id}`);
+
   router.visit(`/take-calls/online-users/${connectedClient.value.call.call_type_id}`, {
     method: "DELETE",
     preserveState: true,
