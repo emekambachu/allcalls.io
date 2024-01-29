@@ -83,6 +83,8 @@ onMounted(() => {
               <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                 <tr>
                   <th scope="col" class="py-3 px-6">ID</th>
+                  <th scope="col" class="py-3 px-6">Application Date</th>
+                  <th scope="col" class="py-3 px-6">Policy Draft Date</th>
                   <th scope="col" class="py-3 px-6">Insurance Company</th>
                   <th scope="col" class="py-3 px-6">Product Name</th>
                   <th scope="col" class="py-3 px-6">APV</th>
@@ -95,6 +97,8 @@ onMounted(() => {
                   :key="policy.id"
                 >
                   <td class="py-4 px-6">{{ policy.id }}</td>
+                  <td class="py-4 px-6">{{ policy.application_date }}</td>
+                  <td class="py-4 px-6">{{ policy.policy_draft_date }}</td>
                   <td class="py-4 px-6">{{ policy.insurance_company }}</td>
                   <td class="py-4 px-6">{{ policy.product_name }}</td>
                   <td class="py-4 px-6">{{ policy.premium_volumn }}</td>
