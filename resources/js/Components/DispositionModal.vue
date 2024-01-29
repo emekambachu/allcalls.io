@@ -6,18 +6,17 @@ import GlobalSpinner from "@/Components/GlobalSpinner.vue";
 import { toaster } from "@/helper.js";
 import { router } from "@inertiajs/vue3";
 
-let emit = defineEmits(['close']);
+let emit = defineEmits(["close"]);
 let { client, callTypeId } = defineProps(["client", "callTypeId"]);
 
 let turnOnForCalls = () => {
-  axios.post(`/web-api/calltype/${callTypeId}/offline`).then(response => {
-    toaster(
-        "success",
-        "You have been turned back online for receiving new calls."
-      );
-  });
-}
+  axios.post(`/web-api/calltype/${callTypeId}/offline`).then((response) => {
+    toaster("success", "You have been turned back online for receiving new calls.");
 
+    console.log("Reloading..");
+    router.reload({ only: ["callTypes", "onlineCallType"] });
+  });
+};
 
 let latestClientDisposition = ref("");
 let dispositionUpdating = ref(false);
@@ -29,9 +28,9 @@ let updateLatestClientDisposition = () => {
     })
     .then((response) => {
       dispositionUpdating.value = false;
-      emit('close');
+      emit("close");
       //   showUpdateDispositionForLastClient.value = false;
-      
+
       console.log("Turn them back on for whatever vertical they turned off for.");
       turnOnForCalls();
 
@@ -46,7 +45,7 @@ let updateLatestClientDisposition = () => {
     })
     .catch((error) => {
       //   dispositionUpdating.value = false;
-      emit('close');
+      emit("close");
       turnOnForCalls();
       console.log("Error updating client disposition:");
       console.log(error);
