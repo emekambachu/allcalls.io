@@ -470,9 +470,6 @@ onMounted(() => {
   );
 
   Echo.private("calls." + page.props.auth.user.id).listenForWhisper("psst", (e) => {
-    console.log("call event:");
-    console.log(e);
-
     if (ringingTimeout.value) {
       console.log("Clearing the previous timeout.");
       clearTimeout(ringingTimeout.value);
@@ -480,6 +477,8 @@ onMounted(() => {
     }
     showRinging.value = false;
     showOngoing.value = false;
+
+    console.log('Show Update Disposition Due To Whisper');
     showUpdateDispositionModal();
   });
 
