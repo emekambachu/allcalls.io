@@ -493,6 +493,12 @@ onMounted(() => {
       });
       console.log('It was accepted or rejected on some other device OR it was a missed call.');
 
+      // Client hung up but it is not a missed call.
+      if (showOngoing.value) {
+        console.log('Client hung up and it is not a missed call.');
+        showUpdateDispositionModal();
+      }
+
       if (ringingTimeout.value) {
         console.log("Clearing the previous timeout.");
         clearTimeout(ringingTimeout.value);
