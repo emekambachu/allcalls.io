@@ -18,11 +18,6 @@ import DispositionModal from "@/Components/DispositionModal.vue";
 
 let page = usePage();
 
-console.log("auth", page.props.auth);
-
-console.log(page.props.auth.role);
-console.log(page.props.auth.user.balance);
-
 let showLowBalanceModal = ref(false);
 if (page.props.auth.role !== "admin" && page.props.auth.user.balance < 35) {
   console.log("Display the low balance modal now.");
@@ -388,10 +383,7 @@ let setupTwilioDevice = () => {
 let showUpdateDispositionForLastClient = ref(false);
 
 if (page.props.auth.showDispositionUpdateOption) {
-  // showUpdateDispositionForLastClient.value = true;
-  // startTimeoutForRepeatedDispositionNotifications();
-  console.log("Turn them offline for now.");
-  console.log("Show the modal for latest client disposition");
+  showUpdateDispositionModal();
 }
 // console.log('showDispositionModal:', page.props.auth.showDispositionUpdateOption);
 
