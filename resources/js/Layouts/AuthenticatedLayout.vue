@@ -396,11 +396,11 @@ if (page.props.auth.showDispositionUpdateOption) {
 // console.log('showDispositionModal:', page.props.auth.showDispositionUpdateOption);
 
 let turnOff = () => {
-  if (!showUpdateDispositionForLastClient.value) {
+  if (showUpdateDispositionForLastClient.value) {
     return;
   }
 
-  console.log('Redirecting to /take-calls/online-users/${connectedClient.value.call.call_type_id}');
+  console.log(`Redirecting to /take-calls/online-users/${connectedClient.value.call.call_type_id}`);
   console.log(`/take-calls/online-users/${connectedClient.value.call.call_type_id}`);
 
   router.visit(`/take-calls/online-users/${connectedClient.value.call.call_type_id}`, {
