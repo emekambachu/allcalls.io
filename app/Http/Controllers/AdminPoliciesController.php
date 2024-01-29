@@ -11,9 +11,8 @@ class AdminPoliciesController extends Controller
     {
         $policy = InternalAgentMyBusiness::find($policyId);
 
-        dd($policy);
-
         $policy->delete();
+
         return redirect()->back()->with('message', 'Policy deleted successfully.');
     }
 }
