@@ -400,17 +400,21 @@ let turnOff = () => {
     return;
   }
 
-  axios
-    .post(`/web-api/calltype/${connectedClient.value.call.call_type_id}/offline`)
-    .then((response) => {
-      toaster(
-        "info",
-        "You have been temporarily paused to receive new calls until you update the disposition."
-      );
+  router.visit(`/take-calls/online-users/${connectedClient.value.call.call_type_id}`, {
+    method: "DELETE",
+  });
 
-      console.log('Reloading..');
-      router.reload({ only: ['callTypes', 'onlineCallType'] })
-    });
+  // axios
+  //   .post(`/web-api/calltype/${connectedClient.value.call.call_type_id}/offline`)
+  //   .then((response) => {
+  //     toaster(
+  //       "info",
+  //       "You have been temporarily paused to receive new calls until you update the disposition."
+  //     );
+
+  //     console.log('Reloading..');
+  //     router.reload({ only: ['callTypes', 'onlineCallType'] })
+  //   });
 };
 let showUpdateDispositionModal = () => {
   // Turn them offline for now:
