@@ -92,4 +92,8 @@ class TrainingController extends Controller
     {
         //
     }
+
+    public function trainingLowerBalance() {
+        return Inertia::render('InternalAgent/Traning/LowerBalance', []);
+    }
 }

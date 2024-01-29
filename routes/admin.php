@@ -72,6 +72,8 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::post('/agent', [InternalAgentController::class, 'store'])->name('admin.agent.store');
 
     Route::post('/agent/{id}', [InternalAgentController::class, 'update'])->name('admin.agent.update');
+    
+    Route::post('/update-training-status', [InternalAgentController::class, 'UpdateTrainingStatus'])->name('admin.update.training.status');
 
     Route::get('/agent/detail/{id}', [InternalAgentController::class, 'show'])->name('admin.agent.detail');
 

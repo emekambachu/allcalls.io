@@ -390,6 +390,26 @@ class InternalAgentController extends Controller
             return response()->json(['error' => $e], 500);
         }
     }
+    public function UpdateTrainingStatus(Request $request){
+       try {
+        $user = User::where('id', $request->agent_id)->first();
+        if($user){
+            $user->agent_access_status = $request->agent_access_status;
+            $user->update();
+            return response()->json([
+                'message' => 'Status updated successfully.',
+                'user' => $user
+            ],200);
+        }
+       } catch (\Throwable $th) {
+        return response()->json([
+            'success' => false,
+            'errors' => $th->getMessage(),
+        ], 400);
+       }
+        
+        // dd($request->all());
+    }
 
     public function downloadAgentContractPdf($id)
     {
@@ -409,7 +429,6 @@ class InternalAgentController extends Controller
     public function getQuestionPdf($id, $userId, $serialNo)
     {
         set_time_limit(0);
-
         $returnArr['contractData'] = User::where('id', $userId)
             ->with(['internalAgentContract.legalQuestion' => function ($query) use ($id) {
                 $query->where('id', $id);

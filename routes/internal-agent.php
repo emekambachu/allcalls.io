@@ -56,6 +56,7 @@ Route::prefix('internal-agent')->middleware(['auth', 'verified', 'internal-agent
     Route::post('/my-business', [MyBusinessController::class, 'store'])->name('agent.my.business.store')->middleware(['registration-step-check']);
     Route::get('/download-pdf/{fileName}', [TrainingController::class, 'downloadPdf'])->name('download-pdf')->middleware(['registration-step-check']);;
 });
+Route::get('/training-lower-balance', [TrainingController::class, 'trainingLowerBalance'])->name('training.lower.balance')->middleware(['registration-step-check']);;
 
 Route::middleware(['auth', 'verified', 'internal-agent'])->group(function () {
     Route::get('docusign', [DocusignController::class, 'index'])->name('internal.agent.docusign');
