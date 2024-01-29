@@ -115,6 +115,7 @@ let updateFormAndDisableElement = (
   }
 };
 if (props.businessData) {
+  edit_data.value = true;
   form.value.insurance_company = props.businessData.insurance_company
     ? props.businessData.insurance_company
     : "AETNA/CVS";
@@ -170,7 +171,6 @@ if (props.businessData) {
   // if (props.businessData.this_app_from_lead == 'NO') {
   //   form.value.source_of_lead = 'Select'
   // }
-  edit_data.value = true;
 }
 
 let getInsuranceCompanyOptions = () => {

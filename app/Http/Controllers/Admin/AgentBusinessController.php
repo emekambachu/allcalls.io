@@ -87,7 +87,6 @@ class AgentBusinessController extends Controller
             'client_zipcode' => 'nullable',
             'client_phone_no' => 'required',
             'client_email' => 'required',
-
         ]);
 
         if ($validate->fails()) {
@@ -138,7 +137,6 @@ class AgentBusinessController extends Controller
 
     public function update(Request $request)
     {
-
         $validate = Validator::make($request->all(), [
             'agent_full_name' => 'required',
             'agent_email' => 'required',
@@ -166,7 +164,6 @@ class AgentBusinessController extends Controller
             'client_zipcode' => 'nullable',
             'client_phone_no' => 'required',
             'client_email' => 'required',
-
         ]);
 
         if ($validate->fails()) {
@@ -175,6 +172,7 @@ class AgentBusinessController extends Controller
                 'errors' => $validate->errors(),
             ], 400);
         }
+        
         $InternalAgentMyBusiness = InternalAgentMyBusiness::find($request->business_id);
 
         if ($InternalAgentMyBusiness) {
