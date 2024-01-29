@@ -387,12 +387,12 @@ let showUpdateDispositionForLastClient = ref(false);
 // console.log('showDispositionModal:', page.props.auth.showDispositionUpdateOption);
 
 let turnOff = () => {
-  if (showUpdateDispositionForLastClient.value) {
+  if (showUpdateDispositionForLastClient.value || !dispositionClient.value) {
     return;
   }
 
   axios
-    .post(`/web-api/calltype/${connectedClient.value.call.call_type_id}/offline`)
+    .post(`/web-api/calltype/${dispositionClient.value.call.call_type_id}/offline`)
     .then((response) => {
       toaster(
         "info",
