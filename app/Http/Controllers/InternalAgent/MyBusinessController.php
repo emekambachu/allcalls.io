@@ -113,7 +113,6 @@ class MyBusinessController extends Controller
         }
 
         // if (isset($request->client_id)) {
-
             // $business = InternalAgentMyBusiness::where('client_id', $request->client_id)->first();
             // if ($business) {
             //     return response()->json([
@@ -172,7 +171,7 @@ class MyBusinessController extends Controller
         $internalAgentBusiness->save();
         return response()->json([
             'success' => true,
-            'message' => 'Business added successfully.',
+            'message' => isset($request->business_id)? 'Client has been attached to the policy' : 'Business added successfully.',
         ], 200);
     }
     public function businessByLabel(Request $request)
