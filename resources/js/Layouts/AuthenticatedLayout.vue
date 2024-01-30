@@ -373,7 +373,7 @@ let setupTwilioDevice = () => {
     });
 
     device.on("incoming", (incomingCall) => {
-      console.log("Incoming!");
+      console.log("alpha:Incoming Call!");
       console.log(incomingCall);
 
       call = incomingCall;
