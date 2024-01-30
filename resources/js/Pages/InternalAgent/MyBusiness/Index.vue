@@ -185,20 +185,6 @@ function formatCurrency(number) {
         minimumFractionDigits: 2,
     }).format(rounded);
 } 
-let AddCarrears = async () => {
-  await axios.post('/web-api/careers', {
-    first_name:'test',
-    last_name:'user 1',
-    email:'vacola7773@wentcity.com',
-    phone:'65464654654',
-    life_insurance:'sssssss',
-  })
-  .then((response)=>{
-    console.log('res', response);
-  }).catch((error)=>{
-    console.log(error);
-  })
-}
 
 let deleteApp = (policy) => {
   if (!confirm("Are you sure you want to delete this app?")) {
@@ -255,7 +241,6 @@ let deleteApp = (policy) => {
 
             <div>
               <PrimaryButton @click="addBusiness()">Report Application </PrimaryButton>
-              <PrimaryButton class="ml-5" @click="AddCarrears()">Web Carrears </PrimaryButton>
 
             </div>
           </div>

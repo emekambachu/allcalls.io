@@ -1,10 +1,13 @@
 <x-mail::message>
 Welcome to **AllCalls.io**.<br>
 
-You have been invited to join our company and begin your career as an Independent AllCalls Insurance Agent. <br>
+Dear Recruiting Team,
+
+I hope this email finds you well. I am writing to inform you that a new candidate has submitted their application for the [AllCalls.io](https://allcalls.io).
+Below are the details provided by the candidate:<br>
 
 @component('mail::table')
-| Description                   |                               Value |
+|                    |                                |
 |:------------------------------|--------------------------------:    |
 | First Name                    | {{ $applicantData['first_name'] }}  |
 | Last Name                     | {{ $applicantData['last_name'] }}   |

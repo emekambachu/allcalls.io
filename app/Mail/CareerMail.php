@@ -28,7 +28,7 @@ class CareerMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'invited succesfully.',
+            subject: 'Carreers',
         );
     }
 

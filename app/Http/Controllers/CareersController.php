@@ -14,7 +14,7 @@ class CareersController extends Controller
             'first_name' => 'required',
             'last_name' => 'required',
             'email' => 'required|string|email',
-            'phone' => 'required',
+            'phone' => ['required', 'string',  'regex:/^[0-9]*$/'],
             'life_insurance' => 'required',
         ]);
         if ($carreerValidation->fails()) {
@@ -23,7 +23,6 @@ class CareersController extends Controller
                 'errors' => $carreerValidation->errors(),
             ], 400);
         };
-        // dd($request->all());
 
         $applicantData = $request->only('first_name', 'last_name', 'email', 'phone', 'life_insurance');
         try {

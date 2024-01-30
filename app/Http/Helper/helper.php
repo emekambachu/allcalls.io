@@ -33,9 +33,9 @@ function systemEmails() {
 function recruitingEmail() {
     $currentUrl = trim(url()->current());
     if (str_contains($currentUrl, 'staging.allcalls.io')) {
-        return ['josov49837@flexvio.com'];
+        return ['awaisamir23@gmail.com'];
     } else {
-        return ['josov49837@flexvio.com'];
+        return ['recruiting@allcalls.io'];
     }
 }
 

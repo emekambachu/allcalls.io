@@ -46,11 +46,8 @@ use App\Http\Controllers\TwilioIOSAccessTokenController;
 use App\Http\Controllers\CustomBroadcastingAuthController;
 use App\Http\Controllers\ActiveUsersPusherWebhookController;
 use App\Http\Controllers\CallCenterDispositionAPIController;
-<<<<<<< HEAD
 use App\Http\Controllers\CareersController;
-=======
 use App\Http\Controllers\TextMessageController;
->>>>>>> 589b9f96700016212ba094cef6c6ad43b908f395
 use App\Http\Controllers\TwilioAndroidAccessTokenController;
 use App\Http\Controllers\TwilioIOSAccessTokenGuestController;
 use App\Http\Controllers\TwilioIOSSandboxAccessTokenController;
@@ -254,7 +251,6 @@ Route::middleware(['auth:sanctum', 'notBanned'])->delete('/sendbird-user/delete'
 Route::middleware(['auth:sanctum', 'notBanned'])->post('/profile/upload-image', [ProfileController::class, 'uploadProfilePicture']);
 
 Route::middleware(['auth:sanctum', 'notBanned'])->post('/web-api/careers', [CareersController::class, 'careers']);
-
 
 Route::post('/sendbird-user/blahblahblah', function (Request $request){
     return response()->json([
