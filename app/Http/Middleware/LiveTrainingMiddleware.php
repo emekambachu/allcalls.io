@@ -15,9 +15,10 @@ class LiveTrainingMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(auth()->user()->agent_access_status === 'Training' && auth()->user()->balance < 40) {
+        if(auth()->user()->roles->contains('name', 'internal-agent') && auth()->user()->agent_access_status === 'Training' && auth()->user()->balance < 40) {
             return redirect()->route('training.lower.balance');  
         }
+
         return $next($request);
     }
 }

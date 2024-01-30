@@ -23,22 +23,10 @@ let validateEmail = (email) => {
 let uiEmailValidation = ref({
     isValid: false,
 });
-let inviteAgent = () => {
-    props.firstStepErrors.email = [``];
-    props.firstStepErrors.level = [``];
-    if (validateEmail(form.value.email)) {
-        if (form.value.level && form.value.level !== "-- Select an option --") {
-            emits('inviteAgent', form.value)
-        } else {
-            props.firstStepErrors.level = [`Please select the level.`];
-        }
-    } else {
-        props.firstStepErrors.email = [`Please enter valid email address.`];
-    }
+let scheduleCall = () => {
+   console.log('in process');
 }
-let ReinviteAgent = () => {
-    emits('ReinviteAgent')
-}
+
 let close = () => {
     emits('close')
 }
@@ -116,56 +104,26 @@ let close = () => {
                     <div class="relative bg-white rounded-lg shadow-lg transition-all">
                         <div class="flex justify-end">
                             <Link :href="route('logout')" method="post" as="button"
-                                    class="underline text-sm text-gray-600 mr-5 mt-2  dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
-                                Logout </Link>
+                                class="underline text-sm text-gray-600 mr-5 mt-2  dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
+                            Logout </Link>
                         </div>
-                        <div class="px-12 py-2">
+                        <div class="px-6 py-2">
                             <h1 class="text-gray-800 text-2xl font-bold">Low Balance</h1>
                             <br>
 
 
+                            <p class="mb-5">
+                                Your balance is low. Please schedule a review call with your trainer.
+                            </p>
 
-                            <div class="mb-3">
-                                <label for="Email" class="block mb-2 text-sm font-black text-gray-900 ">Email<span
-                                        class="text-red-500">*</span></label>
-                                <input type="email" v-model="form.email" id="default-input"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
-                                <div v-if="firstStepErrors.email" class="text-red-500" v-text="firstStepErrors.email[0]">
-                                </div>
-                                <!-- <div v-if="uiEmailValidation.isValid" class="text-red-500">
-                                Please enter valid email address.
-                            </div> -->
-                            </div>
-                            <!-- <div class="mb-3">
-                            <label for="Upline ID" class="block mb-2 text-sm font-black text-gray-900 ">Upline ID<span
-                                    class="text-red-500">*</span></label>
-                            <input type="text"  v-model="form.upline_id" id="default-input"
-                            
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
-                            <div v-if="firstStepErrors.upline_id" class="text-red-500" v-text="firstStepErrors.upline_id[0]"></div>
-                            
-                        </div> -->
-
-                            <div>
-                                <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 ">Agent
-                                    Level<span class="text-red-500">*</span></label>
-                                <select v-model="form.level" id="countries"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
-                                    <option disabled selected>-- Select an option -- </option>
-                                    <option>hello </option>
-                                </select>
-                                <div v-if="firstStepErrors.level" class="text-red-500" v-text="firstStepErrors.level[0]">
-                                </div>
-                            </div>
 
                             <div class=" mb-3 mt-2">
-                                <div class="flex justify-end">
-
+                                <div class="flex justify-start">
                                     <div class="mt-4">
-                                        <button type="button" @click="inviteAgent" :class="{ 'opacity-25': isLoading }"
+                                        <button type="button" @click="scheduleCall" :class="{ 'opacity-25': isLoading }"
                                             :disabled="isLoading"
                                             class="button-custom px-3 py-2 rounded-md flex items-center">
-                                            <global-spinner :spinner="isLoading" /> Invite
+                                            <global-spinner :spinner="isLoading" /> Schedule A Call
                                         </button>
                                     </div>
                                 </div>

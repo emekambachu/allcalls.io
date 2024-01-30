@@ -20,6 +20,8 @@ const PROGRESS_STATUSES = [
     'Contracts Sent to Carrier',
 ];
 
+const IN_TRAINING_STATUS_ROUTES = ['take-calls.show', 'take-calls.online-users.store', 'take-calls.online-users.destroy', 'training.index', 'profile.view', 'upload.profile.picture', 'profile.edit', 'profile.update', 'profile.destroy'];
+
 function systemEmails() {
     $currentUrl = trim(url()->current());
 

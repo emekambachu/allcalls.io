@@ -115,7 +115,7 @@ class RegistrationStepController extends Controller
 
                 $user->legacy_key = true;
                 $user->contract_step = 12;
-                $user->is_locked = 1;
+                $user->agent_access_status = 'Not Live';
                 $user->save();
 
                 event(new OnboardingCompleted($user));
