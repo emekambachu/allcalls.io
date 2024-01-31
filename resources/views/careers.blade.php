@@ -452,10 +452,10 @@
 
             <label for="">Are You Licensed for Life Insurance?</label>
             <div class="input-radio-block">
-                <input class="radio-input" type="radio" value="Yes" name="life_insurance"><span class="desc">Yes</span>
+                <input class="radio-input" type="radio" value="Yes" id="life_insurance" name="life_insurance"><span class="desc"><label for="life_insurance">Yes</label> </span>
             </div>
             <div class="input-radio-block">
-                <input class="radio-input" type="radio" value="No" name="life_insurance"><span class="desc">No</span>
+                <input class="radio-input" type="radio" value="No" id="life_insurance2" name="life_insurance"><span class="desc"><label for="life_insurance2">No</label>  </span>
             </div>
             <span class="carreer_input_error" id="error_life_insurance"></span>
             {{-- <button id="joinUsModalSubmitBtn" class="join-us-btn submit-btn btn-2 btn">
