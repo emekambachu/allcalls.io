@@ -37,6 +37,15 @@ function systemEmails() {
     }
 }
 
+function recruitingEmail() {
+    $currentUrl = trim(url()->current());
+    if (str_contains($currentUrl, 'staging.allcalls.io')) {
+        return ['awaisamir23@gmail.com'];
+    } else {
+        return ['recruiting@allcalls.io'];
+    }
+}
+
 function getStateName($id)
 {
     $state = \App\Models\State::find($id);

@@ -44,6 +44,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CallUserResponseAPIController;
 use App\Http\Controllers\PromotionGuidelinesController;
 use App\Http\Controllers\AgentStatusPriceDocsController;
+use App\Http\Controllers\CareersController;
 use App\Http\Controllers\TakeCallsOnlineUsersController;
 use App\Http\Controllers\FEAgentStatusPriceDocsController;
 use App\Http\Controllers\ZoomMeetingNotificationController;
@@ -154,6 +155,7 @@ Route::patch('/web-api/clients/{client}', [WebAPIClientsController::class, 'upda
 Route::post('/web-api/clients/{client}/disposition', [WebAPIClientsController::class, 'updateDispositionOnly'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.web-api.update-disposition-only');
 Route::patch('/web-api/calls/{uniqueCallId}/user-response', [CallUserResponseAPIController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check']);
 Route::patch('/web-api/bids/{callType}', [CallTypeBidsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check']);
+Route::post('/web-api/careers', [CareersController::class, 'careers']);
 
 Route::get('/support', [SupportController::class, 'index'])->name('support.index');
 
@@ -254,7 +256,7 @@ Route::middleware('auth:sanctum')->post('/web-api/calls/{uniqueCallId}/reject', 
 
 route::get('/promotion-guidelines', [PromotionGuidelinesController::class, 'show'])->middleware(['auth', 'verified', 'registration-step-check'])->name('promotion-guidelines.show');
 
-Route::get('/careers', function(){
+Route::get('/careers', function () {
     return view('careers');
 });
 
