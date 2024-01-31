@@ -440,8 +440,6 @@
             action="https://656a16294c31011321a8129b--stupendous-trifle-525211.netlify.app/">
             <input class="type-input" name="first_name" type="text" placeholder="First Name">
             <span class="carreer_input_error" id="error_first_name"></span>
-            <span class="life_insurance" id="life_insurance2"></span>
-
 
             <input class="type-input" name="last_name" type="text" placeholder="Last Name">
             <span class="carreer_input_error" id="error_last_name"></span>
@@ -454,10 +452,10 @@
 
             <label for="">Are You Licensed for Life Insurance?</label>
             <div class="input-radio-block">
-                <input class="radio-input" type="radio" name="life_insurance"><span class="desc">Yes</span>
+                <input class="radio-input" type="radio" value="Yes" name="life_insurance"><span class="desc">Yes</span>
             </div>
             <div class="input-radio-block">
-                <input class="radio-input" type="radio" name="life_insurance"><span class="desc">No</span>
+                <input class="radio-input" type="radio" value="No" name="life_insurance"><span class="desc">No</span>
             </div>
             <span class="carreer_input_error" id="error_life_insurance"></span>
             {{-- <button id="joinUsModalSubmitBtn" class="join-us-btn submit-btn btn-2 btn">
