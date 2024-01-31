@@ -22,6 +22,7 @@ import {
   endOfQuarter,
   subQuarters,
 } from "date-fns";
+// import axios from "axios";
 
 const presetDates = ref([
   { label: "Today", value: [new Date(), new Date()] },
@@ -177,13 +178,13 @@ function formatCurrency(number) {
   // First, round the number to two decimal places
   let rounded = Number(number).toFixed(2);
 
-  // Then, format it as currency
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
-  }).format(rounded);
-}
+    // Then, format it as currency
+    return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 2,
+    }).format(rounded);
+} 
 
 let deleteApp = (policy) => {
   if (!confirm("Are you sure you want to delete this app?")) {
@@ -240,6 +241,7 @@ let deleteApp = (policy) => {
 
             <div>
               <PrimaryButton @click="addBusiness()">Report Application </PrimaryButton>
+
             </div>
           </div>
           <div class="flex mb-5">
