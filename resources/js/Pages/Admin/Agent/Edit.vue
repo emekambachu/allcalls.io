@@ -33,6 +33,7 @@ let props = defineProps({
   user_type: String,
   levels: Array,
   agents: Array,
+  roles:Array,
 });
 let emit = defineEmits(["close"]);
 let originalClient = props.userDetail;

@@ -49,25 +49,27 @@ let unreadNotifications = ref(
   })
 );
 
-let isNotLive = ref(true);
-let isLive = ref(true);
-let isTraining = ref(true);
+  let isNotLive = ref(page.props.auth.role === "internal-agent" ? true : false);
+  let isLive = ref(page.props.auth.role === "internal-agent" ? true : false);
+  let isTraining = ref(page.props.auth.role === "internal-agent" ? true : false);
+  let isLiveOrIsTrainingTrue = ref(page.props.auth.role === "internal-agent" ? true : false)
 
-if (page.props.auth.role === "internal-agent" && page.props.auth.user.agent_access_status == 'Not Live') {
-  isNotLive.value = false;
-}
+if(page.props.auth.role === "internal-agent") {
+  if (page.props.auth.user.agent_access_status == 'Not Live') {
+    isNotLive.value = false;
+  }
 
-if (page.props.auth.role === "internal-agent" && page.props.auth.user.agent_access_status == 'Live') {
-  isLive.value = false;
-}
+  if (page.props.auth.user.agent_access_status == 'Live') {
+    isLive.value = false;
+  }
 
-if (page.props.auth.role === "internal-agent" && page.props.auth.user.agent_access_status == 'Training') {
-  isTraining.value = false;
-}
+  if (page.props.auth.user.agent_access_status == 'Training') {
+    isTraining.value = false;
+  }
 
-let isLiveOrIsTrainingTrue = ref(true)
-if (page.props.auth.role === "internal-agent" && (page.props.auth.user.agent_access_status == 'Training' || page.props.auth.user.agent_access_status == 'Live')) {
-  isLiveOrIsTrainingTrue.value = false;
+  if (page.props.auth.user.agent_access_status == 'Training' || page.props.auth.user.agent_access_status == 'Live') {
+    isLiveOrIsTrainingTrue.value = false;
+  }
 }
 
 
