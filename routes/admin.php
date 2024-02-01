@@ -72,6 +72,8 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::post('/agent', [InternalAgentController::class, 'store'])->name('admin.agent.store');
 
     Route::post('/agent/{id}', [InternalAgentController::class, 'update'])->name('admin.agent.update');
+    
+    Route::post('/update-training-status', [InternalAgentController::class, 'UpdateTrainingStatus'])->name('admin.update.training.status');
 
     Route::get('/agent/detail/{id}', [InternalAgentController::class, 'show'])->name('admin.agent.detail');
 
@@ -89,10 +91,8 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
     Route::get('/download/signature-authorization/{id}', [InternalAgentController::class, 'signatureAuthorizationPdf'])->name('admin.agent.signature.authorization.pdf');
 
-    Route::get('/approved-internal-agent/{id}', [InternalAgentController::class, 'internalAgentApproved'])->name('admin.approved.internal.agent');
 
     Route::post('/progress-internal-agent', [InternalAgentController::class, 'internalAgentProgress'])->name('admin.internal.agent.update.progress');
-
     /// My business
     Route::get('/my-business', [AgentBusinessController::class, 'index'])->name('admin.my-business.index');
     Route::post('/my-business', [AgentBusinessController::class, 'store'])->name('admin.my-business.store');
@@ -143,4 +143,23 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::delete('/email-blacklist/{emailBlacklist}', [AdminEmailBlacklistController::class, 'destroy'])->name('admin.email-blacklist.destroy');
 
     Route::post('/policies/{policyId}/delete', [AdminPoliciesController::class, 'destroy'])->name('admin.policies.destroy');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    Route::get('/manage-training-level', [InternalAgentController::class, 'manageTrainingLevel']);
+
 });

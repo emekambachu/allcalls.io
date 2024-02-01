@@ -22,15 +22,17 @@ class RegistrationStepCheckerMiddleware
             return redirect()->route('contract.steps');
         }
 
-        if (auth()->user()->roles->contains('name', 'internal-agent') && auth()->user()->is_locked) {
-            return redirect()->route('internal.agent.locked');
-        }
+        // if (auth()->user()->roles->contains('name', 'internal-agent') && auth()->user()->is_locked) {
+        //     return redirect()->route('internal.agent.locked');
+        // }
 
-        if (DB::table('users_call_type_state')->where('user_id', auth()->user()->id)->count()) {
-            return $next($request);
-        }
-
+        if (DB::table('users_call_type_state')->where('user_id', auth()->user()->id)->count() == 0) {
         return redirect()->route('registration.steps');
+        }
+
+        return $next($request);
+
+        // return redirect()->route('registration.steps');
 
 
         //        if (DB::table('users_call_type_state')->where('user_id', auth()->user()->id)->count()) {
