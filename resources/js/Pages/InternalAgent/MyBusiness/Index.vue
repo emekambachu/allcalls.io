@@ -314,6 +314,9 @@ let deleteApp = (policy) => {
                     Client Name
                   </th>
                   <th scope="col" style="min-width: 150px" class="px-4 py-3">
+                    Phone
+                  </th>
+                  <th scope="col" style="min-width: 150px" class="px-4 py-3">
                     Application Date
                   </th>
                   <th scope="col" style="min-width: 150px" class="px-4 py-3">
@@ -359,6 +362,13 @@ let deleteApp = (policy) => {
                   <td class="text-gray-600 px-4 py-3">
                     {{ businesse.first_name }} {{ businesse.last_name }}
                   </td>
+
+                  <td class="text-gray-600 px-4 py-3">
+                    <span v-if="businesse.client && businesse.client.call">
+                      {{ businesse.client.call.from }}
+                    </span>
+                  </td>
+
                   <td
                     class="text-gray-600 px-4 py-3"
                     v-text="businesse?.application_date"
