@@ -91,7 +91,6 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
     Route::get('/download/signature-authorization/{id}', [InternalAgentController::class, 'signatureAuthorizationPdf'])->name('admin.agent.signature.authorization.pdf');
 
-    Route::get('/approved-internal-agent/{id}', [InternalAgentController::class, 'internalAgentApproved'])->name('admin.approved.internal.agent');
 
     Route::post('/progress-internal-agent', [InternalAgentController::class, 'internalAgentProgress'])->name('admin.internal.agent.update.progress');
     /// My business

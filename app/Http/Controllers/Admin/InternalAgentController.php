@@ -443,23 +443,6 @@ class InternalAgentController extends Controller
         return $pdf->download($serialNo . '-explaination.pdf');
     }
 
-    public function internalAgentApproved($id)
-    {
-        try {
-            $user = User::findOrFail($id);
-            $user->is_locked = false;
-            $user->save();
-            return response()->json([
-                'success' => true,
-                'message' => 'Internal Agent Approved Successfully.',
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'errors' => $e->getMessage(),
-            ], 400);
-        }
-    }
 
     public function internalAgentProgress(Request $request)
     {

@@ -13,7 +13,6 @@ import ViewPdfindex from "@/Pages/Admin/Agent/ViewPdfindex.vue";
 // import AgentTree from "@/Pages/Admin/Agent/AgentTree.vue";
 import AgentTree from "@/Components/AgentTree.vue";
 import ProgressView from "@/Pages/Admin/Agent/ProgressView.vue";
-import ApproveConfirm from "@/Pages/Admin/Agent/ApproveConfirm.vue";
 import LiveTraining from "@//Pages/Admin/Agent/LiveTraining.vue";
 
 import axios from "axios";
@@ -120,32 +119,8 @@ let progressFun = (agent) => {
   userData.value = agent;
   progressModal.value = true;
 };
-let showModalConfirm = ref(false);
-let ApproveAgentVal = ref(null);
 let isLoading = ref(false);
-let ApproveAgent = (agent) => {
-  ApproveAgentVal.value = agent;
-  showModalConfirm.value = true;
-};
-let onApprove = () => {
-  // Logic for approval
-  isLoading.value = true;
-  axios
-    .get(`/admin/approved-internal-agent/${ApproveAgentVal.value.id}`)
-    .then((res) => {
-      router.visit("/admin/agents");
-      toaster("success", res.data.message);
-      showModalConfirm.value = false;
-    })
-    .catch((error) => {
-      toaster("error", error.message);
-      showModalConfirm.value = false;
-      isLoading.value = false;
-    });
-};
-let onCancel = () => {
-  showModalConfirm.value = false;
-};
+
 let updateProgress = (data) => {
   isLoading.value = true;
   axios
@@ -365,14 +340,7 @@ let updateUserData = (user) => {
                         </g>
                       </svg>
                     </button>
-                    <button class="ml-2" @click="agent.is_locked !== 0 ? ApproveAgent(agent) : null"
-                      v-show="agent.internal_agent_contract && agent.legacy_key === 1"
-                      :title="agent.is_locked === 0 ? 'Approved' : 'Approve Agent'">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" :class="{ 'text-green-400': agent.is_locked === 0 }" class="w-5 h-5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                      </svg>
-                    </button>
+
                     <a title="View Agent" :href="route('admin.agent.detail', agent.id)"><svg
                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-5 h-5">
@@ -569,8 +537,6 @@ let updateUserData = (user) => {
         :callTypes="callTypes" :states="states" @close="agentModal = false"></Create>
     </Modal>
 
-    <ApproveConfirm @close="showModalConfirm = false" :showModalConfirm="showModalConfirm" @onApprove="onApprove"
-      :isLoading="isLoading" @onCancel="onCancel" />
   </AuthenticatedLayout>
 </template>
 
