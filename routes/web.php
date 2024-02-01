@@ -122,7 +122,7 @@ Route::middleware(['auth', 'verified', 'registration-step-check', 'notBanned', '
     Route::get('/call-client-info', [CallClientInfoController::class, 'show']);
 });
 
-Route::middleware(['auth', 'notBanned'])->group(function () {
+Route::middleware(['auth', 'notBanned', 'IsLiveTraining'])->group(function () {
     Route::get('/profile/view', [ProfileController::class, 'view'])->name('profile.view');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');

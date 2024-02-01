@@ -33,7 +33,7 @@ Route::prefix('internal-agent')->middleware(['auth', 'verified', 'internal-agent
     ->name('training.lower.balance')->middleware(['registration-step-check']);
 
 
-    Route::get('/training', [TrainingController::class, 'index'])->name('training.index')->middleware(['registration-step-check']);
+    Route::get('/training', [TrainingController::class, 'index'])->name('training.index')->middleware(['registration-step-check', 'IsLiveTraining']);
 
 
     // Route::get('/training-locked', function () {
