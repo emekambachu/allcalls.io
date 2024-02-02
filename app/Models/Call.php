@@ -85,6 +85,11 @@ class Call extends Model
         return 'Regular User';
     }
 
-
+    public function devices()
+    {
+        return $this->belongsToMany(Device::class, 'call_device_actions')
+                    ->withPivot('action')
+                    ->withTimestamps();
+    }
 
 }
