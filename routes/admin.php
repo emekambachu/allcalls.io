@@ -93,6 +93,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
 
     Route::post('/progress-internal-agent', [InternalAgentController::class, 'internalAgentProgress'])->name('admin.internal.agent.update.progress');
+    Route::get('/approved-internal-agent/{id}', [InternalAgentController::class, 'ApproveAgent'])->name('admin.internal.agent.approved.internal.agent');
     /// My business
     Route::get('/my-business', [AgentBusinessController::class, 'index'])->name('admin.my-business.index');
     Route::post('/my-business', [AgentBusinessController::class, 'store'])->name('admin.my-business.store');

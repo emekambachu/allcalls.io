@@ -14,6 +14,7 @@ import ViewPdfindex from "@/Pages/Admin/Agent/ViewPdfindex.vue";
 import AgentTree from "@/Components/AgentTree.vue";
 import ProgressView from "@/Pages/Admin/Agent/ProgressView.vue";
 import LiveTraining from "@//Pages/Admin/Agent/LiveTraining.vue";
+import ApproveConfirm from "@/Pages/Admin/Agent/ApproveConfirm.vue";
 
 import axios from "axios";
 import { rule } from "postcss";
@@ -100,6 +101,33 @@ let formatDate = (inputDate) => {
   return formattedDate;
 };
 
+let showModalConfirm = ref(false);
+let ApproveAgentVal = ref(null);
+let isLoading = ref(false);
+let ApproveAgent = (agent) => {
+  ApproveAgentVal.value = agent;
+  showModalConfirm.value = true;
+};
+let onApprove = () => {
+  // Logic for approval
+  isLoading.value = true;
+  axios
+    .get(`/admin/approved-internal-agent/${ApproveAgentVal.value.id}`)
+    .then((res) => {
+      router.visit("/admin/agents");
+      toaster("success", res.data.message);
+      showModalConfirm.value = false;
+    })
+    .catch((error) => {
+      toaster("error", error.message);
+      showModalConfirm.value = false;
+      isLoading.value = false;
+    });
+};
+let onCancel = () => {
+  showModalConfirm.value = false;
+};
+
 let capitalizeAndReplaceUnderscore = (str) => {
   // Replace underscores with spaces
   let result = str.replace(/_/g, " ");
@@ -119,7 +147,6 @@ let progressFun = (agent) => {
   userData.value = agent;
   progressModal.value = true;
 };
-let isLoading = ref(false);
 
 let updateProgress = (data) => {
   isLoading.value = true;
@@ -289,7 +316,7 @@ let updateUserData = (user) => {
                   <th scope="col" class="px-4 py-3">Progress</th>
                   <th scope="col" class="px-4 py-3 text-end">Actions</th>
                   <th scope="col" style="min-width: 110px" class="px-4 py-3">Level</th>
-                  <th scope="col" style="min-width: 110px" class="px-4 py-3">Status</th>
+                  <!-- <th scope="col" style="min-width: 110px" class="px-4 py-3">Status</th> -->
                   <th scope="col" style="min-width: 110px" class="px-4 py-3">Upline</th>
                   <th scope="col" class="px-4 py-3">Email</th>
                   <th scope="col" class="px-4 py-3">Balance</th>
@@ -319,9 +346,9 @@ let updateUserData = (user) => {
                       </svg>
                     </button>
 
-                    <button class="ml-2" @click="viewPdfData(agent)"
+                    <button class="ml-0 mr-2" @click="viewPdfData(agent)"
                       v-show="agent.internal_agent_contract && agent.legacy_key === 1" title="Contracting">
-                      <svg fill="#000000" class="w-4 h-4" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                      <svg fill="#000000" class="w-4  h-4" version="1.1" xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 237.783 237.783" xmlns:xlink="http://www.w3.org/1999/xlink"
                         enable-background="new 0 0 237.783 237.783">
                         <g>
@@ -338,6 +365,29 @@ let updateUserData = (user) => {
                           <path
                             d="m237.783,98.361c0-1.591-0.632-3.117-1.757-4.243l-16.356-16.355c-1.125-1.125-2.651-1.757-4.243-1.757s-3.117,0.632-4.243,1.757l-28.756,28.756v-88.117c0-3.313-2.686-6-6-6h-170.428c-3.314,0-6,2.687-6,6v200.979c0,3.313 2.686,6 6,6h170.429c3.314,0 6-2.687 6-6v-63.18l53.597-53.597c1.125-1.125 1.757-2.651 1.757-4.243zm-225.783,115.02v-188.979h158.429v94.117l-35.291,35.291h-92.403c-3.313,0-6,2.687-6,6s2.687,6 6,6h80.403l-1.033,1.033c-0.777,0.777-1.326,1.753-1.586,2.821l-4.157,17.05h-25.148c-3.313,0-6,2.687-6,6s2.687,6 6,6c0,0 29.714,0 29.86,0 0.473,0 0.95-0.056 1.421-0.171l21.629-5.273c1.068-0.26 2.044-0.809 2.821-1.586l23.482-23.482v45.181h-158.427zm127.649-31.374l-10.408,2.538 2.538-10.408 83.648-83.648 7.871,7.871-83.649,83.647z" />
                         </g>
+                      </svg>
+                    </button>
+
+                    <button
+                      class="ml-2"
+                      @click="agent.is_locked !== 0 ? ApproveAgent(agent) : null"
+                      v-show="agent.internal_agent_contract && agent.legacy_key === 1"
+                      :title="agent.is_locked === 0 ? 'Approved' : 'Approve Agent'"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        :class="{ 'text-green-400': agent.is_locked === 0 }"
+                        class="w-5 h-5"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M4.5 12.75l6 6 9-13.5"
+                        />
                       </svg>
                     </button>
 
@@ -360,7 +410,7 @@ let updateUserData = (user) => {
                       </svg>
                     </button>
 
-                    <button title="Live Training" @click="liveTraining(agent, agents.current_page)"
+                    <!-- <button title="Live Training" @click="liveTraining(agent, agents.current_page)"
                       class="inline-flex items-center mx-2 p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
                       type="button">
                       <svg fill="#000000" class="w-5 h-5" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
@@ -390,7 +440,7 @@ let updateUserData = (user) => {
                           </g>
                         </g>
                       </svg>
-                    </button>
+                    </button> -->
                     <button class="ml-2" @click="progressFun(agent)" title="Progress">
                       <svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512.000000 512.000000"
                         preserveAspectRatio="xMidYMid meet" class="w-5 h-5">
@@ -536,6 +586,7 @@ let updateUserData = (user) => {
       <Create :levels="levels" :agentModal="agentModal" :roles="roles" :agents="agents.data" :currentPage="currentPage"
         :callTypes="callTypes" :states="states" @close="agentModal = false"></Create>
     </Modal>
+    <ApproveConfirm :showModalConfirm="showModalConfirm" :isLoading="isLoading" @onApprove="onApprove" @close="showModalConfirm = false" />
 
   </AuthenticatedLayout>
 </template>

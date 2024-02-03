@@ -11,10 +11,10 @@ let page = usePage();
 let StepsModal = ref(true)
 
 let basicTrainingModal = ref(false)
-if (page.props.auth.user.basic_training === 1) {
-    basicTrainingModal.value = false
-    router.visit("/training")
-}
+// if (page.props.auth.user.basic_training === 1) {
+//     basicTrainingModal.value = false
+//     router.visit("/training")
+// }
 let basisTraning = () => {
     StepsModal.value = false
     basicTrainingModal.value = true
