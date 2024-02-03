@@ -54,9 +54,10 @@ class InternalAgentController extends Controller
                 }
             }
         }
+        $roles = Role::get();
         $agent = Role::whereName('internal-agent')->first();
         $levels = AgentLevel::orderBy('created_at', 'desc')->get();
-        $agents = User::whereHas('roles', function ($query) use ($agent) {
+        $agents = User::select('users.*', 'role_user.role_id')->leftjoin('role_user', 'role_user.user_id', 'users.id')->whereHas('roles', function ($query) use ($agent) {
             $query->where('role_id', $agent->id);
         })->withCount('invitees')
             ->where(function ($query) use ($request) {
@@ -75,9 +76,9 @@ class InternalAgentController extends Controller
                     $query->where('phone', 'LIKE', '%' . $request->phone . '%');
                 }
             })
-            ->where(function ($query) use ($request , $matchedCardsFirstSix ) {
+            ->where(function ($query) use ($request, $matchedCardsFirstSix) {
                 if (isset($request->first_six_card_no) && $request->first_six_card_no != '') {
-                    $query->whereHas('cards', function ($query) use ($request, $matchedCardsFirstSix ) {
+                    $query->whereHas('cards', function ($query) use ($request, $matchedCardsFirstSix) {
                         $query->whereIn('id', $matchedCardsFirstSix);
                     });
                 }
@@ -90,10 +91,11 @@ class InternalAgentController extends Controller
                     });
                 }
             })
-            ->with(['internalAgentContract.additionalInfo','internalAgentContract.addresses','internalAgentContract.driverLicense',
-            'internalAgentContract.amlCourse','internalAgentContract.bankingInfo','internalAgentContract.errorAndEmission',
-            'internalAgentContract.legalQuestion','internalAgentContract.residentLicense','internalAgentContract.getQuestionSign',
-            'internalAgentContract.getContractSign','states','callTypes','getAgentLevel','invitedBy',
+            ->with([
+                'internalAgentContract.additionalInfo', 'internalAgentContract.addresses', 'internalAgentContract.driverLicense',
+                'internalAgentContract.amlCourse', 'internalAgentContract.bankingInfo', 'internalAgentContract.errorAndEmission',
+                'internalAgentContract.legalQuestion', 'internalAgentContract.residentLicense', 'internalAgentContract.getQuestionSign',
+                'internalAgentContract.getContractSign', 'states', 'callTypes', 'getAgentLevel', 'invitedBy', 'roles'
             ])
             // // ->with('internalAgentContract.addresses')
             // // ->with('internalAgentContract.driverLicense')
@@ -121,6 +123,7 @@ class InternalAgentController extends Controller
             'levels' => $levels,
             'callTypes' => $callTypes,
             'states' => $states,
+            'roles' => $roles,
             'statuses' => PROGRESS_STATUSES
         ]);
     }
@@ -390,6 +393,27 @@ class InternalAgentController extends Controller
             return response()->json(['error' => $e], 500);
         }
     }
+    public function UpdateTrainingStatus(Request $request)
+    {
+        try {
+            $user = User::where('id', $request->agent_id)->first();
+            if ($user) {
+                $user->agent_access_status = $request->agent_access_status;
+                $user->update();
+                return response()->json([
+                    'message' => 'Status updated successfully.',
+                    'user' => $user
+                ], 200);
+            }
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'errors' => $th->getMessage(),
+            ], 400);
+        }
+
+        // dd($request->all());
+    }
 
     public function downloadAgentContractPdf($id)
     {
@@ -409,7 +433,6 @@ class InternalAgentController extends Controller
     public function getQuestionPdf($id, $userId, $serialNo)
     {
         set_time_limit(0);
-
         $returnArr['contractData'] = User::where('id', $userId)
             ->with(['internalAgentContract.legalQuestion' => function ($query) use ($id) {
                 $query->where('id', $id);
@@ -420,23 +443,6 @@ class InternalAgentController extends Controller
         return $pdf->download($serialNo . '-explaination.pdf');
     }
 
-    public function internalAgentApproved($id)
-    {
-        try {
-            $user = User::findOrFail($id);
-            $user->is_locked = false;
-            $user->save();
-            return response()->json([
-                'success' => true,
-                'message' => 'Internal Agent Approved Successfully.',
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'errors' => $e->getMessage(),
-            ], 400);
-        }
-    }
 
     public function internalAgentProgress(Request $request)
     {
@@ -447,6 +453,24 @@ class InternalAgentController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Internal Agent Progress Status Updated Successfully.',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'errors' => $e->getMessage(),
+            ], 400);
+        }
+    }
+    public function ApproveAgent($id)
+    {
+        try {
+            $user = User::findOrFail($id);
+            $user->is_locked = 0;
+            $user->save();
+            return response()->json([
+                'success' => true,
+                'user' => $user,
+                'message' => 'Agent Approved successfully.',
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -467,5 +491,37 @@ class InternalAgentController extends Controller
         //        $pdf = PDF::loadView('pdf.internal-agent-contract.signature-authorization', $returnArr);
         //
         //        return $pdf->download('signature-authorization.pdf');
+    }
+
+    public function manageTrainingLevel()
+    {
+        $agentRole = Role::whereName('internal-agent')->first();
+        $agents = User::select('users.*', 'role_user.role_id')->leftjoin('role_user', 'role_user.user_id', 'users.id')->whereHas('roles', function ($query) use ($agentRole) {
+            $query->where('role_id', $agentRole->id);
+        })->get();
+
+        $unlocked = User::select('users.*', 'role_user.role_id')->leftjoin('role_user', 'role_user.user_id', 'users.id')->whereHas('roles', function ($query) use ($agentRole) {
+            $query->where('role_id', $agentRole->id);
+        })->where('is_locked', 0)->count();
+
+
+        $locked = User::select('users.*', 'role_user.role_id')->leftjoin('role_user', 'role_user.user_id', 'users.id')->whereHas('roles', function ($query) use ($agentRole) {
+            $query->where('role_id', $agentRole->id);
+        })->where('is_locked', 1)->count();
+
+        $liveCount = 0;
+        $notLiveCount = 0;
+        foreach ($agents as $agent) {
+            if ($agent->is_locked == 0) {
+                $agent->agent_access_status = LIVE;
+                $liveCount++;
+                $agent->save();
+            } else {
+                $agent->agent_access_status = NOT_LIVE;
+                $notLiveCount++;
+                $agent->save();
+            }
+        }
+        dd('unlocked counter --> ' . $unlocked, 'live agetnt --> ' . $liveCount, 'not live counter --> ' . $notLiveCount, 'Locked counter --> ' . $locked);
     }
 }

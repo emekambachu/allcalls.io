@@ -20,6 +20,13 @@ const PROGRESS_STATUSES = [
     'Contracts Sent to Carrier',
 ];
 
+const IN_TRAINING_STATUS_ROUTES = ['take-calls.show', 'take-calls.online-users.store', 'take-calls.online-users.destroy', 'training.index', 'profile.view', 'upload.profile.picture', 'profile.edit', 'profile.update', 'profile.destroy'];
+const TRAINING_MINIMUM_AMOUNT = 40;
+const TRAINING = 'Training';
+const LIVE = 'Live';
+const NOT_LIVE = 'Not Live';
+
+
 function systemEmails() {
     $currentUrl = trim(url()->current());
 
@@ -27,6 +34,15 @@ function systemEmails() {
         return ['awaisamir23@gmail.com'];
     } else {
         return ['contracting@allcalls.io', 'maria@allcalls.io', 'ema@allcalls.io'];
+    }
+}
+
+function recruitingEmail() {
+    $currentUrl = trim(url()->current());
+    if (str_contains($currentUrl, 'staging.allcalls.io')) {
+        return ['awaisamir23@gmail.com'];
+    } else {
+        return ['recruiting@allcalls.io'];
     }
 }
 

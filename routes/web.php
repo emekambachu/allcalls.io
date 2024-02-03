@@ -44,6 +44,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CallUserResponseAPIController;
 use App\Http\Controllers\PromotionGuidelinesController;
 use App\Http\Controllers\AgentStatusPriceDocsController;
+use App\Http\Controllers\CareersController;
 use App\Http\Controllers\TakeCallsOnlineUsersController;
 use App\Http\Controllers\FEAgentStatusPriceDocsController;
 use App\Http\Controllers\ZoomMeetingNotificationController;
@@ -80,13 +81,13 @@ require 'internal-agent.php';
 Route::get('/transactions', [TransactionsController::class, 'index'])->middleware(['auth', 'verified', 'notBanned'])->name('transactions.index');
 Route::delete('/transactions/{transaction}', [TransactionsController::class, 'destroy'])->middleware(['auth', 'verified', 'notBanned'])->name('transactions.destroy');
 
-Route::middleware(['auth', 'verified', 'notBanned', 'isLocked'])->group(function () {
+Route::middleware(['auth', 'verified', 'notBanned'])->group(function () {
     Route::get('/registration-steps', [RegisteredUserController::class, 'steps'])->name('registration.steps');
     Route::post('/store-registration-steps', [RegisteredUserController::class, 'storeSteps'])->name('store.registration.steps');
 });
 
 
-Route::middleware(['auth', 'verified', 'registration-step-check', 'notBanned'])->group(function () {
+Route::middleware(['auth', 'verified', 'registration-step-check', 'notBanned', 'isLocked', ])->group(function () {
     //User Routes
     Route::get('/dashboard', [DashboardController::class, 'show'])->name('dashboard');
     Route::get('/transactions', [TransactionsController::class, 'index'])->name('transactions.index');
@@ -121,12 +122,12 @@ Route::middleware(['auth', 'verified', 'registration-step-check', 'notBanned'])-
     Route::get('/call-client-info', [CallClientInfoController::class, 'show']);
 });
 
-Route::middleware(['auth', 'notBanned'])->group(function () {
+Route::middleware(['auth', 'notBanned', ])->group(function () {
     Route::get('/profile/view', [ProfileController::class, 'view'])->name('profile.view');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::post('/profile/upload-picture', [ProfileController::class, 'uploadProfilePicture']);
+    Route::post('/profile/upload-picture', [ProfileController::class, 'uploadProfilePicture'])->name('upload.profile.picture');
 });
 
 Route::patch('/bids', [BidsController::class, 'update'])->middleware(['auth', 'verified', 'notBanned'])->name('bids.update');
@@ -148,12 +149,13 @@ Route::get('/device/incoming', function () {
     return view('incoming');
 })->middleware('auth');
 
-Route::get('/clients', [ClientsController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.index');
-Route::patch('/clients/{client}', [ClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.update');
+Route::get('/clients', [ClientsController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check', 'isLocked', ])->name('clients.index');
+Route::patch('/clients/{client}', [ClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check', 'isLocked', ])->name('clients.update');
 Route::patch('/web-api/clients/{client}', [WebAPIClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.web-api.update');
 Route::post('/web-api/clients/{client}/disposition', [WebAPIClientsController::class, 'updateDispositionOnly'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.web-api.update-disposition-only');
 Route::patch('/web-api/calls/{uniqueCallId}/user-response', [CallUserResponseAPIController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check']);
 Route::patch('/web-api/bids/{callType}', [CallTypeBidsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check']);
+Route::post('/web-api/careers', [CareersController::class, 'careers']);
 
 Route::get('/support', [SupportController::class, 'index'])->name('support.index');
 
@@ -254,7 +256,7 @@ Route::middleware('auth:sanctum')->post('/web-api/calls/{uniqueCallId}/reject', 
 
 route::get('/promotion-guidelines', [PromotionGuidelinesController::class, 'show'])->middleware(['auth', 'verified', 'registration-step-check'])->name('promotion-guidelines.show');
 
-Route::get('/careers', function(){
+Route::get('/careers', function () {
     return view('careers');
 });
 

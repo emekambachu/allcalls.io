@@ -6,7 +6,7 @@ let props = defineProps({
     isLoading:Boolean,
 });
 let onCancel  = () => {
-    emits('onCancel')
+    emits('close')
 }
 let onApprove  = () => {
     emits('onApprove')
