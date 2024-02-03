@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('agent_access_status')->default(NOT_LIVE)->after('legacy_key')->nullable();
+            $table->string('agent_access_status')->after('legacy_key')->nullable();
         });
     }
 
