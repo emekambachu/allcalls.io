@@ -10,7 +10,7 @@ class TwilioWebhookErrorController extends Controller
     public function store()
     {
         // Log the error
-        Log::error('Twilio webhook error: ' . request()->getContent());
+        Log::debug('Twilio webhook error: ' . request()->getContent());
 
         return response('Error logged', 200);
     }
