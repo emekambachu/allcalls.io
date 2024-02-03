@@ -267,4 +267,4 @@ Route::post('/twilio/sms/receive', [TwilioSMSController::class, 'receiveSMS']);
 Route::post('/commio/sms/send', [TextMessageController::class, 'sendMessage']);
 Route::post('/commio/sms/receive', [TextMessageController::class, 'receiveMessage']);
 
-Route::get('/twilio-webhook-error', [TwilioWebhookErrorController::class, 'store']);
+Route::post('/twilio-webhook-error', [TwilioWebhookErrorController::class, 'store']);
