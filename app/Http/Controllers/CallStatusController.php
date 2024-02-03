@@ -25,6 +25,10 @@ class CallStatusController extends Controller
 {
     public function update(Request $request)
     {
+        Log::debug('CallStatusControllerWebhook:', [
+            'request' => $request->all(),
+        ]);
+
         if (!$request->user_id || !$request->call_type_id || !$request->CallStatus) {
             Log::debug('Not enough query parameters to process the request.');
             Log::debug([
