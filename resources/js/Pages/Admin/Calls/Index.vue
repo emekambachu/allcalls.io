@@ -202,7 +202,8 @@ let openPublisherDetails = (call) => {
         response.data.ringbaCallLogs.report.records.length
       ) {
         // Set state for publisher info
-        publisherName.value = response.data.ringbaCallLogs.report.records[0].publisherName;
+        publisherName.value =
+          response.data.ringbaCallLogs.report.records[0].publisherName;
         publisherId.value = response.data.ringbaCallLogs.report.records[0].publisherId;
       } else {
         console.log("No publisher found for call " + call.id);
@@ -224,17 +225,20 @@ let openPublisherDetails = (call) => {
     </template>
 
     <Modal :show="publisherModal" :closeable="true" @close="publisherModal = false">
-      <div class="p-3">
-        <h3 class="text-lg mb-4 text-center">Publisher Details</h3>
-
-        <div v-if="publisherName && publisherId">
-          <div class="flex justify-between">
-            <div class="text-gray-600">Publisher Name:</div>
-            <div class="text-gray-600">{{ publisherName }}</div>
-          </div>
-          <div class="flex justify-between">
-            <div class="text-gray-600">Publisher ID:</div>
-            <div class="text-gray-600">{{ publisherId }}</div>
+      <div class="p-4 max-w-md mx-auto">
+        <div class="bg-white shadow-md rounded-lg">
+          <div class="p-5">
+            <h3 class="text-lg font-semibold mb-4 text-center">Publisher Details</h3>
+            <ul class="space-y-3" v-if="publisherName && publisherId">
+              <li class="flex justify-between">
+                <span class="text-gray-600">Publisher Name:</span>
+                <span class="text-gray-800">{{ publisherName }}</span>
+              </li>
+              <li class="flex justify-between">
+                <span class="text-gray-600">Publisher ID:</span>
+                <span class="text-gray-800">{{ publisherId }}</span>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
