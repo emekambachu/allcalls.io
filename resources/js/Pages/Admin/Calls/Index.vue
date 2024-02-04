@@ -195,19 +195,18 @@ let openPublisherDetails = (call) => {
   axios
     .get("/admin/web-api/publisher-info/" + call.id)
     .then((response) => {
-      publisherInfo.value = response.data;
       publisherModal.value = true;
 
       if (
         response.data.ringbaCallLogs.report &&
         response.data.ringbaCallLogs.report.records.length
       ) {
-        console.log("First record publisher fetched:");
-        console.log(response.data.ringbaCallLogs.report.records[0].publisherName);
-        console.log(response.data.ringbaCallLogs.report.records[0].publisherId);
+        // Set state for publisher info
+        publisherName.value = response.data.ringbaCallLogs.report.records[0].publisherName;
+        publisherId.value = response.data.ringbaCallLogs.report.records[0].publisherId;
+      } else {
+        console.log("No publisher found for call " + call.id);
       }
-      console.log(response.data.ringbaCallLogs.report.records[0].publisherName);
-      console.log(response.data.ringbaCallLogs.report.records[0].publisherId);
     })
     .catch((error) => {
       console.log(error);
