@@ -237,6 +237,10 @@ let openPublisherDetails = (call) => {
             <span class="text-gray-800">{{ publisherId }}</span>
           </li>
         </ul>
+
+        <div class="flex justify-end mt-3">
+          <PrimaryButton @click.prevent="publisherModal = false">Close</PrimaryButton
+        </div>
       </div>
     </Modal>
 
