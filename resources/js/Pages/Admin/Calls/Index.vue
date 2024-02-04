@@ -177,6 +177,7 @@ let openPublisherDetails = call => {
   axios.get('/admin/web-api/publisher-info/' + call.id)
     .then(response => {
       publisherInfo.value = response.data;
+      publisherModal.value = true;
       console.log(response.data);
     })
     .catch(error => {
