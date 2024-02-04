@@ -75,7 +75,7 @@ class PublisherInfoController extends Controller
                     'anyConditionToMatch' => [
                         [
                             'column' => 'inboundPhoneNumber',
-                            'value' => '+19168771246',
+                            'value' => $from,
                             'comparisonType' => 'EQUALS'
                         ]
                     ]
