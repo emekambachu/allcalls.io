@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Events\FundsAdded;
+use App\Events\CareerEvent;
 use App\Events\FundsTooLow;
 use App\Events\InviteAgent;
 use App\Models\Transaction;
@@ -10,9 +11,10 @@ use App\Events\MissedCallEvent;
 use App\Listeners\SaveUserCall;
 use App\Events\RingingCallEvent;
 use App\Events\CallStatusUpdated;
-use App\Events\CareerEvent;
 use App\Listeners\AddDefaultBids;
+use App\Listeners\CareerListener;
 use App\Events\CompletedCallEvent;
+use App\Events\InitiatedCallEvent;
 use App\Listeners\MakeUserOffline;
 use App\Events\OnboardingCompleted;
 use App\Listeners\SendWelcomeEmail;
@@ -41,7 +43,6 @@ use App\Listeners\ChargeUserForCompletedCall;
 use App\Listeners\OnboardingCompletedTrigger;
 use App\Listeners\NotifyUserForLowFundsViaSMS;
 use App\Listeners\AddCompletedCallUserActivity;
-use App\Listeners\CareerListener;
 use App\Listeners\NotifyUserForLowFundsViaEmail;
 use App\Listeners\InviteAgent as ListenersInviteAgent;
 use App\Listeners\DispatchDispositionUpdateNotification;
@@ -72,8 +73,12 @@ class EventServiceProvider extends ServiceProvider
             ListenersInviteAgent::class,
         ],
 
-        RingingCallEvent::class => [
+        InitiatedCallEvent::class => [
             SaveUserCall::class,
+        ],
+
+        RingingCallEvent::class => [
+            // SaveUserCall::class,
         ],
 
         MissedCallEvent::class => [

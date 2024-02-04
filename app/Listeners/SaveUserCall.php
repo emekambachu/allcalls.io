@@ -2,11 +2,16 @@
 
 namespace App\Listeners;
 
+use DateTime;
 use Exception;
+use DateInterval;
+use DateTimeZone;
 use App\Models\Call;
 use App\Models\Client;
+use DateTimeInterface;
+use App\Models\CallType;
 use App\Models\UserActivity;
-use App\Events\RingingCallEvent;
+use App\Events\InitiatedCallEvent;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
@@ -26,7 +31,7 @@ class SaveUserCall
     /**
      * Handle the event.
      */
-    public function handle(RingingCallEvent $event): void
+    public function handle(InitiatedCallEvent $event): void
     {
         Log::debug('Save the call now');
         Log::debug($event->user->id);
@@ -112,8 +117,7 @@ class SaveUserCall
                 ]
             );
 
-        if ( !$response->ok() )
-        {
+        if (!$response->ok()) {
             return false;
         }
 
@@ -126,17 +130,17 @@ class SaveUserCall
     protected function saveBrooksIMClient($from, $userId, $callTypeId, $callId, $responseData)
     {
         Log::debug('Starting saveBrooksIMClient method.');
-    
+
         // Decode the BrooksIM response data.
         $data = json_decode($responseData, true);
         Log::debug('Decoded BrooksIM response:');
         Log::debug($data);
-    
+
         // Extract result data.
         $result = $data['result'];
         Log::debug('Extracted result from BrooksIM response:');
         Log::debug($result);
-    
+
         // Define the client data to be saved.
         $clientData = [
             'first_name' => $result['name']['first_name'] ?? 'N/A',
@@ -153,15 +157,15 @@ class SaveUserCall
         ];
         Log::debug('Defined client data to be saved:');
         Log::debug($clientData);
-    
+
         // Save the client.
         $client = Client::create($clientData);
         Log::debug('Client saved to database.');
-    
+
         // Log the saved client data.
         Log::debug('Client saved from BrooksIM data:');
         Log::debug($client->toArray());
-    
+
         return $client;
     }
 
@@ -187,4 +191,5 @@ class SaveUserCall
 
         return $client;
     }
+
 }

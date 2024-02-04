@@ -167,6 +167,22 @@ maxDate.value.setHours(23, 59, 59, 999);
 let paginate = (url) => {
   router.visit(url);
 };
+
+
+let publisherInfo = ref(null);
+let publisherModal = ref(false);
+let openPublisherDetails = call => {
+  console.log('Open publisher info for call ' + call.id);
+
+  axios.get('/admin/web-api/publisher-info/' + call.id)
+    .then(response => {
+      publisherInfo.value = response.data;
+      console.log(response.data);
+    })
+    .catch(error => {
+      console.log(error);
+    });
+}
 </script>
 
 <template>
@@ -360,6 +376,17 @@ let paginate = (url) => {
                                 ? 'bg-sky-900 text-white'
                                 : 'text-gray-900',
                               'group flex w-full items-center rounded-md py-2 px-2 text-xs',
+                            ]" @click.prevent="openPublisherDetails(call)">
+                              Open Publisher Details 
+                            </button>
+                            </MenuItem>
+
+                            <!-- <MenuItem v-slot="{ active }">
+                            <button :class="[
+                              active
+                                ? 'bg-sky-900 text-white'
+                                : 'text-gray-900',
+                              'group flex w-full items-center rounded-md py-2 px-2 text-xs',
                             ]" @click.prevent="openClientModal(call)">
                               Open Client Details
                             </button>
@@ -383,7 +410,7 @@ let paginate = (url) => {
                             ]">
                               Open Call Details
                             </button>
-                            </MenuItem>
+                            </MenuItem> -->
                           </div>
                         </MenuItems>
                       </transition>
@@ -442,11 +469,14 @@ let paginate = (url) => {
       </div>
     </section>
 
-    <Modal :show="showModal" @close="showModal = false">
-      <div>
-        <!-- {{ selectedCall }} -->
+    <Modal :show="publisherModal" @close="publisherModal = false">
+      <div class="p-3">
+        <h3 class="text-lg mb-4 text-center">Publisher Details</h3>
+
+        <pre v-if="publisherInfo">{{ publisherInfo }}</pre>
       </div>
     </Modal>
+
   </AuthenticatedLayout>
 </template>
 
