@@ -225,7 +225,7 @@ let openPublisherDetails = (call) => {
     </template>
 
     <Modal :show="publisherModal" :closeable="true" @close="publisherModal = false">
-      <div class="p-4 max-w-md mx-auto">
+      <div class="p-4">
         <h3 class="text-lg font-semibold mb-4 text-center">Publisher Details</h3>
         <ul class="space-y-3" v-if="publisherName && publisherId">
           <li class="flex items-center">
