@@ -185,6 +185,9 @@ class IncomingCallController extends Controller
         }
 
         // If nobody picks up, forward the call to an external number.
+        Log::debug('BackupBuyer:', [
+            'request' => request()->all(),
+        ]);
         $twimlBody .= '<Dial callerId="+12518626328">+18449831955</Dial>';
 
 
