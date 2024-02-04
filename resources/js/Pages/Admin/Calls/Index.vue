@@ -183,9 +183,13 @@ let paginate = (url) => {
   router.visit(url);
 };
 
-let publisherInfo = ref(null);
+let publisherName = ref(null);
+let publisherId = ref(null);
 let publisherModal = ref(false);
 let openPublisherDetails = (call) => {
+  publisherName.value = null;
+  publisherId.value = null;
+
   console.log("Open publisher info for call " + call.id);
 
   axios
@@ -224,7 +228,16 @@ let openPublisherDetails = (call) => {
       <div class="p-3">
         <h3 class="text-lg mb-4 text-center">Publisher Details</h3>
 
-        <pre v-if="publisherInfo" v-text="publisherInfo"></pre>
+        <div v-if="publisherName && publisherId">
+          <div class="flex justify-between">
+            <div class="text-gray-600">Publisher Name:</div>
+            <div class="text-gray-600">{{ publisherName }}</div>
+          </div>
+          <div class="flex justify-between">
+            <div class="text-gray-600">Publisher ID:</div>
+            <div class="text-gray-600">{{ publisherId }}</div>
+          </div>
+        </div>
       </div>
     </Modal>
 
