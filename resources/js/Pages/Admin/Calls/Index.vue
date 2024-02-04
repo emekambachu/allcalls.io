@@ -239,7 +239,7 @@ let openPublisherDetails = (call) => {
         </ul>
 
         <div class="flex justify-end mt-3">
-          <PrimaryButton @click.prevent="publisherModal = false">Close</PrimaryButton
+          <PrimaryButton @click.prevent="publisherModal = false">Close</PrimaryButton>
         </div>
       </div>
     </Modal>
