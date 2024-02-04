@@ -469,17 +469,12 @@ let openPublisherDetails = call => {
       </div>
     </section>
 
-    <Modal :show="showModal" @close="showModal = false">
-      <div>
-        <!-- {{ selectedCall }} -->
-      </div>
-    </Modal>
-
-
     <Modal :show="publisherModal" @close="publisherModal = false">
-      <pre>
-        {{ publisherInfo }}
-      </pre>
+      <div class="p-3">
+        <h3 class="text-lg mb-4 text-center">Publisher Details</h3>
+
+        <pre v-if="publisherInfo">{{ publisherInfo }}</pre>
+      </div>
     </Modal>
 
   </AuthenticatedLayout>
