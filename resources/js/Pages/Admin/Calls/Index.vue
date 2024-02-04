@@ -228,12 +228,12 @@ let openPublisherDetails = (call) => {
       <div class="p-4 max-w-md mx-auto">
         <h3 class="text-lg font-semibold mb-4 text-center">Publisher Details</h3>
         <ul class="space-y-3" v-if="publisherName && publisherId">
-          <li class="flex justify-between">
-            <span class="text-gray-600">Publisher Name:</span>
+          <li class="flex items-center">
+            <span class="text-gray-600 mr-2">Publisher Name:</span>
             <span class="text-gray-800">{{ publisherName }}</span>
           </li>
-          <li class="flex justify-between">
-            <span class="text-gray-600">Publisher ID:</span>
+          <li class="flex items-center">
+            <span class="text-gray-600 mr-2">Publisher ID:</span>
             <span class="text-gray-800">{{ publisherId }}</span>
           </li>
         </ul>
