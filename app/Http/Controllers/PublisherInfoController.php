@@ -51,6 +51,37 @@ class PublisherInfoController extends Controller
         $endDate = $endDate->add(new DateInterval('PT30S'))->format(DateTimeInterface::ISO8601);
     
         // Your HTTP request and response handling code goes here...
+        $response = Http::withHeaders([
+            'Authorization' => 'Token ' . env('RINGBA_API_KEY'),
+        ])->post('https://api.ringba.com/v2/' . env('RINGBA_ACCOUNT_ID') . '/calllogs', [
+            'reportStart' => $startDate,
+            'reportEnd' => $endDate,
+            'filters' => [
+                [
+                    'anyConditionToMatch' => [
+                        [
+                            'column' => 'targetName',
+                            'value' => 'Allcalls FE',
+                            'comparisonType' => 'EQUALS'
+                        ],
+                        [
+                            'column' => 'targetNumber',
+                            'value' => '+15736523170',
+                            'comparisonType' => 'EQUALS'
+                        ]
+                    ]
+                ],
+                [
+                    'anyConditionToMatch' => [
+                        [
+                            'column' => 'inboundPhoneNumber',
+                            'value' => '+19168771246',
+                            'comparisonType' => 'EQUALS'
+                        ]
+                    ]
+                ]
+            ]
+        ]);
     
         if ($response->successful()) {
             return $response->json();
