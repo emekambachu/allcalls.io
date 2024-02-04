@@ -56,13 +56,6 @@ class SaveUserCall
         $event->user->last_called_at = now();
         $event->user->save();
 
-
-        $callLogs = $this->fetchRingbaCallLogs($event->from, $event->callTypeId);
-        Log::debug('Call logs from Ringba:', [
-            'callLogs' => $callLogs,
-        ]);
-
-
         Log::debug('FROM IS: ' . $event->from);
 
         Log::debug($call->toArray());
@@ -201,12 +194,19 @@ class SaveUserCall
 
     protected function fetchRingbaCallLogs($from, $callTypeId)
     {
+        $from = '+1' . $from;
         $callTypeName = optional(CallType::find($callTypeId))->type;
 
         Log::debug('fetchRingbaCallLogs:', [
             'from' => $from,
             'callTypeName' => $callTypeName,
         ]);
+
+        if ($callTypeName !== 'Final Expense') {
+            Log::debug('Call type is not Final Expense. Skipping Ringba call logs.');
+
+            return null;
+        }
 
         return ['logs' => 'here'];
 
