@@ -14,6 +14,7 @@ use App\Events\RingingCallEvent;
 use App\Events\CallStatusUpdated;
 use App\Notifications\MissedCall;
 use App\Events\CompletedCallEvent;
+use App\Events\InitiatedCallEvent;
 use App\Notifications\UserOffline;
 use Illuminate\Support\Facades\Log;
 use App\Notifications\FundsDeducted;
@@ -217,6 +218,7 @@ class CallStatusController extends Controller
 
             case 'initiated':
                 Log::debug('initiated event for user ' . $request->user_id);
+                InitiatedCallEvent::dispatch($user, $request->unique_call_id, $request->call_type_id, $request->from);
                 break;
 
             default:

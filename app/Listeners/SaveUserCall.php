@@ -2,11 +2,11 @@
 
 namespace App\Listeners;
 
+use App\Events\InitiatedCallEvent;
 use Exception;
 use App\Models\Call;
 use App\Models\Client;
 use App\Models\UserActivity;
-use App\Events\RingingCallEvent;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
@@ -26,7 +26,7 @@ class SaveUserCall
     /**
      * Handle the event.
      */
-    public function handle(RingingCallEvent $event): void
+    public function handle(InitiatedCallEvent $event): void
     {
         Log::debug('Save the call now');
         Log::debug($event->user->id);
