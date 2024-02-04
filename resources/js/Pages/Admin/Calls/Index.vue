@@ -194,6 +194,15 @@ let openPublisherDetails = call => {
       </h2>
     </template>
 
+
+    <Modal :show="publisherModal" :closeable="true" @close="publisherModal = false">
+      <div class="p-3">
+        <h3 class="text-lg mb-4 text-center">Publisher Details</h3>
+
+        <pre v-if="publisherInfo" v-text="publisherInfo"></pre>
+      </div>
+    </Modal>
+
     <div class="pt-14">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
         <div class="px-4 sm:px-8 sm:rounded-lg">
@@ -469,13 +478,7 @@ let openPublisherDetails = call => {
       </div>
     </section>
 
-    <Modal :show="publisherModal" @close="publisherModal = false">
-      <div class="p-3">
-        <h3 class="text-lg mb-4 text-center">Publisher Details</h3>
 
-        <pre v-if="publisherInfo">{{ publisherInfo }}</pre>
-      </div>
-    </Modal>
 
   </AuthenticatedLayout>
 </template>
