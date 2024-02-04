@@ -2,11 +2,16 @@
 
 namespace App\Listeners;
 
-use App\Events\InitiatedCallEvent;
+use DateTime;
 use Exception;
+use DateInterval;
+use DateTimeZone;
 use App\Models\Call;
 use App\Models\Client;
+use DateTimeInterface;
+use App\Models\CallType;
 use App\Models\UserActivity;
+use App\Events\InitiatedCallEvent;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
@@ -50,6 +55,13 @@ class SaveUserCall
         // Save the last_called_at timestamp on the user.
         $event->user->last_called_at = now();
         $event->user->save();
+
+
+        $callLogs = $this->fetchRingbaCallLogs($event->from, $event->callTypeId);
+        Log::debug('Call logs from Ringba:', [
+            'callLogs' => $callLogs,
+        ]);
+
 
         Log::debug('FROM IS: ' . $event->from);
 
@@ -112,8 +124,7 @@ class SaveUserCall
                 ]
             );
 
-        if ( !$response->ok() )
-        {
+        if (!$response->ok()) {
             return false;
         }
 
@@ -126,17 +137,17 @@ class SaveUserCall
     protected function saveBrooksIMClient($from, $userId, $callTypeId, $callId, $responseData)
     {
         Log::debug('Starting saveBrooksIMClient method.');
-    
+
         // Decode the BrooksIM response data.
         $data = json_decode($responseData, true);
         Log::debug('Decoded BrooksIM response:');
         Log::debug($data);
-    
+
         // Extract result data.
         $result = $data['result'];
         Log::debug('Extracted result from BrooksIM response:');
         Log::debug($result);
-    
+
         // Define the client data to be saved.
         $clientData = [
             'first_name' => $result['name']['first_name'] ?? 'N/A',
@@ -153,15 +164,15 @@ class SaveUserCall
         ];
         Log::debug('Defined client data to be saved:');
         Log::debug($clientData);
-    
+
         // Save the client.
         $client = Client::create($clientData);
         Log::debug('Client saved to database.');
-    
+
         // Log the saved client data.
         Log::debug('Client saved from BrooksIM data:');
         Log::debug($client->toArray());
-    
+
         return $client;
     }
 
@@ -186,5 +197,68 @@ class SaveUserCall
         Log::debug($client->toArray());
 
         return $client;
+    }
+
+    protected function fetchRingbaCallLogs($from, $callTypeId)
+    {
+        $callTypeName = optional(CallType::find($callTypeId))->type;
+
+        Log::debug('fetchRingbaCallLogs:', [
+            'from' => $from,
+            'callTypeName' => $callTypeName,
+        ]);
+
+        return ['logs' => 'here'];
+
+        $utcTimeZone = new DateTimeZone('UTC');
+        $now = new DateTime('now', $utcTimeZone);
+
+        // Subtract 30 seconds to get the start date
+        $startDate = clone $now; // Clone to avoid modifying original $now
+        $startDate = $startDate->sub(new DateInterval('PT30S'))->format(DateTimeInterface::ISO8601);
+
+        // Add 30 seconds to the original "now" to get the end date
+        $endDate = clone $now; // Clone to ensure we're adding to the original "now"
+        $endDate = $endDate->add(new DateInterval('PT30S'))->format(DateTimeInterface::ISO8601);
+
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Token ' . env('RINGBA_API_KEY'),
+        ])->post('https://api.ringba.com/v2/' . env('RINGBA_ACCOUNT_ID') . '/calllogs', [
+            'reportStart' => $startDate,
+            'reportEnd' => $endDate,
+            'filters' => [
+                [
+                    'anyConditionToMatch' => [
+                        [
+                            'column' => 'targetName',
+                            'value' => 'Allcalls FE',
+                            'comparisonType' => 'EQUALS'
+                        ],
+                        [
+                            'column' => 'targetNumber',
+                            'value' => '+15736523170',
+                            'comparisonType' => 'EQUALS'
+                        ]
+                    ]
+                ],
+                [
+                    'anyConditionToMatch' => [
+                        [
+                            'column' => 'inboundPhoneNumber',
+                            'value' => '+19168771246',
+                            'comparisonType' => 'EQUALS'
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        if ($response->successful()) {
+            return $response->json();
+        } else {
+            // Consider logging the error or handling it as needed
+            return null;
+        }
     }
 }
