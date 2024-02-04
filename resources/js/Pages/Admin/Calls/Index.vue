@@ -226,21 +226,17 @@ let openPublisherDetails = (call) => {
 
     <Modal :show="publisherModal" :closeable="true" @close="publisherModal = false">
       <div class="p-4 max-w-md mx-auto">
-        <div class="bg-white shadow-md rounded-lg">
-          <div class="p-5">
-            <h3 class="text-lg font-semibold mb-4 text-center">Publisher Details</h3>
-            <ul class="space-y-3" v-if="publisherName && publisherId">
-              <li class="flex justify-between">
-                <span class="text-gray-600">Publisher Name:</span>
-                <span class="text-gray-800">{{ publisherName }}</span>
-              </li>
-              <li class="flex justify-between">
-                <span class="text-gray-600">Publisher ID:</span>
-                <span class="text-gray-800">{{ publisherId }}</span>
-              </li>
-            </ul>
-          </div>
-        </div>
+        <h3 class="text-lg font-semibold mb-4 text-center">Publisher Details</h3>
+        <ul class="space-y-3" v-if="publisherName && publisherId">
+          <li class="flex justify-between">
+            <span class="text-gray-600">Publisher Name:</span>
+            <span class="text-gray-800">{{ publisherName }}</span>
+          </li>
+          <li class="flex justify-between">
+            <span class="text-gray-600">Publisher ID:</span>
+            <span class="text-gray-800">{{ publisherId }}</span>
+          </li>
+        </ul>
       </div>
     </Modal>
 
