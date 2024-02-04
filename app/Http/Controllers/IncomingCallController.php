@@ -280,6 +280,10 @@ class IncomingCallController extends Controller
 
         Log::debug('Forwarding call to ' . $availableNumber->phone);
 
+        Log::debug('BeforeForwardingToAvailableNumber:', [
+            'from' => request()->from,
+        ]);
+
         // Return the available number in a <Dial> verb to forward the call to this number
         $twiml = '<Response><Dial callerId="+441146971410"><Number>' . $availableNumber->phone . '</Number></Dial></Response>';
 
