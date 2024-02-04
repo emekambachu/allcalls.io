@@ -410,9 +410,9 @@ let openPublisherDetails = call => {
                             ]">
                               Open Call Details
                             </button>
-                            </MenuItem>
+                            </MenuItem> -->
                           </div>
-                        </MenuItems> -->
+                        </MenuItems>
                       </transition>
                     </Menu>
 
@@ -481,6 +481,7 @@ let openPublisherDetails = call => {
         {{ publisherInfo }}
       </pre>
     </Modal>
+
   </AuthenticatedLayout>
 </template>
 
