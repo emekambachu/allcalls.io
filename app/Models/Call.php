@@ -91,25 +91,28 @@ class Call extends Model
         return 'Regular User';
     }
 
+
+    /**
+     * Update the publisher info for the call.
+     * 
+     * @return bool
+     */
     public function updatePublisherInfo()
     {
         $callLogs = $this->fetchRingbaCallLogs();
-
-        if ($callLogs['report'] && $callLogs['report']['records']) {
+    
+        if (isset($callLogs['report'], $callLogs['report']['records']) && !empty($callLogs['report']['records'])) {
             $callLog = $callLogs['report']['records'][0];
-
-            $publisherName = $callLog['publisherName'];
-            $publisherId = $callLog['publisherId'];
-
-            $this->publisher_name = $publisherName;
-            $this->publisher_id = $publisherId;
-
+    
+            $this->publisher_name = $callLog['publisherName'];
+            $this->publisher_id = $callLog['publisherId'];
+    
             return $this->save();
         } else {
-            return null;
+            Log::warning("No publisher info found for call with ID: {$this->id}");
+            return false;
         }
     }
-
 
     public function fetchRingbaCallLogs()
     {
