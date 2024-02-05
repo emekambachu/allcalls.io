@@ -388,7 +388,7 @@ let openPublisherDetails = (call) => {
                   </td>
 
                   <td class="text-gray-600">
-                    <span v-if="Number(call.ringing_duration) < 20">
+                    <span v-if="Number(call.ringing_duration) >= 20">
                       {{ call.ringing_duration }}
                     </span>
                     <span v-else>
