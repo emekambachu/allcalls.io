@@ -1225,10 +1225,10 @@ let appDownloadModal = ref(false);
                 :href="route('agent.my.business')" :active="route().current('agent.my.business')">
                 My Business
               </ResponsiveNavLink>
-              <!-- <ResponsiveNavLink v-if="$page.props.auth.role === 'internal-agent'" :href="route('training.index')"
+              <ResponsiveNavLink v-if="$page.props.auth.role === 'internal-agent'" :href="route('training.index')"
                 :active="route().current('training.index')">
                 Training
-              </ResponsiveNavLink> -->
+              </ResponsiveNavLink>
 
               <!-- <ResponsiveNavLink v-if="$page.props.auth.role === 'internal-agent'" :href="route('internal-agent.my-agent.index')" :active="route().current('internal-agent.my-agent.index')">
                 Registered Agents
@@ -1606,7 +1606,7 @@ let appDownloadModal = ref(false);
               My Business
             </NavLink>
 
-            <!-- <NavLink v-if="$page.props.auth.role === 'internal-agent'" class="mb-10 gap-2" :href="route('training.index')"
+            <NavLink v-if="$page.props.auth.role === 'internal-agent'" class="mb-10 gap-2" :href="route('training.index')"
               :active="route().current('training.index')">
               <svg fill="#fff" class="w-8 h-8 mr-2" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 496 496" xml:space="preserve">
@@ -1642,7 +1642,7 @@ let appDownloadModal = ref(false);
                 </g>
               </svg>
               Training
-            </NavLink> -->
+            </NavLink>
 
             <!--
             <NavLink v-if="$page.props.auth.role === 'internal-agent'" class="mb-10 gap-2" :href="route('internal-agent.my-agent.index')"
