@@ -283,6 +283,7 @@ class IncomingCallController extends Controller
 
         Log::debug('BeforeForwardingToAvailableNumber:', [
             'from' => request('From'),
+            'availableNumberFrom' => $availableNumber->from,
         ]);
 
         // Return the available number in a <Dial> verb to forward the call to this number
