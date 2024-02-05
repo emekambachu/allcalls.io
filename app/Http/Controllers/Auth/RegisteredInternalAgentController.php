@@ -96,7 +96,7 @@ class RegisteredInternalAgentController extends Controller
 
             if(isset($user->invited_by)) {
                 $invitedBy = User::find($user->invited_by);
-                dispatch(new EquisAPIJob($invitedBy, $user->id));
+//                dispatch(new EquisAPIJob($invitedBy, $user->id));
             }
 
             return response()->json([
@@ -139,6 +139,7 @@ class RegisteredInternalAgentController extends Controller
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
         ])->withToken($accessToken)->get($url);
+
         dd($response->json());
 
         if ($response->successful()) {
