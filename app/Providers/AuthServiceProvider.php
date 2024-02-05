@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Providers;
+
 use Illuminate\Support\Facades\Gate;
 
 // use Illuminate\Support\Facades\Gate;
@@ -16,7 +17,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         //
-        
+
     ];
 
     /**
@@ -27,8 +28,10 @@ class AuthServiceProvider extends ServiceProvider
         // $this->registerPolicies();
 
         LogViewer::auth(function ($request) {
-            // return true to allow viewing the Log Viewer.
-            return true;
+            return $request->user()
+                && in_array($request->user()->email, [
+                    'ryan@pinnaclesyn.com',
+                ]);
         });
 
 
