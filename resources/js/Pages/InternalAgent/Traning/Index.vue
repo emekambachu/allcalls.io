@@ -124,7 +124,7 @@ console.log('filteredAgens', filteredAgens);
             </Carousel>
         </div>
 
-        <hr class="mb-4 mt-4" />
+        <!-- <hr class="mb-4 mt-4" />
         <div class="px-12">
             <a href="#" class="font-medium"><span class="text-blue-600 dark:text-blue-500 hover:underline">Intermediate
                     Training</span></a>
@@ -133,7 +133,7 @@ console.log('filteredAgens', filteredAgens);
         <div class="px-12">
             <a href="#" class="font-medium"><span class="text-blue-600 dark:text-blue-500 hover:underline">Advanced
                     Training</span></a>
-        </div>
+        </div> -->
         <BasicTraining v-if="basicTrainingModal" :basicTrainingSteps="basicTrainingSteps" :unlocked="'unlocked'" @close="closeBasicTraining"
             :basicTrainingModal="basicTrainingModal" />
         <BasicTrainingModal v-if="videoDataModal" @close="videoDataModal = false" :videoData="videoData"
