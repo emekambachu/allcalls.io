@@ -188,6 +188,7 @@ class IncomingCallController extends Controller
         Log::debug('FromTwoOptions:02', [
             'From' => request('From'),
             'To' => request('To'),
+            'twimlForBackUp' => '<Dial callerId="' . request('From') . '">+18449831955</Dial>',
         ]);
         $twimlBody .= '<Dial callerId="' . request('From') . '">+18449831955</Dial>';
 
