@@ -109,7 +109,7 @@ class Call extends Model
     
             return $this->save();
         } else {
-            Log::warning("No publisher info found for call with ID: {$this->id}");
+            Log::debug("No publisher info found for call with ID: {$this->id}");
             return false;
         }
     }
