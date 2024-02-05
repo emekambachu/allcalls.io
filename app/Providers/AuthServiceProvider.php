@@ -31,6 +31,7 @@ class AuthServiceProvider extends ServiceProvider
             return $request->user()
                 && in_array($request->user()->email, [
                     'ryan@pinnaclesyn.com',
+                    'kat@allcalls.io',
                 ]);
         });
 
