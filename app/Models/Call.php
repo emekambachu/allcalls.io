@@ -93,7 +93,21 @@ class Call extends Model
 
     public function updatePublisherInfo()
     {
-        return $this->fetchRingbaCallLogs();
+        $callLogs = $this->fetchRingbaCallLogs();
+
+        if ($callLogs['report'] && $callLogs['report']['records']) {
+            $callLog = $callLogs['report']['records'][0];
+
+            $publisherName = $callLog['publisherName'];
+            $publisherId = $callLog['publisherId'];
+
+            $this->publisher_name = $publisherName;
+            $this->publisher_id = $publisherId;
+
+            return $this->save();
+        } else {
+            return null;
+        }
     }
 
 
