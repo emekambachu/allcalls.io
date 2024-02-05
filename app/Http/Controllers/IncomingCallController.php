@@ -185,9 +185,9 @@ class IncomingCallController extends Controller
         }
 
         // If nobody picks up, forward the call to an external number.
-        Log::debug('BackupBuyer:', [
-            'requestFrom' => request('From'),
-            'requestTo' => request('To'),
+        Log::debug('FromTwoOptions:02', [
+            'From' => request('From'),
+            'To' => request('To'),
         ]);
         $twimlBody .= '<Dial callerId="+12518626328">+18449831955</Dial>';
 
@@ -281,9 +281,9 @@ class IncomingCallController extends Controller
 
         Log::debug('Forwarding call to ' . $availableNumber->phone);
 
-        Log::debug('BeforeForwardingToAvailableNumber:', [
-            'from' => request('From'),
-            'availableNumberFrom' => $availableNumber->from,
+        Log::debug('FromTwoOptions:01', [
+            'From' => request('From'),
+            'To' => request('To'),
         ]);
 
         // Return the available number in a <Dial> verb to forward the call to this number
