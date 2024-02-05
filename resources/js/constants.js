@@ -57,7 +57,7 @@ let basicTrainingSteps = [{
     {
         id: 8,
         video_url: 'https://allcalls-training.s3.amazonaws.com/7)+Final+Expense+Products.mp4',
-        pdf: '/Agent Training/3) Final Expense Products.pdf',
+        pdf: 'https://drive.google.com/file/d/1Cy1fBSBUaUXss_Z9oYRFuEz7kDWSzRXJ/view?usp=drive_link',
         title: 'Final Expense Products',
         thumbnail: '/Agent Training/Final Expense Products.png'
     },
