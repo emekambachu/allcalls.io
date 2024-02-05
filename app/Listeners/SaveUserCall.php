@@ -66,9 +66,7 @@ class SaveUserCall
         $event->user->last_called_at = now();
         $event->user->save();
 
-        Log::debug('FROM IS: ' . $event->from);
-
-        Log::debug($call->toArray());
+        Log::debug('SaveUserCallForPhone:', ['phone' => $event->from]);
 
         // Query the external database
         $results = DB::connection('mysql2')->select("SELECT * FROM leads WHERE phone = ? LIMIT 1", [$event->from]);
