@@ -68,30 +68,29 @@ let basicTrainingSteps = [{
         title: 'Completing The Request For Coverage',
         thumbnail: '/Agent Training/Completing The Request For Coverage.png'
     },
-
+    // {
+    //     id: 10,
+    //     video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    //     pdf: '/Agent Training/dummy.pdf',
+    //     title: 'Live Call Examples',
+    //     thumbnail: '/Agent Training/dummy-thumnail.png'
+    // },
+    // {
+    //     id: 11,
+    //     video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    //     pdf: '/Agent Training/dummy.pdf',
+    //     title: 'Reporting Your Business',
+    //     thumbnail: '/Agent Training/dummy-thumnail.png'
+    // },
+    // {
+    //     id: 12,
+    //     video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    //     pdf: '/Agent Training/dummy.pdf',
+    //     title: 'Understanding the Process',
+    //     thumbnail: '/Agent Training/dummy-thumnail.png'
+    // },
     {
         id: 10,
-        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        pdf: '/Agent Training/dummy.pdf',
-        title: 'Live Call Examples',
-        thumbnail: '/Agent Training/dummy-thumnail.png'
-    },
-    {
-        id: 11,
-        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        pdf: '/Agent Training/dummy.pdf',
-        title: 'Reporting Your Business',
-        thumbnail: '/Agent Training/dummy-thumnail.png'
-    },
-    {
-        id: 12,
-        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        pdf: '/Agent Training/dummy.pdf',
-        title: 'Understanding the Process',
-        thumbnail: '/Agent Training/dummy-thumnail.png'
-    },
-    {
-        id: 13,
         video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
         pdf: '/Agent Training/dummy.pdf',
         title: '',
