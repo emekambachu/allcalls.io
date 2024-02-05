@@ -112,7 +112,7 @@ class RegisteredInternalAgentController extends Controller
         }
     }
 
-    public function getEfNo($id = 3) {
+    public function getEfNo($id = 1423) {
         // First, retrieve the Bearer token
         $clientId = env('EQUIS_CLIENT_ID'); // Your client ID here
         $clientSecret = env('EQUIS_CLIENT_SECRET'); // Your client secret here
@@ -135,6 +135,7 @@ class RegisteredInternalAgentController extends Controller
         $partnerUniqueId = "AC" . $id;
 
         $url = "https://equisapipartner-uat.azurewebsites.net/Agent/{$partnerUniqueId}/UserName";
+
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
         ])->withToken($accessToken)->get($url);
