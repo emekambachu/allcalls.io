@@ -105,6 +105,7 @@ let downloadPDF = async (pdfPath) => {
                 >
                 Download {{videoData.title  }} Pdf
                 </a>
+                
                 <!-- <a target="_blank" :href="videoData.pdf" 
                                     class="font-medium  text-blue-600  cursor-pointer dark:text-blue-500 hover:underline">Download
                                     pdf
