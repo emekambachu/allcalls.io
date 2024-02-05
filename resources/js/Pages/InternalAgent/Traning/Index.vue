@@ -112,7 +112,7 @@ console.log('filteredAgens', filteredAgens);
 
                             </svg>
                         </div>
-                        <p style="font-weight:100;" class="mt-2  text-blue-600 dark:text-blue-500 "> ({{basicTraining.id}}) {{ basicTraining.title
+                        <p style="font-weight:100;" class="mt-2  text-blue-600 dark:text-blue-500 "> {{basicTraining.id}}) {{ basicTraining.title
                         }}</p>
                         <br>
                         <br>
