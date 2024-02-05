@@ -39,7 +39,6 @@ class UpdateAllCallsPublishers extends Command
             if ($response) {
                 $this->info('Updated call ' . $call->id . ' with publisher info.');
                 // log the response:
-                dd($response);
             } else {
                 $this->info('Failed to update call ' . $call->id . ' with publisher info.');
             }
