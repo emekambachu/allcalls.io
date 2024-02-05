@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\EquisAPIJob;
 use App\Models\AgentInvite;
 use App\Models\Call;
 use Illuminate\Http\Request;
@@ -28,7 +29,7 @@ class RegisteredInternalAgentController extends Controller
         $callTypes = CallType::all();
         $states = State::all();
         $tokenData = '';
-        if(session('agent-token')){ 
+        if(session('agent-token')){
             $tokenData = AgentInvite::where('token', session('agent-token'))->first();
         }
 
@@ -83,9 +84,18 @@ class RegisteredInternalAgentController extends Controller
             $token->isUsed($token->token);
 
             DB::commit();
+
             session()->remove('agent-token');
+
             event(new Registered($user));
+
             Auth::login($user);
+
+            if(isset($user->invited_by)) {
+                $invitedBy = User::find($user->invited_by);
+                dispatch(new EquisAPIJob($invitedBy, $user->id));
+            }
+
             return response()->json([
                 'success' => true,
                 'message' => 'Agent added successfully',
