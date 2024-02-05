@@ -358,7 +358,7 @@ let updateItemsToShow = () => {
                         </div>
 
                         <div v-for="(basicTraning, index) in basicTrainingSteps" :key="basicTraning.id">
-                            <div v-if="basicTraning.id == step && step < 13" class="px-12 pt-3 ">
+                            <div v-if="basicTraning.id == step && step < 10" class="px-12 pt-3 ">
                                 <!-- <iframe style="width:100%;" height="400" :src="basicTraning.video_url"
                                     title="YouTube video player" frameborder="0"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -409,28 +409,28 @@ let updateItemsToShow = () => {
                                         </button>
                                     </div>
                                     <div class="mt-4">
-                                        <button v-if="step < 12" type="button" :class="{ 'opacity-25': isLoading }"
+                                        <button v-if="step < 9" type="button" :class="{ 'opacity-25': isLoading }"
                                             :disabled="isLoading" @click.prevent="NextStep"
                                             class="button-custom px-3 py-2 rounded-md">
                                             <global-spinner :spinner="isLoading" /> Next Step
                                         </button>
-                                        <button v-if="step == 12 && !unlocked" type="button"
+                                        <button v-if="step == 9 && !unlocked" type="button"
                                             :class="{ 'opacity-25': isLoading }" :disabled="isLoading"
                                             @click.prevent="NextStep" class="button-custom px-3 py-2 rounded-md">
                                             <global-spinner :spinner="isLoading" /> Finish
                                         </button>
-                                        <button v-if="step == 12 && unlocked" type="button"
+                                        <button v-if="step == 9 && unlocked" type="button"
                                             :class="{ 'opacity-25': isLoading }" :disabled="isLoading"
                                             @click.prevent="NextStep" class="button-custom px-3 py-2 rounded-md">
                                             <global-spinner :spinner="isLoading" /> Finish
                                         </button>
 
-                                        <button v-if="step == 13 && !unlocked" type="button"
+                                        <button v-if="step == 10 && !unlocked" type="button"
                                             :class="{ 'opacity-25': isLoading }" :disabled="isLoading" @click.prevent="done"
                                             class="button-custom px-3 py-2 rounded-md">
                                             <global-spinner :spinner="isLoading" /> done
                                         </button>
-                                        <button v-if="step == 13 && unlocked" type="button"
+                                        <button v-if="step == 10 && unlocked" type="button"
                                             :class="{ 'opacity-25': isLoading }" :disabled="isLoading" @click.prevent="done"
                                             class="button-custom px-3 py-2 rounded-md">
                                             <global-spinner :spinner="isLoading" /> done
