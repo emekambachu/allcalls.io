@@ -138,6 +138,7 @@ class RegisteredInternalAgentController extends Controller
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
         ])->withToken($accessToken)->get($url);
+        dd($response->json());
 
         if ($response->successful()) {
             $efNumber = $response->json()['userName'];
