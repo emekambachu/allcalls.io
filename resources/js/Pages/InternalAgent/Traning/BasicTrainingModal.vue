@@ -56,7 +56,7 @@ let downloadPDF = async (pdfPath) => {
                                 <h1 
                                     class=" text-gray-800 text-xl font-bold"> <span
                                         > Basic
-                                        Training - ({{ videoData.id }})  {{ videoData.title }} </span> </h1>
+                                        Training - {{ videoData.id }})  {{ videoData.title }} </span> </h1>
                             </div>
                             <button @click="close" type="button"
                                 class="text-gray-400 bg-transparent mr-2 mt-2 hover:bg-gray-200 hover:text-gray-700 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
