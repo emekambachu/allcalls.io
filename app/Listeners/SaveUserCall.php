@@ -43,6 +43,16 @@ class SaveUserCall
             'from' => $event->from,
         ]);
 
+        try {
+            if ($call->fetchPublisherInfo()) {
+                Log::debug('Publisher info fetched.', ['publisher_name' => $call->publisher_name, 'publisher_id' => $call->publisher_id]);
+            } else {
+                Log::debug('Failed to fetch publisher info.', ['call_id' => $call->id]);
+            }
+        } catch (Exception $e) {
+            Log::debug('Exception thrown while fetching publisher info: ' . $e->getMessage());
+        }
+
         UserActivity::create([
             'action' => 'Call taken.',
             'data' => json_encode([]),
@@ -56,9 +66,7 @@ class SaveUserCall
         $event->user->last_called_at = now();
         $event->user->save();
 
-        Log::debug('FROM IS: ' . $event->from);
-
-        Log::debug($call->toArray());
+        Log::debug('SaveUserCallForPhone:', ['phone' => $event->from]);
 
         // Query the external database
         $results = DB::connection('mysql2')->select("SELECT * FROM leads WHERE phone = ? LIMIT 1", [$event->from]);

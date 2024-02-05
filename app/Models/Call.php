@@ -2,12 +2,18 @@
 
 namespace App\Models;
 
-use App\Models\CallType;
+use DateTime;
+use DateInterval;
+use DateTimeZone;
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Client;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use DateTimeInterface;
+use App\Models\CallType;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Call extends Model
 {
@@ -86,5 +92,93 @@ class Call extends Model
     }
 
 
+    /**
+     * Update the publisher info for the call.
+     * 
+     * @return bool
+     */
+    public function updatePublisherInfo()
+    {
+        $callLogs = $this->fetchRingbaCallLogs();
+    
+        if (isset($callLogs['report'], $callLogs['report']['records']) && !empty($callLogs['report']['records'])) {
+            $callLog = $callLogs['report']['records'][0];
+    
+            $this->publisher_name = $callLog['publisherName'];
+            $this->publisher_id = $callLog['publisherId'];
+    
+            return $this->save();
+        } else {
+            Log::debug("No publisher info found for call with ID: {$this->id}");
+            return false;
+        }
+    }
 
+    public function fetchRingbaCallLogs()
+    {
+        $from = '+1' . $this->from;
+        $callTypeName = optional(CallType::find($this->call_type_id))->type;
+
+        Log::debug('fetchRingbaCallLogs:', [
+            'from' => $from,
+            'callTypeName' => $callTypeName,
+        ]);
+    
+        if ($callTypeName !== 'Final Expense') {
+            Log::debug('Call type is not Final Expense. Skipping Ringba call logs.');
+    
+            return null;
+        }
+    
+        // Convert $createdAt to DateTime object
+        $callCreatedAt = new DateTime($this->created_at, new DateTimeZone('UTC'));
+    
+        // Subtract 30 seconds to get the start date
+        $startDate = clone $callCreatedAt; // Clone to avoid modifying original $callCreatedAt
+        $startDate = $startDate->sub(new DateInterval('PT30S'))->format(DateTimeInterface::ISO8601);
+    
+        // Add 30 seconds to $createdAt to get the end date
+        $endDate = clone $callCreatedAt; // Clone to ensure we're adding to the original $callCreatedAt
+        $endDate = $endDate->add(new DateInterval('PT30S'))->format(DateTimeInterface::ISO8601);
+    
+        // Your HTTP request and response handling code goes here...
+        $response = Http::withHeaders([
+            'Authorization' => 'Token ' . env('RINGBA_API_KEY'),
+        ])->post('https://api.ringba.com/v2/' . env('RINGBA_ACCOUNT_ID') . '/calllogs', [
+            'reportStart' => $startDate,
+            'reportEnd' => $endDate,
+            'filters' => [
+                [
+                    'anyConditionToMatch' => [
+                        [
+                            'column' => 'targetName',
+                            'value' => 'Allcalls FE',
+                            'comparisonType' => 'EQUALS'
+                        ],
+                        [
+                            'column' => 'targetNumber',
+                            'value' => '+15736523170',
+                            'comparisonType' => 'EQUALS'
+                        ]
+                    ]
+                ],
+                [
+                    'anyConditionToMatch' => [
+                        [
+                            'column' => 'inboundPhoneNumber',
+                            'value' => $from,
+                            'comparisonType' => 'EQUALS'
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+    
+        if ($response->successful()) {
+            return $response->json();
+        } else {
+            // Consider logging the error or handling it as needed
+            return null;
+        }
+    }
 }
