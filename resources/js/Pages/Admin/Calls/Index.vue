@@ -347,6 +347,8 @@ let openPublisherDetails = (call) => {
                     Disposition
                   </th>
                   <th scope="col" class="px-4 py-2" style="min-width: 130px">Vertical</th>
+                  <th scope="col" class="px-4 py-2" style="min-width: 130px">Publisher ID</th>
+                  <th scope="col" class="px-4 py-2" style="min-width: 130px">Publisher Name</th>
                   <th scope="col" class="px-4 py-2" style="min-width: 100px">
                     Caller ID
                   </th>
@@ -382,11 +384,7 @@ let openPublisherDetails = (call) => {
                   </td>
 
                   <td class="text-gray-600">
-                    {{
-                      String(Math.floor(call.ringing_duration / 60)).padStart(2, "0") +
-                      ":" +
-                      String(call.ringing_duration % 60).padStart(2, "0")
-                    }}
+                    {{ call.ringing_duration }}
                   </td>
                   <td class="text-gray-600">
                     {{
@@ -410,6 +408,14 @@ let openPublisherDetails = (call) => {
                   <td class="text-gray-600">
                     {{ call.call_type.type }}
                   </td>
+
+                  <td class="text-gray-600">
+                    {{ call.publisher_id }}
+                  </td>
+                  <td class="text-gray-600">
+                    {{ call.publisher_name }}
+                  </td>
+
                   <td class="text-gray-600">{{ call.from }}</td>
 
                   <td class="text-gray-600">
