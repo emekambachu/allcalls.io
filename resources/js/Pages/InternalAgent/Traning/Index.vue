@@ -84,13 +84,13 @@ console.log('filteredAgens', filteredAgens);
             </div>
         </div>
 
-        <div class="mx-auto sm:px-4  lg:px-12">
-            <button class="font-medium"><span class="text-blue-600 dark:text-blue-500 hover:underline">Basic
+        <div class="mx-auto sm:px-4   lg:px-12">
+            <button class="font-medium mb-3"><span class="text-blue-600 ml-4  dark:text-blue-500 hover:underline">Basic
                     Training</span></button>
             <Carousel v-bind="settings" :autoplay="autoplayTime"  :wrapAround="true" :breakpoints="breakpoints">
                 <Slide @mouseenter="onMouseEnter" @mouseleave="onMouseLeave"
                     v-for="(basicTraining, index) in filteredAgens" :key="basicTraining.id" >
-                    <div  class="thumbnail cursor-pointer" @click="slideTo(index, basicTraining)">
+                    <div  class="thumbnail  cursor-pointer" @click="slideTo(index, basicTraining)">
 
                         <img class="thumbnail-img " :src="basicTraining.thumbnail" alt="Thumbnail">
                         <div class="svg-container">
@@ -112,7 +112,7 @@ console.log('filteredAgens', filteredAgens);
 
                             </svg>
                         </div>
-                        <p style="font-weight:100;" class="mt-2  text-blue-600 dark:text-blue-500 ">{{ basicTraining.title
+                        <p style="font-weight:100;" class="mt-2  text-blue-600 dark:text-blue-500 "> ({{basicTraining.id}}) {{ basicTraining.title
                         }}</p>
                         <br>
                         <br>

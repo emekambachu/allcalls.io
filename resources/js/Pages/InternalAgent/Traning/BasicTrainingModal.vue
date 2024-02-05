@@ -18,6 +18,12 @@ let downloadPDF = async (pdfPath) => {
     link.click();
 }
 </script>
+<style scoped>
+.modal-width {
+    width:60%;
+}
+
+</style>
 <template>
     <AuthenticatedLayout>
         <Transition name="modal" enter-active-class="transition ease-out duration-300 transform"
@@ -31,14 +37,14 @@ let downloadPDF = async (pdfPath) => {
                 <div class="fixed inset-0 bg-black opacity-60 blurred-overlay"></div>
 
                 <!-- This is the overlay -->
-                <div style="width: 60%;" class="relative w-full py-10   max-h-full mx-auto">
+                <div style="width: 60%;" class="relative w-full py-10 modal-width   max-h-full mx-auto">
                     <div class="relative bg-white rounded-lg shadow-lg transition-all">
                         <div class="flex justify-between ">
                             <div class="px-12 py-2 mt-2">
                                 <h1 
                                     class=" text-gray-800 text-xl font-bold"> <span
                                         > Basic
-                                        Training - {{ videoData.title }} </span> </h1>
+                                        Training - ({{ videoData.id }})  {{ videoData.title }} </span> </h1>
                             </div>
                             <button @click="close" type="button"
                                 class="text-gray-400 bg-transparent mr-2 mt-2 hover:bg-gray-200 hover:text-gray-700 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
