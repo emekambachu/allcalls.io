@@ -13,7 +13,7 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
-    Route::get('get-ef-number-test', [RegisteredInternalAgentController::class, 'getEfNo']);
+    Route::get('get-ef-number-test/{id}', [RegisteredInternalAgentController::class, 'getEfNo']);
 
     Route::get('internal-agent/register', [RegisteredInternalAgentController::class, 'create'])
         ->name('internal.agent.register')->middleware('agentTokenValid');
