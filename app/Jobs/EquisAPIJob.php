@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\User;
 use Carbon\Carbon;
 use App\Models\State;
 use Illuminate\Bus\Queueable;
@@ -25,13 +26,16 @@ class EquisAPIJob implements ShouldQueue
      * Create a new job instance.
      */
     public $user;
-    public function __construct($user)
+    public $inviteeId;
+
+    public function __construct($user, $inviteeId = null)
     {
         Log::debug('equis-api-job:constructing equis api job', [
             'user' => $user,
         ]);
 
         $this->user = $user;
+        $this->inviteeId = $inviteeId;
     }
 
     /**
@@ -85,7 +89,6 @@ class EquisAPIJob implements ShouldQueue
 
         if (!$response->successful()) {
             $responseBody = (string) $response->body();
-
             // In case of a failure to create an agent, check if the agent already exists in Equis API
             // If the agent already exists, send an email to the people and tag the user as equis_duplicate
             // Also, map the agent to Equis API
@@ -98,6 +101,8 @@ class EquisAPIJob implements ShouldQueue
 
             return;
         }
+
+//        $this->saveEFNumberForUser($accessToken);
     }
 
     protected function sendEmailsToPeople()
@@ -184,5 +189,33 @@ class EquisAPIJob implements ShouldQueue
     protected function getStateAbbrev($stateId)
     {
         return State::find($stateId)->name;
+    }
+
+    protected function saveEFNumberForUser($accessToken)
+    {
+        $partnerUniqueId = "AC" . $this->user->id;
+
+        $url = "https://equisapipartner-uat.azurewebsites.net/Agent/{$partnerUniqueId}/UserName";
+
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+        ])->withToken($accessToken)->get($url);
+
+        if ($response->successful()) {
+            $efNumber = $response->json()['userName'];
+            $this->user->ef_number = $efNumber;
+            $this->user->save();
+
+            if(isset($this->inviteeId)) {
+                User::whereId($this->inviteeId)->update([
+                    'upline_id' => $efNumber
+                ]);
+            }
+
+            Log::debug('EF Number saved for user', ['Inviter' => $this->user->id, 'invitee' => $this->inviteeId, 'Inviter EF Number' => $efNumber]);
+        } else {
+            // Handle the error scenario
+            Log::debug('Failed to save EF Number for user', ['Inviter' => $this->user->id, 'invitee' => $this->inviteeId, 'response' => $response->body()]);
+        }
     }
 }
