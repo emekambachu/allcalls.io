@@ -102,7 +102,7 @@ class EquisAPIJob implements ShouldQueue
             return;
         }
 
-        $this->saveEFNumberForUser($accessToken);
+//        $this->saveEFNumberForUser($accessToken);
     }
 
     protected function sendEmailsToPeople()
