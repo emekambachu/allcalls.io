@@ -14,7 +14,7 @@ class UpdateAllCallsPublishers extends Command
      *
      * @var string
      */
-    protected $signature = 'allcalls:update-all-calls-publishers';
+    protected $signature = 'allcalls:update-all-calls-publishers {--only-last-week}';
 
     /**
      * The console command description.
