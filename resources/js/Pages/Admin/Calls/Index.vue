@@ -12,19 +12,45 @@ import { format, parse } from "date-fns";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 import {
-  endOfMonth,
-  endOfYear,
-  startOfMonth,
+  endOfDay,
+  startOfDay,
   subDays,
-  startOfYear,
-  subMonths,
   startOfWeek,
   endOfWeek,
   subWeeks,
+  startOfMonth,
+  endOfMonth,
   startOfQuarter,
   endOfQuarter,
   subQuarters,
+  startOfYear,
+  endOfYear,
+  subMonths,
 } from "date-fns";
+
+const presetDates = ref([
+  { label: "Today", value: [startOfDay(new Date()), endOfDay(new Date())] },
+  {
+    label: "Yesterday",
+    value: [startOfDay(subDays(new Date(), 1)), endOfDay(subDays(new Date(), 1))],
+  },
+  { label: "This Week", value: [startOfWeek(new Date()), endOfWeek(new Date())] },
+  {
+    label: "Last Week",
+    value: [startOfWeek(subWeeks(new Date(), 1)), endOfWeek(subWeeks(new Date(), 1))],
+  },
+  { label: "Last 7 Days", value: [subDays(new Date(), 6), endOfDay(new Date())] },
+  { label: "Last 14 Days", value: [subDays(new Date(), 13), endOfDay(new Date())] },
+  { label: "Last 30 Days", value: [subDays(new Date(), 29), endOfDay(new Date())] },
+  { label: "This Month", value: [startOfMonth(new Date()), endOfMonth(new Date())] },
+  {
+    label: "Last Month",
+    value: [startOfMonth(subMonths(new Date(), 1)), endOfMonth(subMonths(new Date(), 1))],
+  },
+  { label: "Last 90 Days", value: [subDays(new Date(), 89), endOfDay(new Date())] },
+  { label: "Last 6 Months", value: [subMonths(new Date(), 5), endOfDay(new Date())] },
+  { label: "This Year", value: [startOfYear(new Date()), endOfYear(new Date())] },
+]);
 
 let page = usePage();
 if (page.props.flash.message) {
@@ -38,40 +64,6 @@ let props = defineProps({
   requestData: Array,
 });
 
-const presetDates = ref([
-  { label: "Today", value: [new Date(), new Date()] },
-  {
-    label: "Today (Slot)",
-    value: [new Date(), new Date()],
-    slot: "preset-date-range-button",
-  },
-  { label: "This month", value: [startOfMonth(new Date()), endOfMonth(new Date())] },
-  {
-    label: "Last month",
-    value: [startOfMonth(subMonths(new Date(), 1)), endOfMonth(subMonths(new Date(), 1))],
-  },
-  { label: "This year", value: [startOfYear(new Date()), endOfYear(new Date())] },
-  {
-    label: "Last 7 Days",
-    value: [subDays(new Date(), 6), new Date()],
-  },
-  {
-    label: "Last 14 Days",
-    value: [subDays(new Date(), 13), new Date()],
-  },
-  {
-    label: "Last 30 Days",
-    value: [subDays(new Date(), 29), new Date()],
-  },
-  {
-    label: "This Week",
-    value: [startOfWeek(new Date()), endOfWeek(new Date())],
-  },
-  {
-    label: "Last Week",
-    value: [startOfWeek(subWeeks(new Date(), 1)), endOfWeek(subWeeks(new Date(), 1))],
-  },
-]);
 let dateRange = ref([]);
 let form = ref({
   status: props.requestData.status || "Select an status",
