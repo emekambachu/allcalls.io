@@ -47,6 +47,27 @@ let columns = ref([
       return call.id;
     },
   },
+
+    {
+        label: "Publisher ID",
+        columnMethod: "getPublisherIdColumn",
+        visible: true,
+        sortable: true,
+        render(call) {
+            return call.publisher_id;
+        },
+    },
+
+    {
+        label: "Publisher Name",
+        columnMethod: "getPublisherNameColumn",
+        visible: true,
+        sortable: true,
+        render(call) {
+            return call.publisher_name;
+        },
+    },
+
   {
     label: "Call Date",
     name: "call_taken",
@@ -318,6 +339,18 @@ let filters = ref([
     operators: ["is", "is greater than", "is less than", "is greater than or equal to", "is less than or equal to"],
     inputType: "number",
   },
+    {
+        label: "Publisher ID",
+        name: "publisher_id",
+        operators: ["is"],
+        inputType: "text"
+    },
+    {
+        label: "Publisher Name",
+        name: "publisher_name",
+        operators: ["is"],
+        inputType: "text"
+    },
   {
     label: "Call Duration (in seconds)",
     name: "call_duration_in_seconds",
@@ -491,9 +524,9 @@ function formatDate(date) {
       day = '' + d.getDate(),
       year = d.getFullYear();
 
-  if (month.length < 2) 
+  if (month.length < 2)
       month = '0' + month;
-  if (day.length < 2) 
+  if (day.length < 2)
       day = '0' + day;
 
   return [year, month, day].join('-');
@@ -656,14 +689,18 @@ function formatDate(date) {
           <div class="flex items-center justify-between">
             <div class="mr-2">
               <label class="block mb-2 text-sm font-medium text-gray-900">From:</label>
-              <input v-model="dateFilterFrom" style="background-color: #E8F0FE;" class="bg-custom-blue text-sm rounded-lg focus:ring-blue-500 border border-transparent focus:border focus:border-blue-500 block w-full p-2.5 text-black outline-none" type="date">
+              <input v-model="dateFilterFrom"
+                     style="background-color: #E8F0FE;"
+                     class="bg-custom-blue text-sm rounded-lg focus:ring-blue-500 border border-transparent focus:border focus:border-blue-500 block w-full p-2.5 text-black outline-none" type="date">
             </div>
             <div class="mr-2">
               <div class="w-3 h-0.5 bg-gray-200 mt-6"></div>
             </div>
             <div>
               <label class="block mb-2 text-sm font-medium text-gray-900">To:</label>
-              <input v-model="dateFilterTo" style="background-color: #E8F0FE;" class="bg-custom-blue text-sm rounded-lg focus:ring-blue-500 border border-transparent focus:border focus:border-blue-500 block w-full p-2.5 text-black outline-none" type="date">
+              <input v-model="dateFilterTo"
+                     style="background-color: #E8F0FE;"
+                     class="bg-custom-blue text-sm rounded-lg focus:ring-blue-500 border border-transparent focus:border focus:border-blue-500 block w-full p-2.5 text-black outline-none" type="date">
             </div>
           </div>
 
