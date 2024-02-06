@@ -35,6 +35,7 @@ use App\Listeners\ChargeUserForMissedCall;
 use Illuminate\Mail\Events\MessageSending;
 use App\Listeners\CheckDispositionListener;
 use App\Listeners\PreventBlacklistedEmails;
+use App\Listeners\SendCallInfoToOnScriptAI;
 use App\Listeners\AddFundsAddedUserActivity;
 use App\Listeners\AddMissedCallUserActivity;
 use App\Listeners\AddUnsubscribeTokenToUser;
@@ -75,6 +76,7 @@ class EventServiceProvider extends ServiceProvider
 
         InitiatedCallEvent::class => [
             SaveUserCall::class,
+            SendCallInfoToOnScriptAI::class,
         ],
 
         RingingCallEvent::class => [
