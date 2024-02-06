@@ -25,7 +25,7 @@ class SendCallInfoToOnScriptAI implements ShouldQueue
         $call = Call::whereUniqueCallId($event->uniqueCallId)->first();
         $agent = $event->user;
 
-        Log::debug('SendCallInfoToOnScriptAIData:', [
+        Log::debug('Alpha:SendCallInfoToOnScriptAIData:', [
             'agent' => $agent,
             'call' => $call,
             'client' => $call->client,
@@ -35,12 +35,18 @@ class SendCallInfoToOnScriptAI implements ShouldQueue
             $params = [
                 'agent_name' => $agent->first_name . ' ' . $agent->last_name,
                 'api_key' => env('ONSCRIPT_AI_API_KEY'),
-                'url' => $call->recording_url ?: 'defaultRecordingUrl', // Provide a default or handle null appropriately
-                'client_phone' => $call->from,
+                'url' => $call->recording_url ?? 'N/A',
                 'first_name' => $agent->first_name,
                 'last_name' => $agent->last_name,
                 'call_timestamp' => $call->created_at->format('Y-m-d H:i:s'),
+                'affiliate_name' => $call->publisher_name ?? null,
+                'call_disposition' => ($call->client && $call->client->status) ? $call->client->status : null,
                 'agent_id' => $agent->id, // Added parameter
+                'first_name' => ($call->client && $call->client->first_name) ? $call->client->first_name: null,
+                'last_name' => ($call->client && $call->client->last_name) ? $call->client->last_name: null,
+                'client_phone' => $call->from,
+                'client_address' => ($call->client && $call->client->address) ? $call->client->address : null,
+                'client_zipcode' => ($call->client && $call->client->zipCode) ? $call->client->zipCode : null,
             ];
 
             // Filter out null values
@@ -48,23 +54,23 @@ class SendCallInfoToOnScriptAI implements ShouldQueue
                 return !is_null($value);
             });
 
-            Log::debug('SendCallInfoToOnScriptAIQueryParams:', [
+            Log::debug('Alpha:SendCallInfoToOnScriptAIQueryParams:', [
                 'queryParams' => $queryParams,
             ]);
 
             try {
                 $response = Http::get('https://app.onscript.ai/api/create_process_dialog', $queryParams);
 
-                Log::info('SendCallInfoToOnScriptAI Success:', [
+                Log::info('Alpha:SendCallInfoToOnScriptAI Success:', [
                     'response' => $response->body(),
                 ]);
             } catch (Exception $e) {
-                Log::error('SendCallInfoToOnScriptAI Error:', [
+                Log::error('Alpha:SendCallInfoToOnScriptAI Error:', [
                     'message' => $e->getMessage(),
                 ]);
             }
         } else {
-            Log::warning('SendCallInfoToOnScriptAI: Call or Agent not found', [
+            Log::warning('Alpha:SendCallInfoToOnScriptAI: Call or Agent not found', [
                 'uniqueCallId' => $event->uniqueCallId,
             ]);
         }

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Events\CallJustCompleted;
 use App\Events\FundsAdded;
 use App\Events\CareerEvent;
 use App\Events\FundsTooLow;
@@ -76,7 +77,6 @@ class EventServiceProvider extends ServiceProvider
 
         InitiatedCallEvent::class => [
             SaveUserCall::class,
-            SendCallInfoToOnScriptAI::class,
         ],
 
         RingingCallEvent::class => [
@@ -87,6 +87,10 @@ class EventServiceProvider extends ServiceProvider
             // ChargeUserForMissedCall::class,
             MakeUserOffline::class,
             AddMissedCallUserActivity::class,
+        ],
+
+        CallJustCompleted::class => [
+            SendCallInfoToOnScriptAI::class,
         ],
 
         CompletedCallEvent::class => [
