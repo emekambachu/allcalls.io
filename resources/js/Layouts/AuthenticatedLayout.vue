@@ -1090,7 +1090,6 @@ let appDownloadModal = ref(false);
                           </div>
 
                           <!-- Unread Notification Items End -->
-
                           <div class="px-3 py-2 text-sm text-gray-600 font-bold flex items-center justify-between"
                             v-if="userNotifications && userNotifications.length">
                             <div class="flex items-center">
@@ -1180,6 +1179,13 @@ let appDownloadModal = ref(false);
                   <!--Show Mobile Notification button-->
                 <button @click="showMobileNotifications = !showMobileNotifications"
                   class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
+
+                    <!--unread alert-->
+                    <div v-if="unreadNotifications.length" class="relative">
+                        <div
+                            class="h-4 w-4 flex items-center justify-center absolute -top-2 -left-2 bg-red-500 rounded-full text-xs text-white z-10"
+                            v-text="unreadNotifications.length"></div>
+                    </div>
 
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                          stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
