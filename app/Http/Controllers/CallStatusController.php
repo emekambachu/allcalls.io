@@ -37,9 +37,10 @@ class CallStatusController extends Controller
             return;
         }
 
-        Log::debug('TwilioSignature:', [
+        Log::debug('TwilioSignatureData:', [
             'signature' => isset($_SERVER['HTTP_X_TWILIO_SIGNATURE']) ? $_SERVER['HTTP_X_TWILIO_SIGNATURE']  : 'Not found',
-            'scriptURI' => isset($_SERVER['SCRIPT_URI']) ? $_SERVER['SCRIPT_URI']  : 'Not found',
+            'scriptURI' => 'https://staging.allcalls.io/handle-call-status',
+            'postVars' => $_POST,
         ]);
 
         $callStatus = $request->input('CallStatus');
