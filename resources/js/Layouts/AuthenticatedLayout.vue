@@ -1178,7 +1178,7 @@ let appDownloadModal = ref(false);
               <div class="-mr-2 flex items-center md:hidden">
                   <!--Show Mobile Notification button-->
                 <button @click="showMobileNotifications = !showMobileNotifications"
-                  class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
+                  class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 focus:outline-none focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
 
                     <!--unread alert-->
                     <div v-if="unreadNotifications.length" class="relative">
