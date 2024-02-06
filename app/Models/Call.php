@@ -180,7 +180,7 @@ class Call extends Model
             ]);
             return $response->json();
         } else {
-            Log::debug('RingbaResponse:Success', [
+            Log::debug('RingbaResponse:Error', [
                 'body' => $response->body(),
                 'errorCode' => $response->status(),
             ]);
