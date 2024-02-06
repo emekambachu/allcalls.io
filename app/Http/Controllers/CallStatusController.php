@@ -37,6 +37,10 @@ class CallStatusController extends Controller
             return;
         }
 
+        Log::debug('TwilioSignature:', [
+            'signature' => isset($_SERVER['HTTP_X_TWILIO_SIGNATURE']) ? $_SERVER['HTTP_X_TWILIO_SIGNATURE'] : 'Not found',
+        ]);
+
         $callStatus = $request->input('CallStatus');
         $userId = $request->input('user_id');
         $callTypeId = $request->input('call_type_id');
