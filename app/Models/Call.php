@@ -175,8 +175,15 @@ class Call extends Model
         ]);
     
         if ($response->successful()) {
+            Log::debug('RingbaResponse:Success', [
+                'body' => $response->body(),
+            ]);
             return $response->json();
         } else {
+            Log::debug('RingbaResponse:Success', [
+                'body' => $response->body(),
+                'errorCode' => $response->status(),
+            ]);
             // Consider logging the error or handling it as needed
             return null;
         }
