@@ -77,7 +77,6 @@ class EventServiceProvider extends ServiceProvider
 
         InitiatedCallEvent::class => [
             SaveUserCall::class,
-
         ],
 
         RingingCallEvent::class => [
