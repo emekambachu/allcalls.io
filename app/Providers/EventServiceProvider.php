@@ -76,7 +76,7 @@ class EventServiceProvider extends ServiceProvider
 
         InitiatedCallEvent::class => [
             SaveUserCall::class,
-            SendCallInfoToOnScriptAI::class,
+
         ],
 
         RingingCallEvent::class => [
@@ -93,6 +93,7 @@ class EventServiceProvider extends ServiceProvider
             ChargeUserForCompletedCall::class,
             UnlockClientForUser::class,
             AddCompletedCallUserActivity::class,
+            SendCallInfoToOnScriptAI::class,
             // DispatchDispositionUpdateNotification::class,
             // CheckDispositionListener::class,
         ],
