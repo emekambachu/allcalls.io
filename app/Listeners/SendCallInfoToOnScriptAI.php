@@ -48,6 +48,10 @@ class SendCallInfoToOnScriptAI implements ShouldQueue
                 return !is_null($value);
             });
 
+            Log::debug('SendCallInfoToOnScriptAIQueryParams:', [
+                'queryParams' => $queryParams,
+            ]);
+
             try {
                 $response = Http::get('https://app.onscript.ai/api/create_process_dialog', $queryParams);
 
