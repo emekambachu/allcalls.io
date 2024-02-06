@@ -3,60 +3,50 @@ import { onMounted, ref } from "vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import DatePicker from "@/Components/DatePicker.vue";
 import { toaster } from "@/helper.js";
 import AddModal from "@/Pages/InternalAgent/MyBusiness/AddModal.vue";
 import ViewDetailCom from "@/Pages/InternalAgent/MyBusiness/ViewDetail.vue";
 import Modal from "@/Components/Modal.vue";
-
 import {
-  endOfMonth,
-  endOfYear,
-  startOfMonth,
+  endOfDay,
+  startOfDay,
   subDays,
-  startOfYear,
-  subMonths,
   startOfWeek,
   endOfWeek,
   subWeeks,
+  startOfMonth,
+  endOfMonth,
   startOfQuarter,
   endOfQuarter,
   subQuarters,
+  startOfYear,
+  endOfYear,
+  subMonths,
 } from "date-fns";
-// import axios from "axios";
 
 const presetDates = ref([
-  { label: "Today", value: [new Date(), new Date()] },
+  { label: "Today", value: [startOfDay(new Date()), endOfDay(new Date())] },
   {
-    label: "Today (Slot)",
-    value: [new Date(), new Date()],
-    slot: "preset-date-range-button",
+    label: "Yesterday",
+    value: [startOfDay(subDays(new Date(), 1)), endOfDay(subDays(new Date(), 1))],
   },
-  { label: "This month", value: [startOfMonth(new Date()), endOfMonth(new Date())] },
-  {
-    label: "Last month",
-    value: [startOfMonth(subMonths(new Date(), 1)), endOfMonth(subMonths(new Date(), 1))],
-  },
-  { label: "This year", value: [startOfYear(new Date()), endOfYear(new Date())] },
-  {
-    label: "Last 7 Days",
-    value: [subDays(new Date(), 6), new Date()],
-  },
-  {
-    label: "Last 14 Days",
-    value: [subDays(new Date(), 13), new Date()],
-  },
-  {
-    label: "Last 30 Days",
-    value: [subDays(new Date(), 29), new Date()],
-  },
-  {
-    label: "This Week",
-    value: [startOfWeek(new Date()), endOfWeek(new Date())],
-  },
+  { label: "This Week", value: [startOfWeek(new Date()), endOfWeek(new Date())] },
   {
     label: "Last Week",
     value: [startOfWeek(subWeeks(new Date(), 1)), endOfWeek(subWeeks(new Date(), 1))],
   },
+  { label: "Last 7 Days", value: [subDays(new Date(), 6), endOfDay(new Date())] },
+  { label: "Last 14 Days", value: [subDays(new Date(), 13), endOfDay(new Date())] },
+  { label: "Last 30 Days", value: [subDays(new Date(), 29), endOfDay(new Date())] },
+  { label: "This Month", value: [startOfMonth(new Date()), endOfMonth(new Date())] },
+  {
+    label: "Last Month",
+    value: [startOfMonth(subMonths(new Date(), 1)), endOfMonth(subMonths(new Date(), 1))],
+  },
+  { label: "Last 90 Days", value: [subDays(new Date(), 89), endOfDay(new Date())] },
+  { label: "Last 6 Months", value: [subMonths(new Date(), 5), endOfDay(new Date())] },
+  { label: "This Year", value: [startOfYear(new Date()), endOfYear(new Date())] },
 ]);
 
 let page = usePage();
@@ -178,13 +168,13 @@ function formatCurrency(number) {
   // First, round the number to two decimal places
   let rounded = Number(number).toFixed(2);
 
-    // Then, format it as currency
-    return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 2,
-    }).format(rounded);
-} 
+  // Then, format it as currency
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+  }).format(rounded);
+}
 
 let deleteApp = (policy) => {
   if (!confirm("Are you sure you want to delete this app?")) {
@@ -194,6 +184,9 @@ let deleteApp = (policy) => {
   router.visit("/admin/policies/" + policy.id + "/delete", {
     method: "POST",
   });
+};
+const changeDate = (date) => {
+  dateRange.value = date;
 };
 </script>
 <style scoped>
@@ -241,12 +234,11 @@ let deleteApp = (policy) => {
 
             <div>
               <PrimaryButton @click="addBusiness()">Report Application </PrimaryButton>
-
             </div>
           </div>
           <div class="flex mb-5">
             <div style="width: 40%">
-              <VueDatePicker
+              <!-- <VueDatePicker
                 v-model="dateRange"
                 range
                 :preset-dates="presetDates"
@@ -254,7 +246,8 @@ let deleteApp = (policy) => {
                 format="dd-MMM-yyyy"
                 :multi-calendars="{ solo: true }"
                 auto-apply
-              />
+              /> -->
+              <DatePicker @changeDate="changeDate" :dateRange="dateRange" />
             </div>
             <PrimaryButton type="button" class="ml-4" @click.prevent="filterBusiness">
               <global-spinner :spinner="isLoading" /> Filter
@@ -315,9 +308,7 @@ let deleteApp = (policy) => {
                   <th scope="col" style="min-width: 150px" class="px-4 py-3">
                     Client Name
                   </th>
-                  <th scope="col" style="min-width: 150px" class="px-4 py-3">
-                    Phone
-                  </th>
+                  <th scope="col" style="min-width: 150px" class="px-4 py-3">Phone</th>
                   <th scope="col" style="min-width: 150px" class="px-4 py-3">
                     Application Date
                   </th>
