@@ -9,28 +9,27 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SendCallInfoToOnScriptAI
+class SendCallInfoToOnScriptAI implements ShouldQueue
 {
     /**
-     * Create the event listener.
+     * 
+     * After 30 seconds of initiating the call, send the call info to OnScript AI
      */
-    public function __construct()
-    {
-        //
-    }
+    protected $delay = 30;
 
     /**
      * Handle the event.
      */
     public function handle(object $event): void
     {
-        Log::debug('SendCallInfoToOnScriptAI:', [
-            'call' => Call::whereUniqueCallId($event->uniqueCallId)->first(),
-            'agent' => $event->user,
-        ]);
-
         $call = Call::whereUniqueCallId($event->uniqueCallId)->first();
         $agent = $event->user;
+
+        Log::debug('SendCallInfoToOnScriptAIData:', [
+            'agent' => $agent,
+            'call' => $call,
+            'client' => $call->client,
+        ]);
 
         if ($call && $agent) {
             $params = [
@@ -41,7 +40,7 @@ class SendCallInfoToOnScriptAI
                 'first_name' => $agent->first_name,
                 'last_name' => $agent->last_name,
                 'call_timestamp' => $call->created_at->format('Y-m-d H:i:s'),
-                // Add other optional parameters as needed, checking for null values
+                'agent_id' => $agent->id, // Added parameter
             ];
 
             // Filter out null values
@@ -65,6 +64,5 @@ class SendCallInfoToOnScriptAI
                 'uniqueCallId' => $event->uniqueCallId,
             ]);
         }
-
     }
 }
