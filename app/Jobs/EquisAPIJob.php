@@ -95,11 +95,9 @@ class EquisAPIJob implements ShouldQueue
                 $this->tagUserAsEquisDuplicate();
                 $this->mapAgentToEquis($accessToken);
             }
-
             return;
         }
-
-//        $this->saveEFNumberForUser($accessToken);
+        $this->saveManagerIdForUser($accessToken);
     }
 
     protected function sendEmailsToPeople()
@@ -187,7 +185,7 @@ class EquisAPIJob implements ShouldQueue
         return State::find($stateId)->name;
     }
 
-    protected function saveEFNumberForUser($accessToken)
+    protected function saveManagerIdForUser($accessToken)
     {
         $url = "https://equisapipartner-uat.azurewebsites.net/Agent/{$this->managerPartnerUniqueId}/UserName";
         $response = Http::withHeaders([
