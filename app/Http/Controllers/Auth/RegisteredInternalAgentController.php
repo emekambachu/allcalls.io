@@ -142,7 +142,7 @@ class RegisteredInternalAgentController extends Controller
             "npn" => $user->internalAgentContract->resident_insu_license_no ?? null,
             "partnerUniqueId" => "AC" . $user->id,
             "role" => "Agent",
-            "state" => isset($user->internalAgentContract->state) ? $this->getStateAbbrev($user->internalAgentContract->state) : null,
+            "state" => isset($user->internalAgentContract->state) ? $user->internalAgentContract->state : null,
             "uplineAgentEFNumber" => isset($user->upline_id) ? $user->upline_id : "",
             "zipCode" => $user->internalAgentContract->zip ?? null,
         ];
