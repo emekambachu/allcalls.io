@@ -70,26 +70,6 @@ class CallsController extends Controller
             $orderBy = $request->sortOrder;
         }
 
-        $calls = Call::with('user.roles', 'getClient', 'callType')
-            ->where(function ($query) use ($request) {
-                if (isset($request->from) && $request->from != '' && isset($request->to) && $request->to != '') {
-                    $fromDate = Carbon::parse($request->from)->startOfDay();
-                    $toDate = Carbon::parse($request->to)->endOfDay();
-                    $query->whereBetween('created_at', [$fromDate, $toDate]);
-                }
-            })
-            ->where(function ($query) use ($request) {
-                if (isset($request->status) && $request->status != '') {
-                    if ($request->status == 'paid') {
-                        $query->where('call_duration_in_seconds', '>', 60);
-                    } else if ($request->status == 'unpaid') {
-                        $query->where('call_duration_in_seconds', '<=', 60);
-                    }
-                }
-            })
-            ->orderBy($orderColumn, $orderBy)
-            ->paginate(50);
-
 
         $allCalls = Call::with('user')->get();
         $callsGroupedByUser = $allCalls->groupBy('user_id')->map(function ($calls, $userId) {
@@ -115,7 +95,6 @@ class CallsController extends Controller
 
         return Inertia::render('Admin/Calls/IndexBeta', [
             'requestData' => $request->all(),
-            // 'calls' => $calls,
             'totalCalls' => Call::count(),
             'totalRevenue' => round((float) Call::sum('amount_spent'), 2),
             'callsGroupedByUser' => $callsGroupedByUser,
