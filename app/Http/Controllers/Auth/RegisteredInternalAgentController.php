@@ -147,6 +147,7 @@ class RegisteredInternalAgentController extends Controller
             "uplineAgentEFNumber" => isset($user->upline_id) ? $user->upline_id : "",
             "zipCode" => $user->internalAgentContract->zip ?? null,
         ];
+        dd($user->internalAgentContract->dob, $requestData);
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
