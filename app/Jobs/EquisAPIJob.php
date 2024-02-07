@@ -2,21 +2,17 @@
 
 namespace App\Jobs;
 
+use App\Models\EquisDuplicate;
+use App\Models\State;
 use App\Models\User;
 use Carbon\Carbon;
-use App\Models\State;
 use Illuminate\Bus\Queueable;
-use App\Mail\EquisDuplicateMail;
-use App\Models\EquisDuplicate;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
-use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class EquisAPIJob implements ShouldQueue
 {
@@ -88,7 +84,7 @@ class EquisAPIJob implements ShouldQueue
 
 
         if (!$response->successful()) {
-            $responseBody = (string) $response->body();
+            $responseBody = (string)$response->body();
             // In case of a failure to create an agent, check if the agent already exists in Equis API
             // If the agent already exists, send an email to the people and tag the user as equis_duplicate
             // Also, map the agent to Equis API
@@ -134,7 +130,7 @@ class EquisAPIJob implements ShouldQueue
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
         ])->withToken($accessToken)->post('https://equisapipartner-uat.azurewebsites.net/Agent/Map', [
-            "userName" =>  isset($this->user->upline_id) ? $this->user->upline_id : "",
+            "userName" => isset($this->user->upline_id) ? $this->user->upline_id : "",
             "partnerUniqueId" => "AC" . $this->user->id,
         ]);
 
@@ -170,19 +166,19 @@ class EquisAPIJob implements ShouldQueue
 
         return [
             "address" => $this->user->internalAgentContract->address ?? null,
-            "birthDate" =>  isset($this->user->internalAgentContract->dob) ? Carbon::parse($this->user->internalAgentContract->dob)->format('Y-m-d') : '-',
-            "city" =>  $this->user->internalAgentContract->city ?? null,
+            "birthDate" => isset($this->user->internalAgentContract->dob) ? Carbon::parse($this->user->internalAgentContract->dob)->format('Y-m-d') : '-',
+            "city" => $this->user->internalAgentContract->city ?? null,
             "currentlyLicensed" => false,
-            "email" =>  $this->user->internalAgentContract->email ?? null,
-            "firstName" =>  $this->user->internalAgentContract->first_name ?? null,
+            "email" => $this->user->internalAgentContract->email ?? null,
+            "firstName" => $this->user->internalAgentContract->first_name ?? null,
             "languageId" => "en",
-            "lastName" =>  $this->user->internalAgentContract->last_name ?? null,
+            "lastName" => $this->user->internalAgentContract->last_name ?? null,
             "npn" => $this->user->internalAgentContract->resident_insu_license_no ?? null,
             "partnerUniqueId" => "AC" . $this->user->id,
             "role" => "Agent",
             "state" => isset($this->user->internalAgentContract->state) ? $this->getStateAbbrev($this->user->internalAgentContract->state) : null,
             "uplineAgentEFNumber" => isset($this->user->upline_id) ? $this->user->upline_id : "",
-            "zipCode" =>  $this->user->internalAgentContract->zip ?? null,
+            "zipCode" => $this->user->internalAgentContract->zip ?? null,
         ];
     }
 
@@ -204,13 +200,8 @@ class EquisAPIJob implements ShouldQueue
         if ($response->successful()) {
             $efNumber = $response->json()['userName'];
             $this->user->ef_number = $efNumber;
+            $this->user->upline_id = isset($this->user->invitedBy) && isset($this->user->invitedBy->ef_number) ? $this->user->invitedBy->ef_number : null;
             $this->user->save();
-
-            if(isset($this->inviteeId)) {
-                User::whereId($this->inviteeId)->update([
-                    'upline_id' => $efNumber
-                ]);
-            }
 
             Log::debug('EF Number saved for user', ['Inviter' => $this->user->id, 'invitee' => $this->inviteeId, 'Inviter EF Number' => $efNumber]);
         } else {
