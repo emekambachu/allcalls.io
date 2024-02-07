@@ -110,6 +110,27 @@ class RegisteredInternalAgentController extends Controller
 
     public function getEfNo($id = 1423)
     {
+        $user = User::findOrFail($id);
+
+        $requestData = [
+            "address" => $user->internalAgentContract->address ?? null,
+            "birthDate" => isset($user->internalAgentContract->dob) ? Carbon::parse($user->internalAgentContract->dob)->format('Y-m-d') : '-',
+            "city" => $user->internalAgentContract->city ?? null,
+            "currentlyLicensed" => false,
+            "email" => $user->internalAgentContract->email ?? null,
+            "firstName" => $user->internalAgentContract->first_name ?? null,
+            "languageId" => "en",
+            "lastName" => $user->internalAgentContract->last_name ?? null,
+            "npn" => $user->internalAgentContract->resident_insu_license_no ?? null,
+            "partnerUniqueId" => "AC" . $user->id,
+            "role" => "Agent",
+            "details" => "This is test agent",
+            "state" => isset($user->internalAgentContract->state) ? $user->internalAgentContract->state : null,
+            "uplineAgentEFNumber" => isset($user->upline_id) ? $user->upline_id : "",
+            "zipCode" => $user->internalAgentContract->zip ?? null,
+        ];
+        dd($user->internalAgentContract, $requestData);
+
         // First, retrieve the Bearer token
         $clientId = env('EQUIS_CLIENT_ID'); // Your client ID here
         $clientSecret = env('EQUIS_CLIENT_SECRET'); // Your client secret here
@@ -147,7 +168,7 @@ class RegisteredInternalAgentController extends Controller
             "uplineAgentEFNumber" => isset($user->upline_id) ? $user->upline_id : "",
             "zipCode" => $user->internalAgentContract->zip ?? null,
         ];
-        dd($requestData);
+        dd($user->internalAgentContract->dob, $requestData);
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
