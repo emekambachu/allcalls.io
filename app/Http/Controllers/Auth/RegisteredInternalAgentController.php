@@ -92,7 +92,7 @@ class RegisteredInternalAgentController extends Controller
 
             Auth::login($user);
 
-//            dispatch(new EquisAPIJob($user));
+            dispatch(new EquisAPIJob($user));
 
             return response()->json([
                 'success' => true,
