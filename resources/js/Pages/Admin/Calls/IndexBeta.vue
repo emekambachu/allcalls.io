@@ -199,6 +199,7 @@ let fetchCalls = async (replace = false) => {
   }
 
   callsPaginator.value = response.data.calls;
+
   loading.value = false;
   console.log("Loaded Calls: ", loadedCalls.value);
 };
@@ -245,6 +246,7 @@ let groupedCalls = computed(() => {
     return minimizedCallsGroupedByUser.value;
   }
 });
+const filteredGroupedCalls = ref({});
 
 let summaryFooterRow = computed(() => {
   let totalCalls = 0;
@@ -423,12 +425,13 @@ let filterOperator = ref("is");
 let filterValue = ref("");
 
 
-let applyFilter = () => {
+let applyFilter = async () => {
   console.log({
     label: filterName.value,
     name: filterName.value,
     value: filterValue.value,
     operator: filterOperator.value,
+    groupedCalls: groupedCalls.value
   });
 
   let label = filters.value.filter((f) => f.name === filterName.value)[0].label;
@@ -442,15 +445,41 @@ let applyFilter = () => {
   });
 
   // Refetch the calls and replace them with current filters
-  fetchCalls(true);
+  await fetchCalls(true);
+  applyCallFiltersToSummary();
 
   showNewFilterModal.value = false;
 }
 
-let removeFilter = (index) => {
-  appliedFilters.value.splice(index, 1);
+const applyCallFiltersToSummary = () => {
+    console.log("Loaded calls", loadedCalls.value);
+    const unfilteredGroupedCalls = maxmizedCallsGroupedByUser.value;
+    showMoreForGrouped.value = true;
+    maxmizedCallsGroupedByUser.value = {};
+    minimizedCallsGroupedByUser.value = {};
 
-  fetchCalls(true);
+    // Iterate loadedCalls first and then grouped calls to match the both user ids
+    // if matched add the user group to the maxmizedCallsGroupedByUser
+    for (const [key, value] of loadedCalls.value.entries()) {
+        Object.values(unfilteredGroupedCalls).forEach(group => {
+            if (group.userId === value.user_id) {
+                // Append the matched group to maximizedCallsGroupedByUser.value
+                maxmizedCallsGroupedByUser.value[group.userId] = group;
+                minimizedCallsGroupedByUser.value[group.userId] = group;
+            }
+        });
+    }
+}
+
+let removeFilter = async (index) => {
+  appliedFilters.value.splice(index, 1);
+  showMoreForGrouped.value = false;
+
+  //populate maximized and minimized calls after removing the filter
+  minimizedCallsGroupedByUserArray.value = callsGroupedByUserArray.slice(0, 2);
+  maxmizedCallsGroupedByUser.value = Object.fromEntries(callsGroupedByUserArray);
+
+  await fetchCalls(true);
 }
 
 let operatorsForTheSelectedFilter = computed(() => {
@@ -537,7 +566,161 @@ function formatDate(date) {
 <template>
   <Head title="Calls" />
   <AuthenticatedLayout>
-    <div class="pt-14 flex justify-between px-16">
+
+      <div class="pt-14 px-16 flex items-center mb-2">
+
+          <Popover class="relative mr-2">
+              <PopoverButton>
+                  <button
+                      type="button"
+                      class="rounded shadow mr-2 px-3 py-1 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md flex items-center text-sm"
+                  >
+                      <span v-if="!(dateFilterFrom && dateFilterTo)">Any Date</span>
+                      <span v-if="dateFilterFrom && dateFilterTo">
+                        <span class="font-bold">Range:</span> {{ dateFilterFrom }} - {{ dateFilterTo }}
+                      </span>
+                  </button>
+              </PopoverButton>
+
+              <PopoverPanel class="absolute z-10">
+                  <div class="border border-gray-100 p-3 shadow bg-gray-50 mt-2">
+
+                      <div class="flex items-center justify-between">
+                          <div class="mr-2">
+                              <label class="block mb-2 text-sm font-medium text-gray-900">From:</label>
+                              <input v-model="dateFilterFrom"
+                                     style="background-color: #E8F0FE;"
+                                     class="bg-custom-blue text-sm rounded-lg focus:ring-blue-500 border border-transparent focus:border focus:border-blue-500 block w-full p-2.5 text-black outline-none" type="date">
+                          </div>
+                          <div class="mr-2">
+                              <div class="w-3 h-0.5 bg-gray-200 mt-6"></div>
+                          </div>
+                          <div>
+                              <label class="block mb-2 text-sm font-medium text-gray-900">To:</label>
+                              <input v-model="dateFilterTo"
+                                     style="background-color: #E8F0FE;"
+                                     class="bg-custom-blue text-sm rounded-lg focus:ring-blue-500 border border-transparent focus:border focus:border-blue-500 block w-full p-2.5 text-black outline-none" type="date">
+                          </div>
+                      </div>
+
+                      <div @click.prevent="applyDatePreset('Today')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+                          Today
+                      </div>
+                      <div @click.prevent="applyDatePreset('Yesterday')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+                          Yesterday
+                      </div>
+                      <div @click.prevent="applyDatePreset('Past 7 Days')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+                          Past 7 Days
+                      </div>
+                      <div @click.prevent="applyDatePreset('Past 30 Days')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+                          Past 30 Days
+                      </div>
+
+                      <PrimaryButton @click.prevent="applyDateFilter" class="w-full text-center flex justify-center text-md mb-4">Apply</PrimaryButton>
+
+                      <button class="w-full text-center flex justify-center items-center text-md px-4 py-3 border rounded-md font-semibold text-md uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 hover:bg-white hover:text-custom-blue"
+                              @click.prevent="clearDateFilter"
+                              :class="{
+              'border-transparent text-gray-900 bg-gray-100 hover:drop-shadow-2xl ': true,
+            }">
+                          Clear Date
+                      </button>
+                  </div>
+              </PopoverPanel>
+          </Popover>
+          <div
+              v-for="(filter, index) in appliedFilters"
+              :key="filter.name"
+              class="rounded shadow mr-2 px-3 py-1 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md cursor-pointer flex items-center"
+          >
+              <span class="font-bold mr-2">{{ filter.label }}</span>
+              <span class="mr-2">{{ filter.operator }}</span>
+              <span class="font-bold mr-2">{{ filter.value }}</span>
+
+              <span class="cursor-pointer" @click.prevent="removeFilter(index)">&#x2715;</span>
+          </div>
+
+          <button
+              class="rounded shadow mr-2 px-3 py-1 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md flex items-center text-sm"
+              @click.prevent="showNewFilterModal = true"
+          >
+              + Add Filter
+          </button>
+      </div>
+
+      <Modal
+          :show="showNewFilterModal"
+          @close="showNewFilterModal = false"
+          :closeable="true"
+      >
+          <div class="bg-gray-100 py-4 px-6 text-gray-900">
+              <div class="flex justify-between mb-6">
+                  <h3 class="text-2xl font-bold">Add New Filter</h3>
+                  <span class="cursor-pointer" @click.prevent="showNewFilterModal = false">&#x2715</span>
+              </div>
+
+              <div class="mb-3">
+                  <label class="block mb-2 text-sm font-medium text-gray-900">Filter:</label>
+
+                  <select v-model="filterName" class="select-custom border border-gray-200">
+                      <option v-for="(filter, index) in filters" :key="index" :value="filter.name">{{ filter.label }}</option>
+                  </select>
+              </div>
+
+              <div class="mb-3">
+                  <label class="block mb-2 text-sm font-medium text-gray-900">Operator:</label>
+
+                  <select v-model="filterOperator" class="select-custom border border-gray-200">
+                      <option v-for="(operator, index) in operatorsForTheSelectedFilter" :key="index">{{ operator }}</option>
+                  </select>
+              </div>
+
+              <div class="mb-3">
+                  <label class="block mb-2 text-sm font-medium text-gray-900">Value:</label>
+
+                  <div v-if="inputTypeForTheSelectedFilter === 'number'">
+                      <TextInput class="border-gray-200" v-model="filterValue" type="number" />
+                  </div>
+
+                  <div v-if="inputTypeForTheSelectedFilter === 'text'">
+                      <TextInput class="border-gray-200" v-model="filterValue" type="text" />
+                  </div>
+
+                  <div v-if="inputTypeForTheSelectedFilter === 'email'">
+                      <TextInput class="border-gray-200" v-model="filterValue" type="text" />
+                  </div>
+
+                  <div v-if="inputTypeForTheSelectedFilter === 'select'">
+                      <select v-model="filterValue" class="select-custom border border-gray-200">
+                          <option v-for="(option, index) in filters.filter((f) => f.name === filterName)[0].inputTypeOptions" :key="index" :value="option.value">{{ option.label }}</option>
+                      </select>
+                  </div>
+              </div>
+
+              <div class="flex items-center justify-end mt-4">
+                  <PrimaryButton class="mr-2" @click.prevent="applyFilter">Apply</PrimaryButton>
+
+                  <button
+                      class="inline-flex items-center px-4 py-3 border rounded-md font-semibold text-md uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 hover:bg-white hover:text-custom-blue"
+                      :class="{
+              'border-transparent text-gray-900 bg-gray-100 hover:drop-shadow-2xl ': true,
+            }"
+                      :disabled="disabled"
+                      @click.prevent="showNewFilterModal = false"
+                  >
+                      Cancel
+                  </button>
+              </div>
+          </div>
+      </Modal>
+
+      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+          <div class="px-4 sm:px-8 sm:rounded-lg">
+              <hr class="mb-4" />
+          </div>
+      </div>
+
+    <div class="pt-12 flex justify-between px-16">
       <div>
         <div class="text-4xl text-custom-sky font-bold mb-6">Summary</div>
       </div>
@@ -667,159 +850,6 @@ function formatDate(date) {
       </div>
     </div>
 
-
-    <div class="pt-14 px-16 flex items-center mb-2">
-
-    <Popover class="relative mr-2">
-      <PopoverButton>
-        <button
-          type="button"
-          class="rounded shadow mr-2 px-3 py-1 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md flex items-center text-sm"
-        >
-          <span v-if="!(dateFilterFrom && dateFilterTo)">Any Date</span>
-          <span v-if="dateFilterFrom && dateFilterTo">
-            <span class="font-bold">Range:</span> {{ dateFilterFrom }} - {{ dateFilterTo }}
-          </span>
-        </button>
-      </PopoverButton>
-
-      <PopoverPanel class="absolute z-10">
-        <div class="border border-gray-100 p-3 shadow bg-gray-50 mt-2">
-
-          <div class="flex items-center justify-between">
-            <div class="mr-2">
-              <label class="block mb-2 text-sm font-medium text-gray-900">From:</label>
-              <input v-model="dateFilterFrom"
-                     style="background-color: #E8F0FE;"
-                     class="bg-custom-blue text-sm rounded-lg focus:ring-blue-500 border border-transparent focus:border focus:border-blue-500 block w-full p-2.5 text-black outline-none" type="date">
-            </div>
-            <div class="mr-2">
-              <div class="w-3 h-0.5 bg-gray-200 mt-6"></div>
-            </div>
-            <div>
-              <label class="block mb-2 text-sm font-medium text-gray-900">To:</label>
-              <input v-model="dateFilterTo"
-                     style="background-color: #E8F0FE;"
-                     class="bg-custom-blue text-sm rounded-lg focus:ring-blue-500 border border-transparent focus:border focus:border-blue-500 block w-full p-2.5 text-black outline-none" type="date">
-            </div>
-          </div>
-
-          <div @click.prevent="applyDatePreset('Today')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
-            Today
-          </div>
-          <div @click.prevent="applyDatePreset('Yesterday')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
-            Yesterday
-          </div>
-          <div @click.prevent="applyDatePreset('Past 7 Days')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
-            Past 7 Days
-          </div>
-          <div @click.prevent="applyDatePreset('Past 30 Days')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
-            Past 30 Days
-          </div>
-
-          <PrimaryButton @click.prevent="applyDateFilter" class="w-full text-center flex justify-center text-md mb-4">Apply</PrimaryButton>
-
-          <button class="w-full text-center flex justify-center items-center text-md px-4 py-3 border rounded-md font-semibold text-md uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 hover:bg-white hover:text-custom-blue"
-            @click.prevent="clearDateFilter"
-            :class="{
-              'border-transparent text-gray-900 bg-gray-100 hover:drop-shadow-2xl ': true,
-            }">
-              Clear Date
-            </button>
-        </div>
-      </PopoverPanel>
-    </Popover>
-      <div
-        v-for="(filter, index) in appliedFilters"
-        :key="filter.name"
-        class="rounded shadow mr-2 px-3 py-1 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md cursor-pointer flex items-center"
-      >
-        <span class="font-bold mr-2">{{ filter.label }}</span>
-        <span class="mr-2">{{ filter.operator }}</span>
-        <span class="font-bold mr-2">{{ filter.value }}</span>
-
-        <span class="cursor-pointer" @click.prevent="removeFilter(index)">&#x2715;</span>
-      </div>
-
-      <button
-        class="rounded shadow mr-2 px-3 py-1 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md flex items-center text-sm"
-        @click.prevent="showNewFilterModal = true"
-      >
-        + Add Filter
-      </button>
-    </div>
-
-    <Modal
-      :show="showNewFilterModal"
-      @close="showNewFilterModal = false"
-      :closeable="true"
-    >
-      <div class="bg-gray-100 py-4 px-6 text-gray-900">
-        <div class="flex justify-between mb-6">
-          <h3 class="text-2xl font-bold">Add New Filter</h3>
-          <span class="cursor-pointer" @click.prevent="showNewFilterModal = false">&#x2715</span>
-        </div>
-
-        <div class="mb-3">
-          <label class="block mb-2 text-sm font-medium text-gray-900">Filter:</label>
-
-          <select v-model="filterName" class="select-custom border border-gray-200">
-            <option v-for="(filter, index) in filters" :key="index" :value="filter.name">{{ filter.label }}</option>
-          </select>
-        </div>
-
-        <div class="mb-3">
-          <label class="block mb-2 text-sm font-medium text-gray-900">Operator:</label>
-
-          <select v-model="filterOperator" class="select-custom border border-gray-200">
-            <option v-for="(operator, index) in operatorsForTheSelectedFilter" :key="index">{{ operator }}</option>
-          </select>
-        </div>
-
-        <div class="mb-3">
-          <label class="block mb-2 text-sm font-medium text-gray-900">Value:</label>
-
-          <div v-if="inputTypeForTheSelectedFilter === 'number'">
-            <TextInput class="border-gray-200" v-model="filterValue" type="number" />
-          </div>
-
-          <div v-if="inputTypeForTheSelectedFilter === 'text'">
-            <TextInput class="border-gray-200" v-model="filterValue" type="text" />
-          </div>
-
-          <div v-if="inputTypeForTheSelectedFilter === 'email'">
-            <TextInput class="border-gray-200" v-model="filterValue" type="text" />
-          </div>
-
-          <div v-if="inputTypeForTheSelectedFilter === 'select'">
-            <select v-model="filterValue" class="select-custom border border-gray-200">
-              <option v-for="(option, index) in filters.filter((f) => f.name === filterName)[0].inputTypeOptions" :key="index" :value="option.value">{{ option.label }}</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-          <PrimaryButton class="mr-2" @click.prevent="applyFilter">Apply</PrimaryButton>
-
-          <button
-            class="inline-flex items-center px-4 py-3 border rounded-md font-semibold text-md uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 hover:bg-white hover:text-custom-blue"
-            :class="{
-              'border-transparent text-gray-900 bg-gray-100 hover:drop-shadow-2xl ': true,
-            }"
-            :disabled="disabled"
-            @click.prevent="showNewFilterModal = false"
-          >
-            Cancel
-          </button>
-        </div>
-      </div>
-    </Modal>
-
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-      <div class="px-4 sm:px-8 sm:rounded-lg">
-        <hr class="mb-4" />
-      </div>
-    </div>
 
     <section class="py-3 sm:py-5">
       <div class="px-4 mx-auto max-w-screen-2xl lg:px-12">

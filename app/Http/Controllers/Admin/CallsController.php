@@ -113,7 +113,6 @@ class CallsController extends Controller
         });
 
 
-
         return Inertia::render('Admin/Calls/IndexBeta', [
             'requestData' => $request->all(),
             // 'calls' => $calls,

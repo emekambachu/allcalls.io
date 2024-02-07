@@ -85,7 +85,9 @@ class WebCallsAPIController extends Controller
         });
 
 
-        return ['calls' => $calls];
+        return [
+            'calls' => $calls
+        ];
     }
 
     protected function applyUserEmailFilter($query, $filter)
