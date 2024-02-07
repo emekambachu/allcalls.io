@@ -145,23 +145,6 @@ class EquisAPIJob implements ShouldQueue
     protected function getRequestData()
     {
         // This is the sample REQUIRED data that we need to send to Equis API
-        // return [
-        //     "address" => "787 Pine Rd",
-        //     "birthDate" => "1990-04-22",
-        //     "city" => "Raleigh",
-        //     "currentlyLicensed" => false,
-        //     "email" => "emily.smitch@webmail.com",
-        //     "firstName" => "Emily",
-        //     "languageId" => "es",
-        //     "lastName" => "Smitch",
-        //     "npn" => "9JL456C",
-        //     "partnerUniqueId" => "b3n4k8",
-        //     "role" => "Agent",
-        //     "state" => "NY",
-        //     "uplineAgentEFNumber" => "EF222171",
-        //     "zipCode" => "10001"
-        // ];
-
         return [
             "address" => $this->user->internalAgentContract->address ?? null,
             "birthDate" => isset($this->user->internalAgentContract->dob) ? Carbon::parse($this->user->internalAgentContract->dob)->format('Y-m-d') : '-',
