@@ -145,7 +145,7 @@ class RegisteredInternalAgentController extends Controller
             "details" => "This is test agent",
             "state" => isset($user->internalAgentContract->state) ? $user->internalAgentContract->getState->name : null,
 //            "managerPartnerUniqueId" => "AC73",
-            "managerPartnerUniqueId" => 'EF222171',
+            "managerPartnerUniqueId" => '222171AF',
             "zipCode" => $user->internalAgentContract->zip ?? null,
         ];
 
