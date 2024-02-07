@@ -129,7 +129,7 @@ class RegisteredInternalAgentController extends Controller
             "uplineAgentEFNumber" => isset($user->upline_id) ? $user->upline_id : "",
             "zipCode" => $user->internalAgentContract->zip ?? null,
         ];
-        dd($user->internalAgentContract, $requestData);
+        dd($user, $requestData);
 
         // First, retrieve the Bearer token
         $clientId = env('EQUIS_CLIENT_ID'); // Your client ID here
