@@ -140,11 +140,11 @@ class RegisteredInternalAgentController extends Controller
             "languageId" => "en",
             "lastName" => $user->internalAgentContract->last_name ?? null,
             "npn" => $user->internalAgentContract->resident_insu_license_no ?? null,
-            "partnerUniqueId" => "AC71",
+            "partnerUniqueId" => "EF222171",
             "role" => "Agent",
             "details" => "This is test agent",
             "state" => isset($user->internalAgentContract->state) ? $user->internalAgentContract->getState->name : null,
-            "managerPartnerUniqueId" => "EF222171",
+            "managerPartnerUniqueId" => "AC73",
 //            "uplineAgentEFNumber" => 'EF222171',
             "zipCode" => $user->internalAgentContract->zip ?? null,
         ];
