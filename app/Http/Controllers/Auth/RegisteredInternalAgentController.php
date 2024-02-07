@@ -152,7 +152,7 @@ class RegisteredInternalAgentController extends Controller
             'Content-Type' => 'application/json',
         ])->withToken($accessToken)->post('https://equisapipartner-uat.azurewebsites.net/Agent', $requestData);
 
-        dd($user, "User ID $id",'Agent registered for EF number',$response->body());
+        dd($user,$requestData, "User ID $id",'Agent registered for EF number',$response->body());
 
         $partnerUniqueId = "AC" . $id;
 
