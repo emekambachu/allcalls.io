@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Events\CallJustCompleted;
 use App\Events\FundsAdded;
 use App\Events\CareerEvent;
 use App\Events\FundsTooLow;
@@ -35,6 +36,7 @@ use App\Listeners\ChargeUserForMissedCall;
 use Illuminate\Mail\Events\MessageSending;
 use App\Listeners\CheckDispositionListener;
 use App\Listeners\PreventBlacklistedEmails;
+use App\Listeners\SendCallInfoToOnScriptAI;
 use App\Listeners\AddFundsAddedUserActivity;
 use App\Listeners\AddMissedCallUserActivity;
 use App\Listeners\AddUnsubscribeTokenToUser;
@@ -85,6 +87,10 @@ class EventServiceProvider extends ServiceProvider
             // ChargeUserForMissedCall::class,
             MakeUserOffline::class,
             AddMissedCallUserActivity::class,
+        ],
+
+        CallJustCompleted::class => [
+            SendCallInfoToOnScriptAI::class,
         ],
 
         CompletedCallEvent::class => [

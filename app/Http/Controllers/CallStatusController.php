@@ -11,6 +11,7 @@ use App\Events\CallEnded;
 use Illuminate\Http\Request;
 use App\Events\MissedCallEvent;
 use App\Events\RingingCallEvent;
+use App\Events\CallJustCompleted;
 use App\Events\CallStatusUpdated;
 use App\Notifications\MissedCall;
 use App\Events\CompletedCallEvent;
@@ -36,6 +37,12 @@ class CallStatusController extends Controller
 
             return;
         }
+
+        Log::debug('TwilioSignatureData:', [
+            'signature' => isset($_SERVER['HTTP_X_TWILIO_SIGNATURE']) ? $_SERVER['HTTP_X_TWILIO_SIGNATURE']  : 'Not found',
+            'scriptURI' => 'https://staging.allcalls.io/handle-call-status',
+            'postVars' => $_POST,
+        ]);
 
         $callStatus = $request->input('CallStatus');
         $userId = $request->input('user_id');
@@ -120,6 +127,7 @@ class CallStatusController extends Controller
 
             case 'completed':
 
+                CallJustCompleted::dispatch($user, CallType::find($callTypeId), $request->unique_call_id);
 
                 Log::debug('completed event for user ' . $request->user_id);
                 CallAcceptedOrRejected::dispatch(User::find($request->user_id));

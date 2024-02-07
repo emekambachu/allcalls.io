@@ -469,14 +469,8 @@ let makeDispositionModalNull = () => {
 };
 
 onMounted(() => {
-  // if the showDispositionModal is not null, display the modal
-  // if (localStorage.getItem("showDispositionModal") !== null) {
-  //   showUpdateDispositionForLastClient.value = true;
-  //   startTimeoutForRepeatedDispositionNotifications();
-  // }
-});
+    console.log("mounted", unreadNotifications.value);
 
-onMounted(() => {
   console.log("mounted AuthenticatedLayout");
 
   console.log("Listening for completed call event.");
@@ -551,6 +545,7 @@ onUnmounted(() => {
 });
 
 const showingNavigationDropdown = ref(false);
+const showNotificationDropdown = ref(false);
 
 let formatMoney = (amount) => {
   return parseFloat(amount)
@@ -634,20 +629,21 @@ let appDownloadModal = ref(false);
 
               <!-- Hamburger -->
               <div class="-mr-2 flex items-center md:hidden">
-                <button @click="showingNavigationDropdown = !showingNavigationDropdown"
-                  class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
-                  <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                    <path :class="{
+                  <button @click="showingNavigationDropdown = !showingNavigationDropdown"
+                          class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
+                      <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                          <path :class="{
                       hidden: showingNavigationDropdown,
                       'inline-flex': !showingNavigationDropdown,
                     }" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                    <path :class="{
+                          <path :class="{
                       hidden: !showingNavigationDropdown,
                       'inline-flex': showingNavigationDropdown,
                     }" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
+                      </svg>
+                  </button>
               </div>
+
             </div>
 
             <!-- <p class="mt-10 mb-2 text-lg text-white font-bold">
@@ -1006,10 +1002,10 @@ let appDownloadModal = ref(false);
 
                   </div> -->
                   <div>
-                    <Link   href="/billing/funds"
+                    <Link href="/billing/funds"
                       class="mr-3 px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
                       v-if="!isInternalLevel">
-                    Add Funds  
+                    Add Funds
                     </Link>
                   </div>
                   <div class="flex flex-col justify-center items-center">
@@ -1094,7 +1090,6 @@ let appDownloadModal = ref(false);
                           </div>
 
                           <!-- Unread Notification Items End -->
-
                           <div class="px-3 py-2 text-sm text-gray-600 font-bold flex items-center justify-between"
                             v-if="userNotifications && userNotifications.length">
                             <div class="flex items-center">
@@ -1166,7 +1161,7 @@ let appDownloadModal = ref(false);
                     </template>
 
                     <template #content>
-                      <DropdownLink 
+                      <DropdownLink
                         :href="route('profile.view')" method="get" as="button">
                         Profile
                       </DropdownLink>
@@ -1179,21 +1174,51 @@ let appDownloadModal = ref(false);
                 </div>
               </div>
 
-              <!-- Hamburger -->
+              <!-- Hamburger Mobile -->
               <div class="-mr-2 flex items-center md:hidden">
+                  <!--Show Mobile Notification button-->
+                <button @click="showMobileNotifications = !showMobileNotifications"
+                  class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 focus:outline-none focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
+
+                    <!--unread alert-->
+                    <div v-if="unreadNotifications.length" class="relative">
+                        <div
+                            class="h-4 w-4 flex items-center justify-center absolute -top-4 left-07 bg-red-500 rounded-full text-xs text-white z-10"
+                            v-text="unreadNotifications.length"></div>
+                    </div>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                         stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path :class="{
+                                  hidden: showMobileNotifications,
+                                  'inline-flex': !showMobileNotifications,
+                              }"
+                              stroke-linecap="round" stroke-linejoin="round"
+                              d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0">
+                        </path>
+                        <path :class="{
+                              hidden: !showMobileNotifications,
+                              'inline-flex': showMobileNotifications,
+                            }"
+                            stroke-linecap="round" stroke-linejoin="round"
+                              d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+
                 <button @click="showingNavigationDropdown = !showingNavigationDropdown"
-                  class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
-                  <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                    <path :class="{
+                          class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
+                      <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                          <path :class="{
                       hidden: showingNavigationDropdown,
                       'inline-flex': !showingNavigationDropdown,
                     }" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                    <path :class="{
+                          <path :class="{
                       hidden: !showingNavigationDropdown,
                       'inline-flex': showingNavigationDropdown,
                     }" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
+                      </svg>
+                  </button>
               </div>
             </div>
 
@@ -1202,6 +1227,97 @@ let appDownloadModal = ref(false);
             </p> -->
             <div class="mb-6"></div>
           </div>
+
+            <!--Show Mobile Notifications Dropdown-->
+            <div :class="{
+            block: showMobileNotifications,
+            hidden: !showMobileNotifications,
+          }" class="md:hidden">
+                <div class="pt-2 pb-3 space-y-1">
+                    <!--Mobile Notifications Display-->
+                    <div class="w-full rounded-md bg-custom-indigo shadow-lg focus:outline-none">
+                        <div class="text-lg font-bold px-3 py-2 text-white">
+                            Notifications
+                        </div>
+
+                        <!-- Unread Notifications -->
+                        <div v-if="showMobileNotifications && unreadNotifications.length">
+                            <div class="px-3 py-2 text-sm text-white font-bold flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <span class="mr-1 font-bold text-white">Unread</span>
+                                    <span style="font-size: 10px"
+                                          class="bg-gray-600 rounded-full text-white w-4 h-4 flex items-center justify-center">
+                        {{ unreadNotifications.length }}
+                      </span>
+                                </div>
+                                <span class="cursor-pointer text-xs py-2 text-white hover:text-gray-400"
+                                      @click.prevent="markAllAsRead">
+                      Mark All As Read
+                    </span>
+                            </div>
+
+                            <!-- Unread Notification Items -->
+                            <div style="max-height: 400px; overflow-y: auto">
+                                <div v-for="(notification, index) in unreadNotifications" :key="notification.id"
+                                     class="p-1 cursor-pointer hover:bg-custom-blue hover:text-white">
+                                    <div class="flex flex-col gap-1 p-2 rounded-md">
+                                        <p class="text-sm font-semibold text-white">
+                                            {{ notification.data.title }}
+                                        </p>
+                                        <p class="text-xs text-white">{{ notification.data.body }}</p>
+                                        <p style="font-size: 9px" class="text-white">
+                                            {{ notification.created_at_diff }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- All Notifications -->
+                        <div v-if="showMobileNotifications &&
+                  userNotifications &&
+                  userNotifications.length
+                  ">
+                            <div class="px-3 py-2 text-sm text-white font-bold flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <span class="mr-1 font-bold text-white">All</span>
+                                    <span style="font-size: 10px"
+                                          class="bg-gray-600 rounded-full text-white w-4 h-4 flex items-center justify-center">
+                        {{ userNotifications.length }}
+                      </span>
+                                </div>
+                                <span class="cursor-pointer text-xs py-2 text-white hover:text-gray-400"
+                                      @click.prevent="clearAllNotifications">
+                      Clear All
+                    </span>
+                            </div>
+
+                            <!-- Notification Items -->
+                            <div style="max-height: 400px; overflow-y: auto">
+                                <div v-for="(notification, index) in userNotifications" :key="notification.id"
+                                     class="p-1 cursor-pointer hover:bg-custom-blue hover:text-white">
+                                    <div class="flex flex-col gap-1 p-2 rounded-md">
+                                        <p class="text-sm font-semibold text-white">
+                                            {{ notification.data.title }}
+                                        </p>
+                                        <p class="text-xs text-white">{{ notification.data.body }}</p>
+                                        <p style="font-size: 9px" class="text-white">
+                                            {{ notification.created_at_diff }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- No Notifications Message -->
+                        <div v-if="showMobileNotifications && !userNotifications.length"
+                             class="text-center py-3 text-md text-white">
+                            You're all caught up!
+                        </div>
+                    </div>
+                </div>
+
+            </div>
 
           <!-- Responsive Navigation Menu -->
           <div :class="{
@@ -1234,7 +1350,7 @@ let appDownloadModal = ref(false);
                 Registered Agents
               </ResponsiveNavLink> -->
 
-              <ResponsiveNavLink 
+              <ResponsiveNavLink
                 :href="route('billing.funds.index')" :active="route().current('billing.funds.index') ||
                   route().current('billing.cards.index') ||
                   route().current('billing.autopay.index')
@@ -1306,12 +1422,12 @@ let appDownloadModal = ref(false);
                 </div>
               </ResponsiveNavLink>
 
-              <ResponsiveNavLink 
+              <ResponsiveNavLink
                 :href="route('calls.index')" :active="route().current('calls.index')">
                 Call Reporting
               </ResponsiveNavLink>
- 
-              <ResponsiveNavLink 
+
+              <ResponsiveNavLink
                 :href="route('additional-files.index')" :active="route().current('additional-files.index')">
                 Additional Files
               </ResponsiveNavLink>
@@ -1373,7 +1489,7 @@ let appDownloadModal = ref(false);
                 </div>
               </ResponsiveNavLink>
 
-              <ResponsiveNavLink 
+              <ResponsiveNavLink
                 :href="route('support.index')" :active="route().current('support.index')">
                 Support
               </ResponsiveNavLink>
@@ -1384,7 +1500,7 @@ let appDownloadModal = ref(false);
                 Promotion Guidelines
               </ResponsiveNavLink>
 
-              <ResponsiveNavLink 
+              <ResponsiveNavLink
                 :href="route('activities.index')" :active="route().current('activities.index') ||
                   route().current('transactions.index') ||
                   route().current('profile.view') ||
@@ -1456,88 +1572,6 @@ let appDownloadModal = ref(false);
                   </ul>
                 </div>
               </ResponsiveNavLink>
-
-              <div class="w-full rounded-md bg-custom-indigo shadow-lg focus:outline-none">
-                <div class="text-lg font-bold px-3 py-2 text-white"
-                  @click.prevent="showMobileNotifications = !showMobileNotifications">
-                  Notifications
-                </div>
-
-                <!-- Unread Notifications -->
-                <div v-if="showMobileNotifications && unreadNotifications.length">
-                  <div class="px-3 py-2 text-sm text-white font-bold flex items-center justify-between">
-                    <div class="flex items-center">
-                      <span class="mr-1 font-bold text-white">Unread</span>
-                      <span style="font-size: 10px"
-                        class="bg-gray-600 rounded-full text-white w-4 h-4 flex items-center justify-center">
-                        {{ unreadNotifications.length }}
-                      </span>
-                    </div>
-                    <span class="cursor-pointer text-xs py-2 text-white hover:text-gray-400"
-                      @click.prevent="markAllAsRead">
-                      Mark All As Read
-                    </span>
-                  </div>
-
-                  <!-- Unread Notification Items -->
-                  <div style="max-height: 400px; overflow-y: auto">
-                    <div v-for="(notification, index) in unreadNotifications" :key="notification.id"
-                      class="p-1 cursor-pointer hover:bg-custom-blue hover:text-white">
-                      <div class="flex flex-col gap-1 p-2 rounded-md">
-                        <p class="text-sm font-semibold text-white">
-                          {{ notification.data.title }}
-                        </p>
-                        <p class="text-xs text-white">{{ notification.data.body }}</p>
-                        <p style="font-size: 9px" class="text-white">
-                          {{ notification.created_at_diff }}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- All Notifications -->
-                <div v-if="showMobileNotifications &&
-                  userNotifications &&
-                  userNotifications.length
-                  ">
-                  <div class="px-3 py-2 text-sm text-white font-bold flex items-center justify-between">
-                    <div class="flex items-center">
-                      <span class="mr-1 font-bold text-white">All</span>
-                      <span style="font-size: 10px"
-                        class="bg-gray-600 rounded-full text-white w-4 h-4 flex items-center justify-center">
-                        {{ userNotifications.length }}
-                      </span>
-                    </div>
-                    <span class="cursor-pointer text-xs py-2 text-white hover:text-gray-400"
-                      @click.prevent="clearAllNotifications">
-                      Clear All
-                    </span>
-                  </div>
-
-                  <!-- Notification Items -->
-                  <div style="max-height: 400px; overflow-y: auto">
-                    <div v-for="(notification, index) in userNotifications" :key="notification.id"
-                      class="p-1 cursor-pointer hover:bg-custom-blue hover:text-white">
-                      <div class="flex flex-col gap-1 p-2 rounded-md">
-                        <p class="text-sm font-semibold text-white">
-                          {{ notification.data.title }}
-                        </p>
-                        <p class="text-xs text-white">{{ notification.data.body }}</p>
-                        <p style="font-size: 9px" class="text-white">
-                          {{ notification.created_at_diff }}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- No Notifications Message -->
-                <div v-if="showMobileNotifications && !userNotifications.length"
-                  class="text-center py-3 text-md text-white">
-                  You're all caught up!
-                </div>
-              </div>
             </div>
 
             <!-- Responsive Settings Options -->
@@ -1556,7 +1590,7 @@ let appDownloadModal = ref(false);
               </div>
 
               <div class="mt-3 space-y-1">
-                <ResponsiveNavLink 
+                <ResponsiveNavLink
                   :href="route('profile.view')" method="get" as="button">
                   Profile
                 </ResponsiveNavLink>
@@ -1566,7 +1600,9 @@ let appDownloadModal = ref(false);
               </div>
             </div>
           </div>
+
         </nav>
+
         <div class="w-full mx-auto md:grid md:grid-cols-5 md:gap-28 md:max-w-screen-2xl xl:gap-0">
           <div class="py-12 hidden sm:-my-px sm:ml-10 col-span-1 md:flex md:flex-col">
             <NavLink class="mb-10 gap-2"   :href="route('take-calls.show')"
@@ -1576,9 +1612,9 @@ let appDownloadModal = ref(false);
                 <path stroke-linecap="round" stroke-linejoin="round"
                   d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
               </svg>
-              Take Calls 
+              Take Calls
             </NavLink>
-           
+
             <NavLink class="mb-10 gap-2"   :href="route('clients.index')"
               :active="route().current('clients.index')">
               <img src="/img/clients.png" alt="" />
@@ -1669,7 +1705,7 @@ let appDownloadModal = ref(false);
               v-if="!isInternalLevel"
             >
               <img src="/img/billing.png" alt="" />
-              Add Funds 
+              Add Funds
 
               <svg v-if="route().current('billing.funds.index') ||
                 route().current('billing.cards.index') ||
@@ -1691,7 +1727,7 @@ let appDownloadModal = ref(false);
       route().current('billing.autopay.index'),
   }">
               <img src="/img/billing.png" alt="" />
-              Add Funds 
+              Add Funds
 
               <svg v-if="route().current('billing.funds.index') ||
                 route().current('billing.cards.index') ||
@@ -1778,7 +1814,7 @@ let appDownloadModal = ref(false);
               Additional Files
             </NavLink>
 
-            <NavLink 
+            <NavLink
               class="mb-10 gap-2" :href="route('support.index')" :active="route().current('support.index')">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" style="height: 38px; width: 38px">
