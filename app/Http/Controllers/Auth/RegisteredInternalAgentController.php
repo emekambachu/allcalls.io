@@ -144,14 +144,16 @@ class RegisteredInternalAgentController extends Controller
             "role" => "Agent",
             "details" => "This is test agent",
             "state" => isset($user->internalAgentContract->state) ? $user->internalAgentContract->getState->name : null,
-            "uplineAgentEFNumber" => 'AC1313',
+            "uplineAgentEFNumber" => null,
             "zipCode" => $user->internalAgentContract->zip ?? null,
         ];
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
         ])->withToken($accessToken)->post('https://equisapipartner-uat.azurewebsites.net/Agent', $requestData);
+
         dd($user, "User ID $id",'Agent registered for EF number',$response->body());
+
         $partnerUniqueId = "AC" . $id;
 
         $url = "https://equisapipartner-uat.azurewebsites.net/Agent/{$partnerUniqueId}/UserName";
