@@ -144,7 +144,7 @@ class RegisteredInternalAgentController extends Controller
             "role" => "Agent",
             "details" => "This is test agent",
             "state" => isset($user->internalAgentContract->state) ? $user->internalAgentContract->getState->name : null,
-            "uplineAgentEFNumber" => isset($user->upline_id) ? $user->upline_id : null,
+            "uplineAgentEFNumber" => null,
             "zipCode" => $user->internalAgentContract->zip ?? null,
         ];
 
