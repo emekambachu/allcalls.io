@@ -142,10 +142,12 @@ class RegisteredInternalAgentController extends Controller
             "npn" => $user->internalAgentContract->resident_insu_license_no ?? null,
             "partnerUniqueId" => "AC" . $user->id,
             "role" => "Agent",
+            "details" => "This is test agent",
             "state" => isset($user->internalAgentContract->state) ? $user->internalAgentContract->state : null,
             "uplineAgentEFNumber" => isset($user->upline_id) ? $user->upline_id : "",
             "zipCode" => $user->internalAgentContract->zip ?? null,
         ];
+        dd($requestData);
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
