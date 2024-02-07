@@ -180,10 +180,10 @@ class EquisAPIJob implements ShouldQueue
             $this->user->manager_id = $this->managerPartnerUniqueId;
             $this->user->save();
 
-            Log::debug('EF Number saved for user', ['Inviter' => $this->user->id, 'Manager ID' => $this->managerPartnerUniqueId]);
+            Log::debug('EF Number saved for user', ['Invitee' => $this->user->id, 'Manager ID' => $this->managerPartnerUniqueId]);
         } else {
             // Handle the error scenario
-            Log::debug('Failed to save EF Number for user', ['Inviter' => $this->user->id, 'Server error response' => $response->body()]);
+            Log::debug('Failed to save EF Number for user', ['Invitee' => $this->user->id, 'Server error response' => $response->body()]);
         }
     }
 }
