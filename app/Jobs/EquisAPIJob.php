@@ -147,7 +147,7 @@ class EquisAPIJob implements ShouldQueue
         // This is the sample REQUIRED data that we need to send to Equis API
         return [
             "address" => $this->user->internalAgentContract->address ?? null,
-            "birthDate" => isset($this->user->internalAgentContract->dob) ? Carbon::parse($this->user->internalAgentContract->dob)->format('Y-m-d') : '-',
+            "birthDate" => isset($this->user->internalAgentContract->dob) ? Carbon::parse($this->user->internalAgentContract->dob)->format('Y-m-d') : null,
             "city" => $this->user->internalAgentContract->city ?? null,
             "currentlyLicensed" => false,
             "email" => $this->user->internalAgentContract->email ?? null,
