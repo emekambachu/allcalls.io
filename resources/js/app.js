@@ -1,6 +1,7 @@
     import './bootstrap';
     import '../css/app.css';
-  
+    import '../css/custom.css';
+
     import { createApp, h } from 'vue';
     import { createInertiaApp } from '@inertiajs/vue3';
     import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
@@ -37,7 +38,7 @@
                 .component("VueSignaturePad", VueSignaturePad)
                 .component('VueLoader', VueLoader)
                 // .mount(el);
-              
+
             app.mount(el)
         },
         progress: {
