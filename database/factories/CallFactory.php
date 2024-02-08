@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Call;
 use App\Models\User;
+use App\Services\Base\BaseService;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CallFactory extends Factory
@@ -23,6 +24,8 @@ class CallFactory extends Factory
             'amount_spent' => $faker->numberBetween(20, 60), // Generating a random number between 20 to 60 as the amount spent per call
             'recording_url' => $faker->url,
             'call_type_id' => $faker->numberBetween(1, 5),
+            'publisher_id' => BaseService::randomChar(34, '0123456789abcdefABCDEF'),
+            'publisher_name' => $faker->randomElement(['Assurance', 'BLM', 'PolicyScout', 'AmeriQuote']),
         ];
     }
 }

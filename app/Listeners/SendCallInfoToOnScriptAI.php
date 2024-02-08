@@ -22,10 +22,10 @@ class SendCallInfoToOnScriptAI implements ShouldQueue
      */
     public function handle(object $event): void
     {
-        $call = Call::whereUniqueCallId($event->uniqueCallId)->first();
+        $call = $event->call;
         $agent = $event->user;
 
-        Log::debug('Alpha:SendCallInfoToOnScriptAIData:', [
+        Log::debug('Gamma:SendCallInfoToOnScriptAIData:', [
             'agent' => $agent,
             'call' => $call,
             'client' => $call->client,
@@ -42,8 +42,8 @@ class SendCallInfoToOnScriptAI implements ShouldQueue
                 'affiliate_name' => $call->publisher_name ?? null,
                 'call_disposition' => ($call->client && $call->client->status) ? $call->client->status : null,
                 'agent_id' => $agent->id, // Added parameter
-                'first_name' => ($call->client && $call->client->first_name) ? $call->client->first_name: null,
-                'last_name' => ($call->client && $call->client->last_name) ? $call->client->last_name: null,
+                'first_name' => ($call->client && $call->client->first_name) ? $call->client->first_name : null,
+                'last_name' => ($call->client && $call->client->last_name) ? $call->client->last_name : null,
                 'client_phone' => $call->from,
                 'client_address' => ($call->client && $call->client->address) ? $call->client->address : null,
                 'client_zipcode' => ($call->client && $call->client->zipCode) ? $call->client->zipCode : null,
@@ -54,25 +54,23 @@ class SendCallInfoToOnScriptAI implements ShouldQueue
                 return !is_null($value);
             });
 
-            Log::debug('Alpha:SendCallInfoToOnScriptAIQueryParams:', [
+            Log::debug('Gamma:SendCallInfoToOnScriptAIQueryParams:', [
                 'queryParams' => $queryParams,
             ]);
 
             try {
                 $response = Http::get('https://app.onscript.ai/api/create_process_dialog', $queryParams);
 
-                Log::info('Alpha:SendCallInfoToOnScriptAI Success:', [
+                Log::debug('Gamma:SendCallInfoToOnScriptAI Success:', [
                     'response' => $response->body(),
                 ]);
             } catch (Exception $e) {
-                Log::error('Alpha:SendCallInfoToOnScriptAI Error:', [
+                Log::debug('Gamma:SendCallInfoToOnScriptAI Error:', [
                     'message' => $e->getMessage(),
                 ]);
             }
         } else {
-            Log::warning('Alpha:SendCallInfoToOnScriptAI: Call or Agent not found', [
-                'uniqueCallId' => $event->uniqueCallId,
-            ]);
+            Log::debug('Gamma:SendCallInfoToOnScriptAI: Call or Agent not found');
         }
     }
 }
