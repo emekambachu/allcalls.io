@@ -17,6 +17,6 @@ class CallRecordingController extends Controller
         $call->recording_url = $request->RecordingUrl;
         $call->save();
 
-        RecordingSaved::dispatch($call, $call->callType, $call->user);
+        RecordingSaved::dispatch($call, $call->user);
     }
 }
