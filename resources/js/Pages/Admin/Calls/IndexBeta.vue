@@ -373,6 +373,12 @@ let filters = ref([
     inputType: "number"
   },
   {
+    label: "Hung up by",
+    name: "call_duration_in_seconds",
+    operators: ["is", "is greater than", "is less than", "is greater than or equal to", "is less than or equal to"],
+    inputType: "number"
+  },
+  {
     label: "Revenue",
     name: "amount_spent",
     operators: ["is", "is greater than", "is less than", "is greater than or equal to", "is less than or equal to"],
