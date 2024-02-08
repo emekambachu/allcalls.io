@@ -30,6 +30,22 @@ class ClientFactory extends Factory
             'call_id' => function() {
                 return Call::factory()->create()->id;
             },
+            'status' => $faker->randomElement([
+                'Sale - Simplified Issue',
+                'Sale - Guaranteed Issue',
+                'Follow Up Needed',
+                'Quoted - Not Interested',
+                'Not Interested',
+                'Transfer Handoff Too Long',
+                'Client Hung Up',
+                'No Income',
+                'Wrong State',
+                'Not Qualified Age',
+                'Not Qualified Nursing Home',
+                'Not Qualified Memory Issues',
+                'Language Barrier',
+                'Do Not Call'
+            ]),
             'state' => $faker->state(),
         ];
     }

@@ -22,6 +22,7 @@ let page = usePage();
 if (page.props.flash.message) {
   toaster("success", page.props.flash.message);
 }
+
 let props = defineProps({
   totalCalls: {
     type: Number,
@@ -36,6 +37,9 @@ let props = defineProps({
     required: true,
   },
 });
+
+const getTotalCalls = ref(props.totalCalls);
+const getTotalRevenue = ref(props.totalRevenue);
 
 let columns = ref([
   {
@@ -141,6 +145,15 @@ let columns = ref([
       return call.user_email;
     },
   },
+    {
+        label: "Disposition",
+        name: "disposition",
+        visible: false,
+        sortable: false,
+        render(call) {
+            return call.client?.status;
+        },
+    },
 ]);
 
 let performSorting = () => {
@@ -377,6 +390,12 @@ let filters = ref([
     operators: ["is"],
     inputType: "email"
   },
+    {
+        label: "Disposition",
+        name: "disposition",
+        operators: ["is"],
+        inputType: "text"
+    },
   {
     label: "Vertical",
     name: "vertical",
@@ -457,13 +476,18 @@ const applyCallFiltersToSummary = () => {
     showMoreForGrouped.value = true;
     maxmizedCallsGroupedByUser.value = {};
     minimizedCallsGroupedByUser.value = {};
+    getTotalCalls.value = 0;
+    getTotalRevenue.value = 0;
 
     // Iterate loadedCalls first and then grouped calls to match the both user ids
     // if matched add the user group to the maxmizedCallsGroupedByUser
     for (const [key, value] of loadedCalls.value.entries()) {
         Object.values(unfilteredGroupedCalls).forEach(group => {
             if (group.userId === value.user_id) {
-                // Append the matched group to maximizedCallsGroupedByUser.value
+
+                getTotalCalls.value ++;
+                getTotalRevenue.value += parseFloat(value.amount_spent);
+
                 maxmizedCallsGroupedByUser.value[group.userId] = group;
                 minimizedCallsGroupedByUser.value[group.userId] = group;
             }
@@ -478,6 +502,10 @@ let removeFilter = async (index) => {
   //populate maximized and minimized calls after removing the filter
   minimizedCallsGroupedByUserArray.value = callsGroupedByUserArray.slice(0, 2);
   maxmizedCallsGroupedByUser.value = Object.fromEntries(callsGroupedByUserArray);
+
+  // reset total calls and revenue
+  getTotalCalls.value = props.totalCalls;
+  getTotalRevenue.value = props.totalRevenue;
 
   await fetchCalls(true);
 }
@@ -860,11 +888,11 @@ function formatDate(date) {
             <div class="flex items-center flex-1 space-x-4">
               <h5>
                 <span class="text-gray-500">Total Calls: </span>
-                <span class="">{{ totalCalls }}</span>
+                <span class="">{{ getTotalCalls }}</span>
               </h5>
               <h5>
                 <span class="text-gray-500">Total Revenue: </span>
-                <span class="">${{ totalRevenue.toFixed(2) }}</span>
+                <span class="">${{ getTotalRevenue.toFixed(2) }}</span>
               </h5>
             </div>
             <div
