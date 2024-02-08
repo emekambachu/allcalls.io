@@ -13,7 +13,6 @@ class TwilioForwardingController extends Controller
         $forwardingNumber = '+18559740661'; // Ringba forwarding number
 
         $response = new VoiceResponse();
-        $response->say('Thanks for the call. We are connecting you now.', ['voice' => 'woman']);
         $dial = $response->dial('', ['callerId' => $callerId]);
         $dial->number($forwardingNumber);
 
@@ -26,7 +25,6 @@ class TwilioForwardingController extends Controller
         $forwardingNumber = '+18662140491'; // Retreaver forwarding number
 
         $response = new VoiceResponse();
-        $response->say('Thanks for the call. We are connecting you now.', ['voice' => 'woman']);
         $dial = $response->dial('', ['callerId' => $callerId]);
         $dial->number($forwardingNumber);
 
