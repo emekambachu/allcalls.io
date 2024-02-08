@@ -22,7 +22,7 @@ class SendCallInfoToOnScriptAI implements ShouldQueue
      */
     public function handle(object $event): void
     {
-        $call = Call::whereUniqueCallId($event->uniqueCallId)->first();
+        $call = $event->call;
         $agent = $event->user;
 
         Log::debug('Alpha:SendCallInfoToOnScriptAIData:', [
@@ -42,8 +42,8 @@ class SendCallInfoToOnScriptAI implements ShouldQueue
                 'affiliate_name' => $call->publisher_name ?? null,
                 'call_disposition' => ($call->client && $call->client->status) ? $call->client->status : null,
                 'agent_id' => $agent->id, // Added parameter
-                'first_name' => ($call->client && $call->client->first_name) ? $call->client->first_name: null,
-                'last_name' => ($call->client && $call->client->last_name) ? $call->client->last_name: null,
+                'first_name' => ($call->client && $call->client->first_name) ? $call->client->first_name : null,
+                'last_name' => ($call->client && $call->client->last_name) ? $call->client->last_name : null,
                 'client_phone' => $call->from,
                 'client_address' => ($call->client && $call->client->address) ? $call->client->address : null,
                 'client_zipcode' => ($call->client && $call->client->zipCode) ? $call->client->zipCode : null,

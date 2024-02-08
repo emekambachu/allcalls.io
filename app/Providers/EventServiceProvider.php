@@ -20,6 +20,7 @@ use App\Listeners\MakeUserOffline;
 use App\Events\OnboardingCompleted;
 use App\Listeners\SendWelcomeEmail;
 use App\Events\OnlineUserListUpdated;
+use App\Events\RecordingSaved;
 use App\Listeners\AddTargetsInRingba;
 use Illuminate\Support\Facades\Event;
 use App\Listeners\LogCallStatusChange;
@@ -50,6 +51,7 @@ use App\Listeners\InviteAgent as ListenersInviteAgent;
 use App\Listeners\DispatchDispositionUpdateNotification;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Plivo\Resources\Recording\Recording;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -90,6 +92,10 @@ class EventServiceProvider extends ServiceProvider
         ],
 
         CallJustCompleted::class => [
+            // SendCallInfoToOnScriptAI::class,
+        ],
+
+        RecordingSaved::class => [
             SendCallInfoToOnScriptAI::class,
         ],
 
