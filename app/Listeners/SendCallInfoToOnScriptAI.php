@@ -25,7 +25,7 @@ class SendCallInfoToOnScriptAI implements ShouldQueue
         $call = $event->call;
         $agent = $event->user;
 
-        Log::debug('Alpha:SendCallInfoToOnScriptAIData:', [
+        Log::debug('Gamma:SendCallInfoToOnScriptAIData:', [
             'agent' => $agent,
             'call' => $call,
             'client' => $call->client,
@@ -54,23 +54,23 @@ class SendCallInfoToOnScriptAI implements ShouldQueue
                 return !is_null($value);
             });
 
-            Log::debug('Alpha:SendCallInfoToOnScriptAIQueryParams:', [
+            Log::debug('Gamma:SendCallInfoToOnScriptAIQueryParams:', [
                 'queryParams' => $queryParams,
             ]);
 
             try {
                 $response = Http::get('https://app.onscript.ai/api/create_process_dialog', $queryParams);
 
-                Log::info('Alpha:SendCallInfoToOnScriptAI Success:', [
+                Log::info('Gamma:SendCallInfoToOnScriptAI Success:', [
                     'response' => $response->body(),
                 ]);
             } catch (Exception $e) {
-                Log::error('Alpha:SendCallInfoToOnScriptAI Error:', [
+                Log::error('Gamma:SendCallInfoToOnScriptAI Error:', [
                     'message' => $e->getMessage(),
                 ]);
             }
         } else {
-            Log::warning('Alpha:SendCallInfoToOnScriptAI: Call or Agent not found', [
+            Log::warning('Gamma:SendCallInfoToOnScriptAI: Call or Agent not found', [
                 'uniqueCallId' => $event->uniqueCallId,
             ]);
         }
