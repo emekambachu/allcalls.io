@@ -145,6 +145,15 @@ let columns = ref([
       return call.user_email;
     },
   },
+    {
+        label: "Disposition",
+        name: "disposition",
+        visible: false,
+        sortable: false,
+        render(call) {
+            return call.client?.status;
+        },
+    },
 ]);
 
 let performSorting = () => {
@@ -381,6 +390,12 @@ let filters = ref([
     operators: ["is"],
     inputType: "email"
   },
+    {
+        label: "Disposition",
+        name: "disposition",
+        operators: ["is"],
+        inputType: "text"
+    },
   {
     label: "Vertical",
     name: "vertical",

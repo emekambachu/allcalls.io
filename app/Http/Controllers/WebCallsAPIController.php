@@ -5,26 +5,33 @@ namespace App\Http\Controllers;
 use App\Models\Call;
 use App\Models\User;
 use App\Models\CallType;
+use App\Services\Client\ClientService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class WebCallsAPIController extends Controller
 {
-    protected $supportedSortColumns = [
+    protected ClientService $client;
+    public function __construct(ClientService $client){
+        $this->client = $client;
+    }
+
+    protected array $supportedSortColumns = [
         'id', 'user_id', 'call_taken', 'call_duration_in_seconds', 'hung_up_by',
         'amount_spent', 'recording_url', 'call_type_id', 'created_at', 'updated_at',
         'sid', 'unique_call_id', 'from', 'user_response_time', 'completed_at'
     ];
 
-    protected $specialFilters = [
+    protected array $specialFilters = [
         'user_email' => 'applyUserEmailFilter',
         'user_role' => 'applyUserRoleFilter',
         'vertical' => 'applyVerticalFilter',
+        'disposition' => 'applyDispositionFilter',
     ];
 
     public function index(Request $request)
     {
-        $query = Call::with('user.roles')->with('callType');
+        $query = Call::with('user.roles', 'callType', 'client');
 
         // Apply sorting
         $sortColumn = $request->input('sort_column', 'id');
@@ -84,7 +91,6 @@ class WebCallsAPIController extends Controller
             return $call;
         });
 
-
         return [
             'calls' => $calls
         ];
@@ -96,6 +102,15 @@ class WebCallsAPIController extends Controller
         if ($user) {
             $query->where('user_id', '=', $user->id);
         }
+    }
+
+    protected function applyDispositionFilter($query, $filter): void
+    {
+        $clients = $this->client->client()->with('call')
+            ->has('call')->select('id', 'call_id', 'status')
+            ->where('status', $filter['value'])->pluck('call_id');
+
+        $query->whereIn('id', $clients);
     }
 
     protected function applyUserRoleFilter($query, $filter)
