@@ -18,15 +18,15 @@ class RecordingSaved
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $call;
-    public $callType;
     public $user;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(Call $call, CallType $callType, User $user)
+    public function __construct(Call $call, User $user)
     {
         $this->call = $call;
+        $this->user = $user;
     }
 
     /**
