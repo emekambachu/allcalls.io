@@ -110,6 +110,16 @@ let columns = ref([
     },
   },
   {
+    label: "Hung up by",
+    name: "hung_up_by",
+    visible: false,
+    sortable: false,
+    render(call) {
+       return call.hung_up_by;
+    },
+  },
+
+  {
     label: "Revenue",
     name: "amount_spent",
     visible: true,
@@ -374,9 +384,9 @@ let filters = ref([
   },
   {
     label: "Hung up by",
-    name: "call_duration_in_seconds",
-    operators: ["is", "is greater than", "is less than", "is greater than or equal to", "is less than or equal to"],
-    inputType: "number"
+    name: "hung_up_by",
+    operators: ["is"],
+    inputType: "text"
   },
   {
     label: "Revenue",
