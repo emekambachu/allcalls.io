@@ -2,15 +2,16 @@
 
 namespace App\Providers;
 
-use App\Events\CallJustCompleted;
 use App\Events\FundsAdded;
 use App\Events\CareerEvent;
 use App\Events\FundsTooLow;
 use App\Events\InviteAgent;
 use App\Models\Transaction;
+use App\Events\RecordingSaved;
 use App\Events\MissedCallEvent;
 use App\Listeners\SaveUserCall;
 use App\Events\RingingCallEvent;
+use App\Events\CallJustCompleted;
 use App\Events\CallStatusUpdated;
 use App\Listeners\AddDefaultBids;
 use App\Listeners\CareerListener;
@@ -20,7 +21,6 @@ use App\Listeners\MakeUserOffline;
 use App\Events\OnboardingCompleted;
 use App\Listeners\SendWelcomeEmail;
 use App\Events\OnlineUserListUpdated;
-use App\Events\RecordingSaved;
 use App\Listeners\AddTargetsInRingba;
 use Illuminate\Support\Facades\Event;
 use App\Listeners\LogCallStatusChange;
@@ -31,6 +31,7 @@ use App\Listeners\UpdateUserCallStatus;
 use App\Events\UserCallTypeStateUpdated;
 use App\Listeners\SendFundsReceiptEmail;
 use App\Listeners\UpdateTargetsInRingba;
+use Plivo\Resources\Recording\Recording;
 use App\Http\Controllers\FundsController;
 use App\Listeners\UpdateActiveUserStatus;
 use App\Listeners\ChargeUserForMissedCall;
@@ -41,6 +42,7 @@ use App\Listeners\SendCallInfoToOnScriptAI;
 use App\Listeners\AddFundsAddedUserActivity;
 use App\Listeners\AddMissedCallUserActivity;
 use App\Listeners\AddUnsubscribeTokenToUser;
+use App\Listeners\FetchPublisherInfoForCall;
 use App\Listeners\AddFundsTooLowUserActivity;
 use App\Listeners\ChargeUserForCompletedCall;
 use App\Listeners\OnboardingCompletedTrigger;
@@ -51,7 +53,6 @@ use App\Listeners\InviteAgent as ListenersInviteAgent;
 use App\Listeners\DispatchDispositionUpdateNotification;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Plivo\Resources\Recording\Recording;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -92,10 +93,10 @@ class EventServiceProvider extends ServiceProvider
         ],
 
         CallJustCompleted::class => [
-            // SendCallInfoToOnScriptAI::class,
         ],
 
         RecordingSaved::class => [
+            FetchPublisherInfoForCall::class,
             SendCallInfoToOnScriptAI::class,
         ],
 

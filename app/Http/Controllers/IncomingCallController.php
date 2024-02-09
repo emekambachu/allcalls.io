@@ -61,6 +61,18 @@ class IncomingCallController extends Controller
             return response($twiml, 200)->header('Content-Type', 'text/xml');
         }
 
+        // if ($to === '6788536559') {
+        //     $autoInsurance = CallType::whereType('Auto Insurance')->first();
+
+        //     $fromAttribute = $this->getFromAttribute($request->input('From'));
+
+        //     Log::debug($request->input('From'));
+
+        //     // Hard-code auto insurance call type
+        //     $twiml .= $this->handleCallTypeNumberCall('6787232049', $fromAttribute);
+        //     return response($twiml, 200)->header('Content-Type', 'text/xml');
+        // }
+
         Log::debug('The to attribute did not match any records in the database.');
 
         $twimlResponse = '<?xml version="1.0" encoding="UTF-8"?>';

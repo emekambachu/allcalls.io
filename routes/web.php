@@ -11,6 +11,7 @@ use App\Http\Controllers\CallController;
 use App\Http\Controllers\CardsController;
 use App\Http\Controllers\FundsController;
 use App\Http\Controllers\AutoPayController;
+use App\Http\Controllers\CareersController;
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupportController;
@@ -36,6 +37,7 @@ use App\Http\Controllers\EmailBlacklistController;
 use App\Http\Controllers\AdditionalFilesController;
 use App\Http\Controllers\AgentStatusDocsController;
 use App\Http\Controllers\FEAgentPingDocsController;
+use App\Http\Controllers\TwilioForwardingController;
 use App\Http\Controllers\FEAgentStatusDocsController;
 use App\Http\Controllers\NotificationGroupController;
 use App\Http\Controllers\TwilioDeviceTokenController;
@@ -44,7 +46,6 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CallUserResponseAPIController;
 use App\Http\Controllers\PromotionGuidelinesController;
 use App\Http\Controllers\AgentStatusPriceDocsController;
-use App\Http\Controllers\CareersController;
 use App\Http\Controllers\TakeCallsOnlineUsersController;
 use App\Http\Controllers\FEAgentStatusPriceDocsController;
 use App\Http\Controllers\ZoomMeetingNotificationController;
@@ -270,3 +271,6 @@ Route::get('/web-api/policies/{client}', [ClientPoliciesController::class, 'inde
 
 Route::post('/web-api/calltype/{callType}/online', [CallTypeStatusController::class, 'store'])->name('call-type-status.store');
 Route::post('/web-api/calltype/{callType}/offline', [CallTypeStatusController::class, 'destroy'])->name('call-type-status.destroy');
+
+Route::get('/twilio/forward/ringba', [TwilioForwardingController::class, 'ringba']);
+Route::get('/twilio/forward/retreaver', [TwilioForwardingController::class, 'retreaver']);
