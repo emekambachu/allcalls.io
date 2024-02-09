@@ -68,6 +68,7 @@ class IncomingCallController extends Controller
 
             Log::debug($request->input('From'));
 
+            // Hard-code auto insurance call type
             $twiml .= $this->handleCallTypeNumberCall('+16787232049', $fromAttribute);
             return response($twiml, 200)->header('Content-Type', 'text/xml');
         }
