@@ -34,8 +34,8 @@ class FetchPublisherInfoForCall
 
         $call = $event->call;
 
-        // $callerId = $call->from;
-        $callerId = '+18045172235';
+        $callerId = $call->from;
+        // $callerId = '+18045172235';
 
         try {
             if ($call->updatePublisherInfo($callerId)) {
