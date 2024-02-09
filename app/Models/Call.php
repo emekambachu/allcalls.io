@@ -97,9 +97,10 @@ class Call extends Model
      * 
      * @return bool
      */
-    public function updatePublisherInfo()
+    public function updatePublisherInfo($callerId = null)
     {
-        $callLogs = $this->fetchRingbaCallLogs();
+        $callLogs = $this->fetchRingbaCallLogs($callerId ?? null);
+
     
         if (isset($callLogs['report'], $callLogs['report']['records']) && !empty($callLogs['report']['records'])) {
             $callLog = $callLogs['report']['records'][0];
@@ -114,7 +115,7 @@ class Call extends Model
         }
     }
 
-    public function fetchRingbaCallLogs()
+    public function fetchRingbaCallLogs($callerId = null)
     {
         $from = '+1' . $this->from;
         $callTypeName = optional(CallType::find($this->call_type_id))->type;
@@ -166,7 +167,7 @@ class Call extends Model
                     'anyConditionToMatch' => [
                         [
                             'column' => 'inboundPhoneNumber',
-                            'value' => $from,
+                            'value' => $callerId ?? $from,
                             'comparisonType' => 'EQUALS'
                         ]
                     ]
