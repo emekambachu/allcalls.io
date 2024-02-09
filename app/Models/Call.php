@@ -166,12 +166,12 @@ class Call extends Model
                     'anyConditionToMatch' => [
                         [
                             'column' => 'targetName',
-                            'value' => 'Allcalls FE',
+                            'value' => $targetName,
                             'comparisonType' => 'EQUALS'
                         ],
                         [
                             'column' => 'targetNumber',
-                            'value' => '+15736523170',
+                            'value' => $targetNumber,
                             'comparisonType' => 'EQUALS'
                         ]
                     ],
