@@ -42,13 +42,13 @@ use App\Listeners\SendCallInfoToOnScriptAI;
 use App\Listeners\AddFundsAddedUserActivity;
 use App\Listeners\AddMissedCallUserActivity;
 use App\Listeners\AddUnsubscribeTokenToUser;
+use App\Listeners\FetchPublisherInfoForCall;
 use App\Listeners\AddFundsTooLowUserActivity;
 use App\Listeners\ChargeUserForCompletedCall;
 use App\Listeners\OnboardingCompletedTrigger;
 use App\Listeners\NotifyUserForLowFundsViaSMS;
 use App\Listeners\AddCompletedCallUserActivity;
 use App\Listeners\NotifyUserForLowFundsViaEmail;
-use App\Http\Controllers\FetchPublisherInfoForCall;
 use App\Listeners\InviteAgent as ListenersInviteAgent;
 use App\Listeners\DispatchDispositionUpdateNotification;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -93,10 +93,10 @@ class EventServiceProvider extends ServiceProvider
         ],
 
         CallJustCompleted::class => [
-            FetchPublisherInfoForCall::class,
         ],
 
         RecordingSaved::class => [
+            FetchPublisherInfoForCall::class,
             SendCallInfoToOnScriptAI::class,
         ],
 

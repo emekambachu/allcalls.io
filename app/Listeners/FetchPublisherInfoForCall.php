@@ -10,6 +10,13 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class FetchPublisherInfoForCall
 {
+
+    /**
+     * 
+     * After 30 seconds of initiating the call, send the call info to OnScript AI
+     */
+    protected $delay = 30;
+
     /**
      * Create the event listener.
      */
@@ -23,8 +30,9 @@ class FetchPublisherInfoForCall
      */
     public function handle(object $event): void
     {
-        $call = Call::whereUniqueCallId($event->uniqueCallId)->first();
+        Log::debug('FetchPublisherInfoForCall:start');
 
+        $call = Call::whereUniqueCallId($event->uniqueCallId)->first();
 
         try {
             if ($call->fetchPublisherInfo()) {

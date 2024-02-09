@@ -119,7 +119,7 @@ class Call extends Model
         $from = '+1' . $this->from;
         $callTypeName = optional(CallType::find($this->call_type_id))->type;
 
-        Log::debug('fetchRingbaCallLogs:', [
+        Log::debug('fetchRingbaCallLogs:foobar:', [
             'from' => $from,
             'callTypeName' => $callTypeName,
         ]);
