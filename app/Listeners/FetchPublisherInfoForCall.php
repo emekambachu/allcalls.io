@@ -35,7 +35,7 @@ class FetchPublisherInfoForCall
         $call = $event->call;
 
         try {
-            if ($call->fetchPublisherInfo()) {
+            if ($call->updatePublisherInfo()) {
                 Log::debug('FetchPublisherInfoForCall:', ['publisher_name' => $call->publisher_name, 'publisher_id' => $call->publisher_id]);
             } else {
                 Log::debug('FetchPublisherInfoForCall:', ['call_id' => $call->id]);
