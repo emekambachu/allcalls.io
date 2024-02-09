@@ -38,7 +38,7 @@ class FetchPublisherInfoForCall
         // $callerId = '+18045172235';
 
         try {
-            if ($call->updatePublisherInfo($callerId)) {
+            if ($call->updatePublisherInfo()) {
                 Log::debug('FetchPublisherInfoForCall:info-updated', ['publisher_name' => $call->publisher_name, 'publisher_id' => $call->publisher_id]);
             } else {
                 Log::debug('FetchPublisherInfoForCall:info-not-updated', ['call_id' => $call->id]);
