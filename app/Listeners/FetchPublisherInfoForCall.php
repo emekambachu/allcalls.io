@@ -36,9 +36,9 @@ class FetchPublisherInfoForCall
 
         try {
             if ($call->updatePublisherInfo()) {
-                Log::debug('FetchPublisherInfoForCall:', ['publisher_name' => $call->publisher_name, 'publisher_id' => $call->publisher_id]);
+                Log::debug('FetchPublisherInfoForCall:info-updated', ['publisher_name' => $call->publisher_name, 'publisher_id' => $call->publisher_id]);
             } else {
-                Log::debug('FetchPublisherInfoForCall:', ['call_id' => $call->id]);
+                Log::debug('FetchPublisherInfoForCall:info-not-updated', ['call_id' => $call->id]);
             }
         } catch (Exception $e) {
             Log::debug('FetchPublisherInfoForCall:Exception: ' . $e->getMessage());
