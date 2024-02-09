@@ -32,7 +32,7 @@ class FetchPublisherInfoForCall
     {
         Log::debug('FetchPublisherInfoForCall:start');
 
-        $call = Call::whereUniqueCallId($event->uniqueCallId)->first();
+        $call = $event->call;
 
         try {
             if ($call->fetchPublisherInfo()) {
