@@ -118,7 +118,7 @@ class Call extends Model
     {
         $from = '+1' . $this->from;
         $callTypeName = optional(CallType::find($this->call_type_id))->type;
-
+    
         Log::debug('fetchRingbaCallLogs:foobar:', [
             'from' => $from,
             'callTypeName' => $callTypeName,
@@ -133,13 +133,13 @@ class Call extends Model
         // Convert $createdAt to DateTime object
         $callCreatedAt = new DateTime($this->created_at, new DateTimeZone('UTC'));
     
-        // Subtract 30 seconds to get the start date
+        // Subtract 2 minutes to get the start date
         $startDate = clone $callCreatedAt; // Clone to avoid modifying original $callCreatedAt
-        $startDate = $startDate->sub(new DateInterval('PT30S'))->format(DateTimeInterface::ISO8601);
+        $startDate = $startDate->sub(new DateInterval('PT2M'))->format(DateTimeInterface::ISO8601);
     
-        // Add 30 seconds to $createdAt to get the end date
+        // Add 2 minutes to $createdAt to get the end date
         $endDate = clone $callCreatedAt; // Clone to ensure we're adding to the original $callCreatedAt
-        $endDate = $endDate->add(new DateInterval('PT30S'))->format(DateTimeInterface::ISO8601);
+        $endDate = $endDate->add(new DateInterval('PT2M'))->format(DateTimeInterface::ISO8601);
     
         // Your HTTP request and response handling code goes here...
         $response = Http::withHeaders([
@@ -160,7 +160,7 @@ class Call extends Model
                             'value' => '+15736523170',
                             'comparisonType' => 'EQUALS'
                         ]
-                    ]
+                    ],
                 ],
                 [
                     'anyConditionToMatch' => [
@@ -181,6 +181,7 @@ class Call extends Model
             return null;
         }
     }
+    
 
 
     public function fetchRetrieverCallLogs()
