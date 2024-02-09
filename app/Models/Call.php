@@ -147,7 +147,7 @@ class Call extends Model
             $targetNumber = '+15736523170';
         } else {
             $targetName = 'testtestest';
-            $targetNumber = '+15736523170';
+            $targetNumber = '+16787232049';
         }
 
         Log::debug('fetchRingbaCallLogs:targetInfo', [
