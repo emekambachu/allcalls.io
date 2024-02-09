@@ -180,7 +180,7 @@ class Call extends Model
                     'anyConditionToMatch' => [
                         [
                             'column' => 'inboundPhoneNumber',
-                            'value' => $callerId ?? ('+1' . $from),
+                            'value' => $callerId ?? $from,
                             'comparisonType' => 'EQUALS'
                         ]
                     ]
