@@ -141,7 +141,17 @@ class Call extends Model
         // Add 2 minutes to $createdAt to get the end date
         $endDate = clone $callCreatedAt; // Clone to ensure we're adding to the original $callCreatedAt
         $endDate = $endDate->add(new DateInterval('PT2M'))->format(DateTimeInterface::ISO8601);
-    
+
+        if ( !in_array($this->from, ['8045172235']) ) {
+            $targetName = 'Allcalls FE';
+            $targetNumber = '+15736523170';
+        } else {
+            $targetName = 'test';
+            $targetNumber = '+15736523170';
+        }
+
+        Log::debug('fetchRingbaCallLogs:fetchRingbaCallLogs');
+
         // Your HTTP request and response handling code goes here...
         $response = Http::withHeaders([
             'Authorization' => 'Token ' . env('RINGBA_API_KEY'),
