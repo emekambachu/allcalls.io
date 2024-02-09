@@ -174,6 +174,10 @@ class Call extends Model
                 ]
             ]
         ]);
+
+        Log::debug('fetchRingbaCallLogs:response:', [
+            'response' => $response->json(),
+        ]);
     
         if ($response->successful()) {
             return $response->json();
