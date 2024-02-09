@@ -16,7 +16,7 @@ class SendCallInfoToOnScriptAI implements ShouldQueue
      * 
      * After 30 seconds of initiating the call, send the call info to OnScript AI
      */
-    protected $delay = 60;
+    protected $delay = 120;
 
 
     /**
