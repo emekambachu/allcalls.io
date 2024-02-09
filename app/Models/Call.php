@@ -125,11 +125,11 @@ class Call extends Model
             'callTypeName' => $callTypeName,
         ]);
     
-        if ($callTypeName !== 'Final Expense') {
-            Log::debug('Call type is not Final Expense. Skipping Ringba call logs.');
+        // if ($callTypeName !== 'Final Expense') {
+        //     Log::debug('Call type is not Final Expense. Skipping Ringba call logs.');
     
-            return null;
-        }
+        //     return null;
+        // }
     
         // Convert $createdAt to DateTime object
         $callCreatedAt = new DateTime($this->created_at, new DateTimeZone('UTC'));
