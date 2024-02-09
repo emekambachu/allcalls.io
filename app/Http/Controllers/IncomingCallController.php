@@ -61,7 +61,7 @@ class IncomingCallController extends Controller
             return response($twiml, 200)->header('Content-Type', 'text/xml');
         }
 
-        if ($to === '17622456702') {
+        if ($to === '6788536559') {
             $autoInsurance = CallType::whereType('Auto Insurance')->first();
 
             $fromAttribute = $this->getFromAttribute($request->input('From'));
