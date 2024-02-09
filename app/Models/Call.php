@@ -109,10 +109,9 @@ class Call extends Model
             $this->publisher_id = $callLog['publisherId'];
     
             return $this->save();
-        } else {
-            Log::debug("No publisher info found for call with ID: {$this->id}");
-            return false;
         }
+
+        return false;
     }
 
     public function fetchRingbaCallLogs($callerId = null)
