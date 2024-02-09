@@ -150,7 +150,10 @@ class Call extends Model
             $targetNumber = '+15736523170';
         }
 
-        Log::debug('fetchRingbaCallLogs:fetchRingbaCallLogs');
+        Log::debug('fetchRingbaCallLogs:targetInfo', [
+            'targetName' => $targetName,
+            'targetNumber' => $targetNumber,
+        ]);
 
         // Your HTTP request and response handling code goes here...
         $response = Http::withHeaders([
