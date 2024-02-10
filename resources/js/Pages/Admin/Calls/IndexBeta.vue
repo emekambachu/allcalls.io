@@ -511,17 +511,22 @@ const applyCallFiltersToSummary = () => {
     }
 }
 
+const removeFiltersForSummary = () => {
+    //populate maximized and minimized calls after removing the filter
+    minimizedCallsGroupedByUserArray.value = callsGroupedByUserArray.slice(0, 2);
+    console.log("Minimized Calls Grouped By User: ", minimizedCallsGroupedByUser)
+    maxmizedCallsGroupedByUser.value = Object.fromEntries(callsGroupedByUserArray);
+    showMoreForGrouped.value = false;
+
+    // reset total calls and revenue
+    getTotalCalls.value = props.totalCalls;
+    getTotalRevenue.value = props.totalRevenue;
+}
+
 let removeFilter = async (index) => {
   appliedFilters.value.splice(index, 1);
-  showMoreForGrouped.value = false;
 
-  //populate maximized and minimized calls after removing the filter
-  minimizedCallsGroupedByUserArray.value = callsGroupedByUserArray.slice(0, 2);
-  maxmizedCallsGroupedByUser.value = Object.fromEntries(callsGroupedByUserArray);
-
-  // reset total calls and revenue
-  getTotalCalls.value = props.totalCalls;
-  getTotalRevenue.value = props.totalRevenue;
+  removeFiltersForSummary();
 
   await fetchCalls(true);
 }
@@ -545,14 +550,16 @@ let clearDateFilter = () => {
   dateFilterTo.value = null;
 
   fetchCalls(true);
+  removeFiltersForSummary();
 }
 
-let applyDateFilter = () => {
+let applyDateFilter = async () => {
 
   console.log("Date Filter From: ", dateFilterFrom.value);
   console.log("Date Filter To: ", dateFilterTo.value);
 
-  fetchCalls(true);
+  await fetchCalls(true);
+  applyCallFiltersToSummary();
 }
 
 onMounted(() => {
@@ -647,26 +654,31 @@ function formatDate(date) {
                           </div>
                       </div>
 
-                      <div @click.prevent="applyDatePreset('Today')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+                      <div @click.prevent="applyDatePreset('Today')"
+                           class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
                           Today
                       </div>
-                      <div @click.prevent="applyDatePreset('Yesterday')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+                      <div @click.prevent="applyDatePreset('Yesterday')"
+                           class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
                           Yesterday
                       </div>
-                      <div @click.prevent="applyDatePreset('Past 7 Days')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+                      <div @click.prevent="applyDatePreset('Past 7 Days')"
+                           class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
                           Past 7 Days
                       </div>
-                      <div @click.prevent="applyDatePreset('Past 30 Days')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+                      <div @click.prevent="applyDatePreset('Past 30 Days')"
+                           class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
                           Past 30 Days
                       </div>
 
-                      <PrimaryButton @click.prevent="applyDateFilter" class="w-full text-center flex justify-center text-md mb-4">Apply</PrimaryButton>
+                      <PrimaryButton @click.prevent="applyDateFilter"
+                                     class="w-full text-center flex justify-center text-md mb-4">Apply</PrimaryButton>
 
                       <button class="w-full text-center flex justify-center items-center text-md px-4 py-3 border rounded-md font-semibold text-md uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 hover:bg-white hover:text-custom-blue"
                               @click.prevent="clearDateFilter"
                               :class="{
-              'border-transparent text-gray-900 bg-gray-100 hover:drop-shadow-2xl ': true,
-            }">
+                                  'border-transparent text-gray-900 bg-gray-100 hover:drop-shadow-2xl ': true,
+                                }">
                           Clear Date
                       </button>
                   </div>
