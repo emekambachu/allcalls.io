@@ -109,6 +109,27 @@ let columns = ref([
       );
     },
   },
+
+    {
+        label: "Ringing Duration",
+        name: "ringing_duration",
+        visible: false,
+        sortable: true,
+        render(call) {
+            return call.ringing_duration;
+        },
+    },
+
+    {
+        label: "Agent Name",
+        name: "agent_name",
+        visible: false,
+        sortable: true,
+        render(call) {
+            return call.user !== null ? call.user.first_name+' '+call.user.last_name : '';
+        },
+    },
+
   {
     label: "Hung up by",
     name: "hung_up_by",
@@ -382,6 +403,18 @@ let filters = ref([
     operators: ["is", "is greater than", "is less than", "is greater than or equal to", "is less than or equal to"],
     inputType: "number"
   },
+    {
+        label: "Ring Duration (in seconds)",
+        name: "ringing_duration",
+        operators: ["is", "is greater than", "is less than", "is greater than or equal to", "is less than or equal to"],
+        inputType: "number"
+    },
+    {
+        label: "Agent Name",
+        name: "agent_name",
+        operators: ["is"],
+        inputType: "text"
+    },
   {
     label: "Hung up by",
     name: "hung_up_by",
@@ -513,8 +546,8 @@ const applyCallFiltersToSummary = () => {
 
 const removeFiltersForSummary = () => {
     //populate maximized and minimized calls after removing the filter
-    minimizedCallsGroupedByUserArray.value = callsGroupedByUserArray.slice(0, 2);
-    console.log("Minimized Calls Grouped By User: ", minimizedCallsGroupedByUser)
+    minimizedCallsGroupedByUserArray.value = Object.entries(props.callsGroupedByUser).slice(0, 2);
+    console.log("Minimized Calls Grouped By User: ", minimizedCallsGroupedByUserArray.value)
     maxmizedCallsGroupedByUser.value = Object.fromEntries(callsGroupedByUserArray);
     showMoreForGrouped.value = false;
 
