@@ -440,6 +440,13 @@ let filters = ref([
     },
 
     {
+        label: "Cost",
+        name: "cost",
+        operators: ["is", "is greater than", "is less than", "is greater than or equal to", "is less than or equal to"],
+        inputType: "number"
+    },
+
+    {
         label: "Publisher Name",
         name: "publisher_name",
         operators: ["is"],
@@ -965,7 +972,8 @@ function formatDate(date) {
 
     <section class="py-3 sm:py-5">
       <div class="px-4 mx-auto max-w-screen-2xl lg:px-12">
-        <div class="relative overflow-hidden bg-white sm:rounded-lg">
+        <div class="relative overflow-hidden bg-white sm:rounded-lg"
+             :class="{'height-600': getTotalCalls <= 14}">
           <div
             class="flex flex-col px-4 py-3 space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-4"
           >
@@ -979,6 +987,7 @@ function formatDate(date) {
                 <span class="">${{ getTotalRevenue.toFixed(2) }}</span>
               </h5>
             </div>
+
             <div
               class="flex flex-col flex-shrink-0 space-y-3 md:flex-row md:items-center lg:justify-end md:space-y-0 md:space-x-3"
             >
@@ -993,8 +1002,8 @@ function formatDate(date) {
                     </button>
                   </PopoverButton>
 
-                  <PopoverPanel class="absolute z-10 w-40 -left-20">
-                    <div class="border border-gray-100 p-3 shadow bg-white mt-2">
+                  <PopoverPanel class="z-10 w-40 -left-20">
+                    <div class="absolute border border-gray-100 p-3 shadow bg-white mt-2">
                       <div
                         class="flex items-center mb-4"
                         v-for="(column, index) in columns"
@@ -1040,9 +1049,10 @@ function formatDate(date) {
                 </Popover> -->
               </div>
             </div>
+
           </div>
           <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left text-gray-500">
+            <table class="w-full text-sm text-left text-gray-500" style="min-height: 50px;">
               <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                 <tr class="cursor-pointer">
                   <th
@@ -1178,5 +1188,6 @@ function formatDate(date) {
         </div>
       </div>
     </section>
+
   </AuthenticatedLayout>
 </template>
