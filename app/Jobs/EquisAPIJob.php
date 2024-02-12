@@ -2,9 +2,9 @@
 
 namespace App\Jobs;
 
+use App\Mail\EquisApiError;
 use App\Models\EquisDuplicate;
 use App\Models\State;
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -13,6 +13,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class EquisAPIJob implements ShouldQueue
 {
@@ -31,8 +32,9 @@ class EquisAPIJob implements ShouldQueue
             'user' => $user,
         ]);
         $this->user = $user;
-        $this->partnerUniqueId = "AC".$this->user->id;
-        $this->managerPartnerUniqueId = isset($this->user->invitedBy) && isset($this->user->invitedBy->upline_id) ? $this->user->invitedBy->upline_id : null;
+        $this->partnerUniqueId = "AC" . $this->user->id;
+        $this->managerPartnerUniqueId = "AC71";
+//        $this->managerPartnerUniqueId = isset($this->user->invitedBy) && isset($this->user->invitedBy->upline_id) ? $this->user->invitedBy->upline_id : null;
     }
 
     /**
@@ -40,11 +42,9 @@ class EquisAPIJob implements ShouldQueue
      */
     public function handle(): void
     {
-
         // First, retrieve the Bearer token
         $clientId = env('EQUIS_CLIENT_ID'); // Your client ID here
         $clientSecret = env('EQUIS_CLIENT_SECRET'); // Your client secret here
-
         // First, retrieve the Bearer token
         $tokenResponse = Http::asForm()->post('https://equisfinancialb2c.b2clogin.com/equisfinancialb2c.onmicrosoft.com/B2C_1_SignIn/oauth2/v2.0/token', [
             'grant_type' => 'client_credentials',
@@ -58,7 +58,6 @@ class EquisAPIJob implements ShouldQueue
             'responseStatus' => $tokenResponse->status(),
         ]);
 
-
         if (!$tokenResponse->successful()) {
             Log::debug('equis-api-job:Failed to retrieve access token on the request to create an agent');
             return;
@@ -67,12 +66,10 @@ class EquisAPIJob implements ShouldQueue
         $accessToken = $tokenResponse->json()['access_token'];
 
         $requestData = $this->getRequestData();
-
         // Log the request data
         Log::debug('equis-api-job:request data to create an agent:', [
             'requestData' => $requestData,
         ]);
-
         // Now, make the POST request to the API endpoint with the Bearer token to create an agent
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
@@ -83,6 +80,11 @@ class EquisAPIJob implements ShouldQueue
             'responseStatus' => $response->status(),
         ]);
 
+        if($response->status() !== 200) {
+            Mail::to(EQUIS_JOB_ERROR_EMAILS)->send(new EquisApiError($response->body()));
+            Log::debug('Equis API error email triggered.');
+            return;
+        }
 
         if (!$response->successful()) {
             $responseBody = (string)$response->body();
