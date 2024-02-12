@@ -87,10 +87,10 @@ class WebCallsAPIController extends Controller
             'filters' => $filters
         ]);
 
-        // Get paginated result
+        $allCalls = $query->get();
         $calls = $query->paginate(100);
 
-        $calls->getCollection()->transform(function ($call) {
+        $calls->getCollection()->transform(function ($call){
             if (isset($call->user)) {
                 $call->user_email = $call->user->email;
             } else {
@@ -100,11 +100,13 @@ class WebCallsAPIController extends Controller
         });
 
         return [
-            'calls' => $calls
+            'calls' => $calls,
+            'total' => $allCalls->count(),
+            'total_revenue' => round((float) $allCalls->sum('amount_spent'), 2),
         ];
     }
 
-    protected function applyUserEmailFilter($query, $filter)
+    protected function applyUserEmailFilter($query, $filter): void
     {
         $user = User::where('email', $filter['value'])->first();
         if ($user) {

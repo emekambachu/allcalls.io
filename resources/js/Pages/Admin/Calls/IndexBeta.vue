@@ -38,9 +38,6 @@ let props = defineProps({
   },
 });
 
-const getTotalCalls = ref(props.totalCalls);
-const getTotalRevenue = ref(props.totalRevenue);
-
 let columns = ref([
     {
         label: "ID",
@@ -220,6 +217,11 @@ let sortColumn = ref(null);
 let sortDirection = ref("asc");
 let loading = ref(false);
 let currentPage = ref(1);
+const getTotalCalls = ref(props.totalCalls);
+const getTotalRevenue = ref(props.totalRevenue);
+const getTotalCallResults = ref(0);
+const getTotalRevenueResults = ref(0);
+
 
 let fetchCalls = async (replace = false) => {
   let url = "/admin/web-api/calls?page=" + currentPage.value;
@@ -231,12 +233,6 @@ let fetchCalls = async (replace = false) => {
   if (sortDirection.value) {
     url += "&sort_direction=" + sortDirection.value;
   }
-
-  // Include start_date and end_date in the query string if they both exist
-  // if (startDate.value && endDate.value) {
-  //   url += "&start_date=" + startDate.value;
-  //   url += "&end_date=" + endDate.value;
-  // }
 
   if (dateFilterFrom.value && dateFilterTo.value) {
     url += "&start_date=" + dateFilterFrom.value;
@@ -260,9 +256,13 @@ let fetchCalls = async (replace = false) => {
   }
 
   callsPaginator.value = response.data.calls;
+  getTotalCallResults.value = response.data.total;
+  getTotalRevenueResults.value = response.data.total_revenue;
 
   loading.value = false;
   console.log("Loaded Calls: ", loadedCalls.value);
+  console.log("Total Call Results: ", getTotalCallResults.value);
+  console.log("Total Revenue: ", getTotalRevenueResults.value);
 };
 
 
@@ -555,8 +555,10 @@ const applyCallFiltersToSummary = () => {
     showMoreForGrouped.value = true;
     maxmizedCallsGroupedByUser.value = {};
     minimizedCallsGroupedByUser.value = {};
-    getTotalCalls.value = 0;
-    getTotalRevenue.value = 0;
+
+    // update with results
+    getTotalCalls.value = getTotalCallResults.value;
+    getTotalRevenue.value = getTotalRevenueResults.value;
 
     // Iterate loadedCalls first and then grouped calls to match the both user ids
     // if matched add the user group to the maxmizedCallsGroupedByUser
@@ -564,8 +566,8 @@ const applyCallFiltersToSummary = () => {
         Object.values(unfilteredGroupedCalls).forEach(group => {
             if (group.userId === value.user_id) {
 
-                getTotalCalls.value ++;
-                getTotalRevenue.value += parseFloat(value.amount_spent);
+                // getTotalCalls.value ++;
+                // getTotalRevenue.value += parseFloat(value.amount_spent);
 
                 maxmizedCallsGroupedByUser.value[group.userId] = group;
                 minimizedCallsGroupedByUser.value[group.userId] = group;
@@ -623,6 +625,10 @@ let applyDateFilter = async () => {
 
   await fetchCalls(true);
   applyCallFiltersToSummary();
+
+  // Hide filter after displaying results
+  dateFilterFrom.value = null;
+  dateFilterTo.value = null;
 }
 
 onMounted(() => {
