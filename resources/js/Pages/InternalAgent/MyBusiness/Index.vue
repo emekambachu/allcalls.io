@@ -357,11 +357,14 @@ const changeDate = (date) => {
                   </td>
 
                   <td class="text-gray-600 px-4 py-3">
-                    <span v-if="businesse.client && businesse.client.call">
+                    <!-- <span v-if="businesse.client && businesse.client.call">
                       {{ businesse.client.call.from }}
                     </span>
                     <span v-else-if="businesse.client && businesse.client.phone">
                       {{ businesse.client.phone }}
+                    </span> -->
+                    <span >
+                      {{ businesse.client_phone_no }}
                     </span>
                   </td>
 
