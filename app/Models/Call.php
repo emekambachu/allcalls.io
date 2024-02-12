@@ -107,6 +107,7 @@ class Call extends Model
 
             $this->publisher_name = $callLog['publisherName'];
             $this->publisher_id = $callLog['publisherId'];
+            $this->cost = $callLog['totalCost'];
 
             return $this->save();
         }
