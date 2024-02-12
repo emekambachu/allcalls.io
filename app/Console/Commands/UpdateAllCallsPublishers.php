@@ -41,6 +41,8 @@ class UpdateAllCallsPublishers extends Command
         foreach ($calls as $call) {
             $response = $call->updatePublisherInfo();
 
+            Log::debug('UpdatePublisherInfoForCall: ' . $call->id, ['response' => $response]);
+
             if ($response) {
                 $this->info('Updated call ' . $call->id . ' with publisher info.');
                 // log the response:
