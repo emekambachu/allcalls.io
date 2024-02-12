@@ -124,6 +124,12 @@ class Call extends Model
                 'affiliateId' => $callLogs[0]['call']['afid'],
                 'charge_total' => $callLogs[0]['call']['charge_total'],
             ]);
+
+            $response = self::getRetreaverAffiliateById($callLogs[0]['call']['afid']);
+
+            Log::debug('getRetreaverAffiliateById', [
+                'response' => $response->body(),
+            ]);
         }
 
         return false;
@@ -134,15 +140,7 @@ class Call extends Model
         $retreaverAPIKey = env('RETREAVER_COMPANY_ID');
         $retreaverCompanyId = env('RETREAVER_COMPANY_ID');
 
-        $response = Http::get("https://api.retreaver.com/affiliates/afid/{$affiliateId}.xml?api_key={$retreaverAPIKey}&company_id={$retreaverCompanyId}");
-
-        Log::debug('getRetreaverAffiliateById:response', [
-            'response' => $response->body(),
-        ]);
-
-        if ($response->successful()) {
-            
-        }
+        return Http::get("https://api.retreaver.com/affiliates/afid/{$affiliateId}.xml?api_key={$retreaverAPIKey}&company_id={$retreaverCompanyId}");
     }
 
     public function fetchRingbaCallLogs($callerId = null)
