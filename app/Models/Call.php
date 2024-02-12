@@ -129,6 +129,22 @@ class Call extends Model
         return false;
     }
 
+    public static function getRetreaverAffiliateById($affiliateId)
+    {
+        $retreaverAPIKey = env('RETREAVER_COMPANY_ID');
+        $retreaverCompanyId = env('RETREAVER_COMPANY_ID');
+
+        $response = Http::get("https://api.retreaver.com/affiliates/afid/{$affiliateId}.xml?api_key={$retreaverAPIKey}&company_id={$retreaverCompanyId}");
+
+        Log::debug('getRetreaverAffiliateById:response', [
+            'response' => $response->body(),
+        ]);
+
+        if ($response->successful()) {
+            
+        }
+    }
+
     public function fetchRingbaCallLogs($callerId = null)
     {
         $from = '+1' . $this->from;
