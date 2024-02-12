@@ -125,22 +125,38 @@ class Call extends Model
                 'charge_total' => $callLogs[0]['call']['charge_total'],
             ]);
 
-            $response = self::getRetreaverAffiliateById($callLogs[0]['call']['afid']);
+            $affiliateName = self::getRetreaverAffiliateFullNameById($callLogs[0]['call']['afid']);
 
-            Log::debug('getRetreaverAffiliateById', [
-                'response' => $response->body(),
+            Log::debug('retreaver:affiliate-name', [
+                'affiliateName' => $affiliateName,
             ]);
         }
 
         return false;
     }
 
-    public static function getRetreaverAffiliateById($affiliateId)
+    public static function getRetreaverAffiliateFullNameById($affiliateId)
     {
         $retreaverAPIKey = env('RETREAVER_API_KEY');
         $retreaverCompanyId = env('RETREAVER_COMPANY_ID');
 
-        return Http::get("https://api.retreaver.com/affiliates/afid/{$affiliateId}.xml?api_key={$retreaverAPIKey}&company_id={$retreaverCompanyId}");
+        $response = Http::get("https://api.retreaver.com/affiliates/afid/{$affiliateId}.xml?api_key={$retreaverAPIKey}&company_id={$retreaverCompanyId}");
+
+        // Check if the response is successful
+        if ($response->successful()) {
+            $xml = simplexml_load_string($response->body());
+            $firstName = (string)$xml->{'first-name'};
+            $lastName = (string)$xml->{'last-name'};
+
+            // Check if last name is nil or empty
+            if (empty($lastName) || $lastName == 'nil') {
+                return $firstName; // Return just the first name
+            } else {
+                return $firstName . ' ' . $lastName; // Return full name
+            }
+        }
+
+        return null; // Return null if the response is not successful or if there's any issue
     }
 
     public function fetchRingbaCallLogs($callerId = null)
