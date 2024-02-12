@@ -10,13 +10,16 @@ let { videoDataModal, videoData } = defineProps({
 let close = () => {
   emits("close");
 };
-let downloadPDF = async (pdfPath) => {
-  const fileName = pdfPath.substring(pdfPath.lastIndexOf("/") + 1);
-  const link = document.createElement("a");
-  link.href = pdfPath;
-  link.download = fileName;
-  link.click();
-};
+// let downloadPDF = async (pdfPath) => {
+//   const fileName = pdfPath.substring(pdfPath.lastIndexOf("/") + 1);
+//   const link = document.createElement("a");
+//   link.href = pdfPath;
+//   link.download = fileName;
+//   link.click();
+// };
+let downloadPdf = (url) => {
+  window.open(url, '_blank');
+}
 </script>
 <style scoped>
 .modal-width {
@@ -25,7 +28,7 @@ let downloadPDF = async (pdfPath) => {
 }
 .video-player {
   width: 100%;
-  height: 400px;
+  max-height: 480px;
 }
 @media only screen and (min-width: 320px) and (max-width: 768px) {
   .modal-width {
@@ -98,13 +101,15 @@ let downloadPDF = async (pdfPath) => {
               </video>
               <br />
               <div>
-                <a
-                  target="_blank"
-                  :href="videoData.pdf"
-                  class="px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
+                <button
+                  :target="videoData.pdf ? '_blank' : ''"
+                  :disabled="!videoData.pdf"
+                  :class="{ 'opacity-50': !videoData.pdf }"
+                  @click="downloadPdf(videoData.pdf)"
+                  class="px-3 py-2 text-sm cursor-pointer font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
                 >
-                Download {{videoData.title  }} PDF
-                </a>
+                  Download {{ videoData.title }} PDF
+                </button>
 
                 <!-- <a target="_blank" :href="videoData.pdf" 
                                     class="font-medium  text-blue-600  cursor-pointer dark:text-blue-500 hover:underline">Download
