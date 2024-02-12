@@ -125,11 +125,27 @@ class Call extends Model
                 'charge_total' => $callLogs[0]['call']['charge_total'],
             ]);
 
-            $affiliateName = self::getRetreaverAffiliateFullNameById($callLogs[0]['call']['afid']);
+            $publisherId = $callLogs[0]['call']['afid'];
+            $publisherName = self::getRetreaverAffiliateFullNameById($publisherId);
 
-            Log::debug('retreaver:affiliate-name', [
-                'affiliateName' => $affiliateName,
+            $cost = $callLogs[0]['call']['charge_total'];
+
+            Log::debug('retreaver:set', [
+                'cost' => $cost,
+                'publisher_id' => $publisherId,
+                'publisher_name' => $publisherName,
             ]);
+
+            $this->publisher_name = $publisherName;
+            $this->publisher_id = $publisherId;
+            $this->cost = $cost;
+            $this->save();
+
+            Log::debug('retreaver:values-saved', [
+                'cost' => $cost,
+                'publisher_id' => $publisherId,
+                'publisher_name' => $publisherName,
+            ]);    
         }
 
         return false;
