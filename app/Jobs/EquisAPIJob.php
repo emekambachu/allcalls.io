@@ -82,6 +82,7 @@ class EquisAPIJob implements ShouldQueue
 
         if($response->status() !== 200) {
             Mail::to(EQUIS_JOB_ERROR_EMAILS)->send(new EquisApiError($response->body()));
+            Log::debug('Equis API error email triggered.');
             return;
         }
 
