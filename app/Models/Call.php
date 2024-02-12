@@ -112,6 +112,13 @@ class Call extends Model
             return $this->save();
         }
 
+        // Now let's try the same with fetchRetrieverCallLogs
+        $callLogs = $this->fetchRetrieverCallLogs();
+
+        Log::debug('updatePublisherInfo:retreaver:', [
+            'callLogs' => $callLogs,
+        ]);
+
         return false;
     }
 
