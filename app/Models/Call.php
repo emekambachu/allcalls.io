@@ -121,8 +121,8 @@ class Call extends Model
 
         if (sizeof($callLogs) > 0) {
             Log::debug('updatePublisherInfo:retreaver:found', [
-                'affiliateId' => $callLogs[0]->call->afid,
-                'charge_total' => $callLogs[0]->call->charge_total,
+                'affiliateId' => $callLogs[0]['call']['afid'],
+                'charge_total' => $callLogs[0]['call']['charge_total'],
             ]);
         }
 
