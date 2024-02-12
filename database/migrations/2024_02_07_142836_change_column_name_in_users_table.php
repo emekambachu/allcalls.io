@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
 
-            $table->string('ef_number')->nullable()->after('upline_id');
+            $table->renameColumn('ef_number', 'manager_id');
 
         });
     }
@@ -24,7 +24,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('ef_number');
+
+            $table->string('ef_number')->nullable()->after('upline_id');
+
         });
     }
 };

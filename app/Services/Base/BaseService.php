@@ -12,4 +12,9 @@ class BaseService
         }
         return $randomString;
     }
+
+    public static function debugSql($query){
+        $rawQuery = str_replace('?', "'?'", $query->toSql());
+        logger()->info(vsprintf(str_replace('?', '%s', $rawQuery), $query->getBindings()));
+    }
 }

@@ -42,23 +42,97 @@ const getTotalCalls = ref(props.totalCalls);
 const getTotalRevenue = ref(props.totalRevenue);
 
 let columns = ref([
-  {
-    label: "ID",
-    name: "id",
-    visible: true,
-    sortable: true,
-    render(call) {
-      return call.id;
-    },
-  },
-
     {
-        label: "Publisher ID",
-        columnMethod: "getPublisherIdColumn",
+        label: "ID",
+        name: "id",
         visible: true,
         sortable: true,
         render(call) {
-            return call.publisher_id;
+          return call.id;
+        },
+    },
+
+    {
+        label: "Call Date",
+        name: "call_taken",
+        visible: true,
+        sortable: true,
+        render(call) {
+            return call.call_taken;
+        },
+    },
+
+    {
+        label: "Agent Name",
+        name: "agent_name",
+        visible: true,
+        sortable: true,
+        render(call) {
+            return call.user !== null ? call.user.first_name+' '+call.user.last_name : '';
+        },
+    },
+
+    {
+        label: "Ring Duration",
+        name: "ringing_duration",
+        visible: true,
+        sortable: true,
+        render(call) {
+            return call.ringing_duration;
+        },
+    },
+
+    {
+        label: "Call Length",
+        name: "call_duration_in_seconds",
+        visible: true,
+        sortable: true,
+        render(call) {
+            return (
+                String(Math.floor(call.call_duration_in_seconds / 60)).padStart(2, "0") +
+                ":" +
+                String(call.call_duration_in_seconds % 60).padStart(2, "0")
+            );
+        },
+    },
+
+    {
+        label: "Hung up by",
+        name: "hung_up_by",
+        visible: true,
+        sortable: false,
+        render(call) {
+            return call.hung_up_by;
+        },
+    },
+
+    {
+        label: "Disposition",
+        name: "disposition",
+        visible: true,
+        sortable: false,
+        render(call) {
+            return call.client?.status;
+        },
+    },
+
+    {
+        label: "Revenue",
+        name: "amount_spent",
+        visible: true,
+        sortable: true,
+        render(call) {
+            return "$" + call.amount_spent;
+        },
+    },
+
+    {
+        label: "Cost",
+        name: "cost",
+        visible: true,
+        sortable: true,
+        render(call) {
+            return call.cost === '' || call.cost === null ? `$${0}` : `$${call.cost}`;
         },
     },
 
@@ -72,98 +146,62 @@ let columns = ref([
         },
     },
 
-  {
-    label: "Call Date",
-    name: "call_taken",
-    visible: true,
-    sortable: true,
-    render(call) {
-      return call.call_taken;
-    },
-  },
-  {
-    label: "Role",
-    name: "role",
-    visible: false,
-    sortable: false,
-    render(call) {
-      for (let i = 0; i < call.user.roles.length; i++) {
-        if (call.user.roles[i].name === "internal-agent") {
-          return "Internal Agent";
-        }
-      }
-
-      return "Regular User";
-    },
-  },
-  {
-    label: "Connected Duration",
-    name: "call_duration_in_seconds",
-    visible: false,
-    sortable: true,
-    render(call) {
-      return (
-        String(Math.floor(call.call_duration_in_seconds / 60)).padStart(2, "0") +
-        ":" +
-        String(call.call_duration_in_seconds % 60).padStart(2, "0")
-      );
-    },
-  },
-  {
-    label: "Hung up by",
-    name: "hung_up_by",
-    visible: false,
-    sortable: false,
-    render(call) {
-       return call.hung_up_by;
-    },
-  },
-
-  {
-    label: "Revenue",
-    name: "amount_spent",
-    visible: true,
-    sortable: true,
-    render(call) {
-      return "$" + call.amount_spent;
-    },
-  },
-  {
-    label: "Vertical",
-    name: "vertical",
-    visible: true,
-    sortable: false,
-    render(call) {
-      return call.call_type.type;
-    },
-  },
-  {
-    label: "CallerID",
-    name: "from",
-    visible: true,
-    sortable: false,
-    render(call) {
-      return call.from;
-    },
-  },
-  {
-    label: "User Email",
-    name: "user_email",
-    visible: false,
-    sortable: false,
-    render(call) {
-      return call.user_email;
-    },
-  },
     {
-        label: "Disposition",
-        name: "disposition",
+        label: "Pub ID",
+        columnMethod: "getPublisherIdColumn",
+        visible: true,
+        sortable: true,
+        render(call) {
+            return call.publisher_id;
+        },
+    },
+
+    {
+        label: "Role",
+        name: "role",
+        visible: true,
+        sortable: false,
+        render(call) {
+            for (let i = 0; i < call.user.roles.length; i++) {
+                if (call.user.roles[i].name === "internal-agent") {
+                    return "Internal Agent";
+                }
+            }
+
+            return "Regular User";
+        },
+    },
+
+    {
+        label: "Vertical",
+        name: "vertical",
+        visible: true,
+        sortable: false,
+        render(call) {
+            return call.call_type.type;
+        },
+    },
+
+    {
+        label: "CallerID",
+        name: "from",
         visible: false,
         sortable: false,
         render(call) {
-            return call.client?.status;
+          return call.from;
         },
     },
+
+    {
+        label: "User Email",
+        name: "user_email",
+        visible: false,
+        sortable: false,
+        render(call) {
+          return call.user_email;
+        },
+    },
+
 ]);
 
 let performSorting = () => {
@@ -358,98 +396,123 @@ let stopPlayingRecording = (call) => {
 };
 
 let filters = ref([
-  {
-    label: "ID",
-    name: "id",
-    operators: ["is", "is greater than", "is less than", "is greater than or equal to", "is less than or equal to"],
-    inputType: "number",
-  },
+
     {
-        label: "Publisher ID",
-        name: "publisher_id",
+        label: "ID",
+        name: "id",
+        operators: ["is", "is greater than", "is less than", "is greater than or equal to", "is less than or equal to"],
+        inputType: "number",
+    },
+
+    {
+        label: "Agent Name",
+        name: "agent_name",
         operators: ["is"],
         inputType: "text"
     },
+
     {
-        label: "Publisher Name",
-        name: "publisher_name",
+        label: "Call Duration (in seconds)",
+        name: "call_duration_in_seconds",
+        operators: ["is", "is greater than", "is less than", "is greater than or equal to", "is less than or equal to"],
+        inputType: "number"
+    },
+
+    {
+        label: "Hung up by",
+        name: "hung_up_by",
         operators: ["is"],
         inputType: "text"
     },
-  {
-    label: "Call Duration (in seconds)",
-    name: "call_duration_in_seconds",
-    operators: ["is", "is greater than", "is less than", "is greater than or equal to", "is less than or equal to"],
-    inputType: "number"
-  },
-  {
-    label: "Hung up by",
-    name: "hung_up_by",
-    operators: ["is"],
-    inputType: "text"
-  },
-  {
-    label: "Revenue",
-    name: "amount_spent",
-    operators: ["is", "is greater than", "is less than", "is greater than or equal to", "is less than or equal to"],
-    inputType: "number"
-  },
-  {
-    label: "CallerID",
-    name: "from",
-    operators: ["is"],
-    inputType: "text"
-  },
-  {
-    label: "User Email",
-    name: "user_email",
-    operators: ["is"],
-    inputType: "email"
-  },
+
     {
         label: "Disposition",
         name: "disposition",
         operators: ["is"],
         inputType: "text"
     },
-  {
-    label: "Vertical",
-    name: "vertical",
-    operators: ["is"],
-    inputType: "select",
-    inputTypeOptions: [{
-      label: "Auto Insurance",
-      value: "Auto Insurance",
-    }, {
-      label: "Final Expense",
-      value: "Final Expense",
-    }, {
-      label: "U65 Health",
-      value: "U65 Health",
-    }, {
-      label: "ACA",
-      value: "ACA",
-    }, {
-      label: "Medicare",
-      value: "Medicare",
-    }]
-  },
-  {
-    label: "Role",
-    name: "user_role",
-    operators: ["is"],
-    inputType: "select",
-    inputTypeOptions: [
-      {
-        label: "Internal Agent",
-        value: "internal-agent"
-      },
-      {
-        label: "Regular User",
-        value: "regular-user"
-      }
-    ]
-  },
+
+    {
+        label: "Revenue",
+        name: "amount_spent",
+        operators: ["is", "is greater than", "is less than", "is greater than or equal to", "is less than or equal to"],
+        inputType: "number"
+    },
+
+    {
+        label: "Cost",
+        name: "cost",
+        operators: ["is", "is greater than", "is less than", "is greater than or equal to", "is less than or equal to"],
+        inputType: "number"
+    },
+
+    {
+        label: "Publisher Name",
+        name: "publisher_name",
+        operators: ["is"],
+        inputType: "text"
+    },
+
+    {
+        label: "Publisher ID",
+        name: "publisher_id",
+        operators: ["is"],
+        inputType: "text"
+    },
+
+    {
+        label: "Role",
+        name: "user_role",
+        operators: ["is"],
+        inputType: "select",
+        inputTypeOptions: [
+            {
+                label: "Internal Agent",
+                value: "internal-agent"
+            },
+            {
+                label: "Regular User",
+                value: "regular-user"
+            }
+        ]
+    },
+
+    {
+        label: "Vertical",
+        name: "vertical",
+        operators: ["is"],
+        inputType: "select",
+        inputTypeOptions: [{
+            label: "Auto Insurance",
+            value: "Auto Insurance",
+        }, {
+            label: "Final Expense",
+            value: "Final Expense",
+        }, {
+            label: "U65 Health",
+            value: "U65 Health",
+        }, {
+            label: "ACA",
+            value: "ACA",
+        }, {
+            label: "Medicare",
+            value: "Medicare",
+        }]
+    },
+
+    {
+        label: "CallerID",
+        name: "from",
+        operators: ["is"],
+        inputType: "text"
+    },
+
+    {
+        label: "User Email",
+        name: "user_email",
+        operators: ["is"],
+        inputType: "email"
+    },
 ]);
 
 let appliedFilters = ref([])
@@ -511,17 +574,22 @@ const applyCallFiltersToSummary = () => {
     }
 }
 
+const removeFiltersForSummary = () => {
+    //populate maximized and minimized calls after removing the filter
+    minimizedCallsGroupedByUserArray.value = Object.entries(props.callsGroupedByUser).slice(0, 2);
+    console.log("Minimized Calls Grouped By User: ", minimizedCallsGroupedByUserArray.value)
+    maxmizedCallsGroupedByUser.value = Object.fromEntries(callsGroupedByUserArray);
+    showMoreForGrouped.value = false;
+
+    // reset total calls and revenue
+    getTotalCalls.value = props.totalCalls;
+    getTotalRevenue.value = props.totalRevenue;
+}
+
 let removeFilter = async (index) => {
   appliedFilters.value.splice(index, 1);
-  showMoreForGrouped.value = false;
 
-  //populate maximized and minimized calls after removing the filter
-  minimizedCallsGroupedByUserArray.value = callsGroupedByUserArray.slice(0, 2);
-  maxmizedCallsGroupedByUser.value = Object.fromEntries(callsGroupedByUserArray);
-
-  // reset total calls and revenue
-  getTotalCalls.value = props.totalCalls;
-  getTotalRevenue.value = props.totalRevenue;
+  removeFiltersForSummary();
 
   await fetchCalls(true);
 }
@@ -545,14 +613,16 @@ let clearDateFilter = () => {
   dateFilterTo.value = null;
 
   fetchCalls(true);
+  removeFiltersForSummary();
 }
 
-let applyDateFilter = () => {
+let applyDateFilter = async () => {
 
   console.log("Date Filter From: ", dateFilterFrom.value);
   console.log("Date Filter To: ", dateFilterTo.value);
 
-  fetchCalls(true);
+  await fetchCalls(true);
+  applyCallFiltersToSummary();
 }
 
 onMounted(() => {
@@ -647,26 +717,31 @@ function formatDate(date) {
                           </div>
                       </div>
 
-                      <div @click.prevent="applyDatePreset('Today')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+                      <div @click.prevent="applyDatePreset('Today')"
+                           class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
                           Today
                       </div>
-                      <div @click.prevent="applyDatePreset('Yesterday')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+                      <div @click.prevent="applyDatePreset('Yesterday')"
+                           class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
                           Yesterday
                       </div>
-                      <div @click.prevent="applyDatePreset('Past 7 Days')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+                      <div @click.prevent="applyDatePreset('Past 7 Days')"
+                           class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
                           Past 7 Days
                       </div>
-                      <div @click.prevent="applyDatePreset('Past 30 Days')" class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+                      <div @click.prevent="applyDatePreset('Past 30 Days')"
+                           class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
                           Past 30 Days
                       </div>
 
-                      <PrimaryButton @click.prevent="applyDateFilter" class="w-full text-center flex justify-center text-md mb-4">Apply</PrimaryButton>
+                      <PrimaryButton @click.prevent="applyDateFilter"
+                                     class="w-full text-center flex justify-center text-md mb-4">Apply</PrimaryButton>
 
                       <button class="w-full text-center flex justify-center items-center text-md px-4 py-3 border rounded-md font-semibold text-md uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 hover:bg-white hover:text-custom-blue"
                               @click.prevent="clearDateFilter"
                               :class="{
-              'border-transparent text-gray-900 bg-gray-100 hover:drop-shadow-2xl ': true,
-            }">
+                                  'border-transparent text-gray-900 bg-gray-100 hover:drop-shadow-2xl ': true,
+                                }">
                           Clear Date
                       </button>
                   </div>
@@ -897,7 +972,8 @@ function formatDate(date) {
 
     <section class="py-3 sm:py-5">
       <div class="px-4 mx-auto max-w-screen-2xl lg:px-12">
-        <div class="relative overflow-hidden bg-white sm:rounded-lg">
+        <div class="relative overflow-hidden bg-white sm:rounded-lg"
+             :class="{'height-600': getTotalCalls <= 14}">
           <div
             class="flex flex-col px-4 py-3 space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-4"
           >
@@ -911,6 +987,7 @@ function formatDate(date) {
                 <span class="">${{ getTotalRevenue.toFixed(2) }}</span>
               </h5>
             </div>
+
             <div
               class="flex flex-col flex-shrink-0 space-y-3 md:flex-row md:items-center lg:justify-end md:space-y-0 md:space-x-3"
             >
@@ -925,8 +1002,8 @@ function formatDate(date) {
                     </button>
                   </PopoverButton>
 
-                  <PopoverPanel class="absolute z-10 w-40 -left-20">
-                    <div class="border border-gray-100 p-3 shadow bg-white mt-2">
+                  <PopoverPanel class="z-10 w-40 -left-20">
+                    <div class="absolute border border-gray-100 p-3 shadow bg-white mt-2">
                       <div
                         class="flex items-center mb-4"
                         v-for="(column, index) in columns"
@@ -972,9 +1049,10 @@ function formatDate(date) {
                 </Popover> -->
               </div>
             </div>
+
           </div>
           <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left text-gray-500">
+            <table class="w-full text-sm text-left text-gray-500" style="min-height: 50px;">
               <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                 <tr class="cursor-pointer">
                   <th
@@ -1110,5 +1188,6 @@ function formatDate(date) {
         </div>
       </div>
     </section>
+
   </AuthenticatedLayout>
 </template>

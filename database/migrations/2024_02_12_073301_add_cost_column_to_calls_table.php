@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-
-            $table->string('ef_number')->nullable()->after('upline_id');
-
+        Schema::table('calls', function (Blueprint $table) {
+            $table->float('cost')->nullable();
         });
     }
 
@@ -23,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('ef_number');
+        Schema::table('calls', function (Blueprint $table) {
+            $table->dropColumn('cost');
         });
     }
 };

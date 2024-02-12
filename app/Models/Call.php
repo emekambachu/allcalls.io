@@ -107,11 +107,74 @@ class Call extends Model
 
             $this->publisher_name = $callLog['publisherName'];
             $this->publisher_id = $callLog['publisherId'];
+            $this->cost = $callLog['totalCost'];
+
+            return $this->save();
+        }
+
+        // Now let's try the same with fetchRetrieverCallLogs
+        $callLogs = $this->fetchRetrieverCallLogs();
+
+        Log::debug('updatePublisherInfo:retreaver:', [
+            'callLogs' => $callLogs,
+        ]);
+
+        if (sizeof($callLogs) > 0) {
+            Log::debug('updatePublisherInfo:retreaver:found', [
+                'affiliateId' => $callLogs[0]['call']['afid'],
+                'payout' => $callLogs[0]['call']['payout'] ?? null,
+            ]);
+
+            $publisherId = $callLogs[0]['call']['afid'];
+            $publisherName = self::getRetreaverAffiliateFullNameById($publisherId);
+
+            $cost = $callLogs[0]['call']['payout'] ?? null;
+
+            Log::debug('retreaver:set', [
+                'cost' => $cost,
+                'publisher_id' => $publisherId,
+                'publisher_name' => $publisherName,
+            ]);
+
+            $this->publisher_name = $publisherName;
+            $this->publisher_id = $publisherId;
+            $this->cost = $cost ?? null;
+            $this->save();
+
+            Log::debug('retreaver:values-saved', [
+                'cost' => $cost,
+                'publisher_id' => $publisherId,
+                'publisher_name' => $publisherName,
+            ]);
 
             return $this->save();
         }
 
         return false;
+    }
+
+    public static function getRetreaverAffiliateFullNameById($affiliateId)
+    {
+        $retreaverAPIKey = env('RETREAVER_API_KEY');
+        $retreaverCompanyId = env('RETREAVER_COMPANY_ID');
+
+        $response = Http::get("https://api.retreaver.com/affiliates/afid/{$affiliateId}.xml?api_key={$retreaverAPIKey}&company_id={$retreaverCompanyId}");
+
+        // Check if the response is successful
+        if ($response->successful()) {
+            $xml = simplexml_load_string($response->body());
+            $firstName = (string)$xml->{'first-name'};
+            $lastName = (string)$xml->{'last-name'};
+
+            // Check if last name is nil or empty
+            if (empty($lastName) || $lastName == 'nil') {
+                return $firstName; // Return just the first name
+            } else {
+                return $firstName . ' ' . $lastName; // Return full name
+            }
+        }
+
+        return null; // Return null if the response is not successful or if there's any issue
     }
 
     public function fetchRingbaCallLogs($callerId = null)
