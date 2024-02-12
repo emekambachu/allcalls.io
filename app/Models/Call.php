@@ -119,6 +119,20 @@ class Call extends Model
             'callLogs' => $callLogs,
         ]);
 
+        if (sizeof($callLogs) > 0) {
+            Log::debug('updatePublisherInfo:retreaver:found', [
+                'affiliateId' => $callLogs[0]->call->afid,
+            ]);
+
+            $callLog = $callLogs[0];
+
+            $this->publisher_name = $callLog['publisher_name'];
+            $this->publisher_id = $callLog['publisher_id'];
+            $this->cost = $callLog['cost'];
+
+            return $this->save();
+        }
+
         return false;
     }
 
