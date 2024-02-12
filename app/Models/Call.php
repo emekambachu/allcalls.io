@@ -137,7 +137,7 @@ class Call extends Model
 
     public static function getRetreaverAffiliateById($affiliateId)
     {
-        $retreaverAPIKey = env('RETREAVER_COMPANY_ID');
+        $retreaverAPIKey = env('RETREAVER_API_KEY');
         $retreaverCompanyId = env('RETREAVER_COMPANY_ID');
 
         return Http::get("https://api.retreaver.com/affiliates/afid/{$affiliateId}.xml?api_key={$retreaverAPIKey}&company_id={$retreaverCompanyId}");
