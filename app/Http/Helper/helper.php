@@ -19,7 +19,7 @@ const PROGRESS_STATUSES = [
     'Agent Signed Carrier Contracts',
     'Contracts Sent to Carrier',
 ];
-
+const EQUIS_JOB_ERROR_EMAILS = ['awaisamir23@gmail.com', 'iamfaizahmed123@gmail.com'];
 const IN_TRAINING_STATUS_ROUTES = ['take-calls.show', 'take-calls.online-users.store', 'take-calls.online-users.destroy', 'training.index', 'profile.view', 'upload.profile.picture', 'profile.edit', 'profile.update', 'profile.destroy'];
 const TRAINING_MINIMUM_AMOUNT = 40;
 const TRAINING = 'Training';
@@ -59,6 +59,6 @@ function getInviteeIds($parent)
     foreach ($parent->invitees as $child) {
         $ids = array_merge($ids, getInviteeIds($child));
     }
-    
+
     return $ids;
 }
