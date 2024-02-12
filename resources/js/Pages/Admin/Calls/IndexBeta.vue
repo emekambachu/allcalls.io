@@ -42,15 +42,35 @@ const getTotalCalls = ref(props.totalCalls);
 const getTotalRevenue = ref(props.totalRevenue);
 
 let columns = ref([
-  {
-    label: "ID",
-    name: "id",
-    visible: true,
-    sortable: true,
-    render(call) {
-      return call.id;
+    {
+        label: "ID",
+        name: "id",
+        visible: true,
+        sortable: true,
+        render(call) {
+          return call.id;
+        },
     },
-  },
+
+    {
+        label: "Call Date",
+        name: "call_taken",
+        visible: true,
+        sortable: true,
+        render(call) {
+            return call.call_taken;
+        },
+    },
+
+    {
+        label: "Agent Name",
+        name: "agent_name",
+        visible: false,
+        sortable: true,
+        render(call) {
+            return call.user !== null ? call.user.first_name+' '+call.user.last_name : '';
+        },
+    },
 
     {
         label: "Publisher ID",
@@ -72,15 +92,7 @@ let columns = ref([
         },
     },
 
-  {
-    label: "Call Date",
-    name: "call_taken",
-    visible: true,
-    sortable: true,
-    render(call) {
-      return call.call_taken;
-    },
-  },
+
   {
     label: "Role",
     name: "role",
@@ -120,15 +132,7 @@ let columns = ref([
         },
     },
 
-    {
-        label: "Agent Name",
-        name: "agent_name",
-        visible: false,
-        sortable: true,
-        render(call) {
-            return call.user !== null ? call.user.first_name+' '+call.user.last_name : '';
-        },
-    },
+
 
   {
     label: "Hung up by",
