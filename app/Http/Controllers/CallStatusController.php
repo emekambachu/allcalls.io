@@ -20,6 +20,7 @@ use App\Notifications\UserOffline;
 use Illuminate\Support\Facades\Log;
 use App\Notifications\FundsDeducted;
 use Illuminate\Support\Facades\Http;
+use Twilio\Security\RequestValidator;
 use App\Events\CallAcceptedOrRejected;
 use App\Listeners\CheckDispositionListener;
 
@@ -44,6 +45,17 @@ class CallStatusController extends Controller
             'postVars' => $request->all(),
             'new' => true,
         ]);
+
+        $twilioSignature = isset($_SERVER['HTTP_X_TWILIO_SIGNATURE']) ? $_SERVER['HTTP_X_TWILIO_SIGNATURE']  : null;
+
+        $validator = new RequestValidator(env('TWILIO_AUTH_TOKEN'));
+
+        if ($validator->validate($twilioSignature, url('/handle-call-status'), $request->all())) {
+            Log::debug('TwilioValidation:true');
+        } else {
+            Log::debug('TwilioValidation:false');
+        }
+
 
         $callStatus = $request->input('CallStatus');
         $userId = $request->input('user_id');
