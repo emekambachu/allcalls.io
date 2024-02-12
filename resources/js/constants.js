@@ -35,34 +35,41 @@ let basicTrainingSteps = [{
     },
     {
         id: 5,
+        video_url: 'https://allcalls-training.s3.amazonaws.com/5)+Final+Expense+Script.mov',
+        pdf: '',
+        title: 'Final Expense Script',
+        thumbnail: '/Agent Training/Final Expense Script.png'
+    },
+    {
+        id: 6,
         video_url: 'https://allcalls-training.s3.amazonaws.com/5)+Training+Call+Recording+1+.m4a',
-        pdf: 'https://drive.google.com/file/d/1Rbif_6KjMpmNa4uKpzdy8DzdPGf6GsGp/view?usp=drive_link',
+        pdf: '',
         title: 'Taking Calls',
         thumbnail: '/Agent Training/Taking Calls.png'
     },
     {
-        id: 6,
+        id: 7,
         video_url: 'https://allcalls-training.s3.amazonaws.com/5)+Training+call+recording+2.m4a',
-        pdf: 'https://drive.google.com/file/d/19ui4yMEJ41B62_bdE23mY1BohgyCZdge/view?usp=drive_link',
+        pdf: '',
         title: 'Taking Calls ( Part 2 )',
         thumbnail: '/Agent Training/Taking Calls.png'
     },
     {
-        id: 7,
+        id: 8,
         video_url: 'https://allcalls-training.s3.amazonaws.com/6)+Insurance+Toolkit.mp4',
         pdf: 'https://drive.google.com/file/d/19ui4yMEJ41B62_bdE23mY1BohgyCZdge/view',
         title: 'Insurance Toolkit',
         thumbnail: '/Agent Training/Insurance Toolkit.png'
     },
     {
-        id: 8,
+        id: 9,
         video_url: 'https://allcalls-training.s3.amazonaws.com/7)+Final+Expense+Products.mp4',
         pdf: 'https://drive.google.com/file/d/1ag5frECOObanwDojUUwoYDPOolNepU8b/view?usp=drive_link',
         title: 'Final Expense Products',
         thumbnail: '/Agent Training/Final Expense Products.png'
     },
     {
-        id: 9,
+        id: 10,
         video_url: 'https://allcalls-training.s3.amazonaws.com/8)+Completing+the+Process.mov',
         pdf: 'https://drive.google.com/file/d/1aqJoT-kae_uNfnNZIM8wfHJJiITjQHLb/view?usp=drive_link',
         title: 'Completing The Request For Coverage',
@@ -90,7 +97,7 @@ let basicTrainingSteps = [{
     //     thumbnail: '/Agent Training/dummy-thumnail.png'
     // },
     {
-        id: 10,
+        id: 11,
         video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
         pdf: '/Agent Training/dummy.pdf',
         title: '',

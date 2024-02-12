@@ -57,10 +57,10 @@ let breakpoints = ref({
     itemsToShow: 3,
   },
 });
-const filteredAgens = computed(() => {
+const filteredTraining = computed(() => {
   return basicTrainingSteps.filter((basicTraining) => basicTraining.title !== "");
 });
-console.log("filteredAgens", filteredAgens);
+console.log("filteredTraining", filteredTraining);
 </script>
 
 <template>
@@ -97,7 +97,7 @@ console.log("filteredAgens", filteredAgens);
         <Slide
           @mouseenter="onMouseEnter"
           @mouseleave="onMouseLeave"
-          v-for="(basicTraining, index) in filteredAgens"
+          v-for="(basicTraining, index) in filteredTraining"
           :key="basicTraining.id"
         >
           <div class="thumbnail cursor-pointer" @click="slideTo(index, basicTraining)">
@@ -156,10 +156,12 @@ console.log("filteredAgens", filteredAgens);
     </div> -->
     <div class="mx-auto sm:px-4 lg:px-12 text-center">
       <div class="grid lg:grid-cols-3 mb-2 md:grid-cols-2 sm:grid-cols-1 gap-0">
-        <div style="position:relative;"
-          v-for="(basicTraining, index) in filteredAgens"
+        <div
+          style="position: relative"
+          v-for="(basicTraining, index) in filteredTraining"
           :key="basicTraining.id"
-          class="thumbnail cursor-pointer" @click="slideTo(index, basicTraining)"
+          class="thumbnail cursor-pointer"
+          @click="slideTo(index, basicTraining)"
         >
           <img class="thumbnail-img" :src="basicTraining.thumbnail" alt="Thumbnail" />
           <div class="svg-container">
@@ -287,20 +289,19 @@ console.log("filteredAgens", filteredAgens);
 }
 
 .thumbnail-img {
-    width: 97%;
-    max-height: 180px;
-    display: inline-block;
-    vertical-align: middle;
-    border-radius: 10px;
+  width: 97%;
+  height: 190px;
+  display: inline-block;
+  vertical-align: middle;
+  border-radius: 10px;
 }
 
 .svg-container {
-    position: absolute;
-    top: 33%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  position: absolute;
+  top: 33%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
-
 .center-svg {
   width: 50px;
   /* Adjust the width of the SVG */
@@ -346,4 +347,17 @@ console.log("filteredAgens", filteredAgens);
     transform: translate(-50%, -50%);
   }
 } */
+
+@media only screen and (min-width: 320px) and (max-width: 767px) {
+  .thumbnail-img {
+    width: 100%;
+    height: 80%;
+  }
+  .svg-container {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
 </style>

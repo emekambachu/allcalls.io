@@ -98,8 +98,6 @@ let updateLatestClientDisposition = () => {
         v-model="latestClientDisposition"
       >
         <option value="">Select a disposition</option>
-        <option value="Dead Air/No Response">Dead Air/No Response</option>
-        <option value="Thought Was Free">Thought Was Free</option>
         <option value="Sale - Simplified Issue">Sale - Simplified Issue</option>
         <option value="Sale - Guaranteed Issue">Sale - Guaranteed Issue</option>
         <option value="Follow Up Needed">Follow Up Needed</option>
@@ -114,6 +112,8 @@ let updateLatestClientDisposition = () => {
         <option value="Not Qualified Memory Issues">Not Qualified Memory Issues</option>
         <option value="Language Barrier">Language Barrier</option>
         <option value="Do Not Call">Do Not Call</option>
+        <option value="Dead Air/No Response">Dead Air/No Response</option>
+        <option value="Thought Was Free">Thought Was Free</option>
       </select>
     </div>
 
