@@ -1,7 +1,5 @@
 <?php
 
-use App\Mail\EquisApiError;
-use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 use App\Jobs\SampleJob;
 use Illuminate\Http\Request;
