@@ -65,7 +65,7 @@ let columns = ref([
     {
         label: "Agent Name",
         name: "agent_name",
-        visible: false,
+        visible: true,
         sortable: true,
         render(call) {
             return call.user !== null ? call.user.first_name+' '+call.user.last_name : '';
@@ -73,12 +73,66 @@ let columns = ref([
     },
 
     {
-        label: "Publisher ID",
-        columnMethod: "getPublisherIdColumn",
+        label: "Ring Duration",
+        name: "ringing_duration",
         visible: true,
         sortable: true,
         render(call) {
-            return call.publisher_id;
+            return call.ringing_duration;
+        },
+    },
+
+    {
+        label: "Call Length",
+        name: "call_duration_in_seconds",
+        visible: true,
+        sortable: true,
+        render(call) {
+            return (
+                String(Math.floor(call.call_duration_in_seconds / 60)).padStart(2, "0") +
+                ":" +
+                String(call.call_duration_in_seconds % 60).padStart(2, "0")
+            );
+        },
+    },
+
+    {
+        label: "Hung up by",
+        name: "hung_up_by",
+        visible: true,
+        sortable: false,
+        render(call) {
+            return call.hung_up_by;
+        },
+    },
+
+    {
+        label: "Disposition",
+        name: "disposition",
+        visible: true,
+        sortable: false,
+        render(call) {
+            return call.client?.status;
+        },
+    },
+
+    {
+        label: "Revenue",
+        name: "amount_spent",
+        visible: true,
+        sortable: true,
+        render(call) {
+            return "$" + call.amount_spent;
+        },
+    },
+
+    {
+        label: "Cost",
+        name: "cost",
+        visible: true,
+        sortable: true,
+        render(call) {
+            return call.cost === '' || call.cost === null ? `$${0}` : `$${call.cost}`;
         },
     },
 
@@ -92,103 +146,62 @@ let columns = ref([
         },
     },
 
-
-  {
-    label: "Role",
-    name: "role",
-    visible: false,
-    sortable: false,
-    render(call) {
-      for (let i = 0; i < call.user.roles.length; i++) {
-        if (call.user.roles[i].name === "internal-agent") {
-          return "Internal Agent";
-        }
-      }
-
-      return "Regular User";
-    },
-  },
-  {
-    label: "Connected Duration",
-    name: "call_duration_in_seconds",
-    visible: false,
-    sortable: true,
-    render(call) {
-      return (
-        String(Math.floor(call.call_duration_in_seconds / 60)).padStart(2, "0") +
-        ":" +
-        String(call.call_duration_in_seconds % 60).padStart(2, "0")
-      );
-    },
-  },
-
     {
-        label: "Ringing Duration",
-        name: "ringing_duration",
-        visible: false,
+        label: "Pub ID",
+        columnMethod: "getPublisherIdColumn",
+        visible: true,
         sortable: true,
         render(call) {
-            return call.ringing_duration;
+            return call.publisher_id;
         },
     },
 
-
-
-  {
-    label: "Hung up by",
-    name: "hung_up_by",
-    visible: false,
-    sortable: false,
-    render(call) {
-       return call.hung_up_by;
-    },
-  },
-
-  {
-    label: "Revenue",
-    name: "amount_spent",
-    visible: true,
-    sortable: true,
-    render(call) {
-      return "$" + call.amount_spent;
-    },
-  },
-  {
-    label: "Vertical",
-    name: "vertical",
-    visible: true,
-    sortable: false,
-    render(call) {
-      return call.call_type.type;
-    },
-  },
-  {
-    label: "CallerID",
-    name: "from",
-    visible: true,
-    sortable: false,
-    render(call) {
-      return call.from;
-    },
-  },
-  {
-    label: "User Email",
-    name: "user_email",
-    visible: false,
-    sortable: false,
-    render(call) {
-      return call.user_email;
-    },
-  },
     {
-        label: "Disposition",
-        name: "disposition",
+        label: "Role",
+        name: "role",
+        visible: true,
+        sortable: false,
+        render(call) {
+            for (let i = 0; i < call.user.roles.length; i++) {
+                if (call.user.roles[i].name === "internal-agent") {
+                    return "Internal Agent";
+                }
+            }
+
+            return "Regular User";
+        },
+    },
+
+    {
+        label: "Vertical",
+        name: "vertical",
+        visible: true,
+        sortable: false,
+        render(call) {
+            return call.call_type.type;
+        },
+    },
+
+    {
+        label: "CallerID",
+        name: "from",
         visible: false,
         sortable: false,
         render(call) {
-            return call.client?.status;
+          return call.from;
         },
     },
+
+    {
+        label: "User Email",
+        name: "user_email",
+        visible: false,
+        sortable: false,
+        render(call) {
+          return call.user_email;
+        },
+    },
+
 ]);
 
 let performSorting = () => {
@@ -383,110 +396,116 @@ let stopPlayingRecording = (call) => {
 };
 
 let filters = ref([
-  {
-    label: "ID",
-    name: "id",
-    operators: ["is", "is greater than", "is less than", "is greater than or equal to", "is less than or equal to"],
-    inputType: "number",
-  },
+
     {
-        label: "Publisher ID",
-        name: "publisher_id",
-        operators: ["is"],
-        inputType: "text"
-    },
-    {
-        label: "Publisher Name",
-        name: "publisher_name",
-        operators: ["is"],
-        inputType: "text"
-    },
-  {
-    label: "Call Duration (in seconds)",
-    name: "call_duration_in_seconds",
-    operators: ["is", "is greater than", "is less than", "is greater than or equal to", "is less than or equal to"],
-    inputType: "number"
-  },
-    {
-        label: "Ring Duration (in seconds)",
-        name: "ringing_duration",
+        label: "ID",
+        name: "id",
         operators: ["is", "is greater than", "is less than", "is greater than or equal to", "is less than or equal to"],
-        inputType: "number"
+        inputType: "number",
     },
+
     {
         label: "Agent Name",
         name: "agent_name",
         operators: ["is"],
         inputType: "text"
     },
-  {
-    label: "Hung up by",
-    name: "hung_up_by",
-    operators: ["is"],
-    inputType: "text"
-  },
-  {
-    label: "Revenue",
-    name: "amount_spent",
-    operators: ["is", "is greater than", "is less than", "is greater than or equal to", "is less than or equal to"],
-    inputType: "number"
-  },
-  {
-    label: "CallerID",
-    name: "from",
-    operators: ["is"],
-    inputType: "text"
-  },
-  {
-    label: "User Email",
-    name: "user_email",
-    operators: ["is"],
-    inputType: "email"
-  },
+
+    {
+        label: "Call Duration (in seconds)",
+        name: "call_duration_in_seconds",
+        operators: ["is", "is greater than", "is less than", "is greater than or equal to", "is less than or equal to"],
+        inputType: "number"
+    },
+
+    {
+        label: "Hung up by",
+        name: "hung_up_by",
+        operators: ["is"],
+        inputType: "text"
+    },
+
     {
         label: "Disposition",
         name: "disposition",
         operators: ["is"],
         inputType: "text"
     },
-  {
-    label: "Vertical",
-    name: "vertical",
-    operators: ["is"],
-    inputType: "select",
-    inputTypeOptions: [{
-      label: "Auto Insurance",
-      value: "Auto Insurance",
-    }, {
-      label: "Final Expense",
-      value: "Final Expense",
-    }, {
-      label: "U65 Health",
-      value: "U65 Health",
-    }, {
-      label: "ACA",
-      value: "ACA",
-    }, {
-      label: "Medicare",
-      value: "Medicare",
-    }]
-  },
-  {
-    label: "Role",
-    name: "user_role",
-    operators: ["is"],
-    inputType: "select",
-    inputTypeOptions: [
-      {
-        label: "Internal Agent",
-        value: "internal-agent"
-      },
-      {
-        label: "Regular User",
-        value: "regular-user"
-      }
-    ]
-  },
+
+    {
+        label: "Revenue",
+        name: "amount_spent",
+        operators: ["is", "is greater than", "is less than", "is greater than or equal to", "is less than or equal to"],
+        inputType: "number"
+    },
+
+    {
+        label: "Publisher Name",
+        name: "publisher_name",
+        operators: ["is"],
+        inputType: "text"
+    },
+
+    {
+        label: "Publisher ID",
+        name: "publisher_id",
+        operators: ["is"],
+        inputType: "text"
+    },
+
+    {
+        label: "Role",
+        name: "user_role",
+        operators: ["is"],
+        inputType: "select",
+        inputTypeOptions: [
+            {
+                label: "Internal Agent",
+                value: "internal-agent"
+            },
+            {
+                label: "Regular User",
+                value: "regular-user"
+            }
+        ]
+    },
+
+    {
+        label: "Vertical",
+        name: "vertical",
+        operators: ["is"],
+        inputType: "select",
+        inputTypeOptions: [{
+            label: "Auto Insurance",
+            value: "Auto Insurance",
+        }, {
+            label: "Final Expense",
+            value: "Final Expense",
+        }, {
+            label: "U65 Health",
+            value: "U65 Health",
+        }, {
+            label: "ACA",
+            value: "ACA",
+        }, {
+            label: "Medicare",
+            value: "Medicare",
+        }]
+    },
+
+    {
+        label: "CallerID",
+        name: "from",
+        operators: ["is"],
+        inputType: "text"
+    },
+
+    {
+        label: "User Email",
+        name: "user_email",
+        operators: ["is"],
+        inputType: "email"
+    },
 ]);
 
 let appliedFilters = ref([])
