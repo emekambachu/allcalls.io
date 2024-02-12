@@ -122,14 +122,32 @@ class Call extends Model
         if (sizeof($callLogs) > 0) {
             Log::debug('updatePublisherInfo:retreaver:found', [
                 'affiliateId' => $callLogs[0]['call']['afid'],
-                'charge_total' => $callLogs[0]['call']['charge_total'],
+                'payout' => $callLogs[0]['call']['payout'] ?? null,
             ]);
 
-            $affiliateName = self::getRetreaverAffiliateFullNameById($callLogs[0]['call']['afid']);
+            $publisherId = $callLogs[0]['call']['afid'];
+            $publisherName = self::getRetreaverAffiliateFullNameById($publisherId);
 
-            Log::debug('retreaver:affiliate-name', [
-                'affiliateName' => $affiliateName,
+            $cost = $callLogs[0]['call']['payout'] ?? null;
+
+            Log::debug('retreaver:set', [
+                'cost' => $cost,
+                'publisher_id' => $publisherId,
+                'publisher_name' => $publisherName,
             ]);
+
+            $this->publisher_name = $publisherName;
+            $this->publisher_id = $publisherId;
+            $this->cost = $cost ?? null;
+            $this->save();
+
+            Log::debug('retreaver:values-saved', [
+                'cost' => $cost,
+                'publisher_id' => $publisherId,
+                'publisher_name' => $publisherName,
+            ]);
+
+            return $this->save();
         }
 
         return false;
