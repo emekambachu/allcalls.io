@@ -1,5 +1,7 @@
 <?php
 
+use App\Mail\EquisApiError;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 use App\Jobs\SampleJob;
 use Illuminate\Http\Request;
@@ -62,6 +64,8 @@ use App\Http\Controllers\ZoomMeetingNotificationController;
 */
 
 Route::get('/', function () {
+    Mail::to('abdullah.laraveldev@gamil.com')->send(new EquisApiError('sdsddssd'));
+dd('dsdsdsd');
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
