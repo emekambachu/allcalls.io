@@ -5,15 +5,22 @@ namespace App\Http\Controllers;
 use App\Models\Call;
 use App\Models\User;
 use App\Models\CallType;
+use App\Services\Base\BaseService;
 use App\Services\Client\ClientService;
+use App\Services\User\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class WebCallsAPIController extends Controller
 {
     protected ClientService $client;
-    public function __construct(ClientService $client){
+    protected UserService $user;
+    public function __construct(
+        ClientService $client,
+        UserService $user
+    ){
         $this->client = $client;
+        $this->user = $user;
     }
 
     protected array $supportedSortColumns = [
@@ -24,6 +31,7 @@ class WebCallsAPIController extends Controller
 
     protected array $specialFilters = [
         'user_email' => 'applyUserEmailFilter',
+        'agent_name' => 'applyAgentNameFilter',
         'user_role' => 'applyUserRoleFilter',
         'vertical' => 'applyVerticalFilter',
         'disposition' => 'applyDispositionFilter',
@@ -102,6 +110,28 @@ class WebCallsAPIController extends Controller
         if ($user) {
             $query->where('user_id', '=', $user->id);
         }
+    }
+
+    protected function applyAgentNameFilter($query, $filter): void
+    {
+        $names = explode(' ', $filter['value']);
+
+        if(empty($names)) {
+            return;
+        }
+
+        $userIds = $this->user->user()->select('id', 'first_name', 'last_name')
+            ->where(function ($q) use ($names) {
+                if(!empty($names[0])) {
+                    $q->where('first_name', $names[0])
+                        ->orWhere('last_name', $names[0]);
+                }
+                if(!empty($names[1])) {
+                    $q->where('last_name', $names[1]);
+                }
+        })->pluck('id');
+
+        $query->whereIn('user_id', $userIds);
     }
 
     protected function applyDispositionFilter($query, $filter): void
