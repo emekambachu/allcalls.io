@@ -145,7 +145,9 @@ class Call extends Model
                 'cost' => $cost,
                 'publisher_id' => $publisherId,
                 'publisher_name' => $publisherName,
-            ]);    
+            ]);
+
+            return $this->save();
         }
 
         return false;
