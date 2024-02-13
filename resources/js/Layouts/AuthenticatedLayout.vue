@@ -345,7 +345,7 @@ let clearTimeoutForRepeatedDispositionNotifications = () => {
 let logDeviceAction = () => {
   // First, get the device id:
   axios
-    .get("/web-api/get-device-id-by-user-agent?device_type" + window.navigator.userAgent)
+    .get("/web-api/get-device-id-by-user-agent?device_type=" + window.navigator.userAgent)
     .then((response) => {
       console.log("Device id:", response.data.device_id);
 
