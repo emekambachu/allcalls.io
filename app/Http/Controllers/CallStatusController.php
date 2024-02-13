@@ -11,13 +11,16 @@ use App\Events\CallEnded;
 use Illuminate\Http\Request;
 use App\Events\MissedCallEvent;
 use App\Events\RingingCallEvent;
+use App\Events\CallJustCompleted;
 use App\Events\CallStatusUpdated;
 use App\Notifications\MissedCall;
 use App\Events\CompletedCallEvent;
+use App\Events\InitiatedCallEvent;
 use App\Notifications\UserOffline;
 use Illuminate\Support\Facades\Log;
 use App\Notifications\FundsDeducted;
 use Illuminate\Support\Facades\Http;
+use Twilio\Security\RequestValidator;
 use App\Events\CallAcceptedOrRejected;
 use App\Listeners\CheckDispositionListener;
 
@@ -35,6 +38,24 @@ class CallStatusController extends Controller
 
             return;
         }
+
+        Log::debug('TwilioSignatureData:', [
+            'signature' => isset($_SERVER['HTTP_X_TWILIO_SIGNATURE']) ? $_SERVER['HTTP_X_TWILIO_SIGNATURE']  : 'Not found',
+            'scriptURI' => url('/handle-call-status'),
+            'postVars' => $request->all(),
+            'new' => true,
+        ]);
+
+        $twilioSignature = isset($_SERVER['HTTP_X_TWILIO_SIGNATURE']) ? $_SERVER['HTTP_X_TWILIO_SIGNATURE']  : null;
+
+        $validator = new RequestValidator(env('TWILIO_AUTH_TOKEN'));
+
+        if ($validator->validate($twilioSignature, url('/handle-call-status'), $request->all())) {
+            Log::debug('TwilioValidation:true');
+        } else {
+            Log::debug('TwilioValidation:false');
+        }
+
 
         $callStatus = $request->input('CallStatus');
         $userId = $request->input('user_id');
@@ -80,27 +101,27 @@ class CallStatusController extends Controller
             case 'no-answer':
                 Log::debug('no-answer event for user ' . $request->user_id);
                 CallAcceptedOrRejected::dispatch(User::find($request->user_id));
-                
+
                 $call = Call::where('unique_call_id', $request->unique_call_id)->first();
                 if (!$call) {
                     // Handle the case where there's no Call associated with the user.
                     return response()->json(['message' => 'Call not found for the user'], 404);
                 }
-            
+
                 // Fetch the `created_at` column of that `Call` model.
                 $createdAt = $call->created_at;
                 Log::debug("Fetching Ringing duration, call started ringing at: " . $createdAt);
-                
+
                 // Calculate the difference between the current time and the `Call` model's `created_at`.
                 $now = now();
                 $difference = $now->diff($createdAt);
-            
+
                 // Display the result in a time format.
                 $timeDifference = $difference->format('%y years, %m months, %d days, %h hours, %i minutes, %s seconds');
-                
+
                 // Log the result
                 Log::debug('Time difference: ' . $timeDifference);
-            
+
                 // Check the difference in seconds
                 $elapsedSeconds = $now->getTimestamp() - $createdAt->getTimestamp();
                 Log::debug($elapsedSeconds);
@@ -114,11 +135,12 @@ class CallStatusController extends Controller
                     Log::debug("Ringing duration is LESS than 20 seconds, NOT dispatching MissedCallEvent, Break");
                 }
                 break;
-                
-                
+
+
 
             case 'completed':
 
+                CallJustCompleted::dispatch($user, CallType::find($callTypeId), $request->unique_call_id);
 
                 Log::debug('completed event for user ' . $request->user_id);
                 CallAcceptedOrRejected::dispatch(User::find($request->user_id));
@@ -140,7 +162,7 @@ class CallStatusController extends Controller
                 // $checkDispositionListener = new CheckDispositionListener();
                 // $checkDispositionListener->handle(new CompletedCallEvent($user, $call->callType, $call->unique_call_id));
                 // Log::debug("CheckDispositionListener invoked manually for user {$request->user_id} and call {$call->unique_call_id}");
-            
+
 
                 // ========================================
                 // START: Terminate Call Chain Block
@@ -164,22 +186,22 @@ class CallStatusController extends Controller
 
                 // If the call duration is more than 0 seconds
                 // if ($callDuration > 0) {
-                    try {
-                        // End the parent call if it's still going
-                        if ($parentCallSid) {
-                            $client->calls($parentCallSid)->update(['status' => 'completed']);
-                        }
-
-                        // End the child call if it's still going
-                        if ($childCallSid && $childCallSid !== $parentCallSid) {
-                            $client->calls($childCallSid)->update(['status' => 'completed']);
-                        }
-
-                        Log::debug('Terminated call chain due to duration exceeding 10 seconds.');
-                    } catch (Exception $e) {
-                        // Log the exception for debugging
-                        Log::debug('Error while trying to terminate call chain: ' . $e->getMessage());
+                try {
+                    // End the parent call if it's still going
+                    if ($parentCallSid) {
+                        $client->calls($parentCallSid)->update(['status' => 'completed']);
                     }
+
+                    // End the child call if it's still going
+                    if ($childCallSid && $childCallSid !== $parentCallSid) {
+                        $client->calls($childCallSid)->update(['status' => 'completed']);
+                    }
+
+                    Log::debug('Terminated call chain due to duration exceeding 10 seconds.');
+                } catch (Exception $e) {
+                    // Log the exception for debugging
+                    Log::debug('Error while trying to terminate call chain: ' . $e->getMessage());
+                }
                 // }
                 // ========================================
                 // END: Terminate Call Chain Block
@@ -213,9 +235,12 @@ class CallStatusController extends Controller
                     CompletedCallEvent::dispatch($user, CallType::find($callTypeId), $request->unique_call_id);
                 }
 
-
                 break;
 
+            case 'initiated':
+                Log::debug('initiated event for user ' . $request->user_id);
+                InitiatedCallEvent::dispatch($user, $request->unique_call_id, $request->call_type_id, $request->from);
+                break;
 
             default:
                 Log::debug('Unhandled call status: ' . $callStatus);

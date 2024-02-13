@@ -5,7 +5,7 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
-        "php": "^8.1",
+        "php": "8.1 || ^8.2.0",
         "barryvdh/laravel-dompdf": "^2.0",
         "clegginabox/pdf-merger": "dev-master",
         "docusign/esign-client": "^6.17",
@@ -21,6 +21,7 @@
         "laravel/sanctum": "^3.2",
         "laravel/telescope": "^4.17",
         "laravel/tinker": "^2.8",
+        "opcodesio/log-viewer": "^3.1",
         "plivo/plivo-php": "^4.59",
         "pusher/pusher-php-server": "^7.2",
         "tightenco/ziggy": "^1.0",

@@ -7,6 +7,7 @@ use App\Http\Controllers\WebCallsAPIController;
 use App\Http\Controllers\AgentInvitesController;
 use App\Http\Controllers\Admin\ClientsController;
 use App\Http\Controllers\AdminPoliciesController;
+use App\Http\Controllers\PublisherInfoController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\InternalAgentLevel;
 use App\Http\Controllers\ActiveUserChannelController;
@@ -93,6 +94,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
 
     Route::post('/progress-internal-agent', [InternalAgentController::class, 'internalAgentProgress'])->name('admin.internal.agent.update.progress');
+    Route::get('/approved-internal-agent/{id}', [InternalAgentController::class, 'ApproveAgent'])->name('admin.internal.agent.approved.internal.agent');
     /// My business
     Route::get('/my-business', [AgentBusinessController::class, 'index'])->name('admin.my-business.index');
     Route::post('/my-business', [AgentBusinessController::class, 'store'])->name('admin.my-business.store');
@@ -144,21 +146,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
     Route::post('/policies/{policyId}/delete', [AdminPoliciesController::class, 'destroy'])->name('admin.policies.destroy');
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    Route::get('/web-api/publisher-info/{call}', [PublisherInfoController::class, 'show']);
 
     Route::get('/manage-training-level', [InternalAgentController::class, 'manageTrainingLevel']);
 

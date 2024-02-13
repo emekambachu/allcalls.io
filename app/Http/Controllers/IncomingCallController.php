@@ -61,6 +61,18 @@ class IncomingCallController extends Controller
             return response($twiml, 200)->header('Content-Type', 'text/xml');
         }
 
+        // if ($to === '6788536559') {
+        //     $autoInsurance = CallType::whereType('Auto Insurance')->first();
+
+        //     $fromAttribute = $this->getFromAttribute($request->input('From'));
+
+        //     Log::debug($request->input('From'));
+
+        //     // Hard-code auto insurance call type
+        //     $twiml .= $this->handleCallTypeNumberCall('6787232049', $fromAttribute);
+        //     return response($twiml, 200)->header('Content-Type', 'text/xml');
+        // }
+
         Log::debug('The to attribute did not match any records in the database.');
 
         $twimlResponse = '<?xml version="1.0" encoding="UTF-8"?>';
@@ -79,7 +91,7 @@ class IncomingCallController extends Controller
         if (strpos($fromString, 'client:') === 0) {
             Log::debug('String starts with "client:". Processing accordingly.');
             // return '2055551234';  // Return a dummy number
-            return '4793860440'; // from AR
+            return '2053860440'; // from AK
         }
 
         // If it's a phone number
@@ -185,7 +197,12 @@ class IncomingCallController extends Controller
         }
 
         // If nobody picks up, forward the call to an external number.
-        $twimlBody .= '<Dial callerId="+12518626328">+18449831955</Dial>';
+        Log::debug('FromTwoOptions:02', [
+            'From' => request('From'),
+            'To' => request('To'),
+            'twimlForBackUp' => '<Dial callerId="' . request('From') . '">+18449831955</Dial>',
+        ]);
+        $twimlBody .= '<Dial callerId="' . request('From') . '">+18449831955</Dial>';
 
 
         $twiml = $twimlStart . $twimlBody . $twimlEnd;
@@ -277,8 +294,28 @@ class IncomingCallController extends Controller
 
         Log::debug('Forwarding call to ' . $availableNumber->phone);
 
+
+
+        // if request('From') starts with 'client:', use the following callerId
+        if ( strpos(request('From'), 'client:') === 0 ) {
+            Log::debug('CallComingFrom:client', [
+                'From' => request('From'),
+            ]);
+            $callerId = '+441146971410';
+        } else {
+            Log::debug('CallComingFrom:phone', [
+                'From' => request('From'),
+            ]);
+            $callerId = request('From');
+        }
+
+        Log::debug('FromTwoOptions:01', [
+            'From' => request('From'),
+            'To' => request('To'),
+        ]);
+
         // Return the available number in a <Dial> verb to forward the call to this number
-        $twiml = '<Response><Dial callerId="+441146971410"><Number>' . $availableNumber->phone . '</Number></Dial></Response>';
+        $twiml = '<Response><Dial callerId="' . $callerId . '"><Number>' . $availableNumber->phone . '</Number></Dial></Response>';
 
         Log::debug('TWIML sent: ' . $twiml);
 

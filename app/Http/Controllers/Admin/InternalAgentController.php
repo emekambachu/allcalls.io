@@ -461,6 +461,24 @@ class InternalAgentController extends Controller
             ], 400);
         }
     }
+    public function ApproveAgent($id)
+    {
+        try {
+            $user = User::findOrFail($id);
+            $user->is_locked = 0;
+            $user->save();
+            return response()->json([
+                'success' => true,
+                'user' => $user,
+                'message' => 'Agent Approved successfully.',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'errors' => $e->getMessage(),
+            ], 400);
+        }
+    }
 
     public function signatureAuthorizationPdf($id)
     {

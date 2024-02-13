@@ -2,20 +2,18 @@
 
 namespace App\Jobs;
 
-use Carbon\Carbon;
-use App\Models\State;
-use Illuminate\Bus\Queueable;
-use App\Mail\EquisDuplicateMail;
 use App\Models\EquisDuplicate;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
+use App\Models\State;
+use Carbon\Carbon;
+use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
-use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\EquisApiError;
 
 class EquisAPIJob implements ShouldQueue
 {
@@ -25,13 +23,18 @@ class EquisAPIJob implements ShouldQueue
      * Create a new job instance.
      */
     public $user;
+    public $partnerUniqueId;
+    public $managerPartnerUniqueId;
+
     public function __construct($user)
     {
         Log::debug('equis-api-job:constructing equis api job', [
             'user' => $user,
         ]);
-
         $this->user = $user;
+        $this->partnerUniqueId = "AC" . $this->user->id;
+        $this->managerPartnerUniqueId = "AC71";
+//        $this->managerPartnerUniqueId = isset($this->user->invitedBy) && isset($this->user->invitedBy->upline_id) ? $this->user->invitedBy->upline_id : null;
     }
 
     /**
@@ -39,11 +42,9 @@ class EquisAPIJob implements ShouldQueue
      */
     public function handle(): void
     {
-
         // First, retrieve the Bearer token
         $clientId = env('EQUIS_CLIENT_ID'); // Your client ID here
         $clientSecret = env('EQUIS_CLIENT_SECRET'); // Your client secret here
-
         // First, retrieve the Bearer token
         $tokenResponse = Http::asForm()->post('https://equisfinancialb2c.b2clogin.com/equisfinancialb2c.onmicrosoft.com/B2C_1_SignIn/oauth2/v2.0/token', [
             'grant_type' => 'client_credentials',
@@ -57,7 +58,6 @@ class EquisAPIJob implements ShouldQueue
             'responseStatus' => $tokenResponse->status(),
         ]);
 
-
         if (!$tokenResponse->successful()) {
             Log::debug('equis-api-job:Failed to retrieve access token on the request to create an agent');
             return;
@@ -66,12 +66,10 @@ class EquisAPIJob implements ShouldQueue
         $accessToken = $tokenResponse->json()['access_token'];
 
         $requestData = $this->getRequestData();
-
         // Log the request data
         Log::debug('equis-api-job:request data to create an agent:', [
             'requestData' => $requestData,
         ]);
-
         // Now, make the POST request to the API endpoint with the Bearer token to create an agent
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
@@ -82,10 +80,14 @@ class EquisAPIJob implements ShouldQueue
             'responseStatus' => $response->status(),
         ]);
 
+        if($response->status() !== 200) {
+            Mail::to(EQUIS_JOB_ERROR_EMAILS)->send(new EquisApiError($response->body()));
+            Log::debug('Equis API error email triggered.');
+            return;
+        }
 
         if (!$response->successful()) {
-            $responseBody = (string) $response->body();
-
+            $responseBody = (string)$response->body();
             // In case of a failure to create an agent, check if the agent already exists in Equis API
             // If the agent already exists, send an email to the people and tag the user as equis_duplicate
             // Also, map the agent to Equis API
@@ -95,9 +97,9 @@ class EquisAPIJob implements ShouldQueue
                 $this->tagUserAsEquisDuplicate();
                 $this->mapAgentToEquis($accessToken);
             }
-
             return;
         }
+        $this->saveManagerIdForUser($accessToken);
     }
 
     protected function sendEmailsToPeople()
@@ -129,7 +131,7 @@ class EquisAPIJob implements ShouldQueue
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
         ])->withToken($accessToken)->post('https://equisapipartner-uat.azurewebsites.net/Agent/Map', [
-            "userName" =>  isset($this->user->upline_id) ? $this->user->upline_id : "",
+            "userName" => isset($this->user->upline_id) ? $this->user->upline_id : "",
             "partnerUniqueId" => "AC" . $this->user->id,
         ]);
 
@@ -145,44 +147,46 @@ class EquisAPIJob implements ShouldQueue
     protected function getRequestData()
     {
         // This is the sample REQUIRED data that we need to send to Equis API
-        // return [
-        //     "address" => "787 Pine Rd",
-        //     "birthDate" => "1990-04-22",
-        //     "city" => "Raleigh",
-        //     "currentlyLicensed" => false,
-        //     "email" => "emily.smitch@webmail.com",
-        //     "firstName" => "Emily",
-        //     "languageId" => "es",
-        //     "lastName" => "Smitch",
-        //     "npn" => "9JL456C",
-        //     "partnerUniqueId" => "b3n4k8",
-        //     "role" => "Agent",
-        //     "state" => "NY",
-        //     "uplineAgentEFNumber" => "EF222171",
-        //     "zipCode" => "10001"
-        // ];
-
-
         return [
             "address" => $this->user->internalAgentContract->address ?? null,
-            "birthDate" =>  isset($this->user->internalAgentContract->dob) ? Carbon::parse($this->user->internalAgentContract->dob)->format('Y-m-d') : '-',
-            "city" =>  $this->user->internalAgentContract->city ?? null,
+            "birthDate" => isset($this->user->internalAgentContract->dob) ? Carbon::parse($this->user->internalAgentContract->dob)->format('Y-m-d') : null,
+            "city" => $this->user->internalAgentContract->city ?? null,
             "currentlyLicensed" => false,
-            "email" =>  $this->user->internalAgentContract->email ?? null,
-            "firstName" =>  $this->user->internalAgentContract->first_name ?? null,
+            "email" => $this->user->internalAgentContract->email ?? null,
+            "firstName" => $this->user->internalAgentContract->first_name ?? null,
             "languageId" => "en",
-            "lastName" =>  $this->user->internalAgentContract->last_name ?? null,
+            "lastName" => $this->user->internalAgentContract->last_name ?? null,
             "npn" => $this->user->internalAgentContract->resident_insu_license_no ?? null,
-            "partnerUniqueId" => "AC" . $this->user->id,
+            "partnerUniqueId" => $this->partnerUniqueId,
             "role" => "Agent",
+            "details" => "A New Agent Registered.",
             "state" => isset($this->user->internalAgentContract->state) ? $this->getStateAbbrev($this->user->internalAgentContract->state) : null,
-            "uplineAgentEFNumber" => isset($this->user->upline_id) ? $this->user->upline_id : "",
-            "zipCode" =>  $this->user->internalAgentContract->zip ?? null,
+            "managerPartnerUniqueId" => $this->managerPartnerUniqueId,
+            "zipCode" => $this->user->internalAgentContract->zip ?? null,
         ];
     }
 
     protected function getStateAbbrev($stateId)
     {
         return State::find($stateId)->name;
+    }
+
+    protected function saveManagerIdForUser($accessToken)
+    {
+        $url = "https://equisapipartner-uat.azurewebsites.net/Agent/{$this->managerPartnerUniqueId}/UserName";
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+        ])->withToken($accessToken)->get($url);
+
+        if ($response->successful()) {
+            $this->user->upline_id = $this->partnerUniqueId;
+            $this->user->manager_id = $this->managerPartnerUniqueId;
+            $this->user->save();
+
+            Log::debug('EF Number saved for user', ['Invitee' => $this->user->id, 'Manager ID' => $this->managerPartnerUniqueId]);
+        } else {
+            // Handle the error scenario
+            Log::debug('Failed to save EF Number for user', ['Invitee' => $this->user->id, 'Server error response' => $response->body()]);
+        }
     }
 }
