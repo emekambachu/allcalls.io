@@ -274,7 +274,6 @@ Route::get('/web-api/policies/{client}', [ClientPoliciesController::class, 'inde
 Route::post('/web-api/calltype/{callType}/online', [CallTypeStatusController::class, 'store'])->name('call-type-status.store');
 Route::post('/web-api/calltype/{callType}/offline', [CallTypeStatusController::class, 'destroy'])->name('call-type-status.destroy');
 
-Route::post('/web-api/call-actions', [CallDeviceActionsController::class, 'store'])->name('call-device-actions.store');
 Route::get('/twilio/forward/ringba', [TwilioForwardingController::class, 'ringba']);
 Route::get('/twilio/forward/retreaver', [TwilioForwardingController::class, 'retreaver']);
 
