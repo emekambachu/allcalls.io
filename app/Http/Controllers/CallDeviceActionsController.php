@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Call;
 use Illuminate\Http\Request;
 use App\Models\CallDeviceAction;
 
@@ -15,8 +16,9 @@ class CallDeviceActionsController extends Controller
             'action' => 'required|string|max:255',
         ]);
 
+        $call = Call::findOrFail($validatedData['call_id']);
 
-        if ($request->user()->id !== $request->call->user_id) {
+        if ($request->user()->id !== $call->user_id) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
