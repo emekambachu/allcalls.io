@@ -342,19 +342,18 @@ let clearTimeoutForRepeatedDispositionNotifications = () => {
   repeatedNotificationToUpdateDispositionTimeout.value = null;
 };
 
-let logDeviceAction = () => {
-  // First, get the device id:
+let logDeviceAction = (action) => {
+  // First we need to get the device id
   axios
     .get("/web-api/get-device-id-by-user-agent?device_type=" + window.navigator.userAgent)
     .then((response) => {
-      console.log("Device id:", response.data.device_id);
-
-      let deviceId = response.data.device_id;
-
+      // and then we can log the device action
+      // using that device id, call unique id and
+      // the action.
       axios
         .post("/web-api/call-device-actions-with-unique-call-id", {
-          action: "ringing",
-          device_id: deviceId,
+          action,
+          device_id: response.data.device_id,
           call_unique_id: connectedUniqueCallId.value,
         })
         .then((response) => {})
