@@ -317,6 +317,9 @@ let disconnectCall = () => {
     showOngoing.value = false;
     hasSixtySecondsPassed.value = false;
     showUpdateDispositionModal();
+
+    logDeviceAction("hungup");
+
   } else {
     console.log("call not found while disconnecting");
   }
