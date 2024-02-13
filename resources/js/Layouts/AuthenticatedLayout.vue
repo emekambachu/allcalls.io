@@ -7,6 +7,7 @@ import NavLink from "@/Components/NavLink.vue";
 import DashboardFooter from "@/Components/DashboardFooter.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import Modal from "@/Components/Modal.vue";
+import LowBalanceModal from "@/Components/LowBalanceModal.vue";
 import TextInput from "@/Components/TextInput.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { toaster } from "@/helper.js";
@@ -19,9 +20,9 @@ import DispositionModal from "@/Components/DispositionModal.vue";
 let page = usePage();
 
 let showLowBalanceModal = ref(false);
-if (page.props.auth.role !== "admin" && page.props.auth.user.balance < 35) {
+if (page.props.auth.role !== "admin" && page.props.auth.user.balance < 40 && page.props.auth.user.basic_training == '1' ) {
   console.log("Display the low balance modal now.");
-  // showLowBalanceModal.value = true;
+  showLowBalanceModal.value = true;
 }
 
 let onLowBalanceModalClick = () => {
@@ -49,6 +50,11 @@ let unreadNotifications = ref(
   })
 );
 
+let disabledNavLink = ref(false);
+if(page.props.auth.user.agent_access_status !== "Live"){
+  disabledNavLink.value = true
+}
+console.log('page.props',page.props);
 //   let isNotLive = ref(page.props.auth.role === "internal-agent" ? true : false);
 //   let isLive = ref(page.props.auth.role === "internal-agent" ? true : false);
 //   let isTraining = ref(page.props.auth.role === "internal-agent" ? true : false);
@@ -1003,6 +1009,10 @@ let appDownloadModal = ref(false);
                   </div> -->
                   <div>
                     <Link href="/billing/funds"
+                    :style="{
+                        'pointer-events': disabledNavLink ? 'none' : 'pointer',
+                      }"
+                      :class="{'opacity-25': disabledNavLink === true}"
                       class="mr-3 px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
                       v-if="!isInternalLevel">
                     Add Funds
@@ -1162,6 +1172,7 @@ let appDownloadModal = ref(false);
 
                     <template #content>
                       <DropdownLink
+                      :class="{ 'opacity-50': disabledNavLink === true }" :disabledNavLink="disabledNavLink"
                         :href="route('profile.view')" method="get" as="button">
                         Profile
                       </DropdownLink>
@@ -1325,23 +1336,23 @@ let appDownloadModal = ref(false);
             hidden: !showingNavigationDropdown,
           }" class="md:hidden">
             <div class="pt-2 pb-3 space-y-1">
-              <ResponsiveNavLink :href="route('take-calls.show')"  :active="route().current('take-calls.show')">
+              <ResponsiveNavLink :class="{ 'opacity-50': disabledNavLink === true }" :disabledNavLink="disabledNavLink" :href="route('take-calls.show')"  :active="route().current('take-calls.show')">
                 Take Calls
               </ResponsiveNavLink>
 
-              <ResponsiveNavLink :href="route('clients.index')"   :active="route().current('clients.index')">
+              <ResponsiveNavLink :class="{ 'opacity-50': disabledNavLink === true }" :disabledNavLink="disabledNavLink" :href="route('clients.index')"   :active="route().current('clients.index')">
                 Clients
               </ResponsiveNavLink>
-              <ResponsiveNavLink v-if="$page.props.auth.role === 'internal-agent'"
+              <ResponsiveNavLink :class="{ 'opacity-50': disabledNavLink === true }" :disabledNavLink="disabledNavLink" v-if="$page.props.auth.role === 'internal-agent'"
                 :href="route('internal-agent.agent-agency.index')"
                 :active="route().current('internal-agent.agent-agency.index')">
                 My Agency
               </ResponsiveNavLink>
-              <ResponsiveNavLink v-if="$page.props.auth.role === 'internal-agent'"
+              <ResponsiveNavLink :class="{ 'opacity-50': disabledNavLink === true }" :disabledNavLink="disabledNavLink" v-if="$page.props.auth.role === 'internal-agent'"
                 :href="route('agent.my.business')" :active="route().current('agent.my.business')">
                 My Business
               </ResponsiveNavLink>
-              <ResponsiveNavLink v-if="$page.props.auth.role === 'internal-agent'" :href="route('training.index')"
+              <ResponsiveNavLink  v-if="$page.props.auth.role === 'internal-agent'" :href="route('training.index')"
                 :active="route().current('training.index')">
                 Training
               </ResponsiveNavLink>
@@ -1350,7 +1361,7 @@ let appDownloadModal = ref(false);
                 Registered Agents
               </ResponsiveNavLink> -->
 
-              <ResponsiveNavLink
+              <ResponsiveNavLink :class="{ 'opacity-50': disabledNavLink === true }" :disabledNavLink="disabledNavLink"
                 :href="route('billing.funds.index')" :active="route().current('billing.funds.index') ||
                   route().current('billing.cards.index') ||
                   route().current('billing.autopay.index')
@@ -1422,17 +1433,17 @@ let appDownloadModal = ref(false);
                 </div>
               </ResponsiveNavLink>
 
-              <ResponsiveNavLink
+              <ResponsiveNavLink :class="{ 'opacity-50': disabledNavLink === true }" :disabledNavLink="disabledNavLink"
                 :href="route('calls.index')" :active="route().current('calls.index')">
                 Call Reporting
               </ResponsiveNavLink>
 
-              <ResponsiveNavLink
+              <ResponsiveNavLink :class="{ 'opacity-50': disabledNavLink === true }" :disabledNavLink="disabledNavLink"
                 :href="route('additional-files.index')" :active="route().current('additional-files.index')">
                 Additional Files
               </ResponsiveNavLink>
 
-              <ResponsiveNavLink  :href="route('billing.funds.index')" :active="route().current('billing.funds.index') ||
+              <ResponsiveNavLink :class="{ 'opacity-50': disabledNavLink === true }" :disabledNavLink="disabledNavLink"  :href="route('billing.funds.index')" :active="route().current('billing.funds.index') ||
                 route().current('billing.cards.index') ||
                 route().current('billing.autopay.index')
                 " v-if="!isInternalLevel">
@@ -1489,18 +1500,18 @@ let appDownloadModal = ref(false);
                 </div>
               </ResponsiveNavLink>
 
-              <ResponsiveNavLink
+              <ResponsiveNavLink :class="{ 'opacity-50': disabledNavLink === true }" :disabledNavLink="disabledNavLink"
                 :href="route('support.index')" :active="route().current('support.index')">
                 Support
               </ResponsiveNavLink>
 
-              <ResponsiveNavLink v-if="$page.props.auth.role === 'internal-agent'"
+              <ResponsiveNavLink :class="{ 'opacity-50': disabledNavLink === true }" :disabledNavLink="disabledNavLink" v-if="$page.props.auth.role === 'internal-agent'"
                 :href="route('promotion-guidelines.show')" :active="route().current('promotion-guidelines.show')"
                  >
                 Promotion Guidelines
               </ResponsiveNavLink>
 
-              <ResponsiveNavLink
+              <ResponsiveNavLink :class="{ 'opacity-50': disabledNavLink === true }" :disabledNavLink="disabledNavLink"
                 :href="route('activities.index')" :active="route().current('activities.index') ||
                   route().current('transactions.index') ||
                   route().current('profile.view') ||
@@ -1590,7 +1601,7 @@ let appDownloadModal = ref(false);
               </div>
 
               <div class="mt-3 space-y-1">
-                <ResponsiveNavLink
+                <ResponsiveNavLink :class="{ 'opacity-50': disabledNavLink === true }" :disabledNavLink="disabledNavLink"
                   :href="route('profile.view')" method="get" as="button">
                   Profile
                 </ResponsiveNavLink>
@@ -1605,7 +1616,7 @@ let appDownloadModal = ref(false);
 
         <div class="w-full mx-auto md:grid md:grid-cols-5 md:gap-28 md:max-w-screen-2xl xl:gap-0">
           <div class="py-12 hidden sm:-my-px sm:ml-10 col-span-1 md:flex md:flex-col">
-            <NavLink class="mb-10 gap-2"   :href="route('take-calls.show')"
+            <NavLink :class="{ 'opacity-50': disabledNavLink === true }" :disabledNavLink="disabledNavLink" class="mb-10 gap-2"   :href="route('take-calls.show')"
               :active="route().current('take-calls.show')">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="w-8 h-8 mr-2">
@@ -1615,13 +1626,13 @@ let appDownloadModal = ref(false);
               Take Calls
             </NavLink>
 
-            <NavLink class="mb-10 gap-2"   :href="route('clients.index')"
+            <NavLink :class="{ 'opacity-50': disabledNavLink === true }" :disabledNavLink="disabledNavLink" class="mb-10 gap-2"   :href="route('clients.index')"
               :active="route().current('clients.index')">
               <img src="/img/clients.png" alt="" />
               Clients
             </NavLink>
 
-            <NavLink v-if="$page.props.auth.role === 'internal-agent'"   class="mb-10 gap-2" :href="route('internal-agent.agent-agency.index')"
+            <NavLink :class="{ 'opacity-50': disabledNavLink === true }" :disabledNavLink="disabledNavLink" v-if="$page.props.auth.role === 'internal-agent'"   class="mb-10 gap-2" :href="route('internal-agent.agent-agency.index')"
               :active="route().current('internal-agent.agent-agency.index')">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="w-8 h-8 mr-2">
@@ -1631,7 +1642,7 @@ let appDownloadModal = ref(false);
               My Agency
             </NavLink>
 
-            <NavLink v-if="$page.props.auth.role === 'internal-agent'"   class="mb-10 gap-2" :href="route('agent.my.business')"
+            <NavLink :class="{ 'opacity-50': disabledNavLink === true }" :disabledNavLink="disabledNavLink" v-if="$page.props.auth.role === 'internal-agent'"   class="mb-10 gap-2" :href="route('agent.my.business')"
               :active="route().current('agent.my.business')">
               <svg fill="#fff" class="w-8 h-8 mr-2" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink" stroke="#fff">
@@ -1716,11 +1727,12 @@ let appDownloadModal = ref(false);
               </svg>
             </NavLink> -->
 
-            <NavLink v-if="!isInternalLevel"     class="mb-10 gap-2" id="billing-nav-link"
+            <NavLink :disabledNavLink="disabledNavLink" v-if="!isInternalLevel"     class="mb-10 gap-2" id="billing-nav-link"
               :href="route('billing.funds.index')" :active="route().current('billing.funds.index') ||
                 route().current('billing.cards.index') ||
                 route().current('billing.autopay.index')
                 " :class="{
+                  'opacity-50': disabledNavLink === true,
     'mb-5':
       route().current('billing.funds.index') ||
       route().current('billing.cards.index') ||
@@ -1738,62 +1750,71 @@ let appDownloadModal = ref(false);
               </svg>
             </NavLink>
 
-            <div v-if="route().current('billing.funds.index') ||
+            <div  v-if="route().current('billing.funds.index') ||
               route().current('billing.cards.index') ||
               route().current('billing.autopay.index')
               " class="pl-14 text-white text-xs mb-5">
               <ul>
                 <li class="mb-3">
-                  <Link href="/billing/funds" class="inline-flex items-center rounded-t-lg hover:text-custom-green"
+                  <Link :style="{
+                        'pointer-events': disabledNavLink ? 'none' : 'pointer',
+                      }" href="/billing/funds" class="inline-flex items-center rounded-t-lg hover:text-custom-green"
                     :class="{
+                       'opacity-25': disabledNavLink === true,
                       'text-custom-green': route().current('billing.funds.index'),
                     }">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="w-4 h-4 mr-2">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
-                  </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                      stroke="currentColor" class="w-4 h-4 mr-2">
+                      <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
+                    </svg>
 
-                  <span>Add Funds</span>
+                    <span>Add Funds</span>
                   </Link>
                 </li>
 
                 <li class="mb-3">
-                  <Link aria-current="page" class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
+                  <Link :style="{
+                        'pointer-events': disabledNavLink ? 'none' : 'pointer',
+                      }" aria-current="page" class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
                     :class="{
+                       'opacity-25': disabledNavLink === true,
                       'text-custom-green': route().current('billing.autopay.index'),
                     }" href="">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="w-4 h-4 mr-2">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
-                  </svg>
-                  <span>Autopay</span>
-                  <div class="p-2">
-                    <span
-                      class="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">Soon</span>
-                  </div>
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-4 h-4 mr-2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                      </svg>
+                      <span>Autopay</span>
+                      <div class="p-2">
+                        <span
+                          class="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">Soon</span>
+                      </div>
                   </Link>
                 </li>
 
                 <li>
-                  <Link href="/billing/cards" class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
+                  <Link :style="{
+                        'pointer-events': disabledNavLink ? 'none' : 'pointer',
+                      }" href="/billing/cards" class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
                     :class="{
+                       'opacity-25': disabledNavLink === true,
                       'text-custom-green': route().current('billing.cards.index'),
                     }" aria-current="page">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="w-4 h-4 mr-2">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
-                  </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                      stroke="currentColor" class="w-4 h-4 mr-2">
+                      <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
+                    </svg>
 
-                  <span>Saved Cards</span>
+                    <span>Saved Cards</span>
                   </Link>
                 </li>
               </ul>
             </div>
 
-            <NavLink class="mb-10 gap-2"   :href="route('calls.index')" :active="route().current('calls.index')">
+            <NavLink :class="{ 'opacity-50': disabledNavLink === true }" :disabledNavLink="disabledNavLink" class="mb-10 gap-2"   :href="route('calls.index')" :active="route().current('calls.index')">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="w-8 h-8 mr-2">
                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -1803,7 +1824,7 @@ let appDownloadModal = ref(false);
               Call Reporting
             </NavLink>
 
-            <NavLink v-if="$page.props.auth.role === 'internal-agent'"   class="mb-10 gap-2" :href="route('additional-files.index')"
+            <NavLink :class="{ 'opacity-50': disabledNavLink === true }" :disabledNavLink="disabledNavLink" v-if="$page.props.auth.role === 'internal-agent'"   class="mb-10 gap-2" :href="route('additional-files.index')"
               :active="route().current('additional-files.index')">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="w-8 h-8 mr-2">
@@ -1814,7 +1835,7 @@ let appDownloadModal = ref(false);
               Additional Files
             </NavLink>
 
-            <NavLink
+            <NavLink :class="{ 'opacity-50': disabledNavLink === true }" :disabledNavLink="disabledNavLink"
               class="mb-10 gap-2" :href="route('support.index')" :active="route().current('support.index')">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" style="height: 38px; width: 38px">
@@ -1825,7 +1846,7 @@ let appDownloadModal = ref(false);
               Support
             </NavLink>
 
-            <NavLink v-if="$page.props.auth.role === 'internal-agent'"   class="mb-10 gap-2" :href="route('promotion-guidelines.show')"
+            <NavLink :class="{ 'opacity-50': disabledNavLink === true }" :disabledNavLink="disabledNavLink" v-if="$page.props.auth.role === 'internal-agent'"   class="mb-10 gap-2" :href="route('promotion-guidelines.show')"
               :active="route().current('promotion-guidelines.show')">
               <svg class="w-8 h-8 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                 stroke-width="1.5" stroke="currentColor">
@@ -1836,12 +1857,13 @@ let appDownloadModal = ref(false);
               Promotion Guidelines
             </NavLink>
 
-            <NavLink  class="mb-10 gap-2" id="billing-nav-link"
+            <NavLink  :disabledNavLink="disabledNavLink"  class="mb-10 gap-2" id="billing-nav-link"
               :href="route('activities.index')" :active="route().current('activities.index') ||
                 route().current('transactions.index') ||
                 route().current('profile.view') ||
                 route().current('profile.edit')
                 " :class="{
+                  'opacity-50': disabledNavLink === true,
     'mb-5':
       route().current('activities.index') ||
       route().current('transactions.index') ||
@@ -2137,8 +2159,8 @@ let appDownloadModal = ref(false);
       <DispositionModal :client="dispositionClient" @close="showUpdateDispositionForLastClient = false" />
     </Modal>
 
-    <Modal :show="showLowBalanceModal" :closeable="true" @close="showLowBalanceModal = false">
-      <div class="bg-white py-6 flex justify-center">
+    <!-- <Modal :show="showLowBalanceModal" :closeable="true" @close="showLowBalanceModal = false">
+      <div class="bg-white py-6 flex items-center justify-center ">
         <div class="flex flex-col justify-center">
           <h4 class="mb-4 text-lg">
             You Just Ran Out Of Credits. Schedule a one on one review to continue.
@@ -2148,6 +2170,11 @@ let appDownloadModal = ref(false);
           </div>
         </div>
       </div>
-    </Modal>
+    </Modal> -->
+    <LowBalanceModal v-if="showLowBalanceModal" :showLowBalanceModal="showLowBalanceModal" @onLowBalanceModalClick="onLowBalanceModalClick" @close="showLowBalanceModal = false" />
+    
+
+    
+
   </div>
 </template>

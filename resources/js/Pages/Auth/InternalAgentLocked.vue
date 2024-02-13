@@ -10,7 +10,7 @@ let page = usePage();
 
 let StepsModal = ref(true)
 
-let basicTrainingModal = ref(false)
+let basicTrainingModal = ref(true)
 // if (page.props.auth.user.basic_training === 1) {
 //     basicTrainingModal.value = false
 //     router.visit("/training")
