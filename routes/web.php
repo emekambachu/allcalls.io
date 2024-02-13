@@ -277,5 +277,5 @@ Route::post('/web-api/calltype/{callType}/offline', [CallTypeStatusController::c
 Route::get('/twilio/forward/ringba', [TwilioForwardingController::class, 'ringba']);
 Route::get('/twilio/forward/retreaver', [TwilioForwardingController::class, 'retreaver']);
 
-Route::post('/web-api/browser-device', [BrowserDeviceController::class, 'store'])->middlewaare(['auth', 'verified', 'registration-step-check']);
+Route::post('/web-api/browser-device', [BrowserDeviceController::class, 'store'])->middleware(['auth', 'verified', 'registration-step-check']);
 Route::post('/web-api/call-device-actions', [CallDeviceActionsController::class, 'store'])->middleware(['auth', 'verified', 'registration-step-check']);
