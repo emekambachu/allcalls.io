@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Mail\EquisApiError;
 use App\Models\EquisDuplicate;
 use App\Models\State;
 use Carbon\Carbon;
@@ -14,6 +13,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\EquisApiError;
 
 class EquisAPIJob implements ShouldQueue
 {
