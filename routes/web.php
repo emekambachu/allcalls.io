@@ -28,6 +28,7 @@ use App\Http\Controllers\CallTypeBidsController;
 use App\Http\Controllers\LatestClientController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TransactionsController;
+use App\Http\Controllers\BrowserDeviceController;
 use App\Http\Controllers\UsageActivityController;
 use App\Http\Controllers\WebAPIClientsController;
 use App\Http\Controllers\CallClientInfoController;
@@ -38,6 +39,7 @@ use App\Http\Controllers\AdditionalFilesController;
 use App\Http\Controllers\AgentStatusDocsController;
 use App\Http\Controllers\FEAgentPingDocsController;
 use App\Http\Controllers\TwilioForwardingController;
+use App\Http\Controllers\CallDeviceActionsController;
 use App\Http\Controllers\FEAgentStatusDocsController;
 use App\Http\Controllers\NotificationGroupController;
 use App\Http\Controllers\TwilioDeviceTokenController;
@@ -88,7 +90,7 @@ Route::middleware(['auth', 'verified', 'notBanned'])->group(function () {
 });
 
 
-Route::middleware(['auth', 'verified', 'registration-step-check', 'notBanned', 'isLocked', ])->group(function () {
+Route::middleware(['auth', 'verified', 'registration-step-check', 'notBanned', 'isLocked',])->group(function () {
     //User Routes
     Route::get('/dashboard', [DashboardController::class, 'show'])->name('dashboard');
     Route::get('/transactions', [TransactionsController::class, 'index'])->name('transactions.index');
@@ -123,7 +125,7 @@ Route::middleware(['auth', 'verified', 'registration-step-check', 'notBanned', '
     Route::get('/call-client-info', [CallClientInfoController::class, 'show']);
 });
 
-Route::middleware(['auth', 'notBanned', ])->group(function () {
+Route::middleware(['auth', 'notBanned',])->group(function () {
     Route::get('/profile/view', [ProfileController::class, 'view'])->name('profile.view');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
@@ -150,8 +152,8 @@ Route::get('/device/incoming', function () {
     return view('incoming');
 })->middleware('auth');
 
-Route::get('/clients', [ClientsController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check', 'isLocked', ])->name('clients.index');
-Route::patch('/clients/{client}', [ClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check', 'isLocked', ])->name('clients.update');
+Route::get('/clients', [ClientsController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check', 'isLocked',])->name('clients.index');
+Route::patch('/clients/{client}', [ClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check', 'isLocked',])->name('clients.update');
 Route::patch('/web-api/clients/{client}', [WebAPIClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.web-api.update');
 Route::post('/web-api/clients/{client}/disposition', [WebAPIClientsController::class, 'updateDispositionOnly'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.web-api.update-disposition-only');
 Route::patch('/web-api/calls/{uniqueCallId}/user-response', [CallUserResponseAPIController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check']);
@@ -274,3 +276,6 @@ Route::post('/web-api/calltype/{callType}/offline', [CallTypeStatusController::c
 
 Route::get('/twilio/forward/ringba', [TwilioForwardingController::class, 'ringba']);
 Route::get('/twilio/forward/retreaver', [TwilioForwardingController::class, 'retreaver']);
+
+Route::post('/web-api/browser-device', [BrowserDeviceController::class, 'store'])->middlewaare(['auth', 'verified', 'registration-step-check']);
+Route::post('/web-api/call-device-actions', [CallDeviceActionsController::class, 'store'])->middleware(['auth', 'verified', 'registration-step-check']);
