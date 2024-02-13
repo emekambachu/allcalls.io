@@ -280,6 +280,9 @@ let rejectCall = () => {
   if (call) {
     call.reject();
     showRinging.value = false;
+
+    logDeviceAction("rejected");
+
     saveUserResponseTime();
     console.log("Should update now");
   } else {
