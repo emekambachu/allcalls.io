@@ -40,7 +40,7 @@ class CallDeviceActionsController extends Controller
             'action' => 'required|string|max:255',
         ]);
 
-        $call = Call::whereUniqueCallId($validatedData['call_uniuqe_id'])->firstOrFail();
+        $call = Call::whereUniqueCallId($validatedData['call_unique_id'])->firstOrFail();
         $device = Device::findOrFail($validatedData['device_id']);
 
         if ($request->user()->id !== $call->user_id && $request->user()->id !== $device->user_id) {
