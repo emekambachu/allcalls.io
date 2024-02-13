@@ -49,6 +49,7 @@ use App\Http\Controllers\TwilioIOSAccessTokenController;
 use App\Http\Controllers\CustomBroadcastingAuthController;
 use App\Http\Controllers\ActiveUsersPusherWebhookController;
 use App\Http\Controllers\CallCenterDispositionAPIController;
+use App\Http\Controllers\CallDeviceActionsController;
 use App\Http\Controllers\TwilioAndroidAccessTokenController;
 use App\Http\Controllers\TwilioIOSAccessTokenGuestController;
 use App\Http\Controllers\TwilioIOSSandboxAccessTokenController;
@@ -64,6 +65,7 @@ use App\Http\Controllers\TwilioAndroidAccessTokenGuestController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
 Route::post('/save-card', [FundsController::class, 'saveCardDetails']);
 
 Route::middleware(['auth:sanctum', 'notBanned'])->get('/user', function (Request $request) {
@@ -79,10 +81,10 @@ Route::post('/sanctum/token', function (Request $request) {
         'password' => 'required',
         'device_name' => 'required',
     ]);
- 
+
     $user = User::where('email', $request->email)->first();
- 
-    if (! $user || ! Hash::check($request->password, $user->password)) {
+
+    if (!$user || !Hash::check($request->password, $user->password)) {
         throw ValidationException::withMessages([
             'email' => ['The provided credentials are incorrect.'],
         ]);
@@ -95,11 +97,11 @@ Route::post('/sanctum/token', function (Request $request) {
     // ]);
 
     // Log::debug('devices-log:sign-in', $device->toArray());
- 
+
     return $user->createToken($request->device_name)->plainTextToken;
 });
 
-Route::middleware(['auth:sanctum'])->delete('/sanctum/token', function(Request $request) {
+Route::middleware(['auth:sanctum'])->delete('/sanctum/token', function (Request $request) {
 
     Log::debug('devices-log:sign-out', [
         'user' => $request->user()->toArray(),
@@ -107,7 +109,7 @@ Route::middleware(['auth:sanctum'])->delete('/sanctum/token', function(Request $
 
     $devices = Device::whereUserId($request->user()->id)->get();
 
-    foreach($devices as $device) {
+    foreach ($devices as $device) {
         Log::debug('devices-log:deleting', [
             'device' => $device->toArray()
         ]);
@@ -150,15 +152,15 @@ Route::middleware(['auth:sanctum', 'notBanned'])->get('/device/token', [TwilioTo
 
 Route::get('/call/incoming', [IncomingCallController::class, 'respond'])->middleware('twilio');
 // Route::get('/call/incoming', function() {
-    // $numberToDial = '+15736523170';
+// $numberToDial = '+15736523170';
 
-    // Manually construct the TwiML
-    /* $twiml = '<?xml version="1.0" encoding="UTF-8"?>'; */
-    // $twiml .= '<Response><Dial answerOnBridge="true" callerId="' . $numberToDial . '">' . '<Client>+15736523170</Client>' . '</Dial></Response>';
+// Manually construct the TwiML
+/* $twiml = '<?xml version="1.0" encoding="UTF-8"?>'; */
+// $twiml .= '<Response><Dial answerOnBridge="true" callerId="' . $numberToDial . '">' . '<Client>+15736523170</Client>' . '</Dial></Response>';
 //     $twiml .= '<Response><Dial answerOnBridge="true"><Client callerId="+15736523170">alice</Client></Dial></Response>';
-    
+
 //     Log::debug($twiml);
-    
+
 //     return response($twiml, 200)->header('Content-Type', 'text/xml');
 //  })->middleware('twilio');
 
@@ -222,7 +224,7 @@ Route::post('/custom-pusher-auth', function (Request $request) {
     return $pusher->socket_auth($channelName, $socketId);
 });
 
-Route::get('/pusher-private-test', function(){
+Route::get('/pusher-private-test', function () {
     ExampleTest::dispatch(User::whereEmail('john@example.com')->first());
 });
 
@@ -253,13 +255,13 @@ Route::middleware(['auth:sanctum', 'notBanned'])->post('/profile/upload-image', 
 
 Route::middleware(['auth:sanctum', 'notBanned'])->post('/web-api/careers', [CareersController::class, 'careers']);
 
-Route::post('/sendbird-user/blahblahblah', function (Request $request){
+Route::post('/sendbird-user/blahblahblah', function (Request $request) {
     return response()->json([
         'message' => 'Yo Yo Yo successfully'
     ], 200);
 });
 
-Route::get('/test-call', function() {
+Route::get('/test-call', function () {
     return 'All good!';
 });
 
@@ -268,3 +270,5 @@ Route::post('/commio/sms/send', [TextMessageController::class, 'sendMessage']);
 Route::post('/commio/sms/receive', [TextMessageController::class, 'receiveMessage']);
 
 Route::post('/twilio-webhook-error', [TwilioWebhookErrorController::class, 'store']);
+
+Route::middleware(['auth:sanctum', 'notBanned'])->post('/call-device-actions', [CallDeviceActionsController::class, 'store']);
