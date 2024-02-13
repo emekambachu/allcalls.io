@@ -40,9 +40,20 @@ let props = defineProps({
 
 let columns = ref([
     {
+        // using serial number instead of ID for sorting purposes
+        label: "SN",
+        name: "serial_number",
+        visible: true,
+        sortable: true,
+        render(call) {
+            return call.serial_number;
+        },
+    },
+
+    {
         label: "ID",
         name: "id",
-        visible: true,
+        visible: false,
         sortable: true,
         render(call) {
           return call.id;
@@ -135,7 +146,7 @@ let columns = ref([
 
     {
         label: "Publisher Name",
-        columnMethod: "getPublisherNameColumn",
+        name: "publisher_name",
         visible: true,
         sortable: true,
         render(call) {
@@ -145,7 +156,7 @@ let columns = ref([
 
     {
         label: "Pub ID",
-        columnMethod: "getPublisherIdColumn",
+        name: "publisher_id",
         visible: true,
         sortable: true,
         render(call) {
@@ -176,6 +187,16 @@ let columns = ref([
         sortable: false,
         render(call) {
             return call.call_type.type;
+        },
+    },
+
+    {
+        label: "Recording URL",
+        name: "recording_url",
+        visible: true,
+        sortable: false,
+        render(call) {
+            return call.recording_url;
         },
     },
 
@@ -214,7 +235,7 @@ let renderColumn = (column, call) => {
 let callsPaginator = ref(null);
 let loadedCalls = ref([]);
 let sortColumn = ref(null);
-let sortDirection = ref("asc");
+let sortDirection = ref("desc");
 let loading = ref(false);
 let currentPage = ref(1);
 const getTotalCalls = ref(props.totalCalls);
@@ -372,6 +393,27 @@ let exportCSV = () => {
   // Cleaning up
   document.body.removeChild(link);
 };
+
+// export to be sent to backend
+const exportSearchResults = computed(() => {
+    return {
+        totalCalls: getTotalCallResults.value,
+        totalRevenue: getTotalRevenueResults.value,
+        columns: columns.value.reduce((arr, col) => {
+            if (col.visible === true) {
+                arr.push({label: col.label, name: col.name});
+            }
+            return arr;
+        }, []),
+
+        // columns: columns.value.reduce((arr, col) => {
+        //     if (col.visible === true) {
+        //         arr.push(col.label);
+        //     }
+        //     return arr;
+        // }, []),
+    };
+})
 
 let currentlyPlayingAudio = ref(null);
 let currentlyPlayingAudioCallId = ref(null);
@@ -574,6 +616,10 @@ const applyCallFiltersToSummary = () => {
             }
         });
     }
+
+    // Hide filter after displaying results
+    dateFilterFrom.value = false;
+    dateFilterTo.value = false;
 }
 
 const removeFiltersForSummary = () => {
@@ -625,10 +671,6 @@ let applyDateFilter = async () => {
 
   await fetchCalls(true);
   applyCallFiltersToSummary();
-
-  // Hide filter after displaying results
-  dateFilterFrom.value = null;
-  dateFilterTo.value = null;
 }
 
 onMounted(() => {
@@ -828,8 +870,8 @@ function formatDate(date) {
                   <button
                       class="inline-flex items-center px-4 py-3 border rounded-md font-semibold text-md uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 hover:bg-white hover:text-custom-blue"
                       :class="{
-              'border-transparent text-gray-900 bg-gray-100 hover:drop-shadow-2xl ': true,
-            }"
+                          'border-transparent text-gray-900 bg-gray-100 hover:drop-shadow-2xl ': true,
+                        }"
                       :disabled="disabled"
                       @click.prevent="showNewFilterModal = false"
                   >
@@ -1031,13 +1073,22 @@ function formatDate(date) {
                   </PopoverPanel>
                 </Popover>
 
-                <button
-                  type="button"
-                  class="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200"
-                  @click.prevent="exportCSV"
-                >
-                  Export
-                </button>
+<!--                <button-->
+<!--                  type="button"-->
+<!--                  class="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200"-->
+<!--                  -->
+<!--                  @click.prevent="exportCSV"-->
+<!--                >-->
+<!--                  Export-->
+<!--                </button>-->
+
+                  <a :href="'/admin/calls/export/'+JSON.stringify(exportSearchResults)">
+                      <button
+                          type="button"
+                          class="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200">
+                          Export
+                      </button>
+                  </a>
 
                 <!-- <Popover class="relative">
                   <PopoverButton>
@@ -1057,6 +1108,7 @@ function formatDate(date) {
             </div>
 
           </div>
+
           <div class="overflow-x-auto">
             <table class="w-full text-sm text-left text-gray-500" style="min-height: 50px;">
               <thead class="text-xs text-gray-700 uppercase bg-gray-50">
@@ -1191,6 +1243,7 @@ function formatDate(date) {
               </button>
             </div>
           </div>
+
         </div>
       </div>
     </section>

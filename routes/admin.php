@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ActiveUsersController;
 use App\Http\Controllers\Admin\CallsController;
 use App\Http\Controllers\WebCallsAPIController;
@@ -22,6 +21,7 @@ use App\Http\Controllers\Admin\AvailableNumberController;
 use App\Http\Controllers\AdminAvaialbleNumbersController;
 use App\Http\Controllers\Admin\LegalQuestionPdfController;
 use App\Http\Controllers\AvailableNumberReleaseController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,7 +73,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::post('/agent', [InternalAgentController::class, 'store'])->name('admin.agent.store');
 
     Route::post('/agent/{id}', [InternalAgentController::class, 'update'])->name('admin.agent.update');
-    
+
     Route::post('/update-training-status', [InternalAgentController::class, 'UpdateTrainingStatus'])->name('admin.update.training.status');
 
     Route::get('/agent/detail/{id}', [InternalAgentController::class, 'show'])->name('admin.agent.detail');
@@ -124,6 +124,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     //Calls
     Route::get('/calls', [CallsController::class, 'index'])->name('admin.calls.index');
     Route::get('/calls/new', [CallsController::class, 'indexNew'])->name('admin.calls.index-new');
+    Route::get('/calls/export/{export}', [CallsController::class,'exportCalls'])->name('admin.calls.export');
 
     Route::get('/notifications', [AdminNotificationsController::class, 'create'])->name('admin.notifications.create');
 
