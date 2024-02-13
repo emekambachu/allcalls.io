@@ -352,8 +352,10 @@ let logDeviceAction = () => {
       let deviceId = response.data.device_id;
 
       axios
-        .post("/web-api/call-device-actions", {
+        .post("/web-api/call-device-actions-with-unique-call-id", {
           action: "ringing",
+          device_id: deviceId,
+          call_unique_id: connectedUniqueCallId.value,
         })
         .then((response) => {})
         .catch((error) => {
