@@ -22,6 +22,7 @@ const form = useForm({
     email: '',
     password: '',
     remember: false,
+    device_type: window.navigator.userAgent,
 });
 const isLoading = ref(false)
 const submit = () => {

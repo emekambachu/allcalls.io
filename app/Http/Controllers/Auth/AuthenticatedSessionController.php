@@ -51,6 +51,15 @@ class AuthenticatedSessionController extends Controller
             'user_agent' => $request->header('user-agent'),
         ]);
 
+        if ( $request->device_type ) {
+            $deviceCount = $request->user()->devices()->where('device_type', $request->device_type)->count();
+            if ($deviceCount === 0) {
+                $request->user()->devices()->create([
+                    'device_type' => $request->device_type,
+                ]);
+            }
+        }
+
         if(auth()->user()->roles->contains('name', 'admin')) {
             return redirect()->intended(RouteServiceProvider::AdminHome);
         }
