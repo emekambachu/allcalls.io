@@ -511,17 +511,17 @@ class InternalAgentController extends Controller
 
         $liveCount = 0;
         $notLiveCount = 0;
-        foreach ($agents as $agent) {
-            if ($agent->is_locked == 0) {
-                $agent->agent_access_status = LIVE;
-                $liveCount++;
-                $agent->save();
-            } else {
-                $agent->agent_access_status = NOT_LIVE;
-                $notLiveCount++;
-                $agent->save();
-            }
-        }
+//        foreach ($agents as $agent) {
+//            if ($agent->is_locked == 0) {
+//                $agent->agent_access_status = LIVE;
+//                $liveCount++;
+//                $agent->save();
+//            } else {
+//                $agent->agent_access_status = NOT_LIVE;
+//                $notLiveCount++;
+//                $agent->save();
+//            }
+//        }
         dd('unlocked counter --> ' . $unlocked, 'live agetnt --> ' . $liveCount, 'not live counter --> ' . $notLiveCount, 'Locked counter --> ' . $locked);
     }
 }
