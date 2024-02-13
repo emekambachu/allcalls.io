@@ -47,7 +47,11 @@ class CallDeviceActionsController extends Controller
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        $callDeviceAction = CallDeviceAction::create($validatedData);
+        $callDeviceAction = CallDeviceAction::create([
+            'call_id' => $call->id,
+            'device_id' => $device->id,
+            'action' => $validatedData['action'],
+        ]);
 
         return [
             'call_device_action' => $callDeviceAction
