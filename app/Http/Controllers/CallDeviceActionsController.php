@@ -35,7 +35,7 @@ class CallDeviceActionsController extends Controller
     public function storeWithUniqueCallId(Request $request)
     {
         $validatedData = $request->validate([
-            'call_unique_id' => 'required|integer',
+            'call_unique_id' => 'required|string',
             'device_id' => 'required|integer|exists:devices,id',
             'action' => 'required|string|max:255',
         ]);
