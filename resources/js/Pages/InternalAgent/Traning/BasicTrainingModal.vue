@@ -102,12 +102,20 @@ let downloadPdf = (url) => {
               <div>
                 <button
                   :target="videoData.pdf ? '_blank' : ''"
-                  :disabled="!videoData.pdf"
+                  v-if="videoData.pdf"
                   :class="{ 'opacity-50': !videoData.pdf }"
                   @click="downloadPdf(videoData.pdf)"
                   class="px-3 py-2 text-sm cursor-pointer font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
                 >
-                  Download {{ videoData.title }}
+                  Download {{ videoData.title }} PDF
+                </button>
+                <button
+                  :target="videoData.pdf ? '_blank' : ''"
+                  v-if="videoData.recording"
+                  @click="downloadPdf(videoData.recording)"
+                  class="px-3 py-2 text-sm cursor-pointer font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
+                >
+                  Download Recording
                 </button>
 
                 <!-- <a target="_blank" :href="videoData.pdf" 
