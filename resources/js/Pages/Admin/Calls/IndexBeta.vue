@@ -51,12 +51,22 @@ let columns = ref([
     // },
 
     {
+        label: "Agent Name",
+        name: "agent_name",
+        visible: true,
+        sortable: true,
+        render(call) {
+            return call.user !== null ? call.user.first_name+' '+call.user.last_name : '';
+        },
+    },
+
+    {
         label: "ID",
         name: "id",
         visible: false,
         sortable: true,
         render(call) {
-          return call.id;
+            return call.id;
         },
     },
 
@@ -67,16 +77,6 @@ let columns = ref([
         sortable: true,
         render(call) {
             return call.call_taken;
-        },
-    },
-
-    {
-        label: "Agent Name",
-        name: "agent_name",
-        visible: true,
-        sortable: true,
-        render(call) {
-            return call.user !== null ? call.user.first_name+' '+call.user.last_name : '';
         },
     },
 
@@ -458,6 +458,11 @@ let playRecording = (call) => {
   currentlyPlayingAudio.value.play();
   currentlyPlayingAudioCallId.value = call.id;
 
+    console.log("Playing Recording: ",{
+        call_url: call.recording_url,
+        currently_playing: currentlyPlayingAudio.value
+    });
+
   // Assuming audio is your Audio element
   currentlyPlayingAudio.value.addEventListener("ended", () => {
     currentlyPlayingAudio.value.pause();
@@ -471,6 +476,19 @@ let stopPlayingRecording = (call) => {
   currentlyPlayingAudio.value = null;
   currentlyPlayingAudioCallId.value = null;
 };
+
+function fastForwardRecording(seconds) {
+    if (currentlyPlayingAudio && currentlyPlayingAudio.value) {
+        // Check if the desired fast forward time is more than the current time
+        const newTime = currentlyPlayingAudio.value.currentTime + seconds;
+        if (newTime < currentlyPlayingAudio.value.duration) {
+            currentlyPlayingAudio.value.currentTime = newTime;
+        } else {
+            // If the fast forward time exceeds the duration
+            currentlyPlayingAudio.value.currentTime = currentlyPlayingAudio.value.duration;
+        }
+    }
+}
 
 let filters = ref([
 
@@ -651,10 +669,6 @@ const applyCallFiltersToSummary = () => {
             }
         });
     }
-
-    // Hide filter after displaying results
-    dateFilterFrom.value = false;
-    dateFilterTo.value = false;
 }
 
 const removeFiltersForSummary = () => {
@@ -699,13 +713,14 @@ let clearDateFilter = () => {
   removeFiltersForSummary();
 }
 
-let applyDateFilter = async () => {
+let applyDateFilter = async (close) => {
 
   console.log("Date Filter From: ", dateFilterFrom.value);
   console.log("Date Filter To: ", dateFilterTo.value);
 
   await fetchCalls(true);
   applyCallFiltersToSummary();
+  close();
 }
 
 onMounted(() => {
@@ -713,7 +728,7 @@ onMounted(() => {
 });
 
 
-let applyDatePreset = label => {
+let applyDatePreset = (label) => {
   const today = new Date();
   let from, to;
 
@@ -779,7 +794,7 @@ function formatDate(date) {
                   </button>
               </PopoverButton>
 
-              <PopoverPanel class="absolute z-10">
+              <PopoverPanel class="absolute z-10" v-slot="{ close }">
                   <div class="border border-gray-100 p-3 shadow bg-gray-50 mt-2">
 
                       <div class="flex items-center justify-between">
@@ -817,7 +832,7 @@ function formatDate(date) {
                           Past 30 Days
                       </div>
 
-                      <PrimaryButton @click.prevent="applyDateFilter"
+                      <PrimaryButton @click.prevent="applyDateFilter(close)"
                                      class="w-full text-center flex justify-center text-md mb-4">Apply</PrimaryButton>
 
                       <button class="w-full text-center flex justify-center items-center text-md px-4 py-3 border rounded-md font-semibold text-md uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 hover:bg-white hover:text-custom-blue"
@@ -830,6 +845,7 @@ function formatDate(date) {
                   </div>
               </PopoverPanel>
           </Popover>
+
           <div
               v-for="(filter, index) in appliedFilters"
               :key="filter.name"
