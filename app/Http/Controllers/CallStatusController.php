@@ -124,16 +124,27 @@ class CallStatusController extends Controller
 
                 // Check the difference in seconds
                 $elapsedSeconds = $now->getTimestamp() - $createdAt->getTimestamp();
-                Log::debug($elapsedSeconds);
+                Log::debug('Ringing Duration is: ' . $elapsedSeconds);
+
+                // Calculate the difference in milliseconds
+                $nowMicro = microtime(true);
+                $createdMicro = strtotime($createdAt->format('Y-m-d H:i:s.u'));
+                $elapsedMilliseconds = round(($nowMicro - $createdMicro) * 1000);
+
+                // Log the elapsed time in milliseconds
+                Log::debug('Ringing Duration in milliseconds: ' . $elapsedMilliseconds);
+                
                 if ($elapsedSeconds >= 20) {
                     // Dispatch MissedCallEvent if the elapsed time is 20 seconds or more
                     Log::debug("Ringing duration is EQUAL to or MORE than 20 seconds, dispatching MissedCallEvent...");
                     MissedCallEvent::dispatch($user);
                     $user->notify(new MissedCall());
                     $user->notify(new FundsDeducted(5));
+                
                 } elseif ($elapsedSeconds == 0) {
                     Log::debug("Ringing duration is 0 [no-answer webhook came in immediately], dispatching MissedCallEvent...");
                     MissedCallEvent::dispatch($user);
+                
                 } else {
                     Log::debug("Ringing duration is LESS than 20 seconds, NOT dispatching MissedCallEvent, Break");
                 }
