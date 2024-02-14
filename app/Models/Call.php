@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Client;
 use DateTimeInterface;
 use App\Models\CallType;
+use App\Models\CallDeviceAction;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Database\Eloquent\Model;
@@ -94,8 +95,8 @@ class Call extends Model
     public function devices()
     {
         return $this->belongsToMany(Device::class, 'call_device_actions')
-                    ->withPivot('action')
-                    ->withTimestamps();
+            ->withPivot('action')
+            ->withTimestamps();
     }
 
     /**
@@ -314,5 +315,10 @@ class Call extends Model
             ]);
             return null;
         }
+    }
+
+    public function deviceActions()
+    {
+        return $this->hasMany(CallDeviceAction::class);
     }
 }
