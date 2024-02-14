@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class AdminCallLogsController extends Controller
 {
-    public function index(Request $request, Call $call)
+    public function index(Call $call)
     {
         $deviceLogs = $call->deviceActions()->with('device')->get();
 
