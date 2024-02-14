@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CallsController;
 use App\Http\Controllers\WebCallsAPIController;
 use App\Http\Controllers\AgentInvitesController;
 use App\Http\Controllers\Admin\ClientsController;
+use App\Http\Controllers\AdminCallLogsController;
 use App\Http\Controllers\AdminPoliciesController;
 use App\Http\Controllers\PublisherInfoController;
 use App\Http\Controllers\Admin\CustomerController;
