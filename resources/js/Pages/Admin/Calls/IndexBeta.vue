@@ -676,17 +676,17 @@ function formatDate(date) {
 }
 
 
-let showLogsForCall = ref(null);
+let showLogsForCallId = ref(null);
+let showLogsForCallModal = ref(false);
 let openDetailedLogs = callId => {
-  showLogsForCall.value = callId;
+  showLogsForCallId.value = callId;
+  showLogsForCallModal.value = true;
 }
-
 </script>
 
 <template>
   <Head title="Calls" />
   <AuthenticatedLayout>
-
       <div class="pt-14 px-16 flex items-center mb-2">
 
           <Popover class="relative mr-2">
@@ -772,6 +772,15 @@ let openDetailedLogs = callId => {
               + Add Filter
           </button>
       </div>
+
+
+      <Modal
+        :show="showLogsForCallModal"
+        @close="showLogsForCallModal = false; showLogsForCallId = null"
+        :closeable="true"
+      >
+        <CallLogs :callId="showLogsForCallId" />
+      </Modal>
 
       <Modal
           :show="showNewFilterModal"
