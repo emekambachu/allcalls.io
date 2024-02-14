@@ -144,6 +144,7 @@ class CallStatusController extends Controller
                 } elseif ($elapsedSeconds == 0) {
                     Log::debug("Ringing duration is 0 [no-answer webhook came in immediately], dispatching MissedCallEvent...");
                     MissedCallEvent::dispatch($user);
+                    $user->notify(new UserOffline());
                 
                 } else {
                     Log::debug("Ringing duration is LESS than 20 seconds, NOT dispatching MissedCallEvent, Break");
