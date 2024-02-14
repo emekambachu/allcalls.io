@@ -39,16 +39,16 @@ let props = defineProps({
 });
 
 let columns = ref([
-    {
-        // using serial number instead of ID for sorting purposes
-        label: "SN",
-        name: "serial_number",
-        visible: true,
-        sortable: true,
-        render(call) {
-            return call.serial_number;
-        },
-    },
+    // {
+    //     // using serial number instead of ID for sorting purposes
+    //     label: "SN",
+    //     name: "serial_number",
+    //     visible: true,
+    //     sortable: true,
+    //     render(call) {
+    //         return call.serial_number;
+    //     },
+    // },
 
     {
         label: "ID",
@@ -242,9 +242,13 @@ const getTotalCalls = ref(props.totalCalls);
 const getTotalRevenue = ref(props.totalRevenue);
 const getTotalCallResults = ref(0);
 const getTotalRevenueResults = ref(0);
+const paginate = ref({
+    currentPage: currentPage.value,
+    perPage: null,
+});
 
 
-let fetchCalls = async (replace = false) => {
+let fetchCalls = async (replace = false, per_page = null) => {
   let url = "/admin/web-api/calls?page=" + currentPage.value;
 
   if (sortColumn.value) {
@@ -258,6 +262,10 @@ let fetchCalls = async (replace = false) => {
   if (dateFilterFrom.value && dateFilterTo.value) {
     url += "&start_date=" + dateFilterFrom.value;
     url += "&end_date=" + dateFilterTo.value;
+  }
+
+  if(per_page !== null) {
+      url += "&per_page=" + per_page;
   }
 
   // Append filters to the query string
@@ -280,6 +288,14 @@ let fetchCalls = async (replace = false) => {
   getTotalCallResults.value = response.data.total;
   getTotalRevenueResults.value = response.data.total_revenue;
 
+  // keep track of current page and pagination
+  paginate.value.perPage = response.data.per_page;
+  paginate.value.currentPage = currentPage.value;
+  console.log({
+      currentPage: paginate.value.currentPage,
+      perPage: paginate.value.perPage,
+  });
+
   loading.value = false;
   console.log("Loaded Calls: ", loadedCalls.value);
   console.log("Total Call Results: ", getTotalCallResults.value);
@@ -288,8 +304,27 @@ let fetchCalls = async (replace = false) => {
 
 
 let loadMore = async () => {
-  currentPage.value++;
-  await fetchCalls();
+  //currentPage.value++;
+
+   // Reason for this solution: Sorting is done on every load more on the backend and applied to only per_pages records.
+    // therefore it is a bug that causes the records on the table to not be sorted correctly.
+   // Will need to implement a better solution that handles the sorting on the frontend and not backend
+
+   // On every load more, increase per_page by 100, which is the default per_page on the backend
+  let per_page;
+  let new_per_page = parseInt(paginate.value.perPage) + 100;
+    console.log("new_per_page", new_per_page);
+
+  if(getTotalCalls.value > new_per_page){
+      per_page = new_per_page;
+      console.log("per page 1", per_page);
+
+  }else{
+      per_page = getTotalCalls.value;
+      console.log("per page 2: ", per_page);
+  }
+
+  await fetchCalls(true, per_page);
 };
 
 onMounted(() => {});
@@ -307,7 +342,7 @@ let sortByColumn = async (column) => {
     sortDirection.value = "asc";
   }
 
-  await fetchCalls(true);
+  await fetchCalls(true, paginate.value.perPage);
 };
 
 let callsGroupedByUserArray = Object.entries(props.callsGroupedByUser);
@@ -1231,7 +1266,7 @@ function formatDate(date) {
             </table>
 
             <div
-              v-if="callsPaginator && callsPaginator.next_page_url"
+              v-if="(callsPaginator && callsPaginator.next_page_url) || getTotalCalls !== loadedCalls.length"
               class="flex items-center justify-center py-4 mt-4"
             >
               <button

@@ -87,13 +87,13 @@ class WebCallsAPIController extends Controller
             ->whereDate('created_at', '<=', $endDate);
         }
 
-
         Log::debug('Filters: ', [
             'filters' => $filters
         ]);
 
         $allCalls = $query->get();
-        $calls = $query->paginate(100);
+        $perPage = $request->per_page ?? 100;
+        $calls = $query->paginate((int)$perPage);
 
         // For paginated data
         $calls->getCollection()->each(function ($call, $index){
@@ -126,6 +126,7 @@ class WebCallsAPIController extends Controller
             'calls' => $calls,
             'total' => $allCalls->count(),
             'total_revenue' => round((float) $allCalls->sum('amount_spent'), 2),
+            'per_page' => $perPage,
         ];
     }
 

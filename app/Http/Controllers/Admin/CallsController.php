@@ -70,15 +70,6 @@ class CallsController extends Controller
 
     public function indexNew(Request $request): \Inertia\Response
     {
-//        $orderColumn = "id";
-//        $orderBy = "DESC";
-//
-//        if ((isset($request->sortColumn) && $request->sortColumn != '') || (isset($request->sortOrder) && $request->sortOrder != '')) {
-//            $orderColumn = $request->sortColumn;
-//            $orderBy = $request->sortOrder;
-//        }
-
-
         $allCalls = Call::with('user')->get();
         $callsGroupedByUser = $allCalls->groupBy('user_id')->map(function ($calls, $userId) {
             $user = $calls->first()->user; // Assuming each call has a 'user' relation loaded

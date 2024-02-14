@@ -21,13 +21,11 @@ class CallService
         $input = json_decode($export, true, 512, JSON_THROW_ON_ERROR);
         $headers = [
             "Content-type" => "text/csv",
-            "Content-Disposition" => "attachment; filename=pre-diagnostic-user-answers.csv",
+            "Content-Disposition" => "attachment; filename=calls.csv",
             "Pragma" => "no-cache",
             "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
             "Expires" => "0",
         ];
-
-//        dd($allCalls);
 
         return response()->stream(function () use ($input, $allCalls) {
             $file = fopen('php://output', 'wb');
