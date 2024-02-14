@@ -20,8 +20,7 @@ import DispositionModal from "@/Components/DispositionModal.vue";
 let page = usePage();
 
 let showLowBalanceModal = ref(false);
-if (page.props.auth.role !== "admin" && page.props.auth.user.balance < 40 && page.props.auth.user.basic_training == '1' ) {
-  console.log("Display the low balance modal now.");
+if (page.props.auth.role !== "admin" && page.props.auth.user.balance < 40 && page.props.auth.user.basic_training == '1' && page.props.auth.user.agent_access_status === "Live" ) {
   showLowBalanceModal.value = true;
 }
 

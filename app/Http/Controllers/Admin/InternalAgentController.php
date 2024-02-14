@@ -399,6 +399,9 @@ class InternalAgentController extends Controller
             $user = User::where('id', $request->agent_id)->first();
             if ($user) {
                 $user->agent_access_status = $request->agent_access_status;
+                if($request->agent_access_status === LIVE) {
+                    $user->balance = $user->balance + 200;
+                }
                 $user->update();
                 return response()->json([
                     'message' => 'Status updated successfully.',
