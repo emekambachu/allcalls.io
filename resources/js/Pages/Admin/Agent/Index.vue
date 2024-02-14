@@ -368,7 +368,7 @@ let updateUserData = (user) => {
                       </svg>
                     </button>
 
-                    <button
+                    <!-- <button
                       class="ml-2"
                       @click="agent.is_locked !== 0 ? ApproveAgent(agent) : null"
                       v-show="agent.internal_agent_contract && agent.legacy_key === 1"
@@ -389,7 +389,7 @@ let updateUserData = (user) => {
                           d="M4.5 12.75l6 6 9-13.5"
                         />
                       </svg>
-                    </button>
+                    </button> -->
 
                     <a title="View Agent" :href="route('admin.agent.detail', agent.id)"><svg
                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
