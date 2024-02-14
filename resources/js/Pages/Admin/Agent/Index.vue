@@ -368,7 +368,7 @@ let updateUserData = (user) => {
                       </svg>
                     </button>
 
-                    <button
+                    <!-- <button
                       class="ml-2"
                       @click="agent.is_locked !== 0 ? ApproveAgent(agent) : null"
                       v-show="agent.internal_agent_contract && agent.legacy_key === 1"
@@ -389,7 +389,7 @@ let updateUserData = (user) => {
                           d="M4.5 12.75l6 6 9-13.5"
                         />
                       </svg>
-                    </button>
+                    </button> -->
 
                     <a title="View Agent" :href="route('admin.agent.detail', agent.id)"><svg
                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -410,7 +410,7 @@ let updateUserData = (user) => {
                       </svg>
                     </button>
 
-                    <!-- <button title="Live Training" @click="liveTraining(agent, agents.current_page)"
+                    <button title="Live Training" @click="liveTraining(agent, agents.current_page)"
                       class="inline-flex items-center mx-2 p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
                       type="button">
                       <svg fill="#000000" class="w-5 h-5" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
@@ -440,7 +440,7 @@ let updateUserData = (user) => {
                           </g>
                         </g>
                       </svg>
-                    </button> -->
+                    </button>
                     <button class="ml-2" @click="progressFun(agent)" title="Progress">
                       <svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512.000000 512.000000"
                         preserveAspectRatio="xMidYMid meet" class="w-5 h-5">

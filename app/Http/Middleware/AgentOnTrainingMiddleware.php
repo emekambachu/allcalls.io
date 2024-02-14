@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class LiveTrainingMiddleware
+class AgentOnTrainingMiddleware
 {
     /**
      * Handle an incoming request.
@@ -15,10 +15,9 @@ class LiveTrainingMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(auth()->user()->roles->contains('name', 'internal-agent') && auth()->user()->agent_access_status === TRAINING && auth()->user()->balance < TRAINING_MINIMUM_AMOUNT) {
-            return redirect()->route('training.lower.balance');  
+        if (auth()->user()->roles->contains('name', 'internal-agent') && auth()->user()->agent_access_status == TRAINING) {
+            return redirect()->route('training.index');
         }
-
         return $next($request);
     }
 }

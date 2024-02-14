@@ -399,6 +399,9 @@ class InternalAgentController extends Controller
             $user = User::where('id', $request->agent_id)->first();
             if ($user) {
                 $user->agent_access_status = $request->agent_access_status;
+                if($request->agent_access_status === LIVE) {
+                    $user->balance = $user->balance + 200;
+                }
                 $user->update();
                 return response()->json([
                     'message' => 'Status updated successfully.',
@@ -511,17 +514,17 @@ class InternalAgentController extends Controller
 
         $liveCount = 0;
         $notLiveCount = 0;
-        foreach ($agents as $agent) {
-            if ($agent->is_locked == 0) {
-                $agent->agent_access_status = LIVE;
-                $liveCount++;
-                $agent->save();
-            } else {
-                $agent->agent_access_status = NOT_LIVE;
-                $notLiveCount++;
-                $agent->save();
-            }
-        }
-        dd('unlocked counter --> ' . $unlocked, 'live agetnt --> ' . $liveCount, 'not live counter --> ' . $notLiveCount, 'Locked counter --> ' . $locked);
+       foreach ($agents as $agent) {
+           if ($agent->is_locked == 0) {
+               $agent->agent_access_status = LIVE;
+               $liveCount++;
+               $agent->save();
+           } else {
+               $agent->agent_access_status = TRAINING;
+               $notLiveCount++;
+               $agent->save();
+           }
+       }
+        dd('unlocked counter --> ' . $unlocked, 'live agetnt --> ' . $liveCount, 'Training counter --> ' . $notLiveCount, 'Locked counter --> ' . $locked);
     }
 }

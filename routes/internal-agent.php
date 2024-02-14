@@ -32,33 +32,23 @@ Route::prefix('internal-agent')->middleware(['auth', 'verified', 'internal-agent
     Route::get('/training-lower-balance', [TrainingController::class, 'trainingLowerBalance'])
     ->name('training.lower.balance')->middleware(['registration-step-check']);
 
+    Route::get('/training', [TrainingController::class, 'index'])->name('training.index')->middleware(['registration-step-check', 'IsBasicTraining']);
 
-    Route::get('/training', [TrainingController::class, 'index'])->name('training.index')->middleware(['registration-step-check']);
-
-
-    // Route::get('/training-locked', function () {
-    //     if(auth()->user()->roles->contains('name', 'internal-agent') && auth()->user()->basic_training) {
-    //         return redirect()->route('training');
-    //     }
-    //     return Inertia::render('Auth/InternalAgentLocked', []);
-    // })->name('training.locked');
-
-
-    Route::get('/agent-agency', [MyAgencyController::class, 'index'])->name('internal-agent.agent-agency.index')->middleware(['registration-step-check', 'isLocked']);
+    Route::get('/agent-agency', [MyAgencyController::class, 'index'])->name('internal-agent.agent-agency.index')->middleware(['registration-step-check', 'agentOnTraining', 'IsBasicTraining']);
     // get Agent invites
-    Route::get('/get-agent-invites', [MyAgencyController::class, 'GetAgentInvites'])->name('internal-agent.get-agent-invites')->middleware(['registration-step-check', 'isLocked']);
+    Route::get('/get-agent-invites', [MyAgencyController::class, 'GetAgentInvites'])->name('internal-agent.get-agent-invites')->middleware(['registration-step-check', 'agentOnTraining', 'IsBasicTraining']);
 
-    Route::get('/my-agent', [MyAgencyController::class, 'myAgent'])->name('internal-agent.my-agent')->middleware(['registration-step-check', 'isLocked']);
-    Route::post('/agent-invites', [MyAgencyController::class, 'store'])->name('admin.agent-invites.store')->middleware(['registration-step-check', 'isLocked']);
-    Route::delete('/agent-invites/{id}', [MyAgencyController::class, 'destroy'])->name('internal-agent.agent-invites.destroy')->middleware(['registration-step-check', 'isLocked']);
-    Route::get('/reinvite-agent/{id}', [MyAgencyController::class, 'reInvite'])->name('internal-agent.agent.reinvite')->middleware(['registration-step-check', 'isLocked']);
-    Route::get('/agent/tree/{id}', [MyAgencyController::class, 'getAgentTree'])->name('agent.tree')->middleware(['registration-step-check', 'isLocked']);
+    Route::get('/my-agent', [MyAgencyController::class, 'myAgent'])->name('internal-agent.my-agent')->middleware(['registration-step-check', 'agentOnTraining', 'IsBasicTraining']);
+    Route::post('/agent-invites', [MyAgencyController::class, 'store'])->name('admin.agent-invites.store')->middleware(['registration-step-check', 'agentOnTraining', 'IsBasicTraining']);
+    Route::delete('/agent-invites/{id}', [MyAgencyController::class, 'destroy'])->name('internal-agent.agent-invites.destroy')->middleware(['registration-step-check', 'agentOnTraining', 'IsBasicTraining']);
+    Route::get('/reinvite-agent/{id}', [MyAgencyController::class, 'reInvite'])->name('internal-agent.agent.reinvite')->middleware(['registration-step-check', 'agentOnTraining', 'IsBasicTraining']);
+    Route::get('/agent/tree/{id}', [MyAgencyController::class, 'getAgentTree'])->name('agent.tree')->middleware(['registration-step-check', 'agentOnTraining', 'IsBasicTraining']);
 
-    Route::get('/my-business', [MyBusinessController::class, 'index'])->name('agent.my.business')->middleware(['registration-step-check', 'isLocked']);
-    Route::post('/business-by-label', [MyBusinessController::class, 'businessByLabel'])->name('business.bylabel')->middleware(['registration-step-check', 'isLocked']);
-    Route::post('/get-client-by-name', [MyBusinessController::class, 'getClientByName'])->name('getclient.byname')->middleware(['registration-step-check', 'isLocked']);
-    Route::post('/my-business', [MyBusinessController::class, 'store'])->name('agent.my.business.store')->middleware(['registration-step-check', 'isLocked']);
-    Route::get('/download-pdf/{fileName}', [TrainingController::class, 'downloadPdf'])->name('download-pdf')->middleware(['registration-step-check', 'isLocked']);
+    Route::get('/my-business', [MyBusinessController::class, 'index'])->name('agent.my.business')->middleware(['registration-step-check', 'agentOnTraining', 'IsBasicTraining']);
+    Route::post('/business-by-label', [MyBusinessController::class, 'businessByLabel'])->name('business.bylabel')->middleware(['registration-step-check', 'agentOnTraining', 'IsBasicTraining']);
+    Route::post('/get-client-by-name', [MyBusinessController::class, 'getClientByName'])->name('getclient.byname')->middleware(['registration-step-check', 'agentOnTraining', 'IsBasicTraining']);
+    Route::post('/my-business', [MyBusinessController::class, 'store'])->name('agent.my.business.store')->middleware(['registration-step-check', 'agentOnTraining', 'IsBasicTraining']);
+    Route::get('/download-pdf/{fileName}', [TrainingController::class, 'downloadPdf'])->name('download-pdf')->middleware(['registration-step-check', 'agentOnTraining', 'IsBasicTraining']);
 });
 
 Route::middleware(['auth', 'verified', 'internal-agent'])->group(function () {
@@ -68,11 +58,10 @@ Route::middleware(['auth', 'verified', 'internal-agent'])->group(function () {
     Route::get('sign-document/{key?}', [DocusignController::class, 'signDocument'])->name('internal.agent.docusign.sign');
     Route::get('/training-complete/{id}', [TrainingController::class, 'trainingComplete'])->name('training-complete');
 
-    Route::get('/locked', function () {
-        
-        if (auth()->user()->roles->contains('name', 'internal-agent') && !auth()->user()->is_locked) {
+    Route::get('/basic-training', function () {
+        if (auth()->user()->roles->contains('name', 'internal-agent') && auth()->user()->basic_training) {
             return redirect()->route('dashboard');
         }
-        return Inertia::render('Auth/InternalAgentLocked', []);
+        return Inertia::render('InternalAgent/Traning/BasicTraining', []);
     })->name('internal.agent.locked');
 });
