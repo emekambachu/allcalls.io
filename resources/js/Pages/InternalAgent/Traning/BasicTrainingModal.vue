@@ -44,7 +44,6 @@ let downloadPdf = (url) => {
 }
 </style>
 <template>
-  <AuthenticatedLayout>
     <Transition
       name="modal"
       enter-active-class="transition ease-out duration-300 transform"
@@ -129,5 +128,4 @@ let downloadPdf = (url) => {
         </div>
       </div>
     </Transition>
-  </AuthenticatedLayout>
 </template>
