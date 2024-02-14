@@ -17,8 +17,30 @@ onMounted(() => {
 });
 
 function deviceName(device) {
-  return device.device_type + " #" + device.id;
+  const userAgent = device.device_type;
+
+  // Regular expressions for major browser user-agent strings
+  const browserRegex = {
+    'Chrome': /Chrome\/([\d.]+)/,
+    'Safari': /Version\/([\d.]+) Safari/,
+    'Firefox': /Firefox\/([\d.]+)/,
+    'Edge': /Edg(e|\/)([\d.]+)/,
+    'Opera': /OPR\/([\d.]+)/,
+    'IE': /Trident\/.*rv:([\d.]+)/ // For Internet Explorer 11
+  };
+
+  // Check against each browser regex
+  for (const [name, regex] of Object.entries(browserRegex)) {
+    const match = userAgent.match(regex);
+    if (match) {
+      return `${name} ${match[1]}`; // Return the browser name and version number
+    }
+  }
+
+  // If no known browser is matched, return the full user-agent string
+  return userAgent;
 }
+
 
 function formatDateTime(dateTime) {
   const options = {
