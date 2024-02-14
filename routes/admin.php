@@ -122,8 +122,9 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::get('/reinvite-agent/{id}', [AgentInvitesController::class, 'reInvite'])->name('admin.agent.reinvite');
 
     //Calls
-    Route::get('/calls', [CallsController::class, 'index'])->name('admin.calls.index');
-    Route::get('/calls/new', [CallsController::class, 'indexNew'])->name('admin.calls.index-new');
+    // Route::get('/calls', [CallsController::class, 'index'])->name('admin.calls.index');
+    Route::get('/calls', [CallsController::class, 'indexNew'])->name('admin.calls.index');
+    Route::get('/calls/old', [CallsController::class, 'index'])->name('admin.calls.index-old');
 
     Route::get('/notifications', [AdminNotificationsController::class, 'create'])->name('admin.notifications.create');
 
