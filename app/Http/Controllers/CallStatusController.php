@@ -117,7 +117,7 @@ class CallStatusController extends Controller
                 $difference = $now->diff($createdAt);
 
                 // Display the result in a time format.
-                $timeDifference = $difference->format('%y years, %m months, %d days, %h hours, %i minutes, %s seconds');
+                $timeDifference = $difference->format('%h hours, %i minutes, %s seconds');
 
                 // Log the result
                 Log::debug('Time difference: ' . $timeDifference);
@@ -125,7 +125,7 @@ class CallStatusController extends Controller
                 // Check the difference in seconds
                 $elapsedSeconds = $now->getTimestamp() - $createdAt->getTimestamp();
                 Log::debug($elapsedSeconds);
-                if ($elapsedSeconds >= 20) {
+                if ($elapsedSeconds >= 20 || $elapsedSeconds == 0) {
                     // Dispatch MissedCallEvent if the elapsed time is 20 seconds or more
                     Log::debug("Ringing duration is EQUAL to or MORE than 20 seconds, dispatching MissedCallEvent...");
                     MissedCallEvent::dispatch($user);
