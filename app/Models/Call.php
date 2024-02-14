@@ -321,4 +321,12 @@ class Call extends Model
     {
         return $this->hasMany(CallDeviceAction::class);
     }
+
+    public function deviceActionsByDevice()
+    {
+        return $this->deviceActions()
+            ->with('device')
+            ->get()
+            ->groupBy('device_id');
+    }
 }

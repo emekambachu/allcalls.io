@@ -9,11 +9,11 @@ class AdminCallLogsController extends Controller
 {
     public function index(Call $call)
     {
-        $deviceLogs = $call->deviceActions()->with('device')->get();
+        $groupedDeviceLogs = $call->deviceActionsByDevice();
 
         return response()->json([
             'call' => $call,
-            'deviceLogs' => $deviceLogs
+            'groupedDeviceLogs' => $groupedDeviceLogs
         ]);
     }
 }
