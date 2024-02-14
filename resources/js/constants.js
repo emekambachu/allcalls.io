@@ -43,14 +43,14 @@ let basicTrainingSteps = [{
     {
         id: 6,
         video_url: 'https://allcalls-training.s3.amazonaws.com/5)+Training+Call+Recording+1+.m4a',
-        pdf: '',
+        pdf: 'https://allcalls-training.s3.amazonaws.com/5)+Training+Call+Recording+1+.m4a',
         title: 'Taking Calls',
         thumbnail: '/Agent Training/Taking Calls.png'
     },
     {
         id: 7,
         video_url: 'https://allcalls-training.s3.amazonaws.com/5)+Training+call+recording+2.m4a',
-        pdf: '',
+        pdf: 'https://allcalls-training.s3.amazonaws.com/5)+Training+call+recording+2.m4a',
         title: 'Taking Calls ( Part 2 )',
         thumbnail: '/Agent Training/Taking Calls.png'
     },
