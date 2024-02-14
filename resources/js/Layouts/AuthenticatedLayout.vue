@@ -200,6 +200,8 @@ let acceptCall = () => {
     call.accept();
     showRinging.value = false;
 
+    logDeviceAction("accepted");
+
     if (ringingTimeout.value) {
       console.log("Clearing the previous timeout.");
       clearTimeout(ringingTimeout.value);
@@ -278,6 +280,9 @@ let rejectCall = () => {
   if (call) {
     call.reject();
     showRinging.value = false;
+
+    logDeviceAction("rejected");
+
     saveUserResponseTime();
     console.log("Should update now");
   } else {
@@ -312,6 +317,9 @@ let disconnectCall = () => {
     showOngoing.value = false;
     hasSixtySecondsPassed.value = false;
     showUpdateDispositionModal();
+
+    logDeviceAction("hungup");
+
   } else {
     console.log("call not found while disconnecting");
   }
@@ -414,9 +422,6 @@ let setupTwilioDevice = () => {
       showUpdateDispositionModal();
     });
 
-    device.addListener("disconnect", (device) => {
-      console.log("The device is about to disconnect now.");
-    });
 
     device.on("cancel", function () {
       console.log("Incoming call was canceled");
