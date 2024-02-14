@@ -28,6 +28,7 @@ use App\Http\Controllers\CallTypeBidsController;
 use App\Http\Controllers\LatestClientController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TransactionsController;
+use App\Http\Controllers\BrowserDeviceController;
 use App\Http\Controllers\UsageActivityController;
 use App\Http\Controllers\WebAPIClientsController;
 use App\Http\Controllers\CallClientInfoController;
@@ -38,12 +39,14 @@ use App\Http\Controllers\AdditionalFilesController;
 use App\Http\Controllers\AgentStatusDocsController;
 use App\Http\Controllers\FEAgentPingDocsController;
 use App\Http\Controllers\TwilioForwardingController;
+use App\Http\Controllers\CallDeviceActionsController;
 use App\Http\Controllers\FEAgentStatusDocsController;
 use App\Http\Controllers\NotificationGroupController;
 use App\Http\Controllers\TwilioDeviceTokenController;
 use App\Http\Controllers\TwilioDialerTokenController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CallUserResponseAPIController;
+use App\Http\Controllers\DeviceIdByUserAgentController;
 use App\Http\Controllers\PromotionGuidelinesController;
 use App\Http\Controllers\AgentStatusPriceDocsController;
 use App\Http\Controllers\TakeCallsOnlineUsersController;
@@ -274,3 +277,9 @@ Route::post('/web-api/calltype/{callType}/offline', [CallTypeStatusController::c
 
 Route::get('/twilio/forward/ringba', [TwilioForwardingController::class, 'ringba']);
 Route::get('/twilio/forward/retreaver', [TwilioForwardingController::class, 'retreaver']);
+
+// Route::post('/web-api/browser-device', [BrowserDeviceController::class, 'store'])->middleware(['auth', 'verified', 'registration-step-check']);
+
+Route::get('/web-api/get-device-id-by-user-agent', [DeviceIdByUserAgentController::class, 'show'])->middleware(['auth', 'verified', 'registration-step-check']);
+Route::post('/web-api/call-device-actions', [CallDeviceActionsController::class, 'store'])->middleware(['auth', 'verified', 'registration-step-check']);
+Route::post('/web-api/call-device-actions-with-unique-call-id', [CallDeviceActionsController::class, 'storeWithUniqueCallId'])->middleware(['auth', 'verified', 'registration-step-check']);
