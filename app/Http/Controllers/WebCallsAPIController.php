@@ -9,6 +9,7 @@ use App\Services\Base\BaseService;
 use App\Services\Calls\CallService;
 use App\Services\Client\ClientService;
 use App\Services\User\UserService;
+use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
@@ -98,18 +99,15 @@ class WebCallsAPIController extends Controller
         // For paginated data
         $calls->getCollection()->each(function ($call, $index){
             $call->serial_number = $index + 1;
-            if (isset($call->user)) {
-                $call->user_email = $call->user ? $call->user->email : null;
-            } else {
-                $call->user_email = null; // or some default value
-            }
+            $call->user_email = $call->user ? $call->user->email : null;
+            $call->agent_name = $call->user ? $call->user->first_name.' '.$call->user->last_name : '';
             return $call;
         });
 
         // For all data
         $allCalls = $allCalls->transform(function ($call, $index) {
             $call->serial_number = $index + 1;
-            $call->user_email = $call->user ? $call->user->email : null; // Set user email or null
+            $call->user_email = $call->user ? $call->user->email : null;
             $call->agent_name = $call->user ? $call->user->first_name.' '.$call->user->last_name : '';
             $call->disposition = $call->client ? $call->client->status : null;
             $call->revenue = '$'.$call->amount_spent;
@@ -117,13 +115,14 @@ class WebCallsAPIController extends Controller
             return $call;
         });
 
-        // Save collection in session
+        // Save collection in session for search
         Session::put('all_calls', [
             'calls' => $allCalls,
         ]);
 
         return [
             'calls' => $calls,
+            'all_calls' => $allCalls, // Get a better solution for this
             'total' => $allCalls->count(),
             'total_revenue' => round((float) $allCalls->sum('amount_spent'), 2),
             'per_page' => $perPage,
@@ -190,5 +189,17 @@ class WebCallsAPIController extends Controller
         }
 
         $query->where('call_type_id', $callType->id);
+    }
+
+    public function getAutocompleteOptions(Request $request): \Illuminate\Http\JsonResponse
+    {
+        try {
+            $data = $this->call->searchAutocompleteForCalls($request);
+            return response()->json($data);
+
+        }catch (\Exception $e) {
+            return BaseService::tryCatchException($e);
+        }
+
     }
 }

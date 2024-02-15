@@ -239,6 +239,7 @@ let sortColumn = ref(null);
 let sortDirection = ref("desc");
 let loading = ref(false);
 let currentPage = ref(1);
+const getAllCalls = ref([]);
 const getTotalCalls = ref(props.totalCalls);
 const getTotalRevenue = ref(props.totalRevenue);
 const getTotalCallResults = ref(0);
@@ -286,6 +287,7 @@ let fetchCalls = async (replace = false, per_page = null) => {
   }
 
   callsPaginator.value = response.data.calls;
+  getAllCalls.value = response.data.all_calls;
   getTotalCallResults.value = response.data.total;
   getTotalRevenueResults.value = response.data.total_revenue;
 
@@ -314,15 +316,12 @@ let loadMore = async () => {
    // On every load more, increase per_page by 100, which is the default per_page on the backend
   let per_page;
   let new_per_page = parseInt(paginate.value.perPage) + 100;
-    console.log("new_per_page", new_per_page);
 
   if(getTotalCalls.value > new_per_page){
       per_page = new_per_page;
-      console.log("per page 1", per_page);
 
   }else{
       per_page = getTotalCalls.value;
-      console.log("per page 2: ", per_page);
   }
 
   await fetchCalls(true, per_page);
@@ -694,9 +693,7 @@ const removeFiltersForSummary = () => {
 
 let removeFilter = async (index) => {
   appliedFilters.value.splice(index, 1);
-
   removeFiltersForSummary();
-
   await fetchCalls(true);
 }
 
@@ -804,6 +801,7 @@ let addDisposition = (call , index) => {
     disposition.value = 'Select a disposition'
   }
 }
+
 let firstStepErrors = ref({})
 let disposition_loader = ref(false)
 let saveChanges = () => {
@@ -834,15 +832,31 @@ let saveChanges = () => {
   })
 }
 
-const toggleFilterAutocomplete = ref(false);
-const filteredAutocompleteRecords = computed(() => {
+
+// Autocomplete filter selections
+const allowedAutoCompleteFilterNames = ref([
+    "user_email",
+    "agent_name",
+])
+const filterAutoCompleteDropdown = ref(false);
+
+// Check if filter name is allowed for auto complete
+const toggleFilterAutocompleteDropdown = (event, filterName) => {
+    console.log('Filter name: ', filterName);
+    if(allowedAutoCompleteFilterNames.value.includes(filterName)){
+        event.stopPropagation(); // Prevent click from propagating
+        filterAutoCompleteDropdown.value = !filterAutoCompleteDropdown.value;
+    }
+}
+
+const filteredCallRecords = computed(() => {
     if (filterValue.value === '') {
         return [];
     }
     let matches = 0;
-    return loadedCalls.value.filter(call => {
+    return getAllCalls.value.filter(call => {
         if (
-            call.user_email.toLowerCase().includes(filterValue.value.toLowerCase())
+            (call.user_email.toLowerCase().includes(filterValue.value.toLowerCase()) || call.agent_name.toLowerCase().includes(filterValue.value.toLowerCase()))
             && matches < 10
         ) {
             matches++
@@ -850,6 +864,40 @@ const filteredAutocompleteRecords = computed(() => {
         }
     });
 });
+
+const selectFilteredResult = (event, call, filterName) => {
+    if(filterName === 'user_email'){
+        filterValue.value = call.user_email;
+        console.log('Selected value',filterValue.value);
+    }else if(filterName === 'agent_name'){
+        filterValue.value = call.agent_name;
+        console.log('Selected value',filterValue.value);
+    }else{
+        filterValue.value = '';
+        console.log('Selected value',filterValue.value);
+    }
+}
+
+const getAutoCompleteFilterOptions = async (keyword) => {
+    await axios.get(`/web-api/calls/autocomplete`, {
+        headers: {
+            'Accept' : 'application/json',
+        },
+        params: {
+            keyword: keyword
+        }
+    }).then((response) => {
+        if (response.data.success) {
+            console.log(response.data.data);
+
+        } else {
+            console.log(response.data.data);
+        }
+
+    }).catch((error) => {
+        console.log(error);
+    });
+}
 </script>
 
 <template>
@@ -986,11 +1034,45 @@ const filteredAutocompleteRecords = computed(() => {
                   </div>
 
                   <div v-if="inputTypeForTheSelectedFilter === 'text'">
-                      <TextInput class="border-gray-200" v-model="filterValue" type="text" />
+                      <TextInput
+                          class="border-gray-200"
+                          v-model="filterValue"
+                          type="text"
+                          @click="toggleFilterAutocompleteDropdown($event, filterName)"
+                      />
+
+                      <!-- Dropdown for Filtered List -->
+                      <div v-if="filterAutoCompleteDropdown" class="border rounded max-h-60 overflow-y-auto">
+                          <div
+                              v-for="call in filteredCallRecords"
+                              :key="call.id"
+                              class="p-2 hover:bg-gray-100 cursor-pointer dropdown-container"
+                              @click="selectFilteredResult($event, call, filterName)"
+                          >
+                              {{ call.agent_name }}
+                          </div>
+                      </div>
                   </div>
 
                   <div v-if="inputTypeForTheSelectedFilter === 'email'">
-                      <TextInput class="border-gray-200" v-model="filterValue" type="text" />
+                      <TextInput
+                          class="border-gray-200"
+                          v-model="filterValue"
+                          type="text"
+                          @click="toggleFilterAutocompleteDropdown($event, filterName)"
+                      />
+
+                      <!-- Dropdown for Filtered List -->
+                      <div v-if="filterAutoCompleteDropdown" class="border rounded max-h-60 overflow-y-auto">
+                          <div
+                              v-for="call in filteredCallRecords"
+                              :key="call.id"
+                              class="p-2 hover:bg-gray-100 cursor-pointer dropdown-container"
+                              @click="selectFilteredResult($event, call, filterName)"
+                          >
+                              {{ call.user_email }}
+                          </div>
+                      </div>
                   </div>
 
                   <div v-if="inputTypeForTheSelectedFilter === 'select'">
