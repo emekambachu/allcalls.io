@@ -125,6 +125,7 @@ class ClientsController extends Controller
             "zipCode" => $request->zipCode,
             "email" => $request->email,
             "address" => $request->address,
+            "unlocked" => $request->unlocked,
             "dob" => $request->dob,
             "status" => $request->status,
             "state" => $request->state,
