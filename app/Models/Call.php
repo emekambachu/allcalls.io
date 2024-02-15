@@ -258,11 +258,18 @@ class Call extends Model
         if ($response->successful()) {
             $body = json_decode($response->body(), true);
 
-            $inboundCallerId = $body['report']['records'][0]['inboundCallId'] ?? 'Not found';
+            $inboundCallId = $body['report']['records'][0]['inboundCallId'] ?? 'Not found';
             Log::debug('RingbaResponse:Success', [
                 'body' => $response->body(),
-                'inboundCallerId' => $inboundCallerId,
+                'inboundCallId' => $inboundCallId,
             ]);
+
+            $publisherPayout = $this->fetchPublisherPayoutFromRingba($inboundCallId);
+
+            Log::debug('ringba:payout', [
+                'payout' => $publisherPayout,
+            ]);
+
             return $response->json();
         } else {
             Log::debug('RingbaResponse:Error', [
