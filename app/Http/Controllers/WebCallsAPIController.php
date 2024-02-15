@@ -6,25 +6,30 @@ use App\Models\Call;
 use App\Models\User;
 use App\Models\CallType;
 use App\Services\Base\BaseService;
+use App\Services\Calls\CallService;
 use App\Services\Client\ClientService;
 use App\Services\User\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 
 class WebCallsAPIController extends Controller
 {
     protected ClientService $client;
+    protected CallService $call;
     protected UserService $user;
     public function __construct(
         ClientService $client,
-        UserService $user
+        UserService $user,
+        CallService $call
     ){
         $this->client = $client;
         $this->user = $user;
+        $this->call = $call;
     }
 
     protected array $supportedSortColumns = [
-        'id', 'user_id', 'call_taken', 'call_duration_in_seconds', 'hung_up_by',
+        'serial_number', 'id', 'user_id', 'call_taken', 'call_duration_in_seconds', 'hung_up_by',
         'amount_spent', 'recording_url', 'call_type_id', 'created_at', 'updated_at',
         'sid', 'unique_call_id', 'from', 'user_response_time', 'completed_at'
     ];
@@ -42,9 +47,9 @@ class WebCallsAPIController extends Controller
         $query = Call::with('user.roles', 'callType', 'client');
 
         // Apply sorting
-        $sortColumn = $request->input('sort_column', 'id');
+        $sortColumn = $request->input('sort_column', 'created_at');
         $sortDirection = $request->input('sort_direction', 'desc');
-        if (in_array($sortColumn, $this->supportedSortColumns)) {
+        if (in_array($sortColumn, $this->supportedSortColumns, true)) {
             $sortDirection = $sortDirection === 'asc' ? 'asc' : 'desc';
             $query->orderBy($sortColumn, $sortDirection);
         }
@@ -82,29 +87,50 @@ class WebCallsAPIController extends Controller
             ->whereDate('created_at', '<=', $endDate);
         }
 
-
         Log::debug('Filters: ', [
             'filters' => $filters
         ]);
 
-        // Get paginated result
-        $calls = $query->paginate(100);
+        $allCalls = $query->get();
+        $perPage = $request->per_page ?? 100;
+        $calls = $query->paginate((int)$perPage);
 
-        $calls->getCollection()->transform(function ($call) {
+        // For paginated data
+        $calls->getCollection()->each(function ($call, $index){
+            $call->serial_number = $index + 1;
             if (isset($call->user)) {
-                $call->user_email = $call->user->email;
+                $call->user_email = $call->user ? $call->user->email : null;
             } else {
                 $call->user_email = null; // or some default value
             }
             return $call;
         });
 
+        // For all data
+        $allCalls = $allCalls->transform(function ($call, $index) {
+            $call->serial_number = $index + 1;
+            $call->user_email = $call->user ? $call->user->email : null; // Set user email or null
+            $call->agent_name = $call->user ? $call->user->first_name.' '.$call->user->last_name : '';
+            $call->disposition = $call->client ? $call->client->status : null;
+            $call->revenue = '$'.$call->amount_spent;
+            $call->call_type = $call->call_type ? $call->call_type->type : null;
+            return $call;
+        });
+
+        // Save collection in session
+        Session::put('all_calls', [
+            'calls' => $allCalls,
+        ]);
+
         return [
-            'calls' => $calls
+            'calls' => $calls,
+            'total' => $allCalls->count(),
+            'total_revenue' => round((float) $allCalls->sum('amount_spent'), 2),
+            'per_page' => $perPage,
         ];
     }
 
-    protected function applyUserEmailFilter($query, $filter)
+    protected function applyUserEmailFilter($query, $filter): void
     {
         $user = User::where('email', $filter['value'])->first();
         if ($user) {

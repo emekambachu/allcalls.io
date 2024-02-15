@@ -39,17 +39,35 @@ let props = defineProps({
   },
 });
 
-const getTotalCalls = ref(props.totalCalls);
-const getTotalRevenue = ref(props.totalRevenue);
-
 let columns = ref([
+    // {
+    //     // using serial number instead of ID for sorting purposes
+    //     label: "SN",
+    //     name: "serial_number",
+    //     visible: true,
+    //     sortable: true,
+    //     render(call) {
+    //         return call.serial_number;
+    //     },
+    // },
+
     {
-        label: "ID",
-        name: "id",
+        label: "Agent Name",
+        name: "agent_name",
         visible: true,
         sortable: true,
         render(call) {
-          return call.id;
+            return call.user !== null ? call.user.first_name+' '+call.user.last_name : '';
+        },
+    },
+
+    {
+        label: "ID",
+        name: "id",
+        visible: false,
+        sortable: true,
+        render(call) {
+            return call.id;
         },
     },
 
@@ -60,16 +78,6 @@ let columns = ref([
         sortable: true,
         render(call) {
             return call.call_taken;
-        },
-    },
-
-    {
-        label: "Agent Name",
-        name: "agent_name",
-        visible: true,
-        sortable: true,
-        render(call) {
-            return call.user !== null ? call.user.first_name+' '+call.user.last_name : '';
         },
     },
 
@@ -139,7 +147,7 @@ let columns = ref([
 
     {
         label: "Publisher Name",
-        columnMethod: "getPublisherNameColumn",
+        name: "publisher_name",
         visible: true,
         sortable: true,
         render(call) {
@@ -149,7 +157,7 @@ let columns = ref([
 
     {
         label: "Pub ID",
-        columnMethod: "getPublisherIdColumn",
+        name: "publisher_id",
         visible: true,
         sortable: true,
         render(call) {
@@ -180,6 +188,16 @@ let columns = ref([
         sortable: false,
         render(call) {
             return call.call_type.type;
+        },
+    },
+
+    {
+        label: "Recording URL",
+        name: "recording_url",
+        visible: true,
+        sortable: false,
+        render(call) {
+            return call.recording_url;
         },
     },
 
@@ -218,11 +236,20 @@ let renderColumn = (column, call) => {
 let callsPaginator = ref(null);
 let loadedCalls = ref([]);
 let sortColumn = ref(null);
-let sortDirection = ref("asc");
+let sortDirection = ref("desc");
 let loading = ref(false);
 let currentPage = ref(1);
+const getTotalCalls = ref(props.totalCalls);
+const getTotalRevenue = ref(props.totalRevenue);
+const getTotalCallResults = ref(0);
+const getTotalRevenueResults = ref(0);
+const paginate = ref({
+    currentPage: currentPage.value,
+    perPage: null,
+});
 
-let fetchCalls = async (replace = false) => {
+
+let fetchCalls = async (replace = false, per_page = null) => {
   let url = "/admin/web-api/calls?page=" + currentPage.value;
 
   if (sortColumn.value) {
@@ -233,15 +260,13 @@ let fetchCalls = async (replace = false) => {
     url += "&sort_direction=" + sortDirection.value;
   }
 
-  // Include start_date and end_date in the query string if they both exist
-  // if (startDate.value && endDate.value) {
-  //   url += "&start_date=" + startDate.value;
-  //   url += "&end_date=" + endDate.value;
-  // }
-
   if (dateFilterFrom.value && dateFilterTo.value) {
     url += "&start_date=" + dateFilterFrom.value;
     url += "&end_date=" + dateFilterTo.value;
+  }
+
+  if(per_page !== null) {
+      url += "&per_page=" + per_page;
   }
 
   // Append filters to the query string
@@ -261,15 +286,46 @@ let fetchCalls = async (replace = false) => {
   }
 
   callsPaginator.value = response.data.calls;
+  getTotalCallResults.value = response.data.total;
+  getTotalRevenueResults.value = response.data.total_revenue;
+
+  // keep track of current page and pagination
+  paginate.value.perPage = response.data.per_page;
+  paginate.value.currentPage = currentPage.value;
+  console.log({
+      currentPage: paginate.value.currentPage,
+      perPage: paginate.value.perPage,
+  });
 
   loading.value = false;
   console.log("Loaded Calls: ", loadedCalls.value);
+  console.log("Total Call Results: ", getTotalCallResults.value);
+  console.log("Total Revenue: ", getTotalRevenueResults.value);
 };
 
 
 let loadMore = async () => {
-  currentPage.value++;
-  await fetchCalls();
+  //currentPage.value++;
+
+   // Reason for this solution: Sorting is done on every load more on the backend and applied to only per_pages records.
+    // therefore it is a bug that causes the records on the table to not be sorted correctly.
+   // Will need to implement a better solution that handles the sorting on the frontend and not backend
+
+   // On every load more, increase per_page by 100, which is the default per_page on the backend
+  let per_page;
+  let new_per_page = parseInt(paginate.value.perPage) + 100;
+    console.log("new_per_page", new_per_page);
+
+  if(getTotalCalls.value > new_per_page){
+      per_page = new_per_page;
+      console.log("per page 1", per_page);
+
+  }else{
+      per_page = getTotalCalls.value;
+      console.log("per page 2: ", per_page);
+  }
+
+  await fetchCalls(true, per_page);
 };
 
 onMounted(() => {});
@@ -287,7 +343,7 @@ let sortByColumn = async (column) => {
     sortDirection.value = "asc";
   }
 
-  await fetchCalls(true);
+  await fetchCalls(true, paginate.value.perPage);
 };
 
 let callsGroupedByUserArray = Object.entries(props.callsGroupedByUser);
@@ -374,27 +430,74 @@ let exportCSV = () => {
   document.body.removeChild(link);
 };
 
+// export to be sent to backend
+const exportSearchResults = computed(() => {
+    return {
+        totalCalls: getTotalCallResults.value,
+        totalRevenue: getTotalRevenueResults.value,
+        columns: columns.value.reduce((arr, col) => {
+            if (col.visible === true) {
+                arr.push({label: col.label, name: col.name});
+            }
+            return arr;
+        }, []),
+    };
+})
+
 let currentlyPlayingAudio = ref(null);
 let currentlyPlayingAudioCallId = ref(null);
 
 let playRecording = (call) => {
+
+  // Stop any recording currently playing
+  // stopPlayingRecording();
+
   currentlyPlayingAudio.value = new Audio(call.recording_url);
   currentlyPlayingAudio.value.play();
   currentlyPlayingAudioCallId.value = call.id;
 
+  console.log("Playing Recording: ", {
+    call_url: call.recording_url,
+    currently_playing: currentlyPlayingAudio.value
+  });
+
+  currentlyPlayingAudio.value.addEventListener('loadedmetadata', () => {
+
+    let duration = currentlyPlayingAudio.value.duration;
+    let minutes = Math.floor(duration / 60);
+    let seconds = Math.floor(duration % 60);
+    seconds = seconds < 10 ? '0' + seconds : seconds; // Add leading zero if needed
+    console.log(`Duration: ${minutes}:${seconds}`);
+
+    document.getElementById('audio-duration'+call.id).textContent = `Duration: ${minutes}:${seconds}`;
+
+  });
+
   // Assuming audio is your Audio element
+  // Also when the audio is ended, pause and clear the audio element
   currentlyPlayingAudio.value.addEventListener("ended", () => {
-    currentlyPlayingAudio.value.pause();
-    currentlyPlayingAudio.value = null;
-    currentlyPlayingAudioCallId.value = null;
+    stopPlayingRecording();
   });
 };
 
-let stopPlayingRecording = (call) => {
+const stopPlayingRecording = () => {
   currentlyPlayingAudio.value.pause();
   currentlyPlayingAudio.value = null;
   currentlyPlayingAudioCallId.value = null;
 };
+
+function fastForwardRecording(seconds) {
+    if (currentlyPlayingAudio && currentlyPlayingAudio.value) {
+        // Check if the desired fast-forward time is more than the current time
+        const newTime = currentlyPlayingAudio.value.currentTime + seconds;
+        if (newTime < currentlyPlayingAudio.value.duration) {
+            currentlyPlayingAudio.value.currentTime = newTime;
+        } else {
+            // If the fast-forward time exceeds the duration
+            currentlyPlayingAudio.value.currentTime = currentlyPlayingAudio.value.duration;
+        }
+    }
+}
 
 let filters = ref([
 
@@ -556,8 +659,10 @@ const applyCallFiltersToSummary = () => {
     showMoreForGrouped.value = true;
     maxmizedCallsGroupedByUser.value = {};
     minimizedCallsGroupedByUser.value = {};
-    getTotalCalls.value = 0;
-    getTotalRevenue.value = 0;
+
+    // update with results
+    getTotalCalls.value = getTotalCallResults.value;
+    getTotalRevenue.value = getTotalRevenueResults.value;
 
     // Iterate loadedCalls first and then grouped calls to match the both user ids
     // if matched add the user group to the maxmizedCallsGroupedByUser
@@ -565,8 +670,8 @@ const applyCallFiltersToSummary = () => {
         Object.values(unfilteredGroupedCalls).forEach(group => {
             if (group.userId === value.user_id) {
 
-                getTotalCalls.value ++;
-                getTotalRevenue.value += parseFloat(value.amount_spent);
+                // getTotalCalls.value ++;
+                // getTotalRevenue.value += parseFloat(value.amount_spent);
 
                 maxmizedCallsGroupedByUser.value[group.userId] = group;
                 minimizedCallsGroupedByUser.value[group.userId] = group;
@@ -617,13 +722,14 @@ let clearDateFilter = () => {
   removeFiltersForSummary();
 }
 
-let applyDateFilter = async () => {
+let applyDateFilter = async (close) => {
 
   console.log("Date Filter From: ", dateFilterFrom.value);
   console.log("Date Filter To: ", dateFilterTo.value);
 
   await fetchCalls(true);
   applyCallFiltersToSummary();
+  close();
 }
 
 onMounted(() => {
@@ -631,7 +737,7 @@ onMounted(() => {
 });
 
 
-let applyDatePreset = label => {
+let applyDatePreset = (label) => {
   const today = new Date();
   let from, to;
 
@@ -747,7 +853,7 @@ let saveChanges = () => {
                   </button>
               </PopoverButton>
 
-              <PopoverPanel class="absolute z-10">
+              <PopoverPanel class="absolute z-10" v-slot="{ close }">
                   <div class="border border-gray-100 p-3 shadow bg-gray-50 mt-2">
 
                       <div class="flex items-center justify-between">
@@ -785,7 +891,7 @@ let saveChanges = () => {
                           Past 30 Days
                       </div>
 
-                      <PrimaryButton @click.prevent="applyDateFilter"
+                      <PrimaryButton @click.prevent="applyDateFilter(close)"
                                      class="w-full text-center flex justify-center text-md mb-4">Apply</PrimaryButton>
 
                       <button class="w-full text-center flex justify-center items-center text-md px-4 py-3 border rounded-md font-semibold text-md uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 hover:bg-white hover:text-custom-blue"
@@ -798,6 +904,7 @@ let saveChanges = () => {
                   </div>
               </PopoverPanel>
           </Popover>
+
           <div
               v-for="(filter, index) in appliedFilters"
               :key="filter.name"
@@ -882,8 +989,8 @@ let saveChanges = () => {
                   <button
                       class="inline-flex items-center px-4 py-3 border rounded-md font-semibold text-md uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 hover:bg-white hover:text-custom-blue"
                       :class="{
-              'border-transparent text-gray-900 bg-gray-100 hover:drop-shadow-2xl ': true,
-            }"
+                          'border-transparent text-gray-900 bg-gray-100 hover:drop-shadow-2xl ': true,
+                        }"
                       :disabled="disabled"
                       @click.prevent="showNewFilterModal = false"
                   >
@@ -1141,13 +1248,22 @@ let saveChanges = () => {
                   </PopoverPanel>
                 </Popover>
 
-                <button
-                  type="button"
-                  class="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200"
-                  @click.prevent="exportCSV"
-                >
-                  Export
-                </button>
+<!--                <button-->
+<!--                  type="button"-->
+<!--                  class="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200"-->
+<!--                  -->
+<!--                  @click.prevent="exportCSV"-->
+<!--                >-->
+<!--                  Export-->
+<!--                </button>-->
+
+                  <a :href="'/admin/calls/export/'+JSON.stringify(exportSearchResults)">
+                      <button
+                          type="button"
+                          class="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200">
+                          Export
+                      </button>
+                  </a>
 
                 <!-- <Popover class="relative">
                   <PopoverButton>
@@ -1167,6 +1283,7 @@ let saveChanges = () => {
             </div>
 
           </div>
+
           <div class="overflow-x-auto">
             <table class="w-full text-sm text-left text-gray-500" style="min-height: 50px;">
               <thead class="text-xs text-gray-700 uppercase bg-gray-50">
@@ -1237,24 +1354,26 @@ let saveChanges = () => {
                     v-text="renderColumn(column, call)"
                   ></td>
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      class="w-4 h-4 cursor-pointer ml-3"
-                      v-if="currentlyPlayingAudioCallId !== call.id"
-                      @click.prevent="playRecording(call)"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
-                      />
-                    </svg>
+
 
                     <div class="flex items-center">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="w-4 h-4 cursor-pointer ml-3"
+                            v-if="currentlyPlayingAudioCallId !== call.id"
+                            @click.prevent="playRecording(call)"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
+                            />
+                        </svg>
+
                       <svg
                         class="w-4 h-4 cursor-pointer ml-3"
                         v-if="currentlyPlayingAudioCallId === call.id"
@@ -1274,11 +1393,23 @@ let saveChanges = () => {
 
                       <p
                         style="font-size: 10px"
-                        class="text-gray-800 ml-1 user-select-none"
-                        v-if="currentlyPlayingAudioCallId === call.id"
-                      >
-                        Playing
+                        class="text-gray-800 mx-1 user-select-none"
+                        v-if="currentlyPlayingAudioCallId === call.id">
+                        Playing<br/>
+                          <span :id="'audio-duration'+call.id"></span>
                       </p>
+
+                    <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+                         width="10.000000pt" viewBox="0 0 512.000000 512.000000"
+                         preserveAspectRatio="xMidYMid meet"
+                         v-if="currentlyPlayingAudioCallId === call.id"
+                         @click.prevent="fastForwardRecording(5)">
+
+                        <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
+                            <path d="M2560 4469 c-70 -14 -163 -65 -210 -115 -23 -25 -56 -75 -73 -112 l-32 -67 -5 -421 -5 -422 -640 535 c-715 597 -712 595 -852 601 -100 5 -171 -15 -246 -67 -69 -49 -123 -122 -147 -201 -20 -64 -20 -91 -18 -1665 l3 -1600 33 -67 c108 -220 378 -295 573 -161 24 17 330 268 679 557 l635 526 5 -432 5 -433 28 -58 c40 -80 112 -151 194 -190 62 -29 77 -32 163 -32 85 0 102 3 160 31 51 24 260 192 935 753 479 397 896 750 929 783 170 177 188 446 42 641 -23 31 -60 70 -83 86 -22 16 -430 354 -907 750 -477 397 -889 732 -915 745 -46 24 -144 47 -185 45 -12 -1 -41 -5 -66 -10z m-1756 -361 c35 -29 373 -309 750 -623 l685 -570 0 -355 0 -355 -738 -614 c-406 -338 -746 -618 -755 -623 -23 -13 -61 -3 -86 22 -20 20 -20 40 -20 1570 l0 1551 25 24 c36 37 66 32 139 -27z m1882 30 c68 -52 1692 -1404 1726 -1436 72 -69 86 -164 35 -241 -20 -30 -1634 -1385 -1764 -1480 -36 -27 -70 -24 -103 9 -20 20 -20 40 -20 1570 l0 1551 25 24 c30 31 64 32 101 3z"/>
+                        </g>
+                    </svg>
+
                     </div>
                   </td>
                   <td class="px-4 flex  py-2 font-medium text-gray-900 whitespace-nowrap">
@@ -1296,7 +1427,7 @@ let saveChanges = () => {
             </table>
 
             <div
-              v-if="callsPaginator && callsPaginator.next_page_url"
+              v-if="(callsPaginator && callsPaginator.next_page_url) || getTotalCalls !== loadedCalls.length"
               class="flex items-center justify-center py-4 mt-4"
             >
               <button
@@ -1308,6 +1439,7 @@ let saveChanges = () => {
               </button>
             </div>
           </div>
+
         </div>
       </div>
     </section>
