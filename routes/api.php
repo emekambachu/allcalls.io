@@ -272,3 +272,5 @@ Route::post('/commio/sms/receive', [TextMessageController::class, 'receiveMessag
 Route::post('/twilio-webhook-error', [TwilioWebhookErrorController::class, 'store']);
 
 Route::middleware(['auth:sanctum', 'notBanned'])->post('/call-device-actions', [CallDeviceActionsController::class, 'store']);
+Route::middleware(['auth:sanctum', 'notBanned'])->post('/call-device-actions/unique', [CallDeviceActionsController::class, 'storeWithUniqueCallId']);
+
