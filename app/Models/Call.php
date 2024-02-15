@@ -163,15 +163,7 @@ class Call extends Model
         // Check if the response is successful
         if ($response->successful()) {
             $xml = simplexml_load_string($response->body());
-            $firstName = (string)$xml->{'first-name'};
-            $lastName = (string)$xml->{'last-name'};
-
-            // Check if last name is nil or empty
-            if (empty($lastName) || $lastName == 'nil') {
-                return $firstName; // Return just the first name
-            } else {
-                return $firstName . ' ' . $lastName; // Return full name
-            }
+            return (string)$xml->{'company_name'};
         }
 
         return null; // Return null if the response is not successful or if there's any issue
