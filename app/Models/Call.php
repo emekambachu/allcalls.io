@@ -324,7 +324,6 @@ class Call extends Model
             ->groupBy('device_id');
     }
 
-
     public function fetchPublisherPayoutFromRingba($inboundCallId)
     {
         $response = Http::withHeaders([
@@ -334,8 +333,26 @@ class Call extends Model
         ]);
 
         if ($response->successful()) {
+            $responseData = $response->json();
+
+            // Initialize payoutAmount
+            $payoutAmount = null;
+
+            // Check if the expected structure exists
+            if (isset($responseData['report']['records'][0]['events'])) {
+                foreach ($responseData['report']['records'][0]['events'] as $event) {
+                    // Check for the event that contains payoutAmount
+                    if (isset($event['payoutAmount'])) {
+                        $payoutAmount = $event['payoutAmount'];
+                        break; // Stop the loop once payoutAmount is found
+                    }
+                }
+            }
+
+            // Log the entire response and the payoutAmount if found
             Log::debug('fetchPublisherPayoutFromRingba:Success', [
-                'response' => $response->json(),
+                'response' => $responseData,
+                'payoutAmount' => $payoutAmount,
             ]);
 
             return $response->body();
@@ -345,7 +362,5 @@ class Call extends Model
             'response' => $response->body(),
             'errorCode' => $response->status(),
         ]);
-
-        return null;
     }
 }
