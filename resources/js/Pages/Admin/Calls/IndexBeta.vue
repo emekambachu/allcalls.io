@@ -480,7 +480,7 @@ let playRecording = (call) => {
   });
 };
 
-const stopPlayingRecording = () => {
+const stopPlayingRecording = (call) => {
   currentlyPlayingAudio.value.pause();
   currentlyPlayingAudio.value = null;
   currentlyPlayingAudioCallId.value = null;
@@ -833,6 +833,23 @@ let saveChanges = () => {
     disposition_loader.value = false
   })
 }
+
+const toggleFilterAutocomplete = ref(false);
+const filteredAutocompleteRecords = computed(() => {
+    if (filterValue.value === '') {
+        return [];
+    }
+    let matches = 0;
+    return loadedCalls.value.filter(call => {
+        if (
+            call.user_email.toLowerCase().includes(filterValue.value.toLowerCase())
+            && matches < 10
+        ) {
+            matches++
+            return call
+        }
+    });
+});
 </script>
 
 <template>
@@ -1040,14 +1057,15 @@ let saveChanges = () => {
 
 
               <div class="flex items-center justify-end mt-4">
-                  <PrimaryButton 
-                    :disabled=" disposition_loader" class="mr-2" @click.prevent="saveChanges"><global-spinner :spinner="disposition_loader" /> Save Changes</PrimaryButton>
+                  <PrimaryButton :disabled=" disposition_loader" class="mr-2"
+                                 @click.prevent="saveChanges">
+                      <global-spinner :spinner="disposition_loader" /> Save Changes</PrimaryButton>
 
                   <button
                       class="inline-flex items-center px-4 py-3 border rounded-md font-semibold text-md uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 hover:bg-white hover:text-custom-blue"
                       :class="{
-              'border-transparent text-gray-900 bg-gray-100 hover:drop-shadow-2xl ': true,
-            }"
+                              'border-transparent text-gray-900 bg-gray-100 hover:drop-shadow-2xl ': true,
+                            }"
                       :disabled="disabled"
                       @click.prevent="showDispositionModal = false"
                   >
@@ -1354,7 +1372,6 @@ let saveChanges = () => {
                     v-text="renderColumn(column, call)"
                   ></td>
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-
 
                     <div class="flex items-center">
                         <svg
