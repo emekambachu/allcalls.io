@@ -119,6 +119,8 @@ class Call extends Model
             return $this->save();
         }
 
+
+
         // Now let's try the same with fetchRetrieverCallLogs
         $callLogs = $this->fetchRetrieverCallLogs();
 
@@ -320,5 +322,30 @@ class Call extends Model
             ->with('device')
             ->get()
             ->groupBy('device_id');
+    }
+
+
+    public function fetchPublisherPayoutFromRingba($inboundCallId)
+    {
+        $response = Http::withHeaders([
+            'Authorization' => 'Token ' . env('RINGBA_API_KEY'),
+        ])->post('https://api.ringba.com/v2/' . env('RINGBA_ACCOUNT_ID') . '/calllogs/detail', [
+            "InboundCallIds" => [$inboundCallId]
+        ]);
+
+        if ($response->successful()) {
+            Log::debug('fetchPublisherPayoutFromRingba:Success', [
+                'response' => $response->json(),
+            ]);
+
+            return $response->body();
+        }
+
+        Log::debug('fetchPublisherPayoutFromRingba:Error', [
+            'response' => $response->body(),
+            'errorCode' => $response->status(),
+        ]);
+
+        return null;
     }
 }
