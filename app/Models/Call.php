@@ -355,12 +355,14 @@ class Call extends Model
                 'payoutAmount' => $payoutAmount,
             ]);
 
-            return $response->body();
+            return $payoutAmount;
         }
 
         Log::debug('fetchPublisherPayoutFromRingba:Error', [
             'response' => $response->body(),
             'errorCode' => $response->status(),
         ]);
+
+        return null;
     }
 }
