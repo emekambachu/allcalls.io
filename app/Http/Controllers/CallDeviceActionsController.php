@@ -35,12 +35,12 @@ class CallDeviceActionsController extends Controller
     public function storeWithUniqueCallId(Request $request)
     {
         $validatedData = $request->validate([
-            'call_unique_id' => 'required|string',
+            'unique_call_id' => 'required|string',
             'device_id' => 'required|integer|exists:devices,id',
             'action' => 'required|string|max:255',
         ]);
 
-        $call = Call::whereUniqueCallId($validatedData['call_unique_id'])->firstOrFail();
+        $call = Call::whereUniqueCallId($validatedData['unique_call_id'])->firstOrFail();
         $device = Device::findOrFail($validatedData['device_id']);
 
         if ($request->user()->id !== $call->user_id && $request->user()->id !== $device->user_id) {
