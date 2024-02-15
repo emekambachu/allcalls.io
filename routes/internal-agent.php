@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CallsController;
 use App\Http\Controllers\InternalAgent\DocusignController;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\InternalAgent\RegistrationStepController;
@@ -49,6 +50,7 @@ Route::prefix('internal-agent')->middleware(['auth', 'verified', 'internal-agent
     Route::post('/get-client-by-name', [MyBusinessController::class, 'getClientByName'])->name('getclient.byname')->middleware(['registration-step-check', 'agentOnTraining', 'IsBasicTraining']);
     Route::post('/my-business', [MyBusinessController::class, 'store'])->name('agent.my.business.store')->middleware(['registration-step-check', 'agentOnTraining', 'IsBasicTraining']);
     Route::get('/download-pdf/{fileName}', [TrainingController::class, 'downloadPdf'])->name('download-pdf')->middleware(['registration-step-check', 'agentOnTraining', 'IsBasicTraining']);
+    Route::post('/calls/disposition', [CallsController::class, 'disposition'])->name('internal-agent.calls.disposition');
 });
 
 Route::middleware(['auth', 'verified', 'internal-agent'])->group(function () {
