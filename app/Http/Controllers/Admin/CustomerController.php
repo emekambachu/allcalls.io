@@ -431,6 +431,7 @@ class CustomerController extends Controller
             $user->update([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
+                'email' => $request->email,
                 'balance' => isset($request->balance) ? $request->balance : 0,
             ]);
             // check roles user exix
