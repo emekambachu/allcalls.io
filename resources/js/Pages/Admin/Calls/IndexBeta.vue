@@ -842,10 +842,11 @@ const filterAutoCompleteDropdown = ref(false);
 
 // Check if filter name is allowed for auto complete
 const toggleFilterAutocompleteDropdown = (event, filterName) => {
+    filterAutoCompleteDropdown.value = false;
     console.log('Filter name: ', filterName);
     if(allowedAutoCompleteFilterNames.value.includes(filterName)){
         event.stopPropagation(); // Prevent click from propagating
-        filterAutoCompleteDropdown.value = !filterAutoCompleteDropdown.value;
+        filterAutoCompleteDropdown.value = true;
     }
 }
 
@@ -866,6 +867,7 @@ const filteredCallRecords = computed(() => {
 });
 
 const selectFilteredResult = (event, call, filterName) => {
+    filterAutoCompleteDropdown.value = false;
     if(filterName === 'user_email'){
         filterValue.value = call.user_email;
         console.log('Selected value',filterValue.value);
@@ -1038,7 +1040,8 @@ const getAutoCompleteFilterOptions = async (keyword) => {
                           class="border-gray-200"
                           v-model="filterValue"
                           type="text"
-                          @click="toggleFilterAutocompleteDropdown($event, filterName)"
+                          role="button"
+                          @keyup="toggleFilterAutocompleteDropdown($event, filterName)"
                       />
 
                       <!-- Dropdown for Filtered List -->
@@ -1059,7 +1062,7 @@ const getAutoCompleteFilterOptions = async (keyword) => {
                           class="border-gray-200"
                           v-model="filterValue"
                           type="text"
-                          @click="toggleFilterAutocompleteDropdown($event, filterName)"
+                          @keyup="toggleFilterAutocompleteDropdown($event, filterName)"
                       />
 
                       <!-- Dropdown for Filtered List -->
