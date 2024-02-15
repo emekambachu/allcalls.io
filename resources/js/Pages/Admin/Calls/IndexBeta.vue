@@ -449,7 +449,7 @@ let currentlyPlayingAudioCallId = ref(null);
 let playRecording = (call) => {
 
   // Stop any recording currently playing
-  stopPlayingRecording();
+  // stopPlayingRecording();
 
   currentlyPlayingAudio.value = new Audio(call.recording_url);
   currentlyPlayingAudio.value.play();
