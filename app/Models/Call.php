@@ -258,13 +258,10 @@ class Call extends Model
         if ($response->successful()) {
             $body = json_decode($response->body(), true);
 
-            // Assuming 'payerAmount' is at a specific path in the array, you need to navigate to it
-            // This is just an example path; you'll need to adjust it based on the actual structure of your JSON response
-            $payerAmount = $body['report']['records'][0]['payerAmount'] ?? 'Not found';
-
+            $inboundCallerId = $body['report']['records'][0]['inboundCallId'] ?? 'Not found';
             Log::debug('RingbaResponse:Success', [
                 'body' => $response->body(),
-                'payerAmount' => $payerAmount,
+                'inboundCallerId' => $inboundCallerId,
             ]);
             return $response->json();
         } else {
