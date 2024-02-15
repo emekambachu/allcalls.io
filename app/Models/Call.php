@@ -114,7 +114,19 @@ class Call extends Model
 
             $this->publisher_name = $callLog['publisherName'];
             $this->publisher_id = $callLog['publisherId'];
-            $this->cost = $callLog['totalCost'];
+
+            $inboundCallId = $callLogs['report']['records'][0]['inboundCallId'] ?? 'Not found';
+            Log::debug('inboundCallId:', [
+                'inboundCallId' => $inboundCallId,
+            ]);
+
+            $publisherPayout = $this->fetchPublisherPayoutFromRingba($inboundCallId);
+
+            Log::debug('ringba:payout', [
+                'payout' => $publisherPayout,
+            ]);
+
+            $this->cost = $publisherPayout ?? null;
 
             return $this->save();
         }
@@ -256,20 +268,6 @@ class Call extends Model
         ]);
 
         if ($response->successful()) {
-            $body = json_decode($response->body(), true);
-
-            $inboundCallId = $body['report']['records'][0]['inboundCallId'] ?? 'Not found';
-            Log::debug('RingbaResponse:Success', [
-                'body' => $response->body(),
-                'inboundCallId' => $inboundCallId,
-            ]);
-
-            $publisherPayout = $this->fetchPublisherPayoutFromRingba($inboundCallId);
-
-            Log::debug('ringba:payout', [
-                'payout' => $publisherPayout,
-            ]);
-
             return $response->json();
         } else {
             Log::debug('RingbaResponse:Error', [
