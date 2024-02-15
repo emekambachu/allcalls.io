@@ -117,7 +117,7 @@ let userIdsToSend = selectedGroupId.value
     sendEmail: sendEmail.value,
     emailData: sendEmail.value ? {
       title: emailTitle.value,
-      subject: emailSubject.value, 
+      subject: emailSubject.value,
       buttonText: emailButtonText.value,
       buttonUrl: processedEmailButtonUrl.value,
       description: emailDescription.value
@@ -224,7 +224,7 @@ const forceUpdate = () => {
   });
 };
 
-const selectAllUsers = () => { 
+const selectAllUsers = () => {
   selectedUserIds.value = filteredUsers.value.map(user => user.id);
 };
 
@@ -240,7 +240,7 @@ const toggleDropdown = (event) => {
 function handleClickOutside(event) {
   const withinDropdownContainer = event.target.closest('.dropdown-container');
   const withinDropdownHeader = event.target.closest('.dropdown-header');
-  
+
   if (!withinDropdownContainer && !withinDropdownHeader) {
     showDropdown.value = false;
   }
@@ -321,14 +321,14 @@ if (page.props.flash.message) {
 
           <!-- Dropdown for Filtered User List -->
           <div v-if="showDropdown" class="border rounded max-h-60 overflow-y-auto">
-            
+
             <!-- Header Row -->
             <div class="flex justify-between items-center p-2 bg-gray-200 dropdown-header">
               <!-- Total Number of Users -->
               <div>Total Users: {{ filteredUsers.length }}</div>
-              
+
               <!-- Select All Button -->
-              <div 
+              <div
                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded-full cursor-pointer"
                 @click="selectAllUsers"
               >
@@ -336,9 +336,9 @@ if (page.props.flash.message) {
               </div>
             </div>
 
-            <div 
+            <div
               v-for="user in filteredUsers"
-              :key="user.id" 
+              :key="user.id"
               class="p-2 hover:bg-gray-100 cursor-pointer dropdown-container"
               :class="{'bg-blue-200': selectedUserIds.includes(user.id)}"
               @click="selectUser(user)"
@@ -347,11 +347,12 @@ if (page.props.flash.message) {
             </div>
           </div>
         </div>
-        
+
         <div class="mt-1">
           <div class="mb-4">
             <InputLabel for="groupName" value="Create a Group:" />
-            <TextInput id="groupName" type="text" v-model="groupName" placeholder="Enter Group Name" class="w-full p-2 border rounded" />
+            <TextInput id="groupName" type="text" v-model="groupName"
+                       placeholder="Enter Group Name" class="w-full p-2 border rounded" />
           </div>
 
                   <!-- Group Selection -->
@@ -367,8 +368,8 @@ if (page.props.flash.message) {
             <PrimaryButton @click="createGroup" :disabled="selectedUserIds.length === 0" class="px-4 py-2 bg-green-500 hover:bg-green-700 text-white font-bold rounded">
               Create Group
             </PrimaryButton>
-          
-            
+
+
             <PrimaryButton @click="addUserToGroup" :disabled="selectedUserIds.length === 0 || !selectedGroupId" class="px-4 py-2 bg-green-500 hover:bg-green-700 text-white font-bold rounded">
               Add Users to Selected Group
             </PrimaryButton>
@@ -377,10 +378,10 @@ if (page.props.flash.message) {
 
 
 
-        
+
       <div class="mt-4">
         <h3 class="text-lg font-semibold">Created Groups</h3>
-        
+
         <div v-if="groups && groups.length > 0">
           <ul>
             <li v-for="group in groups" :key="group.id" class="mt-2">
@@ -411,13 +412,13 @@ if (page.props.flash.message) {
             </li>
           </ul>
         </div>
-        
+
         <div v-else class="text-gray-600">
           No groups found.
         </div>
       </div>
 
-        
+
         <!-- Notification Form -->
         <div class="mt-4">
           <label class="flex items-center">
@@ -432,7 +433,7 @@ if (page.props.flash.message) {
               <InputLabel for="title" value="Notification Title:" />
               <TextInput id="title" type="text" v-model="form.title" required autofocus class="w-full p-2 border rounded" />
             </div>
-            
+
             <div class="mt-4">
               <InputLabel for="message" value="Notification Message:" />
               <TextInput id="message" type="text" v-model="form.message" required class="w-full p-2 border rounded" />
@@ -464,10 +465,10 @@ if (page.props.flash.message) {
 
           <!-- Conditional TextInput for Zoom Meeting URL -->
           <transition name="fade">
-            <TextInput 
-              v-if="shouldShowZoomLinkInput" 
-              v-model="zoomMeetingUrl" 
-              placeholder="Enter Zoom Meeting URL" 
+            <TextInput
+              v-if="shouldShowZoomLinkInput"
+              v-model="zoomMeetingUrl"
+              placeholder="Enter Zoom Meeting URL"
               class="w-full p-2 border rounded mt-2"
             />
           </transition>
@@ -489,7 +490,7 @@ if (page.props.flash.message) {
             <TextInput v-model="emailDescription" placeholder="Email Description" class="mb-4" />
           </div>
         </transition>
-        
+
         <div class="mt-6">
           <PrimaryButton @click="sendPushNotification" :disabled="form.processing" class="px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded">
             Send Notification
