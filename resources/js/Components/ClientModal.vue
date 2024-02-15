@@ -1,7 +1,16 @@
-<style>
+<style scoped>
 .spnClassLocked {
   color: #fb4040;
 }
+
+
+::v-deep .dp__input_icon_pad {
+    cursor: pointer;
+    background: #e8f0fe;
+    height: 44px;
+    border-radius: 8px;
+}
+
 </style>
 <script setup>
 import { ref, reactive, defineEmits, onMounted } from "vue";
@@ -20,15 +29,16 @@ let props = defineProps({
   },
   states: Array,
   route: String,
+  editScreen:Boolean,
 });
-
-console.log("Client Details: ", props.ClientDetail);
-let editScreen = ref(false);
+let maxDate = ref(new Date)
+maxDate.value.setHours(23, 59, 59, 999);
+// let editScreen = ref(false);
 let emit = defineEmits(["close"]);
 
 let form = ref({});
 let close = () => {
-  editScreen.value = false;
+  // editScreen.value = false;
   emit("close");
   form.value = {};
   props.ClientDetail = {};
@@ -37,15 +47,18 @@ let close = () => {
 let isLoading = ref(false);
 let saveChanges = () => {
   isLoading.value = true;
-  router.visit(`${props.route}/${form.id}`, {
+  router.visit(`${props.route}/${form.value.id}`, {
     method: "PATCH",
-    data: form,
+    data: form.value,
   });
   isLoading.value = false;
 };
-
+if(props.editScreen){
+  console.log('ClientDetail',props.ClientDetail);
+  form.value = props.ClientDetail;
+}
 let openEdit = () => {
-  editScreen.value = true;
+  // editScreen.value = true;
   form = JSON.parse(JSON.stringify(props.ClientDetail));
 };
 </script>
@@ -73,12 +86,12 @@ let openEdit = () => {
             v-if="ClientDetail.unlocked !== 0 || $page.props.auth.role == 'admin'">
             <h4 class="text-2xl font-small text-custom-sky mb-2">Personal Details</h4>
 
-            <PrimaryButton @click="openEdit"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+            <!-- <PrimaryButton @click="openEdit"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                 stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                 <path stroke-linecap="round" stroke-linejoin="round"
                   d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
               </svg>
-            </PrimaryButton>
+            </PrimaryButton> -->
           </div>
 
           <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-10">
@@ -231,7 +244,7 @@ let openEdit = () => {
       </div>
       <form v-if="form" class="p-6">
         <h4 class="text-2xl font-small text-gray-700 mb-2">Personal Details</h4>
-        <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-10">
+        <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-6">
           <div>
             <label class="text-lg">First Name:</label>
             <TextInput type="text" name="first_name" id="first_name" class="w-full" placeholder="John" required
@@ -244,10 +257,26 @@ let openEdit = () => {
           </div>
           <div>
             <label class="text-lg">Date of Birth:</label>
-            <TextInput type="text" name="dob" id="dob" class="w-full" required v-model="form.dob" />
+            <!-- <TextInput type="text" name="dob" id="dob" class="w-full" required v-model="form.dob" /> -->
+            <VueDatePicker  v-model="form.dob"
+                    format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply>
+                </VueDatePicker>
           </div>
+          
         </div>
-
+        <label class="text-lg ">Locked Status:</label>
+        <div v-if="$page.props.auth.role == 'admin'" class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-6">
+          <div class="flex mt-1">
+                <div class="flex items-center">
+                    <input id="link-radio" type="radio" v-model="form.unlocked"  value="0" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    <label for="link-radio"  class="ms-2 text-sm  font-medium text-gray-900 dark:text-gray-300"> Locked</label>
+                </div>
+                <div class="flex ml-5 items-center">
+                    <input id="link-radio-2" type="radio" v-model="form.unlocked" value="1" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    <label for="link-radio-2" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">UnLocked</label>
+                </div>
+            </div>
+        </div>
         <h4 class="text-2xl font-small text-custom-sky mb-2">Contact Information</h4>
         <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-10">
           <div>
