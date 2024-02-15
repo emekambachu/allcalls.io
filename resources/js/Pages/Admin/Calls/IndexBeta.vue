@@ -113,7 +113,7 @@ let columns = ref([
         visible: true,
         sortable: false,
         render(call) {
-            return call.client?.status;
+            return call.disposition;
         },
     },
 
@@ -683,6 +683,50 @@ let openDetailedLogs = callId => {
   showLogsForCallId.value = callId;
   showLogsForCallModal.value = true;
 }
+let disposition = ref('Select a disposition')
+let showDispositionModal = ref(false)
+let call_id = ref(null)
+let colIndex = ref(null)
+let addDisposition = (call , index) => {
+  firstStepErrors.value.disposition = [``];
+  showDispositionModal.value = true
+  call_id.value = call.id
+  colIndex.value = index
+  if(call.disposition){
+    disposition.value = call.disposition
+  }else{
+    disposition.value = 'Select a disposition'
+  }
+}
+let firstStepErrors = ref({})
+let disposition_loader = ref(false)
+let saveChanges = () => {
+  firstStepErrors.value.disposition = [``];
+  disposition_loader.value = true
+  if(!disposition.value || disposition.value == 'Select a disposition' ){
+    console.log('error');
+    firstStepErrors.value.disposition = [`The disposition is required.`];
+    disposition_loader.value = false
+    console.log('firstStepErrors.value',firstStepErrors.value);
+    return
+  }
+  axios.post('/admin/calls/disposition',{
+    disposition:disposition.value,
+    call_id:call_id.value
+  })
+  .then((res)=>{
+    console.log('res',res);
+    toaster("success", res.data.message);
+    router.visit('/admin/calls')
+    disposition_loader.value = false
+    showDispositionModal.value = false
+    // loadedCalls.value[colIndex.value].disposition = res.data.call.disposition;
+    // console.log('loadedCalls.value[colIndex.value]',loadedCalls.value[colIndex.value].disposition);
+  }).catch((error)=>{
+    console.log('error',error);
+    disposition_loader.value = false
+  })
+}
 </script>
 
 <template>
@@ -847,7 +891,64 @@ let openDetailedLogs = callId => {
                   </button>
               </div>
           </div>
-      </Modal>
+    </Modal>
+
+    <Modal
+          :show="showDispositionModal"
+          @close="showDispositionModal = false"
+          :closeable="true"
+      >
+          <div class="bg-gray-100 py-4 px-6 text-gray-900">
+              <div class="flex justify-between mb-6">
+                  <h3 class="text-2xl font-bold">Update  Disposition</h3>
+                  <span class="cursor-pointer" @click.prevent="showDispositionModal = false">&#x2715</span>
+              </div>
+
+              <div class="mb-3">
+                  <label class="block mb-2 text-sm font-medium text-gray-900">Disposition:</label>
+
+                  <select v-model="disposition" class="select-custom border border-gray-200">
+                      <!-- <option v-for="(filter, index) in filters" :key="index" :value="filter.name">{{ filter.label }}</option> -->
+                      <option disabled value="Select a disposition">Select a disposition</option>
+                      <option value="Sale - Simplified Issue">Sale - Simplified Issue</option>
+                      <option value="Sale - Guaranteed Issue">Sale - Guaranteed Issue</option>
+                      <option value="Follow Up Needed">Follow Up Needed</option>
+                      <option value="Quoted - Not Interested">Quoted - Not Interested</option>
+                      <option value="Not Interested">Not Interested</option>
+                      <option value="Transfer Handoff Too Long">Transfer Handoff Too Long</option>
+                      <option value="Client Hung Up">Client Hung Up</option>
+                      <option value="No Income">No Income</option>
+                      <option value="Wrong State">Wrong State</option>
+                      <option value="Not Qualified Age">Not Qualified Age</option>
+                      <option value="Not Qualified Nursing Home">Not Qualified Nursing Home</option>
+                      <option value="Not Qualified Memory Issues">Not Qualified Memory Issues</option>
+                      <option value="Language Barrier">Language Barrier</option>
+                      <option value="Do Not Call">Do Not Call</option>
+                      <option value="Dead Air/No Response">Dead Air/No Response</option>
+                      <option value="Thought Was Free">Thought Was Free</option>
+                  </select>
+                  <div v-if="firstStepErrors.disposition" class="text-red-500 mt-1" v-text="firstStepErrors.disposition[0]"></div>
+
+              </div>
+
+
+              <div class="flex items-center justify-end mt-4">
+                  <PrimaryButton 
+                    :disabled=" disposition_loader" class="mr-2" @click.prevent="saveChanges"><global-spinner :spinner="disposition_loader" /> Save Changes</PrimaryButton>
+
+                  <button
+                      class="inline-flex items-center px-4 py-3 border rounded-md font-semibold text-md uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 hover:bg-white hover:text-custom-blue"
+                      :class="{
+              'border-transparent text-gray-900 bg-gray-100 hover:drop-shadow-2xl ': true,
+            }"
+                      :disabled="disabled"
+                      @click.prevent="showDispositionModal = false"
+                  >
+                      Cancel
+                  </button>
+              </div>
+          </div>
+    </Modal>
 
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
           <div class="px-4 sm:px-8 sm:rounded-lg">
@@ -1180,11 +1281,15 @@ let openDetailedLogs = callId => {
                       </p>
                     </div>
                   </td>
-                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                  <td class="px-4 flex  py-2 font-medium text-gray-900 whitespace-nowrap">
                     <svg @click.prevent="openDetailedLogs(call.id)" title="Open Detailed Logs" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 cursor-pointer text-gray-800 hover:text-gray-900">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
                       <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                     </svg>
+                    <svg @click.prevent="addDisposition(call , colIndex)" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 cursor-pointer text-gray-800 hover:text-gray-900 ml-3">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                    </svg>
+
                   </td>
                 </tr>
               </tbody>

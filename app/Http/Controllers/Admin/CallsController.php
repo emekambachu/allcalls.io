@@ -100,4 +100,23 @@ class CallsController extends Controller
             'callsGroupedByUser' => $callsGroupedByUser,
         ]);
     }
+
+    public function disposition(Request $request)
+    {
+        try {
+            $call = Call::where('id', $request->call_id)->first();
+            $call->disposition = $request->disposition;
+            $call->update();
+            return response()->json([
+                'success' => true,
+                'call' => $call,
+                'message' => 'Disposition updated successfully.'
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'errors' => $th->getMessage(),
+            ], 400);
+        }
+    }
 }
