@@ -23,7 +23,7 @@ class ClientFactory extends Factory
             'zipCode' => $faker->postcode,
             'email' => $faker->unique()->safeEmail,
             'address' => $faker->address,
-            'dob' => $faker->dateTimeBetween('-66 years', '-23 years')->format('Y-m-d'), // Generating dob for people aged between 23 to 66 years
+            'dob' => $faker->dateTimeBetween('-66 years', '-23 years')->format('Y-m-d'), // Generating dob for people aged between 23 and 66 years
             'user_id' => function() {
                 return User::factory()->create()->id;
             },

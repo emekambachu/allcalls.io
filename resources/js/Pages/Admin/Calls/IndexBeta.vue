@@ -440,13 +440,6 @@ const exportSearchResults = computed(() => {
             }
             return arr;
         }, []),
-
-        // columns: columns.value.reduce((arr, col) => {
-        //     if (col.visible === true) {
-        //         arr.push(col.label);
-        //     }
-        //     return arr;
-        // }, []),
     };
 })
 
@@ -454,24 +447,39 @@ let currentlyPlayingAudio = ref(null);
 let currentlyPlayingAudioCallId = ref(null);
 
 let playRecording = (call) => {
+
+  // Stop any recording currently playing
+  stopPlayingRecording();
+
   currentlyPlayingAudio.value = new Audio(call.recording_url);
   currentlyPlayingAudio.value.play();
   currentlyPlayingAudioCallId.value = call.id;
 
-    console.log("Playing Recording: ",{
-        call_url: call.recording_url,
-        currently_playing: currentlyPlayingAudio.value
-    });
+  console.log("Playing Recording: ", {
+    call_url: call.recording_url,
+    currently_playing: currentlyPlayingAudio.value
+  });
+
+  currentlyPlayingAudio.value.addEventListener('loadedmetadata', () => {
+
+    let duration = currentlyPlayingAudio.value.duration;
+    let minutes = Math.floor(duration / 60);
+    let seconds = Math.floor(duration % 60);
+    seconds = seconds < 10 ? '0' + seconds : seconds; // Add leading zero if needed
+    console.log(`Duration: ${minutes}:${seconds}`);
+
+    document.getElementById('audio-duration'+call.id).textContent = `Duration: ${minutes}:${seconds}`;
+
+  });
 
   // Assuming audio is your Audio element
+  // Also when the audio is ended, pause and clear the audio element
   currentlyPlayingAudio.value.addEventListener("ended", () => {
-    currentlyPlayingAudio.value.pause();
-    currentlyPlayingAudio.value = null;
-    currentlyPlayingAudioCallId.value = null;
+    stopPlayingRecording();
   });
 };
 
-let stopPlayingRecording = (call) => {
+const stopPlayingRecording = () => {
   currentlyPlayingAudio.value.pause();
   currentlyPlayingAudio.value = null;
   currentlyPlayingAudioCallId.value = null;
@@ -479,12 +487,12 @@ let stopPlayingRecording = (call) => {
 
 function fastForwardRecording(seconds) {
     if (currentlyPlayingAudio && currentlyPlayingAudio.value) {
-        // Check if the desired fast forward time is more than the current time
+        // Check if the desired fast-forward time is more than the current time
         const newTime = currentlyPlayingAudio.value.currentTime + seconds;
         if (newTime < currentlyPlayingAudio.value.duration) {
             currentlyPlayingAudio.value.currentTime = newTime;
         } else {
-            // If the fast forward time exceeds the duration
+            // If the fast-forward time exceeds the duration
             currentlyPlayingAudio.value.currentTime = currentlyPlayingAudio.value.duration;
         }
     }
@@ -1230,24 +1238,26 @@ function formatDate(date) {
                     v-text="renderColumn(column, call)"
                   ></td>
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      class="w-4 h-4 cursor-pointer ml-3"
-                      v-if="currentlyPlayingAudioCallId !== call.id"
-                      @click.prevent="playRecording(call)"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
-                      />
-                    </svg>
+
 
                     <div class="flex items-center">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="w-4 h-4 cursor-pointer ml-3"
+                            v-if="currentlyPlayingAudioCallId !== call.id"
+                            @click.prevent="playRecording(call)"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
+                            />
+                        </svg>
+
                       <svg
                         class="w-4 h-4 cursor-pointer ml-3"
                         v-if="currentlyPlayingAudioCallId === call.id"
@@ -1267,11 +1277,23 @@ function formatDate(date) {
 
                       <p
                         style="font-size: 10px"
-                        class="text-gray-800 ml-1 user-select-none"
-                        v-if="currentlyPlayingAudioCallId === call.id"
-                      >
-                        Playing
+                        class="text-gray-800 mx-1 user-select-none"
+                        v-if="currentlyPlayingAudioCallId === call.id">
+                        Playing<br/>
+                          <span :id="'audio-duration'+call.id"></span>
                       </p>
+
+                    <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+                         width="10.000000pt" viewBox="0 0 512.000000 512.000000"
+                         preserveAspectRatio="xMidYMid meet"
+                         v-if="currentlyPlayingAudioCallId === call.id"
+                         @click.prevent="fastForwardRecording(5)">
+
+                        <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
+                            <path d="M2560 4469 c-70 -14 -163 -65 -210 -115 -23 -25 -56 -75 -73 -112 l-32 -67 -5 -421 -5 -422 -640 535 c-715 597 -712 595 -852 601 -100 5 -171 -15 -246 -67 -69 -49 -123 -122 -147 -201 -20 -64 -20 -91 -18 -1665 l3 -1600 33 -67 c108 -220 378 -295 573 -161 24 17 330 268 679 557 l635 526 5 -432 5 -433 28 -58 c40 -80 112 -151 194 -190 62 -29 77 -32 163 -32 85 0 102 3 160 31 51 24 260 192 935 753 479 397 896 750 929 783 170 177 188 446 42 641 -23 31 -60 70 -83 86 -22 16 -430 354 -907 750 -477 397 -889 732 -915 745 -46 24 -144 47 -185 45 -12 -1 -41 -5 -66 -10z m-1756 -361 c35 -29 373 -309 750 -623 l685 -570 0 -355 0 -355 -738 -614 c-406 -338 -746 -618 -755 -623 -23 -13 -61 -3 -86 22 -20 20 -20 40 -20 1570 l0 1551 25 24 c36 37 66 32 139 -27z m1882 30 c68 -52 1692 -1404 1726 -1436 72 -69 86 -164 35 -241 -20 -30 -1634 -1385 -1764 -1480 -36 -27 -70 -24 -103 9 -20 20 -20 40 -20 1570 l0 1551 25 24 c30 31 64 32 101 3z"/>
+                        </g>
+                    </svg>
+
                     </div>
                   </td>
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
