@@ -303,6 +303,8 @@ let openEdit = () => {
               </option>
               <option value="Language Barrier">Language Barrier</option>
               <option value="Do Not Call">Do Not Call</option>
+              <option value="Dead Air/No Response">Dead Air/No Response</option>
+              <option value="Thought Was Free">Thought Was Free</option>
             </select>
           </div>
         </div>
