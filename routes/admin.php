@@ -140,6 +140,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::delete('/user-activities/clear-all', [AdminUserActivitiesController::class, 'clearAll'])->name('admin.user-activities.clearAll');
 
     Route::get('/web-api/calls', [WebCallsAPIController::class, 'index']);
+    Route::get('/web-api/calls/autocomplete', [WebCallsAPIController::class, 'getAutocompleteOptions']);
 
     Route::get('/email-blacklist', [AdminEmailBlacklistController::class, 'index'])->name('admin.email-blacklist.index');
     Route::post('/email-blacklist', [AdminEmailBlacklistController::class, 'store'])->name('admin.email-blacklist.store');

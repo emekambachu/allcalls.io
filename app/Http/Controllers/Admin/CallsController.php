@@ -82,6 +82,7 @@ class CallsController extends Controller
             return [
                 'userId' => $user->id,
                 'agentName' => $user->first_name . ' ' . $user->last_name,
+                'agentEmail' => $user->email,
                 'totalCalls' => $totalCalls,
                 'paidCalls' => $paidCalls,
                 'revenueEarned' => $totalRevenue,
@@ -90,7 +91,6 @@ class CallsController extends Controller
                 'averageCallLength' => $averageCallLength,
             ];
         });
-
 
         return Inertia::render('Admin/Calls/IndexBeta', [
             'requestData' => $request->all(),
