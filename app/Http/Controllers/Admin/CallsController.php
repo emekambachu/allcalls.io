@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Services\Base\BaseService;
+use App\Services\Calls\CallService;
 use Exception;
 use Carbon\Carbon;
 use App\Models\Bid;
 use App\Models\Call;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use App\Models\State;
 use App\Models\Client;
@@ -24,6 +27,11 @@ use Illuminate\Validation\Rules\Password;
 
 class CallsController extends Controller
 {
+    protected CallService $call;
+    public function __construct(CallService $call){
+        $this->call = $call;
+    }
+
     public function index(Request $request)
     {
         $orderColumn = "created_at";
@@ -60,17 +68,8 @@ class CallsController extends Controller
         ]);
     }
 
-    public function indexNew(Request $request)
+    public function indexNew(Request $request): \Inertia\Response
     {
-        $orderColumn = "id";
-        $orderBy = "DESC";
-
-        if ((isset($request->sortColumn) && $request->sortColumn != '') || (isset($request->sortOrder) && $request->sortOrder != '')) {
-            $orderColumn = $request->sortColumn;
-            $orderBy = $request->sortOrder;
-        }
-
-
         $allCalls = Call::with('user')->get();
         $callsGroupedByUser = $allCalls->groupBy('user_id')->map(function ($calls, $userId) {
             $user = $calls->first()->user; // Assuming each call has a 'user' relation loaded
@@ -101,7 +100,7 @@ class CallsController extends Controller
         ]);
     }
 
-    public function disposition(Request $request)
+    public function disposition(Request $request): \Illuminate\Http\JsonResponse
     {
         try {
             $call = Call::where('id', $request->call_id)->first();
@@ -118,5 +117,19 @@ class CallsController extends Controller
                 'errors' => $th->getMessage(),
             ], 400);
         }
+    }
+    /**
+     * @throws \JsonException
+     */
+
+    public function exportCalls($export): \Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\StreamedResponse
+    {
+        try {
+            $response = $this->call->exportCalls($export, Session::get('all_calls'));
+
+        } catch (\Exception $e) {
+            return BaseService::tryCatchException($e);
+        }
+        return $response;
     }
 }
