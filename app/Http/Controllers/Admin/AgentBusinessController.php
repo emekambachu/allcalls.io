@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\AppSubmittedEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Client;
 use App\Models\InternalAgentMyBusiness;
@@ -95,7 +96,7 @@ class AgentBusinessController extends Controller
                 'errors' => $validate->errors(),
             ], 400);
         }
-        InternalAgentMyBusiness::create([
+        $internalAgentBusiness =   InternalAgentMyBusiness::create([
             'agent_id' => auth()->user()->id,
             'agent_full_name' => $request->agent_full_name,
             'agent_email' => $request->agent_email,
@@ -129,6 +130,7 @@ class AgentBusinessController extends Controller
             'client_phone_no' => $request->client_phone_no,
             'client_email' => $request->client_email,
         ]);
+        event(new AppSubmittedEvent($internalAgentBusiness));
         return response()->json([
             'success' => true,
             'message' => 'Business Added Successfully!',
@@ -210,6 +212,7 @@ class AgentBusinessController extends Controller
                 'client_phone_no' => $request->client_phone_no,
                 'client_email' => $request->client_email,
             ]);
+            event(new AppSubmittedEvent($InternalAgentMyBusiness));
             return response()->json([
                 'success' => true,
                 'message' => 'Business updated Successfully!',
