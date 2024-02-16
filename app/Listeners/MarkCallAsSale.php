@@ -9,7 +9,7 @@ use Illuminate\Support\Carbon;
 use App\Models\Call;
 use Illuminate\Support\Facades\Log;
 
-class MarkCallAsSale
+class MarkCallAsSale implements ShouldQueue
 {
     /**
      * Create the event listener.

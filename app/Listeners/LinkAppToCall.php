@@ -9,7 +9,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 
-class LinkAppToCall
+class LinkAppToCall implements ShouldQueue
 {
     /**
      * Create the event listener.
