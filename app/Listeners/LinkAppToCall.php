@@ -25,13 +25,13 @@ class LinkAppToCall implements ShouldQueue
     public function handle(AppSubmittedEvent $event): void
     {
         $dateTillEndOfDay = Carbon::parse($event->business->application_date)->endOfDay();
-        $matchedRecord = Call::where('from', trim($event->business->client_phone_no))
+        $matchedRecord = Call::whereFrom(trim($event->business->client_phone_no))
             ->where('created_at', '<=', $dateTillEndOfDay)
             ->orderBy('created_at', 'desc')->first();
         if ($matchedRecord) {
             $event->business->call_id = $matchedRecord->id;
             $event->business->save();
-            Log::debug("Mark Call As Sale For Business --> $event->business AND Call Record ---> $matchedRecord");
+            Log::debug("Assign Call To Business --> $event->business AND Call Record ---> $matchedRecord");
         }else {
             Log::debug("Date --> $dateTillEndOfDay Call Record Not found For Business --> $event->business");
         }

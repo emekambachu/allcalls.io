@@ -25,15 +25,15 @@ class MarkCallAsSale implements ShouldQueue
     public function handle(AppSubmittedEvent $event): void
     {
         $dateTillEndOfDay = Carbon::parse($event->business->application_date)->endOfDay();
-        $matchedRecord = Call::where('from', trim($event->business->client_phone_no))
+        $matchedRecord = Call::whereFrom(trim($event->business->client_phone_no))
             ->where('created_at', '<=', $dateTillEndOfDay)
             ->orderBy('created_at', 'desc')->first();
         if ($matchedRecord) {
             $matchedRecord->disposition = 'Sale - Guaranteed Issue';
             $matchedRecord->save();
-            Log::debug("Date --> $dateTillEndOfDay Mark Call As Sale For Business -->$event->business AND Call Record ---> $matchedRecord");
+            Log::debug("Mark Call As Sale For Business -->$event->business AND Call Record ---> $matchedRecord");
         }else {
-            Log::debug("Call Record Not found For Business -->$event->business");
+            Log::debug("Date --> $dateTillEndOfDay Call Record Not found For Business -->$event->business");
         }
 
     }
