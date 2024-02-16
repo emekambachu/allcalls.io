@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Events\AppSubmittedEvent;
 use App\Events\FundsAdded;
 use App\Events\CareerEvent;
 use App\Events\FundsTooLow;
@@ -51,6 +52,8 @@ use App\Listeners\AddCompletedCallUserActivity;
 use App\Listeners\NotifyUserForLowFundsViaEmail;
 use App\Listeners\InviteAgent as ListenersInviteAgent;
 use App\Listeners\DispatchDispositionUpdateNotification;
+use App\Listeners\LinkAppToCall;
+use App\Listeners\MarkCallAsSale;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -130,6 +133,11 @@ class EventServiceProvider extends ServiceProvider
 
         CareerEvent::class => [
             CareerListener::class,
+        ],
+
+        AppSubmittedEvent::class => [
+            LinkAppToCall::class,
+            MarkCallAsSale::class,
         ],
     ];
 
