@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Carbon;
 use App\Models\Call;
+use Illuminate\Support\Facades\Log;
 
 class MarkCallAsSale
 {
@@ -30,6 +31,10 @@ class MarkCallAsSale
         if ($matchedRecord) {
             $matchedRecord->disposition = 'Sale - Guaranteed Issue';
             $matchedRecord->save();
+            Log::debug("Mark Call As Sale For Business -->$event->business AND Call Record ---> $matchedRecord");
+        }else {
+            Log::debug("Call Record Not found For Business -->$event->business");
         }
+
     }
 }

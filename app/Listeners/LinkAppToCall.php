@@ -7,6 +7,7 @@ use App\Models\Call;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class LinkAppToCall
 {
@@ -30,6 +31,9 @@ class LinkAppToCall
         if ($matchedRecord) {
             $event->business->call_id = $matchedRecord->id;
             $event->business->save();
+            Log::debug("Mark Call As Sale For Business -->$event->business AND Call Record ---> $matchedRecord");
+        }else {
+            Log::debug("Call Record Not found For Business -->$event->business");
         }
     }
 }
