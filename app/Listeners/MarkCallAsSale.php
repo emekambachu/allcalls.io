@@ -8,7 +8,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Carbon;
 use App\Models\Call;
 
-class MarkCallAsSale implements ShouldQueue
+class MarkCallAsSale
 {
     /**
      * Create the event listener.
