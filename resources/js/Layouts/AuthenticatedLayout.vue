@@ -367,7 +367,7 @@ let logDeviceAction = (action) => {
         .post("/web-api/call-device-actions-with-unique-call-id", {
           action,
           device_id: response.data.device_id,
-          call_unique_id: connectedUniqueCallId.value,
+          unique_call_id: connectedUniqueCallId.value,
         })
         .then((response) => {})
         .catch((error) => {
