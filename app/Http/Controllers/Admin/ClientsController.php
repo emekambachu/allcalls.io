@@ -111,7 +111,7 @@ class ClientsController extends Controller
             "last_name" => 'required',
             "phone" => 'required',
             "zipCode" => 'required',
-            "email" => 'required|email',
+            "email" => 'required',
             "address" => 'required',
             "dob" => 'required',
             "status" => 'required',
