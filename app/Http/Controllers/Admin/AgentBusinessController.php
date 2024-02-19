@@ -32,7 +32,7 @@ class AgentBusinessController extends Controller
 
         $totalAPV = $query->sum('premium_volumn');
 
-        $businesses = $query->with(['client', 'client.call'])
+        $businesses = $query->with(['client', 'client.call', 'getCall'])
             ->orderBy('created_at', 'desc')
             ->paginate(100);
 
@@ -59,6 +59,7 @@ class AgentBusinessController extends Controller
             'totalAPV' => $totalAPV
         ]);
     }
+
     public function store(Request $request)
     {
         $validate = Validator::make($request->all(), [
@@ -174,7 +175,7 @@ class AgentBusinessController extends Controller
                 'errors' => $validate->errors(),
             ], 400);
         }
-        
+
         $InternalAgentMyBusiness = InternalAgentMyBusiness::find($request->business_id);
 
         if ($InternalAgentMyBusiness) {
