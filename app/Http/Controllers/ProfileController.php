@@ -163,16 +163,16 @@ class ProfileController extends Controller
         return Redirect::route('profile.edit')->with('message', 'Profile updated successfully.');
     }
 
-    public function api_update(ProfileUpdateRequest $request): \Illuminate\Http\JsonResponse
-    {
-        try {
-            $data = $this->user->updateUser($request);
-            return response()->json($data);
-
-        }catch (Exception $e){
-            return BaseService::tryCatchException($e);
-        }
-    }
+//    public function api_update(ProfileUpdateRequest $request): \Illuminate\Http\JsonResponse
+//    {
+//        try {
+//            $data = $this->user->updateUser($request);
+//            return response()->json($data);
+//
+//        }catch (Exception $e){
+//            return BaseService::tryCatchException($e);
+//        }
+//    }
 
     private function buildIncomingData($selectedStates): array
     {

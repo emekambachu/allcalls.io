@@ -205,7 +205,7 @@ Route::match(['get', 'post'], '/overseer', [OverseerResponseController::class, '
 Route::match(['get', 'post'], '/med', [DatalotResponseController::class, 'store']);
 Route::match(['get', 'post'], '/available-agents', [AvailableAgentsAPIController::class, 'show']);
 
-Route::middleware(['auth:sanctum', 'notBanned'])->post('/app-events', [AppEventsController::class, 'store']);
+//Route::middleware(['auth:sanctum', 'notBanned'])->post('/app-events', [AppEventsController::class, 'store']);
 
 Route::match(['get', 'post'], '/ping', [PingAPIController::class, 'show']);
 Route::match(['get', 'post'], '/disposition', [DispositionsController::class, 'update']);
@@ -277,7 +277,7 @@ Route::middleware(['auth:sanctum', 'notBanned'])->group(function () {
     Route::delete('/sendbird-user/delete', [SendBirdUserController::class, 'deleteSendBirdUser']);
 
     Route::post('/profile/upload-image', [ProfileController::class, 'uploadProfilePicture']);
-    Route::post('/profile/update', [ProfileController::class, 'api_update']);
+//    Route::post('/profile/update', [ProfileController::class, 'api_update']);
 
     Route::post('/web-api/careers', [CareersController::class, 'careers']);
 
@@ -294,6 +294,12 @@ Route::middleware(['auth:sanctum', 'notBanned'])->group(function () {
     // Twilio Android Access Tokens
     Route::get('/twilio-android-access-token', [TwilioAndroidAccessTokenController::class, 'show']);
     Route::get('/twilio-android-access-token-guest', [TwilioAndroidAccessTokenGuestController::class, 'show']);
+
+    // call device actions
+    Route::post('/call-device-actions', [CallDeviceActionsController::class, 'store']);
+    Route::post('/call-device-actions/unique', [CallDeviceActionsController::class, 'storeWithUniqueCallId']);
+
+    Route::post('/app-events', [AppEventsController::class, 'store']);
 });
 
 //Route::middleware(['auth:sanctum', 'notBanned'])->patch('/calls/{uniqueCallId}/user-response', [CallUserResponseAPIController::class, 'update']);
@@ -320,13 +326,13 @@ Route::middleware(['auth:sanctum', 'notBanned'])->group(function () {
 //
 //Route::middleware(['auth:sanctum', 'notBanned'])->post('/web-api/careers', [CareersController::class, 'careers']);
 
-Route::post('/sendbird-user/blahblahblah', function (Request $request) {
+Route::post('/sendbird-user/blahblahblah', static function (Request $request) {
     return response()->json([
         'message' => 'Yo Yo Yo successfully'
     ], 200);
 });
 
-Route::get('/test-call', function () {
+Route::get('/test-call', static function () {
     return 'All good!';
 });
 
@@ -336,6 +342,6 @@ Route::post('/commio/sms/receive', [TextMessageController::class, 'receiveMessag
 
 Route::post('/twilio-webhook-error', [TwilioWebhookErrorController::class, 'store']);
 
-Route::middleware(['auth:sanctum', 'notBanned'])->post('/call-device-actions', [CallDeviceActionsController::class, 'store']);
-Route::middleware(['auth:sanctum', 'notBanned'])->post('/call-device-actions/unique', [CallDeviceActionsController::class, 'storeWithUniqueCallId']);
+//Route::middleware(['auth:sanctum', 'notBanned'])->post('/call-device-actions', [CallDeviceActionsController::class, 'store']);
+//Route::middleware(['auth:sanctum', 'notBanned'])->post('/call-device-actions/unique', [CallDeviceActionsController::class, 'storeWithUniqueCallId']);
 
