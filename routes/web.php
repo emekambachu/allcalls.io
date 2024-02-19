@@ -37,6 +37,7 @@ use App\Http\Controllers\ClientPoliciesController;
 use App\Http\Controllers\EmailBlacklistController;
 use App\Http\Controllers\AdditionalFilesController;
 use App\Http\Controllers\AgentStatusDocsController;
+use App\Http\Controllers\CalendlyWebhookController;
 use App\Http\Controllers\FEAgentPingDocsController;
 use App\Http\Controllers\TwilioForwardingController;
 use App\Http\Controllers\CallDeviceActionsController;
@@ -283,3 +284,5 @@ Route::get('/twilio/forward/retreaver', [TwilioForwardingController::class, 'ret
 Route::get('/web-api/get-device-id-by-user-agent', [DeviceIdByUserAgentController::class, 'show'])->middleware(['auth', 'verified', 'registration-step-check']);
 Route::post('/web-api/call-device-actions', [CallDeviceActionsController::class, 'store'])->middleware(['auth', 'verified', 'registration-step-check']);
 Route::post('/web-api/call-device-actions-with-unique-call-id', [CallDeviceActionsController::class, 'storeWithUniqueCallId'])->middleware(['auth', 'verified', 'registration-step-check']);
+
+Route::post('/webhooks/calendly', [CalendlyWebhookController::class, 'show']);
