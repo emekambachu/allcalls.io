@@ -1219,7 +1219,7 @@ const getAutoCompleteFilterOptions = async (keyword) => {
                       'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',
                       selected
                         ? 'bg-white text-blue-700 shadow'
-                        : 'text-gray-900 hover:bg-white/[0.12]',
+                        : 'text-gray-900 hover:bg-white',
                     ]"
                   >
                       Publishers
@@ -1350,7 +1350,7 @@ const getAutoCompleteFilterOptions = async (keyword) => {
                       <div class="overflow-x-auto">
                           <table class="w-full text-sm text-left text-gray-500">
                               <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                              <tr class="cursor-pointer">
+                                <tr class="cursor-pointer">
                                   <th scope="col" class="px-4 py-3 whitespace-nowrap">Publisher Name</th>
                                   <th scope="col" class="px-4 py-3 whitespace-nowrap">Total Calls</th>
                                   <th scope="col" class="px-4 py-3 whitespace-nowrap">Paid Calls</th>
@@ -1368,7 +1368,7 @@ const getAutoCompleteFilterOptions = async (keyword) => {
                               </tr>
                               </thead>
                               <tbody>
-                              <tr
+                                <tr
                                   v-for="(publisher, index) in callsGroupedByPublisherName"
                                   :key="index"
                                   class="border-b hover:bg-gray-100"
