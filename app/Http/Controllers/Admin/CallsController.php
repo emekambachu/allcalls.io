@@ -113,8 +113,17 @@ class CallsController extends Controller
     {
         try {
             $call = Call::where('id', $request->call_id)->first();
-            $call->disposition = $request->disposition;
-            $call->update();
+            if($call->client) {
+                $call->client->status = $request->disposition;
+                $call->client->save();
+            }
+            else {
+                return response()->json([
+                    'success' => false,
+                    'errors' => 'Client not found for this call.',
+                ], 400);
+            }
+            $call->save();
             return response()->json([
                 'success' => true,
                 'call' => $call,

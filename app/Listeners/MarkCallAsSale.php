@@ -3,10 +3,9 @@
 namespace App\Listeners;
 
 use App\Events\AppSubmittedEvent;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Carbon;
 use App\Models\Call;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 
 class MarkCallAsSale implements ShouldQueue
@@ -29,10 +28,14 @@ class MarkCallAsSale implements ShouldQueue
             ->where('created_at', '<=', $dateTillEndOfDay)
             ->orderBy('created_at', 'desc')->first();
         if ($matchedRecord) {
-            $matchedRecord->disposition = 'Sale - Guaranteed Issue';
+            if (isset($matchedRecord->client)) {
+                $matchedRecord->client->status = 'Sale - Guaranteed Issue';
+                $matchedRecord->client->save();
+                Log::debug("Mark Call As Sale For Client  --> $matchedRecord->client");
+            }
             $matchedRecord->save();
             Log::debug("Mark Call As Sale For Business -->$event->business AND Call Record ---> $matchedRecord");
-        }else {
+        } else {
             Log::debug("Date --> $dateTillEndOfDay Call Record Not found For Business -->$event->business");
         }
 
