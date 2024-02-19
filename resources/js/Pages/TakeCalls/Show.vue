@@ -105,6 +105,7 @@ watchEffect(async () => {
 <template>
   <Head title="Take Calls" />
   <AuthenticatedLayout>
+
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
         Take Calls
@@ -119,9 +120,11 @@ watchEffect(async () => {
         </div>
       </div>
     </div>
+
     <section class="p-3">
-      <div class="mx-auto max-w-screen-xl sm:px-12 grid grid-cols-2 gap-2" style="grid-template-columns: 3fr 2fr;">
-        <div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2">
+
+        <div class="mt-5">
           <h1 class="text-2xl font-bold mb-4 text-gray-700">Guidelines</h1>
           <ul class="pl-2 max-w-md text-gray-500 list-disc list-inside">
             <li>
@@ -150,8 +153,8 @@ watchEffect(async () => {
         </div>
 
         <!-- List here -->
-        <div>
-          <h1 class="text-2xl font-bold mb-4 text-gray-700">Verticals</h1>
+        <div class="mt-5">
+          <h1 class="text-2xl font-bold text-gray-700">Verticals</h1>
           <!-- Call Types and Bids List -->
           <ul>
             <li v-for="callType in callTypesWithToggles" :key="callType.callType.id" class="py-3 sm:py-4">
