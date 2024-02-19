@@ -6,24 +6,11 @@ use App\Services\Base\BaseService;
 use App\Services\Calls\CallService;
 use Exception;
 use Carbon\Carbon;
-use App\Models\Bid;
 use App\Models\Call;
-use App\Models\Role;
-use App\Models\User;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
-use App\Models\State;
-use App\Models\Client;
-use App\Models\Activity;
-use App\Models\CallType;
-use App\Models\Transaction;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rules\Password;
 
 class CallsController extends Controller
 {
@@ -92,11 +79,33 @@ class CallsController extends Controller
             ];
         });
 
+        $callsGroupedByPublisherName = $allCalls->groupBy('publisher_name')->map(function ($calls) {
+            $user = $calls->first()->user; // Assuming each call has a 'user' relation loaded
+            $totalCalls = $calls->count();
+            $paidCalls = $calls->where('amount_spent', '>', 0)->count();
+            $totalRevenue = $calls->sum('amount_spent');
+            $totalCallLength = $calls->sum('call_duration_in_seconds');
+            $averageCallLength = $totalCalls > 0 ? $totalCallLength / $totalCalls : 0;
+            $publisherName = $calls->first()->publisher_name;
+
+            return [
+                'publisher_name' => $publisherName,
+                'userId' => $user->id,
+                'totalCalls' => $totalCalls,
+                'paidCalls' => $paidCalls,
+                'revenueEarned' => $totalRevenue,
+                'revenuePerCall' => $totalCalls > 0 ? $totalRevenue / $totalCalls : 0,
+                'totalCallLength' => $totalCallLength,
+                'averageCallLength' => $averageCallLength,
+            ];
+        });
+
         return Inertia::render('Admin/Calls/IndexBeta', [
             'requestData' => $request->all(),
             'totalCalls' => Call::count(),
             'totalRevenue' => round((float) Call::sum('amount_spent'), 2),
             'callsGroupedByUser' => $callsGroupedByUser,
+            'callsGroupedByPublisherName' => $callsGroupedByPublisherName,
         ]);
     }
 
