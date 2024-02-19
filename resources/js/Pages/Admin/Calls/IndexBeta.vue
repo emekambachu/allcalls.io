@@ -121,7 +121,7 @@ let columns = ref([
         visible: true,
         sortable: false,
         render(call) {
-            return call.disposition;
+            return call?.client?.status;
         },
     },
 
@@ -795,8 +795,8 @@ let addDisposition = (call , index) => {
   showDispositionModal.value = true
   call_id.value = call.id
   colIndex.value = index
-  if(call.disposition){
-    disposition.value = call.disposition
+  if(call?.client?.status){
+    disposition.value = call?.client?.status
   }else{
     disposition.value = 'Select a disposition'
   }
@@ -827,7 +827,12 @@ let saveChanges = () => {
     // loadedCalls.value[colIndex.value].disposition = res.data.call.disposition;
     // console.log('loadedCalls.value[colIndex.value]',loadedCalls.value[colIndex.value].disposition);
   }).catch((error)=>{
-    console.log('error',error);
+    if(error.response.status == 400){
+      toaster("error", error.response.data.errors);
+    }else{
+      toaster("error", error.message);
+    }
+    // console.log('error',error);
     disposition_loader.value = false
   })
 }

@@ -44,6 +44,11 @@ class Call extends Model
         return $this->hasOne(Client::class);
     }
 
+    public function getBusiness()
+    {
+        return $this->hasOne(InternalAgentMyBusiness::class);
+    }
+
     /**
      * Get the ringing duration for the call.
      *
@@ -101,7 +106,7 @@ class Call extends Model
 
     /**
      * Update the publisher info for the call.
-     * 
+     *
      * @return bool
      */
     public function updatePublisherInfo($callerId = null)

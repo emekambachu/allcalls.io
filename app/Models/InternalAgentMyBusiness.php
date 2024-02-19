@@ -15,12 +15,18 @@ class InternalAgentMyBusiness extends Model
     {
         return $this->belongsTo(Client::class, 'client_id', 'id');
     }
+
     public function agent()
     {
         return $this->belongsTo(User::class, 'agent_id', 'id');
     }
+
     public function clientState()
     {
         return $this->belongsTo(State::class, 'client_state', 'id');
+    }
+
+    public function getCall() {
+        return $this->belongsTo(Call::class, 'call_id', 'id');
     }
 }
