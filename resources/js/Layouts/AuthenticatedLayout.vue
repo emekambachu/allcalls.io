@@ -444,6 +444,13 @@ let setupTwilioDevice = () => {
   });
 };
 
+let unregisterTwilioDevice = () => {
+  if (device) {
+    device.destroy();  // or device.unregister();
+    console.log("Twilio.Device Unregistered!");
+  }
+};
+
 let showUpdateDispositionForLastClient = ref(false);
 
 // console.log('showDispositionModal:', page.props.auth.showDispositionUpdateOption);
@@ -576,6 +583,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   console.log("unmounted AuthenticatedLayout");
+  unregisterTwilioDevice();
 });
 
 const showingNavigationDropdown = ref(false);
