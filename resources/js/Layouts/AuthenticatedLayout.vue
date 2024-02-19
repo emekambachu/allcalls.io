@@ -103,6 +103,7 @@ let clearAllNotifications = () => {
   });
 };
 
+let device = ref(null);
 let dispositionClient = ref(null);
 let connectedClient = ref(null);
 let callDuration = ref("00:00");
@@ -384,7 +385,7 @@ let setupTwilioDevice = () => {
     let token = response.data.token;
     console.log("token is ", token);
 
-    let device = new Device(token, {
+    device = new Device(token, {
       // Set Opus as our preferred codec. Opus generally performs better, requiring less bandwidth and
       // providing better audio quality in restrained network conditions. Opus will be default in 2.0.
       codecPreferences: ["opus", "pcmu"],
@@ -578,7 +579,7 @@ onMounted(() => {
     }
   );
 
-  setupTwilioDevice();
+  setupTwilioDevice(); 
 });
 
 onUnmounted(() => {
