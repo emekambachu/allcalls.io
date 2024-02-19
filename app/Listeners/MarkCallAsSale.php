@@ -31,6 +31,7 @@ class MarkCallAsSale implements ShouldQueue
             if (isset($matchedRecord->client)) {
                 $matchedRecord->client->status = 'Sale - Guaranteed Issue';
                 $matchedRecord->client->save();
+                Log::debug("Mark Call As Sale For Client  --> $matchedRecord->client");
             }
             $matchedRecord->save();
             Log::debug("Mark Call As Sale For Business -->$event->business AND Call Record ---> $matchedRecord");
