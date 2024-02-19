@@ -64,7 +64,7 @@ use App\Http\Controllers\ZoomMeetingNotificationController;
 |
 */
 
-Route::get('/', function () {
+Route::get('/', static function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
