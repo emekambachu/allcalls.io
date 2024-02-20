@@ -90,7 +90,7 @@ let newAgentTraining = () => {
               </h1>
             </div>
             <div>
-              <PrimaryButton @click="newAgentTraining">NEW AGENT TRAINING</PrimaryButton>
+              <PrimaryButton v-if="!$page.props.auth.user.new_agent_call_scheduled" @click="newAgentTraining">NEW AGENT TRAINING</PrimaryButton>
             </div>
           </div>
           <hr class="mb-4" />
