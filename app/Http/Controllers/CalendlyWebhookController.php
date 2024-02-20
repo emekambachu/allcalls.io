@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -10,6 +11,10 @@ class CalendlyWebhookController extends Controller
 {
     public function show(Request $request)
     {
+        Log::debug('CalendlyWebhook:', [
+            $request->all(),
+        ]);
+
         try {
             if($request['payload']['status'] == 'active') {
                 $userExist = User::whereEmail($request['payload']['email'])->first();
@@ -49,7 +54,7 @@ class CalendlyWebhookController extends Controller
 
             Log::debug('Calendly not working. Email not matched. Current status is --->'.$request['payload']['status']);
         }
-        catch (\Exception $e) {
+        catch (Exception $e) {
             Log::debug('CalendlyWebhook:', [
                $request->all(),
             ]);
