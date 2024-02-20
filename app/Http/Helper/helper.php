@@ -22,6 +22,7 @@ const PROGRESS_STATUSES = [
 const EQUIS_JOB_ERROR_EMAILS = ['awaisamir23@gmail.com', 'iamfaizahmed123@gmail.com'];
 const TRAINING = 'Training';
 const LIVE = 'Live';
+const MINIMUM_BALANCE = 40;
 
 function systemEmails() {
     $currentUrl = trim(url()->current());

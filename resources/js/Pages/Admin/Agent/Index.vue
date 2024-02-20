@@ -318,6 +318,7 @@ let updateUserData = (user) => {
                   <th scope="col" style="min-width: 110px" class="px-4 py-3">Level</th>
                   <!-- <th scope="col" style="min-width: 110px" class="px-4 py-3">Status</th> -->
                   <th scope="col" style="min-width: 110px" class="px-4 py-3">Upline</th>
+                  <th scope="col" style="min-width: 150px" class="px-4 py-3">Invited By</th>
                   <th scope="col" class="px-4 py-3">Email</th>
                   <th scope="col" class="px-4 py-3">Balance</th>
                   <th scope="col" class="px-4 py-3">Phone</th>
