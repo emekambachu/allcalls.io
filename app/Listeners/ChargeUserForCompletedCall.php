@@ -43,18 +43,18 @@ class ChargeUserForCompletedCall
             $allBids = Bid::where('call_type_id', $event->callType->id)
                 ->orderBy('amount', 'desc')
                 ->get();
-        
+
             Log::debug('All Bids:', ['bids' => $allBids->toArray()]);
-        
+
             $userBid = $allBids->firstWhere('user_id', $event->user->id);
             Log::debug('User Bid:', ['userBid' => $userBid]);
-        
+
             if ($userBid) {
                 // If the user’s bid amount matches another user’s bid amount:
                 if ($allBids->where('amount', $userBid->amount)->count() > 1) {
                     Log::debug('Charge amount is the same as the user bid amount');
                     $chargeAmount = $userBid->amount;
-                } 
+                }
                 // Else if user's bid is greater than 35 AND there’s no other bid amount greater than 35 in the list, apart from this user’s bid:
                 elseif ($userBid->amount > 35 && $allBids->where('amount', '>', 35)->count() < 2) {
                     // if there are NO bids at all other than users bid then charge $35, otherwise charge $36
@@ -72,7 +72,7 @@ class ChargeUserForCompletedCall
                         return $bid->id == $userBid->id;
                     });
                     Log::debug('User Bid Index:', ['index' => $userBidIndex]);
-                    
+
                     if (isset($allBids[$userBidIndex + 1])) {
                         Log::debug('Charge amount is the next highest bid amount');
                         $chargeAmount = $allBids[$userBidIndex + 1]->amount + 1;
@@ -86,7 +86,7 @@ class ChargeUserForCompletedCall
                 return;
             }
         }
-        
+
 
 
         Log::debug("Charge amount: $$chargeAmount");
@@ -96,6 +96,11 @@ class ChargeUserForCompletedCall
             // Deduct the charge amount from the user's balance
             DB::transaction(function () use ($event, $chargeAmount) {
                 $event->user->decrement('balance', $chargeAmount);
+
+                if($event->user->balance < MINIMUM_BALANCE) {
+                    $event->user->low_balance_call_scheduled = false;
+                    $event->user->save();
+                }
 
                 Transaction::create([
                     'amount' => $chargeAmount,
