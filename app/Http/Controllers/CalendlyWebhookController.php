@@ -20,14 +20,14 @@ class CalendlyWebhookController extends Controller
                 if($userExist) {
                     if($request['request']['payload']['scheduled_event']['name'] == 'New Agent Call Review') {
                         $userExist->new_agent_call_scheduled = true;
-                        Log::log('Low balance calendly meeting scheduled.');
+                        Log::debug('Low balance calendly meeting scheduled.');
                         $userExist->save();
                         return;
                     }
                     elseif($request['request']['payload']['scheduled_event']['name'] == 'New Agent Training'){
                         $userExist->low_balance_call_scheduled = true;
                         $userExist->save();
-                        Log::log('Low balance calendly meeting scheduled.');
+                        Log::debug('Low balance calendly meeting scheduled.');
                         return;
                     }
                 }
@@ -38,23 +38,23 @@ class CalendlyWebhookController extends Controller
                 if($userExist) {
                     if($request['request']['payload']['scheduled_event']['name'] == 'New Agent Call Review') {
                         $userExist->new_agent_call_scheduled = false;
-                        Log::log('Low balance calendly meeting cancelled.');
+                        Log::debug('Low balance calendly meeting cancelled.');
                         $userExist->save();
                         return;
                     }
                     elseif($request['request']['payload']['scheduled_event']['name'] == 'New Agent Training'){
                         $userExist->low_balance_call_scheduled = false;
                         $userExist->save();
-                        Log::log('Low balance calendly meeting cancelled.');
+                        Log::debug('Low balance calendly meeting cancelled.');
                         return;
                     }
                 }
             }
 
-            Log::log('Calendly not working. Current status is --->'.$request['request']['payload']['status']);
+            Log::debug('Calendly not working. Current status is --->'.$request['request']['payload']['status']);
         }
         catch (\Exception $e) {
-            Log::log('Calendly Webhook Exception---->'.$e->getMessage());
+            Log::debug('Calendly Webhook Exception---->'.$e->getMessage());
         }
     }
 }
