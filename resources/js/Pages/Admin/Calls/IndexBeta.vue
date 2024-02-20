@@ -897,19 +897,6 @@ const selectFilteredResult = (event, selected, filterName) => {
     }else{
         filterValue.value = '';
     }
-    console.log('Selected value', selected, filterValue.value);
-    console.log('Filter Name', filterName);
-
-    // if(filterName === 'user_email'){
-    //     filterValue.value = selected;
-    //     console.log('Selected value',filterValue.value);
-    // }else if(filterName === 'agent_name'){
-    //     filterValue.value = selected;
-    //     console.log('Selected value',filterValue.value);
-    // }else{
-    //     filterValue.value = '';
-    //     console.log('Selected value',filterValue.value);
-    // }
 }
 
 const getAutoCompleteFilterOptions = async (keyword) => {

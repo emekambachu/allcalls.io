@@ -38,7 +38,10 @@ let basicTrainingSteps = [{
         video_url: 'https://allcalls-training.s3.amazonaws.com/5)+Final+Expense+Script.mov',
         pdf: 'https://drive.google.com/file/d/10L9RfystH61EAI7LRHVS3u8vojmbxrUu/view?usp=drive_link',
         title: 'Final Expense Script',
-        thumbnail: '/Agent Training/Final Expense Script.png'
+        thumbnail: '/Agent Training/Final Expense Script.png',
+        second_btn:true,
+        second_btn_label:'Download Final Expense Script',
+        second_btn_pdf_url:'https://drive.google.com/file/d/1Rbif_6KjMpmNa4uKpzdy8DzdPGf6GsGp/view',
     },
     {
         id: 6,
