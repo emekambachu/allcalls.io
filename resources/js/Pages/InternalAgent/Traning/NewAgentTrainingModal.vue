@@ -56,17 +56,17 @@ let onLowBalanceModalClick = () => {
                             </button>
                         </div>
                         <div class="bg-white py-6   ">
-                           
+
                                 <h4 class="mb-4 mx-5 text-lg">
                                     Congratulations on completing your training videos! Your next step awaits – schedule your agent review call now. Don't miss out, take the next step today!
                                 </h4>
                                 <div class="flex justify-between mx-5">
-                                    <PrimaryButton :disabled="!page.props.auth.user.new_agent_call_scheduled"  @click.prevent="onLowBalanceModalClick">Schedule Live Training</PrimaryButton>
+                                    <PrimaryButton  @click.prevent="onLowBalanceModalClick">Schedule Live Training</PrimaryButton>
                                     <PrimaryButton  @click.prevent="close">Close</PrimaryButton>
                                 </div>
-                          
+
                         </div>
-                      
+
                     </div>
                 </div>
             </div>
