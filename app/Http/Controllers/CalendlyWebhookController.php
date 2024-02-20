@@ -50,7 +50,8 @@ class CalendlyWebhookController extends Controller
                     }
                 }
             }
-            Log::log('Calendly meeting inactive/cancelled.');
+
+            Log::log('Calendly not working. Current status is --->'.$request['request']['payload']['status']);
         }
         catch (\Exception $e) {
             Log::log('Calendly Webhook Exception---->'.$e->getMessage());
