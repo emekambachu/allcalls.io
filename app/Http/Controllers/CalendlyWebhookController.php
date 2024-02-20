@@ -10,14 +10,19 @@ class CalendlyWebhookController extends Controller
 {
     public function show(Request $request)
     {
+        Log::debug('CalendlyWebhook:', [
+            'request' => $request->all(),
+        ]);
         try {
+//            $request = $request->all();
+
             if($request['request']['payload']['status'] == 'active') {
                 $userExist = User::whereEmail($request['request']['payload']['email'])->first();
                 if($userExist) {
                     if($request['request']['payload']['scheduled_event']['name'] == 'New Agent Call Review') {
                         $userExist->new_agent_call_scheduled = true;
-                        Log::debug('Low balance calendly meeting scheduled.');
                         $userExist->save();
+                        Log::debug('New agent calendly meeting scheduled.');
                         return;
                     }
                     elseif($request['request']['payload']['scheduled_event']['name'] == 'New Agent Training'){
@@ -47,7 +52,7 @@ class CalendlyWebhookController extends Controller
                 }
             }
 
-            Log::debug('Calendly not working. Current status is --->'.$request['request']['payload']['status']);
+            Log::debug('Calendly not working. Email not matched. Current status is --->'.$request['request']['payload']['status']);
         }
         catch (\Exception $e) {
             Log::debug('CalendlyWebhook:', [
