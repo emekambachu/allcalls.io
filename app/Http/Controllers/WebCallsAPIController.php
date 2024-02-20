@@ -148,8 +148,7 @@ class WebCallsAPIController extends Controller
         $userIds = $this->user->user()->select('id', 'first_name', 'last_name')
             ->where(function ($q) use ($names) {
                 if(!empty($names[0])) {
-                    $q->where('first_name', $names[0])
-                        ->orWhere('last_name', $names[0]);
+                    $q->where('first_name', $names[0]);
                 }
                 if(!empty($names[1])) {
                     $q->where('last_name', $names[1]);

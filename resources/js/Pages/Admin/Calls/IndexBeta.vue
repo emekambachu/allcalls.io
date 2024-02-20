@@ -854,6 +854,11 @@ let saveChanges = () => {
 const allowedAutoCompleteFilterNames = ref([
     "user_email",
     "agent_name",
+    "publisher_name",
+    "publisher_id",
+    "disposition",
+    "id"
+
 ])
 const filterAutoCompleteDropdown = ref(false);
 
@@ -873,28 +878,38 @@ const filteredCallRecords = computed(() => {
     }
     let matches = 0;
     return getAllCalls.value.filter(call => {
-        if (
-            (call.user_email.toLowerCase().includes(filterValue.value.toLowerCase()) || call.agent_name.toLowerCase().includes(filterValue.value.toLowerCase()))
-            && matches < 10
-        ) {
-            matches++
-            return call
+        // Check if any of the specified fields contain the filter value
+        const filterMatch = [call.user_email, call.agent_name, call.publisher_name, call.publisher_id, call.disposition, call.id]
+            .some(field => field && field.toString().toLowerCase().includes(filterValue.value.toLowerCase()));
+
+        if (filterMatch && matches < 10) {
+            matches++;
+            return true;
         }
     });
 });
 
-const selectFilteredResult = (event, call, filterName) => {
+const selectFilteredResult = (event, selected, filterName) => {
     filterAutoCompleteDropdown.value = false;
-    if(filterName === 'user_email'){
-        filterValue.value = call.user_email;
-        console.log('Selected value',filterValue.value);
-    }else if(filterName === 'agent_name'){
-        filterValue.value = call.agent_name;
-        console.log('Selected value',filterValue.value);
+
+    if(allowedAutoCompleteFilterNames.value.includes(filterName)){
+        filterValue.value = selected;
     }else{
         filterValue.value = '';
-        console.log('Selected value',filterValue.value);
     }
+    console.log('Selected value', selected, filterValue.value);
+    console.log('Filter Name', filterName);
+
+    // if(filterName === 'user_email'){
+    //     filterValue.value = selected;
+    //     console.log('Selected value',filterValue.value);
+    // }else if(filterName === 'agent_name'){
+    //     filterValue.value = selected;
+    //     console.log('Selected value',filterValue.value);
+    // }else{
+    //     filterValue.value = '';
+    //     console.log('Selected value',filterValue.value);
+    // }
 }
 
 const getAutoCompleteFilterOptions = async (keyword) => {
@@ -1049,7 +1064,27 @@ const getAutoCompleteFilterOptions = async (keyword) => {
                   <label class="block mb-2 text-sm font-medium text-gray-900">Value:</label>
 
                   <div v-if="inputTypeForTheSelectedFilter === 'number'">
-                      <TextInput class="border-gray-200" v-model="filterValue" type="number" />
+                      <TextInput
+                          class="border-gray-200"
+                          v-model="filterValue"
+                          type="number"
+                          @keyup="toggleFilterAutocompleteDropdown($event, filterName)"
+                      />
+
+                      <!-- Dropdown for Filtered List -->
+                      <div v-if="filterAutoCompleteDropdown" class="border rounded max-h-60 overflow-y-auto">
+                          <div v-for="call in filteredCallRecords"
+                               :key="call.id"
+                               class="p-2 hover:bg-gray-100 cursor-pointer dropdown-container"
+                               @click="selectFilteredResult(
+                                  $event,
+                                  call[filterName],
+                                  filterName
+                                  )"
+                          >
+                              {{ call[filterName] }}
+                          </div>
+                      </div>
                   </div>
 
                   <div v-if="inputTypeForTheSelectedFilter === 'text'">
@@ -1063,13 +1098,16 @@ const getAutoCompleteFilterOptions = async (keyword) => {
 
                       <!-- Dropdown for Filtered List -->
                       <div v-if="filterAutoCompleteDropdown" class="border rounded max-h-60 overflow-y-auto">
-                          <div
-                              v-for="call in filteredCallRecords"
+                          <div v-for="call in filteredCallRecords"
                               :key="call.id"
                               class="p-2 hover:bg-gray-100 cursor-pointer dropdown-container"
-                              @click="selectFilteredResult($event, call, filterName)"
+                              @click="selectFilteredResult(
+                                  $event,
+                                  call[filterName],
+                                  filterName
+                                  )"
                           >
-                              {{ call.agent_name }}
+                              {{ call[filterName] }}
                           </div>
                       </div>
                   </div>
@@ -1084,13 +1122,16 @@ const getAutoCompleteFilterOptions = async (keyword) => {
 
                       <!-- Dropdown for Filtered List -->
                       <div v-if="filterAutoCompleteDropdown" class="border rounded max-h-60 overflow-y-auto">
-                          <div
-                              v-for="call in filteredCallRecords"
-                              :key="call.id"
-                              class="p-2 hover:bg-gray-100 cursor-pointer dropdown-container"
-                              @click="selectFilteredResult($event, call, filterName)"
+                          <div v-for="call in filteredCallRecords"
+                               :key="call.id"
+                               class="p-2 hover:bg-gray-100 cursor-pointer dropdown-container"
+                               @click="selectFilteredResult(
+                                  $event,
+                                  call[filterName],
+                                  filterName
+                                  )"
                           >
-                              {{ call.user_email }}
+                              {{ call[filterName] }}
                           </div>
                       </div>
                   </div>
@@ -1113,7 +1154,7 @@ const getAutoCompleteFilterOptions = async (keyword) => {
                       :disabled="disabled"
                       @click.prevent="showNewFilterModal = false"
                   >
-                      Cancel
+                  Cancel
                   </button>
               </div>
           </div>

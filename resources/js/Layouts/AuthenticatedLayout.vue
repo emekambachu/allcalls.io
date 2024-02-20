@@ -20,13 +20,12 @@ import DispositionModal from "@/Components/DispositionModal.vue";
 let page = usePage();
 
 let showLowBalanceModal = ref(false);
-if (page.props.auth.role !== "admin" && page.props.auth.user.balance < 40 && page.props.auth.user.basic_training == '1' && page.props.auth.user.agent_access_status === "Live" ) {
+if (page.props.auth.role !== "admin" && page.props.auth.user.balance < 40 && page.props.auth.user.basic_training == '1' && page.props.auth.user.agent_access_status === "Live"  && !page.props.auth.user.low_balance_call_scheduled ) {
   showLowBalanceModal.value = true;
 }
 
 let onLowBalanceModalClick = () => {
   window.open("https://calendly.com/insurancecareers/new-agent-call-review", "_blank");
-
   showLowBalanceModal.value = false;
 };
 
@@ -579,7 +578,7 @@ onMounted(() => {
     }
   );
 
-  setupTwilioDevice(); 
+  setupTwilioDevice();
 });
 
 onUnmounted(() => {
@@ -2940,9 +2939,9 @@ let appDownloadModal = ref(false);
       </div>
     </Modal> -->
     <LowBalanceModal v-if="showLowBalanceModal" :showLowBalanceModal="showLowBalanceModal" @onLowBalanceModalClick="onLowBalanceModalClick" @close="showLowBalanceModal = false" />
-    
 
-    
+
+
 
   </div>
 </template>

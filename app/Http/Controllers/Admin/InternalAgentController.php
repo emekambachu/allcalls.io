@@ -385,6 +385,7 @@ class InternalAgentController extends Controller
                 'level_id' => $request->level,
                 'upline_id' => $request->upline_id,
             ]);
+
             return response()->json([
                 'success' => true,
                 'message' => 'Agent updated successfully.',
@@ -527,4 +528,5 @@ class InternalAgentController extends Controller
        }
         dd('unlocked counter --> ' . $unlocked, 'live agetnt --> ' . $liveCount, 'Training counter --> ' . $notLiveCount, 'Locked counter --> ' . $locked);
     }
+
 }
