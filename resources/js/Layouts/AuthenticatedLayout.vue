@@ -26,7 +26,6 @@ if (page.props.auth.role !== "admin" && page.props.auth.user.balance < 40 && pag
 
 let onLowBalanceModalClick = () => {
   window.open("https://calendly.com/insurancecareers/new-agent-call-review", "_blank");
-
   showLowBalanceModal.value = false;
 };
 
@@ -579,7 +578,7 @@ onMounted(() => {
     }
   );
 
-  setupTwilioDevice(); 
+  setupTwilioDevice();
 });
 
 onUnmounted(() => {
@@ -2940,9 +2939,9 @@ let appDownloadModal = ref(false);
       </div>
     </Modal> -->
     <LowBalanceModal v-if="showLowBalanceModal" :showLowBalanceModal="showLowBalanceModal" @onLowBalanceModalClick="onLowBalanceModalClick" @close="showLowBalanceModal = false" />
-    
 
-    
+
+
 
   </div>
 </template>

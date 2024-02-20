@@ -385,6 +385,13 @@ class InternalAgentController extends Controller
                 'level_id' => $request->level,
                 'upline_id' => $request->upline_id,
             ]);
+
+
+            if($user->balance > MINIMUM_BALANCE) {
+                $user->low_balance_call_scheduled = false;
+                $user->save();
+            }
+
             return response()->json([
                 'success' => true,
                 'message' => 'Agent updated successfully.',
