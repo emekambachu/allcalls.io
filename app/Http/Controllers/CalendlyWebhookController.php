@@ -11,7 +11,7 @@ class CalendlyWebhookController extends Controller
 {
     public function show(Request $request)
     {
-        Log::debug('CalendlyWebhook:', [
+        Log::debug('CalendlyWebhookReceived:', [
             $request->all(),
         ]);
 
