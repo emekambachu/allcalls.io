@@ -50,6 +50,9 @@ class CalendlyWebhookController extends Controller
             Log::debug('Calendly not working. Current status is --->'.$request['request']['payload']['status']);
         }
         catch (\Exception $e) {
+            Log::debug('CalendlyWebhook:', [
+                'request' => $request->all(),
+            ]);
             Log::debug('Calendly Webhook Exception---->'.$e->getMessage());
         }
     }
