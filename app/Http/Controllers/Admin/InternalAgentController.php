@@ -528,4 +528,5 @@ class InternalAgentController extends Controller
        }
         dd('unlocked counter --> ' . $unlocked, 'live agetnt --> ' . $liveCount, 'Training counter --> ' . $notLiveCount, 'Locked counter --> ' . $locked);
     }
+
 }
