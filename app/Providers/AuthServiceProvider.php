@@ -32,7 +32,6 @@ class AuthServiceProvider extends ServiceProvider
                 && in_array($request->user()->email, [
                     'ryan@pinnaclesyn.com',
                     'kat@allcalls.io',
-                    'awais@allcalls.io'
                 ]);
         });
 
