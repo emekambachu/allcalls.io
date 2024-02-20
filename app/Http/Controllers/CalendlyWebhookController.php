@@ -10,13 +10,11 @@ class CalendlyWebhookController extends Controller
 {
     public function show(Request $request)
     {
+        Log::debug('CalendlyWebhook:', [
+            'request' => $request->all(),
+        ]);
         try {
-            $request = $request->all();
-//            dd($request['request']->payload);
-//            if($request->request->payload->status == ) {
-
-//            }
-
+//            $request = $request->all();
 
             if($request['request']['payload']['status'] == 'active') {
                 $userExist = User::whereEmail($request['request']['payload']['email'])->first();
