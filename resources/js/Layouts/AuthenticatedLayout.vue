@@ -52,7 +52,7 @@ let unreadNotifications = ref(
 );
 
 let disabledNavLink = ref(false);
-if(page.props.auth.user.agent_access_status !== "Live"){
+if(page.props.auth.user.agent_access_status !== "Live" &&  page.props.auth.user.role == 'internal-agent' ){
   disabledNavLink.value = true
 }
 console.log('page.props',page.props);
