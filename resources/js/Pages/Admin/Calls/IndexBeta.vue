@@ -61,6 +61,16 @@ let columns = ref([
     // },
 
     {
+        label: "ID",
+        name: "id",
+        visible: false,
+        sortable: false,
+        render(call) {
+            return call.id;
+        },
+    },
+
+    {
         label: "Agent Name",
         name: "agent_name",
         visible: true,
@@ -71,22 +81,22 @@ let columns = ref([
     },
 
     {
-        label: "ID",
-        name: "id",
-        visible: false,
-        sortable: true,
-        render(call) {
-            return call.id;
-        },
-    },
-
-    {
         label: "Call Date",
         name: "call_taken",
         visible: true,
         sortable: true,
         render(call) {
             return call.call_taken;
+        },
+    },
+
+    {
+        label: "CallerID",
+        name: "from",
+        visible: true,
+        sortable: false,
+        render(call) {
+            return call.from;
         },
     },
 
@@ -168,7 +178,7 @@ let columns = ref([
         label: "Pub ID",
         name: "publisher_id",
         visible: true,
-        sortable: true,
+        sortable: false,
         render(call) {
             return call.publisher_id;
         },
@@ -207,16 +217,6 @@ let columns = ref([
         sortable: false,
         render(call) {
             return call.recording_url;
-        },
-    },
-
-    {
-        label: "CallerID",
-        name: "from",
-        visible: false,
-        sortable: false,
-        render(call) {
-          return call.from;
         },
     },
 
