@@ -889,7 +889,7 @@ let appDownloadModal = ref(false);
         </nav>
 
         <div class="w-full md:grid md:grid-cols-5 md:gap-28 md:max-w-screen-3xl xl:gap-0 px-5">
-          <div class="py-12 hidden sm:-my-px sm:ml-10 col-span-1 md:flex md:flex-col">
+          <div class="py-12 hidden mx-auto col-span-1 md:flex md:flex-col">
             <NavLink
               class="mb-10 gap-2"
               :href="route('admin.dashboard')"
