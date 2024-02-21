@@ -504,40 +504,9 @@ class InternalAgentController extends Controller
             $query->where('role_id', $agentRole->id);
         })->get();
 
-        $unlocked = User::select('users.*', 'role_user.role_id')->leftjoin('role_user', 'role_user.user_id', 'users.id')->whereHas('roles', function ($query) use ($agentRole) {
-            $query->where('role_id', $agentRole->id);
-        })->where('is_locked', 0)->count();
-
-
-        $locked = User::select('users.*', 'role_user.role_id')->leftjoin('role_user', 'role_user.user_id', 'users.id')->whereHas('roles', function ($query) use ($agentRole) {
-            $query->where('role_id', $agentRole->id);
-        })->where('is_locked', 1)->count();
-
-        $liveCount = 0;
-        $notLiveCount = 0;
-        foreach ($agents as $agent) {
-            if ($agent->is_locked == 0) {
-                $agent->agent_access_status = LIVE;
-                $liveCount++;
-                $agent->save();
-            } else {
-                $agent->agent_access_status = TRAINING;
-                $notLiveCount++;
-                $agent->save();
-            }
-        }
-        dd('unlocked counter --> ' . $unlocked, 'live agetnt --> ' . $liveCount, 'Training counter --> ' . $notLiveCount, 'Locked counter --> ' . $locked);
-    }
-    public function scheduleLiveTraining()
-    {
-        $agentRole = Role::whereName('internal-agent')->first();
-        $agents = User::select('users.*', 'role_user.role_id')->leftjoin('role_user', 'role_user.user_id', 'users.id')->whereHas('roles', function ($query) use ($agentRole) {
-            $query->where('role_id', $agentRole->id);
-        })->get();
-
         foreach ($agents as $agent) {
             if ($agent->agent_access_status == LIVE) {
-                $agent->new_agent_call_scheduled = true;
+                $agent->basic_training = true;
                 $agent->save();
             }
         }
