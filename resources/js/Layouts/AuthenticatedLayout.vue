@@ -1923,19 +1923,29 @@ let appDownloadModal = ref(false);
                 </div>
               </ResponsiveNavLink>
 
-              <ResponsiveNavLink :class="{ 'opacity-50': disabledNavLink === true }" :disabledNavLink="disabledNavLink"
-                :href="route('calls.index')" :active="route().current('calls.index')">
+              <ResponsiveNavLink
+                  :class="{ 'opacity-50': disabledNavLink === true }"
+                  :disabledNavLink="disabledNavLink"
+                  :href="route('calls.index')"
+                  :active="route().current('calls.index')">
                 Call Reporting
               </ResponsiveNavLink>
 
-              <ResponsiveNavLink :class="{ 'opacity-50': disabledNavLink === true }" :disabledNavLink="disabledNavLink"
-                :href="route('additional-files.index')" :active="route().current('additional-files.index')">
+              <ResponsiveNavLink
+                  :class="{ 'opacity-50': disabledNavLink === true }"
+                  :disabledNavLink="disabledNavLink"
+                  :href="route('additional-files.index')"
+                  :active="route().current('additional-files.index')">
                 Additional Files
               </ResponsiveNavLink>
 
-              <ResponsiveNavLink :class="{ 'opacity-50': disabledNavLink === true }" :disabledNavLink="disabledNavLink"  :href="route('billing.funds.index')" :active="route().current('billing.funds.index') ||
-                route().current('billing.cards.index') ||
-                route().current('billing.autopay.index')
+              <ResponsiveNavLink
+                  :class="{ 'opacity-50': disabledNavLink === true }"
+                  :disabledNavLink="disabledNavLink"
+                  :href="route('billing.funds.index')"
+                  :active="route().current('billing.funds.index') ||
+                    route().current('billing.cards.index') ||
+                    route().current('billing.autopay.index')
                 " v-if="!isInternalLevel">
                 <div class="row pb-3 flex">
                   <div class="columns-6 flex">Add Funds</div>
@@ -2033,23 +2043,31 @@ let appDownloadModal = ref(false);
                 </div>
               </ResponsiveNavLink>
 
-              <ResponsiveNavLink :class="{ 'opacity-50': disabledNavLink === true }" :disabledNavLink="disabledNavLink"
-                :href="route('support.index')" :active="route().current('support.index')">
+              <ResponsiveNavLink
+                  :class="{ 'opacity-50': disabledNavLink === true }"
+                  :disabledNavLink="disabledNavLink"
+                  :href="route('support.index')"
+                  :active="route().current('support.index')">
                 Support
               </ResponsiveNavLink>
 
-              <ResponsiveNavLink :class="{ 'opacity-50': disabledNavLink === true }" :disabledNavLink="disabledNavLink" v-if="$page.props.auth.role === 'internal-agent'"
-                :href="route('promotion-guidelines.show')" :active="route().current('promotion-guidelines.show')"
+              <ResponsiveNavLink
+                  :class="{ 'opacity-50': disabledNavLink === true }"
+                  :disabledNavLink="disabledNavLink"
+                  v-if="$page.props.auth.role === 'internal-agent'"
+                  :href="route('promotion-guidelines.show')"
+                  :active="route().current('promotion-guidelines.show')"
                  >
                 Promotion Guidelines
               </ResponsiveNavLink>
 
-              <ResponsiveNavLink :class="{ 'opacity-50': disabledNavLink === true }" :disabledNavLink="disabledNavLink"
-                :href="route('activities.index')" :active="route().current('activities.index') ||
+              <ResponsiveNavLink
+                  :class="{ 'opacity-50': disabledNavLink === true }"
+                  :disabledNavLink="disabledNavLink"
+                  :href="route('activities.index')" :active="route().current('activities.index') ||
                   route().current('transactions.index') ||
                   route().current('profile.view') ||
-                  route().current('profile.edit')
-                "
+                  route().current('profile.edit')"
               >
                 <div class="row pb-3 flex">
                   <div class="columns-6 flex">Settings</div>
@@ -2199,13 +2217,16 @@ let appDownloadModal = ref(false);
           </div>
         </nav>
 
-        <div
-          class="w-full mx-auto md:grid md:grid-cols-5 md:gap-28 md:max-w-screen-2xl xl:gap-0"
-        >
+        <div class="w-full mx-auto md:grid md:grid-cols-5 md:gap-28 md:max-w-screen-2xl xl:gap-0">
           <div class="py-12 hidden sm:-my-px sm:ml-10 col-span-1 md:flex md:flex-col">
-            <NavLink :class="{ 'opacity-50': disabledNavLink === true }" :disabledNavLink="disabledNavLink" class="mb-10 gap-2"   :href="route('take-calls.show')"
-              :active="route().current('take-calls.show')">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            <NavLink
+                :class="{ 'opacity-50': disabledNavLink === true }"
+                :disabledNavLink="disabledNavLink"
+                class="mb-10 gap-2"
+                :href="route('take-calls.show')"
+                :active="route().current('take-calls.show')">
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="w-8 h-8 mr-2">
                 <path stroke-linecap="round" stroke-linejoin="round"
                   d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
@@ -2213,15 +2234,24 @@ let appDownloadModal = ref(false);
               Take Calls
             </NavLink>
 
-            <NavLink :class="{ 'opacity-50': disabledNavLink === true }" :disabledNavLink="disabledNavLink" class="mb-10 gap-2"   :href="route('clients.index')"
-              :active="route().current('clients.index')">
+            <NavLink
+                :class="{ 'opacity-50': disabledNavLink === true }"
+                :disabledNavLink="disabledNavLink"
+                class="mb-10 gap-2"
+                :href="route('clients.index')"
+                :active="route().current('clients.index')">
               <img src="/img/clients.png" alt="" />
               Clients
             </NavLink>
 
-            <NavLink :class="{ 'opacity-50': disabledNavLink === true }" :disabledNavLink="disabledNavLink" v-if="$page.props.auth.role === 'internal-agent'"   class="mb-10 gap-2" :href="route('internal-agent.agent-agency.index')"
-              :active="route().current('internal-agent.agent-agency.index')">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            <NavLink
+                :class="{ 'opacity-50': disabledNavLink === true }"
+                :disabledNavLink="disabledNavLink"
+                v-if="$page.props.auth.role === 'internal-agent'"
+                class="mb-10 gap-2" :href="route('internal-agent.agent-agency.index')"
+                :active="route().current('internal-agent.agent-agency.index')">
+
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="w-8 h-8 mr-2">
                 <path stroke-linecap="round" stroke-linejoin="round"
                   d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" />
@@ -2332,20 +2362,21 @@ let appDownloadModal = ref(false);
               </svg>
             </NavLink> -->
 
-            <NavLink :disabledNavLink="disabledNavLink" v-if="!isInternalLevel"     class="mb-10 gap-2" id="billing-nav-link"
-              :href="route('billing.funds.index')" :active="route().current('billing.funds.index') ||
-                route().current('billing.cards.index') ||
-                route().current('billing.autopay.index')
-                " :class="{
-                  'opacity-50': disabledNavLink === true,
-    'mb-5':
-      route().current('billing.funds.index') ||
-      route().current('billing.cards.index') ||
-      route().current('billing.autopay.index'),
-  }">
-              <img src="/img/billing.png" alt="" />
+            <NavLink :disabledNavLink="disabledNavLink" v-if="!isInternalLevel"
+                     class="mb-10 gap-2"
+                     id="billing-nav-link"
+                     :href="route('billing.funds.index')" :active="route().current('billing.funds.index') ||
+                    route().current('billing.cards.index') ||
+                    route().current('billing.autopay.index')
+                    " :class="{
+                      'opacity-50': disabledNavLink === true,
+                        'mb-5':
+                          route().current('billing.funds.index') ||
+                          route().current('billing.cards.index') ||
+                          route().current('billing.autopay.index'),
+                      }">
+              <img src="/img/billing.png" alt=""/>
               Add Funds
-
               <svg
                 v-if="
                   route().current('billing.funds.index') ||
