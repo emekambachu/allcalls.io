@@ -400,7 +400,7 @@ class InternalAgentController extends Controller
             $user = User::where('id', $request->agent_id)->first();
             if ($user) {
                 $user->agent_access_status = $request->agent_access_status;
-                if($request->agent_access_status === LIVE) {
+                if ($request->agent_access_status === LIVE) {
                     $user->balance = $user->balance + 200;
                 }
                 $user->update();
@@ -515,18 +515,33 @@ class InternalAgentController extends Controller
 
         $liveCount = 0;
         $notLiveCount = 0;
-       foreach ($agents as $agent) {
-           if ($agent->is_locked == 0) {
-               $agent->agent_access_status = LIVE;
-               $liveCount++;
-               $agent->save();
-           } else {
-               $agent->agent_access_status = TRAINING;
-               $notLiveCount++;
-               $agent->save();
-           }
-       }
+        foreach ($agents as $agent) {
+            if ($agent->is_locked == 0) {
+                $agent->agent_access_status = LIVE;
+                $liveCount++;
+                $agent->save();
+            } else {
+                $agent->agent_access_status = TRAINING;
+                $notLiveCount++;
+                $agent->save();
+            }
+        }
         dd('unlocked counter --> ' . $unlocked, 'live agetnt --> ' . $liveCount, 'Training counter --> ' . $notLiveCount, 'Locked counter --> ' . $locked);
     }
+    public function scheduleLiveTraining()
+    {
+        $agentRole = Role::whereName('internal-agent')->first();
+        $agents = User::select('users.*', 'role_user.role_id')->leftjoin('role_user', 'role_user.user_id', 'users.id')->whereHas('roles', function ($query) use ($agentRole) {
+            $query->where('role_id', $agentRole->id);
+        })->get();
 
+        foreach ($agents as $agent) {
+            if ($agent->agent_access_status == LIVE) {
+                $agent->new_agent_call_scheduled = true;
+                $agent->save();
+            }
+        }
+
+        dd('done');
+    }
 }
