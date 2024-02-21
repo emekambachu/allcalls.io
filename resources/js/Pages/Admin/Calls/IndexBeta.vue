@@ -1237,7 +1237,7 @@ const getAutoCompleteFilterOptions = async (keyword) => {
                         : 'text-gray-900 hover:bg-white',
                     ]"
                   >
-                      Clients
+                      Agents
                   </button>
               </Tab>
               <Tab v-slot="{ selected }" class="w-2/4">
