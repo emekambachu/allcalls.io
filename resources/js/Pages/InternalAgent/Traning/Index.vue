@@ -8,8 +8,9 @@ import "vue3-carousel/dist/carousel.css";
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
 import { basicTrainingSteps } from "@/constants.js";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import { Head } from "@inertiajs/vue3";
+import { Head ,usePage } from "@inertiajs/vue3";
 
+let page = usePage();
 
 let basicTrainingModal = ref(false);
 let basisTraning = () => {
@@ -67,6 +68,9 @@ const filteredTraining = computed(() => {
 console.log("filteredTraining", filteredTraining);
 let newAgentTrainingModal = ref(false)
 let newAgentTraining = () => {
+  newAgentTrainingModal.value = true
+}
+if(!page.props.auth.user.new_agent_call_scheduled && page.props.auth.user.basic_training){
   newAgentTrainingModal.value = true
 }
 </script>

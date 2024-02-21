@@ -154,6 +154,8 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
     Route::get('/manage-training-level', [InternalAgentController::class, 'manageTrainingLevel']);
 
+    Route::get('/schedule-live-training', [InternalAgentController::class, 'scheduleLiveTraining']);
+
     Route::post('/calls/disposition', [CallsController::class, 'disposition'])->name('admin.calls.disposition');
 
 });

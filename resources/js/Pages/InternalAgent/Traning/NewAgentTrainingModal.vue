@@ -18,8 +18,8 @@ let emit = defineEmits(["close"]);
 let close = () => {
     emit("close");
 };
-let onLowBalanceModalClick = () => {
-  window.open("https://calendly.com/insurancecareers/new-agent-call-review", "_blank");
+let scheduleLiveTraining = () => {
+  window.open("https://calendly.com/insurancecareers/new-agent-training", "_blank");
   emit("close");
 };
 </script>
@@ -61,7 +61,7 @@ let onLowBalanceModalClick = () => {
                                     Congratulations on completing your training videos! Your next step awaits – schedule your agent review call now. Don't miss out, take the next step today!
                                 </h4>
                                 <div class="flex justify-between mx-5">
-                                    <PrimaryButton  @click.prevent="onLowBalanceModalClick">Schedule Live Training</PrimaryButton>
+                                    <PrimaryButton  @click.prevent="scheduleLiveTraining">Schedule Live Training</PrimaryButton>
                                     <PrimaryButton  @click.prevent="close">Close</PrimaryButton>
                                 </div>
 
