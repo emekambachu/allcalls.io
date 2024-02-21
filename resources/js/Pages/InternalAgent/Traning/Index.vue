@@ -95,7 +95,6 @@ if(!page.props.auth.user.new_agent_call_scheduled && page.props.auth.user.basic_
               </h1>
             </div>
             <div>
-              <PrimaryButton v-if="!$page.props.auth.user.new_agent_call_scheduled" @click="newAgentTraining">NEW AGENT TRAINING</PrimaryButton>
             </div>
           </div>
           <hr class="mb-4" />
