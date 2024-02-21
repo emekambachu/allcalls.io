@@ -8,14 +8,20 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import Modal from "@/Components/Modal.vue";
+import CallLogs from "@/Components/CallLogs.vue";
 import {
-  Menu,
-  MenuButton,
-  MenuItems,
-  MenuItem,
-  Popover,
-  PopoverButton,
-  PopoverPanel,
+    Menu,
+    MenuButton,
+    MenuItems,
+    MenuItem,
+    Popover,
+    PopoverButton,
+    PopoverPanel,
+    TabGroup,
+    TabList,
+    Tab,
+    TabPanels,
+    TabPanel
 } from "@headlessui/vue";
 
 let page = usePage();
@@ -24,31 +30,53 @@ if (page.props.flash.message) {
 }
 
 let props = defineProps({
-  totalCalls: {
-    type: Number,
-    required: true,
-  },
-  totalRevenue: {
-    type: Number,
-    required: true,
-  },
-  callsGroupedByUser: {
-    type: Object,
-    required: true,
-  },
+    totalCalls: {
+        type: Number,
+        required: true,
+    },
+    totalRevenue: {
+        type: Number,
+        required: true,
+    },
+    callsGroupedByUser: {
+        type: Object,
+        required: true,
+    },
+    callsGroupedByPublisherName: {
+        type: Object,
+        required: true,
+    },
 });
 
-const getTotalCalls = ref(props.totalCalls);
-const getTotalRevenue = ref(props.totalRevenue);
-
 let columns = ref([
+    // {
+    //     // using serial number instead of ID for sorting purposes
+    //     label: "SN",
+    //     name: "serial_number",
+    //     visible: true,
+    //     sortable: true,
+    //     render(call) {
+    //         return call.serial_number;
+    //     },
+    // },
+
     {
-        label: "ID",
-        name: "id",
+        label: "Agent Name",
+        name: "agent_name",
         visible: true,
         sortable: true,
         render(call) {
-          return call.id;
+            return call.user !== null ? call.user.first_name+' '+call.user.last_name : '';
+        },
+    },
+
+    {
+        label: "ID",
+        name: "id",
+        visible: false,
+        sortable: true,
+        render(call) {
+            return call.id;
         },
     },
 
@@ -59,16 +87,6 @@ let columns = ref([
         sortable: true,
         render(call) {
             return call.call_taken;
-        },
-    },
-
-    {
-        label: "Agent Name",
-        name: "agent_name",
-        visible: true,
-        sortable: true,
-        render(call) {
-            return call.user !== null ? call.user.first_name+' '+call.user.last_name : '';
         },
     },
 
@@ -112,7 +130,7 @@ let columns = ref([
         visible: true,
         sortable: false,
         render(call) {
-            return call.client?.status;
+            return call?.client?.status;
         },
     },
 
@@ -138,7 +156,7 @@ let columns = ref([
 
     {
         label: "Publisher Name",
-        columnMethod: "getPublisherNameColumn",
+        name: "publisher_name",
         visible: true,
         sortable: true,
         render(call) {
@@ -148,7 +166,7 @@ let columns = ref([
 
     {
         label: "Pub ID",
-        columnMethod: "getPublisherIdColumn",
+        name: "publisher_id",
         visible: true,
         sortable: true,
         render(call) {
@@ -179,6 +197,16 @@ let columns = ref([
         sortable: false,
         render(call) {
             return call.call_type.type;
+        },
+    },
+
+    {
+        label: "Recording URL",
+        name: "recording_url",
+        visible: true,
+        sortable: false,
+        render(call) {
+            return call.recording_url;
         },
     },
 
@@ -217,11 +245,21 @@ let renderColumn = (column, call) => {
 let callsPaginator = ref(null);
 let loadedCalls = ref([]);
 let sortColumn = ref(null);
-let sortDirection = ref("asc");
+let sortDirection = ref("desc");
 let loading = ref(false);
 let currentPage = ref(1);
+const getAllCalls = ref([]);
+const getTotalCalls = ref(props.totalCalls);
+const getTotalRevenue = ref(props.totalRevenue);
+const getTotalCallResults = ref(0);
+const getTotalRevenueResults = ref(0);
+const paginate = ref({
+    currentPage: currentPage.value,
+    perPage: null,
+});
 
-let fetchCalls = async (replace = false) => {
+
+let fetchCalls = async (replace = false, per_page = null) => {
   let url = "/admin/web-api/calls?page=" + currentPage.value;
 
   if (sortColumn.value) {
@@ -232,15 +270,13 @@ let fetchCalls = async (replace = false) => {
     url += "&sort_direction=" + sortDirection.value;
   }
 
-  // Include start_date and end_date in the query string if they both exist
-  // if (startDate.value && endDate.value) {
-  //   url += "&start_date=" + startDate.value;
-  //   url += "&end_date=" + endDate.value;
-  // }
-
   if (dateFilterFrom.value && dateFilterTo.value) {
     url += "&start_date=" + dateFilterFrom.value;
     url += "&end_date=" + dateFilterTo.value;
+  }
+
+  if(per_page !== null) {
+      url += "&per_page=" + per_page;
   }
 
   // Append filters to the query string
@@ -260,15 +296,44 @@ let fetchCalls = async (replace = false) => {
   }
 
   callsPaginator.value = response.data.calls;
+  getAllCalls.value = response.data.all_calls;
+  getTotalCallResults.value = response.data.total;
+  getTotalRevenueResults.value = response.data.total_revenue;
+
+  // keep track of current page and pagination
+  paginate.value.perPage = response.data.per_page;
+  paginate.value.currentPage = currentPage.value;
+  console.log({
+      currentPage: paginate.value.currentPage,
+      perPage: paginate.value.perPage,
+  });
 
   loading.value = false;
   console.log("Loaded Calls: ", loadedCalls.value);
+  console.log("Total Call Results: ", getTotalCallResults.value);
+  console.log("Total Revenue: ", getTotalRevenueResults.value);
 };
 
 
 let loadMore = async () => {
-  currentPage.value++;
-  await fetchCalls();
+  //currentPage.value++;
+
+   // Reason for this solution: Sorting is done on every load more on the backend and applied to only per_pages records.
+    // therefore it is a bug that causes the records on the table to not be sorted correctly.
+   // Will need to implement a better solution that handles the sorting on the frontend and not backend
+
+   // On every load more, increase per_page by 100, which is the default per_page on the backend
+  let per_page;
+  let new_per_page = parseInt(paginate.value.perPage) + 100;
+
+  if(getTotalCalls.value > new_per_page){
+      per_page = new_per_page;
+
+  }else{
+      per_page = getTotalCalls.value;
+  }
+
+  await fetchCalls(true, per_page);
 };
 
 onMounted(() => {});
@@ -286,7 +351,7 @@ let sortByColumn = async (column) => {
     sortDirection.value = "asc";
   }
 
-  await fetchCalls(true);
+  await fetchCalls(true, paginate.value.perPage);
 };
 
 let callsGroupedByUserArray = Object.entries(props.callsGroupedByUser);
@@ -296,6 +361,9 @@ let minimizedCallsGroupedByUser = ref(
 );
 let maxmizedCallsGroupedByUser = ref(Object.fromEntries(callsGroupedByUserArray));
 let showMoreForGrouped = ref(false);
+
+const callsGroupedByPublisherNameArray = Object.entries(props.callsGroupedByPublisherName);
+const callsGroupedByPublisherName = ref(Object.fromEntries(callsGroupedByPublisherNameArray));
 
 console.log("Mini Calls Grouped By User: ", minimizedCallsGroupedByUser.value);
 console.log("Max Calls Grouped By User: ", maxmizedCallsGroupedByUser.value);
@@ -373,27 +441,74 @@ let exportCSV = () => {
   document.body.removeChild(link);
 };
 
+// export to be sent to backend
+const exportSearchResults = computed(() => {
+    return {
+        totalCalls: getTotalCallResults.value,
+        totalRevenue: getTotalRevenueResults.value,
+        columns: columns.value.reduce((arr, col) => {
+            if (col.visible === true) {
+                arr.push({label: col.label, name: col.name});
+            }
+            return arr;
+        }, []),
+    };
+})
+
 let currentlyPlayingAudio = ref(null);
 let currentlyPlayingAudioCallId = ref(null);
 
 let playRecording = (call) => {
+
+  // Stop any recording currently playing
+  // stopPlayingRecording();
+
   currentlyPlayingAudio.value = new Audio(call.recording_url);
   currentlyPlayingAudio.value.play();
   currentlyPlayingAudioCallId.value = call.id;
 
+  console.log("Playing Recording: ", {
+    call_url: call.recording_url,
+    currently_playing: currentlyPlayingAudio.value
+  });
+
+  currentlyPlayingAudio.value.addEventListener('loadedmetadata', () => {
+
+    let duration = currentlyPlayingAudio.value.duration;
+    let minutes = Math.floor(duration / 60);
+    let seconds = Math.floor(duration % 60);
+    seconds = seconds < 10 ? '0' + seconds : seconds; // Add leading zero if needed
+    console.log(`Duration: ${minutes}:${seconds}`);
+
+    document.getElementById('audio-duration'+call.id).textContent = `Duration: ${minutes}:${seconds}`;
+
+  });
+
   // Assuming audio is your Audio element
+  // Also when the audio is ended, pause and clear the audio element
   currentlyPlayingAudio.value.addEventListener("ended", () => {
-    currentlyPlayingAudio.value.pause();
-    currentlyPlayingAudio.value = null;
-    currentlyPlayingAudioCallId.value = null;
+    stopPlayingRecording();
   });
 };
 
-let stopPlayingRecording = (call) => {
+const stopPlayingRecording = (call) => {
   currentlyPlayingAudio.value.pause();
   currentlyPlayingAudio.value = null;
   currentlyPlayingAudioCallId.value = null;
 };
+
+function fastForwardRecording(seconds) {
+    if (currentlyPlayingAudio && currentlyPlayingAudio.value) {
+        // Check if the desired fast-forward time is more than the current time
+        const newTime = currentlyPlayingAudio.value.currentTime + seconds;
+        if (newTime < currentlyPlayingAudio.value.duration) {
+            currentlyPlayingAudio.value.currentTime = newTime;
+        } else {
+            // If the fast-forward time exceeds the duration
+            currentlyPlayingAudio.value.currentTime = currentlyPlayingAudio.value.duration;
+        }
+    }
+}
 
 let filters = ref([
 
@@ -555,8 +670,10 @@ const applyCallFiltersToSummary = () => {
     showMoreForGrouped.value = true;
     maxmizedCallsGroupedByUser.value = {};
     minimizedCallsGroupedByUser.value = {};
-    getTotalCalls.value = 0;
-    getTotalRevenue.value = 0;
+
+    // update with results
+    getTotalCalls.value = getTotalCallResults.value;
+    getTotalRevenue.value = getTotalRevenueResults.value;
 
     // Iterate loadedCalls first and then grouped calls to match the both user ids
     // if matched add the user group to the maxmizedCallsGroupedByUser
@@ -564,8 +681,8 @@ const applyCallFiltersToSummary = () => {
         Object.values(unfilteredGroupedCalls).forEach(group => {
             if (group.userId === value.user_id) {
 
-                getTotalCalls.value ++;
-                getTotalRevenue.value += parseFloat(value.amount_spent);
+                // getTotalCalls.value ++;
+                // getTotalRevenue.value += parseFloat(value.amount_spent);
 
                 maxmizedCallsGroupedByUser.value[group.userId] = group;
                 minimizedCallsGroupedByUser.value[group.userId] = group;
@@ -588,9 +705,7 @@ const removeFiltersForSummary = () => {
 
 let removeFilter = async (index) => {
   appliedFilters.value.splice(index, 1);
-
   removeFiltersForSummary();
-
   await fetchCalls(true);
 }
 
@@ -616,13 +731,14 @@ let clearDateFilter = () => {
   removeFiltersForSummary();
 }
 
-let applyDateFilter = async () => {
+let applyDateFilter = async (close) => {
 
   console.log("Date Filter From: ", dateFilterFrom.value);
   console.log("Date Filter To: ", dateFilterTo.value);
 
   await fetchCalls(true);
   applyCallFiltersToSummary();
+  close();
 }
 
 onMounted(() => {
@@ -630,7 +746,7 @@ onMounted(() => {
 });
 
 
-let applyDatePreset = label => {
+let applyDatePreset = (label) => {
   const today = new Date();
   let from, to;
 
@@ -675,12 +791,139 @@ function formatDate(date) {
   return [year, month, day].join('-');
 }
 
+
+let showLogsForCallId = ref(null);
+let showLogsForCallModal = ref(false);
+let openDetailedLogs = callId => {
+  showLogsForCallId.value = callId;
+  showLogsForCallModal.value = true;
+}
+let disposition = ref('Select a disposition')
+let showDispositionModal = ref(false)
+let call_id = ref(null)
+let colIndex = ref(null)
+let addDisposition = (call , index) => {
+  firstStepErrors.value.disposition = [``];
+  showDispositionModal.value = true
+  call_id.value = call.id
+  colIndex.value = index
+  if(call?.client?.status){
+    disposition.value = call?.client?.status
+  }else{
+    disposition.value = 'Select a disposition'
+  }
+}
+
+let firstStepErrors = ref({})
+let disposition_loader = ref(false)
+let saveChanges = () => {
+  firstStepErrors.value.disposition = [``];
+  disposition_loader.value = true
+  if(!disposition.value || disposition.value == 'Select a disposition' ){
+    console.log('error');
+    firstStepErrors.value.disposition = [`The disposition is required.`];
+    disposition_loader.value = false
+    console.log('firstStepErrors.value',firstStepErrors.value);
+    return
+  }
+  axios.post('/admin/calls/disposition',{
+    disposition:disposition.value,
+    call_id:call_id.value
+  })
+  .then((res)=>{
+    console.log('res',res);
+    toaster("success", res.data.message);
+    router.visit('/admin/calls')
+    disposition_loader.value = false
+    showDispositionModal.value = false
+    // loadedCalls.value[colIndex.value].disposition = res.data.call.disposition;
+    // console.log('loadedCalls.value[colIndex.value]',loadedCalls.value[colIndex.value].disposition);
+  }).catch((error)=>{
+    if(error.response.status == 400){
+      toaster("error", error.response.data.errors);
+    }else{
+      toaster("error", error.message);
+    }
+    // console.log('error',error);
+    disposition_loader.value = false
+  })
+}
+
+
+// Autocomplete filter selections
+const allowedAutoCompleteFilterNames = ref([
+    "user_email",
+    "agent_name",
+    "publisher_name",
+    "publisher_id",
+    "disposition",
+    "id"
+
+])
+const filterAutoCompleteDropdown = ref(false);
+
+// Check if filter name is allowed for auto complete
+const toggleFilterAutocompleteDropdown = (event, filterName) => {
+    filterAutoCompleteDropdown.value = false;
+    console.log('Filter name: ', filterName);
+    if(allowedAutoCompleteFilterNames.value.includes(filterName)){
+        event.stopPropagation(); // Prevent click from propagating
+        filterAutoCompleteDropdown.value = true;
+    }
+}
+
+const filteredCallRecords = computed(() => {
+    if (filterValue.value === '') {
+        return [];
+    }
+    let matches = 0;
+    return getAllCalls.value.filter(call => {
+        // Check if any of the specified fields contain the filter value
+        const filterMatch = [call.user_email, call.agent_name, call.publisher_name, call.publisher_id, call.disposition, call.id]
+            .some(field => field && field.toString().toLowerCase().includes(filterValue.value.toLowerCase()));
+
+        if (filterMatch && matches < 10) {
+            matches++;
+            return true;
+        }
+    });
+});
+
+const selectFilteredResult = (event, selected, filterName) => {
+    filterAutoCompleteDropdown.value = false;
+
+    if(allowedAutoCompleteFilterNames.value.includes(filterName)){
+        filterValue.value = selected;
+    }else{
+        filterValue.value = '';
+    }
+}
+
+const getAutoCompleteFilterOptions = async (keyword) => {
+    await axios.get(`/web-api/calls/autocomplete`, {
+        headers: {
+            'Accept' : 'application/json',
+        },
+        params: {
+            keyword: keyword
+        }
+    }).then((response) => {
+        if (response.data.success) {
+            console.log(response.data.data);
+
+        } else {
+            console.log(response.data.data);
+        }
+
+    }).catch((error) => {
+        console.log(error);
+    });
+}
 </script>
 
 <template>
   <Head title="Calls" />
   <AuthenticatedLayout>
-
       <div class="pt-14 px-16 flex items-center mb-2">
 
           <Popover class="relative mr-2">
@@ -696,7 +939,7 @@ function formatDate(date) {
                   </button>
               </PopoverButton>
 
-              <PopoverPanel class="absolute z-10">
+              <PopoverPanel class="absolute z-10" v-slot="{ close }">
                   <div class="border border-gray-100 p-3 shadow bg-gray-50 mt-2">
 
                       <div class="flex items-center justify-between">
@@ -734,7 +977,7 @@ function formatDate(date) {
                           Past 30 Days
                       </div>
 
-                      <PrimaryButton @click.prevent="applyDateFilter"
+                      <PrimaryButton @click.prevent="applyDateFilter(close)"
                                      class="w-full text-center flex justify-center text-md mb-4">Apply</PrimaryButton>
 
                       <button class="w-full text-center flex justify-center items-center text-md px-4 py-3 border rounded-md font-semibold text-md uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 hover:bg-white hover:text-custom-blue"
@@ -747,6 +990,7 @@ function formatDate(date) {
                   </div>
               </PopoverPanel>
           </Popover>
+
           <div
               v-for="(filter, index) in appliedFilters"
               :key="filter.name"
@@ -766,6 +1010,15 @@ function formatDate(date) {
               + Add Filter
           </button>
       </div>
+
+
+      <Modal
+        :show="showLogsForCallModal"
+        @close="showLogsForCallModal = false; showLogsForCallId = null"
+        :closeable="true"
+      >
+        <CallLogs :callId="showLogsForCallId" />
+      </Modal>
 
       <Modal
           :show="showNewFilterModal"
@@ -798,15 +1051,76 @@ function formatDate(date) {
                   <label class="block mb-2 text-sm font-medium text-gray-900">Value:</label>
 
                   <div v-if="inputTypeForTheSelectedFilter === 'number'">
-                      <TextInput class="border-gray-200" v-model="filterValue" type="number" />
+                      <TextInput
+                          class="border-gray-200"
+                          v-model="filterValue"
+                          type="number"
+                          @keyup="toggleFilterAutocompleteDropdown($event, filterName)"
+                      />
+
+                      <!-- Dropdown for Filtered List -->
+                      <div v-if="filterAutoCompleteDropdown" class="border rounded max-h-60 overflow-y-auto">
+                          <div v-for="call in filteredCallRecords"
+                               :key="call.id"
+                               class="p-2 hover:bg-gray-100 cursor-pointer dropdown-container"
+                               @click="selectFilteredResult(
+                                  $event,
+                                  call[filterName],
+                                  filterName
+                                  )"
+                          >
+                              {{ call[filterName] }}
+                          </div>
+                      </div>
                   </div>
 
                   <div v-if="inputTypeForTheSelectedFilter === 'text'">
-                      <TextInput class="border-gray-200" v-model="filterValue" type="text" />
+                      <TextInput
+                          class="border-gray-200"
+                          v-model="filterValue"
+                          type="text"
+                          role="button"
+                          @keyup="toggleFilterAutocompleteDropdown($event, filterName)"
+                      />
+
+                      <!-- Dropdown for Filtered List -->
+                      <div v-if="filterAutoCompleteDropdown" class="border rounded max-h-60 overflow-y-auto">
+                          <div v-for="call in filteredCallRecords"
+                              :key="call.id"
+                              class="p-2 hover:bg-gray-100 cursor-pointer dropdown-container"
+                              @click="selectFilteredResult(
+                                  $event,
+                                  call[filterName],
+                                  filterName
+                                  )"
+                          >
+                              {{ call[filterName] }}
+                          </div>
+                      </div>
                   </div>
 
                   <div v-if="inputTypeForTheSelectedFilter === 'email'">
-                      <TextInput class="border-gray-200" v-model="filterValue" type="text" />
+                      <TextInput
+                          class="border-gray-200"
+                          v-model="filterValue"
+                          type="text"
+                          @keyup="toggleFilterAutocompleteDropdown($event, filterName)"
+                      />
+
+                      <!-- Dropdown for Filtered List -->
+                      <div v-if="filterAutoCompleteDropdown" class="border rounded max-h-60 overflow-y-auto">
+                          <div v-for="call in filteredCallRecords"
+                               :key="call.id"
+                               class="p-2 hover:bg-gray-100 cursor-pointer dropdown-container"
+                               @click="selectFilteredResult(
+                                  $event,
+                                  call[filterName],
+                                  filterName
+                                  )"
+                          >
+                              {{ call[filterName] }}
+                          </div>
+                      </div>
                   </div>
 
                   <div v-if="inputTypeForTheSelectedFilter === 'select'">
@@ -822,16 +1136,74 @@ function formatDate(date) {
                   <button
                       class="inline-flex items-center px-4 py-3 border rounded-md font-semibold text-md uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 hover:bg-white hover:text-custom-blue"
                       :class="{
-              'border-transparent text-gray-900 bg-gray-100 hover:drop-shadow-2xl ': true,
-            }"
+                          'border-transparent text-gray-900 bg-gray-100 hover:drop-shadow-2xl ': true,
+                        }"
                       :disabled="disabled"
                       @click.prevent="showNewFilterModal = false"
+                  >
+                  Cancel
+                  </button>
+              </div>
+          </div>
+    </Modal>
+
+    <Modal
+          :show="showDispositionModal"
+          @close="showDispositionModal = false"
+          :closeable="true"
+      >
+          <div class="bg-gray-100 py-4 px-6 text-gray-900">
+              <div class="flex justify-between mb-6">
+                  <h3 class="text-2xl font-bold">Update  Disposition</h3>
+                  <span class="cursor-pointer" @click.prevent="showDispositionModal = false">&#x2715</span>
+              </div>
+
+              <div class="mb-3">
+                  <label class="block mb-2 text-sm font-medium text-gray-900">Disposition:</label>
+
+                  <select v-model="disposition" class="select-custom border border-gray-200">
+                      <!-- <option v-for="(filter, index) in filters" :key="index" :value="filter.name">{{ filter.label }}</option> -->
+                      <option disabled value="Select a disposition">Select a disposition</option>
+                      <option value="Sale - Simplified Issue">Sale - Simplified Issue</option>
+                      <option value="Sale - Guaranteed Issue">Sale - Guaranteed Issue</option>
+                      <option value="Follow Up Needed">Follow Up Needed</option>
+                      <option value="Quoted - Not Interested">Quoted - Not Interested</option>
+                      <option value="Not Interested">Not Interested</option>
+                      <option value="Transfer Handoff Too Long">Transfer Handoff Too Long</option>
+                      <option value="Client Hung Up">Client Hung Up</option>
+                      <option value="No Income">No Income</option>
+                      <option value="Wrong State">Wrong State</option>
+                      <option value="Not Qualified Age">Not Qualified Age</option>
+                      <option value="Not Qualified Nursing Home">Not Qualified Nursing Home</option>
+                      <option value="Not Qualified Memory Issues">Not Qualified Memory Issues</option>
+                      <option value="Language Barrier">Language Barrier</option>
+                      <option value="Do Not Call">Do Not Call</option>
+                      <option value="Dead Air/No Response">Dead Air/No Response</option>
+                      <option value="Thought Was Free">Thought Was Free</option>
+                  </select>
+                  <div v-if="firstStepErrors.disposition" class="text-red-500 mt-1" v-text="firstStepErrors.disposition[0]"></div>
+
+              </div>
+
+
+              <div class="flex items-center justify-end mt-4">
+                  <PrimaryButton :disabled=" disposition_loader" class="mr-2"
+                                 @click.prevent="saveChanges">
+                      <global-spinner :spinner="disposition_loader" /> Save Changes</PrimaryButton>
+
+                  <button
+                      class="inline-flex items-center px-4 py-3 border rounded-md font-semibold text-md uppercase tracking-widest transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 hover:bg-white hover:text-custom-blue"
+                      :class="{
+                              'border-transparent text-gray-900 bg-gray-100 hover:drop-shadow-2xl ': true,
+                            }"
+                      :disabled="disabled"
+                      @click.prevent="showDispositionModal = false"
                   >
                       Cancel
                   </button>
               </div>
           </div>
-      </Modal>
+    </Modal>
 
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
           <div class="px-4 sm:px-8 sm:rounded-lg">
@@ -851,117 +1223,375 @@ function formatDate(date) {
       </div>
     </div>
 
-    <section class="py-3 sm:py-5">
-      <div class="px-4 mx-auto max-w-screen-2xl lg:px-12">
-        <div class="relative overflow-hidden bg-white sm:rounded-lg">
-          <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left text-gray-500">
-              <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                <tr class="cursor-pointer">
-                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Agent Name</th>
-                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Total Calls</th>
-                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Paid Calls</th>
-                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Revenue Earned</th>
-                  <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                    Revenue Per Call
-                  </th>
-                  <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                    Total Call Length
-                  </th>
-                  <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                    Average Call Length
-                  </th>
-                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  v-for="(userData, userId) in groupedCalls"
-                  :key="userId"
-                  class="border-b hover:bg-gray-100"
-                >
-                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                    <Link
-                      :href="`/admin/customer/detail/${userId}`"
-                      class="text-blue-400 hover:text-blue-500 underline"
-                    >
-                      {{ userData.agentName }}
-                    </Link>
-                  </td>
-                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                    {{ userData.totalCalls }}
-                  </td>
-                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                    {{ userData.paidCalls }}
-                  </td>
-                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                    ${{ userData.revenueEarned }}
-                  </td>
-                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                    ${{ userData.revenuePerCall.toFixed(2) }}
-                  </td>
-                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                    {{
-                      String(Math.floor(userData.totalCallLength / 60)).padStart(2, "0") +
-                      ":" +
-                      String(userData.totalCallLength % 60).padStart(2, "0")
-                    }}
-                  </td>
-                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                    {{ userData.averageCallLength.toFixed(2) }} sec
-                  </td>
-                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                    <!-- Actions column content -->
-                  </td>
-                </tr>
 
-                <tr class="bg-gray-100 border-b" v-if="showMoreForGrouped">
-                  <td
-                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
-                    v-text="summaryFooterRow.agentName"
-                  ></td>
-                  <td
-                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
-                    v-text="summaryFooterRow.totalCalls"
-                  ></td>
-                  <td
-                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
-                    v-text="summaryFooterRow.paidCalls"
-                  ></td>
-                  <td
-                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
-                    v-text="`$${summaryFooterRow.revenueEarned}`"
-                  ></td>
-                  <td
-                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
-                    v-text="`$${summaryFooterRow.revenuePerCall.toFixed(2)}`"
-                  ></td>
-                  <td
-                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
-                    v-text="`${summaryFooterRow.totalCallLength.toFixed(2)}`"
-                  ></td>
-                  <td
-                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
-                    v-text="`${summaryFooterRow.averageCallLength.toFixed(2)}`"
-                  ></td>
-                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"></td>
-                </tr>
-              </tbody>
-            </table>
-
-            <div class="flex justify-center mt-4">
-              <button
-                @click.prevent="showMoreForGrouped = !showMoreForGrouped"
-                class="bg-gray-200 hover:bg-gray-100 text-gray-800 cursor-pointer px-4 py-2 text-sm rounded-md flex items-center"
+    <div class="px-4 mx-auto max-w-screen-2xl lg:px-12">
+        <TabGroup>
+          <TabList class="flex space-x-1 rounded-xl bg-blue-500/20 p-1">
+              <Tab v-slot="{ selected }" class="w-2/4">
+                  <button
+                      :class="[
+                      'w-full rounded-lg py-2.5 text-sm font-medium leading-5 p-2',
+                      'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',
+                      selected
+                        ? 'bg-white text-blue-700 shadow'
+                        : 'text-gray-900 hover:bg-white',
+                    ]"
+                  >
+                      Agents
+                  </button>
+              </Tab>
+              <Tab v-slot="{ selected }" class="w-2/4">
+                  <button
+                      :class="[
+                      'w-full rounded-lg py-2.5 text-sm font-medium leading-5',
+                      'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',
+                      selected
+                        ? 'bg-white text-blue-700 shadow'
+                        : 'text-gray-900 hover:bg-white',
+                    ]"
+                  >
+                      Publishers
+                  </button>
+              </Tab>
+          </TabList>
+          <TabPanels class="mt-2">
+              <TabPanel
+                  :class="[
+                    'rounded-xl bg-white p-3',
+                    'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',
+                  ]"
               >
-                <span v-if="showMoreForGrouped">Show Less</span>
-                <span v-else>Show More</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+                  <div class="relative overflow-hidden bg-white sm:rounded-lg">
+                      <div class="overflow-x-auto">
+                          <table class="w-full text-sm text-left text-gray-500">
+                              <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                              <tr class="cursor-pointer">
+                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Agent Name</th>
+                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Total Calls</th>
+                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Paid Calls</th>
+                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Revenue Earned</th>
+                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">
+                                      Revenue Per Call
+                                  </th>
+                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">
+                                      Total Call Length
+                                  </th>
+                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">
+                                      Average Call Length
+                                  </th>
+                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Actions</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr
+                                  v-for="(userData, userId) in groupedCalls"
+                                  :key="userId"
+                                  class="border-b hover:bg-gray-100"
+                              >
+                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                                      <Link
+                                          :href="`/admin/customer/detail/${userId}`"
+                                          class="text-blue-400 hover:text-blue-500 underline"
+                                      >
+                                          {{ userData.agentName }}
+                                      </Link>
+                                  </td>
+                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                                      {{ userData.totalCalls }}
+                                  </td>
+                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                                      {{ userData.paidCalls }}
+                                  </td>
+                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                                      ${{ userData.revenueEarned }}
+                                  </td>
+                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                                      ${{ userData.revenuePerCall.toFixed(2) }}
+                                  </td>
+                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                                      {{
+                                          String(Math.floor(userData.totalCallLength / 60)).padStart(2, "0") +
+                                          ":" +
+                                          String(userData.totalCallLength % 60).padStart(2, "0")
+                                      }}
+                                  </td>
+                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                                      {{ userData.averageCallLength.toFixed(2) }} sec
+                                  </td>
+                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                                  </td>
+                              </tr>
+
+                              <tr class="bg-gray-100 border-b" v-if="showMoreForGrouped">
+                                  <td
+                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                                      v-text="summaryFooterRow.agentName"
+                                  ></td>
+                                  <td
+                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                                      v-text="summaryFooterRow.totalCalls"
+                                  ></td>
+                                  <td
+                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                                      v-text="summaryFooterRow.paidCalls"
+                                  ></td>
+                                  <td
+                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                                      v-text="`$${summaryFooterRow.revenueEarned}`"
+                                  ></td>
+                                  <td
+                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                                      v-text="`$${summaryFooterRow.revenuePerCall.toFixed(2)}`"
+                                  ></td>
+                                  <td
+                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                                      v-text="`${summaryFooterRow.totalCallLength.toFixed(2)}`"
+                                  ></td>
+                                  <td
+                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                                      v-text="`${summaryFooterRow.averageCallLength.toFixed(2)}`"
+                                  ></td>
+                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"></td>
+                              </tr>
+                              </tbody>
+                          </table>
+
+                          <div class="flex justify-center mt-4">
+                              <button
+                                  @click.prevent="showMoreForGrouped = !showMoreForGrouped"
+                                  class="bg-gray-200 hover:bg-gray-100 text-gray-800 cursor-pointer px-4 py-2 text-sm rounded-md flex items-center"
+                              >
+                                  <span v-if="showMoreForGrouped">Show Less</span>
+                                  <span v-else>Show More</span>
+                              </button>
+                          </div>
+                      </div>
+                  </div>
+              </TabPanel>
+              <TabPanel
+                  :class="[
+                    'rounded-xl bg-white p-3',
+                    'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',
+                  ]"
+              >
+                  <div class="relative overflow-hidden bg-white sm:rounded-lg">
+                      <div class="overflow-x-auto">
+                          <table class="w-full text-sm text-left text-gray-500">
+                              <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                <tr class="cursor-pointer">
+                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Publisher Name</th>
+                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Total Calls</th>
+                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Paid Calls</th>
+                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Revenue Earned</th>
+                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">
+                                      Revenue Per Call
+                                  </th>
+                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">
+                                      Total Call Length
+                                  </th>
+                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">
+                                      Average Call Length
+                                  </th>
+                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Actions</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                                <tr
+                                  v-for="(publisher, index) in callsGroupedByPublisherName"
+                                  :key="index"
+                                  class="border-b hover:bg-gray-100"
+                              >
+                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                                      {{ publisher.publisher_name }}
+                                  </td>
+                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                                      {{ publisher.totalCalls }}
+                                  </td>
+                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                                      {{ publisher.paidCalls }}
+                                  </td>
+                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                                      ${{ publisher.revenueEarned }}
+                                  </td>
+                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                                      ${{ publisher.revenuePerCall.toFixed(2) }}
+                                  </td>
+                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                                      {{
+                                          String(Math.floor(publisher.totalCallLength / 60)).padStart(2, "0") +
+                                          ":" +
+                                          String(publisher.totalCallLength % 60).padStart(2, "0")
+                                      }}
+                                  </td>
+                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                                      {{ publisher.averageCallLength.toFixed(2) }} sec
+                                  </td>
+                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
+                                  </td>
+                              </tr>
+
+<!--                              <tr class="bg-gray-100 border-b" v-if="showMoreForGrouped">-->
+<!--                                  <td-->
+<!--                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
+<!--                                      v-text="summaryFooterRow.agentName"-->
+<!--                                  ></td>-->
+<!--                                  <td-->
+<!--                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
+<!--                                      v-text="summaryFooterRow.totalCalls"-->
+<!--                                  ></td>-->
+<!--                                  <td-->
+<!--                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
+<!--                                      v-text="summaryFooterRow.paidCalls"-->
+<!--                                  ></td>-->
+<!--                                  <td-->
+<!--                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
+<!--                                      v-text="`$${summaryFooterRow.revenueEarned}`"-->
+<!--                                  ></td>-->
+<!--                                  <td-->
+<!--                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
+<!--                                      v-text="`$${summaryFooterRow.revenuePerCall.toFixed(2)}`"-->
+<!--                                  ></td>-->
+<!--                                  <td-->
+<!--                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
+<!--                                      v-text="`${summaryFooterRow.totalCallLength.toFixed(2)}`"-->
+<!--                                  ></td>-->
+<!--                                  <td-->
+<!--                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
+<!--                                      v-text="`${summaryFooterRow.averageCallLength.toFixed(2)}`"-->
+<!--                                  ></td>-->
+<!--                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"></td>-->
+<!--                              </tr>-->
+                              </tbody>
+                          </table>
+
+<!--                          <div class="flex justify-center mt-4">-->
+<!--                              <button-->
+<!--                                  @click.prevent="showMoreForGrouped = !showMoreForGrouped"-->
+<!--                                  class="bg-gray-200 hover:bg-gray-100 text-gray-800 cursor-pointer px-4 py-2 text-sm rounded-md flex items-center"-->
+<!--                              >-->
+<!--                                  <span v-if="showMoreForGrouped">Show Less</span>-->
+<!--                                  <span v-else>Show More</span>-->
+<!--                              </button>-->
+<!--                          </div>-->
+
+                      </div>
+                  </div>
+              </TabPanel>
+          </TabPanels>
+      </TabGroup>
+    </div>
+
+
+<!--    <section class="py-3 sm:py-5">-->
+<!--      <div class="px-4 mx-auto max-w-screen-2xl lg:px-12">-->
+<!--        <div class="relative overflow-hidden bg-white sm:rounded-lg">-->
+<!--          <div class="overflow-x-auto">-->
+<!--            <table class="w-full text-sm text-left text-gray-500">-->
+<!--              <thead class="text-xs text-gray-700 uppercase bg-gray-50">-->
+<!--                <tr class="cursor-pointer">-->
+<!--                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Agent Name</th>-->
+<!--                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Total Calls</th>-->
+<!--                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Paid Calls</th>-->
+<!--                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Revenue Earned</th>-->
+<!--                  <th scope="col" class="px-4 py-3 whitespace-nowrap">-->
+<!--                    Revenue Per Call-->
+<!--                  </th>-->
+<!--                  <th scope="col" class="px-4 py-3 whitespace-nowrap">-->
+<!--                    Total Call Length-->
+<!--                  </th>-->
+<!--                  <th scope="col" class="px-4 py-3 whitespace-nowrap">-->
+<!--                    Average Call Length-->
+<!--                  </th>-->
+<!--                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Actions</th>-->
+<!--                </tr>-->
+<!--              </thead>-->
+<!--              <tbody>-->
+<!--                <tr-->
+<!--                  v-for="(userData, userId) in groupedCalls"-->
+<!--                  :key="userId"-->
+<!--                  class="border-b hover:bg-gray-100"-->
+<!--                >-->
+<!--                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
+<!--                    <Link-->
+<!--                      :href="`/admin/customer/detail/${userId}`"-->
+<!--                      class="text-blue-400 hover:text-blue-500 underline"-->
+<!--                    >-->
+<!--                      {{ userData.agentName }}-->
+<!--                    </Link>-->
+<!--                  </td>-->
+<!--                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
+<!--                    {{ userData.totalCalls }}-->
+<!--                  </td>-->
+<!--                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
+<!--                    {{ userData.paidCalls }}-->
+<!--                  </td>-->
+<!--                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
+<!--                    ${{ userData.revenueEarned }}-->
+<!--                  </td>-->
+<!--                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
+<!--                    ${{ userData.revenuePerCall.toFixed(2) }}-->
+<!--                  </td>-->
+<!--                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
+<!--                    {{-->
+<!--                      String(Math.floor(userData.totalCallLength / 60)).padStart(2, "0") +-->
+<!--                      ":" +-->
+<!--                      String(userData.totalCallLength % 60).padStart(2, "0")-->
+<!--                    }}-->
+<!--                  </td>-->
+<!--                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
+<!--                    {{ userData.averageCallLength.toFixed(2) }} sec-->
+<!--                  </td>-->
+<!--                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
+<!--                  </td>-->
+<!--                </tr>-->
+
+<!--                <tr class="bg-gray-100 border-b" v-if="showMoreForGrouped">-->
+<!--                  <td-->
+<!--                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
+<!--                    v-text="summaryFooterRow.agentName"-->
+<!--                  ></td>-->
+<!--                  <td-->
+<!--                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
+<!--                    v-text="summaryFooterRow.totalCalls"-->
+<!--                  ></td>-->
+<!--                  <td-->
+<!--                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
+<!--                    v-text="summaryFooterRow.paidCalls"-->
+<!--                  ></td>-->
+<!--                  <td-->
+<!--                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
+<!--                    v-text="`$${summaryFooterRow.revenueEarned}`"-->
+<!--                  ></td>-->
+<!--                  <td-->
+<!--                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
+<!--                    v-text="`$${summaryFooterRow.revenuePerCall.toFixed(2)}`"-->
+<!--                  ></td>-->
+<!--                  <td-->
+<!--                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
+<!--                    v-text="`${summaryFooterRow.totalCallLength.toFixed(2)}`"-->
+<!--                  ></td>-->
+<!--                  <td-->
+<!--                    class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
+<!--                    v-text="`${summaryFooterRow.averageCallLength.toFixed(2)}`"-->
+<!--                  ></td>-->
+<!--                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"></td>-->
+<!--                </tr>-->
+<!--              </tbody>-->
+<!--            </table>-->
+
+<!--            <div class="flex justify-center mt-4">-->
+<!--              <button-->
+<!--                @click.prevent="showMoreForGrouped = !showMoreForGrouped"-->
+<!--                class="bg-gray-200 hover:bg-gray-100 text-gray-800 cursor-pointer px-4 py-2 text-sm rounded-md flex items-center"-->
+<!--              >-->
+<!--                <span v-if="showMoreForGrouped">Show Less</span>-->
+<!--                <span v-else>Show More</span>-->
+<!--              </button>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </section>-->
 
     <div class="pt-14 flex justify-between px-16">
       <div>
@@ -1025,13 +1655,22 @@ function formatDate(date) {
                   </PopoverPanel>
                 </Popover>
 
-                <button
-                  type="button"
-                  class="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200"
-                  @click.prevent="exportCSV"
-                >
-                  Export
-                </button>
+<!--                <button-->
+<!--                  type="button"-->
+<!--                  class="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200"-->
+<!--                  -->
+<!--                  @click.prevent="exportCSV"-->
+<!--                >-->
+<!--                  Export-->
+<!--                </button>-->
+
+                  <a :href="'/admin/calls/export/'+JSON.stringify(exportSearchResults)">
+                      <button
+                          type="button"
+                          class="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200">
+                          Export
+                      </button>
+                  </a>
 
                 <!-- <Popover class="relative">
                   <PopoverButton>
@@ -1051,6 +1690,7 @@ function formatDate(date) {
             </div>
 
           </div>
+
           <div class="overflow-x-auto">
             <table class="w-full text-sm text-left text-gray-500" style="min-height: 50px;">
               <thead class="text-xs text-gray-700 uppercase bg-gray-50">
@@ -1121,24 +1761,25 @@ function formatDate(date) {
                     v-text="renderColumn(column, call)"
                   ></td>
                   <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      class="w-4 h-4 cursor-pointer ml-3"
-                      v-if="currentlyPlayingAudioCallId !== call.id"
-                      @click.prevent="playRecording(call)"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
-                      />
-                    </svg>
 
                     <div class="flex items-center">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="w-4 h-4 cursor-pointer ml-3"
+                            v-if="currentlyPlayingAudioCallId !== call.id"
+                            @click.prevent="playRecording(call)"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
+                            />
+                        </svg>
+
                       <svg
                         class="w-4 h-4 cursor-pointer ml-3"
                         v-if="currentlyPlayingAudioCallId === call.id"
@@ -1158,22 +1799,41 @@ function formatDate(date) {
 
                       <p
                         style="font-size: 10px"
-                        class="text-gray-800 ml-1 user-select-none"
-                        v-if="currentlyPlayingAudioCallId === call.id"
-                      >
-                        Playing
+                        class="text-gray-800 mx-1 user-select-none"
+                        v-if="currentlyPlayingAudioCallId === call.id">
+                        Playing<br/>
+                          <span :id="'audio-duration'+call.id"></span>
                       </p>
+
+                    <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+                         width="10.000000pt" viewBox="0 0 512.000000 512.000000"
+                         preserveAspectRatio="xMidYMid meet"
+                         v-if="currentlyPlayingAudioCallId === call.id"
+                         @click.prevent="fastForwardRecording(5)">
+
+                        <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
+                            <path d="M2560 4469 c-70 -14 -163 -65 -210 -115 -23 -25 -56 -75 -73 -112 l-32 -67 -5 -421 -5 -422 -640 535 c-715 597 -712 595 -852 601 -100 5 -171 -15 -246 -67 -69 -49 -123 -122 -147 -201 -20 -64 -20 -91 -18 -1665 l3 -1600 33 -67 c108 -220 378 -295 573 -161 24 17 330 268 679 557 l635 526 5 -432 5 -433 28 -58 c40 -80 112 -151 194 -190 62 -29 77 -32 163 -32 85 0 102 3 160 31 51 24 260 192 935 753 479 397 896 750 929 783 170 177 188 446 42 641 -23 31 -60 70 -83 86 -22 16 -430 354 -907 750 -477 397 -889 732 -915 745 -46 24 -144 47 -185 45 -12 -1 -41 -5 -66 -10z m-1756 -361 c35 -29 373 -309 750 -623 l685 -570 0 -355 0 -355 -738 -614 c-406 -338 -746 -618 -755 -623 -23 -13 -61 -3 -86 22 -20 20 -20 40 -20 1570 l0 1551 25 24 c36 37 66 32 139 -27z m1882 30 c68 -52 1692 -1404 1726 -1436 72 -69 86 -164 35 -241 -20 -30 -1634 -1385 -1764 -1480 -36 -27 -70 -24 -103 9 -20 20 -20 40 -20 1570 l0 1551 25 24 c30 31 64 32 101 3z"/>
+                        </g>
+                    </svg>
+
                     </div>
                   </td>
-                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                    <!-- Actions column content -->
+                  <td class="px-4 flex  py-2 font-medium text-gray-900 whitespace-nowrap">
+                    <svg @click.prevent="openDetailedLogs(call.id)" title="Open Detailed Logs" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 cursor-pointer text-gray-800 hover:text-gray-900">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                    </svg>
+                    <svg @click.prevent="addDisposition(call , colIndex)" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 cursor-pointer text-gray-800 hover:text-gray-900 ml-3">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                    </svg>
+
                   </td>
                 </tr>
               </tbody>
             </table>
 
             <div
-              v-if="callsPaginator && callsPaginator.next_page_url"
+              v-if="(callsPaginator && callsPaginator.next_page_url) || getTotalCalls !== loadedCalls.length"
               class="flex items-center justify-center py-4 mt-4"
             >
               <button
@@ -1185,6 +1845,7 @@ function formatDate(date) {
               </button>
             </div>
           </div>
+
         </div>
       </div>
     </section>

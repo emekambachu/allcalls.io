@@ -9,6 +9,7 @@ import GuestTextInput from '@/Components/GuestTextInput.vue';
 import Footer from '@/Components/Footer.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { ref } from "vue";
+
 defineProps({
     canResetPassword: {
         type: Boolean,
@@ -22,14 +23,16 @@ const form = useForm({
     email: '',
     password: '',
     remember: false,
+    device_type: window.navigator.userAgent,
 });
 const isLoading = ref(false)
+
 const submit = () => {
     const userAgent = window.navigator.userAgent;
 
     isLoading.value = true
     form.post(route('login'), {
-        onFinish: () => { 
+        onFinish: () => {
             form.reset('password')
             isLoading.value = false
         },
@@ -45,7 +48,7 @@ const submit = () => {
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
             {{ status }}
         </div>
-        
+
         <form @submit.prevent="submit">
             <div>
                 <div class="py-4 mb-4 text-custom-blue text-3xl font-bold">Log In</div>
@@ -92,7 +95,7 @@ const submit = () => {
                 <PrimaryButton class="mb-6" :class="{ 'opacity-25': form.processing ||  isLoading}" :disabled="form.processing">
                     <global-spinner :spinner="isLoading" />  Log in
                 </PrimaryButton>
-                
+
                 <Link
                     v-if="canResetPassword"
                     :href="route('password.request')"
@@ -110,8 +113,9 @@ const submit = () => {
         </form>
 
         <template v-slot:titles>
-                <div class="text-4xl lg:text-5xl xl:text-8xl text-white mb-10 "><span class="text-custom-green">On-Demand</span> Calls</div>
-                <div class="text-white text-2xl lg:text-2xl xl:text-5xl text-3xl">Bringing Clients right to your Fingertips.</div>
+                <div class="text-4xl lg:text-5xl xl:text-8xl text-white mb-10">
+                    <span class="text-custom-green">On-Demand</span> Calls</div>
+                <div class="text-white text-2xl lg:text-2xl xl:text-5xl">Bringing Clients right to your Fingertips.</div>
         </template>
 
         <template v-slot:subtitles>
@@ -120,10 +124,8 @@ const submit = () => {
             </div>
         </template>
 
-
-
     <!-- </GuestLayout> -->
     </NewGuestLayout>
-    
+
     <Footer />
 </template>

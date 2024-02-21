@@ -1,11 +1,11 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ActiveUsersController;
 use App\Http\Controllers\Admin\CallsController;
 use App\Http\Controllers\WebCallsAPIController;
 use App\Http\Controllers\AgentInvitesController;
 use App\Http\Controllers\Admin\ClientsController;
+use App\Http\Controllers\AdminCallLogsController;
 use App\Http\Controllers\AdminPoliciesController;
 use App\Http\Controllers\PublisherInfoController;
 use App\Http\Controllers\Admin\CustomerController;
@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\AvailableNumberController;
 use App\Http\Controllers\AdminAvaialbleNumbersController;
 use App\Http\Controllers\Admin\LegalQuestionPdfController;
 use App\Http\Controllers\AvailableNumberReleaseController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,7 +74,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::post('/agent', [InternalAgentController::class, 'store'])->name('admin.agent.store');
 
     Route::post('/agent/{id}', [InternalAgentController::class, 'update'])->name('admin.agent.update');
-    
+
     Route::post('/update-training-status', [InternalAgentController::class, 'UpdateTrainingStatus'])->name('admin.update.training.status');
 
     Route::get('/agent/detail/{id}', [InternalAgentController::class, 'show'])->name('admin.agent.detail');
@@ -122,8 +123,9 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::get('/reinvite-agent/{id}', [AgentInvitesController::class, 'reInvite'])->name('admin.agent.reinvite');
 
     //Calls
-    Route::get('/calls', [CallsController::class, 'index'])->name('admin.calls.index');
-    Route::get('/calls/new', [CallsController::class, 'indexNew'])->name('admin.calls.index-new');
+    Route::get('/calls', [CallsController::class, 'indexNew'])->name('admin.calls.index');
+    Route::get('/calls/old', [CallsController::class, 'index'])->name('admin.calls.index-old');
+    Route::get('/calls/export/{export}', [CallsController::class,'exportCalls'])->name('admin.calls.export');
 
     Route::get('/notifications', [AdminNotificationsController::class, 'create'])->name('admin.notifications.create');
 
@@ -137,8 +139,8 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
     Route::delete('/user-activities/clear-all', [AdminUserActivitiesController::class, 'clearAll'])->name('admin.user-activities.clearAll');
 
-
     Route::get('/web-api/calls', [WebCallsAPIController::class, 'index']);
+    Route::get('/web-api/calls/autocomplete', [WebCallsAPIController::class, 'getAutocompleteOptions']);
 
     Route::get('/email-blacklist', [AdminEmailBlacklistController::class, 'index'])->name('admin.email-blacklist.index');
     Route::post('/email-blacklist', [AdminEmailBlacklistController::class, 'store'])->name('admin.email-blacklist.store');
@@ -148,6 +150,12 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
     Route::get('/web-api/publisher-info/{call}', [PublisherInfoController::class, 'show']);
 
+    Route::get('/web-api/{call}/call-logs', [AdminCallLogsController::class, 'index'])->name('admin.call-logs.index');
+
     Route::get('/manage-training-level', [InternalAgentController::class, 'manageTrainingLevel']);
+
+    Route::get('/schedule-live-training', [InternalAgentController::class, 'scheduleLiveTraining']);
+
+    Route::post('/calls/disposition', [CallsController::class, 'disposition'])->name('admin.calls.disposition');
 
 });

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\InternalAgent;
 
+use App\Events\AppSubmittedEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Client;
 use App\Models\InternalAgentMyBusiness;
@@ -111,7 +112,6 @@ class MyBusinessController extends Controller
                 'errors' => $validate->errors(),
             ], 400);
         }
-
         // if (isset($request->client_id)) {
             // $business = InternalAgentMyBusiness::where('client_id', $request->client_id)->first();
             // if ($business) {
@@ -169,6 +169,9 @@ class MyBusinessController extends Controller
         $internalAgentBusiness->client_phone_no = $request->client_phone_no;
         $internalAgentBusiness->client_email = $request->client_email;
         $internalAgentBusiness->save();
+
+        event(new AppSubmittedEvent($internalAgentBusiness));
+
         return response()->json([
             'success' => true,
             'message' => isset($request->business_id)? 'Client has been attached to the policy' : 'Business added successfully.',

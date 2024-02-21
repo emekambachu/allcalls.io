@@ -385,6 +385,7 @@ class InternalAgentController extends Controller
                 'level_id' => $request->level,
                 'upline_id' => $request->upline_id,
             ]);
+
             return response()->json([
                 'success' => true,
                 'message' => 'Agent updated successfully.',
@@ -399,6 +400,9 @@ class InternalAgentController extends Controller
             $user = User::where('id', $request->agent_id)->first();
             if ($user) {
                 $user->agent_access_status = $request->agent_access_status;
+                if ($request->agent_access_status === LIVE) {
+                    $user->balance = $user->balance + 200;
+                }
                 $user->update();
                 return response()->json([
                     'message' => 'Status updated successfully.',
@@ -517,11 +521,27 @@ class InternalAgentController extends Controller
                 $liveCount++;
                 $agent->save();
             } else {
-                $agent->agent_access_status = NOT_LIVE;
+                $agent->agent_access_status = TRAINING;
                 $notLiveCount++;
                 $agent->save();
             }
         }
-        dd('unlocked counter --> ' . $unlocked, 'live agetnt --> ' . $liveCount, 'not live counter --> ' . $notLiveCount, 'Locked counter --> ' . $locked);
+        dd('unlocked counter --> ' . $unlocked, 'live agetnt --> ' . $liveCount, 'Training counter --> ' . $notLiveCount, 'Locked counter --> ' . $locked);
+    }
+    public function scheduleLiveTraining()
+    {
+        $agentRole = Role::whereName('internal-agent')->first();
+        $agents = User::select('users.*', 'role_user.role_id')->leftjoin('role_user', 'role_user.user_id', 'users.id')->whereHas('roles', function ($query) use ($agentRole) {
+            $query->where('role_id', $agentRole->id);
+        })->get();
+
+        foreach ($agents as $agent) {
+            if ($agent->agent_access_status == LIVE) {
+                $agent->new_agent_call_scheduled = true;
+                $agent->save();
+            }
+        }
+
+        dd('done');
     }
 }

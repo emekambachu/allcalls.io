@@ -49,6 +49,7 @@ use App\Http\Controllers\TwilioIOSAccessTokenController;
 use App\Http\Controllers\CustomBroadcastingAuthController;
 use App\Http\Controllers\ActiveUsersPusherWebhookController;
 use App\Http\Controllers\CallCenterDispositionAPIController;
+use App\Http\Controllers\CallDeviceActionsController;
 use App\Http\Controllers\TwilioAndroidAccessTokenController;
 use App\Http\Controllers\TwilioIOSAccessTokenGuestController;
 use App\Http\Controllers\TwilioIOSSandboxAccessTokenController;
@@ -64,6 +65,7 @@ use App\Http\Controllers\TwilioAndroidAccessTokenGuestController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
 Route::post('/save-card', [FundsController::class, 'saveCardDetails']);
 
 Route::middleware(['auth:sanctum', 'notBanned'])->get('/user', function (Request $request) {
@@ -79,10 +81,10 @@ Route::post('/sanctum/token', function (Request $request) {
         'password' => 'required',
         'device_name' => 'required',
     ]);
- 
+
     $user = User::where('email', $request->email)->first();
- 
-    if (! $user || ! Hash::check($request->password, $user->password)) {
+
+    if (!$user || !Hash::check($request->password, $user->password)) {
         throw ValidationException::withMessages([
             'email' => ['The provided credentials are incorrect.'],
         ]);
@@ -95,11 +97,11 @@ Route::post('/sanctum/token', function (Request $request) {
     // ]);
 
     // Log::debug('devices-log:sign-in', $device->toArray());
- 
+
     return $user->createToken($request->device_name)->plainTextToken;
 });
 
-Route::middleware(['auth:sanctum'])->delete('/sanctum/token', function(Request $request) {
+Route::middleware(['auth:sanctum'])->delete('/sanctum/token', function (Request $request) {
 
     Log::debug('devices-log:sign-out', [
         'user' => $request->user()->toArray(),
@@ -107,7 +109,7 @@ Route::middleware(['auth:sanctum'])->delete('/sanctum/token', function(Request $
 
     $devices = Device::whereUserId($request->user()->id)->get();
 
-    foreach($devices as $device) {
+    foreach ($devices as $device) {
         Log::debug('devices-log:deleting', [
             'device' => $device->toArray()
         ]);
@@ -150,15 +152,15 @@ Route::middleware(['auth:sanctum', 'notBanned'])->get('/device/token', [TwilioTo
 
 Route::get('/call/incoming', [IncomingCallController::class, 'respond'])->middleware('twilio');
 // Route::get('/call/incoming', function() {
-    // $numberToDial = '+15736523170';
+// $numberToDial = '+15736523170';
 
-    // Manually construct the TwiML
-    /* $twiml = '<?xml version="1.0" encoding="UTF-8"?>'; */
-    // $twiml .= '<Response><Dial answerOnBridge="true" callerId="' . $numberToDial . '">' . '<Client>+15736523170</Client>' . '</Dial></Response>';
+// Manually construct the TwiML
+/* $twiml = '<?xml version="1.0" encoding="UTF-8"?>'; */
+// $twiml .= '<Response><Dial answerOnBridge="true" callerId="' . $numberToDial . '">' . '<Client>+15736523170</Client>' . '</Dial></Response>';
 //     $twiml .= '<Response><Dial answerOnBridge="true"><Client callerId="+15736523170">alice</Client></Dial></Response>';
-    
+
 //     Log::debug($twiml);
-    
+
 //     return response($twiml, 200)->header('Content-Type', 'text/xml');
 //  })->middleware('twilio');
 
@@ -168,31 +170,31 @@ Route::get('/handle-call-recording', [CallRecordingController::class, 'store']);
 Route::post('/call/pushNotification', [IncomingCallController::class, 'sendPushNotification'])->name('call.pushNotification');
 Route::middleware(['auth:sanctum', 'notBanned'])->post('/userDeviceToken', [IncomingCallController::class, 'saveDeviceToken'])->name('userDeviceToken');
 
-Route::middleware(['auth:sanctum', 'notBanned'])->get('/online-users', [OnlineUsersController::class, 'index']);
-Route::middleware(['auth:sanctum', 'notBanned'])->post('/online-users', [OnlineUsersController::class, 'store']);
-Route::middleware(['auth:sanctum', 'notBanned'])->delete('/online-users/{callTypeId}', [OnlineUsersController::class, 'destroy']);
-Route::middleware(['auth:sanctum', 'notBanned'])->delete('/online-users', [OnlineUsersController::class, 'destroyOnLogout']);
-
-Route::middleware(['auth:sanctum', 'notBanned'])->get('/clients', [ClientsAPIController::class, 'index']);
-Route::middleware(['auth:sanctum', 'notBanned'])->patch('/clients/{client}', [ClientsAPIController::class, 'update']);
-
-Route::middleware(['auth:sanctum', 'notBanned'])->post('/call-client-info', [LiveCallClientController::class, 'index']);
-
-Route::middleware(['auth:sanctum', 'notBanned'])->get('/callTypes', [CallTypesAPIController::class, 'index']);
-Route::middleware(['auth:sanctum', 'notBanned'])->get('/call-types/selected', [CallTypesSelectedAPIController::class, 'index']);
-Route::middleware(['auth:sanctum', 'notBanned'])->post('/call-types/states/update', [CallTypesSelectedAPIController::class, 'updateUserStates']);
+//Route::middleware(['auth:sanctum', 'notBanned'])->get('/online-users', [OnlineUsersController::class, 'index']);
+//Route::middleware(['auth:sanctum', 'notBanned'])->post('/online-users', [OnlineUsersController::class, 'store']);
+//Route::middleware(['auth:sanctum', 'notBanned'])->delete('/online-users/{callTypeId}', [OnlineUsersController::class, 'destroy']);
+//Route::middleware(['auth:sanctum', 'notBanned'])->delete('/online-users', [OnlineUsersController::class, 'destroyOnLogout']);
+//
+//Route::middleware(['auth:sanctum', 'notBanned'])->get('/clients', [ClientsAPIController::class, 'index']);
+//Route::middleware(['auth:sanctum', 'notBanned'])->patch('/clients/{client}', [ClientsAPIController::class, 'update']);
+//
+//Route::middleware(['auth:sanctum', 'notBanned'])->post('/call-client-info', [LiveCallClientController::class, 'index']);
+//
+//Route::middleware(['auth:sanctum', 'notBanned'])->get('/callTypes', [CallTypesAPIController::class, 'index']);
+//Route::middleware(['auth:sanctum', 'notBanned'])->get('/call-types/selected', [CallTypesSelectedAPIController::class, 'index']);
+//Route::middleware(['auth:sanctum', 'notBanned'])->post('/call-types/states/update', [CallTypesSelectedAPIController::class, 'updateUserStates']);
 
 // Route::middleware('auth:sanctum')->patch('/active-users', [ActiveUsersController::class, 'update']);
 // Route::patch('/active-users', [ActiveUsersController::class, 'update']);
 Route::post('/active-users-pusher-webhook', [ActiveUsersPusherWebhookController::class, 'store']);
 
 Route::get('/twilio-ios-access-token-guest', [TwilioIOSAccessTokenGuestController::class, 'show']);
-Route::middleware(['auth:sanctum', 'notBanned'])->get('/laravel-token-verification', [LaravelTokenController::class, 'validateToken']);
-Route::middleware(['auth:sanctum', 'notBanned'])->get('/twilio-ios-access-token', [TwilioIOSAccessTokenController::class, 'show']);
-Route::middleware(['auth:sanctum', 'notBanned'])->get('/twilio-ios-sandbox-access-token', [TwilioIOSSandboxAccessTokenController::class, 'show']);
-Route::middleware(['auth:sanctum', 'notBanned'])->get('/ios-version-check', [IOSVersionCheckController::class, 'checkVersion']);
-Route::middleware(['auth:sanctum', 'notBanned'])->get('/twilio-android-access-token', [TwilioAndroidAccessTokenController::class, 'show']);
-Route::middleware(['auth:sanctum', 'notBanned'])->get('/twilio-android-access-token-guest', [TwilioAndroidAccessTokenGuestController::class, 'show']);
+//Route::middleware(['auth:sanctum', 'notBanned'])->get('/laravel-token-verification', [LaravelTokenController::class, 'validateToken']);
+//Route::middleware(['auth:sanctum', 'notBanned'])->get('/twilio-ios-access-token', [TwilioIOSAccessTokenController::class, 'show']);
+//Route::middleware(['auth:sanctum', 'notBanned'])->get('/twilio-ios-sandbox-access-token', [TwilioIOSSandboxAccessTokenController::class, 'show']);
+//Route::middleware(['auth:sanctum', 'notBanned'])->get('/ios-version-check', [IOSVersionCheckController::class, 'checkVersion']);
+//Route::middleware(['auth:sanctum', 'notBanned'])->get('/twilio-android-access-token', [TwilioAndroidAccessTokenController::class, 'show']);
+//Route::middleware(['auth:sanctum', 'notBanned'])->get('/twilio-android-access-token-guest', [TwilioAndroidAccessTokenGuestController::class, 'show']);
 
 Route::match(['get', 'post'], '/agent-status-price', [AgentStatusAPIController::class, 'show']);
 Route::match(['get', 'post'], '/agent-status', [AgentStatusAPIController::class, 'showWithoutPrice']);
@@ -203,7 +205,7 @@ Route::match(['get', 'post'], '/overseer', [OverseerResponseController::class, '
 Route::match(['get', 'post'], '/med', [DatalotResponseController::class, 'store']);
 Route::match(['get', 'post'], '/available-agents', [AvailableAgentsAPIController::class, 'show']);
 
-Route::middleware(['auth:sanctum', 'notBanned'])->post('/app-events', [AppEventsController::class, 'store']);
+//Route::middleware(['auth:sanctum', 'notBanned'])->post('/app-events', [AppEventsController::class, 'store']);
 
 Route::match(['get', 'post'], '/ping', [PingAPIController::class, 'show']);
 Route::match(['get', 'post'], '/disposition', [DispositionsController::class, 'update']);
@@ -222,44 +224,115 @@ Route::post('/custom-pusher-auth', function (Request $request) {
     return $pusher->socket_auth($channelName, $socketId);
 });
 
-Route::get('/pusher-private-test', function(){
+Route::get('/pusher-private-test', function () {
     ExampleTest::dispatch(User::whereEmail('john@example.com')->first());
 });
 
 Route::get('/custom-broadcasting-auth', [CustomBroadcastingAuthController::class, 'store']);
 Route::post('/custom-broadcasting-auth', [CustomBroadcastingAuthController::class, 'store']);
 
-Route::middleware(['auth:sanctum', 'notBanned'])->patch('/calls/{uniqueCallId}/user-response', [CallUserResponseAPIController::class, 'update']);
+// Sanctum auth and notBanned Middleware
+Route::middleware(['auth:sanctum', 'notBanned'])->group(function () {
+// Online Users
+    Route::get('/online-users', [OnlineUsersController::class, 'index']);
+    Route::post('/online-users', [OnlineUsersController::class, 'store']);
+    Route::delete('/online-users/{callTypeId}', [OnlineUsersController::class, 'destroy']);
+    Route::delete('/online-users', [OnlineUsersController::class, 'destroyOnLogout']);
 
-Route::middleware(['auth:sanctum', 'notBanned'])->post('/devices', [DevicesAPIController::class, 'store']);
-Route::middleware(['auth:sanctum', 'notBanned'])->patch('/devices/{device}', [DevicesAPIController::class, 'update']);
-Route::middleware(['auth:sanctum', 'notBanned'])->delete('/devices/{device}', [DevicesAPIController::class, 'destroy']);
+    // Clients
+    Route::get('/clients', [ClientsAPIController::class, 'index']);
+    Route::patch('/clients/{client}', [ClientsAPIController::class, 'update']);
 
-Route::middleware(['auth:sanctum', 'notBanned'])->get('/notifications', [NotificationsAPIController::class, 'index']);
-Route::middleware(['auth:sanctum', 'notBanned'])->patch('/notifications/{notificationId}/mark-as-read', [NotificationsAPIController::class, 'markNotificationAsRead']);
-Route::middleware(['auth:sanctum', 'notBanned'])->patch('/notifications/mark-all-as-read', [NotificationsAPIController::class, 'markAllNotificationsAsRead']);
-Route::middleware(['auth:sanctum', 'notBanned'])->delete('/notifications/clear-all', [NotificationsAPIController::class, 'destroyAll']);
-Route::middleware(['auth:sanctum', 'notBanned'])->delete('/notifications/{notificationId}', [NotificationsAPIController::class, 'destroy']);
+    // Call Client Info
+    Route::post('/call-client-info', [LiveCallClientController::class, 'index']);
 
-Route::middleware(['auth:sanctum', 'notBanned'])->post('/ios-logs', [IOSLogController::class, 'log']);
+    // Call Types
+    Route::get('/callTypes', [CallTypesAPIController::class, 'index']);
+    Route::get('/call-types/selected', [CallTypesSelectedAPIController::class, 'index']);
+    Route::post('/call-types/states/update', [CallTypesSelectedAPIController::class, 'updateUserStates']);
 
-Route::middleware(['auth:sanctum', 'notBanned'])->post('/calls/{uniqueCallId}/reject', [CallHungUpController::class, 'update']);
+    // Calls
+    Route::patch('/calls/{uniqueCallId}/user-response', [CallUserResponseAPIController::class, 'update']);
 
-Route::middleware(['auth:sanctum', 'notBanned'])->post('/sendbird-user/create', [SendBirdUserController::class, 'createSendBirdUser']);
-Route::middleware(['auth:sanctum', 'notBanned'])->get('/sendbird-user/check', [SendBirdUserController::class, 'checkSendBirdUser']);
-Route::middleware(['auth:sanctum', 'notBanned'])->delete('/sendbird-user/delete', [SendBirdUserController::class, 'deleteSendBirdUser']);
+    // Devices
+    Route::post('/devices', [DevicesAPIController::class, 'store']);
+    Route::patch('/devices/{device}', [DevicesAPIController::class, 'update']);
+    Route::delete('/devices/{device}', [DevicesAPIController::class, 'destroy']);
 
-Route::middleware(['auth:sanctum', 'notBanned'])->post('/profile/upload-image', [ProfileController::class, 'uploadProfilePicture']);
+    // Notifications
+    Route::get('/notifications', [NotificationsAPIController::class, 'index']);
+    Route::patch('/notifications/{notificationId}/mark-as-read', [NotificationsAPIController::class, 'markNotificationAsRead']);
+    Route::patch('/notifications/mark-all-as-read', [NotificationsAPIController::class, 'markAllNotificationsAsRead']);
+    Route::delete('/notifications/clear-all', [NotificationsAPIController::class, 'destroyAll']);
+    Route::delete('/notifications/{notificationId}', [NotificationsAPIController::class, 'destroy']);
 
-Route::middleware(['auth:sanctum', 'notBanned'])->post('/web-api/careers', [CareersController::class, 'careers']);
 
-Route::post('/sendbird-user/blahblahblah', function (Request $request){
+    Route::post('/ios-logs', [IOSLogController::class, 'log']);
+
+    Route::post('/calls/{uniqueCallId}/reject', [CallHungUpController::class, 'update']);
+
+    // Send Bird
+    Route::post('/sendbird-user/create', [SendBirdUserController::class, 'createSendBirdUser']);
+    Route::get('/sendbird-user/check', [SendBirdUserController::class, 'checkSendBirdUser']);
+    Route::delete('/sendbird-user/delete', [SendBirdUserController::class, 'deleteSendBirdUser']);
+
+    Route::post('/profile/upload-image', [ProfileController::class, 'uploadProfilePicture']);
+//    Route::post('/profile/update', [ProfileController::class, 'api_update']);
+
+    Route::post('/web-api/careers', [CareersController::class, 'careers']);
+
+    // Laravel Token Verification
+    Route::get('/laravel-token-verification', [LaravelTokenController::class, 'validateToken']);
+
+    // Twilio iOS Access Tokens
+    Route::get('/twilio-ios-access-token', [TwilioIOSAccessTokenController::class, 'show']);
+    Route::get('/twilio-ios-sandbox-access-token', [TwilioIOSSandboxAccessTokenController::class, 'show']);
+
+    // iOS Version Check
+    Route::get('/ios-version-check', [IOSVersionCheckController::class, 'checkVersion']);
+
+    // Twilio Android Access Tokens
+    Route::get('/twilio-android-access-token', [TwilioAndroidAccessTokenController::class, 'show']);
+    Route::get('/twilio-android-access-token-guest', [TwilioAndroidAccessTokenGuestController::class, 'show']);
+
+    // call device actions
+    Route::post('/call-device-actions', [CallDeviceActionsController::class, 'store']);
+    Route::post('/call-device-actions/unique', [CallDeviceActionsController::class, 'storeWithUniqueCallId']);
+
+    Route::post('/app-events', [AppEventsController::class, 'store']);
+});
+
+//Route::middleware(['auth:sanctum', 'notBanned'])->patch('/calls/{uniqueCallId}/user-response', [CallUserResponseAPIController::class, 'update']);
+//
+//Route::middleware(['auth:sanctum', 'notBanned'])->post('/devices', [DevicesAPIController::class, 'store']);
+//Route::middleware(['auth:sanctum', 'notBanned'])->patch('/devices/{device}', [DevicesAPIController::class, 'update']);
+//Route::middleware(['auth:sanctum', 'notBanned'])->delete('/devices/{device}', [DevicesAPIController::class, 'destroy']);
+//
+//Route::middleware(['auth:sanctum', 'notBanned'])->get('/notifications', [NotificationsAPIController::class, 'index']);
+//Route::middleware(['auth:sanctum', 'notBanned'])->patch('/notifications/{notificationId}/mark-as-read', [NotificationsAPIController::class, 'markNotificationAsRead']);
+//Route::middleware(['auth:sanctum', 'notBanned'])->patch('/notifications/mark-all-as-read', [NotificationsAPIController::class, 'markAllNotificationsAsRead']);
+//Route::middleware(['auth:sanctum', 'notBanned'])->delete('/notifications/clear-all', [NotificationsAPIController::class, 'destroyAll']);
+//Route::middleware(['auth:sanctum', 'notBanned'])->delete('/notifications/{notificationId}', [NotificationsAPIController::class, 'destroy']);
+//
+//Route::middleware(['auth:sanctum', 'notBanned'])->post('/ios-logs', [IOSLogController::class, 'log']);
+//
+//Route::middleware(['auth:sanctum', 'notBanned'])->post('/calls/{uniqueCallId}/reject', [CallHungUpController::class, 'update']);
+//
+//Route::middleware(['auth:sanctum', 'notBanned'])->post('/sendbird-user/create', [SendBirdUserController::class, 'createSendBirdUser']);
+//Route::middleware(['auth:sanctum', 'notBanned'])->get('/sendbird-user/check', [SendBirdUserController::class, 'checkSendBirdUser']);
+//Route::middleware(['auth:sanctum', 'notBanned'])->delete('/sendbird-user/delete', [SendBirdUserController::class, 'deleteSendBirdUser']);
+//
+//Route::middleware(['auth:sanctum', 'notBanned'])->post('/profile/upload-image', [ProfileController::class, 'uploadProfilePicture']);
+//
+//Route::middleware(['auth:sanctum', 'notBanned'])->post('/web-api/careers', [CareersController::class, 'careers']);
+
+Route::post('/sendbird-user/blahblahblah', static function (Request $request) {
     return response()->json([
         'message' => 'Yo Yo Yo successfully'
     ], 200);
 });
 
-Route::get('/test-call', function() {
+Route::get('/test-call', static function () {
     return 'All good!';
 });
 
@@ -268,3 +341,7 @@ Route::post('/commio/sms/send', [TextMessageController::class, 'sendMessage']);
 Route::post('/commio/sms/receive', [TextMessageController::class, 'receiveMessage']);
 
 Route::post('/twilio-webhook-error', [TwilioWebhookErrorController::class, 'store']);
+
+//Route::middleware(['auth:sanctum', 'notBanned'])->post('/call-device-actions', [CallDeviceActionsController::class, 'store']);
+//Route::middleware(['auth:sanctum', 'notBanned'])->post('/call-device-actions/unique', [CallDeviceActionsController::class, 'storeWithUniqueCallId']);
+

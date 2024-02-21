@@ -109,6 +109,17 @@ let downloadPdf = (url) => {
                 >
                   Download {{ videoData.title }} PDF
                 </button>
+
+                  <button
+                      :target="videoData.second_btn_pdf_url ? '_blank' : ''"
+                      v-if="videoData.second_btn && videoData.second_btn_pdf_url"
+                      :class="{ 'opacity-50': !videoData.second_btn_pdf_url }"
+                      @click="downloadPdf(videoData.second_btn_pdf_url)"
+                      class="px-3 ml-2 py-2 text-sm cursor-pointer font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
+                  >
+                      {{ videoData.second_btn_label }}
+                  </button>
+
                 <button
                   :target="videoData.pdf ? '_blank' : ''"
                   v-if="videoData.recording"

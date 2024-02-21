@@ -17,4 +17,11 @@ class BaseService
         $rawQuery = str_replace('?', "'?'", $query->toSql());
         logger()->info(vsprintf(str_replace('?', '%s', $rawQuery), $query->getBindings()));
     }
+
+    public static function tryCatchException($e): \Illuminate\Http\JsonResponse
+    {
+        return response()->json([
+            'error_message' => "Line ".$e->getLine()." of ".$e->getFile().", ".$e->getMessage(),
+        ], 500);
+    }
 }

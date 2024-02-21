@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\AppSubmittedEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Client;
 use App\Models\InternalAgentMyBusiness;
@@ -31,7 +32,7 @@ class AgentBusinessController extends Controller
 
         $totalAPV = $query->sum('premium_volumn');
 
-        $businesses = $query->with(['client', 'client.call'])
+        $businesses = $query->with(['client', 'client.call', 'getCall'])
             ->orderBy('created_at', 'desc')
             ->paginate(100);
 
@@ -58,6 +59,7 @@ class AgentBusinessController extends Controller
             'totalAPV' => $totalAPV
         ]);
     }
+
     public function store(Request $request)
     {
         $validate = Validator::make($request->all(), [
@@ -95,7 +97,7 @@ class AgentBusinessController extends Controller
                 'errors' => $validate->errors(),
             ], 400);
         }
-        InternalAgentMyBusiness::create([
+        $internalAgentBusiness =   InternalAgentMyBusiness::create([
             'agent_id' => auth()->user()->id,
             'agent_full_name' => $request->agent_full_name,
             'agent_email' => $request->agent_email,
@@ -129,6 +131,7 @@ class AgentBusinessController extends Controller
             'client_phone_no' => $request->client_phone_no,
             'client_email' => $request->client_email,
         ]);
+        event(new AppSubmittedEvent($internalAgentBusiness));
         return response()->json([
             'success' => true,
             'message' => 'Business Added Successfully!',
@@ -172,7 +175,7 @@ class AgentBusinessController extends Controller
                 'errors' => $validate->errors(),
             ], 400);
         }
-        
+
         $InternalAgentMyBusiness = InternalAgentMyBusiness::find($request->business_id);
 
         if ($InternalAgentMyBusiness) {
@@ -210,6 +213,7 @@ class AgentBusinessController extends Controller
                 'client_phone_no' => $request->client_phone_no,
                 'client_email' => $request->client_email,
             ]);
+            event(new AppSubmittedEvent($InternalAgentMyBusiness));
             return response()->json([
                 'success' => true,
                 'message' => 'Business updated Successfully!',

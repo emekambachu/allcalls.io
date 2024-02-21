@@ -139,7 +139,6 @@ let saveChanges = async () => {
                             <select v-model="form.agent_access_status" id='agent_access_status' name="agent_access_status"
                                 class="select-custom" required>
                                 <option disabled value="Select Status">Select Status</option>
-                                <option value="Not Live">Not Live</option>
                                 <option value="Training">Training</option>
                                 <option value="Live">Live</option>
                             </select>
