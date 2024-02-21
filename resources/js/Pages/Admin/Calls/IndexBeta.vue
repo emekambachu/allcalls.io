@@ -1224,7 +1224,7 @@ const getAutoCompleteFilterOptions = async (keyword) => {
     </div>
 
 
-    <div class="px-4 mx-auto max-w-screen-2xl lg:px-12">
+    <div class="px-4 max-w-screen-3xl lg:px-12">
         <TabGroup>
           <TabList class="flex space-x-1 rounded-xl bg-blue-500/20 p-1">
               <Tab v-slot="{ selected }" class="w-2/4">
@@ -1601,7 +1601,7 @@ const getAutoCompleteFilterOptions = async (keyword) => {
 
 
     <section class="py-3 sm:py-5">
-      <div class="px-4 mx-auto max-w-screen-2xl lg:px-12">
+      <div class="px-4 max-w-screen-3xl lg:px-12">
         <div class="relative overflow-hidden bg-white sm:rounded-lg"
              :class="{'height-600': getTotalCalls <= 14}">
           <div
