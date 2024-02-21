@@ -132,10 +132,9 @@ let saveChanges = async () => {
                 <div>
                     <div>
                         <div class="mb-4">
+                            <div class="mb-4 rounded-lg bg-blue-50 p-4 text-sm text-blue-800" role="alert">When set to live, $200 will be added to the agent's account.</div>
+
                             <label for="roles" class="block mb-2 text-sm font-medium text-gray-700">Select Role</label>
-                            <!-- <select v-model="role" id='role' name="role"  class="select-custom" required>
-                  <option v-for="roles in form.roles" :key="roles" :value="roles" selected="">Select Role</option>
-              </select> -->
                             <select v-model="form.agent_access_status" id='agent_access_status' name="agent_access_status"
                                 class="select-custom" required>
                                 <option disabled value="Select Status">Select Status</option>
