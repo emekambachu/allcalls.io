@@ -17,13 +17,13 @@ class CalendlyWebhookController extends Controller
                     if($request['payload']['scheduled_event']['name'] == 'New Agent Call Review') {
                         $userExist->new_agent_call_scheduled = true;
                         $userExist->save();
-                        Log::debug('New agent calendly meeting scheduled.');
+                        Log::debug('New agent calendly meeting scheduled'. $request['payload']['scheduled_event']['name']);
                         return;
                     }
                     elseif($request['payload']['scheduled_event']['name'] == 'New Agent Training'){
                         $userExist->low_balance_call_scheduled = true;
                         $userExist->save();
-                        Log::debug('Low balance calendly meeting scheduled.');
+                        Log::debug('Low balance calendly meeting scheduled.'.$request['payload']['scheduled_event']['name']);
                         return;
                     }
                 }
