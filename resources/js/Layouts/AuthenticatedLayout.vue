@@ -888,9 +888,7 @@ let appDownloadModal = ref(false);
           </div>
         </nav>
 
-        <div
-          class="w-full mx-auto md:grid md:grid-cols-5 md:gap-28 md:max-w-screen-2xl xl:gap-0"
-        >
+        <div class="w-full md:grid md:grid-cols-5 md:gap-28 md:max-w-screen-3xl xl:gap-0 px-5">
           <div class="py-12 hidden sm:-my-px sm:ml-10 col-span-1 md:flex md:flex-col">
             <NavLink
               class="mb-10 gap-2"
@@ -1295,7 +1293,7 @@ let appDownloadModal = ref(false);
             </div>
           </div>
           <!-- Page Content -->
-          <main class="col-span-4 bg-white rounded-xl mt-14 mb-10">
+          <main class="col-span-4 bg-white rounded-xl mt-14 mb-10 mr-2">
             <slot />
           </main>
         </div>
