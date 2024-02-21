@@ -152,10 +152,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
     Route::get('/web-api/{call}/call-logs', [AdminCallLogsController::class, 'index'])->name('admin.call-logs.index');
 
-    Route::get('/manage-training-level', [InternalAgentController::class, 'manageTrainingLevel']);
-
-    Route::get('/schedule-live-training', [InternalAgentController::class, 'scheduleLiveTraining']);
+    Route::get('/live-agent-for-basic-training', [InternalAgentController::class, 'manageTrainingLevel']);
 
     Route::post('/calls/disposition', [CallsController::class, 'disposition'])->name('admin.calls.disposition');
-
 });
