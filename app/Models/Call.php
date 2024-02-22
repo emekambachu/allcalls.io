@@ -190,7 +190,8 @@ class Call extends Model
         if ($response->successful()) {
             $xml = simplexml_load_string($response->body());
             Log::debug('retreaver:company_name', [
-                'company_name' => (string)$xml->{'company_name'},
+                'company_name' => (string) $xml->{'company_name'},
+                'xml_string' => (string) $xml,
             ]);
             return (string)$xml->{'company_name'};
         }
