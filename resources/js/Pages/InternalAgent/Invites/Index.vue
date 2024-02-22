@@ -62,7 +62,7 @@ let fetchagentInvites = (page) => {
     console.log('error agent',error);
     slidingLoader.value = false
   })
-  
+
 };
 
 // get Agent invites by pagination end
@@ -136,12 +136,12 @@ let inviteAgent = (data) => {
     }else{
       firstStepErrors.value = error
     }
-    
+
   })
 }
 // invite agent end
 
-// delete invite start 
+// delete invite start
 let deleteInvite = (agentInvite) => {
   if (window.confirm("Are you sure you want to delete this invite?")) {
     slidingLoader.value = true
@@ -157,7 +157,7 @@ let deleteInvite = (agentInvite) => {
     console.log("Deletion cancelled");
   }
 };
-// delete invite end 
+// delete invite end
 
 // re-invite agent modal start
 let reInviteAgent = (agentInvite) => {
@@ -233,7 +233,7 @@ let inviteAgentTree = (agent) => {
     </template>
     <vue-loader :slidingLoader="slidingLoader" />
     <div class="pt-14">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+      <div class="sm:px-6 lg:px-8 space-y-6">
         <div class="p-4 rounded-lg bg-white">
           <div class="flex justify-between">
             <div>
@@ -330,7 +330,7 @@ let inviteAgentTree = (agent) => {
               </ul>
             </nav>
             <br>
-            
+
           </div>
 
 
@@ -344,9 +344,12 @@ let inviteAgentTree = (agent) => {
 
     <div class="pt-0 flex justify-between px-16">
         <div class="text-4xl text-custom-sky font-bold mb-6">My Agents</div>
-        <button class="button-custom-back px-4 py-3 rounded-md ml-2 mb-2" @click="inviteAgentTree(page.props.auth.user)">View Complete Tree</button>     
+        <button class="button-custom-back px-4 py-3 rounded-md ml-2 mb-2"
+                @click="inviteAgentTree(page.props.auth.user)">
+          View Complete Tree
+        </button>
     </div>
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+    <div class="max-w-3xl sm:px-6 lg:px-8 space-y-6">
       <div class="px-4 sm:px-8 sm:rounded-lg">
         <hr class="mb-4" />
       </div>
@@ -354,7 +357,7 @@ let inviteAgentTree = (agent) => {
 
 
     <section v-if="agentsData.data.length" class="p-3">
-      <div class="mx-auto max-w-screen-xl sm:px-12">
+      <div class="sm:px-12">
         <div class="relative sm:rounded-lg overflow-hidden">
           <div class="overflow-x-auto">
             <table class="w-full text-sm text-left text-gray-400">
@@ -380,7 +383,7 @@ let inviteAgentTree = (agent) => {
                   :key="agent.id"
                   class="border-b border-gray-500"
                 >
-                
+
                   <td class="text-gray-600 px-4 py-3">{{ agent.id }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ agent.first_name }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ agent.last_name }}</td>
@@ -446,7 +449,7 @@ let inviteAgentTree = (agent) => {
               </ul>
             </nav>
             <br>
-            
+
           </div>
         </div>
       </div>

@@ -45,7 +45,7 @@ let paginate = (url) => {
     </template>
 
     <div class="pt-14">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+      <div class="sm:px-6 lg:px-8 space-y-6">
         <div class="px-4 sm:px-8 sm:rounded-lg">
           <div class="text-4xl text-custom-sky font-bold mb-6">Transactions</div>
           <hr class="mb-4" />
@@ -144,7 +144,7 @@ let paginate = (url) => {
               </ul>
             </nav>
             <br>
-            
+
           </div>
         </div>
       </div>

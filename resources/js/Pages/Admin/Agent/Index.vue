@@ -292,7 +292,7 @@ let updateUserData = (user) => {
         <PrimaryButton @click="addAgentModal(agents.current_page)">Add New</PrimaryButton>
       </div>
     </div>
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+    <div class="sm:px-6 lg:px-8 space-y-6">
       <div class="px-4 sm:px-8 sm:rounded-lg">
         <hr class="mb-4" />
       </div>
@@ -300,7 +300,7 @@ let updateUserData = (user) => {
 
     <SearchFilter :route="page.url" :requestData="requestData" />
     <section v-if="agents.data.length" class="p-3">
-      <div class="mx-auto max-w-screen-xl sm:px-12">
+      <div class="sm:px-12">
         <div class="relative sm:rounded-lg overflow-hidden">
           <div class="overflow-x-auto">
             <table class="w-full text-sm text-left text-gray-400">
@@ -337,7 +337,7 @@ let updateUserData = (user) => {
                     {{ agent.progress ? agent.progress : "-" }}
                   </td>
                   <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
-                   
+
                     <button class="mr-2" title="Onboarding info"
                       v-show="agent.internal_agent_contract && agent.legacy_key === 1" @click="openContractModal(agent)">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -484,7 +484,7 @@ let updateUserData = (user) => {
                           d="M15 6V2a.97.97 0 0 0-.933-1H5.828a2 2 0 0 0-1.414.586L1.586 4.414A2 2 0 0 0 1 5.828V18a.969.969 0 0 0 .933 1H14a1 1 0 0 0 1-1M6 1v4a1 1 0 0 1-1 1H1m6 6h9m-1.939-2.768L16.828 12l-2.767 2.768" />
                       </svg>
                     </button>
-                    
+
                   </td>
                   <th class="text-gray-600 px-4 py-3">
                     {{ agent.get_agent_level?.name }}

@@ -133,7 +133,7 @@ let minimizedArray = (arr) => {
       <h2 class="text-2xl font-semibold">Online Agents</h2>
     </template>
     <div class="py-14">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+      <div class="sm:px-6 lg:px-8 space-y-6">
         <div class="p-4 rounded-lg bg-white" style="overflow-x: scroll;">
           <h3 class="text-4xl text-custom-sky font-bold mb-6">Online Agents</h3>
           <hr class="mb-4" />

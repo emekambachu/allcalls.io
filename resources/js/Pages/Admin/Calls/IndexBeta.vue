@@ -61,6 +61,16 @@ let columns = ref([
     // },
 
     {
+        label: "ID",
+        name: "id",
+        visible: false,
+        sortable: false,
+        render(call) {
+            return call.id;
+        },
+    },
+
+    {
         label: "Agent Name",
         name: "agent_name",
         visible: true,
@@ -71,22 +81,22 @@ let columns = ref([
     },
 
     {
-        label: "ID",
-        name: "id",
-        visible: false,
-        sortable: true,
-        render(call) {
-            return call.id;
-        },
-    },
-
-    {
         label: "Call Date",
         name: "call_taken",
         visible: true,
         sortable: true,
         render(call) {
             return call.call_taken;
+        },
+    },
+
+    {
+        label: "CallerID",
+        name: "from",
+        visible: true,
+        sortable: false,
+        render(call) {
+            return call.from;
         },
     },
 
@@ -168,7 +178,7 @@ let columns = ref([
         label: "Pub ID",
         name: "publisher_id",
         visible: true,
-        sortable: true,
+        sortable: false,
         render(call) {
             return call.publisher_id;
         },
@@ -207,16 +217,6 @@ let columns = ref([
         sortable: false,
         render(call) {
             return call.recording_url;
-        },
-    },
-
-    {
-        label: "CallerID",
-        name: "from",
-        visible: false,
-        sortable: false,
-        render(call) {
-          return call.from;
         },
     },
 
@@ -1224,7 +1224,7 @@ const getAutoCompleteFilterOptions = async (keyword) => {
     </div>
 
 
-    <div class="px-4 mx-auto max-w-screen-2xl lg:px-12">
+    <div class="px-4 max-w-screen-3xl lg:px-12">
         <TabGroup>
           <TabList class="flex space-x-1 rounded-xl bg-blue-500/20 p-1">
               <Tab v-slot="{ selected }" class="w-2/4">
@@ -1601,7 +1601,7 @@ const getAutoCompleteFilterOptions = async (keyword) => {
 
 
     <section class="py-3 sm:py-5">
-      <div class="px-4 mx-auto max-w-screen-2xl lg:px-12">
+      <div class="px-4 max-w-screen-3xl lg:px-12">
         <div class="relative overflow-hidden bg-white sm:rounded-lg"
              :class="{'height-600': getTotalCalls <= 14}">
           <div

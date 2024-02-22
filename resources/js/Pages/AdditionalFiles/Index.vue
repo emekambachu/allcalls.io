@@ -67,14 +67,12 @@ const submit = () => {
   <Head title="Additional Files" />
   <AuthenticatedLayout>
     <template #header>
-      <h2
-        class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
-      >
+      <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
         Additional Files
       </h2>
     </template>
     <div class="pt-14">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+      <div class="sm:px-6 lg:px-8 space-y-6">
         <div class="px-4 sm:px-8 sm:rounded-lg">
           <div class="text-4xl text-custom-sky font-bold mb-6">
             Additional Files
@@ -129,7 +127,7 @@ const submit = () => {
     </section>
 
     <section class="p-3">
-      <div class="mx-auto max-w-screen-xl sm:px-12">
+      <div class="sm:px-12">
         <div class="relative sm:rounded-lg overflow-hidden">
           <div class="overflow-x-auto">
             <table

@@ -64,7 +64,7 @@ let inviteAgent = (data) => {
     }else{
       firstStepErrors.value = error
     }
-    
+
   })
 }
 let deleteInvite = (agentInvite) => {
@@ -119,7 +119,7 @@ let ReInviteAgentFun = () => {
     </template>
 
     <div class="py-14">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+      <div class="sm:px-6 lg:px-8 space-y-6">
         <div class="p-4 rounded-lg bg-white">
           <div class="flex justify-between">
             <div>
@@ -219,7 +219,7 @@ let ReInviteAgentFun = () => {
               </ul>
             </nav>
             <br>
-            
+
           </div>
 
 
