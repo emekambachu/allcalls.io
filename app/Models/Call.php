@@ -184,16 +184,15 @@ class Call extends Model
         $retreaverAPIKey = env('RETREAVER_API_KEY');
         $retreaverCompanyId = env('RETREAVER_COMPANY_ID');
 
-        $response = Http::get("https://api.retreaver.com/affiliates/afid/{$affiliateId}.xml?api_key={$retreaverAPIKey}&company_id={$retreaverCompanyId}");
+        $response = Http::get("https://api.retreaver.com/affiliates/afid/{$affiliateId}.json?api_key={$retreaverAPIKey}&company_id={$retreaverCompanyId}");
 
         // Check if the response is successful
         if ($response->successful()) {
-            $xml = simplexml_load_string($response->body());
             Log::debug('retreaver:company_name', [
-                'company_name' => (string) $xml->{'company_name'},
-                'xml_string' => (string) $xml,
+                'repsonseBody' => $response->body(),
             ]);
-            return (string)$xml->{'company_name'};
+
+            return null;
         }
 
         return null; // Return null if the response is not successful or if there's any issue
