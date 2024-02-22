@@ -189,6 +189,9 @@ class Call extends Model
         // Check if the response is successful
         if ($response->successful()) {
             $xml = simplexml_load_string($response->body());
+            Log::debug('retreaver:company_name', [
+                'company_name' => (string)$xml->{'company_name'},
+            ]);
             return (string)$xml->{'company_name'};
         }
 
