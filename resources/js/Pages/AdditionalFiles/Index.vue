@@ -67,9 +67,7 @@ const submit = () => {
   <Head title="Additional Files" />
   <AuthenticatedLayout>
     <template #header>
-      <h2
-        class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
-      >
+      <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
         Additional Files
       </h2>
     </template>
@@ -129,7 +127,7 @@ const submit = () => {
     </section>
 
     <section class="p-3">
-      <div class="mx-auto max-w-screen-xl sm:px-12">
+      <div class="sm:px-12">
         <div class="relative sm:rounded-lg overflow-hidden">
           <div class="overflow-x-auto">
             <table

@@ -231,7 +231,7 @@ let saveChanges = () => {
     </div>
 
     <section v-if="calls.data.length" class="p-3">
-      <div class="mx-auto max-w-screen-xl sm:px-12">
+      <div class="sm:px-12">
         <div class="relative sm:rounded-lg overflow-hidden">
           <div class="overflow-x-auto">
             <table class="w-full text-sm text-left text-gray-400 table-responsive">
