@@ -79,15 +79,15 @@ let fetchData = () => {
         if (form.value.first_six_card_no.length < 6) {
             firstStepErrors.value.first_six_card_no = ['At least 6 charactror is required.']
             return
-        } 
+        }
     }
     if (form.value.last_four_card_no) {
         if (form.value.last_four_card_no.length < 4) {
             firstStepErrors.value.last_four_card_no = ['At least 4 charactror is required.']
             return
-        } 
+        }
     }
-  
+
   router.visit(`/admin/transactions`, {
     data: {
       transaction_type:transactionType.value !== "Choose transaction Type" ? transactionType.value : null,
@@ -284,7 +284,7 @@ input[type="number"] {
     </template>
 
     <div class="pt-14">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+      <div class="max-w-7xl sm:px-6 lg:px-8 space-y-6">
         <div class="px-4 sm:px-8 sm:rounded-lg">
           <div class="text-4xl text-custom-sky font-bold mb-6">Transactions</div>
           <hr class="mb-4" />
@@ -292,8 +292,8 @@ input[type="number"] {
       </div>
     </div>
     <div class="px-3">
-      <div class="mx-auto max-w-screen-xl sm:px-12">
-        <div class="mb-4 grid xl:grid-cols-4 lg:grid-cols-3 mb-2 md:grid-cols-2 sm:grid-cols-1 gap-4">
+      <div class="max-w-screen-3xl sm:px-12">
+        <div class="grid xl:grid-cols-4 lg:grid-cols-3 mb-2 md:grid-cols-2 sm:grid-cols-1 gap-4">
           <!-- <Multiselect v-model="transactionType" :options="stateOptions" track-by="value" label="label" mode="tags"
                         :close-on-select="false" placeholder="Choose States">
                     </Multiselect> -->
@@ -400,7 +400,7 @@ input[type="number"] {
     </div>
 
     <section v-if="transactions.data.length" class="p-3">
-      <div class="mx-auto max-w-screen-xl sm:px-12">
+      <div class="max-w-screen-3xl sm:px-12">
         <div class="relative sm:rounded-lg overflow-hidden">
           <div class="overflow-x-auto">
             <table class="w-full text-sm text-left text-gray-400">
@@ -427,12 +427,13 @@ input[type="number"] {
               <tbody>
                 <tr v-for="transaction in transactions.data" :key="transaction.id" class="border-b border-gray-500">
                   <td class="text-gray-600 px-4 py-3">
-                    {{ transaction.created_at }} {{ transaction.card?.get_year }} 
+                    {{ transaction.created_at }} {{ transaction.card?.get_year }}
                   </td>
                   <td class="text-gray-600 px-4 py-3">
-                    <a class="text-blue-600" :href="route('admin.customer.detail', transaction?.user?.id)">{{
-                      transaction?.user?.first_name }}
-                      {{ transaction?.user?.last_name }}</a>
+                    <a class="text-blue-600" :href="route('admin.customer.detail', transaction?.user?.id)">
+                        {{transaction?.user?.first_name }}
+                        {{ transaction?.user?.last_name }}
+                    </a>
                   </td>
                   <td class="text-gray-600 px-4 py-3">
                     <span title="Visa" v-if="detectCardType(transaction.card?.card_number) == 'Visa'">
@@ -648,7 +649,7 @@ input[type="number"] {
     <section v-else class="p-3">
       <p class="text-center text-gray-600">No Transactions yet.</p>
     </section>
-    <nav class="flex justify-between my-4 mx-auto max-w-screen-xl sm:px-12"
+    <nav class="flex justify-between my-4 max-w-screen-3xl sm:px-12"
       v-if="transactions.links && transactions.data.length">
       <div v-if="transactions">
         <span class="text-sm text-gray-700">

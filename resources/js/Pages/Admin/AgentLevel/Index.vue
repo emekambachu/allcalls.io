@@ -90,7 +90,7 @@ let actionToDeleteLevel = () => {
                 <PrimaryButton @click="addAgentLevel(levels.current_page)">Add Level</PrimaryButton>
             </div>
         </div>
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+        <div class="sm:px-6 lg:px-8 space-y-6">
             <div class="px-4 sm:px-8 sm:rounded-lg">
                 <hr class="mb-4" />
             </div>
@@ -160,7 +160,7 @@ let actionToDeleteLevel = () => {
                             </ul>
                         </nav>
                         <br>
-                       
+
                     </div>
                 </div>
             </div>

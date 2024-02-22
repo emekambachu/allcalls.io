@@ -70,7 +70,7 @@ let inviteAgent = (data) => {
     }else{
       firstStepErrors.value = error
     }
-    
+
   })
 }
 let deleteInvite = (agentInvite) => {
@@ -152,17 +152,17 @@ let inviteParent = (agent) => {
       <div>
         <div class="text-4xl text-custom-sky font-bold mb-6">Registered Agents</div>
       </div>
-     
+
     </div>
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
       <div class="px-4 sm:px-8 sm:rounded-lg">
         <hr class="mb-4" />
       </div>
     </div>
-    
+
 
     <section v-if="agents.data.length" class="p-3">
-      <div class="mx-auto max-w-screen-xl sm:px-12">
+      <div class="max-w-screen-xl sm:px-12">
         <div class="relative sm:rounded-lg overflow-hidden">
           <div class="overflow-x-auto">
             <table class="w-full text-sm text-left text-gray-400">
@@ -188,7 +188,7 @@ let inviteParent = (agent) => {
                   :key="agent.id"
                   class="border-b border-gray-500"
                 >
-                
+
                   <td class="text-gray-600 px-4 py-3">{{ agent.id }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ agent.first_name }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ agent.last_name }}</td>

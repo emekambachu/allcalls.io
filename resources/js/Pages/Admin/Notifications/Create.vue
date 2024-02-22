@@ -292,7 +292,7 @@ if (page.props.flash.message) {
     </template>
 
     <section class="py-8">
-      <div class="container mx-auto px-4">
+      <div class="container-fluid px-4">
 
         <div class="mb-4">
           <!-- Display Selected Users -->

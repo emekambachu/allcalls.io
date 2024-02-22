@@ -86,7 +86,7 @@ if(!page.props.auth.user.new_agent_call_scheduled && page.props.auth.user.basic_
     </template>
 
     <div class="pt-14">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+      <div class="sm:px-6 lg:px-8 space-y-6">
         <div class="px-4 sm:px-8 sm:rounded-lg">
           <div class="flex justify-between">
             <div>

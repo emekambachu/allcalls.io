@@ -24,7 +24,7 @@ let openLiveChat = () => {
     </template>
 
     <div class="pt-14">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+      <div class="sm:px-6 lg:px-8 space-y-6">
         <div class="px-4 sm:px-8 sm:rounded-lg">
           <div class="text-4xl text-custom-sky font-small mb-6">Support</div>
           <hr class="mb-4" />
@@ -74,7 +74,7 @@ let openLiveChat = () => {
     </div>
 
     <div class="pt-14">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+      <div class="sm:px-6 lg:px-8 space-y-6">
         <div class="px-4 sm:px-8 sm:rounded-lg">
           <div class="text-4xl text-custom-sky font-small mb-6">
             Contact Information
@@ -84,7 +84,7 @@ let openLiveChat = () => {
       </div>
     </div>
 
-   
+
       <!-- <div class="px-16 text-gray-700 mb-8">
         <div class="font-bold text-gray-700 mb-2 text-lg">AllCalls LLC</div>
         <div>1309 COFFEEN AVE STE 11246<br>SHERIDAN, WY 82801, USA</div>
@@ -100,7 +100,7 @@ let openLiveChat = () => {
         <p class="mb-1">1309 COFFEEN AVE STE 11246<br>SHERIDAN, WY 82801, USA</p>
         <p><strong class="text-gray-500">Email:</strong> support@allcalls.io</p>
       </div> -->
- 
+
 
     <div class="px-16 text-gray-700 mb-8">
       <div class="font-bold text-gray-700 mb-2 text-lg">AllCalls LLC</div>
@@ -121,7 +121,7 @@ let openLiveChat = () => {
             <p class="mb-1">1309 COFFEEN AVE STE 11246<br>SHERIDAN, WY 82801, USA</p>
           </div>
       </div>
-     
+
       <p><strong class="text-gray-500">Email:</strong> support@allcalls.io</p>
     </div>
 
