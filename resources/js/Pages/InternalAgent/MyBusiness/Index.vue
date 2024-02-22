@@ -222,7 +222,7 @@ const changeDate = (date) => {
     </template>
     <vue-loader :slidingLoader="slidingLoader" />
     <div class="pt-14">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+      <div class="sm:px-6 lg:px-8 space-y-6">
         <div class="p-4 rounded-lg bg-white">
           <div class="flex justify-between">
             <div>
@@ -264,7 +264,7 @@ const changeDate = (date) => {
 
           <div class="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             <div
-              class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative"
+              class="p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative"
             >
               <p class="mb-1 text-sm text-gray-300">Total Apps</p>
               <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
@@ -272,7 +272,7 @@ const changeDate = (date) => {
               </h2>
             </div>
             <div
-              class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative"
+              class="p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative"
             >
               <p class="mb-1 text-sm text-gray-300">Total APV</p>
               <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
@@ -280,7 +280,7 @@ const changeDate = (date) => {
               </h2>
             </div>
             <div
-              class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative"
+              class="p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative"
             >
               <p class="mb-1 text-sm text-gray-300">Average APV</p>
               <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">

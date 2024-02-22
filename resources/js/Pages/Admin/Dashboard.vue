@@ -244,7 +244,7 @@ let formatNumberWith5DecimalPlaces = (number) => {
     </template>
 
     <div class="pt-14">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+      <div class="max-w-7xl sm:px-6 lg:px-8 space-y-6">
         <div class="px-4 sm:px-8 sm:rounded-lg">
           <div class="text-4xl text-custom-sky font-bold mb-6">Dashboard</div>
           <hr class="mb-4" />
@@ -268,7 +268,7 @@ let formatNumberWith5DecimalPlaces = (number) => {
     <div class="px-16">
       <div class="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <div
-          class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative"
+          class="p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative"
         >
           <p class="mb-1 text-sm text-gray-300">Total Users</p>
           <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
@@ -322,7 +322,7 @@ let formatNumberWith5DecimalPlaces = (number) => {
           </button>
         </div>
         <div
-          class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative"
+          class="p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative"
         >
           <p class="mb-1 text-sm text-gray-300">Active Users</p>
           <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
@@ -376,7 +376,7 @@ let formatNumberWith5DecimalPlaces = (number) => {
           </button>
         </div>
         <div
-          class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative"
+          class="p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative"
         >
           <p class="mb-1 text-sm text-gray-300">Total Revenue</p>
           <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">

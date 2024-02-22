@@ -142,7 +142,7 @@ let saveChanges = () => {
     </template>
 
     <div class="pt-14">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+      <div class="sm:px-6 lg:px-8 space-y-6">
         <div class="px-4 sm:px-8 sm:rounded-lg">
           <div class="text-4xl text-custom-sky font-bold mb-6">Calls</div>
           <hr class="mb-4" />
@@ -190,7 +190,7 @@ let saveChanges = () => {
 
 
               <div class="flex items-center justify-end mt-4">
-                  <PrimaryButton 
+                  <PrimaryButton
                     :disabled=" disposition_loader" class="mr-2" @click.prevent="saveChanges"><global-spinner :spinner="disposition_loader" /> Save Changes</PrimaryButton>
 
                   <button
@@ -210,19 +210,19 @@ let saveChanges = () => {
     <div
       class="mx-auto px-4 sm:px-8 md:px-16 py-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
     >
-      <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto">
+      <div class="p-6 bg-custom-darksky rounded-lg shadow overflow-auto">
         <p class="mb-1 text-sm text-gray-300">Total Calls</p>
         <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
           {{ totalCalls }}
         </h2>
       </div>
-      <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto">
+      <div class="p-6 bg-custom-darksky rounded-lg shadow overflow-auto">
         <p class="mb-1 text-sm text-gray-300">Total Spent</p>
         <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
           ${{ formatMoney(totalAmountSpent) }}
         </h2>
       </div>
-      <div class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto">
+      <div class="p-6 bg-custom-darksky rounded-lg shadow overflow-auto">
         <p class="mb-1 text-sm text-gray-300">Average Call Duration</p>
         <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
           {{ formatTime(averageCallDuration) }}
@@ -324,7 +324,7 @@ let saveChanges = () => {
                       <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                     </svg>
                     </button>
-                   
+
                   </td>
                 </tr>
               </tbody>

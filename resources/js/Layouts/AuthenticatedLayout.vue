@@ -1304,7 +1304,7 @@ let appDownloadModal = ref(false);
       <div v-else>
         <nav class="bg-custom-indigo border-b border-gray-800">
           <!-- Primary Navigation Menu -->
-          <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="max-w-screen-3xl px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
               <div class="flex">
                 <!-- Logo -->
@@ -2217,8 +2217,8 @@ let appDownloadModal = ref(false);
           </div>
         </nav>
 
-        <div class="w-full mx-auto md:grid md:grid-cols-5 md:gap-28 md:max-w-screen-2xl xl:gap-0">
-          <div class="py-12 hidden sm:-my-px sm:ml-10 col-span-1 md:flex md:flex-col">
+        <div class="md:grid md:grid-cols-5 md:gap-28 md:max-w-screen-3xl xl:gap-0 mx-5">
+          <div class="py-12 hidden mx-auto col-span-1 md:flex md:flex-col">
             <NavLink
                 :class="{ 'opacity-50': disabledNavLink === true }"
                 :disabledNavLink="disabledNavLink"
