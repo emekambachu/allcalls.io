@@ -88,7 +88,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
     </template>
 
     <div class="pt-14">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+      <div class="max-w-7xl sm:px-6 lg:px-8 space-y-6">
         <div class="px-4 sm:px-8 sm:rounded-lg">
           <div class="text-4xl text-custom-sky font-bold mb-6">Clients</div>
           <hr class="mb-4" />
@@ -111,7 +111,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
     <ClientSearchFilter :allClients="allClients" :requestData="requestData" :route="'/admin/clients'" />
 
     <section v-if="Clients.data.length" class="p-3">
-      <div class="mx-auto max-w-screen-xl sm:px-12">
+      <div class="max-w-screen-3xl sm:px-12">
         <div class="relative sm:rounded-lg overflow-hidden">
           <div class="overflow-x-auto">
             <table class="w-full text-sm text-left text-gray-400">
@@ -241,7 +241,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
     <section v-else class="p-3">
       <p class="text-center text-gray-600">No clients yet.</p>
     </section>
-    
+
     <Modal :show="showModal" @close="showModal = false">
       <ClientModal :showModal="showModal" :editScreen="editScreen" :route="'/admin/clients'" :ClientDetail="ClientDetail" :states="states"
         @close="showModal = false">
