@@ -28,7 +28,7 @@ class SendCallsToOnscript extends Command
      */
     public function handle()
     {
-        $calls = Call::whereSentToOnscript(false)->get();
+        $calls = Call::whereSentToOnscript(false)->where('id',51)->get();
         $total = $calls->count();
         foreach ($calls as $call){
             SendToOnScriptUpdate::dispatch($call,$call->user);
