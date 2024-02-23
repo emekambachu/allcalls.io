@@ -188,8 +188,11 @@ class Call extends Model
 
         // Check if the response is successful
         if ($response->successful()) {
+            $responseBody = $response->json();
+
             Log::debug('retreaver:company_name', [
-                'repsonseBody' => $response->body(),
+                'responseBody' => $response->body(),
+                'affiliate' => $responseBody,
             ]);
 
             return null;
