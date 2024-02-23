@@ -66,7 +66,8 @@ class SendCallInfoToOnScriptAI implements ShouldQueue
                 Log::debug('Gamma:SendCallInfoToOnScriptAI Success:', [
                     'response' => $response->body(),
                 ]);
-                if ($response->body()) {
+                $responseData = json_decode($response->body(),true);
+                if (isset($responseData['message']) && $responseData['message'] =="Call details fetched successfully") {
                     // Update the sent_to_onscript column
                     $call->sent_to_onscript = true;
                     $call->save();
