@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Events\SendToOnScriptUpdate;
+use App\Listeners\SendCallInfoToOnScriptAI;
 use App\Models\Call;
 use Illuminate\Console\Command;
 
@@ -28,6 +30,9 @@ class SendCallsToOnscript extends Command
     {
         $calls = Call::whereSentToOnscript(false)->get();
         $total = $calls->count();
+        foreach ($calls as $call){
+            SendToOnScriptUpdate::dispatch($call,$call->user);
+        }
         $this->info("Total Calls --> $total");
         $this->info('Your command executed successfully!');
     }
