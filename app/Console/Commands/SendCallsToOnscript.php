@@ -28,13 +28,10 @@ class SendCallsToOnscript extends Command
      */
     public function handle()
     {
-        $calls = Call::whereSentToOnscript(false)->where('id',51)->get();
-        $total = $calls->count();
+        $calls = Call::whereSentToOnscript(false)->get();
         foreach ($calls as $call){
             SendToOnScriptUpdate::dispatch($call,$call->user);
         }
-
-        $this->info("Total Calls --> $total");
         $this->info('Your command executed successfully!');
     }
 }
