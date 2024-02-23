@@ -33,6 +33,7 @@ class SendCallsToOnscript extends Command
         foreach ($calls as $call){
             SendToOnScriptUpdate::dispatch($call,$call->user);
         }
+
         $this->info("Total Calls --> $total");
         $this->info('Your command executed successfully!');
     }
