@@ -28,19 +28,14 @@ class Kernel extends ConsoleKernel
 
 
         $schedule->call(function () {
-
             // Check the condition before executing the command
-            if(config('app.url')== ALLCALL_STAGING){
+            if(config('app.url')== AllCALLS_LIVE){
                 $calls = Call::whereSentToOnscript(false)->count();
-                Log::debug('Daily call job:', [
-                    'RECORDS COUNT' => $calls,
-                ]);
                 if ($calls > 0) {
                     Artisan::call('allcalls:send-calls-to-on-script');
                 }
             }
-                })->everyMinute();
-//            ->dailyAt('23:59');
+                })->dailyAt('23:59');
     }
 
     /**
