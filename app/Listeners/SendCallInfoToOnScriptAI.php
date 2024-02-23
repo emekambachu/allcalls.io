@@ -40,7 +40,7 @@ class SendCallInfoToOnScriptAI implements ShouldQueue
                 'url' => $call->recording_url ?? 'N/A',
                 'first_name' => $agent->first_name,
                 'last_name' => $agent->last_name,
-                'call_timestamp' => $call->created_at->format('Y-m-d H:i:s'),
+                'call_timestamp' => $call->created_at !='' ? $call->created_at->format('Y-m-d H:i:s') :null,
                 'affiliate_name' => $call->publisher_id ?? null,
                 'call_disposition' => ($call->client && $call->client->status) ? $call->client->status : null,
                 'agent_id' => $agent->id, // Added parameter
