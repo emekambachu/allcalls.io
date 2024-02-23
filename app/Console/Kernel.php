@@ -28,9 +28,7 @@ class Kernel extends ConsoleKernel
 
 
         $schedule->call(function () {
-            Log::debug('Daily call job:', [
-                'JOB RUNS' => "YES=>" .config('app.url'). ALLCALL_STAGING,
-            ]);
+
             // Check the condition before executing the command
             if(config('app.url')== ALLCALL_STAGING){
                 $calls = Call::whereSentToOnscript(false)->count();
