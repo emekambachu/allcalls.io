@@ -64,8 +64,15 @@ class SendCallInfoToOnScriptAI implements ShouldQueue
                 $response = Http::get('https://app.onscript.ai/api/create_process_dialog', $queryParams);
 
                 Log::debug('Gamma:SendCallInfoToOnScriptAI Success:', [
-                    'response' => $response->body(),
+                    'response' => $response,
                 ]);
+
+                if ($response) {
+                    // Update the sent_to_onscript column
+                    $call->sent_to_onscript = true;
+                    $call->save();
+                }
+
             } catch (Exception $e) {
                 Log::debug('Gamma:SendCallInfoToOnScriptAI Error:', [
                     'message' => $e->getMessage(),
