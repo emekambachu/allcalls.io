@@ -66,11 +66,14 @@ class SendCallInfoToOnScriptAI implements ShouldQueue
                 Log::debug('Gamma:SendCallInfoToOnScriptAI Success:', [
                     'response' => $response->body(),
                 ]);
-
                 if ($response->body()) {
                     // Update the sent_to_onscript column
                     $call->sent_to_onscript = true;
                     $call->save();
+                }else{
+                    Log::debug('Gamma:SendCallInfoToOnScriptAI Call Not Found:', [
+                        'message' => "Call not found ID=>".$call->id,
+                    ]);
                 }
 
             } catch (Exception $e) {
