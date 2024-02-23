@@ -13,7 +13,7 @@ class SendCallInfoToOnScriptAI implements ShouldQueue
 {
 
     /**
-     * 
+     *
      * After 30 seconds of initiating the call, send the call info to OnScript AI
      */
     protected $delay = 120;
@@ -40,7 +40,7 @@ class SendCallInfoToOnScriptAI implements ShouldQueue
                 'url' => $call->recording_url ?? 'N/A',
                 'first_name' => $agent->first_name,
                 'last_name' => $agent->last_name,
-                'call_timestamp' => $call->created_at->format('Y-m-d H:i:s'),
+                'call_timestamp' => $call->created_at !='' ? $call->created_at->format('Y-m-d H:i:s') :null,
                 'affiliate_name' => $call->publisher_id ?? null,
                 'call_disposition' => ($call->client && $call->client->status) ? $call->client->status : null,
                 'agent_id' => $agent->id, // Added parameter
@@ -66,6 +66,17 @@ class SendCallInfoToOnScriptAI implements ShouldQueue
                 Log::debug('Gamma:SendCallInfoToOnScriptAI Success:', [
                     'response' => $response->body(),
                 ]);
+                $responseData = json_decode($response->body(),true);
+                if (isset($responseData['message']) && $responseData['message'] =="Call details fetched successfully") {
+                    // Update the sent_to_onscript column
+                    $call->sent_to_onscript = true;
+                    $call->save();
+                }else{
+                    Log::debug('Gamma:SendCallInfoToOnScriptAI Call Not Found:', [
+                        'message' => "Call not found ID=>".$call->id,
+                    ]);
+                }
+
             } catch (Exception $e) {
                 Log::debug('Gamma:SendCallInfoToOnScriptAI Error:', [
                     'message' => $e->getMessage(),
