@@ -152,7 +152,7 @@ class Call extends Model
             ]);
 
             $publisherId = $callLogs[0]['call']['afid'];
-            $publisherName = self::getRetreaverAffiliateFullNameById($publisherId);
+            $publisherName = self::getRetreaverAffiliateCompanyName($publisherId);
 
             $cost = $callLogs[0]['call']['payout'] ?? null;
 
@@ -179,24 +179,10 @@ class Call extends Model
         return false;
     }
 
-    public static function getRetreaverAffiliateFullNameById($affiliateId)
+    public static function getRetreaverAffiliateCompanyName($affiliateId)
     {
         $retreaverAPIKey = env('RETREAVER_API_KEY');
         $retreaverCompanyId = env('RETREAVER_COMPANY_ID');
-
-        $response = Http::get("https://api.retreaver.com/affiliates/afid/{$affiliateId}.json?api_key={$retreaverAPIKey}&company_id={$retreaverCompanyId}");
-
-        // Check if the response is successful
-        if ($response->successful()) {
-            $responseBody = $response->json();
-
-            Log::debug('retreaver:company_name', [
-                'responseBody' => $response->body(),
-                'affiliate' => $responseBody,
-            ]);
-
-            return null;
-        }
 
         return null; // Return null if the response is not successful or if there's any issue
     }
