@@ -23,6 +23,8 @@ const EQUIS_JOB_ERROR_EMAILS = ['awaisamir23@gmail.com', 'iamfaizahmed123@gmail.
 const TRAINING = 'Training';
 const LIVE = 'Live';
 const MINIMUM_BALANCE = 40;
+const AllCALLS_LIVE = "allcalls.io";
+const ALLCALL_STAGING = "staging.allcalls.io";
 
 function systemEmails() {
     $currentUrl = trim(url()->current());
