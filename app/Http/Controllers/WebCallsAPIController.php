@@ -9,6 +9,7 @@ use App\Services\Base\BaseService;
 use App\Services\Calls\CallService;
 use App\Services\Client\ClientService;
 use App\Services\User\UserService;
+use Carbon\Carbon;
 use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -65,6 +66,11 @@ class WebCallsAPIController extends Controller
 
         // Retrieve filters
         $filters = $request->input('filters', []);
+
+        // if filters are empty, apply default filters
+        if(count($filters) === 0) {
+            $query->whereDate('created_at', '>=', Carbon::today());
+        }
 
         foreach ($filters as $filter) {
             if (isset($filter['name'], $filter['value'], $filter['operator'])) {
@@ -199,6 +205,5 @@ class WebCallsAPIController extends Controller
         }catch (\Exception $e) {
             return BaseService::tryCatchException($e);
         }
-
     }
 }
