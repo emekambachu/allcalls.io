@@ -80,7 +80,7 @@ class CallsController extends Controller
         });
 
         $callsGroupedByPublisherName = $allCalls->groupBy('publisher_name')->map(function ($calls) {
-            $user = $calls->first()->user; // Assuming each call has a 'user' relation loaded
+            $userIds = $calls->pluck('user_id')->toArray(); // Get ids that belong to the same publisher
             $totalCalls = $calls->count();
             $paidCalls = $calls->where('amount_spent', '>', 0)->count();
             $totalRevenue = $calls->sum('amount_spent');
@@ -89,8 +89,8 @@ class CallsController extends Controller
             $publisherName = $calls->first()->publisher_name;
 
             return [
+                'user_ids' => $userIds,
                 'publisher_name' => $publisherName,
-                'userId' => $user->id,
                 'totalCalls' => $totalCalls,
                 'paidCalls' => $paidCalls,
                 'revenueEarned' => $totalRevenue,
