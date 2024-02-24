@@ -22,7 +22,10 @@ class Call extends Model
     protected $table = "calls";
     protected $guarded = ['id'];
 
-    protected $appends = ['ringing_duration', 'role'];
+    protected $appends = [
+        'ringing_duration',
+        'role'
+    ];
 
     public function callType()
     {
@@ -93,7 +96,6 @@ class Call extends Model
         if ($this->user && $this->user->roles->contains('name', 'internal-agent')) {
             return 'Internal Agent';
         }
-
         return 'Regular User';
     }
 
