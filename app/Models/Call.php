@@ -82,7 +82,6 @@ class Call extends Model
             $timestamp->timezone($timezone);
         }
 
-
         return $timestamp->diffForHumans() . ' (' . $timestamp->format('H:i d/m/Y') . ')';
     }
 

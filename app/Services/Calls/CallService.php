@@ -14,6 +14,10 @@ class CallService
         return new Call();
     }
 
+    public function getCallsWithRelationsAndFilters(){
+
+    }
+
     /**
      * @throws \JsonException
      */

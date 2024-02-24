@@ -12,6 +12,7 @@ use App\Services\User\UserService;
 use Carbon\Carbon;
 use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
@@ -34,7 +35,7 @@ class WebCallsAPIController extends Controller
         'serial_number', 'id', 'user_id', 'call_taken', 'call_duration_in_seconds', 'cost',
         'publisher_name', 'publisher_id', 'hung_up_by',
         'amount_spent', 'recording_url', 'call_type_id', 'created_at', 'updated_at',
-        'sid', 'unique_call_id', 'from', 'user_response_time', 'completed_at'
+        'sid', 'unique_call_id', 'from', 'user_response_time', 'ringing_duration', 'completed_at'
     ];
 
     protected array $specialFilters = [
@@ -55,6 +56,12 @@ class WebCallsAPIController extends Controller
     {
         $query = Call::with('user.roles', 'callType', 'client');
 
+        // ringing_duration is a custom attribute, therefore it's not available in the database table
+        // Had to use raw queries to get it to work
+        if($request->input('sort_column') === 'ringing_duration'){
+            $query->select('*', DB::raw('IFNULL(TIMESTAMPDIFF(SECOND, created_at, user_response_time), 20) AS ringing_duration'));
+        }
+
         // Apply sorting for columns with or without joins
         if(in_array($request->input('sort_column'), $this->columnsWithJoins, true)){
             $sortColumn = $request->input('sort_column', 'calls.created_at');
@@ -67,16 +74,19 @@ class WebCallsAPIController extends Controller
             $sortDirection = $sortDirection === 'asc' ? 'asc' : 'desc';
             $query->orderBy($sortColumn, $sortDirection);
 
+        // apply joins to columns with relationships
         }else if($sortColumn === 'disposition'){
             $query->join('clients', 'clients.call_id', '=', 'calls.id')
                 ->orderBy('clients.status', $sortDirection)
                 ->select('calls.*', 'clients.call_id AS clients_call_id', 'clients.status');
 
+        // apply joins to columns with relationships
         }else if($sortColumn === 'agent_name'){
             $query->join('users', 'users.id', '=', 'calls.user_id')
                 ->orderBy('users.first_name', $sortDirection)
                 ->select('calls.*', 'users.id AS users_id', 'users.first_name');
 
+        // apply joins to columns with relationships
         }else if($sortColumn === 'vertical'){
             $query->join('call_types', 'call_types.id', '=', 'calls.call_type_id')
                 ->orderBy('call_types.type', $sortDirection)
