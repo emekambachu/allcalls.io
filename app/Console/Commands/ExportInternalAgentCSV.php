@@ -29,13 +29,13 @@ class ExportInternalAgentCSV extends Command
         $this->info('Exporting data to CSV...');
 
         $users = User::whereHas('roles', fn ($query) => $query->where('name', 'internal-agent'))
-            ->get(['id', 'first_name', 'last_name', 'email', 'phone']);
+            ->get(['id', 'first_name', 'last_name', 'email', 'phone', 'created_at']);
 
         $filePath = 'users.csv';
         $file = fopen($filePath, 'w');
 
         // Optional: Add CSV headers
-        fputcsv($file, ['ID', 'First Name', 'Last Name', 'Email', 'Phone']);
+        fputcsv($file, ['ID', 'First Name', 'Last Name', 'Email', 'Phone', 'Sign Up Date']);
 
         foreach ($users as $user) {
             fputcsv($file, $user->toArray());

@@ -53,6 +53,7 @@ use App\Http\Controllers\AgentStatusPriceDocsController;
 use App\Http\Controllers\TakeCallsOnlineUsersController;
 use App\Http\Controllers\FEAgentStatusPriceDocsController;
 use App\Http\Controllers\ZoomMeetingNotificationController;
+use Illuminate\Support\Facades\Http;
 
 /*
 |--------------------------------------------------------------------------
