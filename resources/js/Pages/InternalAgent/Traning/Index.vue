@@ -3,9 +3,14 @@ import { ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import BasicTraining from "@/Pages/InternalAgent/Traning/BasicTraining.vue";
 import BasicTrainingModal from "@/Pages/InternalAgent/Traning/BasicTrainingModal.vue";
+import NewAgentTrainingModal from "@/Pages/InternalAgent/Traning/NewAgentTrainingModal.vue";
 import "vue3-carousel/dist/carousel.css";
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
 import { basicTrainingSteps } from "@/constants.js";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import { Head, usePage } from "@inertiajs/vue3";
+
+let page = usePage();
 
 let basicTrainingModal = ref(false);
 let basisTraning = () => {
@@ -61,6 +66,13 @@ const filteredTraining = computed(() => {
   return basicTrainingSteps.filter((basicTraining) => basicTraining.title !== "");
 });
 console.log("filteredTraining", filteredTraining);
+let newAgentTrainingModal = ref(false)
+let newAgentTraining = () => {
+  newAgentTrainingModal.value = true
+}
+if(!page.props.auth.user.new_agent_call_scheduled && page.props.auth.user.basic_training){
+  newAgentTrainingModal.value = true
+}
 </script>
 
 <template>
@@ -74,9 +86,18 @@ console.log("filteredTraining", filteredTraining);
     </template>
 
     <div class="pt-14">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+      <div class="sm:px-6 lg:px-8 space-y-6">
         <div class="px-4 sm:px-8 sm:rounded-lg">
-          <div class="text-4xl text-custom-sky font-bold mb-6">Training</div>
+          <div class="flex justify-between">
+            <div>
+              <h1 class="text-4xl text-custom-sky font-bold mb-6">
+                Training
+              </h1>
+            </div>
+            <!-- <div>
+              <PrimaryButton v-if="!$page.props.auth.user.new_agent_call_scheduled" @click="newAgentTraining">NEW AGENT TRAINING</PrimaryButton>
+            </div> -->
+          </div>
           <hr class="mb-4" />
         </div>
       </div>
@@ -236,6 +257,7 @@ console.log("filteredTraining", filteredTraining);
       :videoData="videoData"
       :videoDataModal="videoDataModal"
     />
+    <NewAgentTrainingModal v-if="newAgentTrainingModal" :newAgentTrainingModal="newAgentTrainingModal" @close="newAgentTrainingModal = false" />
   </AuthenticatedLayout>
 </template>
 <style scoped>

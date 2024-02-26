@@ -111,11 +111,9 @@ class RegistrationStepController extends Controller
                     'sign_url' => asset('internal-agents/contract/' . $contractedPdf),
                 ]);
 
-                dispatch(new EquisAPIJob($user));
-
                 $user->legacy_key = true;
                 $user->contract_step = 12;
-                $user->is_locked = 1;
+                $user->agent_access_status = TRAINING;
                 $user->save();
 
                 event(new OnboardingCompleted($user));
@@ -152,7 +150,7 @@ class RegistrationStepController extends Controller
         //     $apiClient = new ApiClient();
         //     $apiClient->getOAuth()->setOAuthBasePath($this->DOCUSIGN_ACCOUNT_BASE_URI);
         //     $docuSignAuthCode = $this->getToken($apiClient);
-        //     session()->put('docusign_auth_code', $docuSignAuthCode);   
+        //     session()->put('docusign_auth_code', $docuSignAuthCode);
         // }
         //End Docusign Auth Token
 

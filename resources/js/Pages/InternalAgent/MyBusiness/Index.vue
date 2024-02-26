@@ -222,7 +222,7 @@ const changeDate = (date) => {
     </template>
     <vue-loader :slidingLoader="slidingLoader" />
     <div class="pt-14">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+      <div class="sm:px-6 lg:px-8 space-y-6">
         <div class="p-4 rounded-lg bg-white">
           <div class="flex justify-between">
             <div>
@@ -264,7 +264,7 @@ const changeDate = (date) => {
 
           <div class="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             <div
-              class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative"
+              class="p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative"
             >
               <p class="mb-1 text-sm text-gray-300">Total Apps</p>
               <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
@@ -272,7 +272,7 @@ const changeDate = (date) => {
               </h2>
             </div>
             <div
-              class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative"
+              class="p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative"
             >
               <p class="mb-1 text-sm text-gray-300">Total APV</p>
               <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
@@ -280,7 +280,7 @@ const changeDate = (date) => {
               </h2>
             </div>
             <div
-              class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative"
+              class="p-6 bg-custom-darksky rounded-lg shadow overflow-auto relative"
             >
               <p class="mb-1 text-sm text-gray-300">Average APV</p>
               <h2 class="mb-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
@@ -316,6 +316,14 @@ const changeDate = (date) => {
                     Draft Date
                   </th>
                   <th scope="col" style="min-width: 150px" class="px-4 py-3">Status</th>
+                    <th
+                        v-if="$page.props.auth.role == 'admin'"
+                        scope="col"
+                        style="min-width: 150px"
+                        class="px-4 py-3"
+                    >
+                        Publisher Name
+                    </th>
                   <!-- <th scope="col" style="min-width: 150px;" class="px-4 py-3">URL</th> -->
                   <th scope="col" style="min-width: 150px" class="px-4 py-3">Carrier</th>
                   <th scope="col" style="min-width: 150px" class="px-4 py-3">Product</th>
@@ -371,6 +379,13 @@ const changeDate = (date) => {
                     v-text="businesse?.policy_draft_date"
                   ></td>
                   <td class="text-gray-600 px-4 py-3" v-text="businesse?.status"></td>
+
+                <td
+                    v-if="$page.props.auth.role == 'admin'"
+                    class="text-gray-600 px-4 py-3"
+                    v-text="businesse?.get_call?.publisher_name"
+                ></td>
+
                   <!-- <td class="text-gray-600">
                                         <a v-if="businesse.client?.call?.recording_url" target="_blank" :href="businesse.client?.call?.recording_url"
                                             class="flex"><svg xmlns="http://www.w3.org/2000/svg" height="1.5em" class="pr-1"

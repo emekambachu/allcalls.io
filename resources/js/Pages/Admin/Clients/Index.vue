@@ -32,10 +32,17 @@ let paginate = (url) => {
 
 let showModal = ref(false);
 let ClientDetail = ref(null);
+let editScreen = ref(false);
 
 let openClientModal = (Client) => {
+  editScreen.value = false
   ClientDetail.value = Client;
   showModal.value = true;
+};
+let EditClientModal = (Client) => {
+  ClientDetail.value = Client;
+  showModal.value = true;
+  editScreen.value = true
 };
 
 let formatTime = (duration) => {
@@ -81,7 +88,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
     </template>
 
     <div class="pt-14">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+      <div class="max-w-7xl sm:px-6 lg:px-8 space-y-6">
         <div class="px-4 sm:px-8 sm:rounded-lg">
           <div class="text-4xl text-custom-sky font-bold mb-6">Clients</div>
           <hr class="mb-4" />
@@ -104,7 +111,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
     <ClientSearchFilter :allClients="allClients" :requestData="requestData" :route="'/admin/clients'" />
 
     <section v-if="Clients.data.length" class="p-3">
-      <div class="mx-auto max-w-screen-xl sm:px-12">
+      <div class="max-w-screen-3xl sm:px-12">
         <div class="relative sm:rounded-lg overflow-hidden">
           <div class="overflow-x-auto">
             <table class="w-full text-sm text-left text-gray-400">
@@ -184,6 +191,15 @@ let capitalizeAndReplaceUnderscore = (str) => {
                       </svg>
 
                     </button>
+                    <button title="View Client" @click="EditClientModal(Client)"
+                      class="inline-flex items-center ml-2 p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
+                      type="button">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                          d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                      </svg>
+                    </button>
                     <!-- <button v-else class="text-center" type="button">-</button> -->
                   </td>
                 </tr>
@@ -225,9 +241,9 @@ let capitalizeAndReplaceUnderscore = (str) => {
     <section v-else class="p-3">
       <p class="text-center text-gray-600">No clients yet.</p>
     </section>
-    
+
     <Modal :show="showModal" @close="showModal = false">
-      <ClientModal :showModal="showModal" :route="'/admin/clients'" :ClientDetail="ClientDetail" :states="states"
+      <ClientModal :showModal="showModal" :editScreen="editScreen" :route="'/admin/clients'" :ClientDetail="ClientDetail" :states="states"
         @close="showModal = false">
       </ClientModal>
     </Modal>

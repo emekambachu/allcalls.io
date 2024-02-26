@@ -113,16 +113,18 @@ let dateFormat = (data) => {
     </template>
 
     <div class="pt-14">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+      <div class="max-w-7xl sm:px-6 lg:px-8 space-y-6">
         <div class="px-4 sm:px-8 sm:rounded-lg">
           <div class="text-4xl text-custom-sky font-bold mb-6">Customers</div>
           <hr class="mb-4" />
         </div>
       </div>
     </div>
+
     <SearchFilter :route="page.url" :requestData="requestData" />
+
     <section v-if="users.data.length" class="p-3">
-      <div class="mx-auto max-w-screen-xl sm:px-12">
+      <div class="max-w-screen-3xl sm:px-12">
         <div class="relative sm:rounded-lg overflow-hidden">
           <div class="overflow-x-auto">
             <table class="w-full text-sm text-left text-gray-400">
@@ -148,7 +150,7 @@ let dateFormat = (data) => {
                   <td class="text-gray-600 px-4 py-3">
                     ${{ formatMoney(user.balance) }}
                   </td>
-            
+
                   <td class="text-gray-600 px-4 py-3"> <div class="flex"><span class="mr-1" v-if="user.phone_code">{{ user.phone_code}}</span> <span>{{ user.phone }}</span> </div> </td>
                   <td class="text-gray-600 px-4 py-3 text-center">
                     <div v-if="user.roles && user.roles.length > 0">
@@ -159,7 +161,7 @@ let dateFormat = (data) => {
                     </div>
                   </td>
                   <th class="text-gray-600 px-4 py-3">{{ dateFormat(user.created_at)  }}</th>
-                  
+
                   <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
                     <a :href="route('admin.customer.detail', user.id)">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -189,7 +191,7 @@ let dateFormat = (data) => {
                 </tr>
               </tbody>
             </table>
-            
+
             <nav class="flex justify-between my-4" v-if="users.links">
               <div v-if="users">
                 <span class="text-sm text-gray-700">
@@ -220,7 +222,7 @@ let dateFormat = (data) => {
             </nav>
             <br>
 
-            
+
           </div>
         </div>
       </div>

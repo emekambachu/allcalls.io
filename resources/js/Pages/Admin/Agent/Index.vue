@@ -292,7 +292,7 @@ let updateUserData = (user) => {
         <PrimaryButton @click="addAgentModal(agents.current_page)">Add New</PrimaryButton>
       </div>
     </div>
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+    <div class="sm:px-6 lg:px-8 space-y-6">
       <div class="px-4 sm:px-8 sm:rounded-lg">
         <hr class="mb-4" />
       </div>
@@ -300,7 +300,7 @@ let updateUserData = (user) => {
 
     <SearchFilter :route="page.url" :requestData="requestData" />
     <section v-if="agents.data.length" class="p-3">
-      <div class="mx-auto max-w-screen-xl sm:px-12">
+      <div class="sm:px-12">
         <div class="relative sm:rounded-lg overflow-hidden">
           <div class="overflow-x-auto">
             <table class="w-full text-sm text-left text-gray-400">
@@ -318,6 +318,7 @@ let updateUserData = (user) => {
                   <th scope="col" style="min-width: 110px" class="px-4 py-3">Level</th>
                   <!-- <th scope="col" style="min-width: 110px" class="px-4 py-3">Status</th> -->
                   <th scope="col" style="min-width: 110px" class="px-4 py-3">Upline</th>
+                  <th scope="col" style="min-width: 150px" class="px-4 py-3">Invited By</th>
                   <th scope="col" class="px-4 py-3">Email</th>
                   <th scope="col" class="px-4 py-3">Balance</th>
                   <th scope="col" class="px-4 py-3">Phone</th>
@@ -336,7 +337,7 @@ let updateUserData = (user) => {
                     {{ agent.progress ? agent.progress : "-" }}
                   </td>
                   <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
-                   
+
                     <button class="mr-2" title="Onboarding info"
                       v-show="agent.internal_agent_contract && agent.legacy_key === 1" @click="openContractModal(agent)">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -368,7 +369,7 @@ let updateUserData = (user) => {
                       </svg>
                     </button>
 
-                    <button
+                    <!-- <button
                       class="ml-2"
                       @click="agent.is_locked !== 0 ? ApproveAgent(agent) : null"
                       v-show="agent.internal_agent_contract && agent.legacy_key === 1"
@@ -389,7 +390,7 @@ let updateUserData = (user) => {
                           d="M4.5 12.75l6 6 9-13.5"
                         />
                       </svg>
-                    </button>
+                    </button> -->
 
                     <a title="View Agent" :href="route('admin.agent.detail', agent.id)"><svg
                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -410,7 +411,7 @@ let updateUserData = (user) => {
                       </svg>
                     </button>
 
-                    <!-- <button title="Live Training" @click="liveTraining(agent, agents.current_page)"
+                    <button title="Live Training" @click="liveTraining(agent, agents.current_page)"
                       class="inline-flex items-center mx-2 p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
                       type="button">
                       <svg fill="#000000" class="w-5 h-5" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
@@ -440,7 +441,7 @@ let updateUserData = (user) => {
                           </g>
                         </g>
                       </svg>
-                    </button> -->
+                    </button>
                     <button class="ml-2" @click="progressFun(agent)" title="Progress">
                       <svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512.000000 512.000000"
                         preserveAspectRatio="xMidYMid meet" class="w-5 h-5">
@@ -483,7 +484,7 @@ let updateUserData = (user) => {
                           d="M15 6V2a.97.97 0 0 0-.933-1H5.828a2 2 0 0 0-1.414.586L1.586 4.414A2 2 0 0 0 1 5.828V18a.969.969 0 0 0 .933 1H14a1 1 0 0 0 1-1M6 1v4a1 1 0 0 1-1 1H1m6 6h9m-1.939-2.768L16.828 12l-2.767 2.768" />
                       </svg>
                     </button>
-                    
+
                   </td>
                   <th class="text-gray-600 px-4 py-3">
                     {{ agent.get_agent_level?.name }}

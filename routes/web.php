@@ -28,6 +28,7 @@ use App\Http\Controllers\CallTypeBidsController;
 use App\Http\Controllers\LatestClientController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TransactionsController;
+use App\Http\Controllers\BrowserDeviceController;
 use App\Http\Controllers\UsageActivityController;
 use App\Http\Controllers\WebAPIClientsController;
 use App\Http\Controllers\CallClientInfoController;
@@ -36,14 +37,17 @@ use App\Http\Controllers\ClientPoliciesController;
 use App\Http\Controllers\EmailBlacklistController;
 use App\Http\Controllers\AdditionalFilesController;
 use App\Http\Controllers\AgentStatusDocsController;
+use App\Http\Controllers\CalendlyWebhookController;
 use App\Http\Controllers\FEAgentPingDocsController;
 use App\Http\Controllers\TwilioForwardingController;
+use App\Http\Controllers\CallDeviceActionsController;
 use App\Http\Controllers\FEAgentStatusDocsController;
 use App\Http\Controllers\NotificationGroupController;
 use App\Http\Controllers\TwilioDeviceTokenController;
 use App\Http\Controllers\TwilioDialerTokenController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CallUserResponseAPIController;
+use App\Http\Controllers\DeviceIdByUserAgentController;
 use App\Http\Controllers\PromotionGuidelinesController;
 use App\Http\Controllers\AgentStatusPriceDocsController;
 use App\Http\Controllers\TakeCallsOnlineUsersController;
@@ -61,7 +65,7 @@ use App\Http\Controllers\ZoomMeetingNotificationController;
 |
 */
 
-Route::get('/', function () {
+Route::get('/', static function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
@@ -79,8 +83,8 @@ require 'admin.php';
 require __DIR__ . '/auth.php';
 require 'internal-agent.php';
 
-Route::get('/transactions', [TransactionsController::class, 'index'])->middleware(['auth', 'verified', 'notBanned'])->name('transactions.index');
-Route::delete('/transactions/{transaction}', [TransactionsController::class, 'destroy'])->middleware(['auth', 'verified', 'notBanned'])->name('transactions.destroy');
+Route::get('/transactions', [TransactionsController::class, 'index'])->middleware(['auth', 'verified', 'notBanned', 'agentOnTraining', 'IsBasicTraining'])->name('transactions.index');
+Route::delete('/transactions/{transaction}', [TransactionsController::class, 'destroy'])->middleware(['auth', 'verified', 'notBanned', 'agentOnTraining', 'IsBasicTraining'])->name('transactions.destroy');
 
 Route::middleware(['auth', 'verified', 'notBanned'])->group(function () {
     Route::get('/registration-steps', [RegisteredUserController::class, 'steps'])->name('registration.steps');
@@ -88,7 +92,7 @@ Route::middleware(['auth', 'verified', 'notBanned'])->group(function () {
 });
 
 
-Route::middleware(['auth', 'verified', 'registration-step-check', 'notBanned', 'isLocked', ])->group(function () {
+Route::middleware(['auth', 'verified', 'registration-step-check', 'notBanned', 'agentOnTraining', 'IsBasicTraining'])->group(function () {
     //User Routes
     Route::get('/dashboard', [DashboardController::class, 'show'])->name('dashboard');
     Route::get('/transactions', [TransactionsController::class, 'index'])->name('transactions.index');
@@ -123,7 +127,7 @@ Route::middleware(['auth', 'verified', 'registration-step-check', 'notBanned', '
     Route::get('/call-client-info', [CallClientInfoController::class, 'show']);
 });
 
-Route::middleware(['auth', 'notBanned', ])->group(function () {
+Route::middleware(['auth', 'notBanned', 'agentOnTraining', 'IsBasicTraining'])->group(function () {
     Route::get('/profile/view', [ProfileController::class, 'view'])->name('profile.view');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
@@ -150,8 +154,8 @@ Route::get('/device/incoming', function () {
     return view('incoming');
 })->middleware('auth');
 
-Route::get('/clients', [ClientsController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check', 'isLocked', ])->name('clients.index');
-Route::patch('/clients/{client}', [ClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check', 'isLocked', ])->name('clients.update');
+Route::get('/clients', [ClientsController::class, 'index'])->middleware(['auth', 'verified', 'registration-step-check', 'agentOnTraining', 'IsBasicTraining'])->name('clients.index');
+Route::patch('/clients/{client}', [ClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check', 'agentOnTraining', 'IsBasicTraining'])->name('clients.update');
 Route::patch('/web-api/clients/{client}', [WebAPIClientsController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.web-api.update');
 Route::post('/web-api/clients/{client}/disposition', [WebAPIClientsController::class, 'updateDispositionOnly'])->middleware(['auth', 'verified', 'registration-step-check'])->name('clients.web-api.update-disposition-only');
 Route::patch('/web-api/calls/{uniqueCallId}/user-response', [CallUserResponseAPIController::class, 'update'])->middleware(['auth', 'verified', 'registration-step-check']);
@@ -274,3 +278,11 @@ Route::post('/web-api/calltype/{callType}/offline', [CallTypeStatusController::c
 
 Route::get('/twilio/forward/ringba', [TwilioForwardingController::class, 'ringba']);
 Route::get('/twilio/forward/retreaver', [TwilioForwardingController::class, 'retreaver']);
+
+// Route::post('/web-api/browser-device', [BrowserDeviceController::class, 'store'])->middleware(['auth', 'verified', 'registration-step-check']);
+
+Route::get('/web-api/get-device-id-by-user-agent', [DeviceIdByUserAgentController::class, 'show'])->middleware(['auth', 'verified', 'registration-step-check']);
+Route::post('/web-api/call-device-actions', [CallDeviceActionsController::class, 'store'])->middleware(['auth', 'verified', 'registration-step-check']);
+Route::post('/web-api/call-device-actions-with-unique-call-id', [CallDeviceActionsController::class, 'storeWithUniqueCallId'])->middleware(['auth', 'verified', 'registration-step-check']);
+
+Route::post('/webhooks/calendly', [CalendlyWebhookController::class, 'show']);

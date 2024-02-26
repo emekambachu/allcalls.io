@@ -28,11 +28,11 @@ onMounted(() => {
     </template>
 
     <div v-if="guidelinesDesktopImg" class="hidden md:block">
-      <img style="max-width: 100%; transform: scale(1.01)" :src="guidelinesDesktopImg" />
+      <img class="mx-auto" style="max-width: 100%; transform: scale(1.01)" :src="guidelinesDesktopImg" />
     </div>
 
     <div v-if="guidelinesMobileImg" class="block md:hidden">
-      <img style="width: 100%; transform: scale(1.01)" :src="guidelinesMobileImg" />
+      <img class="mx-auto" style="width: 100%; transform: scale(1.01)" :src="guidelinesMobileImg" />
     </div>
   </AuthenticatedLayout>
 </template>

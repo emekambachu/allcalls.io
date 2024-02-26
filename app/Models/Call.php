@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Client;
 use DateTimeInterface;
 use App\Models\CallType;
+use App\Models\CallDeviceAction;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Database\Eloquent\Model;
@@ -41,6 +42,11 @@ class Call extends Model
     public function client()
     {
         return $this->hasOne(Client::class);
+    }
+
+    public function getBusiness()
+    {
+        return $this->hasOne(InternalAgentMyBusiness::class);
     }
 
     /**
@@ -91,10 +97,16 @@ class Call extends Model
         return 'Regular User';
     }
 
+    public function devices()
+    {
+        return $this->belongsToMany(Device::class, 'call_device_actions')
+            ->withPivot('action')
+            ->withTimestamps();
+    }
 
     /**
      * Update the publisher info for the call.
-     * 
+     *
      * @return bool
      */
     public function updatePublisherInfo($callerId = null)
@@ -107,10 +119,24 @@ class Call extends Model
 
             $this->publisher_name = $callLog['publisherName'];
             $this->publisher_id = $callLog['publisherId'];
-            $this->cost = $callLog['totalCost'];
+
+            $inboundCallId = $callLogs['report']['records'][0]['inboundCallId'] ?? 'Not found';
+            Log::debug('inboundCallId:', [
+                'inboundCallId' => $inboundCallId,
+            ]);
+
+            $publisherPayout = $this->fetchPublisherPayoutFromRingba($inboundCallId);
+
+            Log::debug('ringba:payout', [
+                'payout' => $publisherPayout,
+            ]);
+
+            $this->cost = $publisherPayout ?? null;
 
             return $this->save();
         }
+
+
 
         // Now let's try the same with fetchRetrieverCallLogs
         $callLogs = $this->fetchRetrieverCallLogs();
@@ -158,12 +184,18 @@ class Call extends Model
         $retreaverAPIKey = env('RETREAVER_API_KEY');
         $retreaverCompanyId = env('RETREAVER_COMPANY_ID');
 
-        $response = Http::get("https://api.retreaver.com/affiliates/afid/{$affiliateId}.xml?api_key={$retreaverAPIKey}&company_id={$retreaverCompanyId}");
+        $response = Http::get("https://api.retreaver.com/affiliates/afid/{$affiliateId}.json?api_key={$retreaverAPIKey}&company_id={$retreaverCompanyId}");
 
         // Check if the response is successful
         if ($response->successful()) {
-            $xml = simplexml_load_string($response->body());
-            return (string)$xml->{'company_name'};
+            $responseBody = $response->json();
+
+            Log::debug('retreaver:company_name', [
+                'responseBody' => $response->body(),
+                'affiliate' => $responseBody,
+            ]);
+
+            return null;
         }
 
         return null; // Return null if the response is not successful or if there's any issue
@@ -247,9 +279,6 @@ class Call extends Model
         ]);
 
         if ($response->successful()) {
-            Log::debug('RingbaResponse:Success', [
-                'body' => $response->body(),
-            ]);
             return $response->json();
         } else {
             Log::debug('RingbaResponse:Error', [
@@ -300,5 +329,60 @@ class Call extends Model
             ]);
             return null;
         }
+    }
+
+    public function deviceActions()
+    {
+        return $this->hasMany(CallDeviceAction::class);
+    }
+
+    public function deviceActionsByDevice()
+    {
+        return $this->deviceActions()
+            ->with('device')
+            ->get()
+            ->groupBy('device_id');
+    }
+
+    public function fetchPublisherPayoutFromRingba($inboundCallId)
+    {
+        $response = Http::withHeaders([
+            'Authorization' => 'Token ' . env('RINGBA_API_KEY'),
+        ])->post('https://api.ringba.com/v2/' . env('RINGBA_ACCOUNT_ID') . '/calllogs/detail', [
+            "InboundCallIds" => [$inboundCallId]
+        ]);
+
+        if ($response->successful()) {
+            $responseData = $response->json();
+
+            // Initialize payoutAmount
+            $payoutAmount = null;
+
+            // Check if the expected structure exists
+            if (isset($responseData['report']['records'][0]['events'])) {
+                foreach ($responseData['report']['records'][0]['events'] as $event) {
+                    // Check for the event that contains payoutAmount
+                    if (isset($event['payoutAmount'])) {
+                        $payoutAmount = $event['payoutAmount'];
+                        break; // Stop the loop once payoutAmount is found
+                    }
+                }
+            }
+
+            // Log the entire response and the payoutAmount if found
+            Log::debug('fetchPublisherPayoutFromRingba:Success', [
+                'response' => $responseData,
+                'payoutAmount' => $payoutAmount,
+            ]);
+
+            return $payoutAmount;
+        }
+
+        Log::debug('fetchPublisherPayoutFromRingba:Error', [
+            'response' => $response->body(),
+            'errorCode' => $response->status(),
+        ]);
+
+        return null;
     }
 }

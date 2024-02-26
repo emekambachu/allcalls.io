@@ -12,6 +12,7 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        'pusher-webhook-example'
+        'pusher-webhook-example',
+        '/webhooks/calendly',
     ];
 }

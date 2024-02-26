@@ -6,9 +6,10 @@ import { toaster } from "@/helper.js";
 import { basicTrainingSteps } from "@/constants.js";
 
 let props = defineProps({
-    basicTrainingModal: Boolean,
+    // basicTrainingModal: Boolean,
     unlocked: String,
 });
+let basicTrainingModal = ref(true)
 let page = usePage();
 let emits = defineEmits()
 let close = () => {
@@ -68,9 +69,32 @@ let updateItemsToShow = () => {
         this.itemsToShow = 1; // Small screens
     }
 }
+let downloadPdf = (url) => {
+  window.open(url, '_blank');
+}
 </script>
 
 <style scoped>
+.modal-width {
+  width: 70%;
+}
+.video-player {
+  width: 100%;
+  max-height: 400px;
+}
+@media only screen and (min-width: 320px) and (max-width: 768px) {
+  .modal-width {
+    width: 90%;
+  }
+  .video-player {
+    width: 100%;
+    height: 100%;
+  }
+  .heading-modal {
+    margin: 10px;
+  }
+}
+
 .active\:bg-gray-900:active {
     color: white;
 }
@@ -329,7 +353,7 @@ let updateItemsToShow = () => {
                 <div class="fixed inset-0 bg-black opacity-90 blurred-overlay"></div>
 
                 <!-- This is the overlay -->
-                <div style="width: 60%;" class="relative w-full py-10  max-h-full mx-auto">
+                <div class="relative w-full py-10 modal-width  max-h-full mx-auto">
                     <div class="relative bg-white rounded-lg shadow-lg transition-all">
                         <div class="flex justify-between ">
                             <div class="px-12 py-2 mt-2">
@@ -358,17 +382,42 @@ let updateItemsToShow = () => {
                         </div>
 
                         <div v-for="(basicTraning, index) in basicTrainingSteps" :key="basicTraning.id">
-                            <div v-if="basicTraning.id == step && step < 10" class="px-12 pt-3 ">
+                            <div v-if="basicTraning.id == step && step < 11" class="px-12 pt-3 ">
                                 <!-- <iframe style="width:100%;" height="400" :src="basicTraning.video_url"
                                     title="YouTube video player" frameborder="0"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                     allowfullscreen></iframe> -->
-                                <video style="width:100%;height:400px;" controls>
+                                <video class="video-player"  controls>
                                     <source :src="basicTraning.video_url">
                                 </video>
                                 <br>
                                 <div>
-                                    <a @click="downloadPDF(basicTraning.pdf)"
+                                    <button
+                                        :target="basicTraning.pdf ? '_blank' : ''"
+                                        :disabled="!basicTraning.pdf"
+                                        :class="{ 'opacity-50': !basicTraning.pdf }"
+                                        @click="downloadPdf(basicTraning.pdf)"
+                                        class="px-3 py-2 text-sm cursor-pointer font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
+                                        >
+                                        Download {{ basicTraning.title }} PDF
+                                    </button>
+                                    <button
+                                        :target="basicTraning.second_btn_pdf_url ? '_blank' : ''"
+                                        v-if="basicTraning.second_btn && basicTraning.second_btn_pdf_url"
+                                        :class="{ 'opacity-50': !basicTraning.second_btn_pdf_url }"
+                                        @click="downloadPdf(basicTraning.second_btn_pdf_url)"
+                                        class="px-3 ml-2 py-2 text-sm cursor-pointer font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                                        {{ basicTraning.second_btn_label }}
+                                    </button>
+                                    <button
+                                        :target="basicTraning.pdf ? '_blank' : ''"
+                                        v-if="basicTraning.recording"
+                                        @click="downloadPdf(basicTraning.recording)"
+                                        class="px-3 py-2 text-sm cursor-pointer ml-2 font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
+                                        >
+                                        Download Recording
+                                    </button>
+                                    <!-- <a @click="downloadPDF(basicTraning.pdf)"
                                         class="font-medium  text-blue-600 cursor-pointer  dark:text-blue-500 hover:underline">Download
                                         pdf
                                     </a>
@@ -379,10 +428,10 @@ let updateItemsToShow = () => {
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
                                         </svg>
-                                    </a>
+                                    </a> -->
                                 </div>
                             </div>
-                            <!-- <div v-if="basicTraning.id == step && step == 13" class="px-12 pt-3 flex justify-center">
+                            <div    v-if="basicTraning.id == step && step == 11" class="px-12 pt-3 flex justify-center">
                                 <div class="success-checkmark">
                                     <div class="check-icon">
                                         <span class="icon-line line-tip"></span>
@@ -391,9 +440,9 @@ let updateItemsToShow = () => {
                                         <div class="icon-fix"></div>
                                     </div>
                                 </div>
-                            </div> -->
+                            </div>
                         </div>
-                        <div class="px-12  pb-7">
+                        <div class="px-12  pb-5">
                             <div class="">
                                 <div class="flex justify-between flex-wrap">
                                     <div class="mt-4">
@@ -409,28 +458,28 @@ let updateItemsToShow = () => {
                                         </button>
                                     </div>
                                     <div class="mt-4">
-                                        <button v-if="step < 9" type="button" :class="{ 'opacity-25': isLoading }"
+                                        <button v-if="step < 10" type="button" :class="{ 'opacity-25': isLoading }"
                                             :disabled="isLoading" @click.prevent="NextStep"
                                             class="button-custom px-3 py-2 rounded-md">
                                             <global-spinner :spinner="isLoading" /> Next Step
                                         </button>
-                                        <button v-if="step == 9 && !unlocked" type="button"
+                                        <button v-if="step == 10 && !unlocked" type="button"
                                             :class="{ 'opacity-25': isLoading }" :disabled="isLoading"
                                             @click.prevent="NextStep" class="button-custom px-3 py-2 rounded-md">
                                             <global-spinner :spinner="isLoading" /> Finish
                                         </button>
-                                        <button v-if="step == 9 && unlocked" type="button"
+                                        <button v-if="step == 10 && unlocked" type="button"
                                             :class="{ 'opacity-25': isLoading }" :disabled="isLoading"
                                             @click.prevent="NextStep" class="button-custom px-3 py-2 rounded-md">
                                             <global-spinner :spinner="isLoading" /> Finish
                                         </button>
 
-                                        <button v-if="step == 10 && !unlocked" type="button"
+                                        <button v-if="step == 11 && !unlocked" type="button"
                                             :class="{ 'opacity-25': isLoading }" :disabled="isLoading" @click.prevent="done"
                                             class="button-custom px-3 py-2 rounded-md">
                                             <global-spinner :spinner="isLoading" /> done
                                         </button>
-                                        <button v-if="step == 10 && unlocked" type="button"
+                                        <button v-if="step == 11 && unlocked" type="button"
                                             :class="{ 'opacity-25': isLoading }" :disabled="isLoading" @click.prevent="done"
                                             class="button-custom px-3 py-2 rounded-md">
                                             <global-spinner :spinner="isLoading" /> done

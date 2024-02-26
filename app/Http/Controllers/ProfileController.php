@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Bid;
 use App\Models\User;
+use App\Services\Base\BaseService;
+use App\Services\User\UserService;
+use Exception;
+use Faker\Provider\Base;
 use Inertia\Inertia;
 use App\Models\State;
 use Inertia\Response;
@@ -12,7 +16,6 @@ use App\Models\Timezone;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\UserCallTypeState;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
@@ -23,6 +26,10 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 class ProfileController extends Controller
 {
+    protected UserService $user;
+    public function __construct(UserService $user){
+        $this->user = $user;
+    }
     /**
      * Display the user's profile form.
      */
@@ -154,6 +161,17 @@ class ProfileController extends Controller
         return Redirect::route('profile.edit')->with('message', 'Profile updated successfully.');
     }
 
+//    public function api_update(ProfileUpdateRequest $request): \Illuminate\Http\JsonResponse
+//    {
+//        try {
+//            $data = $this->user->updateUser($request);
+//            return response()->json($data);
+//
+//        }catch (Exception $e){
+//            return BaseService::tryCatchException($e);
+//        }
+//    }
+
     private function buildIncomingData($selectedStates): array
     {
         // Initialize an empty array to store the call type and state combinations.
@@ -186,37 +204,37 @@ class ProfileController extends Controller
         $request->validate([
             'profile_picture' => 'required|image|mimes:jpg,jpeg,png', // 5MB Max
         ]);
-        
+
         $user = Auth::user();
-        
+
         // Get the file extension of the uploaded file
         $extension = $request->file('profile_picture')->getClientOriginalExtension();
-        
+
         // Create a unique filename
         $uniqueFilename = Str::random(10) . '.' . $extension;
-        
+
         // Create a directory path using the user's ID
         $directory = 'profile_pictures/' . $user->id;
-        
+
         // Store the file in the created directory with the unique filename
         $path = $request->file('profile_picture')->storeAs($directory, $uniqueFilename, 'public');
-        
+
         // Optionally delete the old image if it exists and is different from the new one
         if ($user->profile_picture && Storage::disk('public')->exists($user->profile_picture)) {
             Storage::disk('public')->delete($user->profile_picture);
         }
-        
+
         // Update the user's profile picture path in the database
         $profileUrl = Storage::url($path);
         $user->profile_picture = $profileUrl;
         $user->save();
-        
+
         Log::info("User profile picture request came in for: " . $user->email);
         Log::info("Filename: " . $uniqueFilename);
         Log::info("Path: " . $path);
         Log::info("Profile URL: " . $profileUrl);
-        
-        
+
+
         // Return a JSON response
         return response()->json([
             'success' => true,
@@ -224,9 +242,7 @@ class ProfileController extends Controller
             'profile_picture_url' => $profileUrl,
         ]);
     }
-    
-    
-    
+
 
     /**
      * Delete the user's account.
