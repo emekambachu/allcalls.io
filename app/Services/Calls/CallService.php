@@ -14,6 +14,10 @@ class CallService
         return new Call();
     }
 
+    public function getCallsWithRelationsAndFilters(){
+
+    }
+
     /**
      * @throws \JsonException
      */
@@ -42,11 +46,6 @@ class CallService
                     $rowData = [];
 
                     foreach ($input['columns'] as $column) {
-//                        Log::debug('Export Loop: ', [
-//                            'column' => $column,
-//                            'call' => $value->{$column['name']},
-//                        ]);
-
                         try {
                             if (isset($value->{$column['name']})) {
                                 $rowData[] = $value->{$column['name']};

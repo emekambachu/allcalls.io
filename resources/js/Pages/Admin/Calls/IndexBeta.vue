@@ -1,28 +1,14 @@
 <script setup>
-import { ref, onMounted, watch, computed } from "vue";
+import {computed, onMounted, ref} from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, router, usePage, Link } from "@inertiajs/vue3";
-import { toaster } from "@/helper.js";
+import {Head, Link, router, usePage} from "@inertiajs/vue3";
+import {toaster} from "@/helper.js";
 import GlobalSpinner from "@/Components/GlobalSpinner.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import SecondaryButton from "@/Components/SecondaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import Modal from "@/Components/Modal.vue";
 import CallLogs from "@/Components/CallLogs.vue";
-import {
-    Menu,
-    MenuButton,
-    MenuItems,
-    MenuItem,
-    Popover,
-    PopoverButton,
-    PopoverPanel,
-    TabGroup,
-    TabList,
-    Tab,
-    TabPanels,
-    TabPanel
-} from "@headlessui/vue";
+import {Popover, PopoverButton, PopoverPanel, Tab, TabGroup, TabList, TabPanel, TabPanels} from "@headlessui/vue";
 
 let page = usePage();
 if (page.props.flash.message) {
@@ -64,7 +50,7 @@ let columns = ref([
         label: "ID",
         name: "id",
         visible: false,
-        sortable: false,
+        sortable: true,
         render(call) {
             return call.id;
         },
@@ -94,7 +80,7 @@ let columns = ref([
         label: "CallerID",
         name: "from",
         visible: true,
-        sortable: false,
+        sortable: true,
         render(call) {
             return call.from;
         },
@@ -128,7 +114,7 @@ let columns = ref([
         label: "Hung up by",
         name: "hung_up_by",
         visible: true,
-        sortable: false,
+        sortable: true,
         render(call) {
             return call.hung_up_by;
         },
@@ -138,7 +124,7 @@ let columns = ref([
         label: "Disposition",
         name: "disposition",
         visible: true,
-        sortable: false,
+        sortable: true,
         render(call) {
             return call?.client?.status;
         },
@@ -178,7 +164,7 @@ let columns = ref([
         label: "Pub ID",
         name: "publisher_id",
         visible: true,
-        sortable: false,
+        sortable: true,
         render(call) {
             return call.publisher_id;
         },
@@ -188,7 +174,7 @@ let columns = ref([
         label: "Role",
         name: "role",
         visible: true,
-        sortable: false,
+        sortable: true,
         render(call) {
             for (let i = 0; i < call.user.roles.length; i++) {
                 if (call.user.roles[i].name === "internal-agent") {
@@ -204,7 +190,7 @@ let columns = ref([
         label: "Vertical",
         name: "vertical",
         visible: true,
-        sortable: false,
+        sortable: true,
         render(call) {
             return call.call_type.type;
         },
@@ -213,7 +199,7 @@ let columns = ref([
     {
         label: "Recording URL",
         name: "recording_url",
-        visible: true,
+        visible: false,
         sortable: false,
         render(call) {
             return call.recording_url;
@@ -224,7 +210,7 @@ let columns = ref([
         label: "User Email",
         name: "user_email",
         visible: false,
-        sortable: false,
+        sortable: true,
         render(call) {
           return call.user_email;
         },
@@ -312,6 +298,7 @@ let fetchCalls = async (replace = false, per_page = null) => {
   console.log("Loaded Calls: ", loadedCalls.value);
   console.log("Total Call Results: ", getTotalCallResults.value);
   console.log("Total Revenue: ", getTotalRevenueResults.value);
+  console.log("Grouped Publisher Names", callsGroupedByPublisherName.value);
 };
 
 
@@ -403,6 +390,34 @@ let summaryFooterRow = computed(() => {
     totalCallLength: totalCallLength,
     averageCallLength: averageCallLength,
   };
+});
+
+const publisherFooterRow = computed(() => {
+    let totalCalls = 0;
+    let totalPaidCalls = 0;
+    let totalRevenue = 0;
+    let totalCallLength = 0;
+
+    for (const publisher in callsGroupedByPublisherName.value) {
+        const publisherData = callsGroupedByPublisherName.value[publisher];
+        totalCalls += publisherData.totalCalls || 0;
+        totalPaidCalls += publisherData.paidCalls || 0;
+        totalRevenue += publisherData.revenueEarned || 0;
+        totalCallLength += publisherData.totalCallLength || 0;
+    }
+
+    let averageCallLength = totalCalls > 0 ? totalCallLength / totalCalls : 0;
+    let revenuePerCall = totalCalls > 0 ? totalRevenue / totalCalls : 0;
+
+    return {
+        publisherName: "Totals",
+        totalCalls,
+        paidCalls: totalPaidCalls,
+        revenueEarned: totalRevenue,
+        revenuePerCall,
+        totalCallLength,
+        averageCallLength,
+    };
 });
 
 let exportCSV = () => {
@@ -665,11 +680,16 @@ let applyFilter = async () => {
 }
 
 const applyCallFiltersToSummary = () => {
+
     console.log("Loaded calls", loadedCalls.value);
+    console.log("Grouped Publisher Names", callsGroupedByPublisherName.value);
+
     const unfilteredGroupedCalls = maxmizedCallsGroupedByUser.value;
+    const unfilteredGroupedPublisherNames = callsGroupedByPublisherName.value;
     showMoreForGrouped.value = true;
     maxmizedCallsGroupedByUser.value = {};
     minimizedCallsGroupedByUser.value = {};
+    callsGroupedByPublisherName.value = {};
 
     // update with results
     getTotalCalls.value = getTotalCallResults.value;
@@ -678,14 +698,17 @@ const applyCallFiltersToSummary = () => {
     // Iterate loadedCalls first and then grouped calls to match the both user ids
     // if matched add the user group to the maxmizedCallsGroupedByUser
     for (const [key, value] of loadedCalls.value.entries()) {
+
         Object.values(unfilteredGroupedCalls).forEach(group => {
             if (group.userId === value.user_id) {
-
-                // getTotalCalls.value ++;
-                // getTotalRevenue.value += parseFloat(value.amount_spent);
-
                 maxmizedCallsGroupedByUser.value[group.userId] = group;
                 minimizedCallsGroupedByUser.value[group.userId] = group;
+            }
+        });
+
+        Object.values(unfilteredGroupedPublisherNames).forEach(publisher => {
+            if (publisher.user_ids.includes(value.user_id)) {
+                callsGroupedByPublisherName.value[publisher.publisher_name] = publisher;
             }
         });
     }
@@ -778,6 +801,38 @@ let applyDatePreset = (label) => {
 };
 
 function formatDate(date) {
+    // const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    // const defaultLocale = 'en-GB'; // Default to British format DD/MM/YYYY
+    // const usLocale = 'en-US'; // US format MM/DD/YYYY
+    // const isUSTimezone = currentTimezone.startsWith("America/");
+    //
+    // let options = {
+    //     year: 'numeric',
+    //     month: '2-digit',
+    //     day: '2-digit',
+    //     timeZone: currentTimezone
+    // };
+    //
+    // // Choose the locale based on whether it's a US timezone
+    // let locale = isUSTimezone ? usLocale : defaultLocale;
+    // return new Intl.DateTimeFormat(locale, options).format(new Date(date));
+
+    // // use local time UTC US
+    // const d = new Date(date);
+    // const options = {
+    //     year: 'numeric',
+    //     month: '2-digit',
+    //     day: '2-digit',
+    //     //timeZone: 'Europe/London' // UK time
+    //     timeZone: 'UTC' // Use UTC/US time to avoid timezone offset issues
+    // };
+    // // Format the date according to the specified options and locale
+    // // let formattedDate = d.toLocaleDateString('en-GB', options); (UK time zone)
+    // let formattedDate = d.toLocaleDateString('en-US', options); //(US time zone)
+    // // The result from toLocaleDateString would be in MM/DD/YYYY format, so we need to rearrange it
+    // return formattedDate.split('/').reverse().join('-');
+
+
   let d = new Date(date),
       month = '' + (d.getMonth() + 1),
       day = '' + d.getDate(),
@@ -1430,37 +1485,37 @@ const getAutoCompleteFilterOptions = async (keyword) => {
                                   </td>
                               </tr>
 
-<!--                              <tr class="bg-gray-100 border-b" v-if="showMoreForGrouped">-->
-<!--                                  <td-->
-<!--                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
-<!--                                      v-text="summaryFooterRow.agentName"-->
-<!--                                  ></td>-->
-<!--                                  <td-->
-<!--                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
-<!--                                      v-text="summaryFooterRow.totalCalls"-->
-<!--                                  ></td>-->
-<!--                                  <td-->
-<!--                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
-<!--                                      v-text="summaryFooterRow.paidCalls"-->
-<!--                                  ></td>-->
-<!--                                  <td-->
-<!--                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
-<!--                                      v-text="`$${summaryFooterRow.revenueEarned}`"-->
-<!--                                  ></td>-->
-<!--                                  <td-->
-<!--                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
-<!--                                      v-text="`$${summaryFooterRow.revenuePerCall.toFixed(2)}`"-->
-<!--                                  ></td>-->
-<!--                                  <td-->
-<!--                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
-<!--                                      v-text="`${summaryFooterRow.totalCallLength.toFixed(2)}`"-->
-<!--                                  ></td>-->
-<!--                                  <td-->
-<!--                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
-<!--                                      v-text="`${summaryFooterRow.averageCallLength.toFixed(2)}`"-->
-<!--                                  ></td>-->
-<!--                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"></td>-->
-<!--                              </tr>-->
+                              <tr class="bg-gray-100 border-b">
+                                  <td
+                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                                      v-text="publisherFooterRow.publisherName"
+                                  ></td>
+                                  <td
+                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                                      v-text="publisherFooterRow.totalCalls"
+                                  ></td>
+                                  <td
+                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                                      v-text="publisherFooterRow.paidCalls"
+                                  ></td>
+                                  <td
+                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                                      v-text="`$${publisherFooterRow.revenueEarned}`"
+                                  ></td>
+                                  <td
+                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                                      v-text="`$${publisherFooterRow.revenuePerCall.toFixed(2)}`"
+                                  ></td>
+                                  <td
+                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                                      v-text="`${publisherFooterRow.totalCallLength.toFixed(2)}`"
+                                  ></td>
+                                  <td
+                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                                      v-text="`${publisherFooterRow.averageCallLength.toFixed(2)}`"
+                                  ></td>
+                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"></td>
+                              </tr>
                               </tbody>
                           </table>
 
@@ -1603,7 +1658,7 @@ const getAutoCompleteFilterOptions = async (keyword) => {
     <section class="py-3 sm:py-5">
       <div class="px-4 max-w-screen-3xl lg:px-12">
         <div class="relative overflow-hidden bg-white sm:rounded-lg"
-             :class="{'height-600': getTotalCalls <= 14}">
+             :class="{'height-600': loadedCalls.length <= 14}">
           <div
             class="flex flex-col px-4 py-3 space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-4"
           >

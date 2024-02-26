@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Services\Base;
+use Carbon\Carbon;
+
 class BaseService
 {
     public static function randomChar(int $length, string $randChar, string $staticChar = null): string
@@ -23,5 +25,10 @@ class BaseService
         return response()->json([
             'error_message' => "Line ".$e->getLine()." of ".$e->getFile().", ".$e->getMessage(),
         ], 500);
+    }
+
+    public static function formatFormDateToDbCarbon($date): string
+    {
+        return Carbon::createFromFormat('d/m/Y', $date)->format('Y-m-d:H:i:s');
     }
 }
