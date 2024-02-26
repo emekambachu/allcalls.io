@@ -15,8 +15,8 @@ const props = defineProps({
 });
 const classes = computed(() =>
     props.active
-        ? 'inline-flex items-center px-1 pt-1 border-indigo-400 font-semibold text-lg leading-27 leading-none text-custom-green transition duration-150 ease-in-out'
-        : 'inline-flex items-center px-1 pt-1 border-transparent text-lg font-medium leading-5 text-custom-white hover:text-custom-green hover:border-gray-300 focus:outline-none focus:text-custom-sky dark:focus:text-gray-300 focus:border-gray-300 dark:focus:border-gray-700 transition duration-150 ease-in-out'
+        ? 'inline-flex items-center p-2 border-indigo-400 font-semibold text-lg leading-27 leading-none text-custom-green dark:hover:bg-gray-700 rounded-lg transition duration-150 ease-in-out'
+        : 'inline-flex items-center p-2 border-transparent text-lg font-medium leading-5 text-custom-white hover:text-custom-green hover:border-gray-300 dark:hover:bg-gray-700 rounded-lg focus:outline-none focus:text-custom-sky dark:focus:text-gray-300 focus:border-gray-300 dark:focus:border-gray-700 transition duration-150 ease-in-out'
 );
 
 </script>
@@ -30,6 +30,6 @@ const classes = computed(() =>
 <style>
 .disabledNavLink{
     pointer-events: none;
-   
+
 };
 </style>

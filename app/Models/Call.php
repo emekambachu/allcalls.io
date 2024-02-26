@@ -22,7 +22,10 @@ class Call extends Model
     protected $table = "calls";
     protected $guarded = ['id'];
 
-    protected $appends = ['ringing_duration', 'role'];
+    protected $appends = [
+        'ringing_duration',
+        'role'
+    ];
 
     public function callType()
     {
@@ -79,7 +82,6 @@ class Call extends Model
             $timestamp->timezone($timezone);
         }
 
-
         return $timestamp->diffForHumans() . ' (' . $timestamp->format('H:i d/m/Y') . ')';
     }
 
@@ -93,7 +95,6 @@ class Call extends Model
         if ($this->user && $this->user->roles->contains('name', 'internal-agent')) {
             return 'Internal Agent';
         }
-
         return 'Regular User';
     }
 
@@ -152,7 +153,7 @@ class Call extends Model
             ]);
 
             $publisherId = $callLogs[0]['call']['afid'];
-            $publisherName = self::getRetreaverAffiliateFullNameById($publisherId);
+            $publisherName = self::getRetreaverAffiliateCompanyName($publisherId);
 
             $cost = $callLogs[0]['call']['payout'] ?? null;
 
@@ -179,26 +180,19 @@ class Call extends Model
         return false;
     }
 
-    public static function getRetreaverAffiliateFullNameById($affiliateId)
+    public static function getRetreaverAffiliateCompanyName($affiliateId)
     {
         $retreaverAPIKey = env('RETREAVER_API_KEY');
         $retreaverCompanyId = env('RETREAVER_COMPANY_ID');
+        $accessURL = "https://api.retreaver.com/affiliates/afid/{$affiliateId}.json?api_key={$retreaverAPIKey}&company_id={$retreaverCompanyId}";
+        $response = Http::get($accessURL);
 
-        $response = Http::get("https://api.retreaver.com/affiliates/afid/{$affiliateId}.json?api_key={$retreaverAPIKey}&company_id={$retreaverCompanyId}");
-
-        // Check if the response is successful
         if ($response->successful()) {
-            $responseBody = $response->json();
-
-            Log::debug('retreaver:company_name', [
-                'responseBody' => $response->body(),
-                'affiliate' => $responseBody,
-            ]);
-
-            return null;
-        }
-
-        return null; // Return null if the response is not successful or if there's any issue
+            $data = $response->json();
+            $publisherName = $data['affiliate']['first_name'].' '.$data['affiliate']['last_name'];
+            return $publisherName;
+        } 
+        return null;
     }
 
     public function fetchRingbaCallLogs($callerId = null)
