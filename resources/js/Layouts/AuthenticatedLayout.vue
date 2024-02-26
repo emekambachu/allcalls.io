@@ -117,6 +117,9 @@ let call = reactive(null);
 let hasSixtySecondsPassed = ref(false);
 let ringingTimeout = ref(null);
 
+// Left side menu
+const navSettingDropDown = ref(false);
+
 let getFormattedTime = (startTime) => {
   const now = new Date();
   const difference = new Date(now - startTime);
@@ -1208,81 +1211,161 @@ let appDownloadModal = ref(false);
               Email Blacklist
             </NavLink>
 
-            <NavLink
-              class="mb-10 gap-2"
-              id="billing-nav-link"
-              :href="route('profile.view')"
-              :active="route().current('profile.view') || route().current('profile.edit')"
-              :class="{
+<!--            <NavLink-->
+<!--              class="mb-10 gap-2"-->
+<!--              id="billing-nav-link"-->
+<!--              :href="route('profile.view')"-->
+<!--              :active="route().current('profile.view') || route().current('profile.edit')"-->
+<!--              :class="{-->
+<!--                'mb-5':-->
+<!--                  route().current('profile.view') || route().current('profile.edit'),-->
+<!--              }"-->
+<!--            >-->
+<!--              <svg-->
+<!--                xmlns="http://www.w3.org/2000/svg"-->
+<!--                fill="none"-->
+<!--                viewBox="0 0 24 24"-->
+<!--                stroke-width="1.5"-->
+<!--                stroke="currentColor"-->
+<!--                class="w-8 h-8 mr-2"-->
+<!--              >-->
+<!--                <path-->
+<!--                  stroke-linecap="round"-->
+<!--                  stroke-linejoin="round"-->
+<!--                  d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"-->
+<!--                />-->
+<!--                <path-->
+<!--                  stroke-linecap="round"-->
+<!--                  stroke-linejoin="round"-->
+<!--                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"-->
+<!--                />-->
+<!--              </svg>-->
+<!--              Settings-->
+
+<!--              <svg-->
+<!--                v-if="route().current('profile.view') || route().current('profile.edit')"-->
+<!--                xmlns="http://www.w3.org/2000/svg"-->
+<!--                fill="none"-->
+<!--                viewBox="0 0 24 24"-->
+<!--                stroke-width="1.5"-->
+<!--                stroke="currentColor"-->
+<!--                class="w-6 h-6"-->
+<!--              >-->
+<!--                <path-->
+<!--                  stroke-linecap="round"-->
+<!--                  stroke-linejoin="round"-->
+<!--                  d="M19.5 8.25l-7.5 7.5-7.5-7.5"-->
+<!--                />-->
+<!--              </svg>-->
+<!--            </NavLink>-->
+
+<!--            <div-->
+<!--                v-if="route().current('profile.view') || route().current('profile.edit')"-->
+<!--              class="pl-14 text-white text-xs mb-5">-->
+<!--              <ul>-->
+<!--                <li class="mb-3">-->
+<!--                  <Link-->
+<!--                    aria-current="page"-->
+<!--                    class="inline-flex items-center rounded-t-lg hover:text-custom-green group"-->
+<!--                    :class="{-->
+<!--                      'text-custom-green':-->
+<!--                        route().current('profile.view') ||-->
+<!--                        route().current('profile.edit'),-->
+<!--                    }"-->
+<!--                    :href="route('profile.view')"-->
+<!--                  >-->
+<!--                    <svg-->
+<!--                      xmlns="http://www.w3.org/2000/svg"-->
+<!--                      fill="none"-->
+<!--                      viewBox="0 0 24 24"-->
+<!--                      stroke-width="1.5"-->
+<!--                      stroke="currentColor"-->
+<!--                      class="w-4 h-4 mr-2"-->
+<!--                    >-->
+<!--                      <path-->
+<!--                        stroke-linecap="round"-->
+<!--                        stroke-linejoin="round"-->
+<!--                        d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"-->
+<!--                      />-->
+<!--                    </svg>-->
+
+<!--                    <span>Profile</span>-->
+<!--                  </Link>-->
+<!--                </li>-->
+<!--              </ul>-->
+<!--            </div>-->
+
+              <!--Admin Setting-->
+            <li
+                class="mb-10 gap-2"
+                id="billing-nav-link"
+                :class="{
                 'mb-5':
                   route().current('profile.view') || route().current('profile.edit'),
               }"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="w-8 h-8 mr-2"
+              <button
+                  @click="navSettingDropDown = !navSettingDropDown"
+                  type="button"
+                  class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700 hover:text-custom-green"
+                  aria-controls="dropdown-auth"
+                  data-collapse-toggle="dropdown-auth"
+                  aria-expanded="true"
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"
-                />
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-              </svg>
-              Settings
-
-              <svg
-                v-if="route().current('profile.view') || route().current('profile.edit')"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="w-6 h-6"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-                />
-              </svg>
-            </NavLink>
-            <div
-              v-if="route().current('profile.view') || route().current('profile.edit')"
-              class="pl-14 text-white text-xs mb-5"
-            >
-              <ul>
-                <li class="mb-3">
-                  <Link
-                    aria-current="page"
-                    class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
-                    :class="{
-                      'text-custom-green':
-                        route().current('profile.view') ||
-                        route().current('profile.edit'),
-                    }"
-                    :href="route('profile.view')"
-                  >
-                    <svg
+                  <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke-width="1.5"
                       stroke="currentColor"
-                      class="w-4 h-4 mr-2"
+                      class="w-8 h-8 mr-2"
+                  >
+                      <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"
+                      />
+                      <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                  </svg>
+                <span class="flex-1 ml-3 text-left whitespace-nowrap">
+                  Setting
+                </span>
+                <svg
+                     class="w-6 h-6"
+                     fill="currentColor"
+                     viewBox="0 0 20 20"
+                     xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                </svg>
+              </button>
+              <ul v-if="navSettingDropDown" id="dropdown-auth" class="py-2 space-y-2">
+                <li>
+                  <Link
+                      aria-current="page"
+                      class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700 rounded-t-lg hover:text-custom-green group"
+                      :class="{
+                      'text-custom-green':
+                        route().current('profile.view') ||
+                        route().current('profile.edit'),
+                    }"
+                      :href="route('profile.view')"
+                  >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        class="w-4 h-4 mr-2"
                     >
                       <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
                       />
                     </svg>
 
@@ -1290,7 +1373,8 @@ let appDownloadModal = ref(false);
                   </Link>
                 </li>
               </ul>
-            </div>
+            </li>
+
           </div>
           <!-- Page Content -->
           <main class="col-span-4 bg-white rounded-xl mt-14 mb-10 mr-2">
@@ -2069,6 +2153,7 @@ let appDownloadModal = ref(false);
                   route().current('profile.view') ||
                   route().current('profile.edit')"
               >
+
                 <div class="row pb-3 flex">
                   <div class="columns-6 flex">Settings</div>
                   <div class="columns-6 flex pl-20">
@@ -2094,6 +2179,7 @@ let appDownloadModal = ref(false);
                     </svg>
                   </div>
                 </div>
+
                 <div
                   v-if="
                     route().current('activities.index') ||
@@ -2186,7 +2272,9 @@ let appDownloadModal = ref(false);
                     </li>
                   </ul>
                 </div>
+
               </ResponsiveNavLink>
+
             </div>
 
             <!-- Responsive Settings Options -->
@@ -2504,150 +2592,193 @@ let appDownloadModal = ref(false);
               Promotion Guidelines
             </NavLink>
 
-            <NavLink  :disabledNavLink="disabledNavLink"  class="mb-10 gap-2" id="billing-nav-link"
-              :href="route('activities.index')" :active="route().current('activities.index') ||
-                route().current('transactions.index') ||
-                route().current('profile.view') ||
-                route().current('profile.edit')
-                " :class="{
-                  'opacity-50': disabledNavLink === true,
-    'mb-5':
-      route().current('activities.index') ||
-      route().current('transactions.index') ||
-      route().current('profile.view') ||
-      route().current('profile.edit'),
-  }">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-8 h-8 mr-2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-              Settings
+          <!--User Setting-->
+<!--            <NavLink-->
+<!--                :disabledNavLink="disabledNavLink"  class="mb-10 gap-2" id="billing-nav-link"-->
+<!--                :href="route('activities.index')"-->
+<!--                :active="route().current('activities.index') ||-->
+<!--                route().current('transactions.index') ||-->
+<!--                route().current('profile.view') ||-->
+<!--                route().current('profile.edit')"-->
+<!--                :class="{-->
+<!--                  'opacity-50': disabledNavLink === true, 'mb-5':-->
+<!--                  route().current('activities.index') ||-->
+<!--                  route().current('transactions.index') ||-->
+<!--                  route().current('profile.view') ||-->
+<!--                  route().current('profile.edit'),-->
+<!--                  }"-->
+<!--            >-->
+<!--              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"-->
+<!--                stroke="currentColor" class="w-8 h-8 mr-2">-->
+<!--                <path stroke-linecap="round" stroke-linejoin="round"-->
+<!--                  d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />-->
+<!--                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />-->
+<!--              </svg>-->
+<!--              Settings-->
 
-              <svg
-                v-if="
-                  route().current('activities.index') ||
-                  route().current('transactions.index') ||
-                  route().current('profile.view') ||
-                  route().current('profile.edit')
-                "
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="w-6 h-6"
+<!--              <svg-->
+<!--                v-if="-->
+<!--                  route().current('activities.index') ||-->
+<!--                  route().current('transactions.index') ||-->
+<!--                  route().current('profile.view') ||-->
+<!--                  route().current('profile.edit')-->
+<!--                "-->
+<!--                xmlns="http://www.w3.org/2000/svg"-->
+<!--                fill="none"-->
+<!--                viewBox="0 0 24 24"-->
+<!--                stroke-width="1.5"-->
+<!--                stroke="currentColor"-->
+<!--                class="w-6 h-6"-->
+<!--              >-->
+<!--                <path-->
+<!--                  stroke-linecap="round"-->
+<!--                  stroke-linejoin="round"-->
+<!--                  d="M19.5 8.25l-7.5 7.5-7.5-7.5"-->
+<!--                />-->
+<!--              </svg>-->
+<!--            </NavLink>-->
+
+              <li
+                  :class="{
+                      'opacity-50': disabledNavLink === true, 'mb-5':
+                      route().current('activities.index') ||
+                      route().current('transactions.index') ||
+                      route().current('profile.view') ||
+                      route().current('profile.edit'),
+                  }"
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-                />
-              </svg>
-            </NavLink>
-
-            <div
-              v-if="
-                route().current('activities.index') ||
-                route().current('transactions.index') ||
-                route().current('profile.view') ||
-                route().current('profile.edit')
-              "
-              class="pl-14 text-white text-xs mb-5"
-            >
-              <ul>
-                <li class="mb-3">
-                  <Link
-                    :href="route('activities.index')"
-                    class="inline-flex items-center rounded-t-lg hover:text-custom-green"
-                    :class="{
-                      'text-custom-green': route().current('activities.index'),
-                    }"
+                  <button
+                      @click="navSettingDropDown = !navSettingDropDown"
+                      type="button"
+                      class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700 hover:text-custom-green"
+                      aria-controls="dropdown-auth"
+                      data-collapse-toggle="dropdown-auth"
+                      aria-expanded="true"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      class="w-4 h-4 mr-2"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59"
-                      />
-                    </svg>
+                      <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          class="w-8 h-8 mr-2"
+                      >
+                          <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"
+                          />
+                          <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                          />
+                      </svg>
+                        <span class="flex-1 ml-3 text-left whitespace-nowrap">
+                          Settings
+                        </span>
+                      <svg class="w-6 h-6"
+                           fill="currentColor"
+                           viewBox="0 0 20 20"
+                           xmlns="http://www.w3.org/2000/svg">
+                          <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                      </svg>
+                  </button>
 
-                    <span>Activities</span>
-                  </Link>
-                </li>
+                  <ul v-if="navSettingDropDown" id="dropdown-auth" class="py-2 space-y-2">
+                      <li class="mb-3">
+                          <Link
+                              :href="route('activities.index')"
+                              class="inline-flex items-center rounded-t-lg hover:text-custom-green text-gray-50"
+                              :class="{
+                                      'text-custom-green': route().current('activities.index'),
+                                    }">
+                              <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke-width="1.5"
+                                  stroke="currentColor"
+                                  class="w-4 h-4 mr-2"
+                              >
+                                  <path
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59"
+                                  />
+                              </svg>
 
-                <li v-if="$page.props.auth.role === 'internal-agent'" class="mb-3">
-                  <Link
-                    aria-current="page"
-                    class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
-                    :class="{
-                      'text-custom-green': route().current('transactions.index'),
-                    }"
-                    :href="route('transactions.index')"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      class="w-4 h-4 mr-2"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
+                              <span>Activities</span>
+                          </Link>
+                      </li>
 
-                    <span>Transactions</span>
-                  </Link>
-                </li>
+                      <li v-if="$page.props.auth.role === 'internal-agent'" class="mb-3">
+                          <Link
+                              aria-current="page"
+                              class="inline-flex items-center rounded-t-lg hover:text-custom-green group text-gray-50"
+                              :class="{
+                                  'text-custom-green': route().current('transactions.index'),
+                                }"
+                              :href="route('transactions.index')"
+                          >
+                              <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke-width="1.5"
+                                  stroke="currentColor"
+                                  class="w-4 h-4 mr-2"
+                              >
+                                  <path
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                  />
+                              </svg>
 
-                <li class="mb-3">
-                  <Link
-                    aria-current="page"
-                    class="inline-flex items-center rounded-t-lg hover:text-custom-green group"
-                    :class="{
+                              <span>Transactions</span>
+                          </Link>
+                      </li>
+
+                      <li class="mb-3">
+                          <Link
+                              aria-current="page"
+                              class="inline-flex items-center rounded-t-lg hover:text-custom-green group text-gray-50"
+                              :class="{
                       'text-custom-green':
                         route().current('profile.view') ||
                         route().current('profile.edit'),
                     }"
-                    :href="route('profile.view')"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      class="w-4 h-4 mr-2"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                    </svg>
+                              :href="route('profile.view')"
+                          >
+                              <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke-width="1.5"
+                                  stroke="currentColor"
+                                  class="w-4 h-4 mr-2"
+                              >
+                                  <path
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
+                                  />
+                              </svg>
 
-                    <span>Profile</span>
-                  </Link>
-                </li>
-              </ul>
-            </div>
+                              <span>Profile</span>
+                          </Link>
+                      </li>
+                  </ul>
+
+              </li>
+
           </div>
           <!-- Page Content -->
           <main class="col-span-4 bg-white rounded-xl mt-14 mb-10">
             <slot />
           </main>
+
         </div>
       </div>
       <!-- User Navigation Menu -->

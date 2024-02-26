@@ -35,7 +35,7 @@ class CallFactory extends Factory
             'cost' => $faker->randomFloat(2, 5, 85), // Generating a random number between
             'user_response_time' => $callTaken->copy()->addSeconds($faker->numberBetween(0, 20))->format('Y-m-d H:i:s'),
             'created_at' => $callTaken,
-            'updated_at' => $callTaken
+            'updated_at' => $callTaken,
         ];
     }
 }
