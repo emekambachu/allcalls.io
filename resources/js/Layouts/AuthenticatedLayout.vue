@@ -1300,7 +1300,7 @@ let appDownloadModal = ref(false);
 
               <!--Admin Setting-->
             <li
-                class="mb-10 gap-2"
+                class="mb-10 gap-2 relative"
                 id="billing-nav-link"
                 :class="{
                 'mb-5':
@@ -1345,7 +1345,7 @@ let appDownloadModal = ref(false);
                   <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
                 </svg>
               </button>
-              <ul v-if="navSettingDropDown" id="dropdown-auth" class="py-2 space-y-2">
+              <ul v-if="navSettingDropDown" id="dropdown-auth" class="py-2 space-y-2 absolute z-50 left-0 w-48 mt-2">
                 <li>
                   <Link
                       aria-current="page"
@@ -2642,6 +2642,7 @@ let appDownloadModal = ref(false);
 <!--            </NavLink>-->
 
               <li
+                  class="relative"
                   :class="{
                       'opacity-50': disabledNavLink === true, 'mb-5':
                       route().current('activities.index') ||
@@ -2688,7 +2689,7 @@ let appDownloadModal = ref(false);
                       </svg>
                   </button>
 
-                  <ul v-if="navSettingDropDown" id="dropdown-auth" class="py-2 space-y-2">
+                  <ul v-if="navSettingDropDown" id="dropdown-auth" class="py-2 space-y-2 absolute z-50 left-0 w-48 mt-2">
                       <li class="mb-3">
                           <Link
                               :href="route('activities.index')"
