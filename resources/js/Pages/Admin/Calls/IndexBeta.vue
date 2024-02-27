@@ -312,10 +312,8 @@ let loadMore = async () => {
    // On every load more, increase per_page by 100, which is the default per_page on the backend
   let per_page;
   let new_per_page = parseInt(paginate.value.perPage) + 100;
-
   if(getTotalCalls.value > new_per_page){
       per_page = new_per_page;
-
   }else{
       per_page = getTotalCalls.value;
   }
@@ -684,9 +682,17 @@ const applyCallFiltersToSummary = () => {
     console.log("Loaded calls", loadedCalls.value);
     console.log("Grouped Publisher Names", callsGroupedByPublisherName.value);
 
+    // Populate grouped calls when filter button is clicked
+    maxmizedCallsGroupedByUser.value = Object.fromEntries(callsGroupedByUserArray);
+    minimizedCallsGroupedByUser.value = Object.entries(props.callsGroupedByUser).slice(0, 2);
+    callsGroupedByPublisherName.value = Object.fromEntries(callsGroupedByPublisherNameArray);
+
+    // assigned grouped calls to new variables
     const unfilteredGroupedCalls = maxmizedCallsGroupedByUser.value;
     const unfilteredGroupedPublisherNames = callsGroupedByPublisherName.value;
     showMoreForGrouped.value = true;
+
+    // Clear the grouped calls to be filled with filtered results
     maxmizedCallsGroupedByUser.value = {};
     minimizedCallsGroupedByUser.value = {};
     callsGroupedByPublisherName.value = {};
@@ -763,8 +769,9 @@ let applyDateFilter = async (close) => {
   close();
 }
 
-onMounted(() => {
-    fetchCalls();
+onMounted(async () => {
+    await fetchCalls();
+    applyCallFiltersToSummary();
 });
 
 
@@ -1855,7 +1862,7 @@ const getAutoCompleteFilterOptions = async (keyword) => {
             </table>
 
             <div
-              v-if="(callsPaginator && callsPaginator.next_page_url) || getTotalCalls !== loadedCalls.length"
+              v-if="(callsPaginator && callsPaginator.next_page_url && loadedCalls.length === paginate.perPage) || getTotalCalls !== loadedCalls.length"
               class="flex items-center justify-center py-4 mt-4"
             >
               <button
