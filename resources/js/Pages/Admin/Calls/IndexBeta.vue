@@ -312,10 +312,8 @@ let loadMore = async () => {
    // On every load more, increase per_page by 100, which is the default per_page on the backend
   let per_page;
   let new_per_page = parseInt(paginate.value.perPage) + 100;
-
   if(getTotalCalls.value > new_per_page){
       per_page = new_per_page;
-
   }else{
       per_page = getTotalCalls.value;
   }
@@ -684,9 +682,17 @@ const applyCallFiltersToSummary = () => {
     console.log("Loaded calls", loadedCalls.value);
     console.log("Grouped Publisher Names", callsGroupedByPublisherName.value);
 
+    // Populate grouped calls when filter button is clicked
+    maxmizedCallsGroupedByUser.value = Object.fromEntries(callsGroupedByUserArray);
+    minimizedCallsGroupedByUser.value = Object.entries(props.callsGroupedByUser).slice(0, 2);
+    callsGroupedByPublisherName.value = Object.fromEntries(callsGroupedByPublisherNameArray);
+
+    // assigned grouped calls to new variables
     const unfilteredGroupedCalls = maxmizedCallsGroupedByUser.value;
     const unfilteredGroupedPublisherNames = callsGroupedByPublisherName.value;
     showMoreForGrouped.value = true;
+
+    // Clear the grouped calls to be filled with filtered results
     maxmizedCallsGroupedByUser.value = {};
     minimizedCallsGroupedByUser.value = {};
     callsGroupedByPublisherName.value = {};
@@ -742,9 +748,8 @@ let inputTypeForTheSelectedFilter = computed(() => {
   return filter.inputType;
 });
 
-
-let dateFilterFrom = ref(null);
-let dateFilterTo = ref(null);
+let dateFilterFrom = ref(new Date().toISOString().split('T')[0]);
+let dateFilterTo = ref(new Date().toISOString().split('T')[0]);
 
 let clearDateFilter = () => {
   dateFilterFrom.value = null;
@@ -764,8 +769,9 @@ let applyDateFilter = async (close) => {
   close();
 }
 
-onMounted(() => {
-  fetchCalls();
+onMounted(async () => {
+    await fetchCalls();
+    applyCallFiltersToSummary();
 });
 
 
@@ -801,38 +807,6 @@ let applyDatePreset = (label) => {
 };
 
 function formatDate(date) {
-    // const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    // const defaultLocale = 'en-GB'; // Default to British format DD/MM/YYYY
-    // const usLocale = 'en-US'; // US format MM/DD/YYYY
-    // const isUSTimezone = currentTimezone.startsWith("America/");
-    //
-    // let options = {
-    //     year: 'numeric',
-    //     month: '2-digit',
-    //     day: '2-digit',
-    //     timeZone: currentTimezone
-    // };
-    //
-    // // Choose the locale based on whether it's a US timezone
-    // let locale = isUSTimezone ? usLocale : defaultLocale;
-    // return new Intl.DateTimeFormat(locale, options).format(new Date(date));
-
-    // // use local time UTC US
-    // const d = new Date(date);
-    // const options = {
-    //     year: 'numeric',
-    //     month: '2-digit',
-    //     day: '2-digit',
-    //     //timeZone: 'Europe/London' // UK time
-    //     timeZone: 'UTC' // Use UTC/US time to avoid timezone offset issues
-    // };
-    // // Format the date according to the specified options and locale
-    // // let formattedDate = d.toLocaleDateString('en-GB', options); (UK time zone)
-    // let formattedDate = d.toLocaleDateString('en-US', options); //(US time zone)
-    // // The result from toLocaleDateString would be in MM/DD/YYYY format, so we need to rearrange it
-    // return formattedDate.split('/').reverse().join('-');
-
-
   let d = new Date(date),
       month = '' + (d.getMonth() + 1),
       day = '' + d.getDate(),
@@ -1888,7 +1862,7 @@ const getAutoCompleteFilterOptions = async (keyword) => {
             </table>
 
             <div
-              v-if="(callsPaginator && callsPaginator.next_page_url) || getTotalCalls !== loadedCalls.length"
+              v-if="(callsPaginator && callsPaginator.next_page_url && loadedCalls.length === paginate.perPage) || getTotalCalls !== loadedCalls.length"
               class="flex items-center justify-center py-4 mt-4"
             >
               <button

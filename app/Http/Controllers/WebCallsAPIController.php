@@ -120,15 +120,6 @@ class WebCallsAPIController extends Controller
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
 
-        // if filters and start date are empty, apply default filters
-        if(empty($startDate) && count($filters) === 0){
-            if(in_array($request->input('sort_column'), $this->columnsWithJoins, true)){
-                $query->whereDate('calls.created_at', '>=', Carbon::today());
-            }else{
-                $query->whereDate('created_at', '>=', Carbon::today());
-            }
-        } else
-
         // Apply date filters
         if ($startDate && $endDate) {
             if(in_array($request->input('sort_column'), $this->columnsWithJoins, true)){
@@ -137,6 +128,14 @@ class WebCallsAPIController extends Controller
             }else{
                 $query->whereDate('created_at', '>=', $startDate)
                     ->whereDate('created_at', '<=', $endDate);
+            }
+
+        }else if(empty($startDate) && count($filters) === 0){
+            // if filters and start date are empty, apply default filters
+            if(in_array($request->input('sort_column'), $this->columnsWithJoins, true)){
+                $query->whereDate('calls.created_at', '>=', $startDate);
+            }else{
+                $query->whereDate('created_at', '>=', $startDate);
             }
         }
 
