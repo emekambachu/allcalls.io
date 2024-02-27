@@ -57,7 +57,7 @@ class CallsController extends Controller
 
     public function indexNew(Request $request): \Inertia\Response
     {
-        $allCalls = Call::with('user')->get();
+        $allCalls = Call::with('user')->whereDate('calls.created_at', '>=', Carbon::today())->get();
         $callsGroupedByUser = $allCalls->groupBy('user_id')->map(function ($calls, $userId) {
             $user = $calls->first()->user; // Assuming each call has a 'user' relation loaded
             $totalCalls = $calls->count();

@@ -742,9 +742,8 @@ let inputTypeForTheSelectedFilter = computed(() => {
   return filter.inputType;
 });
 
-
-let dateFilterFrom = ref(null);
-let dateFilterTo = ref(null);
+let dateFilterFrom = ref(new Date().toISOString().split('T')[0]);
+let dateFilterTo = ref(new Date().toISOString().split('T')[0]);
 
 let clearDateFilter = () => {
   dateFilterFrom.value = null;
@@ -765,7 +764,7 @@ let applyDateFilter = async (close) => {
 }
 
 onMounted(() => {
-  fetchCalls();
+    fetchCalls();
 });
 
 
@@ -801,38 +800,6 @@ let applyDatePreset = (label) => {
 };
 
 function formatDate(date) {
-    // const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    // const defaultLocale = 'en-GB'; // Default to British format DD/MM/YYYY
-    // const usLocale = 'en-US'; // US format MM/DD/YYYY
-    // const isUSTimezone = currentTimezone.startsWith("America/");
-    //
-    // let options = {
-    //     year: 'numeric',
-    //     month: '2-digit',
-    //     day: '2-digit',
-    //     timeZone: currentTimezone
-    // };
-    //
-    // // Choose the locale based on whether it's a US timezone
-    // let locale = isUSTimezone ? usLocale : defaultLocale;
-    // return new Intl.DateTimeFormat(locale, options).format(new Date(date));
-
-    // // use local time UTC US
-    // const d = new Date(date);
-    // const options = {
-    //     year: 'numeric',
-    //     month: '2-digit',
-    //     day: '2-digit',
-    //     //timeZone: 'Europe/London' // UK time
-    //     timeZone: 'UTC' // Use UTC/US time to avoid timezone offset issues
-    // };
-    // // Format the date according to the specified options and locale
-    // // let formattedDate = d.toLocaleDateString('en-GB', options); (UK time zone)
-    // let formattedDate = d.toLocaleDateString('en-US', options); //(US time zone)
-    // // The result from toLocaleDateString would be in MM/DD/YYYY format, so we need to rearrange it
-    // return formattedDate.split('/').reverse().join('-');
-
-
   let d = new Date(date),
       month = '' + (d.getMonth() + 1),
       day = '' + d.getDate(),
