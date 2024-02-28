@@ -222,11 +222,11 @@ return [
             ],
             'supervisor-email' => [
                 'connection' => 'redis',
-                'queue' => ['emails-staging'], // Your new queue name
+                'queue' => ['emails'], // Your new queue name
                 'balance' => 'simple', // Or 'auto', depending on your needs
                 'processes' => 3, // Number of processes to handle jobs concurrently
                 'tries' => 5,
-                'maxJobs' => 1,
+                'maxJobs' => 5,
             ],
         ],
 
