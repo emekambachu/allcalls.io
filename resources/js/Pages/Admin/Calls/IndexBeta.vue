@@ -321,8 +321,6 @@ let loadMore = async () => {
   await fetchCalls(true, per_page);
 };
 
-onMounted(() => {});
-
 let sortByColumn = async (column) => {
   console.log("Sort By Column: ", column.name);
 
