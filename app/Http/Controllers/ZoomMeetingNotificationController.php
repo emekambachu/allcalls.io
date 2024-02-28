@@ -82,7 +82,7 @@ class ZoomMeetingNotificationController extends Controller
             }
 
              // Delay for 2 seconds before processing the next batch
-            sleep(2);
+            sleep(1);
         }
        
         return response()->json(['message' => 'Notifications queued for sending.']);
