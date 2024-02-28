@@ -202,6 +202,14 @@ return [
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
             ],
+            'supervisor-email' => [
+                'connection' => 'redis',
+                'queue' => ['emails'], // Your new queue name
+                'balance' => 'simple', // Or 'auto', depending on your needs
+                'processes' => 7, // Number of processes to handle jobs concurrently
+                'tries' => 3,
+                // Additional configuration...
+            ],
         ],
 
         'staging' => [

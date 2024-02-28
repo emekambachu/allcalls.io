@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Notifications\ZoomMeeting;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Notifications\EmailNotification;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Notification;
 
@@ -59,7 +60,13 @@ class ZoomMeetingNotificationController extends Controller
             ]);
         
             try {
-                Notification::send($batch, new ZoomMeeting($title, $message, $sendNotification, $textMessageString, $zoomLink, $emailData));
+
+                if ($sendEmail && $emailData) {
+                    // Send email notifications on 'emails' queue
+                    Notification::send($batch, (new EmailNotification($emailData))->onQueue('emails'));
+                } else {
+                    Notification::send($batch, new ZoomMeeting($title, $message, $sendNotification, $textMessageString, $zoomLink));
+                }
                 
                 $batchEnd = microtime(true); // Get end time for the batch
                 Log::info("Batch sent successfully", [
