@@ -27,6 +27,7 @@ class Kernel extends ConsoleKernel
             ->timezone('America/New_York')
             ->dailyAt('05:00');
 
+        $schedule->command('log:email-notification-count')->everyMinute();
 
         $schedule->call(function () {
             // Check the condition before executing the command
@@ -37,17 +38,6 @@ class Kernel extends ConsoleKernel
                 }
             }
         })->dailyAt('23:59');
-
-        $schedule->call(function () {
-            Log::info("Checking email notification count...");
-
-            $key = 'email_notifications:count:' . now()->subMinute()->format('Y-m-d:H:i');
-            $count = Redis::get($key);
-            Log::info("Email notifications sent in the last minute: {$count}");
-    
-            // Optionally, you can delete the key if you don't need to keep history in Redis
-            Redis::del($key);
-        })->everyMinute();
     }
 
     /**

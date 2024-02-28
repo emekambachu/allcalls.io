@@ -220,7 +220,7 @@ return [
                 'maxProcesses' => 10,
                 // ... other settings
             ],
-            'supervisor-email-staging' => [
+            'supervisor-email' => [
                 'connection' => 'redis',
                 'queue' => ['emails-staging'], // Your new queue name
                 'balance' => 'simple', // Or 'auto', depending on your needs
