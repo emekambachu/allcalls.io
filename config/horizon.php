@@ -206,9 +206,9 @@ return [
                 'connection' => 'redis',
                 'queue' => ['emails'], // Your new queue name
                 'balance' => 'simple', // Or 'auto', depending on your needs
-                'processes' => 7, // Number of processes to handle jobs concurrently
-                'tries' => 3,
-                // Additional configuration...
+                'processes' => 3, // Number of processes to handle jobs concurrently
+                'tries' => 5,
+                'maxJobs' => 5,
             ],
         ],
 

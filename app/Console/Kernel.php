@@ -39,6 +39,8 @@ class Kernel extends ConsoleKernel
         })->dailyAt('23:59');
 
         $schedule->call(function () {
+            Log::info("Checking email notification count...");
+
             $key = 'email_notifications:count:' . now()->subMinute()->format('Y-m-d:H:i');
             $count = Redis::get($key);
             Log::info("Email notifications sent in the last minute: {$count}");
