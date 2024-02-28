@@ -218,6 +218,24 @@ let columns = ref([
 
 ]);
 
+const summaryColumns = ref([
+    {
+        label: "Agents",
+        name: "agents",
+        visible: true,
+    },
+
+    {
+        label: "Publishers",
+        name: "publishers",
+        visible: false,
+    },
+]);
+
+const activeSummaryColumn = computed(() => {
+    return summaryColumns.value.filter((column) => column.visible);
+});
+
 let performSorting = () => {
   console.log("Perform sorting now!!");
   console.log("Sort Column: ", sortColumn.value);
@@ -951,17 +969,17 @@ const getAutoCompleteFilterOptions = async (keyword) => {
 <template>
   <Head title="Calls" />
   <AuthenticatedLayout>
-      <div class="pt-14 px-16 flex items-center mb-2">
 
+      <div class="pt-14 px-16 flex items-center mb-2">
           <Popover class="relative mr-2">
               <PopoverButton>
                   <button
                       type="button"
                       class="rounded shadow mr-2 px-3 py-1 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md flex items-center text-sm"
                   >
-                      <span v-if="!(dateFilterFrom && dateFilterTo)">Any Date</span>
-                      <span v-if="dateFilterFrom && dateFilterTo">
-                        <span class="font-bold">Range:</span> {{ dateFilterFrom }} - {{ dateFilterTo }}
+                      <span class="font-extrabold text-lg font-sans" v-if="!(dateFilterFrom && dateFilterTo)">Select Date Range</span>
+                      <span class="font-extrabold text-lg font-sans" v-if="dateFilterFrom && dateFilterTo">
+                        <span>Selected Date Range:</span> {{ dateFilterFrom }} - {{ dateFilterTo }}
                       </span>
                   </button>
               </PopoverButton>
@@ -1250,11 +1268,56 @@ const getAutoCompleteFilterOptions = async (keyword) => {
       </div>
     </div>
 
+      <div class="px-4 max-w-screen-3xl lg:px-12">
+          <div class="flex flex-col px-4 py-3 space-y-3 lg:flex-row lg:items-end lg:justify-end lg:space-y-0 lg:space-x-4">
+              <div class="flex flex-col flex-shrink-0 space-y-3 md:flex-row md:items-center lg:justify-end md:space-y-0 md:space-x-3">
+                  <div class="flex items-center">
+                      <Popover class="relative mr-2">
+                          <PopoverButton>
+                              <button
+                                  type="button"
+                                  class="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200"
+                              >
+                                  Show Summary Columns
+                              </button>
+                          </PopoverButton>
 
-    <div class="px-4 max-w-screen-3xl lg:px-12">
+                          <PopoverPanel class="z-10 w-40 -left-20">
+                              <div class="absolute border border-gray-100 p-3 shadow bg-white mt-2">
+                                  <div
+                                      class="flex items-center mb-4"
+                                      v-for="(column, index) in summaryColumns"
+                                      :key="index"
+                                  >
+                                      <input
+                                          :id="`column-${index}`"
+                                          type="checkbox"
+                                          v-model="column.visible"
+                                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                                      />
+                                      <label
+                                          :for="`column-${index}`"
+                                          class="ms-2 text-xs font-medium text-gray-900 select-none whitespace-nowrap"
+                                      >{{ column.label }}</label
+                                      >
+                                  </div>
+                              </div>
+                          </PopoverPanel>
+                      </Popover>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+    <div v-if="activeSummaryColumn.length > 0" class="px-4 max-w-screen-3xl lg:px-12">
         <TabGroup>
           <TabList class="flex space-x-1 rounded-xl bg-blue-500/20 p-1">
-              <Tab v-slot="{ selected }" class="w-2/4">
+              <Tab
+                  v-for="(column, index) in summaryColumns"
+                  :key="index"
+                  v-show="column.visible"
+                  v-slot="{ selected }"
+                  class="w-2/4">
                   <button
                       :class="[
                       'w-full rounded-lg py-2.5 text-sm font-medium leading-5 p-2',
@@ -1264,31 +1327,35 @@ const getAutoCompleteFilterOptions = async (keyword) => {
                         : 'text-gray-900 hover:bg-white',
                     ]"
                   >
-                      Agents
+                      {{ column.label }}
                   </button>
               </Tab>
-              <Tab v-slot="{ selected }" class="w-2/4">
-                  <button
-                      :class="[
-                      'w-full rounded-lg py-2.5 text-sm font-medium leading-5',
-                      'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',
-                      selected
-                        ? 'bg-white text-blue-700 shadow'
-                        : 'text-gray-900 hover:bg-white',
-                    ]"
-                  >
-                      Publishers
-                  </button>
-              </Tab>
+
+<!--              <Tab v-slot="{ selected }" class="w-2/4">-->
+<!--                  <button-->
+<!--                      :class="[-->
+<!--                      'w-full rounded-lg py-2.5 text-sm font-medium leading-5',-->
+<!--                      'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',-->
+<!--                      selected-->
+<!--                        ? 'bg-white text-blue-700 shadow'-->
+<!--                        : 'text-gray-900 hover:bg-white',-->
+<!--                    ]"-->
+<!--                  >-->
+<!--                      Publishers-->
+<!--                  </button>-->
+<!--              </Tab>-->
           </TabList>
           <TabPanels class="mt-2">
+
               <TabPanel
+                    v-for="(column, index) in summaryColumns"
+                    :key="index"
                   :class="[
                     'rounded-xl bg-white p-3',
                     'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',
                   ]"
               >
-                  <div class="relative overflow-hidden bg-white sm:rounded-lg">
+                  <div v-show="column.visible && column.name === 'agents'" class="overflow-hidden bg-white sm:rounded-lg">
                       <div class="overflow-x-auto">
                           <table class="w-full text-sm text-left text-gray-500">
                               <thead class="text-xs text-gray-700 uppercase bg-gray-50">
@@ -1394,18 +1461,11 @@ const getAutoCompleteFilterOptions = async (keyword) => {
                           </div>
                       </div>
                   </div>
-              </TabPanel>
-              <TabPanel
-                  :class="[
-                    'rounded-xl bg-white p-3',
-                    'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',
-                  ]"
-              >
-                  <div class="relative overflow-hidden bg-white sm:rounded-lg">
+                  <div v-show="column.visible && column.name === 'publishers'" class="overflow-hidden bg-white sm:rounded-lg">
                       <div class="overflow-x-auto">
                           <table class="w-full text-sm text-left text-gray-500">
                               <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                                <tr class="cursor-pointer">
+                              <tr class="cursor-pointer">
                                   <th scope="col" class="px-4 py-3 whitespace-nowrap">Publisher Name</th>
                                   <th scope="col" class="px-4 py-3 whitespace-nowrap">Total Calls</th>
                                   <th scope="col" class="px-4 py-3 whitespace-nowrap">Paid Calls</th>
@@ -1423,7 +1483,7 @@ const getAutoCompleteFilterOptions = async (keyword) => {
                               </tr>
                               </thead>
                               <tbody>
-                                <tr
+                              <tr
                                   v-for="(publisher, index) in callsGroupedByPublisherName"
                                   :key="index"
                                   class="border-b hover:bg-gray-100"
@@ -1491,19 +1551,129 @@ const getAutoCompleteFilterOptions = async (keyword) => {
                               </tbody>
                           </table>
 
-<!--                          <div class="flex justify-center mt-4">-->
-<!--                              <button-->
-<!--                                  @click.prevent="showMoreForGrouped = !showMoreForGrouped"-->
-<!--                                  class="bg-gray-200 hover:bg-gray-100 text-gray-800 cursor-pointer px-4 py-2 text-sm rounded-md flex items-center"-->
-<!--                              >-->
-<!--                                  <span v-if="showMoreForGrouped">Show Less</span>-->
-<!--                                  <span v-else>Show More</span>-->
-<!--                              </button>-->
-<!--                          </div>-->
+                          <!--                          <div class="flex justify-center mt-4">-->
+                          <!--                              <button-->
+                          <!--                                  @click.prevent="showMoreForGrouped = !showMoreForGrouped"-->
+                          <!--                                  class="bg-gray-200 hover:bg-gray-100 text-gray-800 cursor-pointer px-4 py-2 text-sm rounded-md flex items-center"-->
+                          <!--                              >-->
+                          <!--                                  <span v-if="showMoreForGrouped">Show Less</span>-->
+                          <!--                                  <span v-else>Show More</span>-->
+                          <!--                              </button>-->
+                          <!--                          </div>-->
 
                       </div>
                   </div>
               </TabPanel>
+
+<!--              <TabPanel-->
+<!--                  :class="[-->
+<!--                    'rounded-xl bg-white p-3',-->
+<!--                    'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',-->
+<!--                  ]"-->
+<!--              >-->
+<!--                  <div class="overflow-hidden bg-white sm:rounded-lg">-->
+<!--                      <div class="overflow-x-auto">-->
+<!--                          <table class="w-full text-sm text-left text-gray-500">-->
+<!--                              <thead class="text-xs text-gray-700 uppercase bg-gray-50">-->
+<!--                                <tr class="cursor-pointer">-->
+<!--                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Publisher Name</th>-->
+<!--                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Total Calls</th>-->
+<!--                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Paid Calls</th>-->
+<!--                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Revenue Earned</th>-->
+<!--                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">-->
+<!--                                      Revenue Per Call-->
+<!--                                  </th>-->
+<!--                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">-->
+<!--                                      Total Call Length-->
+<!--                                  </th>-->
+<!--                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">-->
+<!--                                      Average Call Length-->
+<!--                                  </th>-->
+<!--                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Actions</th>-->
+<!--                              </tr>-->
+<!--                              </thead>-->
+<!--                              <tbody>-->
+<!--                                <tr-->
+<!--                                  v-for="(publisher, index) in callsGroupedByPublisherName"-->
+<!--                                  :key="index"-->
+<!--                                  class="border-b hover:bg-gray-100"-->
+<!--                              >-->
+<!--                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
+<!--                                      {{ publisher.publisher_name }}-->
+<!--                                  </td>-->
+<!--                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
+<!--                                      {{ publisher.totalCalls }}-->
+<!--                                  </td>-->
+<!--                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
+<!--                                      {{ publisher.paidCalls }}-->
+<!--                                  </td>-->
+<!--                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
+<!--                                      ${{ publisher.revenueEarned }}-->
+<!--                                  </td>-->
+<!--                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
+<!--                                      ${{ publisher.revenuePerCall.toFixed(2) }}-->
+<!--                                  </td>-->
+<!--                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
+<!--                                      {{-->
+<!--                                          String(Math.floor(publisher.totalCallLength / 60)).padStart(2, "0") +-->
+<!--                                          ":" +-->
+<!--                                          String(publisher.totalCallLength % 60).padStart(2, "0")-->
+<!--                                      }}-->
+<!--                                  </td>-->
+<!--                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
+<!--                                      {{ publisher.averageCallLength.toFixed(2) }} sec-->
+<!--                                  </td>-->
+<!--                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
+<!--                                  </td>-->
+<!--                              </tr>-->
+
+<!--                              <tr class="bg-gray-100 border-b">-->
+<!--                                  <td-->
+<!--                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
+<!--                                      v-text="publisherFooterRow.publisherName"-->
+<!--                                  ></td>-->
+<!--                                  <td-->
+<!--                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
+<!--                                      v-text="publisherFooterRow.totalCalls"-->
+<!--                                  ></td>-->
+<!--                                  <td-->
+<!--                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
+<!--                                      v-text="publisherFooterRow.paidCalls"-->
+<!--                                  ></td>-->
+<!--                                  <td-->
+<!--                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
+<!--                                      v-text="`$${publisherFooterRow.revenueEarned}`"-->
+<!--                                  ></td>-->
+<!--                                  <td-->
+<!--                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
+<!--                                      v-text="`$${publisherFooterRow.revenuePerCall.toFixed(2)}`"-->
+<!--                                  ></td>-->
+<!--                                  <td-->
+<!--                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
+<!--                                      v-text="`${publisherFooterRow.totalCallLength.toFixed(2)}`"-->
+<!--                                  ></td>-->
+<!--                                  <td-->
+<!--                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
+<!--                                      v-text="`${publisherFooterRow.averageCallLength.toFixed(2)}`"-->
+<!--                                  ></td>-->
+<!--                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"></td>-->
+<!--                              </tr>-->
+<!--                              </tbody>-->
+<!--                          </table>-->
+
+<!--&lt;!&ndash;                          <div class="flex justify-center mt-4">&ndash;&gt;-->
+<!--&lt;!&ndash;                              <button&ndash;&gt;-->
+<!--&lt;!&ndash;                                  @click.prevent="showMoreForGrouped = !showMoreForGrouped"&ndash;&gt;-->
+<!--&lt;!&ndash;                                  class="bg-gray-200 hover:bg-gray-100 text-gray-800 cursor-pointer px-4 py-2 text-sm rounded-md flex items-center"&ndash;&gt;-->
+<!--&lt;!&ndash;                              >&ndash;&gt;-->
+<!--&lt;!&ndash;                                  <span v-if="showMoreForGrouped">Show Less</span>&ndash;&gt;-->
+<!--&lt;!&ndash;                                  <span v-else>Show More</span>&ndash;&gt;-->
+<!--&lt;!&ndash;                              </button>&ndash;&gt;-->
+<!--&lt;!&ndash;                          </div>&ndash;&gt;-->
+
+<!--                      </div>-->
+<!--                  </div>-->
+<!--              </TabPanel>-->
           </TabPanels>
       </TabGroup>
     </div>
@@ -1631,6 +1801,7 @@ const getAutoCompleteFilterOptions = async (keyword) => {
       <div class="px-4 max-w-screen-3xl lg:px-12">
         <div class="relative overflow-hidden bg-white sm:rounded-lg"
              :class="{'height-600': loadedCalls.length <= 14}">
+
           <div
             class="flex flex-col px-4 py-3 space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-4"
           >
@@ -1681,15 +1852,6 @@ const getAutoCompleteFilterOptions = async (keyword) => {
                     </div>
                   </PopoverPanel>
                 </Popover>
-
-<!--                <button-->
-<!--                  type="button"-->
-<!--                  class="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200"-->
-<!--                  -->
-<!--                  @click.prevent="exportCSV"-->
-<!--                >-->
-<!--                  Export-->
-<!--                </button>-->
 
                   <a :href="'/admin/calls/export/'+JSON.stringify(exportSearchResults)">
                       <button
