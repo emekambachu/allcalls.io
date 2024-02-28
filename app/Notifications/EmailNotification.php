@@ -3,9 +3,10 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Support\Facades\Redis;
+use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
 
 class EmailNotification extends Notification implements ShouldQueue
 {
@@ -53,6 +54,8 @@ class EmailNotification extends Notification implements ShouldQueue
             // 'level' => 'success', // Define the level (success, error, etc.) if applicable
             // Add any other necessary data you want to include in the email
         ];
+        
+        Redis::incr('email_notifications:count:' . now()->format('Y-m-d:H:i'));
 
         return (new MailMessage)
             ->subject($subject)

@@ -62,6 +62,7 @@ class ZoomMeetingNotificationController extends Controller
             try {
 
                 if ($sendEmail && $emailData) {
+                    Log::info('EmailNotification queued', ['time' => now()->toDateTimeString()]);
                     // Send email notifications on 'emails' queue
                     Notification::send($batch, (new EmailNotification($emailData))->onQueue('emails'));
                 } else {

@@ -2,14 +2,15 @@
 
 namespace App\Console;
 
-use App\Models\Call;
 use http\Env;
+use App\Models\Call;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
 {
@@ -35,7 +36,16 @@ class Kernel extends ConsoleKernel
                     Artisan::call('allcalls:send-calls-to-on-script');
                 }
             }
-                })->dailyAt('23:59');
+        })->dailyAt('23:59');
+
+        $schedule->call(function () {
+            $key = 'email_notifications:count:' . now()->subMinute()->format('Y-m-d:H:i');
+            $count = Redis::get($key);
+            Log::info("Email notifications sent in the last minute: {$count}");
+    
+            // Optionally, you can delete the key if you don't need to keep history in Redis
+            Redis::del($key);
+        })->everyMinute();
     }
 
     /**
