@@ -49,7 +49,7 @@ class ZoomMeetingNotificationController extends Controller
         $users = User::whereIn('id', $userIds)->get();
 
         // Send notification in batches to avoid overloading the system
-        $batchSize = 50; // You can adjust this number based on your server capacity
+        $batchSize = 35; // You can adjust this number based on your server capacity
        
         foreach ($users->chunk($batchSize) as $index => $batch) {
             $batchStart = microtime(true); // Get start time for the batch
@@ -80,6 +80,9 @@ class ZoomMeetingNotificationController extends Controller
                     'error' => $e->getMessage()
                 ]);
             }
+
+             // Delay for 2 seconds before processing the next batch
+            sleep(2);
         }
        
         return response()->json(['message' => 'Notifications queued for sending.']);
