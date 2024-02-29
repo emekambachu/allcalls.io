@@ -3,7 +3,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { reactive, computed, ref } from "vue";
 import { Link, Head, router, usePage } from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-
+import { toaster } from "@/helper.js";
 let props = defineProps({
   user: {
     type: Object,
@@ -20,7 +20,10 @@ let props = defineProps({
     type: Boolean,
   },
 });
-
+let page = usePage();
+if (page.props.flash.message && page.props.auth.role == 'admin') {
+  toaster("success", page.props.flash.message);
+}
 let formatDate = (date) => {
   const dateObj = new Date(date);
 

@@ -12,10 +12,6 @@ import Multiselect from "@vueform/multiselect";
 const countryList = inject('countryList');
 
 import { toaster } from "@/helper.js";
-let page = usePage();
-if (page.props.flash.message) {
-    toaster("success", page.props.flash.message);
-}
 
 let props = defineProps({
   mustVerifyEmail: {
@@ -78,7 +74,6 @@ let customLabel = function (options, select$) {
 };
 
 let submitForm = () => {
-  console.log("form", form);
   form.post(route("profile.update"));
 };
 
@@ -262,7 +257,8 @@ const closeDropDown = () => {
       </div>
 
       <div class="flex items-center gap-4">
-        <AuthenticatedButton class="button-custom px-4 py-3 rounded-md " :disabled="form.processing">Save
+        <AuthenticatedButton class="button-custom px-4 py-3 rounded-md " :class="{ 'opacity-25': form.processing }"
+                     :disabled="form.processing"><global-spinner :spinner="form.processing" /> Save
         </AuthenticatedButton>
 
         <Transition enter-from-class="opacity-0" leave-to-class="opacity-0" class="transition ease-in-out">

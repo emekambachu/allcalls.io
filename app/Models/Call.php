@@ -185,13 +185,12 @@ class Call extends Model
         $retreaverAPIKey = env('RETREAVER_API_KEY');
         $retreaverCompanyId = env('RETREAVER_COMPANY_ID');
 
-        $accessURL = "https://api.retreaver.com/affiliates.json?api_key={$retreaverAPIKey}&company_id={$retreaverCompanyId}";
+        $accessURL = "https://api.retreaver.com/affiliates/afid/{$affiliateId}.json?api_key={$retreaverAPIKey}&company_id={$retreaverCompanyId}";
         $response = Http::get($accessURL);
 
         if ($response->successful()) {
-            $collection = collect($response->json());
-            $matchedAffiliates = $collection->where('affiliate.afid', $affiliateId)->first();
-            $publisherName = isset($matchedAffiliates['affiliate']['company_name'])?$matchedAffiliates['affiliate']['company_name']:null;
+            $matchedAffiliates = $response->json();
+            $publisherName = isset($matchedAffiliates['affiliate']['first_name'])?$matchedAffiliates['affiliate']['first_name']:null;
             return $publisherName;
         }
         return null;
