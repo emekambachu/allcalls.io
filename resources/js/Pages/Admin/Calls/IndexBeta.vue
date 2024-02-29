@@ -218,23 +218,138 @@ let columns = ref([
 
 ]);
 
-const summaryColumns = ref([
+const agentColumns = ref([
     {
-        label: "Agents",
-        name: "agents",
+        label: "Agent Name",
+        name: "agentName",
         visible: true,
+        render(call) {
+            return call.agentName;
+        },
+
     },
 
     {
-        label: "Publishers",
-        name: "publishers",
-        visible: false,
+        label: "Total Calls",
+        name: "totalCalls",
+        visible: true,
+        render(call) {
+            return call.totalCalls;
+        },
+    },
+
+    {
+        label: "Paid Calls",
+        name: "paidCalls",
+        visible: true,
+        render(call) {
+            return call.paidCalls;
+        },
+    },
+
+    {
+        label: "Revenue Earned",
+        name: "revenueEarned",
+        visible: true,
+        render(call) {
+            return call.revenueEarned;
+        },
+    },
+
+    {
+        label: "Revenue Per Call",
+        name: "revenuePerCall",
+        visible: true,
+        render(call) {
+            return call.revenuePerCall.toFixed(2);
+        },
+    },
+
+    {
+        label: "Total Call Length",
+        name: "totalCallLength",
+        visible: true,
+        render(call) {
+            return String(Math.floor(call.totalCallLength / 60)).padStart(2, "0") +
+                ":" +
+                String(call.totalCallLength % 60).padStart(2, "0");
+        },
+    },
+
+    {
+        label: "Average Call Length",
+        name: "averageCallLength",
+        visible: true,
+        render(call) {
+            return call.averageCallLength.toFixed(2);
+        },
     },
 ]);
 
-const activeSummaryColumn = computed(() => {
-    return summaryColumns.value.filter((column) => column.visible);
-});
+const publisherColumns = ref([
+    {
+        label: "Publisher Name",
+        name: "publisher_name",
+        visible: true,
+        render(call) {
+            return call.publisher_name;
+        },
+    },
+
+    {
+        label: "Total Calls",
+        name: "totalCalls",
+        visible: true,
+        render(call) {
+            return call.totalCalls;
+        },
+    },
+
+    {
+        label: "Paid Calls",
+        name: "paidCalls",
+        visible: true,
+        render(call) {
+            return call.paidCalls;
+        },
+    },
+
+    {
+        label: "Revenue Earned",
+        name: "revenueEarned",
+        visible: true,
+        render(call) {
+            return call.revenueEarned;
+        },
+    },
+
+    {
+        label: "Revenue Per Call",
+        name: "revenuePerCall",
+        visible: true,
+        render(call) {
+            return call.revenuePerCall;
+        },
+    },
+
+    {
+        label: "Total Call Length",
+        name: "totalCallLength",
+        visible: true,
+        render(call) {
+            return call.totalCallLength;
+        },
+    },
+
+    {
+        label: "Average Call Length",
+        name: "averageCallLength",
+        visible: true,
+        render(call) {
+            return call.averageCallLength;
+        },
+    },
+]);
 
 let performSorting = () => {
   console.log("Perform sorting now!!");
@@ -424,7 +539,7 @@ const publisherFooterRow = computed(() => {
     let revenuePerCall = totalCalls > 0 ? totalRevenue / totalCalls : 0;
 
     return {
-        publisherName: "Totals",
+        publisher_name: "Totals",
         totalCalls,
         paidCalls: totalPaidCalls,
         revenueEarned: totalRevenue,
@@ -695,8 +810,10 @@ let applyFilter = async () => {
 
 const applyCallFiltersToSummary = () => {
 
-    console.log("Loaded calls", loadedCalls.value);
-    console.log("Grouped Publisher Names", callsGroupedByPublisherName.value);
+    console.log("Loaded calls before filter", getAllCalls.value);
+    console.log("Grouped Publisher Names before filter", callsGroupedByPublisherName.value);
+    console.log("Maximised calls grouped by user before apply", maxmizedCallsGroupedByUser.value);
+
 
     // Populate grouped calls when filter button is clicked
     maxmizedCallsGroupedByUser.value = Object.fromEntries(callsGroupedByUserArray);
@@ -719,7 +836,7 @@ const applyCallFiltersToSummary = () => {
 
     // Iterate loadedCalls first and then grouped calls to match the both user ids
     // if matched add the user group to the maxmizedCallsGroupedByUser
-    for (const [key, value] of loadedCalls.value.entries()) {
+    for (const [key, value] of getAllCalls.value.entries()) {
 
         Object.values(unfilteredGroupedCalls).forEach(group => {
             if (group.userId === value.user_id) {
@@ -734,6 +851,10 @@ const applyCallFiltersToSummary = () => {
             }
         });
     }
+
+    console.log("Loaded calls after filter", loadedCalls.value);
+    console.log("Grouped Publisher Names after filter", callsGroupedByPublisherName.value);
+    console.log("Maximised calls grouped by user after apply", maxmizedCallsGroupedByUser.value);
 }
 
 const removeFiltersForSummary = () => {
@@ -1192,7 +1313,7 @@ const getAutoCompleteFilterOptions = async (keyword) => {
           </div>
     </Modal>
 
-    <Modal
+      <Modal
           :show="showDispositionModal"
           @close="showDispositionModal = false"
           :closeable="true"
@@ -1268,54 +1389,10 @@ const getAutoCompleteFilterOptions = async (keyword) => {
       </div>
     </div>
 
-      <div class="px-4 max-w-screen-3xl lg:px-12">
-          <div class="flex flex-col px-4 py-3 space-y-3 lg:flex-row lg:items-end lg:justify-end lg:space-y-0 lg:space-x-4">
-              <div class="flex flex-col flex-shrink-0 space-y-3 md:flex-row md:items-center lg:justify-end md:space-y-0 md:space-x-3">
-                  <div class="flex items-center">
-                      <Popover class="relative mr-2">
-                          <PopoverButton>
-                              <button
-                                  type="button"
-                                  class="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200"
-                              >
-                                  Show Summary Columns
-                              </button>
-                          </PopoverButton>
-
-                          <PopoverPanel class="z-10 w-40 -left-20">
-                              <div class="absolute border border-gray-100 p-3 shadow bg-white mt-2">
-                                  <div
-                                      class="flex items-center mb-4"
-                                      v-for="(column, index) in summaryColumns"
-                                      :key="index"
-                                  >
-                                      <input
-                                          :id="`column-${index}`"
-                                          type="checkbox"
-                                          v-model="column.visible"
-                                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                                      />
-                                      <label
-                                          :for="`column-${index}`"
-                                          class="ms-2 text-xs font-medium text-gray-900 select-none whitespace-nowrap"
-                                      >{{ column.label }}</label
-                                      >
-                                  </div>
-                              </div>
-                          </PopoverPanel>
-                      </Popover>
-                  </div>
-              </div>
-          </div>
-      </div>
-
-    <div v-if="activeSummaryColumn.length > 0" class="px-4 max-w-screen-3xl lg:px-12">
+    <div class="px-4 max-w-screen-3xl lg:px-12">
         <TabGroup>
           <TabList class="flex space-x-1 rounded-xl bg-blue-500/20 p-1">
               <Tab
-                  v-for="(column, index) in summaryColumns"
-                  :key="index"
-                  v-show="column.visible"
                   v-slot="{ selected }"
                   class="w-2/4">
                   <button
@@ -1327,126 +1404,187 @@ const getAutoCompleteFilterOptions = async (keyword) => {
                         : 'text-gray-900 hover:bg-white',
                     ]"
                   >
-                      {{ column.label }}
+                      Agents
                   </button>
               </Tab>
 
-<!--              <Tab v-slot="{ selected }" class="w-2/4">-->
-<!--                  <button-->
-<!--                      :class="[-->
-<!--                      'w-full rounded-lg py-2.5 text-sm font-medium leading-5',-->
-<!--                      'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',-->
-<!--                      selected-->
-<!--                        ? 'bg-white text-blue-700 shadow'-->
-<!--                        : 'text-gray-900 hover:bg-white',-->
-<!--                    ]"-->
-<!--                  >-->
-<!--                      Publishers-->
-<!--                  </button>-->
-<!--              </Tab>-->
+              <Tab v-slot="{ selected }" class="w-2/4">
+                  <button
+                      :class="[
+                      'w-full rounded-lg py-2.5 text-sm font-medium leading-5',
+                      'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',
+                      selected
+                        ? 'bg-white text-blue-700 shadow'
+                        : 'text-gray-900 hover:bg-white',
+                    ]"
+                  >
+                      Publishers
+                  </button>
+              </Tab>
           </TabList>
-          <TabPanels class="mt-2">
 
+          <TabPanels class="mt-2">
               <TabPanel
-                    v-for="(column, index) in summaryColumns"
-                    :key="index"
                   :class="[
                     'rounded-xl bg-white p-3',
                     'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',
                   ]"
               >
-                  <div v-show="column.visible && column.name === 'agents'" class="overflow-hidden bg-white sm:rounded-lg">
+                  <div class="overflow-hidden bg-white sm:rounded-lg">
+
+                      <!--Grouped Agent calls-->
+                      <div class="flex justify-end">
+                          <Popover class="relative mr-2">
+                              <PopoverButton>
+                                  <button
+                                      type="button"
+                                      class="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200"
+                                  >
+                                      Show Agent Columns
+                                  </button>
+                              </PopoverButton>
+
+                              <PopoverPanel class="z-10 w-40 -left-20">
+                                  <div class="absolute border border-gray-100 p-3 shadow bg-white mt-2">
+                                      <div
+                                          class="flex items-center mb-4"
+                                          v-for="(column, index) in agentColumns"
+                                          :key="index"
+                                      >
+                                          <input
+                                              :id="`column-${index}`"
+                                              type="checkbox"
+                                              v-model="column.visible"
+                                              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                                          />
+                                          <label
+                                              :for="`column-${index}`"
+                                              class="ms-2 text-xs font-medium text-gray-900 select-none whitespace-nowrap"
+                                          >{{ column.label }}</label
+                                          >
+                                      </div>
+                                  </div>
+                              </PopoverPanel>
+                          </Popover>
+                      </div>
+
                       <div class="overflow-x-auto">
                           <table class="w-full text-sm text-left text-gray-500">
                               <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                              <tr class="cursor-pointer">
-                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Agent Name</th>
-                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Total Calls</th>
-                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Paid Calls</th>
-                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Revenue Earned</th>
-                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                                      Revenue Per Call
+                                <tr class="cursor-pointer">
+
+                                  <th
+                                      scope="col"
+                                      class="px-4 py-3 whitespace-nowrap"
+                                      v-for="(column, index) in agentColumns"
+                                      :key="index"
+                                      v-show="column.visible"
+                                  >
+                                      {{ column.label }}
                                   </th>
-                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                                      Total Call Length
-                                  </th>
-                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                                      Average Call Length
-                                  </th>
-                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Actions</th>
+
+<!--                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Total Calls</th>-->
+<!--                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Paid Calls</th>-->
+<!--                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Revenue Earned</th>-->
+<!--                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">-->
+<!--                                      Revenue Per Call-->
+<!--                                  </th>-->
+<!--                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">-->
+<!--                                      Total Call Length-->
+<!--                                  </th>-->
+<!--                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">-->
+<!--                                      Average Call Length-->
+<!--                                  </th>-->
                               </tr>
                               </thead>
                               <tbody>
-                              <tr
-                                  v-for="(userData, userId) in groupedCalls"
-                                  :key="userId"
-                                  class="border-b hover:bg-gray-100"
-                              >
-                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                                      <Link
-                                          :href="`/admin/customer/detail/${userId}`"
-                                          class="text-blue-400 hover:text-blue-500 underline"
+                                  <tr
+                                      v-for="(userData, userId) in groupedCalls"
+                                      :key="userId"
+                                      class="border-b hover:bg-gray-100"
+                                  >
+                                      <td
+                                          v-for="(column, colIndex) in agentColumns"
+                                          :key="colIndex"
+                                          class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                                          v-show="column.visible"
+                                          v-text="renderColumn(column, userData)"
                                       >
-                                          {{ userData.agentName }}
-                                      </Link>
-                                  </td>
-                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                                      {{ userData.totalCalls }}
-                                  </td>
-                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                                      {{ userData.paidCalls }}
-                                  </td>
-                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                                      ${{ userData.revenueEarned }}
-                                  </td>
-                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                                      ${{ userData.revenuePerCall.toFixed(2) }}
-                                  </td>
-                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                                      {{
-                                          String(Math.floor(userData.totalCallLength / 60)).padStart(2, "0") +
-                                          ":" +
-                                          String(userData.totalCallLength % 60).padStart(2, "0")
-                                      }}
-                                  </td>
-                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                                      {{ userData.averageCallLength.toFixed(2) }} sec
-                                  </td>
-                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                                  </td>
-                              </tr>
+                                      </td>
 
-                              <tr class="bg-gray-100 border-b" v-if="showMoreForGrouped">
-                                  <td
-                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
-                                      v-text="summaryFooterRow.agentName"
-                                  ></td>
-                                  <td
-                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
-                                      v-text="summaryFooterRow.totalCalls"
-                                  ></td>
-                                  <td
-                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
-                                      v-text="summaryFooterRow.paidCalls"
-                                  ></td>
-                                  <td
-                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
-                                      v-text="`$${summaryFooterRow.revenueEarned}`"
-                                  ></td>
-                                  <td
-                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
-                                      v-text="`$${summaryFooterRow.revenuePerCall.toFixed(2)}`"
-                                  ></td>
-                                  <td
-                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
-                                      v-text="`${summaryFooterRow.totalCallLength.toFixed(2)}`"
-                                  ></td>
-                                  <td
-                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
-                                      v-text="`${summaryFooterRow.averageCallLength.toFixed(2)}`"
-                                  ></td>
-                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"></td>
-                              </tr>
+<!--                                      <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
+<!--                                          <Link-->
+<!--                                              :href="`/admin/customer/detail/${userId}`"-->
+<!--                                              class="text-blue-400 hover:text-blue-500 underline"-->
+<!--                                          >-->
+<!--                                              {{ userData.agentName }}-->
+<!--                                          </Link>-->
+<!--                                      </td>-->
+<!--                                      <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
+<!--                                          {{ userData.totalCalls }}-->
+<!--                                      </td>-->
+<!--                                      <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
+<!--                                          {{ userData.paidCalls }}-->
+<!--                                      </td>-->
+<!--                                      <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
+<!--                                          ${{ userData.revenueEarned }}-->
+<!--                                      </td>-->
+<!--                                      <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
+<!--                                          ${{ userData.revenuePerCall.toFixed(2) }}-->
+<!--                                      </td>-->
+<!--                                      <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
+<!--                                          {{-->
+<!--                                              String(Math.floor(userData.totalCallLength / 60)).padStart(2, "0") +-->
+<!--                                              ":" +-->
+<!--                                              String(userData.totalCallLength % 60).padStart(2, "0")-->
+<!--                                          }}-->
+<!--                                      </td>-->
+<!--                                      <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
+<!--                                          {{ userData.averageCallLength.toFixed(2) }} sec-->
+<!--                                      </td>-->
+<!--                                      <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
+<!--                                      </td>-->
+                                  </tr>
+
+                                  <tr class="bg-gray-100 border-b" v-if="showMoreForGrouped">
+                                        <td
+                                            v-for="(column, colIndex) in agentColumns"
+                                            :key="colIndex"
+                                            class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                                            v-show="column.visible"
+                                            v-text="renderColumn(column, summaryFooterRow)"
+                                        ></td>
+
+<!--                                      <td-->
+<!--                                          class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
+<!--                                          v-text="summaryFooterRow.agentName"-->
+<!--                                      ></td>-->
+<!--                                      <td-->
+<!--                                          class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
+<!--                                          v-text="summaryFooterRow.totalCalls"-->
+<!--                                      ></td>-->
+<!--                                      <td-->
+<!--                                          class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
+<!--                                          v-text="summaryFooterRow.paidCalls"-->
+<!--                                      ></td>-->
+<!--                                      <td-->
+<!--                                          class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
+<!--                                          v-text="`$${summaryFooterRow.revenueEarned}`"-->
+<!--                                      ></td>-->
+<!--                                      <td-->
+<!--                                          class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
+<!--                                          v-text="`$${summaryFooterRow.revenuePerCall.toFixed(2)}`"-->
+<!--                                      ></td>-->
+<!--                                      <td-->
+<!--                                          class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
+<!--                                          v-text="`${summaryFooterRow.totalCallLength.toFixed(2)}`"-->
+<!--                                      ></td>-->
+<!--                                      <td-->
+<!--                                          class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
+<!--                                          v-text="`${summaryFooterRow.averageCallLength.toFixed(2)}`"-->
+<!--                                      ></td>-->
+<!--                                      <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"></td>-->
+                                  </tr>
                               </tbody>
                           </table>
 
@@ -1461,121 +1599,65 @@ const getAutoCompleteFilterOptions = async (keyword) => {
                           </div>
                       </div>
                   </div>
-                  <div v-show="column.visible && column.name === 'publishers'" class="overflow-hidden bg-white sm:rounded-lg">
+              </TabPanel>
+
+              <TabPanel
+                  :class="[
+                    'rounded-xl bg-white p-3',
+                    'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',
+                  ]"
+              >
+                  <div class="overflow-hidden bg-white sm:rounded-lg">
+                      <!--Grouped Publishers-->
+                      <div class="flex justify-end">
+                          <Popover class="relative mr-2">
+                              <PopoverButton>
+                                  <button
+                                      type="button"
+                                      class="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200"
+                                  >
+                                      Show Agent Columns
+                                  </button>
+                              </PopoverButton>
+
+                              <PopoverPanel class="z-10 w-40 -left-20">
+                                  <div class="absolute border border-gray-100 p-3 shadow bg-white mt-2">
+                                      <div
+                                          class="flex items-center mb-4"
+                                          v-for="(column, index) in publisherColumns"
+                                          :key="index"
+                                      >
+                                          <input
+                                              :id="`column-${index}`"
+                                              type="checkbox"
+                                              v-model="column.visible"
+                                              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                                          />
+                                          <label
+                                              :for="`column-${index}`"
+                                              class="ms-2 text-xs font-medium text-gray-900 select-none whitespace-nowrap"
+                                          >{{ column.label }}
+                                          </label>
+                                      </div>
+                                  </div>
+                              </PopoverPanel>
+                          </Popover>
+                      </div>
+
                       <div class="overflow-x-auto">
                           <table class="w-full text-sm text-left text-gray-500">
                               <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                              <tr class="cursor-pointer">
-                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Publisher Name</th>
-                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Total Calls</th>
-                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Paid Calls</th>
-                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Revenue Earned</th>
-                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                                      Revenue Per Call
-                                  </th>
-                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                                      Total Call Length
-                                  </th>
-                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                                      Average Call Length
-                                  </th>
-                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Actions</th>
-                              </tr>
-                              </thead>
-                              <tbody>
-                              <tr
-                                  v-for="(publisher, index) in callsGroupedByPublisherName"
-                                  :key="index"
-                                  class="border-b hover:bg-gray-100"
-                              >
-                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                                      {{ publisher.publisher_name }}
-                                  </td>
-                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                                      {{ publisher.totalCalls }}
-                                  </td>
-                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                                      {{ publisher.paidCalls }}
-                                  </td>
-                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                                      ${{ publisher.revenueEarned }}
-                                  </td>
-                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                                      ${{ publisher.revenuePerCall.toFixed(2) }}
-                                  </td>
-                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                                      {{
-                                          String(Math.floor(publisher.totalCallLength / 60)).padStart(2, "0") +
-                                          ":" +
-                                          String(publisher.totalCallLength % 60).padStart(2, "0")
-                                      }}
-                                  </td>
-                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                                      {{ publisher.averageCallLength.toFixed(2) }} sec
-                                  </td>
-                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">
-                                  </td>
-                              </tr>
+                                <tr class="cursor-pointer">
+                                    <th
+                                        scope="col"
+                                        class="px-4 py-3 whitespace-nowrap"
+                                        v-for="(column, index) in publisherColumns"
+                                        :key="index"
+                                        v-show="column.visible"
+                                    >
+                                        {{ column.label }}
+                                    </th>
 
-                              <tr class="bg-gray-100 border-b">
-                                  <td
-                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
-                                      v-text="publisherFooterRow.publisherName"
-                                  ></td>
-                                  <td
-                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
-                                      v-text="publisherFooterRow.totalCalls"
-                                  ></td>
-                                  <td
-                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
-                                      v-text="publisherFooterRow.paidCalls"
-                                  ></td>
-                                  <td
-                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
-                                      v-text="`$${publisherFooterRow.revenueEarned}`"
-                                  ></td>
-                                  <td
-                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
-                                      v-text="`$${publisherFooterRow.revenuePerCall.toFixed(2)}`"
-                                  ></td>
-                                  <td
-                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
-                                      v-text="`${publisherFooterRow.totalCallLength.toFixed(2)}`"
-                                  ></td>
-                                  <td
-                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
-                                      v-text="`${publisherFooterRow.averageCallLength.toFixed(2)}`"
-                                  ></td>
-                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"></td>
-                              </tr>
-                              </tbody>
-                          </table>
-
-                          <!--                          <div class="flex justify-center mt-4">-->
-                          <!--                              <button-->
-                          <!--                                  @click.prevent="showMoreForGrouped = !showMoreForGrouped"-->
-                          <!--                                  class="bg-gray-200 hover:bg-gray-100 text-gray-800 cursor-pointer px-4 py-2 text-sm rounded-md flex items-center"-->
-                          <!--                              >-->
-                          <!--                                  <span v-if="showMoreForGrouped">Show Less</span>-->
-                          <!--                                  <span v-else>Show More</span>-->
-                          <!--                              </button>-->
-                          <!--                          </div>-->
-
-                      </div>
-                  </div>
-              </TabPanel>
-
-<!--              <TabPanel-->
-<!--                  :class="[-->
-<!--                    'rounded-xl bg-white p-3',-->
-<!--                    'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',-->
-<!--                  ]"-->
-<!--              >-->
-<!--                  <div class="overflow-hidden bg-white sm:rounded-lg">-->
-<!--                      <div class="overflow-x-auto">-->
-<!--                          <table class="w-full text-sm text-left text-gray-500">-->
-<!--                              <thead class="text-xs text-gray-700 uppercase bg-gray-50">-->
-<!--                                <tr class="cursor-pointer">-->
 <!--                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Publisher Name</th>-->
 <!--                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Total Calls</th>-->
 <!--                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Paid Calls</th>-->
@@ -1590,14 +1672,22 @@ const getAutoCompleteFilterOptions = async (keyword) => {
 <!--                                      Average Call Length-->
 <!--                                  </th>-->
 <!--                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Actions</th>-->
-<!--                              </tr>-->
-<!--                              </thead>-->
-<!--                              <tbody>-->
-<!--                                <tr-->
-<!--                                  v-for="(publisher, index) in callsGroupedByPublisherName"-->
-<!--                                  :key="index"-->
-<!--                                  class="border-b hover:bg-gray-100"-->
-<!--                              >-->
+                              </tr>
+                              </thead>
+                              <tbody>
+                                <tr
+                                  v-for="(publisher, index) in callsGroupedByPublisherName"
+                                  :key="index"
+                                  class="border-b hover:bg-gray-100"
+                              >
+                                    <td
+                                        v-for="(column, colIndex) in publisherColumns"
+                                        :key="colIndex"
+                                        class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                                        v-show="column.visible"
+                                        v-text="renderColumn(column, publisher)"
+                                    ></td>
+
 <!--                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
 <!--                                      {{ publisher.publisher_name }}-->
 <!--                                  </td>-->
@@ -1625,9 +1715,16 @@ const getAutoCompleteFilterOptions = async (keyword) => {
 <!--                                  </td>-->
 <!--                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
 <!--                                  </td>-->
-<!--                              </tr>-->
+                              </tr>
 
-<!--                              <tr class="bg-gray-100 border-b">-->
+                              <tr class="bg-gray-100 border-b">
+                                      <td
+                                          v-for="(column, colIndex) in publisherColumns"
+                                          :key="colIndex"
+                                          class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
+                                          v-show="column.visible"
+                                          v-text="renderColumn(column, publisherFooterRow)"
+                                      ></td>
 <!--                                  <td-->
 <!--                                      class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"-->
 <!--                                      v-text="publisherFooterRow.publisherName"-->
@@ -1657,23 +1754,23 @@ const getAutoCompleteFilterOptions = async (keyword) => {
 <!--                                      v-text="`${publisherFooterRow.averageCallLength.toFixed(2)}`"-->
 <!--                                  ></td>-->
 <!--                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"></td>-->
-<!--                              </tr>-->
-<!--                              </tbody>-->
-<!--                          </table>-->
+                              </tr>
+                              </tbody>
+                          </table>
 
-<!--&lt;!&ndash;                          <div class="flex justify-center mt-4">&ndash;&gt;-->
-<!--&lt;!&ndash;                              <button&ndash;&gt;-->
-<!--&lt;!&ndash;                                  @click.prevent="showMoreForGrouped = !showMoreForGrouped"&ndash;&gt;-->
-<!--&lt;!&ndash;                                  class="bg-gray-200 hover:bg-gray-100 text-gray-800 cursor-pointer px-4 py-2 text-sm rounded-md flex items-center"&ndash;&gt;-->
-<!--&lt;!&ndash;                              >&ndash;&gt;-->
-<!--&lt;!&ndash;                                  <span v-if="showMoreForGrouped">Show Less</span>&ndash;&gt;-->
-<!--&lt;!&ndash;                                  <span v-else>Show More</span>&ndash;&gt;-->
-<!--&lt;!&ndash;                              </button>&ndash;&gt;-->
-<!--&lt;!&ndash;                          </div>&ndash;&gt;-->
+<!--                          <div class="flex justify-center mt-4">-->
+<!--                              <button-->
+<!--                                  @click.prevent="showMoreForGrouped = !showMoreForGrouped"-->
+<!--                                  class="bg-gray-200 hover:bg-gray-100 text-gray-800 cursor-pointer px-4 py-2 text-sm rounded-md flex items-center"-->
+<!--                              >-->
+<!--                                  <span v-if="showMoreForGrouped">Show Less</span>-->
+<!--                                  <span v-else>Show More</span>-->
+<!--                              </button>-->
+<!--                          </div>-->
 
-<!--                      </div>-->
-<!--                  </div>-->
-<!--              </TabPanel>-->
+                      </div>
+                  </div>
+              </TabPanel>
           </TabPanels>
       </TabGroup>
     </div>

@@ -16,7 +16,10 @@ class ClientSeeder extends Seeder
      */
     public function run()
     {
+        // check if email already exists in the database before seeding record
         Client::factory()->count(50)->create();
+
+
         // for ($i = 0; $i < $this->numberOfRecords; $i++) {
         //     if ($this->userId) {
         //         // If a user_id is specified, create a client with that user_id

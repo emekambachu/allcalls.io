@@ -17,7 +17,6 @@ class ClientsAndCallsSeeder extends Seeder
     public function run(): void
     {
         $specificUserId = User::whereEmail('testUser@example.com')->firstOrFail()->id;
-
         $numberOfClientsAndCalls = random_int(20, 80); // This will generate a random number of calls between 20 and 80
 
         Call::factory($numberOfClientsAndCalls)
