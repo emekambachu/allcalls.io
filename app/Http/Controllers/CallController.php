@@ -20,7 +20,7 @@ class CallController extends Controller
     
         // Iterate over each call and modify the 'from' field based on call_duration_in_seconds
         $calls->getCollection()->transform(function ($call) {
-            if ($call->call_duration_in_seconds > 60) {
+            if ($call->call_duration_in_seconds > 80) {
                 $call->from = $call->from; // This is redundant but illustrates that you can modify the value here
             } else {
                 $call->from = "-"; // Replace 'from' with "-" when call_duration_in_seconds <= 60
