@@ -189,7 +189,7 @@ class Call extends Model
         $response = Http::get($accessURL);
 
         if ($response->successful()) {
-            $matchedAffiliates = $response->json()
+            $matchedAffiliates = $response->json();
             $publisherName = isset($matchedAffiliates['affiliate']['first_name'])?$matchedAffiliates['affiliate']['first_name']:null;
             return $publisherName;
         }
