@@ -34,10 +34,12 @@ let bidsInput = ref(
     return { bid_id: bid.id, bid_amount: bid.amount, call_type_name: bid.call_type.type };
   })
 );
-
+let isLoading = ref(false)
 let saveBids = () => {
+  isLoading.value = true
   // Check if any bid amounts are below 20
   if (bidsInput.value.some((bid) => Number(bid.bid_amount) < 20)) {
+    isLoading.value = false
     alert("The minimum amount for a bid is $20.");
     return; // Return early to prevent the router.visit from being called
   }
@@ -104,7 +106,7 @@ let saveBids = () => {
             </div>
 
             <div>
-              <PrimaryButton @click="saveBids">Save</PrimaryButton>
+              <PrimaryButton @click="saveBids" :class="{ 'opacity-25': isLoading }"><global-spinner :spinner="isLoading" /> Save</PrimaryButton>
             </div>
           </div>
         </div>
