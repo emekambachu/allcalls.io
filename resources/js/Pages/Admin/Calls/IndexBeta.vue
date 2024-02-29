@@ -1434,7 +1434,7 @@ const getAutoCompleteFilterOptions = async (keyword) => {
                     'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',
                   ]"
               >
-                  <div class="overflow-hidden bg-white sm:rounded-lg height-600">
+                  <div class="overflow-hidden bg-white sm:rounded-lg" :class="{'height-600': loadedCalls.length <= 14}">
                       <!--Grouped Agent calls-->
                       <div class="flex justify-end">
                           <Popover class="relative mr-2">
