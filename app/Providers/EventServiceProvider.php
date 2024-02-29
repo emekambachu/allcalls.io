@@ -7,6 +7,7 @@ use App\Events\FundsAdded;
 use App\Events\CareerEvent;
 use App\Events\FundsTooLow;
 use App\Events\InviteAgent;
+use App\Events\SendToOnScriptUpdate;
 use App\Models\Transaction;
 use App\Events\RecordingSaved;
 use App\Events\MissedCallEvent;
@@ -69,7 +70,7 @@ class EventServiceProvider extends ServiceProvider
             // AddUnsubscribeTokenToUser::class,
             PreventBlacklistedEmails::class,
         ],
-    
+
         Registered::class => [
             AddUnsubscribeTokenToUser::class,
             SendEmailVerificationNotification::class,
@@ -138,6 +139,9 @@ class EventServiceProvider extends ServiceProvider
         AppSubmittedEvent::class => [
             LinkAppToCall::class,
             MarkCallAsSale::class,
+        ],
+        SendToOnScriptUpdate::class => [
+            SendCallInfoToOnScriptAI::class,
         ],
     ];
 

@@ -3,7 +3,7 @@ import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 </script>
 
 <template>
-  <div class="border-t border-gray-800 text-white w-full mt-10 py-6">
+  <div class="border-t border-gray-800 text-white w-full mt-20 py-6">
     <div>
       <div class="mb-1">
         <h2 class="text-lg text-custom-green text-center">Important Links</h2>
@@ -27,4 +27,3 @@ import ApplicationLogo from "@/Components/ApplicationLogo.vue";
     </div>
   </div>
 </template>
-  

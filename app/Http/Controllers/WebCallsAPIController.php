@@ -9,8 +9,10 @@ use App\Services\Base\BaseService;
 use App\Services\Calls\CallService;
 use App\Services\Client\ClientService;
 use App\Services\User\UserService;
+use Carbon\Carbon;
 use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
@@ -30,9 +32,10 @@ class WebCallsAPIController extends Controller
     }
 
     protected array $supportedSortColumns = [
-        'serial_number', 'id', 'user_id', 'call_taken', 'call_duration_in_seconds', 'hung_up_by',
+        'serial_number', 'id', 'user_id', 'call_taken', 'call_duration_in_seconds', 'cost',
+        'publisher_name', 'publisher_id', 'hung_up_by',
         'amount_spent', 'recording_url', 'call_type_id', 'created_at', 'updated_at',
-        'sid', 'unique_call_id', 'from', 'user_response_time', 'completed_at'
+        'sid', 'unique_call_id', 'from', 'user_response_time', 'ringing_duration', 'completed_at'
     ];
 
     protected array $specialFilters = [
@@ -43,16 +46,51 @@ class WebCallsAPIController extends Controller
         'disposition' => 'applyDispositionFilter',
     ];
 
+    protected array $columnsWithJoins = [
+        'vertical',
+        'disposition',
+        'agent_name',
+    ];
+
     public function index(Request $request)
     {
         $query = Call::with('user.roles', 'callType', 'client');
 
-        // Apply sorting
-        $sortColumn = $request->input('sort_column', 'created_at');
+        // ringing_duration is a custom attribute, therefore it's not available in the database table
+        // Had to use raw queries to get it to work
+        if($request->input('sort_column') === 'ringing_duration'){
+            $query->select('*', DB::raw('IFNULL(TIMESTAMPDIFF(SECOND, created_at, user_response_time), 20) AS ringing_duration'));
+        }
+
+        // Apply sorting for columns with or without joins
+        if(in_array($request->input('sort_column'), $this->columnsWithJoins, true)){
+            $sortColumn = $request->input('sort_column', 'calls.created_at');
+        }else{
+            $sortColumn = $request->input('sort_column', 'created_at');
+        }
         $sortDirection = $request->input('sort_direction', 'desc');
+
         if (in_array($sortColumn, $this->supportedSortColumns, true)) {
             $sortDirection = $sortDirection === 'asc' ? 'asc' : 'desc';
             $query->orderBy($sortColumn, $sortDirection);
+
+        // apply joins to columns with relationships
+        }else if($sortColumn === 'disposition'){
+            $query->join('clients', 'clients.call_id', '=', 'calls.id')
+                ->orderBy('clients.status', $sortDirection)
+                ->select('calls.*', 'clients.call_id AS clients_call_id', 'clients.status');
+
+        // apply joins to columns with relationships
+        }else if($sortColumn === 'agent_name'){
+            $query->join('users', 'users.id', '=', 'calls.user_id')
+                ->orderBy('users.first_name', $sortDirection)
+                ->select('calls.*', 'users.id AS users_id', 'users.first_name');
+
+        // apply joins to columns with relationships
+        }else if($sortColumn === 'vertical'){
+            $query->join('call_types', 'call_types.id', '=', 'calls.call_type_id')
+                ->orderBy('call_types.type', $sortDirection)
+                ->select('calls.*', 'call_types.id AS call_types_id', 'call_types.type');
         }
 
         $operatorMap = [
@@ -84,8 +122,21 @@ class WebCallsAPIController extends Controller
 
         // Apply date filters
         if ($startDate && $endDate) {
-            $query->whereDate('created_at', '>=', $startDate)
-            ->whereDate('created_at', '<=', $endDate);
+            if(in_array($request->input('sort_column'), $this->columnsWithJoins, true)){
+                $query->whereDate('calls.created_at', '>=', $startDate)
+                    ->whereDate('calls.created_at', '<=', $endDate);
+            }else{
+                $query->whereDate('created_at', '>=', $startDate)
+                    ->whereDate('created_at', '<=', $endDate);
+            }
+
+        }else if(empty($startDate) && count($filters) === 0){
+            // if filters and start date are empty, apply default filters
+            if(in_array($request->input('sort_column'), $this->columnsWithJoins, true)){
+                $query->whereDate('calls.created_at', '>=', $startDate);
+            }else{
+                $query->whereDate('created_at', '>=', $startDate);
+            }
         }
 
         Log::debug('Filters: ', [
@@ -199,6 +250,5 @@ class WebCallsAPIController extends Controller
         }catch (\Exception $e) {
             return BaseService::tryCatchException($e);
         }
-
     }
 }
