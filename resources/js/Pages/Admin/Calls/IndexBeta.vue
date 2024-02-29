@@ -814,10 +814,9 @@ const applyCallFiltersToSummary = () => {
     console.log("Grouped Publisher Names before filter", callsGroupedByPublisherName.value);
     console.log("Maximised calls grouped by user before apply", maxmizedCallsGroupedByUser.value);
 
-
     // Populate grouped calls when filter button is clicked
     maxmizedCallsGroupedByUser.value = Object.fromEntries(callsGroupedByUserArray);
-    minimizedCallsGroupedByUser.value = Object.entries(props.callsGroupedByUser).slice(0, 2);
+    minimizedCallsGroupedByUser.value = Object.fromEntries(minimizedCallsGroupedByUserArray);
     callsGroupedByPublisherName.value = Object.fromEntries(callsGroupedByPublisherNameArray);
 
     // assigned grouped calls to new variables
@@ -859,10 +858,15 @@ const applyCallFiltersToSummary = () => {
 
 const removeFiltersForSummary = () => {
     //populate maximized and minimized calls after removing the filter
-    minimizedCallsGroupedByUserArray.value = Object.entries(props.callsGroupedByUser).slice(0, 2);
-    console.log("Minimized Calls Grouped By User: ", minimizedCallsGroupedByUserArray.value)
-    maxmizedCallsGroupedByUser.value = Object.fromEntries(callsGroupedByUserArray);
     showMoreForGrouped.value = false;
+
+    minimizedCallsGroupedByUserArray = callsGroupedByUserArray.slice(0, 2);
+    minimizedCallsGroupedByUser.value = Object.fromEntries(minimizedCallsGroupedByUserArray);
+    maxmizedCallsGroupedByUser.value = Object.fromEntries(callsGroupedByUserArray);
+
+    callsGroupedByPublisherName.value = Object.fromEntries(callsGroupedByPublisherNameArray);
+
+    // console.log("Minimized Calls Grouped By User: ", minimizedCallsGroupedByUserArray.value);
 
     // reset total calls and revenue
     getTotalCalls.value = props.totalCalls;
@@ -1170,7 +1174,7 @@ const getAutoCompleteFilterOptions = async (keyword) => {
           </div>
 
           <button
-              class="rounded shadow mr-2 px-3 py-1 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md flex items-center text-sm"
+              class="rounded shadow mr-2 px-3 py-1 bg-gray-100 hover:bg-gray-50 text-gray-800 text-md flex items-center font-extrabold text-lg font-sans"
               @click.prevent="showNewFilterModal = true"
           >
               + Add Filter
@@ -1430,8 +1434,7 @@ const getAutoCompleteFilterOptions = async (keyword) => {
                     'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',
                   ]"
               >
-                  <div class="overflow-hidden bg-white sm:rounded-lg">
-
+                  <div class="overflow-hidden bg-white sm:rounded-lg height-600">
                       <!--Grouped Agent calls-->
                       <div class="flex justify-end">
                           <Popover class="relative mr-2">
@@ -1482,22 +1485,9 @@ const getAutoCompleteFilterOptions = async (keyword) => {
                                   >
                                       {{ column.label }}
                                   </th>
-
-<!--                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Total Calls</th>-->
-<!--                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Paid Calls</th>-->
-<!--                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Revenue Earned</th>-->
-<!--                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">-->
-<!--                                      Revenue Per Call-->
-<!--                                  </th>-->
-<!--                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">-->
-<!--                                      Total Call Length-->
-<!--                                  </th>-->
-<!--                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">-->
-<!--                                      Average Call Length-->
-<!--                                  </th>-->
                               </tr>
                               </thead>
-                              <tbody>
+                              <tbody v-if="loadedCalls.length > 0">
                                   <tr
                                       v-for="(userData, userId) in groupedCalls"
                                       :key="userId"
@@ -1511,39 +1501,6 @@ const getAutoCompleteFilterOptions = async (keyword) => {
                                           v-text="renderColumn(column, userData)"
                                       >
                                       </td>
-
-<!--                                      <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
-<!--                                          <Link-->
-<!--                                              :href="`/admin/customer/detail/${userId}`"-->
-<!--                                              class="text-blue-400 hover:text-blue-500 underline"-->
-<!--                                          >-->
-<!--                                              {{ userData.agentName }}-->
-<!--                                          </Link>-->
-<!--                                      </td>-->
-<!--                                      <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
-<!--                                          {{ userData.totalCalls }}-->
-<!--                                      </td>-->
-<!--                                      <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
-<!--                                          {{ userData.paidCalls }}-->
-<!--                                      </td>-->
-<!--                                      <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
-<!--                                          ${{ userData.revenueEarned }}-->
-<!--                                      </td>-->
-<!--                                      <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
-<!--                                          ${{ userData.revenuePerCall.toFixed(2) }}-->
-<!--                                      </td>-->
-<!--                                      <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
-<!--                                          {{-->
-<!--                                              String(Math.floor(userData.totalCallLength / 60)).padStart(2, "0") +-->
-<!--                                              ":" +-->
-<!--                                              String(userData.totalCallLength % 60).padStart(2, "0")-->
-<!--                                          }}-->
-<!--                                      </td>-->
-<!--                                      <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
-<!--                                          {{ userData.averageCallLength.toFixed(2) }} sec-->
-<!--                                      </td>-->
-<!--                                      <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">-->
-<!--                                      </td>-->
                                   </tr>
 
                                   <tr class="bg-gray-100 border-b" v-if="showMoreForGrouped">
@@ -1585,10 +1542,18 @@ const getAutoCompleteFilterOptions = async (keyword) => {
 <!--                                      ></td>-->
 <!--                                      <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"></td>-->
                                   </tr>
+
+                              </tbody>
+                              <tbody v-else>
+                                <tr>
+                                    <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap text-center text-lg" colspan="8">
+                                        No data available
+                                    </td>
+                                </tr>
                               </tbody>
                           </table>
 
-                          <div class="flex justify-center mt-4">
+                          <div v-if="loadedCalls.length > 0" class="flex justify-center mt-4">
                               <button
                                   @click.prevent="showMoreForGrouped = !showMoreForGrouped"
                                   class="bg-gray-200 hover:bg-gray-100 text-gray-800 cursor-pointer px-4 py-2 text-sm rounded-md flex items-center"
@@ -1597,6 +1562,7 @@ const getAutoCompleteFilterOptions = async (keyword) => {
                                   <span v-else>Show More</span>
                               </button>
                           </div>
+
                       </div>
                   </div>
               </TabPanel>
@@ -1607,7 +1573,7 @@ const getAutoCompleteFilterOptions = async (keyword) => {
                     'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',
                   ]"
               >
-                  <div class="overflow-hidden bg-white sm:rounded-lg">
+                  <div class="overflow-hidden bg-white sm:rounded-lg" :class="{'height-600': loadedCalls.length <= 14}">
                       <!--Grouped Publishers-->
                       <div class="flex justify-end">
                           <Popover class="relative mr-2">
@@ -1616,7 +1582,7 @@ const getAutoCompleteFilterOptions = async (keyword) => {
                                       type="button"
                                       class="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200"
                                   >
-                                      Show Agent Columns
+                                      Show Publisher Columns
                                   </button>
                               </PopoverButton>
 
@@ -1674,7 +1640,7 @@ const getAutoCompleteFilterOptions = async (keyword) => {
 <!--                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Actions</th>-->
                               </tr>
                               </thead>
-                              <tbody>
+                              <tbody v-if="loadedCalls.length > 0">
                                 <tr
                                   v-for="(publisher, index) in callsGroupedByPublisherName"
                                   :key="index"
@@ -1756,6 +1722,13 @@ const getAutoCompleteFilterOptions = async (keyword) => {
 <!--                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"></td>-->
                               </tr>
                               </tbody>
+                                <tbody v-else>
+                                    <tr>
+                                        <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap text-center text-lg" colspan="8">
+                                            No data available
+                                        </td>
+                                    </tr>
+                                </tbody>
                           </table>
 
 <!--                          <div class="flex justify-center mt-4">-->
@@ -1957,24 +1930,8 @@ const getAutoCompleteFilterOptions = async (keyword) => {
                           Export
                       </button>
                   </a>
-
-                <!-- <Popover class="relative">
-                  <PopoverButton>
-                    <button
-                      type="button"
-                      class="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200"
-                    >
-                      Filters
-                    </button>
-                  </PopoverButton>
-
-                  <PopoverPanel class="absolute z-10 -left-20">
-                    <div class="border border-gray-100 p-2 shadow bg-white mt-2"></div>
-                  </PopoverPanel>
-                </Popover> -->
               </div>
             </div>
-
           </div>
 
           <div class="overflow-x-auto">
@@ -1992,9 +1949,7 @@ const getAutoCompleteFilterOptions = async (keyword) => {
                     <div class="flex items-center">
                       <span>{{ column.label }}</span>
 
-                      <span
-                        v-if="column.sortable && sortColumn && sortColumn === column.name"
-                      >
+                      <span v-if="column.sortable && sortColumn && sortColumn === column.name">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -2033,7 +1988,7 @@ const getAutoCompleteFilterOptions = async (keyword) => {
                   <th scope="col" class="px-4 py-3 whitespace-nowrap">Actions</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody v-if="loadedCalls.length > 0">
                 <tr
                   class="border-b hover:bg-gray-100"
                   v-for="(call, index) in loadedCalls"
@@ -2114,6 +2069,13 @@ const getAutoCompleteFilterOptions = async (keyword) => {
                     </svg>
 
                   </td>
+                </tr>
+              </tbody>
+              <tbody v-else>
+                <tr>
+                    <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap text-center text-lg" colspan="8">
+                        No data available
+                    </td>
                 </tr>
               </tbody>
             </table>

@@ -6,7 +6,6 @@ use App\Models\Call;
 use App\Models\User;
 use App\Models\Client;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class ClientsAndCallsSeeder extends Seeder
 {
