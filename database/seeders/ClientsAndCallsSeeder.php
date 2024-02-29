@@ -6,7 +6,6 @@ use App\Models\Call;
 use App\Models\User;
 use App\Models\Client;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class ClientsAndCallsSeeder extends Seeder
 {
@@ -17,7 +16,6 @@ class ClientsAndCallsSeeder extends Seeder
     public function run(): void
     {
         $specificUserId = User::whereEmail('testUser@example.com')->firstOrFail()->id;
-
         $numberOfClientsAndCalls = random_int(20, 80); // This will generate a random number of calls between 20 and 80
 
         Call::factory($numberOfClientsAndCalls)
