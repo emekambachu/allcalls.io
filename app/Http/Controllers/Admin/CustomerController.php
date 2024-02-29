@@ -357,6 +357,7 @@ class CustomerController extends Controller
     }
     public function update(Request $request, $id)
     {
+        // dd($request);
         $user = User::find($id);
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
@@ -368,6 +369,7 @@ class CustomerController extends Controller
                 'max:255',
                 Rule::unique('users', 'email')->ignore($id),
             ],
+            'password' => 'confirmed', Password::defaults(),
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -375,6 +377,7 @@ class CustomerController extends Controller
                 'errors' => $validator->errors(),
             ], 400);
         }
+        // dd($request);
         if ($user->phone !== $request->phone) {
             $phoneValidator = Validator::make($request->all(), [
                 'phone_code' => ['required', 'regex:/^\+(?:[0-9]){1,4}$/'],
@@ -388,10 +391,12 @@ class CustomerController extends Controller
                 ], 400);
             }
 
+            
             $user->update([
                 'phone_country' => $request->phone_country,
                 'phone_code' => $request->phone_code,
                 'phone' => $request->phone,
+                'password' => $request->password ? Hash::make($request->password) : $user->password,
             ]);
         }
         try {
@@ -433,6 +438,7 @@ class CustomerController extends Controller
                 'last_name' => $request->last_name,
                 'email' => $request->email,
                 'balance' => isset($request->balance) ? $request->balance : 0,
+                'password' => $request->password ? Hash::make($request->password) : $user->password,
             ]);
             // check roles user exix
             // $rolesUser = DB::table('role_user')->where('user_id', $user->id)->exists();

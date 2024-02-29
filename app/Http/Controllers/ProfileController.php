@@ -158,7 +158,7 @@ class ProfileController extends Controller
 
         UserCallTypeState::updateUserCallTypeState($user, $incomingData);
 
-        return Redirect::route('profile.edit')->with('message', 'Profile updated successfully.');
+        return Redirect::route('profile.view')->with('message', 'Profile updated successfully.');
     }
 
 //    public function api_update(ProfileUpdateRequest $request): \Illuminate\Http\JsonResponse

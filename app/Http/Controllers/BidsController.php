@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Bid;
 use App\Models\CallType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class BidsController extends Controller
 {
@@ -22,6 +23,6 @@ class BidsController extends Controller
             ]);
         }
 
-        return back();
+        return Redirect::route('profile.view')->with('message', 'Bids updated successfully.');
     }
 }
