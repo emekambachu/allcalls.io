@@ -19,7 +19,7 @@ const props = defineProps({
         class="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
       >
         <div
-          class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto" 
+          class="max-w-sm p-6 bg-custom-darksky rounded-lg shadow overflow-auto"
         >
           <p class="mb-1 text-sm text-gray-300">Total Calls (Past 7 Days)</p>
           <h2
@@ -63,7 +63,7 @@ const props = defineProps({
       </div>
     </div>
 
-    
+
 
     <section v-if="transactions.data.length" class="p-3">
       <div class="mx-auto max-w-screen-xl sm:px-12">
@@ -102,11 +102,11 @@ const props = defineProps({
                     ).padStart(2, "0")
                   }}
                   </td>
-              
+
                   <th class="text-gray-600 px-4 py-3">{{ call.call_taken }}</th>
                   <td class="text-gray-600 px-4 py-3">{{ call.amount_spent }}</td>
                   <td class="text-gray-600 px-4 py-3">{{ call.call_type.type }}</td>
-                  <td 
+                  <td
                     class="text-gray-700 px-4 py-3 flex items-center justify-end"
                   >
 

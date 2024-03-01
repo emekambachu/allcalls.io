@@ -1,6 +1,7 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Edit from "@//Pages/Admin/User/Edit.vue";
+import ResetPassword from "@//Pages/Admin/User/ResetPassword.vue";
 import { Head, router, usePage, useForm } from "@inertiajs/vue3";
 import { ref } from "vue";
 import { toaster } from "@/helper.js";
@@ -55,13 +56,22 @@ let paginate = (url) => {
 
 let showModal = ref(false);
 let userDetail = ref(null);
+let userId = ref(null);
 let currentPage = ref(null);
+let showResetPasswordModal = ref(false);
 
 let openClientModal = (user, page) => {
   userDetail.value = user;
   currentPage.value = page;
   showModal.value = true;
 };
+
+let openClientPasswordResetModal = (id, page) => {
+    userId.value = id;
+    currentPage.value = page;
+    showResetPasswordModal.value = true;
+};
+
 let formatMoney = (amount) => {
   return parseFloat(amount)
     .toFixed(2)
@@ -171,15 +181,31 @@ let dateFormat = (data) => {
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
                     </a>
-                    <button @click="openClientModal(user, users.current_page)"
-                      class="inline-flex items-center mx-2 p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
-                      type="button">
+
+                  <button @click="openClientModal(user, users.current_page)"
+                          class="inline-flex items-center mx-2 p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
+                          type="button">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="w-4 h-4">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                          d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                           stroke="currentColor" class="w-4 h-4">
+                          <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                       </svg>
-                    </button>
+                  </button>
+
+                  <button @click="openClientPasswordResetModal(user.id, users.current_page)"
+                          class="inline-flex items-center mx-2 p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
+                          type="button">
+                      <svg fill="#000000" class="w-4 h-4"  version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 330 330" xml:space="preserve">
+
+                          <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+
+                          <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+
+                          <g id="SVGRepo_iconCarrier"> <g id="XMLID_509_"> <path id="XMLID_510_" d="M65,330h200c8.284,0,15-6.716,15-15V145c0-8.284-6.716-15-15-15h-15V85c0-46.869-38.131-85-85-85 S80,38.131,80,85v45H65c-8.284,0-15,6.716-15,15v170C50,323.284,56.716,330,65,330z M180,234.986V255c0,8.284-6.716,15-15,15 s-15-6.716-15-15v-20.014c-6.068-4.565-10-11.824-10-19.986c0-13.785,11.215-25,25-25s25,11.215,25,25 C190,223.162,186.068,230.421,180,234.986z M110,85c0-30.327,24.673-55,55-55s55,24.673,55,55v45H110V85z"/> </g> </g>
+
+                        </svg>
+                  </button>
+
                     <button @click="deleteUser(user.id)">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-4 h-4 text-red-600 mr-1">
@@ -235,6 +261,12 @@ let dateFormat = (data) => {
       <Edit :showModal="showModal" :userDetail="userDetail" :currentPage="currentPage" @close="showModal = false"
         :callTypes="callTypes" :states="states" :user_type="'Customer'" :roles="roles" :route="'/admin/customer'"></Edit>
     </Modal>
+
+      <Modal :show="showResetPasswordModal" @close="showResetPasswordModal = false">
+          <ResetPassword :showModal="showResetPasswordModal" :userId="userId" :currentPage="currentPage" @close="showResetPasswordModal = false"
+            :user_type="'Customer'"></ResetPassword>
+      </Modal>
+
     <DeleteModal :isLoading="isLoading" @actionToDeleteUser="actionToDeleteUser" :deleteUserModal="deleteUserModal"
       @close="deleteUserModal = false" :confirmMessage="confirmMessage" />
   </AuthenticatedLayout>
