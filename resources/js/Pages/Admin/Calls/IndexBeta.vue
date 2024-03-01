@@ -485,7 +485,7 @@ console.log("Mini Calls Grouped By User: ", minimizedCallsGroupedByUser.value);
 console.log("Max Calls Grouped By User: ", maxmizedCallsGroupedByUser.value);
 
 let groupedCalls = computed(() => {
-  if (showMoreForGrouped.value) {
+  if (showMoreForGrouped.value === true) {
     return maxmizedCallsGroupedByUser.value;
   } else {
     return minimizedCallsGroupedByUser.value;
@@ -835,12 +835,16 @@ const applyCallFiltersToSummary = () => {
 
     // Iterate loadedCalls first and then grouped calls to match the both user ids
     // if matched add the user group to the maxmizedCallsGroupedByUser
+    let count = 0;
     for (const [key, value] of getAllCalls.value.entries()) {
 
         Object.values(unfilteredGroupedCalls).forEach(group => {
             if (group.userId === value.user_id) {
                 maxmizedCallsGroupedByUser.value[group.userId] = group;
-                minimizedCallsGroupedByUser.value[group.userId] = group;
+                if(count < 2){
+                    minimizedCallsGroupedByUser.value[group.userId] = group;
+                }
+                count++;
             }
         });
 
