@@ -90,7 +90,7 @@ class CustomerController extends Controller
                     });
                 }
             })
-           
+
             ->with(['states', 'roles', 'callTypes'])
             ->orderBy("users.created_at", "DESC")
             ->paginate(100);
@@ -277,7 +277,7 @@ class CustomerController extends Controller
                 }
             }
         }
-        
+
 
 
         $transactions = Transaction::where(function ($query) use ($request) {
@@ -355,6 +355,38 @@ class CustomerController extends Controller
             'activities' => $activities
         ]);
     }
+
+    public function resetPassword(Request $request, $id) {
+        $validator = Validator::make($request->all(), [
+            'password' => ['required', 'confirmed', Password::defaults()]
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors(),
+            ], 400);
+        }
+
+        $user = User::find($id);
+
+
+
+        try {
+            $user->update([
+                'password' => $request->password ? Hash::make($request->password) : $user->password,
+            ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Customer password updated successfully.',
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e], 500);
+        }
+
+
+    }
+
     public function update(Request $request, $id)
     {
         // dd($request);
@@ -391,12 +423,11 @@ class CustomerController extends Controller
                 ], 400);
             }
 
-            
+
             $user->update([
                 'phone_country' => $request->phone_country,
                 'phone_code' => $request->phone_code,
                 'phone' => $request->phone,
-                'password' => $request->password ? Hash::make($request->password) : $user->password,
             ]);
         }
         try {
@@ -438,7 +469,6 @@ class CustomerController extends Controller
                 'last_name' => $request->last_name,
                 'email' => $request->email,
                 'balance' => isset($request->balance) ? $request->balance : 0,
-                'password' => $request->password ? Hash::make($request->password) : $user->password,
             ]);
             // check roles user exix
             // $rolesUser = DB::table('role_user')->where('user_id', $user->id)->exists();
@@ -461,7 +491,6 @@ class CustomerController extends Controller
                 'message' => 'Customer updated successfully.',
             ], 200);
         } catch (Exception $e) {
-            dd($e);
             return response()->json(['error' => $e], 500);
         }
     }
