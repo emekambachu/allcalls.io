@@ -47,7 +47,7 @@ let close = () => {
 let isLoading = ref(false);
 let saveChanges = () => {
   isLoading.value = true;
-  router.visit(`${props.route}/${form.value.id}`, {
+  router.visit(`${props.route}/${form.value.client_id}`, {
     method: "PATCH",
     data: form.value,
   });
@@ -55,7 +55,17 @@ let saveChanges = () => {
 };
 if(props.editScreen){
   console.log('ClientDetail',props.ClientDetail);
-  form.value = props.ClientDetail;
+  form.value.first_name = props.ClientDetail.first_name;
+  form.value.last_name = props.ClientDetail.last_name;
+  form.value.unlocked = props.ClientDetail.unlocked;
+  form.value.phone = props.ClientDetail.phone;
+  form.value.dob = props.ClientDetail.dob;
+  form.value.email = props.ClientDetail.email;
+  form.value.address = props.ClientDetail.address;
+  form.value.state = props.ClientDetail.state;
+  form.value.zipCode = props.ClientDetail.zipCode;
+  form.value.status = props.ClientDetail.status;
+  form.value.client_id = props.ClientDetail.id;
 }
 let openEdit = () => {
   // editScreen.value = true;
