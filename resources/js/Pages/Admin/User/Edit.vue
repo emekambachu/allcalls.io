@@ -112,19 +112,6 @@ let changeBalance = (newBalance) => {
 let validateEmail = (email) => {
   return /\S+@\S+\.\S+/.test(email); // Simple regex for email validation
 };
-let validatePassword = (password) => {
-  console.log('password', password);
-  firstStepErrors.value.password = [];
-  firstStepErrors.value.password_confirmation = [];
-  if (password !== form.password_confirmation) {
-    isLoading.value = false
-    firstStepErrors.value.password = ["Password doesn't match check again"];
-    firstStepErrors.value.password_confirmation = ["Password doesn't match check again"];
-    return false
-  }else{
-    return true
-  }
-}
 
 const isLoading = ref(false);
 let saveChanges = () => {
@@ -134,7 +121,7 @@ let saveChanges = () => {
   } else {
     form.roles = "";
   }
-  if (validateEmail(form.email) && validatePassword(form.password)) {
+  if (validateEmail(form.email)) {
     if (changeBalance(form.balance) && !balanceChange.value) {
       balanceChange.value = true;
       isLoading.value = false;
@@ -408,36 +395,13 @@ const closeDropDown = () => {
             <div v-if="firstStepErrors.balance" class="text-red-500" v-text="firstStepErrors.balance[0]"></div>
           </div>
 
-          <header class="mt-4">
-            <h2 class="text-lg font-medium text-gray-700">Update Password</h2>
-        </header>
-
           <div class="mt-4" v-if="balanceChange">
             <GuestInputLabel for="comment" value="comment" />
             <GuestTextInput id="comment" type="text" class="mt-1 block w-full" v-model="form.comment" required />
             <div v-if="firstStepErrors.comment" class="text-red-500" v-text="firstStepErrors.comment"></div>
           </div>
-
-          <div class="mt-4"> 
-            <GuestInputLabel for="password" value="New Password" />
-
-            <GuestTextInput id="password" ref="passwordInput" v-model="form.password" type="password" class="mt-1 block w-full"
-              autocomplete="new-password" />
-
-            <div v-if="firstStepErrors.password" class="text-red-500" v-text="firstStepErrors.password[0]"></div>
-          </div>
-
-          <div class="mt-4">
-            <GuestInputLabel for="password_confirmation" value="Confirm Password" />
-
-            <GuestTextInput id="password_confirmation" v-model="form.password_confirmation" type="password"
-              class="mt-1 block w-full" autocomplete="new-password" />
-
-            <div v-if="firstStepErrors.password_confirmation" class="text-red-500"
-              v-text="firstStepErrors.password_confirmation[0]"></div>
-
-          </div>
         </div>
+
         <div v-if="tab == 1">
           <div>
             <div v-for="callType in form.call_types" :key="callType.id" class="mb-4">
@@ -471,7 +435,7 @@ const closeDropDown = () => {
           </div>
         </div>
 
-      
+
         <div v-if="tab == 2">
           <div>
             <div class="mb-4">
