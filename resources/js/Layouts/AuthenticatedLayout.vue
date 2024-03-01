@@ -22,7 +22,7 @@ let page = usePage();
 
 let showLowBalanceModal = ref(false);
 if (page.props.auth.role !== "admin" && page.props.auth.user.balance < 40 && page.props.auth.user.basic_training == '1' && page.props.auth.user.agent_access_status === "Live"  && !page.props.auth.user.low_balance_call_scheduled
-&& !(page.props.auth.user_level.name.startsWith("Internal"))
+&& !(page.props.auth.user_level.name.startsWith("AC"))
 ) {
   showLowBalanceModal.value = true;
 }
