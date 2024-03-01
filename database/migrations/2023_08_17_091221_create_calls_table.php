@@ -39,8 +39,8 @@ return new class extends Migration
     public function down(): void
     {
         // comment foreign key checks after testing the migration
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+        //DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::dropIfExists('calls');
-        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+        //DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 };
