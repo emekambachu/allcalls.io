@@ -23,8 +23,9 @@ class TextMessageChannel
     
         $accountId = env('COMMIO_ACCOUNT_ID'); // Replace with your actual account ID
         $authString = env('COMMIO_AUTH_STRING'); // Your encoded auth string
-    
-        $userPhone = $this->formatPhoneNumber($notifiable->phone);
+        
+        $userPhone = $data['toDID'];
+        // $userPhone = $this->formatPhoneNumber($notifiable->phone);
         Log::info('Sending SMS via TextMessageChannel', ['to' => $userPhone, 'from' => $data['fromDID']]);
         
         try {

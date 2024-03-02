@@ -100,4 +100,33 @@ class ZoomMeetingNotificationController extends Controller
        
         return response()->json(['message' => 'Notifications queued for sending.']);
     }
+
+
+    public function sendBatchTextMessages(Request $request)
+    {
+        $request->validate([
+            'textMessageString' => 'required|string',
+            'numbers' => 'required|array',
+            'numbers.*' => 'required|string', // Validate each item in the array
+        ]);
+
+        $textMessageString = $request->textMessageString;
+        $numbers = collect($request->numbers); // Convert to a collection for easy manipulation
+        $batchSize = 50; // Define the batch size
+        $sleepSeconds = 2; // Define the sleep duration between batches
+
+        // Process each batch of numbers
+        $numbers->chunk($batchSize)->each(function ($batch) use ($textMessageString, $sleepSeconds) {
+            foreach ($batch as $number) {
+                // Using Laravel's "on-demand" notifications for an anonymous notifiable
+                Notification::send($batch, (new TextMessageNotification($textMessageString, $number))->onQueue('text-messages'));
+
+            }
+
+            // Sleep for specified seconds to prevent rate limit issues
+            sleep($sleepSeconds);
+        });
+
+        return response()->json(['message' => 'Text messages queued for sending.']);
+    }
 }
