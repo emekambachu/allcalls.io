@@ -285,11 +285,16 @@ if (page.props.flash.message) {
 <template>
   <Head title="Send Push Notifications" />
   <AuthenticatedLayout>
-    <template #header>
+    <!-- <template #header>
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">
         Send Push Notifications
       </h2>
+    </template> -->
+
+    <template #header>
+      <h2 class="text-2xl font-semibold">Online Agents</h2>
     </template>
+    
 
     <section class="py-8">
       <div class="container-fluid px-4">
