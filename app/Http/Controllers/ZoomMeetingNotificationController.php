@@ -104,6 +104,11 @@ class ZoomMeetingNotificationController extends Controller
 
     public function sendBatchTextMessages(Request $request)
     {
+        // Log the incoming request data
+        Log::info('Received request for sending batch text messages', [
+            'requestPayload' => $request->all(), // Logs all request input data
+        ]);
+        
         $request->validate([
             'textMessageString' => 'required|string',
             'numbers' => 'required|array',
@@ -115,15 +120,18 @@ class ZoomMeetingNotificationController extends Controller
         $batchSize = 50; // Define the batch size
         $sleepSeconds = 2; // Define the sleep duration between batches
 
-        // Process each batch of numbers
-        $numbers->chunk($batchSize)->each(function ($batch) use ($textMessageString, $sleepSeconds) {
-            foreach ($batch as $number) {
-                // Using Laravel's "on-demand" notifications for an anonymous notifiable
-                Notification::send($batch, (new TextMessageNotification($textMessageString, $number))->onQueue('text-messages'));
+        Log::info('Starting to send batch text messages', ['totalNumbers' => $numbers->count()]);
 
+        // Process each batch of numbers
+        $numbers->chunk($batchSize)->each(function ($batch, $index) use ($textMessageString, $sleepSeconds) {
+            Log::info('Processing text message batch', ['batchIndex' => $index + 1, 'batchSize' => count($batch)]);
+
+            foreach ($batch as $number) {
+                Notification::send($batch, (new TextMessageNotification($textMessageString, $number))->onQueue('text-messages'));
             }
 
-            // Sleep for specified seconds to prevent rate limit issues
+            Log::info('Completed text message batch', ['batchIndex' => $index + 1]);
+            Log::info('Sleeping between batches', ['sleepSeconds' => $sleepSeconds]);
             sleep($sleepSeconds);
         });
 
