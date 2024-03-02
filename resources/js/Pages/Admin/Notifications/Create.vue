@@ -285,20 +285,15 @@ if (page.props.flash.message) {
 <template>
   <Head title="Send Push Notifications" />
   <AuthenticatedLayout>
-    <!-- <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        Send Push Notifications
-      </h2>
-    </template> -->
-    <!-- <section class="py-8"> -->
+    <!-- <template #header> -->
+      
+    <!-- </template> -->
 
-    <template #header>
-      <h2 class="text-2xl font-semibold">Online Agents</h2>
-    </template>
-    
-
+    <section class="py-8">
       <div class="container-fluid px-4">
-
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+          Send Push Notifications
+        </h2>
         <div class="mb-4">
           <!-- Display Selected Users -->
           <div class="mt-4 flex flex-wrap">
@@ -502,7 +497,7 @@ if (page.props.flash.message) {
           </PrimaryButton>
         </div>
       </div>
-    <!-- </section> -->
+    </section>
   </AuthenticatedLayout>
 </template>
 
