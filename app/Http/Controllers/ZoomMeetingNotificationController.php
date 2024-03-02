@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use App\Notifications\EmailNotification;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Notification;
+use App\Notifications\TextMessageNotification;
 
 class ZoomMeetingNotificationController extends Controller
 {
@@ -61,12 +62,24 @@ class ZoomMeetingNotificationController extends Controller
         
             try {
 
+                // Existing check for sending email notifications
                 if ($sendEmail && $emailData) {
                     Log::info('EmailNotification queued', ['time' => now()->toDateTimeString()]);
                     // Send email notifications on 'emails' queue
                     Notification::send($batch, (new EmailNotification($emailData))->onQueue('emails'));
-                } else {
-                    Notification::send($batch, new ZoomMeeting($title, $message, $sendNotification, $textMessageString, $zoomLink));
+                }
+                
+                // Check if sendNotification is true before sending the ZoomMeeting notification
+                if ($sendNotification) {
+                    Log::info('ZoomMeetingNotification queued', ['time' => now()->toDateTimeString()]);
+                    Notification::send($batch, new ZoomMeeting($title, $message, $zoomLink)); // Assuming 'default' or specify your queue
+                }
+
+                // Check and send text messages separately
+                if (!empty($textMessageString)) {
+                    Log::info('TextMessageNotification queued', ['time' => now()->toDateTimeString()]);
+                    // Send text message notifications on 'text-messages' queue
+                    Notification::send($batch, (new TextMessageNotification($textMessageString))->onQueue('text-messages'));
                 }
                 
                 $batchEnd = microtime(true); // Get end time for the batch
@@ -82,7 +95,7 @@ class ZoomMeetingNotificationController extends Controller
             }
 
              // Delay for 2 seconds before processing the next batch
-            sleep(1);
+            sleep(2);
         }
        
         return response()->json(['message' => 'Notifications queued for sending.']);

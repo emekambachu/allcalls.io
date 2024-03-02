@@ -202,14 +202,14 @@ return [
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
             ],
-            'supervisor-email' => [
-                'connection' => 'redis',
-                'queue' => ['emails'], // Your new queue name
-                'balance' => 'simple', // Or 'auto', depending on your needs
-                'processes' => 3, // Number of processes to handle jobs concurrently
-                'tries' => 5,
-                'maxJobs' => 5,
-            ],
+            // 'supervisor-email' => [
+            //     'connection' => 'redis',
+            //     'queue' => ['emails'], // Your new queue name
+            //     'balance' => 'simple', // Or 'auto', depending on your needs
+            //     'processes' => 3, // Number of processes to handle jobs concurrently
+            //     'tries' => 5,
+            //     'maxJobs' => 5,
+            // ],
         ],
 
         'staging' => [
@@ -223,6 +223,14 @@ return [
             'supervisor-email' => [
                 'connection' => 'redis',
                 'queue' => ['emails'], // Your new queue name
+                'balance' => 'simple', // Or 'auto', depending on your needs
+                'processes' => 3, // Number of processes to handle jobs concurrently
+                'tries' => 5,
+                'maxJobs' => 5,
+            ],
+            'supervisor-text' => [
+                'connection' => 'redis',
+                'queue' => ['text-messages'], // Your new queue name
                 'balance' => 'simple', // Or 'auto', depending on your needs
                 'processes' => 3, // Number of processes to handle jobs concurrently
                 'tries' => 5,

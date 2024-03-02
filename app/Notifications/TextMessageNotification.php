@@ -3,20 +3,24 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Support\Facades\Redis;
+use App\Broadcasting\TextMessageChannel;
+use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
 
-class TextMessageNotification extends Notification
+class TextMessageNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
+    protected $textMessageString;
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct(string $textMessageString)
     {
         //
+        $this->textMessageString = $textMessageString;
     }
 
     /**
@@ -26,7 +30,9 @@ class TextMessageNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        $channels = [];
+        $channels[] = TextMessageChannel::class;
+        return $channels;
     }
 
     /**
@@ -49,6 +55,21 @@ class TextMessageNotification extends Notification
     {
         return [
             //
+        ];
+    }
+
+    /**
+     * Get the SMS representation of the notification.
+     *
+     * @param mixed $notifiable
+     * @return array
+     */
+    public function toTextMessage($notifiable)
+    {
+        // Format your SMS message here
+        return [
+            'fromDID' => '8006778036', // Replace with your sender's number (800) 677-8036 3073428099
+            'textMessageString' => $this->textMessageString // Your message content
         ];
     }
 }

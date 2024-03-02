@@ -484,10 +484,19 @@ if (page.props.flash.message) {
 
         <transition name="fade">
           <div v-if="sendEmail" class="mt-4">
+            <InputLabel for="emailSubject" value="Email Subject:" />
             <TextInput v-model="emailSubject" placeholder="Email Subject" class="mb-4" />
+
+            <InputLabel for="emailTitle" value="Email Title:" />
             <TextInput v-model="emailTitle" placeholder="Email Title" class="mb-4" />
+            
+            <InputLabel for="emailButtonText" value="Action Button Text" />
             <TextInput v-model="emailButtonText" placeholder="Action Button Text" class="mb-4" />
+            
+            <InputLabel for="emailButtonUrl" value="Action Button URL" />
             <TextInput v-model="emailButtonUrl" placeholder="Action Button URL" class="mb-4" />
+            
+            <InputLabel for="emailDescription" value="Email Description:" />
             <TextInput v-model="emailDescription" placeholder="Email Description" class="mb-4" />
           </div>
         </transition>
