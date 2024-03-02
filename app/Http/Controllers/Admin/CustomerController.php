@@ -90,7 +90,7 @@ class CustomerController extends Controller
                     });
                 }
             })
-           
+
             ->with(['states', 'roles', 'callTypes'])
             ->orderBy("users.created_at", "DESC")
             ->paginate(100);
@@ -277,7 +277,7 @@ class CustomerController extends Controller
                 }
             }
         }
-        
+
 
 
         $transactions = Transaction::where(function ($query) use ($request) {
@@ -355,8 +355,41 @@ class CustomerController extends Controller
             'activities' => $activities
         ]);
     }
+
+    public function resetPassword(Request $request, $id) {
+        $validator = Validator::make($request->all(), [
+            'password' => ['required', 'confirmed', Password::defaults()]
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors(),
+            ], 400);
+        }
+
+        $user = User::find($id);
+
+
+
+        try {
+            $user->update([
+                'password' => $request->password ? Hash::make($request->password) : $user->password,
+            ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Customer password updated successfully.',
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e], 500);
+        }
+
+
+    }
+
     public function update(Request $request, $id)
     {
+        // dd($request);
         $user = User::find($id);
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
@@ -368,6 +401,7 @@ class CustomerController extends Controller
                 'max:255',
                 Rule::unique('users', 'email')->ignore($id),
             ],
+            'password' => 'confirmed', Password::defaults(),
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -375,6 +409,7 @@ class CustomerController extends Controller
                 'errors' => $validator->errors(),
             ], 400);
         }
+        // dd($request);
         if ($user->phone !== $request->phone) {
             $phoneValidator = Validator::make($request->all(), [
                 'phone_code' => ['required', 'regex:/^\+(?:[0-9]){1,4}$/'],
@@ -387,6 +422,7 @@ class CustomerController extends Controller
                     'errors' => $phoneValidator->errors(),
                 ], 400);
             }
+
 
             $user->update([
                 'phone_country' => $request->phone_country,
@@ -455,7 +491,6 @@ class CustomerController extends Controller
                 'message' => 'Customer updated successfully.',
             ], 200);
         } catch (Exception $e) {
-            dd($e);
             return response()->json(['error' => $e], 500);
         }
     }

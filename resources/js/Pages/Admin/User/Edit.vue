@@ -6,6 +6,7 @@ import InputError from "@/Components/InputError.vue";
 import { router, usePage } from "@inertiajs/vue3";
 import GuestTextInput from "@/Components/GuestTextInput.vue";
 import GuestInputLabel from "@/Components/GuestInputLabel.vue";
+import InputLabel from '@/Components/InputLabel.vue';
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import { toaster } from "@/helper.js";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
@@ -296,7 +297,7 @@ const closeDropDown = () => {
               <!-- <span class="chemical-formula">{{ transactionsCount }}</span>  -->
             </button>
           </li>
-          <li @click="ChangeTab(2)" class="mr-2  " :class="{ 'active-tab': tab == 2 }" role="presentation">
+          <li @click="ChangeTab(2)" class="mr-2 ml-4 " :class="{ 'active-tab': tab == 2 }" role="presentation">
             <button
               class="inline-block py-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
               id="profile-tab" type="button" role="tab" aria-controls="profile" aria-selected="false">Roles
@@ -346,7 +347,7 @@ const closeDropDown = () => {
             <div v-if="firstStepErrors.phone" class="text-red-500" v-text="firstStepErrors.phone[0]"></div>
           </div> -->
 
-      
+
 
           <div id="dropdown_main_id" class="mt-4">
             <GuestInputLabel for="phone" value="Phone" />
@@ -360,7 +361,8 @@ const closeDropDown = () => {
                   </svg></span>
               </button>
 
-              <GuestTextInput style="border-radius: 0px 5px 5px 0px;" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" @focus="closeDropDown" id="phone" type="text"
+              <GuestTextInput style="border-radius: 0px 5px 5px 0px;"
+                onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" @focus="closeDropDown" id="phone" type="text"
                 placeholder="0000000000" class="mt-1  block w-full" v-model="form.phone" maxlength="10" minlength="10" />
 
 
@@ -382,14 +384,9 @@ const closeDropDown = () => {
             </div>
             <div v-if="firstStepErrors.phone" class="text-red-500" v-text="firstStepErrors.phone[0]"></div>
             <div v-if="firstStepErrors.phone_code" class="text-red-500" v-text="firstStepErrors.phone_code[0]"></div>
-            <div v-if="firstStepErrors.phone_country" class="text-red-500" v-text="firstStepErrors.phone_country[0]"></div>
+            <div v-if="firstStepErrors.phone_country" class="text-red-500" v-text="firstStepErrors.phone_country[0]">
+            </div>
           </div>
-
-
-
-
-
-
 
           <div class="mt-4">
             <GuestInputLabel for="balance" value="balance" />
@@ -404,6 +401,7 @@ const closeDropDown = () => {
             <div v-if="firstStepErrors.comment" class="text-red-500" v-text="firstStepErrors.comment"></div>
           </div>
         </div>
+
         <div v-if="tab == 1">
           <div>
             <div v-for="callType in form.call_types" :key="callType.id" class="mb-4">
@@ -436,6 +434,8 @@ const closeDropDown = () => {
             </div>
           </div>
         </div>
+
+
         <div v-if="tab == 2">
           <div>
             <div class="mb-4">
@@ -454,7 +454,7 @@ const closeDropDown = () => {
             </div>
           </div>
         </div>
-        <div class="flex justify-end mt-6">
+        <div class="flex justify-end mt-10">
           <PrimaryButton type="submit" @click.prevent="saveChanges">
             <global-spinner :spinner="isLoading" /> Save Changes
           </PrimaryButton>

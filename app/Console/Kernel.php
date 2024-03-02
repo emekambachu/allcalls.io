@@ -2,14 +2,15 @@
 
 namespace App\Console;
 
-use App\Models\Call;
 use http\Env;
+use App\Models\Call;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
 {
@@ -26,6 +27,7 @@ class Kernel extends ConsoleKernel
             ->timezone('America/New_York')
             ->dailyAt('05:00');
 
+        // $schedule->command('log:email-notification-count')->everyMinute();
 
         $schedule->call(function () {
             // Check the condition before executing the command
@@ -35,7 +37,7 @@ class Kernel extends ConsoleKernel
                     Artisan::call('allcalls:send-calls-to-on-script');
                 }
             }
-                })->dailyAt('23:59');
+        })->dailyAt('23:59');
     }
 
     /**

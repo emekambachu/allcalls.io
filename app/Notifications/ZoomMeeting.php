@@ -17,7 +17,7 @@ class ZoomMeeting extends Notification implements ShouldQueue
     protected $title;
     protected $message;
     protected $sendNotification;
-    protected $textMessageString;
+    // protected $textMessageString;
     protected $zoomLink;
     protected $emailData;
 
@@ -29,14 +29,15 @@ class ZoomMeeting extends Notification implements ShouldQueue
      * @param string|null $zoomLink
      * @param array|null $emailData
      */
-    public function __construct(?string $title, ?string $message, ?bool $sendNotification = false, ?string $textMessageString, ?string $zoomLink = null, ?array $emailData = null)
+    // public function __construct(?string $title, ?string $message, ?bool $sendNotification = false, ?string $textMessageString, ?string $zoomLink = null, ?array $emailData = null)
+    public function __construct(?string $title, ?string $message, ?bool $sendNotification = false, ?string $zoomLink = null)
     {
         $this->title = $title;
         $this->message = $message;
         $this->sendNotification = $sendNotification;
-        $this->textMessageString = $textMessageString;
+        // $this->textMessageString = $textMessageString;
         $this->zoomLink = $zoomLink;
-        $this->emailData = $emailData;
+        // $this->emailData = $emailData;
     }
 
     /**
@@ -53,13 +54,13 @@ class ZoomMeeting extends Notification implements ShouldQueue
             $channels[] = PushChannel::class;
         }
 
-        if ($this->textMessageString) {
-            $channels[] = TextMessageChannel::class;
-        }
+        // if ($this->textMessageString) {
+        //     $channels[] = TextMessageChannel::class;
+        // }
         
-        if ($this->emailData) {
-            $channels[] = 'mail';
-        }
+        // if ($this->emailData) {
+        //     $channels[] = 'mail';
+        // }
         return $channels;
     }
 
@@ -147,12 +148,12 @@ class ZoomMeeting extends Notification implements ShouldQueue
      * @param mixed $notifiable
      * @return array
      */
-    public function toTextMessage($notifiable)
-    {
-        // Format your SMS message here
-        return [
-            'fromDID' => '3073428099', // Replace with your sender's number
-            'textMessageString' => $this->textMessageString // Your message content
-        ];
-    }
+    // public function toTextMessage($notifiable)
+    // {
+    //     // Format your SMS message here
+    //     return [
+    //         'fromDID' => '8006778036', // Replace with your sender's number (800) 677-8036 3073428099
+    //         'textMessageString' => $this->textMessageString // Your message content
+    //     ];
+    // }
 }

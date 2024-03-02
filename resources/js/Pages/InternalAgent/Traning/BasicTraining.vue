@@ -107,7 +107,7 @@ let downloadPdf = (url) => {
 .blurred-overlay {
     backdrop-filter: blur(10px);
     /* Adjust the blur intensity as needed */
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.9);
     /* Adjust the background color and opacity as needed */
 }
 
@@ -350,7 +350,7 @@ let downloadPdf = (url) => {
             leave-to-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
             <div id="defaultModal" v-if="basicTrainingModal" tabindex="-1"
                 class="flex items-center justify-center fixed inset-0 z-50 w-full h-full overflow-x-hidden overflow-y-auto max-h-full mx-4 sm:mx-0">
-                <div class="fixed inset-0 bg-black opacity-90 blurred-overlay"></div>
+                <div class="fixed inset-0 bg-black opacity-100 blurred-overlay "></div>
 
                 <!-- This is the overlay -->
                 <div class="relative w-full py-10 modal-width  max-h-full mx-auto">
@@ -360,7 +360,7 @@ let downloadPdf = (url) => {
                                 <h1 v-for="(basicTraning, index) in basicTrainingSteps" :key="basicTraning.id"
                                     class=" text-gray-800 text-xl font-bold"> <span
                                         v-show="basicTraning.id == step && step < 12"> Basic
-                                        Training - {{ basicTraning.title }} ( {{ step }}/11 )</span> </h1>
+                                        Training - {{ basicTraning.title }} ( {{ step }}/11 ) </span> </h1>
                             </div>
                             <button v-if="unlocked" @click="close" type="button"
                                 class="text-gray-400 bg-transparent mr-2 mt-2 hover:bg-gray-200 hover:text-gray-700 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"

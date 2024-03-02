@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('internal_agent_reg_infos', function (Blueprint $table) {
+        Schema::table('internal_agent_reg_infos', static function (Blueprint $table) {
             $table->dropColumn('city_state');
             $table->dropColumn('aml_course');
             $table->dropColumn('omissions_insurance');

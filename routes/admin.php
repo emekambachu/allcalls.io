@@ -41,6 +41,8 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     // Customer
     Route::get('/customers', [CustomerController::class, 'index'])->name('admin.customer.index');
 
+    Route::post('/customers/reset-password/{id}', [CustomerController::class, 'resetPassword'])->name('admin.reset.password');
+
     Route::post('/customer/{id}', [CustomerController::class, 'update'])->name('admin.customer.update');
 
     Route::get('/customer/detail/{id}', [CustomerController::class, 'show'])->name('admin.customer.detail');

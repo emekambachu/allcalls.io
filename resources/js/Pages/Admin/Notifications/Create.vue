@@ -285,16 +285,17 @@ if (page.props.flash.message) {
 <template>
   <Head title="Send Push Notifications" />
   <AuthenticatedLayout>
-    <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        Send Push Notifications
-      </h2>
-    </template>
+    <!-- <template #header> -->
+      
+    <!-- </template> -->
 
-    <section class="py-8">
+    <section class="py-14 sm:px-6 lg:px-8 space-y-6">
       <div class="container-fluid px-4">
-
-        <div class="mb-4">
+        <h2 class="text-4xl text-custom-sky font-bold mb-6">
+          Send Notifications
+        </h2>
+        <hr class="mb-1" />
+        <div class="mb-1">
           <!-- Display Selected Users -->
           <div class="mt-4 flex flex-wrap">
             <div v-for="userId in selectedUserIds" :key="userId" class="flex items-center bg-blue-100 text-blue-800 text-sm font-semibold mr-2 mb-2 px-4 py-2 rounded-full">
@@ -483,10 +484,19 @@ if (page.props.flash.message) {
 
         <transition name="fade">
           <div v-if="sendEmail" class="mt-4">
+            <InputLabel for="emailSubject" value="Email Subject:" />
             <TextInput v-model="emailSubject" placeholder="Email Subject" class="mb-4" />
+
+            <InputLabel for="emailTitle" value="Email Title:" />
             <TextInput v-model="emailTitle" placeholder="Email Title" class="mb-4" />
+            
+            <InputLabel for="emailButtonText" value="Action Button Text" />
             <TextInput v-model="emailButtonText" placeholder="Action Button Text" class="mb-4" />
+            
+            <InputLabel for="emailButtonUrl" value="Action Button URL" />
             <TextInput v-model="emailButtonUrl" placeholder="Action Button URL" class="mb-4" />
+            
+            <InputLabel for="emailDescription" value="Email Description:" />
             <TextInput v-model="emailDescription" placeholder="Email Description" class="mb-4" />
           </div>
         </transition>
