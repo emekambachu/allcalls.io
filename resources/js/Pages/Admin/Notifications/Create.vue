@@ -289,12 +289,13 @@ if (page.props.flash.message) {
       
     <!-- </template> -->
 
-    <section class="py-8">
+    <section class="py-14 sm:px-6 lg:px-8 space-y-6">
       <div class="container-fluid px-4">
         <h2 class="text-4xl text-custom-sky font-bold mb-6">
-          Send Push Notifications
+          Send Notifications
         </h2>
-        <div class="mb-4">
+        <hr class="mb-1" />
+        <div class="mb-1">
           <!-- Display Selected Users -->
           <div class="mt-4 flex flex-wrap">
             <div v-for="userId in selectedUserIds" :key="userId" class="flex items-center bg-blue-100 text-blue-800 text-sm font-semibold mr-2 mb-2 px-4 py-2 rounded-full">
