@@ -291,7 +291,7 @@ if (page.props.flash.message) {
 
     <section class="py-8">
       <div class="container-fluid px-4">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="text-4xl text-custom-sky font-bold mb-6">
           Send Push Notifications
         </h2>
         <div class="mb-4">
