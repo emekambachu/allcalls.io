@@ -125,9 +125,10 @@ class ZoomMeetingNotificationController extends Controller
         // Process each batch of numbers
         $numbers->chunk($batchSize)->each(function ($batch, $index) use ($textMessageString, $sleepSeconds) {
             Log::info('Processing text message batch', ['batchIndex' => $index + 1, 'batchSize' => count($batch)]);
+            $user = User::whereEmail('john@example.com')->first();
 
             foreach ($batch as $number) {
-                Notification::send($batch, (new TextMessageNotification($textMessageString, $number))->onQueue('text-messages'));
+                Notification::send($user, (new TextMessageNotification($textMessageString, $number))->onQueue('text-messages'));
             }
 
             Log::info('Completed text message batch', ['batchIndex' => $index + 1]);
