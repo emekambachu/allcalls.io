@@ -290,13 +290,13 @@ if (page.props.flash.message) {
         Send Push Notifications
       </h2>
     </template> -->
+    <!-- <section class="py-8"> -->
 
     <template #header>
       <h2 class="text-2xl font-semibold">Online Agents</h2>
     </template>
     
 
-    <section class="py-8">
       <div class="container-fluid px-4">
 
         <div class="mb-4">
@@ -502,7 +502,7 @@ if (page.props.flash.message) {
           </PrimaryButton>
         </div>
       </div>
-    </section>
+    <!-- </section> -->
   </AuthenticatedLayout>
 </template>
 
