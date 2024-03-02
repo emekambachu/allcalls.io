@@ -14,15 +14,13 @@ class TextMessageNotification extends Notification implements ShouldQueue
     use Queueable;
 
     protected $textMessageString;
-    protected $toDID;
     /**
      * Create a new notification instance.
      */
-    public function __construct(string $textMessageString, string $toDID)
+    public function __construct(string $textMessageString)
     {
         //
         $this->textMessageString = $textMessageString;
-        $this->toDID = $toDID;
     }
 
     /**
@@ -71,7 +69,6 @@ class TextMessageNotification extends Notification implements ShouldQueue
         // Format your SMS message here
         return [
             'fromDID' => '8006778036', // Replace with your sender's number (800) 677-8036 3073428099
-            'toDID' => $this->toDID,
             'textMessageString' => $this->textMessageString // Your message content
         ];
     }

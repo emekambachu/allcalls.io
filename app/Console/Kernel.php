@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
             ->timezone('America/New_York')
             ->dailyAt('05:00');
 
-        $schedule->command('log:email-notification-count')->everyMinute();
+        // $schedule->command('log:email-notification-count')->everyMinute();
 
         $schedule->call(function () {
             // Check the condition before executing the command

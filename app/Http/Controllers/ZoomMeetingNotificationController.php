@@ -102,40 +102,40 @@ class ZoomMeetingNotificationController extends Controller
     }
 
 
-    public function sendBatchTextMessages(Request $request)
-    {
-        // Log the incoming request data
-        Log::info('Received request for sending batch text messages', [
-            'requestPayload' => $request->all(), // Logs all request input data
-        ]);
+    // public function sendBatchTextMessages(Request $request)
+    // {
+    //     // Log the incoming request data
+    //     Log::info('Received request for sending batch text messages', [
+    //         'requestPayload' => $request->all(), // Logs all request input data
+    //     ]);
         
-        $request->validate([
-            'textMessageString' => 'required|string',
-            'numbers' => 'required|array',
-            'numbers.*' => 'required|string', // Validate each item in the array
-        ]);
+    //     $request->validate([
+    //         'textMessageString' => 'required|string',
+    //         'numbers' => 'required|array',
+    //         'numbers.*' => 'required|string', // Validate each item in the array
+    //     ]);
 
-        $textMessageString = $request->textMessageString;
-        $numbers = collect($request->numbers); // Convert to a collection for easy manipulation
-        $batchSize = 50; // Define the batch size
-        $sleepSeconds = 2; // Define the sleep duration between batches
+    //     $textMessageString = $request->textMessageString;
+    //     $numbers = collect($request->numbers); // Convert to a collection for easy manipulation
+    //     $batchSize = 50; // Define the batch size
+    //     $sleepSeconds = 2; // Define the sleep duration between batches
 
-        Log::info('Starting to send batch text messages', ['totalNumbers' => $numbers->count()]);
+    //     Log::info('Starting to send batch text messages', ['totalNumbers' => $numbers->count()]);
 
-        // Process each batch of numbers
-        $numbers->chunk($batchSize)->each(function ($batch, $index) use ($textMessageString, $sleepSeconds) {
-            Log::info('Processing text message batch', ['batchIndex' => $index + 1, 'batchSize' => count($batch)]);
-            $user = User::whereEmail('john@example.com')->first();
+    //     // Process each batch of numbers
+    //     $numbers->chunk($batchSize)->each(function ($batch, $index) use ($textMessageString, $sleepSeconds) {
+    //         Log::info('Processing text message batch', ['batchIndex' => $index + 1, 'batchSize' => count($batch)]);
+    //         $user = User::whereEmail('john@example.com')->first();
 
-            foreach ($batch as $number) {
-                Notification::send($user, (new TextMessageNotification($textMessageString, $number))->onQueue('text-messages'));
-            }
+    //         foreach ($batch as $number) {
+    //             Notification::send($user, (new TextMessageNotification($textMessageString, $number))->onQueue('text-messages'));
+    //         }
 
-            Log::info('Completed text message batch', ['batchIndex' => $index + 1]);
-            Log::info('Sleeping between batches', ['sleepSeconds' => $sleepSeconds]);
-            sleep($sleepSeconds);
-        });
+    //         Log::info('Completed text message batch', ['batchIndex' => $index + 1]);
+    //         Log::info('Sleeping between batches', ['sleepSeconds' => $sleepSeconds]);
+    //         sleep($sleepSeconds);
+    //     });
 
-        return response()->json(['message' => 'Text messages queued for sending.']);
-    }
+    //     return response()->json(['message' => 'Text messages queued for sending.']);
+    // }
 }
