@@ -72,7 +72,7 @@ class ZoomMeetingNotificationController extends Controller
                 // Check if sendNotification is true before sending the ZoomMeeting notification
                 if ($sendNotification) {
                     Log::info('ZoomMeetingNotification queued', ['time' => now()->toDateTimeString()]);
-                    Notification::send($batch, new ZoomMeeting($title, $message, $zoomLink)); // Assuming 'default' or specify your queue
+                    Notification::send($batch, new ZoomMeeting($title, $message, $sendNotification, $zoomLink)); // Assuming 'default' or specify your queue
                 }
 
                 // Check and send text messages separately
