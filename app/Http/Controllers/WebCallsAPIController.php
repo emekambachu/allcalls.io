@@ -12,6 +12,7 @@ use App\Services\User\UserService;
 use Carbon\Carbon;
 use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
@@ -122,6 +123,11 @@ class WebCallsAPIController extends Controller
 
         // Apply date filters
         if ($startDate && $endDate) {
+
+            $userTimeZone = Auth::user() && !empty(Auth::user()->timezone) ? Auth::user()->timezone : 'America/New_York';
+            $startDate = Carbon::createFromFormat('Y-m-d', $startDate)->timezone($userTimeZone);
+            $endDate = Carbon::createFromFormat('Y-m-d', $endDate)->timezone($userTimeZone);
+
             if(in_array($request->input('sort_column'), $this->columnsWithJoins, true)){
                 $query->whereDate('calls.created_at', '>=', $startDate)
                     ->whereDate('calls.created_at', '<=', $endDate);
