@@ -112,7 +112,7 @@ class CustomerController extends Controller
         $callsCount = Call::whereUserId($id)->count();
         $transactionsCount = Transaction::whereUserId($id)->count();
         $activitiesCount = Activity::whereUserId($id)->count();
-        $ClientCount = Client::where('user_id', $id)->count();
+        $ClientCount = Client::where('user_id', $id)->where('unlocked', 1)->count();
 
 
 
