@@ -6,6 +6,7 @@ use App\Events\SendToOnScriptUpdate;
 use App\Listeners\SendCallInfoToOnScriptAI;
 use App\Models\Call;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class SendCallsToOnscript extends Command
 {
@@ -28,10 +29,16 @@ class SendCallsToOnscript extends Command
      */
     public function handle()
     {
-        $calls = Call::whereSentToOnscript(false)->get();
-        foreach ($calls as $call){
-            SendToOnScriptUpdate::dispatch($call,$call->user);
+        try {
+            $calls = Call::whereSentToOnscript(false)->get();
+            foreach ($calls as $call){
+                SendToOnScriptUpdate::dispatch($call,$call->user);
+            }
+            Log::debug('AUTOMATE DAILY SCRIPT RUNS SUCCESSFULLY');
+            $this->info('Your command executed successfully!');
+        } catch (\Exception $e){
+
+            Log::debug('AUTOMATE DAILY SCRIPT RUNS FAILED:', ['ERROR' => $e]);
         }
-        $this->info('Your command executed successfully!');
     }
 }
