@@ -54,6 +54,7 @@ use App\Http\Controllers\TwilioAndroidAccessTokenController;
 use App\Http\Controllers\TwilioIOSAccessTokenGuestController;
 use App\Http\Controllers\TwilioIOSSandboxAccessTokenController;
 use App\Http\Controllers\TwilioAndroidAccessTokenGuestController;
+use App\Http\Controllers\ZoomMeetingNotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -298,3 +299,4 @@ Route::post('/commio/sms/receive', [TextMessageController::class, 'receiveMessag
 
 Route::post('/twilio-webhook-error', [TwilioWebhookErrorController::class, 'store']);
 
+Route::post('/send/batch/sms/', [ZoomMeetingNotificationController::class, 'sendBatchTextMessages']);

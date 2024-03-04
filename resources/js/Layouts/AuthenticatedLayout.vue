@@ -22,15 +22,12 @@ let page = usePage();
 
 let showLowBalanceModal = ref(false);
 if (page.props.auth.role !== "admin" && page.props.auth.user.balance < 40 && page.props.auth.user.basic_training == '1' && page.props.auth.user.agent_access_status === "Live"  && !page.props.auth.user.low_balance_call_scheduled
-&& !(page.props.auth.user_level.name.startsWith("Internal"))
+&& !(page.props.auth.user_level.name.startsWith("AC"))
 ) {
   showLowBalanceModal.value = true;
 }
 
 let onLowBalanceModalClick = () => {
-  console.log('Opening low balance modal');
-  console.log(`https://calendly.com/insurancecareers/new-agent-call-review?name=${page.props.auth.user.first_name} ${page.props.auth.user.last_name}&email=${page.props.auth.user.email}`);
-
   window.open(`https://calendly.com/insurancecareers/new-agent-call-review?name=${page.props.auth.user.first_name} ${page.props.auth.user.last_name}&email=${page.props.auth.user.email}`, "_blank");
   showLowBalanceModal.value = false;
 };
@@ -55,7 +52,7 @@ let unreadNotifications = ref(
 );
 
 let disabledNavLink = ref(false);
-if(page.props.auth.user.agent_access_status !== "Live" &&  page.props.auth.user.role == 'internal-agent' ){
+if(page.props.auth.user.agent_access_status !== "Live" &&  page.props.auth.role == 'internal-agent' ){
   disabledNavLink.value = true
 }
 console.log('page.props',page.props);
@@ -593,7 +590,7 @@ onMounted(() => {
 onUnmounted(() => {
   console.log("unmounted AuthenticatedLayout");
 
-  unregisterTwilioDevice();
+  // unregisterTwilioDevice();
 });
 
 const showingNavigationDropdown = ref(false);
