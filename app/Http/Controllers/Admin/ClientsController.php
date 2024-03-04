@@ -32,6 +32,7 @@ class ClientsController extends Controller
                     $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ['%' . $request->name . '%']);
                 }
             })
+            ->where('unlocked', 1)
             ->with(['call', 'user', 'call.callType'])
             ->paginate(100);
 
