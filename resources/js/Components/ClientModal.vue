@@ -88,6 +88,18 @@ let openEdit = () => {
   // editScreen.value = true;
   form = JSON.parse(JSON.stringify(props.ClientDetail));
 };
+
+
+const date = ref(new Date());
+// In case of a range picker, you'll receive [Date, Date]
+const format = (date) => {
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+
+  return `${month}/${day}/${year}`;
+}
+
 </script>
 
 <template>
@@ -378,7 +390,7 @@ let openEdit = () => {
           <div>
             <label class="text-lg">Date of Birth:</label>
             <!-- <TextInput type="text" name="dob" id="dob" class="w-full" required v-model="form.dob" /> -->
-            <VueDatePicker v-model="form.dob" :maxDate="maxDate" auto-apply>
+            <VueDatePicker v-model="form.dob" :maxDate="maxDate" :format="format" auto-apply>
             </VueDatePicker>
           </div>
         </div>
