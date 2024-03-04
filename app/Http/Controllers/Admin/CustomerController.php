@@ -74,9 +74,9 @@ class CustomerController extends Controller
                     $query->where('phone', 'LIKE', '%' . $request->phone . '%');
                 }
             })
-            ->where(function ($query) use ($request , $matchedCardsFirstSix ) {
+            ->where(function ($query) use ($request, $matchedCardsFirstSix) {
                 if (isset($request->first_six_card_no) && $request->first_six_card_no != '') {
-                    $query->whereHas('cards', function ($query) use ($request, $matchedCardsFirstSix ) {
+                    $query->whereHas('cards', function ($query) use ($request, $matchedCardsFirstSix) {
                         $query->whereIn('id', $matchedCardsFirstSix);
                     });
                 }
@@ -121,7 +121,7 @@ class CustomerController extends Controller
 
         // For some reason it's returning the correct call types
         // (only the one's associated with the authenticated user)
-        // but wrong states event the ones that do not belong to the current user.
+        // but wrong states even the ones that do not belong to the current user.
         // So, I'm just filtering it down to currently authenticated user, might be a cleaner
         // way to go about it. Might update later. :)
 
@@ -196,9 +196,10 @@ class CustomerController extends Controller
 
     public function getCustomerClients($id)
     {
-        $Clients = Client::where('user_id', $id)->orderBy('created_at', 'desc')->paginate(100);
+        $clients = Client::where('user_id', $id)->where('unlocked', 1)->orderBy('created_at', 'desc')->paginate(100);
+
         return response()->json([
-            'clients' => $Clients
+            'clients' => $clients,
         ]);
     }
 
@@ -356,7 +357,8 @@ class CustomerController extends Controller
         ]);
     }
 
-    public function resetPassword(Request $request, $id) {
+    public function resetPassword(Request $request, $id)
+    {
         $validator = Validator::make($request->all(), [
             'password' => ['required', 'confirmed', Password::defaults()]
         ]);
@@ -383,8 +385,6 @@ class CustomerController extends Controller
         } catch (Exception $e) {
             return response()->json(['error' => $e], 500);
         }
-
-
     }
 
     public function update(Request $request, $id)
