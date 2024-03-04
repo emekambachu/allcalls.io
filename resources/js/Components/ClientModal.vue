@@ -46,6 +46,8 @@ let close = () => {
 
 let isLoading = ref(false);
 let saveChanges = () =>  {
+  console.log('form.dob', form.value.dob);
+
   isLoading.value = true;
   router.visit(`${props.route}/${form.value.client_id}`, {
     method: "PATCH",
