@@ -28,9 +28,6 @@ if (page.props.auth.role !== "admin" && page.props.auth.user.balance < 40 && pag
 }
 
 let onLowBalanceModalClick = () => {
-  console.log('Opening low balance modal');
-  console.log(`https://calendly.com/insurancecareers/new-agent-call-review?name=${page.props.auth.user.first_name} ${page.props.auth.user.last_name}&email=${page.props.auth.user.email}`);
-
   window.open(`https://calendly.com/insurancecareers/new-agent-call-review?name=${page.props.auth.user.first_name} ${page.props.auth.user.last_name}&email=${page.props.auth.user.email}`, "_blank");
   showLowBalanceModal.value = false;
 };
@@ -593,7 +590,7 @@ onMounted(() => {
 onUnmounted(() => {
   console.log("unmounted AuthenticatedLayout");
 
-  unregisterTwilioDevice();
+  // unregisterTwilioDevice();
 });
 
 const showingNavigationDropdown = ref(false);

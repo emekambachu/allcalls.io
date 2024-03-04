@@ -5,7 +5,7 @@ import UpdateProfileInformationForm from "./Partials/UpdateProfileInformationFor
 import TextInput from "@/Components/TextInput.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import AuthenticatedButton from "@/Components/AuthenticatedButton.vue";
-import { Head, router } from "@inertiajs/vue3";
+import {Head, router, usePage} from "@inertiajs/vue3";
 import { ref } from "vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 let props = defineProps({
@@ -61,7 +61,7 @@ let saveBids = () => {
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
         Profile
-      </h2> 
+      </h2>
     </template>
 
     <div class="py-6">
