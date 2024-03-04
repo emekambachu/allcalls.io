@@ -823,7 +823,6 @@ const applyCallFiltersToSummary = () => {
     callsGroupedByPublisherName.value = Object.fromEntries(callsGroupedByPublisherNameArray);
 
     // assigned grouped calls to new variables
-    const unfilteredGroupedCalls = maxmizedCallsGroupedByUser.value;
     const unfilteredGroupedPublisherNames = callsGroupedByPublisherName.value;
     showMoreForGrouped.value = true;
 
@@ -849,17 +848,6 @@ const applyCallFiltersToSummary = () => {
     // if matched add the user group to the maxmizedCallsGroupedByUser
 
     for (const [key, value] of getAllCalls.value.entries()) {
-
-        // Object.values(unfilteredGroupedCalls).forEach(group => {
-        //     if (group.userId === value.user_id) {
-        //         maxmizedCallsGroupedByUser.value[group.userId] = group;
-        //         if(count < 2){
-        //             minimizedCallsGroupedByUser.value[group.userId] = group;
-        //         }
-        //         count++;
-        //     }
-        // });
-
         Object.values(unfilteredGroupedPublisherNames).forEach(publisher => {
             if (publisher.user_ids.includes(value.user_id)) {
                 callsGroupedByPublisherName.value[publisher.publisher_name] = publisher;
