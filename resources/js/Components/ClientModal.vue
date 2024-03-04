@@ -46,16 +46,24 @@ let close = () => {
 
 let isLoading = ref(false);
 let saveChanges = () =>  {
+
   // Convert form.dob to a Date object if it's not already one
   const dob = new Date(form.value.dob);
 
-  // Format the date to only include the date portion (YYYY-MM-DD)
-  const formattedDate = dob.toISOString().split('T')[0];
+  // Extract the month, date, and year components
+  const month = dob.getMonth() + 1; // getMonth() returns 0-11
+  const date = dob.getDate();
+  const year = dob.getFullYear();
+
+  // Format the date in MM-DD-YYYY format
+  // Pad single digits with '0' to ensure MM and DD format
+  const formattedDate = `${month.toString().padStart(2, '0')}-${date.toString().padStart(2, '0')}-${year}`;
 
   // Reset form.dob with the formatted date
   form.value.dob = formattedDate;
 
   console.log('form.dob', form.value.dob);
+
 
   isLoading.value = true;
   router.visit(`${props.route}/${form.value.client_id}`, {
