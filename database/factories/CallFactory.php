@@ -21,9 +21,7 @@ class CallFactory extends Factory
             ->setTime($this->faker->numberBetween(9, 17), $this->faker->numberBetween(0, 59), $this->faker->numberBetween(0, 59));
 
         return [
-            'user_id' =>  function() {
-                return User::factory()->create()->id;
-            },
+            'user_id' =>  User::inRandomOrder()->first()->id, // Pick from any user/client because the clientSeeder generates new clients/users
             'call_taken' => $callTaken,
             'call_duration_in_seconds' => $faker->numberBetween(240, 600),
             'hung_up_by' => $faker->randomElement(['Caller', 'Agent']),

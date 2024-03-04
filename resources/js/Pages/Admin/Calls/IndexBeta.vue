@@ -372,6 +372,7 @@ const getTotalCalls = ref(props.totalCalls);
 const getTotalRevenue = ref(props.totalRevenue);
 const getTotalCallResults = ref(0);
 const getTotalRevenueResults = ref(0);
+const callsGroupedByUserResults = ref({});
 const paginate = ref({
     currentPage: currentPage.value,
     perPage: null,
@@ -418,6 +419,7 @@ let fetchCalls = async (replace = false, per_page = null) => {
   getAllCalls.value = response.data.all_calls;
   getTotalCallResults.value = response.data.total;
   getTotalRevenueResults.value = response.data.total_revenue;
+  callsGroupedByUserResults.value = response.data.calls_grouped_by_user;
 
   // keep track of current page and pagination
   paginate.value.perPage = response.data.per_page;
@@ -432,6 +434,7 @@ let fetchCalls = async (replace = false, per_page = null) => {
   console.log("Total Call Results: ", getTotalCallResults.value);
   console.log("Total Revenue: ", getTotalRevenueResults.value);
   console.log("Grouped Publisher Names", callsGroupedByPublisherName.value);
+  console.log("Calls Grouped By User", callsGroupedByUserResults.value);
 };
 
 
@@ -832,21 +835,30 @@ const applyCallFiltersToSummary = () => {
     // update with results
     getTotalCalls.value = getTotalCallResults.value;
     getTotalRevenue.value = getTotalRevenueResults.value;
+    maxmizedCallsGroupedByUser.value = callsGroupedByUserResults.value;
+
+    let count = 0;
+    Object.values(maxmizedCallsGroupedByUser.value).forEach(group => {
+        if(count < 2){
+            minimizedCallsGroupedByUser.value[group.userId] = group;
+        }
+        count++;
+    });
 
     // Iterate loadedCalls first and then grouped calls to match the both user ids
     // if matched add the user group to the maxmizedCallsGroupedByUser
-    let count = 0;
+
     for (const [key, value] of getAllCalls.value.entries()) {
 
-        Object.values(unfilteredGroupedCalls).forEach(group => {
-            if (group.userId === value.user_id) {
-                maxmizedCallsGroupedByUser.value[group.userId] = group;
-                if(count < 2){
-                    minimizedCallsGroupedByUser.value[group.userId] = group;
-                }
-                count++;
-            }
-        });
+        // Object.values(unfilteredGroupedCalls).forEach(group => {
+        //     if (group.userId === value.user_id) {
+        //         maxmizedCallsGroupedByUser.value[group.userId] = group;
+        //         if(count < 2){
+        //             minimizedCallsGroupedByUser.value[group.userId] = group;
+        //         }
+        //         count++;
+        //     }
+        // });
 
         Object.values(unfilteredGroupedPublisherNames).forEach(publisher => {
             if (publisher.user_ids.includes(value.user_id)) {
