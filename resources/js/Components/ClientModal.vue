@@ -288,7 +288,7 @@ let openEdit = () => {
             <label class="text-lg">Date of Birth:</label>
             <!-- <TextInput type="text" name="dob" id="dob" class="w-full" required v-model="form.dob" /> -->
             <VueDatePicker  v-model="form.dob"
-                    format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply>
+                    format="mm-dd-yyyy" :maxDate="maxDate" auto-apply>
                 </VueDatePicker>
           </div>
           
