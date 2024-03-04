@@ -46,6 +46,15 @@ let close = () => {
 
 let isLoading = ref(false);
 let saveChanges = () =>  {
+  // Convert form.dob to a Date object if it's not already one
+  const dob = new Date(form.value.dob);
+
+  // Format the date to only include the date portion (YYYY-MM-DD)
+  const formattedDate = dob.toISOString().split('T')[0];
+
+  // Reset form.dob with the formatted date
+  form.value.dob = formattedDate;
+
   console.log('form.dob', form.value.dob);
 
   isLoading.value = true;
