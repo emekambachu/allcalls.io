@@ -34,11 +34,11 @@ class SendCallsToOnscript extends Command
             foreach ($calls as $call){
                 SendToOnScriptUpdate::dispatch($call,$call->user);
             }
-            Log::debug('AUTOMATE DAILY SCRIPT RUNS SUCCESSFULLY');
+            Log::debug('The daily script runs successfully!');
             $this->info('Your command executed successfully!');
         } catch (\Exception $e){
 
-            Log::debug('AUTOMATE DAILY SCRIPT RUNS FAILED:', ['ERROR' => $e]);
+            Log::debug('The daily script runs failed:', ['ERROR' => $e]);
         }
     }
 }
