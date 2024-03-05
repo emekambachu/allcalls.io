@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use App\Models\SendBirdUser;
 use Carbon\Carbon;
 use Filament\Panel;
 use Illuminate\Support\Str;
@@ -202,7 +202,7 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
 
     public function sendbirdUser()
     {
-        return $this->hasOne(SendBirdUser::class);
+        return $this->hasOne(SendbirdUser::class);
     }
 
 
