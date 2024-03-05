@@ -2,6 +2,7 @@
 
 namespace App\Services\Base;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class BaseService
 {
@@ -20,8 +21,9 @@ class BaseService
         logger()->info(vsprintf(str_replace('?', '%s', $rawQuery), $query->getBindings()));
     }
 
-    public static function tryCatchException($e): \Illuminate\Http\JsonResponse
+    public static function tryCatchException($e, $identifier = null): \Illuminate\Http\JsonResponse
     {
+        Log::error('SERVER ERROR: '."Line ".$e->getLine()." of ".$e->getFile().", ".$e->getMessage().", Identifier: ".$identifier !== null && isset($identifier['identifier']) ? $identifier['identifier'] : '');
         return response()->json([
             'error_message' => "Line ".$e->getLine()." of ".$e->getFile().", ".$e->getMessage(),
         ], 500);
