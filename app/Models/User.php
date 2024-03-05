@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-use App\Models\SendBirdUser;
+// use App\Models\SendBirdUser;
 use Carbon\Carbon;
 use Filament\Panel;
 use Illuminate\Support\Str;
