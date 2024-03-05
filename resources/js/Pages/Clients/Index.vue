@@ -42,6 +42,10 @@ let openClientModal = (Client) => {
   showModal.value = true;
 };
 
+let abbreviatedNotes = (note) => {
+    return note.length > 10 ? note.slice(0, 10) + '...' : note;
+}
+
 let EditClientModal = (Client) => {
   ClientDetail.value = Client;
   showModal.value = true;
@@ -120,7 +124,8 @@ let capitalizeAndReplaceUnderscore = (str) => {
                   <th scope="col" class="px-4 py-3">First Name</th>
                   <th scope="col" class="px-4 py-3">Last Name</th>
                   <th scope="col" class="px-4 py-3">URL</th>
-                  <th scope="col" class="px-4 py-3">Status</th>
+                    <th scope="col" class="px-4 py-3">Notes</th>
+                    <th scope="col" class="px-4 py-3">Status</th>
                   <th scope="col" class="px-4 py-3 text-center">Actions</th>
                 </tr>
               </thead>
@@ -139,6 +144,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
                     </a>
                     <a class="text-center" v-else>_</a>
                   </td>
+                  <td class="text-gray-600 px-4 py-3">{{ Client.notes ? abbreviatedNotes(Client.notes) :"" }}</td>
                   <td class="text-gray-600 px-4 py-3">
                     <span v-if="['Sale - Simplified Issue', 'Sale - Guaranteed Issue'].includes(
                       Client.status
