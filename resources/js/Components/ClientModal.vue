@@ -13,6 +13,7 @@
 <script setup>
 import { ref, reactive, defineEmits, onMounted } from "vue";
 import TextInput from "@/Components/TextInput.vue";
+import TextArea from "@/Components/TextArea.vue";
 import { router } from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { toaster } from "@/helper.js";
@@ -82,6 +83,7 @@ if (props.editScreen) {
   form.value.state = props.ClientDetail.state;
   form.value.zipCode = props.ClientDetail.zipCode;
   form.value.status = props.ClientDetail.status;
+  form.value.notes = props.ClientDetail.notes;
   form.value.client_id = props.ClientDetail.id;
 }
 let openEdit = () => {
@@ -234,6 +236,7 @@ const format = (date) => {
           </div>
 
           <h4 class="text-2xl font-small text-custom-sky mb-2">Contact Information</h4>
+
           <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 mb-10">
             <div v-if="ClientDetail.unlocked === 1 || $page.props.auth.role == 'admin'">
               <strong class="text-lg">Phone: </strong>
@@ -321,6 +324,13 @@ const format = (date) => {
               {{ ClientDetail.call?.call_type?.type }}
             </div>
           </div>
+
+            <h4 class="text-2xl font-small text-custom-sky mb-2">Notes</h4>
+            <div class="text-gray-700 mb-10">
+                <div class="w-full">
+                    {{ClientDetail.notes}}
+                </div>
+            </div>
         </div>
 
         <div class="flex justify-end">
@@ -535,6 +545,13 @@ const format = (date) => {
               <option value="Dead Air/No Response">Dead Air/No Response</option>
               <option value="Thought Was Free">Thought Was Free</option>
             </select>
+          </div>
+        </div>
+
+        <h4 class="text-2xl font-small text-custom-sky mb-2">Notes</h4>
+        <div class="gap-2 text-gray-700 mb-10">
+          <div class="w-full">
+              <TextArea name="notes" id="phone" class="w-full h-24" required v-model="form.notes"/>
           </div>
         </div>
 
