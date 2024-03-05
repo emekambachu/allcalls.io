@@ -25,7 +25,7 @@ class ClientFactory extends Factory
             'address' => $faker->address,
             'dob' => $faker->dateTimeBetween('-66 years', '-23 years')->format('Y-m-d'), // Generating dob for people aged between 23 and 66 years
             'user_id' => function() {
-                return User::factory()->create()->id;
+                return User::inRandomOrder()->first()->id;
             },
             'call_id' => function() {
                 return Call::factory()->create()->id;

@@ -20,6 +20,7 @@
     import VueLoader from "@/Components/VueLoader.vue";
     import 'vue-loaders/dist/vue-loaders.css';
     import VueLoaders from 'vue-loaders';
+
     createInertiaApp({
         title: (title) => `${title} - ${appName}`,
         resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),

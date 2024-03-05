@@ -3,21 +3,9 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use App\Models\Bid;
 use Filament\Panel;
-use App\Models\Card;
-use App\Models\State;
-use App\Models\Client;
-use App\Models\Activity;
-use App\Models\CallType;
-use App\Models\ActiveUser;
-use App\Models\Transaction;
 use Illuminate\Support\Str;
-use App\Models\SendBirdUser;
 use Laravel\Cashier\Billable;
-use App\Models\AdditionalFile;
-use App\Models\UnsubscribeToken;
-use App\Models\UserCallTypeState;
 use Laravel\Sanctum\HasApiTokens;
 use Filament\Models\Contracts\HasName;
 use Illuminate\Notifications\Notifiable;
@@ -237,9 +225,14 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
         return $this->belongsTo(InternalAgentLevel::class, 'level_id', 'id');
     }
 
-    public function clients()
+    public function clients(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Client::class);
+    }
+
+    public function calls(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Call::class);
     }
 
 
@@ -247,7 +240,7 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
     {
         return $this->hasOne(UnsubscribeToken::class);
     }
-    
+
     public function generateUnsubscribeToken()
     {
         if ($this->unsubscribeToken) {

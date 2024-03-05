@@ -28,9 +28,6 @@ if (page.props.auth.role !== "admin" && page.props.auth.user.balance < 40 && pag
 }
 
 let onLowBalanceModalClick = () => {
-  console.log('Opening low balance modal');
-  console.log(`https://calendly.com/insurancecareers/new-agent-call-review?name=${page.props.auth.user.first_name} ${page.props.auth.user.last_name}&email=${page.props.auth.user.email}`);
-
   window.open(`https://calendly.com/insurancecareers/new-agent-call-review?name=${page.props.auth.user.first_name} ${page.props.auth.user.last_name}&email=${page.props.auth.user.email}`, "_blank");
   showLowBalanceModal.value = false;
 };
@@ -593,7 +590,7 @@ onMounted(() => {
 onUnmounted(() => {
   console.log("unmounted AuthenticatedLayout");
 
-  unregisterTwilioDevice();
+  // unregisterTwilioDevice();
 });
 
 const showingNavigationDropdown = ref(false);
@@ -1310,7 +1307,7 @@ let appDownloadModal = ref(false);
               <button
                   @click="navSettingDropDown = !navSettingDropDown"
                   type="button"
-                  class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700 hover:text-custom-green"
+                  class="flex items-center w-full p-2 text-base text-gray-100 transition duration-75 rounded-lg group dark:text-gray-200 dark:hover:bg-gray-700 hover:text-custom-green"
                   aria-controls="dropdown-auth"
                   data-collapse-toggle="dropdown-auth"
                   aria-expanded="true"
@@ -2654,7 +2651,7 @@ let appDownloadModal = ref(false);
                   <button
                       @click="navSettingDropDown = !navSettingDropDown"
                       type="button"
-                      class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700 hover:text-custom-green"
+                      class="flex items-center w-full p-2 text-base text-gray-100 transition duration-75 rounded-lg group dark:text-gray-200 dark:hover:bg-gray-700 hover:text-custom-green"
                       aria-controls="dropdown-auth"
                       data-collapse-toggle="dropdown-auth"
                       aria-expanded="true"

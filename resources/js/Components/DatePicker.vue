@@ -62,7 +62,7 @@ watch(dateRange, (newVal) => {
     :range="true"
     :preset-dates="presetDates"
     placeholder="Picker date range"
-    format="dd-MMM-yyyy"
+    format="MMM-dd-yyyy"
     :multi-calendars="{ solo: true }"
     auto-apply
   />

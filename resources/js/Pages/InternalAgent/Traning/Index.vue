@@ -67,10 +67,11 @@ const filteredTraining = computed(() => {
 });
 console.log("filteredTraining", filteredTraining);
 let newAgentTrainingModal = ref(false)
+
 let newAgentTraining = () => {
   newAgentTrainingModal.value = true
 }
-if(!page.props.auth.user.new_agent_call_scheduled && page.props.auth.user.basic_training){
+if(!page.props.auth.user.new_agent_call_scheduled && page.props.auth.user.basic_training && page.props.auth.user.agent_access_status !== "Live"){
   newAgentTrainingModal.value = true
 }
 </script>
