@@ -234,7 +234,7 @@ let formatSSN = (event) => {
             <div>
                 <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 ">Date of
                     Birth<span class="text-red-500">*</span></label>
-                <VueDatePicker :disabled="page.props.auth.role === 'admin'" v-model="form.dob" format="MMM-dd-yyyy"
+                <VueDatePicker :disabled="page.props.auth.role === 'admin'" v-model="form.dob" format="dd-MMM-yyyy"
                     :maxDate="maxDate" auto-apply></VueDatePicker>
                 <div v-if="firstStepErrors.dob" class="text-red-500" v-text="firstStepErrors.dob[0]"></div>
             </div>
@@ -361,7 +361,7 @@ let formatSSN = (event) => {
             <div>
                 <label for="Move-In Date" class="block mb-2   text-sm font-black text-gray-900 ">Move-In
                     Date<span class="text-red-500">*</span></label>
-                <VueDatePicker :disabled="page.props.auth.role === 'admin'" v-model="form.move_in_date" format="MMM-dd-yyyy"
+                <VueDatePicker :disabled="page.props.auth.role === 'admin'" v-model="form.move_in_date" format="dd-MMM-yyyy"
                     :maxDate="maxDate" auto-apply>
                 </VueDatePicker>
                 <div v-if="firstStepErrors.move_in_date" class="text-red-500" v-text="firstStepErrors.move_in_date[0]">
@@ -634,7 +634,7 @@ let formatSSN = (event) => {
                     <label for="Move-In Date" class="block mb-2   text-sm font-black text-gray-900 ">Move-In
                         Date<span class="text-red-500">*</span></label>
                     <VueDatePicker :disabled="page.props.auth.role === 'admin'" v-model="form.business_move_in_date"
-                        format="MMM-dd-yyyy" :maxDate="maxDate" auto-apply>
+                        format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply>
                     </VueDatePicker>
                     <div v-if="firstStepErrors.business_move_in_date" class="text-red-500"
                         v-text="firstStepErrors.business_move_in_date[0]"></div>

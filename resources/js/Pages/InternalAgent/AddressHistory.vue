@@ -286,7 +286,7 @@ let enforceFiveDigitInput = (fieldName, key) => {
                 <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 ">Move-In
                     Date</label>
                 <VueDatePicker :disabled="page.props.auth.role === 'admin'" v-model="form[history.address].move_in_date"
-                    format="MMM-dd-yyyy" :maxDate="maxDate" auto-apply>
+                    format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply>
                 </VueDatePicker>
                 <div v-if="hasValidationErrors[history.address]">
                     <span v-if="hasValidationErrors[history.address].move_in_date" class="text-red-600">This Field is
@@ -296,7 +296,7 @@ let enforceFiveDigitInput = (fieldName, key) => {
             <div>
                 <label for="middle_name" class="block mb-2   text-sm font-black text-gray-900 " v-text="'Move-Out-Date'">  </label>
                 <VueDatePicker :disabled="page.props.auth.role === 'admin'" v-model="form[history.address].move_out_date"
-                    format="MMM-dd-yyyy" :maxDate="maxDate" auto-apply>
+                    format="dd-MMM-yyyy" :maxDate="maxDate" auto-apply>
                 </VueDatePicker>
                 <div v-if="hasValidationErrors[history.address]">
                     <span v-if="hasValidationErrors[history.address].move_out_date" class="text-red-600">This Field is

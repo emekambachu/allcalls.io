@@ -551,7 +551,7 @@ const format = (date) => {
         <h4 class="text-2xl font-small text-custom-sky mb-2">Notes</h4>
         <div class="gap-2 text-gray-700 mb-10">
           <div class="w-full">
-              <TextArea name="notes" id="phone" class="w-full h-24" required v-model="form.notes"/>
+              <TextArea style="background-color: rgb(232, 240, 254);" name="notes" id="phone" class="w-full h-24" required v-model="form.notes"/>
           </div>
         </div>
 
