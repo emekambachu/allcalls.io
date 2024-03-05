@@ -177,8 +177,6 @@ let getInsuranceCompanyOptions = () => {
   return Object.keys(companies);
 };
 let getProductNameOptions = () => {
-  // console.log('form.value.insurance_company',form.value.insurance_company);
-  // console.log('form.value.product_name',form.value.product_name);
   return Object.keys(companies[form.value.insurance_company]);
 };
 
@@ -1528,7 +1526,7 @@ let existingBusiness = () => {
                         <VueDatePicker
                           v-model="form.dob"
                           :disabled="disabledDob"
-                          format="dd-MMM-yyyy"
+                          format="MMM-dd-yyyy"
                           :maxDate="maxDate"
                           auto-apply
                         >
@@ -1661,7 +1659,7 @@ let existingBusiness = () => {
                         <VueDatePicker
                           v-model="form.application_date"
                           :disabled="applicationDate"
-                          format="dd-MMM-yyyy"
+                          format="MMM-dd-yyyy"
                           :maxDate="maxDate"
                           auto-apply
                         >
@@ -1890,7 +1888,7 @@ let existingBusiness = () => {
                         <VueDatePicker
                           v-model="form.policy_draft_date"
                           :disabled="disabledPolicydraftdate"
-                          format="dd-MMM-yyyy"
+                          format="MMM-dd-yyyy"
                           auto-apply
                         >
                         </VueDatePicker>

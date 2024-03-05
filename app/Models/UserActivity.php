@@ -34,6 +34,6 @@ class UserActivity extends Model
         }
 
 
-        return $timestamp->diffForHumans() . ' (' . $timestamp->format('H:i d/m/Y') . ')';
+        return $timestamp->diffForHumans() . ' (' . $timestamp->format('H:i m/d/Y') . ')';
     }
 }
