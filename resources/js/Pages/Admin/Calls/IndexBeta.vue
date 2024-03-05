@@ -1379,9 +1379,9 @@ const getAutoCompleteFilterOptions = async (keyword) => {
           </div>
     </Modal>
 
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+      <div class="max-w-screen-3xl sm:px-6 lg:px-8">
           <div class="px-4 sm:px-8 sm:rounded-lg">
-              <hr class="mb-4" />
+              <hr class="" />
           </div>
       </div>
 
@@ -1391,7 +1391,7 @@ const getAutoCompleteFilterOptions = async (keyword) => {
       </div>
     </div>
 
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+    <div class="max-w-screen-3xl sm:px-6 lg:px-8">
       <div class="px-4 sm:px-8 sm:rounded-lg">
         <hr class="mb-4" />
       </div>
