@@ -905,10 +905,6 @@ let clearDateFilter = () => {
 }
 
 let applyDateFilter = async (close) => {
-
-  console.log("Date Filter From: ", dateFilterFrom.value);
-  console.log("Date Filter To: ", dateFilterTo.value);
-
   await fetchCalls(true);
   applyCallFiltersToSummary();
   close();
@@ -923,7 +919,6 @@ onMounted(async () => {
 let applyDatePreset = (label) => {
   const today = new Date();
   let from, to;
-
   switch(label) {
     case "Today":
       from = to = formatDate(today);
@@ -962,7 +957,7 @@ function formatDate(date) {
   if (day.length < 2)
       day = '0' + day;
 
-  return [year, month, day].join('-');
+  return [month, day, year].join('-');
 }
 
 
@@ -1108,7 +1103,7 @@ const getAutoCompleteFilterOptions = async (keyword) => {
                   >
                       <span class="font-extrabold text-lg font-sans" v-if="!(dateFilterFrom && dateFilterTo)">Select Date Range</span>
                       <span class="font-extrabold text-lg font-sans" v-if="dateFilterFrom && dateFilterTo">
-                        <span>Selected Date Range:</span> {{ dateFilterFrom }} - {{ dateFilterTo }}
+                        <span>Selected Date Range:</span> {{ formatDate(dateFilterFrom) }} - {{ formatDate(dateFilterTo) }}
                       </span>
                   </button>
               </PopoverButton>

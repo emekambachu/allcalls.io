@@ -72,7 +72,7 @@ if (props.userData.internal_agent_contract && props.userData.internal_agent_cont
                 form.value[formKey].move_in_date = address.move_in_date;
                 form.value[formKey].move_out_date = address.move_out_date;
             }
-            
+
             // Add more properties as needed
         }
     });
@@ -214,7 +214,7 @@ let enforceFiveDigitInput = (fieldName, key) => {
     if (field) {
         form.value[key].zip_code = field.replace(/[^0-9]/g, '').slice(0, 5);
     }
-    
+
 }
 </script>
 <template>
@@ -222,7 +222,7 @@ let enforceFiveDigitInput = (fieldName, key) => {
         Please Provide Your Address History for the Past 7 Years
     </h1>
     <div v-if="yearError">
-        <div 
+        <div
             class="bg-red-100 mb-4  border border-red-400 text-red-700 px-4 py-2 rounded relative" role="alert">
             <span class="block sm:inline">The combined duration of all residences must exceed 7 years.</span>
         </div>
@@ -273,7 +273,7 @@ let enforceFiveDigitInput = (fieldName, key) => {
 
             <div>
                 <label for="first_name" class="block mb-2 text-sm font-black text-gray-900 ">Zip Code</label>
-                <input :disabled="page.props.auth.role === 'admin'" type="text" @input="enforceFiveDigitInput(form[history.address].zip_code, history.address)" 
+                <input :disabled="page.props.auth.role === 'admin'" type="text" @input="enforceFiveDigitInput(form[history.address].zip_code, history.address)"
                     v-model="form[history.address].zip_code" id="default-input"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:text-white">
                 <div v-if="hasValidationErrors[history.address]">

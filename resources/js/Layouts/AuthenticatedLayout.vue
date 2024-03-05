@@ -588,9 +588,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  console.log("unmounted AuthenticatedLayout");
-
-  // unregisterTwilioDevice();
+  unregisterTwilioDevice();
 });
 
 const showingNavigationDropdown = ref(false);
