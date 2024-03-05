@@ -12,6 +12,7 @@ use App\Services\User\UserService;
 use Carbon\Carbon;
 use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
@@ -122,6 +123,11 @@ class WebCallsAPIController extends Controller
 
         // Apply date filters
         if ($startDate && $endDate) {
+
+            $userTimeZone = Auth::user() && !empty(Auth::user()->timezone) ? Auth::user()->timezone : 'America/New_York';
+            $startDate = Carbon::createFromFormat('Y-m-d', $startDate)->timezone($userTimeZone);
+            $endDate = Carbon::createFromFormat('Y-m-d', $endDate)->timezone($userTimeZone);
+
             if(in_array($request->input('sort_column'), $this->columnsWithJoins, true)){
                 $query->whereDate('calls.created_at', '>=', $startDate)
                     ->whereDate('calls.created_at', '<=', $endDate);
@@ -129,14 +135,6 @@ class WebCallsAPIController extends Controller
                 $query->whereDate('created_at', '>=', $startDate)
                     ->whereDate('created_at', '<=', $endDate);
             }
-
-//        }else if(empty($startDate) && count($filters) === 0){
-//            // if filters and start date are empty, apply default filters
-//            if(in_array($request->input('sort_column'), $this->columnsWithJoins, true)){
-//                $query->whereDate('calls.created_at', '>=', $startDate);
-//            }else{
-//                $query->whereDate('created_at', '>=', $startDate);
-//            }
         }
 
         Log::debug('Filters: ', [
@@ -146,6 +144,28 @@ class WebCallsAPIController extends Controller
         $allCalls = $query->get();
         $perPage = $request->per_page ?? 100;
         $calls = $query->paginate((int)$perPage);
+
+        // Group calls by user to filter grouped
+        $callsGroupedByUser = $allCalls->groupBy('user_id')->map(function ($calls, $userId) {
+            $user = $calls->first()->user; // Assuming each call has a 'user' relation loaded
+            $totalCalls = $calls->count();
+            $paidCalls = $calls->where('amount_spent', '>', 0)->count();
+            $totalRevenue = $calls->sum('amount_spent');
+            $totalCallLength = $calls->sum('call_duration_in_seconds');
+            $averageCallLength = $totalCalls > 0 ? $totalCallLength / $totalCalls : 0;
+
+            return [
+                'userId' => $user->id,
+                'agentName' => $user->first_name . ' ' . $user->last_name,
+                'agentEmail' => $user->email,
+                'totalCalls' => $totalCalls,
+                'paidCalls' => $paidCalls,
+                'revenueEarned' => $totalRevenue,
+                'revenuePerCall' => $totalCalls > 0 ? $totalRevenue / $totalCalls : 0,
+                'totalCallLength' => $totalCallLength,
+                'averageCallLength' => $averageCallLength,
+            ];
+        });
 
         // For paginated data
         $calls->getCollection()->each(function ($call, $index){
@@ -175,6 +195,7 @@ class WebCallsAPIController extends Controller
             'calls' => $calls,
             'all_calls' => $allCalls, // Get a better solution for this
             'total' => $allCalls->count(),
+            'calls_grouped_by_user' => $callsGroupedByUser,
             'total_revenue' => round((float) $allCalls->sum('amount_spent'), 2),
             'per_page' => $perPage,
         ];
