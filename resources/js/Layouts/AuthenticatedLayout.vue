@@ -1344,7 +1344,7 @@ let appDownloadModal = ref(false);
                 <li>
                   <Link
                       aria-current="page"
-                      class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700 rounded-t-lg hover:text-custom-green group"
+                      class="flex items-center p-2 text-base text-gray-100 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700 rounded-t-lg hover:text-custom-green group"
                       :class="{
                       'text-custom-green':
                         route().current('profile.view') ||
