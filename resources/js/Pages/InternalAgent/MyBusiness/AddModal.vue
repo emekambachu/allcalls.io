@@ -383,6 +383,7 @@ let UpdateBussinessData = async () => {
     route = "/internal-agent/my-business";
   }
   form.value.application_date = dateFormat(form.value.application_date);
+  console.log('application_date',form.value.application_date)
   form.value.policy_draft_date = dateFormat(form.value.policy_draft_date);
   form.value.dob = dateFormat(form.value.dob);
   isLoading2.value = true;
