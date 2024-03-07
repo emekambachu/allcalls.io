@@ -367,12 +367,16 @@ let sortColumn = ref(null);
 let sortDirection = ref("desc");
 let loading = ref(false);
 let currentPage = ref(1);
+
 const getAllCalls = ref([]);
 const getTotalCalls = ref(props.totalCalls);
 const getTotalRevenue = ref(props.totalRevenue);
 const getTotalCallResults = ref(0);
 const getTotalRevenueResults = ref(0);
+
 const callsGroupedByUserResults = ref({});
+const callsGroupedByPublisherNameResults = ref({});
+
 const paginate = ref({
     currentPage: currentPage.value,
     perPage: null,
@@ -420,6 +424,7 @@ let fetchCalls = async (replace = false, per_page = null) => {
   getTotalCallResults.value = response.data.total;
   getTotalRevenueResults.value = response.data.total_revenue;
   callsGroupedByUserResults.value = response.data.calls_grouped_by_user;
+  callsGroupedByPublisherNameResults.value = response.data.calls_grouped_by_publisher_name;
 
   // keep track of current page and pagination
   paginate.value.perPage = response.data.per_page;
@@ -822,8 +827,8 @@ const applyCallFiltersToSummary = () => {
     minimizedCallsGroupedByUser.value = Object.fromEntries(minimizedCallsGroupedByUserArray);
     callsGroupedByPublisherName.value = Object.fromEntries(callsGroupedByPublisherNameArray);
 
-    // assigned grouped calls to new variables
-    const unfilteredGroupedPublisherNames = callsGroupedByPublisherName.value;
+    // // assigned grouped calls to new variables
+    // const unfilteredGroupedPublisherNames = callsGroupedByPublisherName.value;
     showMoreForGrouped.value = true;
 
     // Clear the grouped calls to be filled with filtered results
@@ -835,6 +840,7 @@ const applyCallFiltersToSummary = () => {
     getTotalCalls.value = getTotalCallResults.value;
     getTotalRevenue.value = getTotalRevenueResults.value;
     maxmizedCallsGroupedByUser.value = callsGroupedByUserResults.value;
+    callsGroupedByPublisherName.value = callsGroupedByPublisherNameResults.value;
 
     let count = 0;
     Object.values(maxmizedCallsGroupedByUser.value).forEach(group => {
@@ -847,13 +853,13 @@ const applyCallFiltersToSummary = () => {
     // Iterate loadedCalls first and then grouped calls to match the both user ids
     // if matched add the user group to the maxmizedCallsGroupedByUser
 
-    for (const [key, value] of getAllCalls.value.entries()) {
-        Object.values(unfilteredGroupedPublisherNames).forEach(publisher => {
-            if (publisher.user_ids.includes(value.user_id)) {
-                callsGroupedByPublisherName.value[publisher.publisher_name] = publisher;
-            }
-        });
-    }
+    // for (const [key, value] of getAllCalls.value.entries()) {
+    //     Object.values(unfilteredGroupedPublisherNames).forEach(publisher => {
+    //         if (publisher.user_ids.includes(value.user_id)) {
+    //             callsGroupedByPublisherName.value[publisher.publisher_name] = publisher;
+    //         }
+    //     });
+    // }
 
     console.log("Loaded calls after filter", loadedCalls.value);
     console.log("Grouped Publisher Names after filter", callsGroupedByPublisherName.value);

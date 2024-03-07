@@ -259,8 +259,8 @@ class CallService
         if ($startDate && $endDate) {
 
             $userTimeZone = Auth::user() && !empty(Auth::user()->timezone) ? Auth::user()->timezone : 'America/New_York';
-            $startDate = Carbon::createFromFormat('Y-m-d', $startDate)->timezone($userTimeZone);
-            $endDate = Carbon::createFromFormat('Y-m-d', $endDate)->timezone($userTimeZone);
+            $startDate = Carbon::createFromFormat('d-m-Y', $startDate)->timezone($userTimeZone);
+            $endDate = Carbon::createFromFormat('d-m-Y', $endDate)->timezone($userTimeZone);
 
             if(in_array($request->input('sort_column'), $this->columnsWithJoins, true)){
                 $query->whereDate('calls.created_at', '>=', $startDate)
@@ -280,26 +280,8 @@ class CallService
         $calls = $query->paginate((int)$perPage);
 
         // Group calls by user to filter grouped
-        $callsGroupedByUser = $allCalls->groupBy('user_id')->map(function ($calls) {
-            $user = $calls->first()->user; // Assuming each call has a 'user' relation loaded
-            $totalCalls = $calls->count();
-            $paidCalls = $calls->where('amount_spent', '>', 0)->count();
-            $totalRevenue = $calls->sum('amount_spent');
-            $totalCallLength = $calls->sum('call_duration_in_seconds');
-            $averageCallLength = $totalCalls > 0 ? $totalCallLength / $totalCalls : 0;
-
-            return [
-                'userId' => $user->id,
-                'agentName' => $user->first_name . ' ' . $user->last_name,
-                'agentEmail' => $user->email,
-                'totalCalls' => $totalCalls,
-                'paidCalls' => $paidCalls,
-                'revenueEarned' => $totalRevenue,
-                'revenuePerCall' => $totalCalls > 0 ? $totalRevenue / $totalCalls : 0,
-                'totalCallLength' => $totalCallLength,
-                'averageCallLength' => $averageCallLength,
-            ];
-        });
+        $callsGroupedByUser = $this->getCallsGroupedByUserId($allCalls);
+        $callsGroupedByPublisherName = $this->getCallsGroupedByPublisherName($allCalls);
 
         // For paginated data
         $calls->getCollection()->each(function ($call, $index){
@@ -330,13 +312,56 @@ class CallService
             'all_calls' => $allCalls, // Get a better solution for this
             'total' => $allCalls->count(),
             'calls_grouped_by_user' => $callsGroupedByUser,
+            'calls_grouped_by_publisher_name' => $callsGroupedByPublisherName,
             'total_revenue' => round((float) $allCalls->sum('amount_spent'), 2),
             'per_page' => $perPage,
         ];
     }
 
-    public function getCallsGroupedByPublisherName($calls){
+    public function getCallsGroupedByUserId($allCalls){
+        return $allCalls->groupBy('user_id')->map(function ($calls) {
+            $user = $calls->first()->user; // Assuming each id group has a user
+            $totalCalls = $calls->count();
+            $paidCalls = $calls->where('amount_spent', '>', 0)->count();
+            $totalRevenue = $calls->sum('amount_spent');
+            $totalCallLength = $calls->sum('call_duration_in_seconds');
+            $averageCallLength = $totalCalls > 0 ? $totalCallLength / $totalCalls : 0;
 
+            return [
+                'userId' => $user->id,
+                'agentName' => $user->first_name . ' ' . $user->last_name,
+                'agentEmail' => $user->email,
+                'totalCalls' => $totalCalls,
+                'paidCalls' => $paidCalls,
+                'revenueEarned' => $totalRevenue,
+                'revenuePerCall' => $totalCalls > 0 ? $totalRevenue / $totalCalls : 0,
+                'totalCallLength' => $totalCallLength,
+                'averageCallLength' => $averageCallLength,
+            ];
+        });
+    }
+
+    public function getCallsGroupedByPublisherName($allCalls){
+        return $allCalls->groupBy('publisher_name')->map(function ($calls) {
+            $userIds = $calls->pluck('user_id')->toArray(); // Get ids that belong to the same publisher
+            $totalCalls = $calls->count();
+            $paidCalls = $calls->where('amount_spent', '>', 0)->count();
+            $totalRevenue = $calls->sum('amount_spent');
+            $totalCallLength = $calls->sum('call_duration_in_seconds');
+            $averageCallLength = $totalCalls > 0 ? $totalCallLength / $totalCalls : 0;
+            $publisherName = $calls->first()->publisher_name;
+
+            return [
+                'user_ids' => $userIds,
+                'publisher_name' => $publisherName,
+                'totalCalls' => $totalCalls,
+                'paidCalls' => $paidCalls,
+                'revenueEarned' => $totalRevenue,
+                'revenuePerCall' => $totalCalls > 0 ? $totalRevenue / $totalCalls : 0,
+                'totalCallLength' => $totalCallLength,
+                'averageCallLength' => $averageCallLength,
+            ];
+        });
     }
 
 }

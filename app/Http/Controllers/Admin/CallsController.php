@@ -58,47 +58,8 @@ class CallsController extends Controller
     public function indexNew(Request $request): \Inertia\Response
     {
         $allCalls = Call::with('user')->get();
-        $callsGroupedByUser = $allCalls->groupBy('user_id')->map(function ($calls, $userId) {
-            $user = $calls->first()->user; // Assuming each call has a 'user' relation loaded
-            $totalCalls = $calls->count();
-            $paidCalls = $calls->where('amount_spent', '>', 0)->count();
-            $totalRevenue = $calls->sum('amount_spent');
-            $totalCallLength = $calls->sum('call_duration_in_seconds');
-            $averageCallLength = $totalCalls > 0 ? $totalCallLength / $totalCalls : 0;
-
-            return [
-                'userId' => $user->id,
-                'agentName' => $user->first_name . ' ' . $user->last_name,
-                'agentEmail' => $user->email,
-                'totalCalls' => $totalCalls,
-                'paidCalls' => $paidCalls,
-                'revenueEarned' => $totalRevenue,
-                'revenuePerCall' => $totalCalls > 0 ? $totalRevenue / $totalCalls : 0,
-                'totalCallLength' => $totalCallLength,
-                'averageCallLength' => $averageCallLength,
-            ];
-        });
-
-        $callsGroupedByPublisherName = $allCalls->groupBy('publisher_name')->map(function ($calls) {
-            $userIds = $calls->pluck('user_id')->toArray(); // Get ids that belong to the same publisher
-            $totalCalls = $calls->count();
-            $paidCalls = $calls->where('amount_spent', '>', 0)->count();
-            $totalRevenue = $calls->sum('amount_spent');
-            $totalCallLength = $calls->sum('call_duration_in_seconds');
-            $averageCallLength = $totalCalls > 0 ? $totalCallLength / $totalCalls : 0;
-            $publisherName = $calls->first()->publisher_name;
-
-            return [
-                'user_ids' => $userIds,
-                'publisher_name' => $publisherName,
-                'totalCalls' => $totalCalls,
-                'paidCalls' => $paidCalls,
-                'revenueEarned' => $totalRevenue,
-                'revenuePerCall' => $totalCalls > 0 ? $totalRevenue / $totalCalls : 0,
-                'totalCallLength' => $totalCallLength,
-                'averageCallLength' => $averageCallLength,
-            ];
-        });
+        $callsGroupedByUser = $this->call->getCallsGroupedByUserId($allCalls);
+        $callsGroupedByPublisherName = $this->call->getCallsGroupedByPublisherName($allCalls);
 
         return Inertia::render('Admin/Calls/IndexBeta', [
             'requestData' => $request->all(),
