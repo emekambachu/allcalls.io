@@ -335,4 +335,8 @@ class CallService
         ];
     }
 
+    public function getCallsGroupedByPublisherName($calls){
+
+    }
+
 }
