@@ -57,6 +57,10 @@ let formatMoney = (amount) => {
     .replace(/\d(?=(\d{3})+\.)/g, "$&,");
 };
 
+let abbreviatedNotes = (note) => {
+    return note.length > 10 ? note.slice(0, 10) + '...' : note;
+}
+
 let formatDate = (inputDate) => {
   // Split the input date by the hyphen ("-") to get year, month, and day
   const [year, month, day] = inputDate.split("-");
@@ -122,6 +126,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
                   <th scope="col" class="px-4 py-3">Last Name</th>
                   <th scope="col" class="px-4 py-3">URL</th>
                   <th scope="col" class="px-4 py-3">Locked Status</th>
+                  <th scope="col" class="px-4 py-3">Notes</th>
                   <th scope="col" class="px-4 py-3">Status</th>
                   <th scope="col" class="px-4 py-3 text-center">Actions</th>
                 </tr>
@@ -167,6 +172,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
                       </div>
                     </div>
                   </td>
+                  <td class="text-gray-600 px-4 py-3">{{ Client.notes ? abbreviatedNotes(Client.notes) :"" }}</td>
                   <td class="text-gray-600 px-4 py-3">
                     <span v-if="['Sale - Simplified Issue', 'Sale - Guaranteed Issue'].includes(
                       Client.status
@@ -178,7 +184,6 @@ let capitalizeAndReplaceUnderscore = (str) => {
                       Client.status }}</span>
                     <span v-else>-</span>
                   </td>
-
                   <td class="text-gray-700 px-4 py-3 flex items-center justify-center">
                     <button title="View Client" @click="openClientModal(Client)"
                       class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"

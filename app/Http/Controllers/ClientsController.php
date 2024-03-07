@@ -72,6 +72,7 @@ class ClientsController extends Controller
             "dob" => $request->dob ?? '',
             "status" => $request->status ?? '',
             "state" => $request->state ?? '',
+            "notes" => $request->notes ?? null,
         ]);
 
         return redirect()->back()->with([

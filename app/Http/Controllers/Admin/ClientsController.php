@@ -117,6 +117,7 @@ class ClientsController extends Controller
             "dob" => 'required',
             "status" => 'required',
             "state" => 'required',
+            "notes" => 'nullable',
         ]);
 
         $client->update([
@@ -130,6 +131,7 @@ class ClientsController extends Controller
             "dob" => $request->dob,
             "status" => $request->status,
             "state" => $request->state,
+            "notes" => $request->notes,
         ]);
 
         return redirect()->back()->with([

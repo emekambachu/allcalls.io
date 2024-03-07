@@ -202,7 +202,7 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
 
     public function sendbirdUser()
     {
-        return $this->hasOne(SendbirdUser::class);
+        return $this->hasOne(SendBirdUser::class);
     }
 
 
