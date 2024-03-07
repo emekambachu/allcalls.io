@@ -257,10 +257,9 @@ class CallService
 
         // Apply date filters
         if ($startDate && $endDate) {
-
             $userTimeZone = Auth::user() && !empty(Auth::user()->timezone) ? Auth::user()->timezone : 'America/New_York';
-            $startDate = Carbon::createFromFormat('d-m-Y', $startDate)->timezone($userTimeZone);
-            $endDate = Carbon::createFromFormat('d-m-Y', $endDate)->timezone($userTimeZone);
+            $startDate = Carbon::parse($startDate)->timezone($userTimeZone);
+            $endDate = Carbon::parse($endDate)->timezone($userTimeZone);
 
             if(in_array($request->input('sort_column'), $this->columnsWithJoins, true)){
                 $query->whereDate('calls.created_at', '>=', $startDate)
