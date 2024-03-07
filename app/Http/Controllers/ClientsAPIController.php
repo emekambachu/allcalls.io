@@ -59,6 +59,7 @@ class ClientsAPIController extends Controller
             'status' => $request->status ?? null,
             'state' => $request->state ?? $client->state,
             'beneficiary' => $request->beneficiary ?? $client->beneficiary,
+            'notes' => $request->notes ?? $client->notes,
         ]);
 
         $client = $client->refresh();
