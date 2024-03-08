@@ -31,8 +31,10 @@ class LinkAppToCall implements ShouldQueue
             ->orderBy('created_at', 'desc')->first();
 
         if ($matchedRecord) {
+            $matchedRecord->business_id = $event->business->id;
             $event->business->call_id = $matchedRecord->id;
             $event->business->save();
+            $matchedRecord->save();
             Log::debug("Assign Call To Business --> $event->business AND Call Record ---> $matchedRecord");
         } else {
             Log::debug("Date --> $dateTillEndOfDay Call Record Not found For Business --> $event->business");
