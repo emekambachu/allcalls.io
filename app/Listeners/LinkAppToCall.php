@@ -31,7 +31,7 @@ class LinkAppToCall implements ShouldQueue
             ->orderBy('created_at', 'desc')->first();
 
         if ($matchedRecord) {
-            $matchedRecord->business_id = $event->business->id;
+            $matchedRecord->policy_id = $event->business->id;
             $event->business->call_id = $matchedRecord->id;
             $event->business->save();
             $matchedRecord->save();
