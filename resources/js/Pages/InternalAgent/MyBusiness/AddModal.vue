@@ -1524,7 +1524,7 @@ let existingBusiness = () => {
                         <VueDatePicker
                           v-model="form.dob"
                           :disabled="disabledDob"
-                          format="MMM-dd-yyyy"
+                          format="MM-dd-yyyy"
                           :maxDate="maxDate"
                           auto-apply
                           utc="preserve"
@@ -1658,7 +1658,7 @@ let existingBusiness = () => {
                         <VueDatePicker
                           v-model="form.application_date"
                           :disabled="applicationDate"
-                          format="MMM-dd-yyyy"
+                          format="MM-dd-yyyy"
                           :maxDate="maxDate"
                           auto-apply
                           utc="preserve">
@@ -1887,7 +1887,7 @@ let existingBusiness = () => {
                         <VueDatePicker
                           v-model="form.policy_draft_date"
                           :disabled="disabledPolicydraftdate"
-                          format="MMM-dd-yyyy"
+                          format="MM-dd-yyyy"
                           auto-apply
                           utc="preserve"
                         >
