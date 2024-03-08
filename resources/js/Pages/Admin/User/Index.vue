@@ -100,6 +100,7 @@ let actionToDeleteUser = () => {
       toaster("error", error.message)
     })
 }
+
 let dateFormat = (data) => {
     if (data) {
         let date = new Date(data)
@@ -107,9 +108,8 @@ let dateFormat = (data) => {
         const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Month is zero-based, so add 1
         const year = date.getFullYear();
         // Create the formatted date string
-        return `${day}/${month}/${year}`;
+        return `${month}-${day}-${year}`;
     }
-
 }
 </script>
 
@@ -140,29 +140,28 @@ let dateFormat = (data) => {
             <table class="w-full text-sm text-left text-gray-400">
               <thead class="text-xs text-gray-300 uppercase bg-sky-900">
                 <tr>
-                  <th scope="col" class="px-4 py-3">ID</th>
-                  <th scope="col" class="px-4 py-3">First Name</th>
-                  <th scope="col" class="px-4 py-3">Last Name</th>
-                  <th scope="col" class="px-4 py-3">Email</th>
-                  <th scope="col" class="px-4 py-3">Balance</th>
-                  <th scope="col" class="px-4 py-3">Phone</th>
-                  <th scope="col" class="px-4 py-3">Role</th>
-                  <th scope="col" class="px-4 py-3">Sign Up Date</th>
-                  <th scope="col" class="px-4 py-3 text-end">Actions</th>
+                  <th scope="col" class="px-2 py-3">ID</th>
+                  <th scope="col" class="px-2 py-3">First Name</th>
+                  <th scope="col" class="px-2 py-3">Last Name</th>
+                  <th scope="col" class="px-2 py-3">Email</th>
+                  <th scope="col" class="px-2 py-3">Balance</th>
+                  <th scope="col" class="px-2 py-3">Phone</th>
+                  <th scope="col" class="px-2 py-3">Role</th>
+                  <th scope="col" class="px-2 py-3">Sign Up Date</th>
+                  <th scope="col" class="px-2 py-3 text-end">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="user in users.data" :key="user.id" class="border-b border-gray-500">
-                  <td class="text-gray-600 px-4 py-3">{{ user.id }}</td>
-                  <td class="text-gray-600 px-4 py-3">{{ user.first_name }}</td>
-                  <td class="text-gray-600 px-4 py-3">{{ user.last_name }}</td>
-                  <th class="text-gray-600 px-4 py-3">{{ user.email }}</th>
-                  <td class="text-gray-600 px-4 py-3">
+                  <td class="text-gray-600 px-2 py-3">{{ user.id }}</td>
+                  <td class="text-gray-600 px-2 py-3">{{ user.first_name }}</td>
+                  <td class="text-gray-600 px-2 py-3">{{ user.last_name }}</td>
+                  <th class="text-gray-600 px-2 py-3">{{ user.email }}</th>
+                  <td class="text-gray-600 px-2 py-3">
                     ${{ formatMoney(user.balance) }}
                   </td>
-
-                  <td class="text-gray-600 px-4 py-3"> <div class="flex"><span class="mr-1" v-if="user.phone_code">{{ user.phone_code}}</span> <span>{{ user.phone }}</span> </div> </td>
-                  <td class="text-gray-600 px-4 py-3 text-center">
+                  <td class="text-gray-600 px-2 py-3"> <div class="flex"><span class="mr-1" v-if="user.phone_code">{{ user.phone_code}}</span> <span>{{ user.phone }}</span> </div> </td>
+                  <td class="text-gray-600 px-2 py-3 text-center">
                     <div v-if="user.roles && user.roles.length > 0">
                       <span v-for="role in user.roles" :key="role.id">{{ role.name }}</span>
                     </div>
@@ -170,9 +169,10 @@ let dateFormat = (data) => {
                         User
                     </div>
                   </td>
-                  <th class="text-gray-600 px-4 py-3">{{ dateFormat(user.created_at)  }}</th>
 
-                  <td class="text-gray-700 px-4 py-3 flex items-center justify-end">
+                  <th class="text-gray-600 px-2 py-3">{{ dateFormat(user.created_at)  }}</th>
+
+                  <td class="text-gray-700 px-2 py-3 flex items-center justify-end">
                     <a :href="route('admin.customer.detail', user.id)">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-5 h-5">

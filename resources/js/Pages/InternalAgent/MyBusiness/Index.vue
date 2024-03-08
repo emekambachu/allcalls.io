@@ -164,6 +164,16 @@ let ClearFilter = () => {
   } catch (error) {}
 };
 
+let dateFormat = (data) => {
+    if (data) {
+        const date = new Date(data);
+        const dateString = date.toISOString().split('T')[0]; // Extracting the date part
+        const [year, month, day] = dateString.split('-'); // Splitting the date string
+        // Create the formatted date string
+        return `${month}-${day}-${year}`;
+    }
+};
+
 function formatCurrency(number) {
   // First, round the number to two decimal places
   let rounded = Number(number).toFixed(2);
@@ -372,11 +382,11 @@ const changeDate = (date) => {
 
                   <td
                     class="text-gray-600 px-4 py-3"
-                    v-text="businesse?.application_date"
+                    v-text="businesse.application_date ? dateFormat(businesse.application_date) : '' "
                   ></td>
                   <td
                     class="text-gray-600 px-4 py-3"
-                    v-text="businesse?.policy_draft_date"
+                    v-text="businesse.policy_draft_date ? dateFormat(businesse.policy_draft_date) : '' "
                   ></td>
                   <td class="text-gray-600 px-4 py-3" v-text="businesse?.status"></td>
 

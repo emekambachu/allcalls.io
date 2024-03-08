@@ -36,7 +36,6 @@ class Transaction extends Model
             // Apply the timezone to the timestamp
             $timestamp->timezone($timezone);
         }
-
-        return $timestamp->diffForHumans() . ' (' . $timestamp->format('H:i d/m/Y') . ')';
+        return $timestamp->diffForHumans() . ' (' . $timestamp->format('H:i m/d/Y') . ')';
     }
 }
