@@ -12,15 +12,11 @@ let formatDate = (date) => {
     return "";
   }
 
-  const dateObj = new Date(date);
-
-  const formattedDate = dateObj.toLocaleDateString("en-US", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
-
-  return formattedDate;
+    const dateObj = new Date(date);
+    const dateString = dateObj.toISOString().split('T')[0]; // Extracting the date part
+    const [year, month, day] = dateString.split('-'); // Splitting the date string
+// Create the formatted date string
+    return `${month}-${day}-${year}`;
 };
 </script>
 <template>
