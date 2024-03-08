@@ -2636,8 +2636,7 @@ let appDownloadModal = ref(false);
 <!--              </svg>-->
 <!--            </NavLink>-->
 
-              <li
-                  class="relative"
+              <li class="relative"
                   :class="{
                       'opacity-50': disabledNavLink === true, 'mb-5':
                       route().current('activities.index') ||
