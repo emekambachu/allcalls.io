@@ -6,11 +6,7 @@ use DateTime;
 use DateInterval;
 use DateTimeZone;
 use Carbon\Carbon;
-use App\Models\User;
-use App\Models\Client;
 use DateTimeInterface;
-use App\Models\CallType;
-use App\Models\CallDeviceAction;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Database\Eloquent\Model;
@@ -82,7 +78,7 @@ class Call extends Model
             $timestamp->timezone($timezone);
         }
 
-        return $timestamp->diffForHumans() . ' (' . $timestamp->format('H:i d/m/Y') . ')';
+        return $timestamp->diffForHumans() . ' (' . $timestamp->format('H:i m/d/Y') . ')';
     }
 
     /**

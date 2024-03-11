@@ -28,6 +28,7 @@ let page = usePage();
 if (page.props.flash.message) {
   toaster("success", page.props.flash.message);
 }
+
 let add_agent_button = ref(true)
 if(page.props.auth.user.upline_id && page.props.auth.user.level_id){
   add_agent_button.value = false

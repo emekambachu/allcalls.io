@@ -256,7 +256,7 @@ let openPublisherDetails = (call) => {
             range
             :preset-dates="presetDates"
             placeholder="Picker date range"
-            format="dd-MMM-yyyy"
+            format="MMM-dd-yyyy"
             :maxDate="maxDate"
             :multi-calendars="{ solo: true }"
             auto-apply>

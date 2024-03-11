@@ -67,12 +67,15 @@ use Illuminate\Support\Facades\Http;
 */
 
 Route::get('/', static function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    // return Inertia::render('Welcome', [
+    //     'canLogin' => Route::has('login'),
+    //     'canRegister' => Route::has('register'),
+    //     'laravelVersion' => Application::VERSION,
+    //     'phpVersion' => PHP_VERSION,
+    // ]);
+
+    return view('welcome');
+
 })->name('home');
 
 Route::get('/pdf', [\App\Http\Controllers\InternalAgent\RegistrationStepController::class, 'pdf']);

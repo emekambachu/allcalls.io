@@ -367,11 +367,16 @@ let sortColumn = ref(null);
 let sortDirection = ref("desc");
 let loading = ref(false);
 let currentPage = ref(1);
+
 const getAllCalls = ref([]);
 const getTotalCalls = ref(props.totalCalls);
 const getTotalRevenue = ref(props.totalRevenue);
 const getTotalCallResults = ref(0);
 const getTotalRevenueResults = ref(0);
+
+const callsGroupedByUserResults = ref({});
+const callsGroupedByPublisherNameResults = ref({});
+
 const paginate = ref({
     currentPage: currentPage.value,
     perPage: null,
@@ -418,6 +423,8 @@ let fetchCalls = async (replace = false, per_page = null) => {
   getAllCalls.value = response.data.all_calls;
   getTotalCallResults.value = response.data.total;
   getTotalRevenueResults.value = response.data.total_revenue;
+  callsGroupedByUserResults.value = response.data.calls_grouped_by_user;
+  callsGroupedByPublisherNameResults.value = response.data.calls_grouped_by_publisher_name;
 
   // keep track of current page and pagination
   paginate.value.perPage = response.data.per_page;
@@ -432,6 +439,7 @@ let fetchCalls = async (replace = false, per_page = null) => {
   console.log("Total Call Results: ", getTotalCallResults.value);
   console.log("Total Revenue: ", getTotalRevenueResults.value);
   console.log("Grouped Publisher Names", callsGroupedByPublisherName.value);
+  console.log("Calls Grouped By User", callsGroupedByUserResults.value);
 };
 
 
@@ -819,9 +827,8 @@ const applyCallFiltersToSummary = () => {
     minimizedCallsGroupedByUser.value = Object.fromEntries(minimizedCallsGroupedByUserArray);
     callsGroupedByPublisherName.value = Object.fromEntries(callsGroupedByPublisherNameArray);
 
-    // assigned grouped calls to new variables
-    const unfilteredGroupedCalls = maxmizedCallsGroupedByUser.value;
-    const unfilteredGroupedPublisherNames = callsGroupedByPublisherName.value;
+    // // assigned grouped calls to new variables
+    // const unfilteredGroupedPublisherNames = callsGroupedByPublisherName.value;
     showMoreForGrouped.value = true;
 
     // Clear the grouped calls to be filled with filtered results
@@ -832,28 +839,27 @@ const applyCallFiltersToSummary = () => {
     // update with results
     getTotalCalls.value = getTotalCallResults.value;
     getTotalRevenue.value = getTotalRevenueResults.value;
+    maxmizedCallsGroupedByUser.value = callsGroupedByUserResults.value;
+    callsGroupedByPublisherName.value = callsGroupedByPublisherNameResults.value;
+
+    let count = 0;
+    Object.values(maxmizedCallsGroupedByUser.value).forEach(group => {
+        if(count < 2){
+            minimizedCallsGroupedByUser.value[group.userId] = group;
+        }
+        count++;
+    });
 
     // Iterate loadedCalls first and then grouped calls to match the both user ids
     // if matched add the user group to the maxmizedCallsGroupedByUser
-    let count = 0;
-    for (const [key, value] of getAllCalls.value.entries()) {
 
-        Object.values(unfilteredGroupedCalls).forEach(group => {
-            if (group.userId === value.user_id) {
-                maxmizedCallsGroupedByUser.value[group.userId] = group;
-                if(count < 2){
-                    minimizedCallsGroupedByUser.value[group.userId] = group;
-                }
-                count++;
-            }
-        });
-
-        Object.values(unfilteredGroupedPublisherNames).forEach(publisher => {
-            if (publisher.user_ids.includes(value.user_id)) {
-                callsGroupedByPublisherName.value[publisher.publisher_name] = publisher;
-            }
-        });
-    }
+    // for (const [key, value] of getAllCalls.value.entries()) {
+    //     Object.values(unfilteredGroupedPublisherNames).forEach(publisher => {
+    //         if (publisher.user_ids.includes(value.user_id)) {
+    //             callsGroupedByPublisherName.value[publisher.publisher_name] = publisher;
+    //         }
+    //     });
+    // }
 
     console.log("Loaded calls after filter", loadedCalls.value);
     console.log("Grouped Publisher Names after filter", callsGroupedByPublisherName.value);
@@ -905,10 +911,6 @@ let clearDateFilter = () => {
 }
 
 let applyDateFilter = async (close) => {
-
-  console.log("Date Filter From: ", dateFilterFrom.value);
-  console.log("Date Filter To: ", dateFilterTo.value);
-
   await fetchCalls(true);
   applyCallFiltersToSummary();
   close();
@@ -923,7 +925,6 @@ onMounted(async () => {
 let applyDatePreset = (label) => {
   const today = new Date();
   let from, to;
-
   switch(label) {
     case "Today":
       from = to = formatDate(today);
@@ -962,7 +963,7 @@ function formatDate(date) {
   if (day.length < 2)
       day = '0' + day;
 
-  return [year, month, day].join('-');
+  return [month, day, year].join('-');
 }
 
 
@@ -1108,7 +1109,7 @@ const getAutoCompleteFilterOptions = async (keyword) => {
                   >
                       <span class="font-extrabold text-lg font-sans" v-if="!(dateFilterFrom && dateFilterTo)">Select Date Range</span>
                       <span class="font-extrabold text-lg font-sans" v-if="dateFilterFrom && dateFilterTo">
-                        <span>Selected Date Range:</span> {{ dateFilterFrom }} - {{ dateFilterTo }}
+                        <span>Selected Date Range:</span> {{ formatDate(dateFilterFrom) }} - {{ formatDate(dateFilterTo) }}
                       </span>
                   </button>
               </PopoverButton>
@@ -1379,9 +1380,9 @@ const getAutoCompleteFilterOptions = async (keyword) => {
           </div>
     </Modal>
 
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+      <div class="max-w-screen-3xl sm:px-6 lg:px-8">
           <div class="px-4 sm:px-8 sm:rounded-lg">
-              <hr class="mb-4" />
+              <hr class="" />
           </div>
       </div>
 
@@ -1391,7 +1392,7 @@ const getAutoCompleteFilterOptions = async (keyword) => {
       </div>
     </div>
 
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+    <div class="max-w-screen-3xl sm:px-6 lg:px-8">
       <div class="px-4 sm:px-8 sm:rounded-lg">
         <hr class="mb-4" />
       </div>

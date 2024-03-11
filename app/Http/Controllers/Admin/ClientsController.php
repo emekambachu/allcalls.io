@@ -32,6 +32,7 @@ class ClientsController extends Controller
                     $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ['%' . $request->name . '%']);
                 }
             })
+            ->where('unlocked', 1)
             ->with(['call', 'user', 'call.callType'])
             ->paginate(100);
 
@@ -116,6 +117,7 @@ class ClientsController extends Controller
             "dob" => 'required',
             "status" => 'required',
             "state" => 'required',
+            "notes" => 'nullable',
         ]);
 
         $client->update([
@@ -129,6 +131,7 @@ class ClientsController extends Controller
             "dob" => $request->dob,
             "status" => $request->status,
             "state" => $request->state,
+            "notes" => $request->notes,
         ]);
 
         return redirect()->back()->with([

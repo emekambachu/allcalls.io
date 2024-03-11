@@ -74,13 +74,16 @@ const props = defineProps({
 });
 
 console.log("from", props.from);
+
 console.log("to", props.to);
+
 let dateRange = ref([]);
 watch(dateRange, (newVal) => {
   if (newVal) {
     fetechDashboard();
   }
 });
+
 const formatDate = (date) => {
   return date.toLocaleString("en-US", {
     weekday: "short",
@@ -98,7 +101,6 @@ const calculateLast7Days = () => {
   const toDate = new Date(); // Today's date
   const fromDate = new Date();
   fromDate.setDate(toDate.getDate() - 6); // Subtract 7 days from today
-
   return {
     from: formatDate(fromDate),
     to: formatDate(toDate),
@@ -259,7 +261,7 @@ let formatNumberWith5DecimalPlaces = (number) => {
           range
           :preset-dates="presetDates"
           placeholder="Picker date range"
-          format="dd-MMM-yyyy"
+          format="MMM-dd-yyyy"
           :multi-calendars="{ solo: true }"
           auto-apply
         />

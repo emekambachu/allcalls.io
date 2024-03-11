@@ -21,7 +21,7 @@ let props = defineProps({
   },
 });
 let page = usePage();
-if (page.props.flash.message && page.props.auth.role == 'admin') {
+if (page.props.flash.message) {
   toaster("success", page.props.flash.message);
 }
 let formatDate = (date) => {

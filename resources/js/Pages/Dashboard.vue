@@ -238,7 +238,7 @@ let formatNumberWith5DecimalPlaces = (number) => {
           range
           :preset-dates="presetDates"
           placeholder="Picker date range"
-          format="dd-MMM-yyyy"
+          format="MMM-dd-yyyy"
           :multi-calendars="{ solo: true }"
         />
       </div>

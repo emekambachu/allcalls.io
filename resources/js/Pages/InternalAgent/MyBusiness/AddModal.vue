@@ -177,8 +177,6 @@ let getInsuranceCompanyOptions = () => {
   return Object.keys(companies);
 };
 let getProductNameOptions = () => {
-  // console.log('form.value.insurance_company',form.value.insurance_company);
-  // console.log('form.value.product_name',form.value.product_name);
   return Object.keys(companies[form.value.insurance_company]);
 };
 
@@ -317,14 +315,12 @@ let Previous = (data) => {
   step.value -= 1;
 };
 let dateFormat = (val) => {
-  const date = new Date(val);
-  const toMonth = date.getMonth() + 1;
-  const toDate = date.getDate();
-  const toYear = date.getFullYear();
-
-  // Format the components as desired (e.g., as "MM-DD-YYYY")
-  // return `${toMonth}/${toDate}/${toYear}`;
-  return `${toYear}-${toMonth}-${toDate}`;
+    const date = new Date(val);
+    const dateString = date.toISOString().split('T')[0]; // Extracting the date part
+    const [year, month, day] = dateString.split('-'); // Splitting the date string
+// Create the formatted date string
+//     return `${month}-${day}-${year}`;
+    return `${year}-${month}-${day}`;
 };
 // save business data start
 let isLoading = ref(false);
@@ -1528,9 +1524,10 @@ let existingBusiness = () => {
                         <VueDatePicker
                           v-model="form.dob"
                           :disabled="disabledDob"
-                          format="dd-MMM-yyyy"
+                          format="MM-dd-yyyy"
                           :maxDate="maxDate"
                           auto-apply
+                          utc="preserve"
                         >
                         </VueDatePicker>
                         <div
@@ -1656,15 +1653,15 @@ let existingBusiness = () => {
                       <div>
                         <label
                           class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
-                          >Application Date<span class="text-red-400">*</span></label
+                          >Application Date <span class="text-red-400">*</span></label
                         >
                         <VueDatePicker
                           v-model="form.application_date"
                           :disabled="applicationDate"
-                          format="dd-MMM-yyyy"
+                          format="MM-dd-yyyy"
                           :maxDate="maxDate"
                           auto-apply
-                        >
+                          utc="preserve">
                         </VueDatePicker>
                         <div
                           v-if="firstStepErrors.application_date"
@@ -1890,8 +1887,9 @@ let existingBusiness = () => {
                         <VueDatePicker
                           v-model="form.policy_draft_date"
                           :disabled="disabledPolicydraftdate"
-                          format="dd-MMM-yyyy"
+                          format="MM-dd-yyyy"
                           auto-apply
+                          utc="preserve"
                         >
                         </VueDatePicker>
                         <div

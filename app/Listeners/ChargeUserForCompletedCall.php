@@ -82,8 +82,8 @@ class ChargeUserForCompletedCall
                     }
                 }
             } else {
-                Log::debug('User bid not found');
-                return;
+                Log::debug('User bid not found, making $chargeAmount = 35');
+                $chargeAmount = 35;
             }
         }
 
