@@ -9,6 +9,7 @@ import TextInput from "@/Components/TextInput.vue";
 import Modal from "@/Components/Modal.vue";
 import CallLogs from "@/Components/CallLogs.vue";
 import {Popover, PopoverButton, PopoverPanel, Tab, TabGroup, TabList, TabPanel, TabPanels} from "@headlessui/vue";
+import DateService from "@/Services/date-service";
 
 let page = usePage();
 if (page.props.flash.message) {
@@ -284,6 +285,15 @@ const agentColumns = ref([
             return call.averageCallLength.toFixed(2);
         },
     },
+
+    {
+        label: "Policies",
+        name: "totalPolicies",
+        visible: true,
+        render(call) {
+            return call.totalPolicies;
+        },
+    },
 ]);
 
 const publisherColumns = ref([
@@ -506,6 +516,7 @@ let summaryFooterRow = computed(() => {
   let totalPaidCalls = 0;
   let totalRevenue = 0;
   let totalCallLength = 0;
+  let totalPolicies = 0;
 
   for (const userId in maxmizedCallsGroupedByUser.value) {
     const userData = maxmizedCallsGroupedByUser.value[userId];
@@ -513,6 +524,7 @@ let summaryFooterRow = computed(() => {
     totalPaidCalls += userData.paidCalls; // Summing up the paidCalls
     totalRevenue += userData.revenueEarned;
     totalCallLength += userData.totalCallLength; // Assuming this field exists in userData
+    totalPolicies += userData.totalPolicies;
   }
 
   let averageCallLength = totalCalls > 0 ? totalCallLength / totalCalls : 0;
@@ -526,6 +538,7 @@ let summaryFooterRow = computed(() => {
     revenuePerCall: revenuePerCall,
     totalCallLength: totalCallLength,
     averageCallLength: averageCallLength,
+    totalPolicies: totalPolicies,
   };
 });
 
@@ -899,8 +912,8 @@ let inputTypeForTheSelectedFilter = computed(() => {
   return filter.inputType;
 });
 
-let dateFilterFrom = ref(new Date().toISOString().split('T')[0]);
-let dateFilterTo = ref(new Date().toISOString().split('T')[0]);
+let dateFilterFrom = ref(DateService.currentDateMDY());
+let dateFilterTo = ref(DateService.currentDateMDY());
 
 let clearDateFilter = () => {
   dateFilterFrom.value = null;
@@ -915,11 +928,6 @@ let applyDateFilter = async (close) => {
   applyCallFiltersToSummary();
   close();
 }
-
-onMounted(async () => {
-    await fetchCalls();
-    applyCallFiltersToSummary();
-});
 
 
 let applyDatePreset = (label) => {
@@ -953,19 +961,8 @@ let applyDatePreset = (label) => {
 };
 
 function formatDate(date) {
-  let d = new Date(date),
-      month = '' + (d.getMonth() + 1),
-      day = '' + d.getDate(),
-      year = d.getFullYear();
-
-  if (month.length < 2)
-      month = '0' + month;
-  if (day.length < 2)
-      day = '0' + day;
-
-  return [month, day, year].join('-');
+  return DateService.formatDate(date);
 }
-
 
 let showLogsForCallId = ref(null);
 let showLogsForCallModal = ref(false);
@@ -1094,6 +1091,11 @@ const getAutoCompleteFilterOptions = async (keyword) => {
         console.log(error);
     });
 }
+
+onMounted(async () => {
+    await fetchCalls();
+    applyCallFiltersToSummary();
+});
 </script>
 
 <template>
