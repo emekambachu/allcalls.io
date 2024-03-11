@@ -258,8 +258,8 @@ class CallService
         // Apply date filters
         if ($startDate && $endDate) {
             $userTimeZone = Auth::user() && !empty(Auth::user()->timezone) ? Auth::user()->timezone : 'America/New_York';
-            $startDate = Carbon::parse($startDate)->timezone($userTimeZone);
-            $endDate = Carbon::parse($endDate)->timezone($userTimeZone);
+            $startDate = Carbon::parse($startDate)->timezone($userTimeZone)->format('Y-m-d H:i:s');
+            $endDate = Carbon::parse($endDate)->timezone($userTimeZone)->format('Y-m-d H:i:s');
 
             if(in_array($request->input('sort_column'), $this->columnsWithJoins, true)){
                 $query->whereDate('calls.created_at', '>=', $startDate)
@@ -320,11 +320,14 @@ class CallService
     public function getCallsGroupedByUserId($allCalls){
         return $allCalls->groupBy('user_id')->map(function ($calls) {
             $user = $calls->first()->user; // Assuming each id group has a user
+
+            $policy = $calls->where('policy_id', '!=', null);
             $totalCalls = $calls->count();
             $paidCalls = $calls->where('amount_spent', '>', 0)->count();
             $totalRevenue = $calls->sum('amount_spent');
             $totalCallLength = $calls->sum('call_duration_in_seconds');
             $averageCallLength = $totalCalls > 0 ? $totalCallLength / $totalCalls : 0;
+            $totalPolicies = $policy->count();
 
             return [
                 'userId' => $user->id,
@@ -336,6 +339,7 @@ class CallService
                 'revenuePerCall' => $totalCalls > 0 ? $totalRevenue / $totalCalls : 0,
                 'totalCallLength' => $totalCallLength,
                 'averageCallLength' => $averageCallLength,
+                'totalPolicies' => $totalPolicies,
             ];
         });
     }

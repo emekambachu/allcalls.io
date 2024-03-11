@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Call;
+use App\Models\InternalAgentMyBusiness;
 use App\Models\User;
 use App\Services\Base\BaseService;
 use Carbon\Carbon;
@@ -20,8 +21,12 @@ class CallFactory extends Factory
         $callTaken = Carbon::createFromTimestamp($callTaken->getTimestamp())
             ->setTime($this->faker->numberBetween(9, 17), $this->faker->numberBetween(0, 59), $this->faker->numberBetween(0, 59));
 
+        $user = new User();
+        $agent = $user->with('clients')->inRandomOrder()->first();
+
         return [
-            'user_id' =>  User::inRandomOrder()->first()->id, // Pick from any user/client because the clientSeeder generates new clients/users
+            'user_id' =>  $agent->id, // Pick from any user/client because the clientSeeder generates new clients/users
+            'policy_id' => InternalAgentMyBusiness::factory()->create()->id,
             'call_taken' => $callTaken,
             'call_duration_in_seconds' => $faker->numberBetween(240, 600),
             'hung_up_by' => $faker->randomElement(['Caller', 'Agent']),

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('internal_agent_my_businesses', function (Blueprint $table) {
+        Schema::table('internal_agent_my_businesses', static function (Blueprint $table) {
             $table->text('label')->after('insurance_company')->nullable();
         });
     }
