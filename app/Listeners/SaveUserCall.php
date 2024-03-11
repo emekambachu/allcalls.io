@@ -41,6 +41,7 @@ class SaveUserCall
             'call_type_id' => $event->callTypeId,
             'unique_call_id' => $event->uniqueCallId,
             'from' => $event->from,
+            'call_duration_in_seconds' => 0,
         ]);
 
         UserActivity::create([

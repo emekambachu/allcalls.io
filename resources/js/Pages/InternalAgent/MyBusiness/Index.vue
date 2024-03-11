@@ -166,10 +166,9 @@ let ClearFilter = () => {
 
 let dateFormat = (data) => {
     if (data) {
-        let date = new Date(data);
-        const day = date.getDate().toString().padStart(2, "0"); // Add leading zero if needed
-        const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Month is zero-based, so add 1
-        const year = date.getFullYear();
+        const date = new Date(data);
+        const dateString = date.toISOString().split('T')[0]; // Extracting the date part
+        const [year, month, day] = dateString.split('-'); // Splitting the date string
         // Create the formatted date string
         return `${month}-${day}-${year}`;
     }
