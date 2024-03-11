@@ -28,29 +28,40 @@ class ExportPoliciesCSV extends Command
     {
         $this->info('Exporting data to CSV...');
 
-        $policies = InternalAgentMyBusiness::all();
-    
+        $policies = InternalAgentMyBusiness::with('client.call')->get();
+
         if ($policies->isEmpty()) {
             $this->error('No policies found to export.');
             return;
         }
-    
+
         $filePath = 'policies.csv';
         $file = fopen($filePath, 'w');
-    
-        // Get the attributes from the first model to set as CSV headers
-        $headers = array_keys($policies->first()->getAttributes());
-    
+
+        // Define headers manually to include the extra columns
+        $headers = ['Policy Headers', 'Publisher Name', 'Publisher ID']; // Replace 'Policy Headers' with your actual policy headers
+
         // Write the headers to the CSV file
         fputcsv($file, $headers);
-    
+
         // Write each policy's attributes to the CSV
         foreach ($policies as $policy) {
-            fputcsv($file, $policy->getAttributes());
+            $attributes = $policy->getAttributes();
+
+            // Check if there's a non-null client_id and related call data
+            if (!is_null($policy->client_id) && !is_null($policy->client) && !is_null($policy->client->call)) {
+                $attributes['publisher_name'] = $policy->client->call->publisher_name;
+                $attributes['publisher_id'] = $policy->client->call->publisher_id;
+            } else {
+                $attributes['publisher_name'] = null;
+                $attributes['publisher_id'] = null;
+            }
+
+            fputcsv($file, $attributes);
         }
-    
+
         fclose($file);
-    
-        $this->info('Data exported successfully to ' . $filePath);    
+
+        $this->info('Data exported successfully to ' . $filePath);
     }
 }
