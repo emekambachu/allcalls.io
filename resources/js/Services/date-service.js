@@ -23,7 +23,7 @@ let DateService = {
         if (day.length < 2)
             day = '0' + day;
 
-        return [day, month ,year].join('-');
+        return [month, day ,year].join('-');
     }
 
 }
