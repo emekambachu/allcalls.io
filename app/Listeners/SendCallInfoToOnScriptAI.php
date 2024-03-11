@@ -33,7 +33,7 @@ class SendCallInfoToOnScriptAI implements ShouldQueue
             'client' => $call->client,
         ]);
 
-        if ($call && $agent) {
+        if ($call && $agent && $call->sent_to_onscript != true) {
             $params = [
                 'agent_name' => $agent->first_name . ' ' . $agent->last_name,
                 'api_key' => env('ONSCRIPT_AI_API_KEY'),
