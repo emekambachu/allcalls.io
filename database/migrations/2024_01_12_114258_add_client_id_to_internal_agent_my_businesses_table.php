@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('internal_agent_my_businesses', function (Blueprint $table) {
+        Schema::table('internal_agent_my_businesses', static function (Blueprint $table) {
             $table->foreignId('client_id')
             ->nullable()
             ->constrained('clients')->after('policy_draft_date');
@@ -23,7 +23,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('internal_agent_my_businesses', function (Blueprint $table) {
+        Schema::table('internal_agent_my_businesses', static function (Blueprint $table) {
             $table->dropColumn('client_id');
         });
     }

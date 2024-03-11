@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('internal_agent_my_businesses', function (Blueprint $table) {
+        Schema::create('internal_agent_my_businesses', static function (Blueprint $table) {
             $table->id();
             $table->foreignId('agent_id')
                 ->constrained('users')
@@ -25,6 +25,8 @@ return new class extends Migration
             $table->string('split_sale_type')->nullable();
             $table->string('split_agent_email');
             $table->string('insurance_company');
+            $table->string('status')->nullable();
+            $table->text('label')->nullable();
             $table->string('product_name');
             $table->date('application_date');
             $table->double('coverage_amount');
@@ -38,6 +40,9 @@ return new class extends Migration
             $table->string('source_of_lead')->nullable();
             $table->string('appointment_type');
             $table->date('policy_draft_date');
+            $table->foreignId('client_id')
+                ->nullable()
+                ->constrained('clients');
             $table->string('first_name');
             $table->string('mi')->nullable();
             $table->double('annual_target_premium')->nullable();
@@ -60,6 +65,8 @@ return new class extends Migration
             $table->string('client_phone_no');
             $table->string('client_email');
             $table->timestamps();
+            $table->string('beneficiary_name');
+            $table->string('beneficiary_relationship');
         });
     }
 
