@@ -14,7 +14,11 @@ return new class extends Migration
     {
         Schema::create('calls', static function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('user_id')
+                ->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('policy_id')
+                ->nullable()
+                ->constrained('calls');
             $table->timestamp('call_taken')->useCurrent();
             $table->integer('call_duration_in_seconds');
             $table->enum('hung_up_by', ['Caller', 'Agent'])->default('Caller');
@@ -38,6 +42,11 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('calls', static function (Blueprint $table) {
+            $table->dropForeign('policy_id');
+            $table->dropColumn('policy_id');
+        });
+
         // comment foreign key checks after testing the migration
         //DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::dropIfExists('calls');

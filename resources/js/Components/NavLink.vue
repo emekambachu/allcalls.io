@@ -22,7 +22,7 @@ const classes = computed(() =>
 </script>
 
 <template>
-    <Link :href="href" :class="[classes, {'disabledNavLink': disabledNavLink } ]"    >
+    <Link :href="href" :class="[classes, {'disabledNavLink': disabledNavLink } ]">
         <slot  />
     </Link>
 </template>

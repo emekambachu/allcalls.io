@@ -43,10 +43,11 @@ class Call extends Model
         return $this->hasOne(Client::class);
     }
 
-    public function getBusiness()
+    public function getBusiness(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
-        return $this->hasOne(InternalAgentMyBusiness::class);
+        return $this->hasOne(InternalAgentMyBusiness::class, 'policy_id', 'id');
     }
+
 
     /**
      * Get the ringing duration for the call.
