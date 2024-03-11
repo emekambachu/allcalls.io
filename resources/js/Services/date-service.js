@@ -9,7 +9,7 @@ let DateService = {
         if (dd < 10) dd = '0' + dd;
         if (mm < 10) mm = '0' + mm;
 
-        return mm + '/' + dd + '/' + yyyy;
+        return dd + '/' + mm + '/' + yyyy;
     },
 
     formatDate(date){
@@ -23,7 +23,7 @@ let DateService = {
         if (day.length < 2)
             day = '0' + day;
 
-        return [day, month ,year].join('-');
+        return [month, day ,year].join('-');
     }
 
 }
