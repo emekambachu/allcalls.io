@@ -593,6 +593,25 @@ onMounted(() => {
   setupTwilioDevice();
 });
 
+let mergeCallsToConference = () => {
+  // Construct the payload
+  const payload = {
+    callSid: incomingCallSid.value,
+    // phoneNumber: conferenceTypedNumber.value,
+  };
+
+  // Send the payload to your endpoint
+  axios.post('/api/conference/convert', payload)
+    .then(response => {
+      console.log('Call initiated', response);
+      // Reset or handle post-call UI here
+    })
+    .catch(error => {
+      console.error('Error initiating call', error);
+      // Handle error
+    });
+}
+
 let callNumber = () => {
   if (conferenceTypedNumber.value && conferenceTypedNumber.value.length > 0) {
     // Construct the payload
@@ -3107,8 +3126,9 @@ let appDownloadModal = ref(false);
 
         <!-- Merge Calls Button -->
         <div class="py-3">
+          <!-- @click="showDialPad = !showDialPad" -->
           <button
-            @click="showDialPad = !showDialPad"
+            @click="mergeCallsToConference"
             class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded"
           >
             Merge Calls
