@@ -21,7 +21,7 @@ class CallService
     public function __construct(
         ClientService $client,
         UserService $user,
-    ){
+    ) {
         $this->client = $client;
         $this->user = $user;
     }
@@ -64,16 +64,16 @@ class CallService
     {
         $names = explode(' ', $filter['value']);
 
-        if(empty($names)) {
+        if (empty($names)) {
             return;
         }
 
         $userIds = $this->user->user()->select('id', 'first_name', 'last_name')
             ->where(function ($q) use ($names) {
-                if(!empty($names[0])) {
+                if (!empty($names[0])) {
                     $q->where('first_name', $names[0]);
                 }
-                if(!empty($names[1])) {
+                if (!empty($names[1])) {
                     $q->where('last_name', $names[1]);
                 }
             })->pluck('id');
@@ -147,7 +147,6 @@ class CallService
                             } else {
                                 $rowData[] = null;
                             }
-
                         } catch (\Exception $e) {
                             Log::error("Export Error " . $column['name'] . " in call object: " . $e->getMessage());
                         }
@@ -156,7 +155,6 @@ class CallService
                 }
             }
             fclose($file);
-
         }, 200, $headers);
     }
 
@@ -165,13 +163,13 @@ class CallService
         $keyword = $request->keyword;
         $calls = $this->call()->with('user')->whereHas('user', function (Builder $query) use ($keyword) {
             $query->where('first_name', 'like', '%' . $keyword . '%')
-                ->orWhere('last_name', 'like', '%'. $keyword. '%');
+                ->orWhere('last_name', 'like', '%' . $keyword . '%');
         })->get();
 
-        if($calls->count() > 0) {
+        if ($calls->count() > 0) {
             $calls = $calls->transform(function ($call, $index) {
                 $call->user_email = $call->user ? $call->user->email : null;
-                $call->agent_name = $call->user ? $call->user->first_name.' '.$call->user->last_name : '';
+                $call->agent_name = $call->user ? $call->user->first_name . ' ' . $call->user->last_name : '';
                 return $call;
             });
 
@@ -182,8 +180,8 @@ class CallService
         }
 
         return [
-         'success' => false,
-         'results' => [],
+            'success' => false,
+            'results' => [],
         ];
     }
 
@@ -193,14 +191,14 @@ class CallService
 
         // ringing_duration is a custom attribute, therefore it's not available in the database table
         // Had to use raw queries to get it to work
-        if($request->input('sort_column') === 'ringing_duration'){
+        if ($request->input('sort_column') === 'ringing_duration') {
             $query->select('*', DB::raw('IFNULL(TIMESTAMPDIFF(SECOND, created_at, user_response_time), 20) AS ringing_duration'));
         }
 
         // Apply sorting for columns with or without joins
-        if(in_array($request->input('sort_column'), $this->columnsWithJoins, true)){
+        if (in_array($request->input('sort_column'), $this->columnsWithJoins, true)) {
             $sortColumn = $request->input('sort_column', 'calls.created_at');
-        }else{
+        } else {
             $sortColumn = $request->input('sort_column', 'created_at');
         }
         $sortDirection = $request->input('sort_direction', 'desc');
@@ -210,19 +208,19 @@ class CallService
             $query->orderBy($sortColumn, $sortDirection);
 
             // apply joins to columns with relationships
-        }else if($sortColumn === 'disposition'){
+        } else if ($sortColumn === 'disposition') {
             $query->join('clients', 'clients.call_id', '=', 'calls.id')
                 ->orderBy('clients.status', $sortDirection)
                 ->select('calls.*', 'clients.call_id AS clients_call_id', 'clients.status');
 
             // apply joins to columns with relationships
-        }else if($sortColumn === 'agent_name'){
+        } else if ($sortColumn === 'agent_name') {
             $query->join('users', 'users.id', '=', 'calls.user_id')
                 ->orderBy('users.first_name', $sortDirection)
                 ->select('calls.*', 'users.id AS users_id', 'users.first_name');
 
             // apply joins to columns with relationships
-        }else if($sortColumn === 'vertical'){
+        } else if ($sortColumn === 'vertical') {
             $query->join('call_types', 'call_types.id', '=', 'calls.call_type_id')
                 ->orderBy('call_types.type', $sortDirection)
                 ->select('calls.*', 'call_types.id AS call_types_id', 'call_types.type');
@@ -269,8 +267,10 @@ class CallService
                 'userTimeZone' => $userTimeZone,
             ]);
 
-            $startDate = Carbon::parse($startDate)->timezone($userTimeZone)->format('Y-m-d');
-            $endDate = Carbon::parse($endDate)->timezone($userTimeZone)->format('Y-m-d');
+            // Set the timezone to the start of the day for the start date
+            $startDate = Carbon::createFromFormat('m/d/Y', $startDate)->startOfDay()->timezone($userTimeZone)->format('Y-m-d');
+            // Set the timezone to the start of the day for the end date
+            $endDate = Carbon::createFromFormat('m/d/Y', $endDate)->startOfDay()->timezone($userTimeZone)->format('Y-m-d');
 
 
             Log::debug('CallService:DatesAfterTimezoneConversion:', [
@@ -278,12 +278,12 @@ class CallService
                 'endDate' => $endDate,
             ]);
 
-            if(in_array($request->input('sort_column'), $this->columnsWithJoins, true)){
+            if (in_array($request->input('sort_column'), $this->columnsWithJoins, true)) {
                 Log::debug('CallService:DatesAppliedToJoinQuery:');
 
                 $query->whereDate('calls.created_at', '>=', $startDate)
                     ->whereDate('calls.created_at', '<=', $endDate);
-            }else{
+            } else {
                 Log::debug('CallService:DatesApplied:');
 
                 $query->whereDate('created_at', '>=', $startDate)
@@ -304,10 +304,10 @@ class CallService
         $callsGroupedByPublisherName = $this->getCallsGroupedByPublisherName($allCalls);
 
         // For paginated data
-        $calls->getCollection()->each(function ($call, $index){
+        $calls->getCollection()->each(function ($call, $index) {
             $call->serial_number = $index + 1;
             $call->user_email = $call->user ? $call->user->email : null;
-            $call->agent_name = $call->user ? $call->user->first_name.' '.$call->user->last_name : '';
+            $call->agent_name = $call->user ? $call->user->first_name . ' ' . $call->user->last_name : '';
             return $call;
         });
 
@@ -315,9 +315,9 @@ class CallService
         $allCalls = $allCalls->transform(function ($call, $index) {
             $call->serial_number = $index + 1;
             $call->user_email = $call->user ? $call->user->email : null;
-            $call->agent_name = $call->user ? $call->user->first_name.' '.$call->user->last_name : '';
+            $call->agent_name = $call->user ? $call->user->first_name . ' ' . $call->user->last_name : '';
             $call->disposition = $call->client ? $call->client->status : null;
-            $call->revenue = '$'.$call->amount_spent;
+            $call->revenue = '$' . $call->amount_spent;
             $call->call_type = $call->call_type ? $call->call_type->type : null;
             return $call;
         });
@@ -338,7 +338,8 @@ class CallService
         ];
     }
 
-    public function getCallsGroupedByUserId($allCalls){
+    public function getCallsGroupedByUserId($allCalls)
+    {
         return $allCalls->groupBy('user_id')->map(function ($calls) {
             $user = $calls->first()->user; // Assuming each id group has a user
 
@@ -365,7 +366,8 @@ class CallService
         });
     }
 
-    public function getCallsGroupedByPublisherName($allCalls){
+    public function getCallsGroupedByPublisherName($allCalls)
+    {
         return $allCalls->groupBy('publisher_name')->map(function ($calls) {
             $userIds = $calls->pluck('user_id')->toArray(); // Get ids that belong to the same publisher
             $totalCalls = $calls->count();
@@ -387,5 +389,4 @@ class CallService
             ];
         });
     }
-
 }
