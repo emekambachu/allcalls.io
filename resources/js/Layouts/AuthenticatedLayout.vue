@@ -19,6 +19,8 @@ import DispositionModal from "@/Components/DispositionModal.vue";
 
 let page = usePage();
 
+let showDialPad = ref(false);
+let conferenceTypedNumber = ref(null);
 
 let showLowBalanceModal = ref(false);
 if (page.props.auth.role !== "admin" && page.props.auth.user.balance < 40 && page.props.auth.user.basic_training == '1' && page.props.auth.user.agent_access_status === "Live"  && !page.props.auth.user.low_balance_call_scheduled
@@ -3072,6 +3074,39 @@ let appDownloadModal = ref(false);
             Hang Up
           </button>
         </div>
+
+        <!-- Merge Calls Button -->
+        <div class="py-3">
+          <button
+            @click="showDialPad = !showDialPad"
+            class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded"
+          >
+            Merge Calls
+          </button>
+        </div>
+
+        <!-- Numpad/Dialer -->
+        <div v-if="showDialPad" class="p-5">
+          <div class="flex flex-wrap justify-center gap-3 mb-3">
+            <!-- Loop through numpad numbers -->
+            <button
+              v-for="number in ['1','2','3','4','5','6','7','8','9','*','0','#']"
+              :key="number"
+              @click="typedNumber += number"
+              class="bg-gray-300 hover:bg-gray-200 text-black font-bold py-2 px-4 rounded"
+            >
+              {{ number }}
+            </button>
+          </div>
+          <input v-model="typedNumber" class="mb-3 p-2 border rounded w-full" disabled />
+          <button
+            @click="callNumber"
+            class="bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 rounded w-full"
+          >
+            Call
+          </button>
+        </div>
+
       </div>
     </Modal>
 
