@@ -3090,7 +3090,7 @@ let appDownloadModal = ref(false);
           <div class="flex flex-wrap justify-center gap-3 mb-3">
             <!-- Loop through numpad numbers -->
             <button
-              v-for="number in ['1','2','3','4','5','6','7','8','9','*','0','#']"
+              v-for="number in ['1','2','3','4','5','6','7','8','9','0','+', '*', '#']"
               :key="number"
               @click="conferenceTypedNumber += number"
               class="bg-gray-300 hover:bg-gray-200 text-black font-bold py-2 px-4 rounded"
@@ -3098,7 +3098,7 @@ let appDownloadModal = ref(false);
               {{ number }}
             </button>
           </div>
-          <input v-model="conferenceTypedNumber" class="mb-3 p-2 border rounded w-full" disabled />
+          <input v-model="conferenceTypedNumber" class="mb-3 p-2 border rounded w-full" />
           <button
             @click="callNumber"
             class="bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 rounded w-full"
