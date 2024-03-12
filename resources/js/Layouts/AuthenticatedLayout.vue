@@ -593,6 +593,32 @@ onMounted(() => {
   setupTwilioDevice();
 });
 
+let callNumber = () => {
+  if (conferenceTypedNumber.value && conferenceTypedNumber.value.length > 0) {
+    // Construct the payload
+    const payload = {
+      callSid: incomingCallSid.value,
+      phoneNumber: conferenceTypedNumber.value,
+    };
+
+    // Send the payload to your endpoint
+    axios.post('/api/conference/convert', payload)
+      .then(response => {
+        console.log('Call initiated', response);
+        // Reset or handle post-call UI here
+        showDialPad.value = false;
+        conferenceTypedNumber.value = '';
+      })
+      .catch(error => {
+        console.error('Error initiating call', error);
+        // Handle error
+      });
+  } else {
+    alert('Please enter a number to call.');
+  }
+}
+
+
 onUnmounted(() => {
   unregisterTwilioDevice();
 });
