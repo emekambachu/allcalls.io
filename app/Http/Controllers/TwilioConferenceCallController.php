@@ -52,11 +52,12 @@ class TwilioConferenceCallController extends Controller
     
         try {
             // Redirect the call to the conference TwiML endpoint
-            $client->calls($callSid)
+            $call = $client->calls($callSid)
                 ->update([
                     "url" => route('conference.direct', ['conferenceName' => $conferenceName])
                 ]);
-    
+                
+            Log::info("Call made to: " . $call->to);
             Log::info("Call redirected to conference TwiML", ['callSid' => $callSid, 'conferenceName' => $conferenceName]);
     
             return response()->json(['message' => 'Call redirected to join the conference.']);
