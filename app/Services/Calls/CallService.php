@@ -322,13 +322,16 @@ class CallService
         return $allCalls->groupBy('user_id')->map(function ($calls) {
             $user = $calls->first()->user; // Assuming each id group has a user
 
-            $policy = $calls->where('policy_id', '!=', null);
             $totalCalls = $calls->count();
             $paidCalls = $calls->where('amount_spent', '>', 0)->count();
             $totalRevenue = $calls->sum('amount_spent');
             $totalCallLength = $calls->sum('call_duration_in_seconds');
             $averageCallLength = $totalCalls > 0 ? $totalCallLength / $totalCalls : 0;
-            $totalPolicies = $policy->count();
+            $totalPolicies = $calls->where('policy_id', '!=', null)->count();
+            $pendingPolicies = $calls->with('getBusiness')
+                ->whereHas('getBusiness', function ($query) {
+                    $query->whereIn('status', ['Submitted', 'Approved']);
+                })->count();
 
             return [
                 'userId' => $user->id,
