@@ -19,16 +19,19 @@ class InitiatedCallEvent
     public $uniqueCallId;
     public $callTypeId;
     public $from;
-
+    public $firstCallSid;
+    public $secondCallSid;
     /**
      * Create a new event instance.
      */
-    public function __construct(User $user, $uniqueCallId, $callTypeId, $from)
+    public function __construct(User $user, $uniqueCallId, $callTypeId, $from, $firstCallSid = null, $secondCallSid = null)
     {
         $this->user = $user;
         $this->uniqueCallId = $uniqueCallId;
         $this->callTypeId = $callTypeId;
         $this->from = $from;
+        $this->firstCallSid = $firstCallSid;
+        $this->secondCallSid = $secondCallSid;
     }
 
 

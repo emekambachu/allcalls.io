@@ -36,7 +36,8 @@ class SaveUserCall
         Log::debug('Save the call now');
         Log::debug($event->user->id);
         
-        Log::debug('Save the call now: with detail: ' . json_encode($event));
+        Log::debug('Save the call now: callSid: ' . $event->firstCallSid);
+        Log::debug('Save the call now: parentCallSid: ' . $event->secondCallSid);
 
         $call = Call::create([
             'user_id' => $event->user->id,
