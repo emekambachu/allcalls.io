@@ -267,11 +267,9 @@ class CallService
                 'userTimeZone' => $userTimeZone,
             ]);
 
-            // Set the timezone to the start of the day for the start date
-            $startDate = Carbon::createFromFormat('m/d/Y', $startDate)->startOfDay()->timezone($userTimeZone)->format('Y-m-d');
-            // Set the timezone to the start of the day for the end date
-            $endDate = Carbon::createFromFormat('m/d/Y', $endDate)->startOfDay()->timezone($userTimeZone)->format('Y-m-d');
-
+            // Convert the input dates to Y-m-d format without any timezone conversion
+            $startDate = Carbon::createFromFormat('m/d/Y', $startDate)->format('Y-m-d');
+            $endDate = Carbon::createFromFormat('m/d/Y', $endDate)->format('Y-m-d');
 
             Log::debug('CallService:DatesAfterTimezoneConversion:', [
                 'startDate' => $startDate,
