@@ -254,6 +254,7 @@ class CallStatusController extends Controller
 
             case 'initiated':
                 Log::debug('initiated event for user ' . $request->user_id);
+                Log::debug('info with initiated event for user: ' . $request);
                 InitiatedCallEvent::dispatch($user, $request->unique_call_id, $request->call_type_id, $request->from);
                 break;
 
