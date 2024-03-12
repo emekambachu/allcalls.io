@@ -261,6 +261,12 @@ class CallService
             $startDate = Carbon::parse($startDate)->timezone($userTimeZone)->format('Y-m-d H:i:s');
             $endDate = Carbon::parse($endDate)->timezone($userTimeZone)->format('Y-m-d H:i:s');
 
+
+            Log::debug('CallService:DatesAfterTimezoneConversion:', [
+                'startDate' => $startDate,
+                'endDate' => $endDate,
+            ]);
+
             if(in_array($request->input('sort_column'), $this->columnsWithJoins, true)){
                 $query->whereDate('calls.created_at', '>=', $startDate)
                     ->whereDate('calls.created_at', '<=', $endDate);
