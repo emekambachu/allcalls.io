@@ -623,7 +623,7 @@ let callNumber = () => {
     };
 
     // Send the payload to your endpoint
-    axios.post('/api/conference/convert', payload)
+    axios.post('/api/conference/convert/withNumber', payload)
       .then(response => {
         console.log('Call initiated', response);
         // Reset or handle post-call UI here
@@ -3128,9 +3128,10 @@ let appDownloadModal = ref(false);
 
         <!-- Merge Calls Button -->
         <div class="py-3">
-          <!-- @click="showDialPad = !showDialPad" -->
+          
+          <!-- @click="mergeCallsToConference" -->
           <button
-            @click="mergeCallsToConference"
+            @click="showDialPad = !showDialPad"
             class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded"
           >
             Merge Calls
