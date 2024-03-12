@@ -264,6 +264,11 @@ class CallService
         if ($startDate && $endDate) {
 
             $userTimeZone = Auth::user() && !empty(Auth::user()->timezone) ? Auth::user()->timezone : 'America/New_York';
+
+            Log::debug('CallService:UserTimeZone:', [
+                'userTimeZone' => $userTimeZone,
+            ]);
+
             $startDate = Carbon::parse($startDate)->timezone($userTimeZone)->format('Y-m-d');
             $endDate = Carbon::parse($endDate)->timezone($userTimeZone)->format('Y-m-d');
 
