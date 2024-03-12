@@ -40,7 +40,7 @@ class TwilioConferenceCallController extends Controller
         Log::info("Converting call to conference", ['callSid' => $callSid, 'phoneNumber' => $phoneNumber]);
     
         // Twilio credentials
-        $accountSid = env('TWILIO_ACCOUNT_SID');
+        $accountSid = env('TWILIO_TWIML_APP_SID');
         $authToken = env('TWILIO_AUTH_TOKEN');
         $twilioNumber = env('TWILIO_PHONE_NUMBER'); // Your Twilio number that can make calls
         Log::info("Twilio credentials", ['accountSid' => $accountSid, 'authToken' => $authToken, 'twilioNumber' => $twilioNumber]);
