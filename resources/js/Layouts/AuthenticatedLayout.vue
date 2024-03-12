@@ -138,8 +138,8 @@ let showIncomingCall = (conn) => {
   console.log("Params:");
   console.log(conn.parameters.Params);
 
-  incomingCallSid = conn.parameters.AccountSid;
-  console.log("Incoming call SID: " . incomingCallSid);
+  incomingCallSid.value = conn.parameters.CallSid;
+  console.log("Incoming call SID: " + incomingCallSid);
   
   // add a timeout for 25 seconds to hide the ringing screen in case the user doesn't accept the call in 25 seconds
   if (ringingTimeout.value) {
