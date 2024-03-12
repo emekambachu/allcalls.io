@@ -29,8 +29,44 @@ class TwilioConferenceCallController extends Controller
         return response($response)->header('Content-Type', 'text/xml');
     }
 
-
     public function convertToConference(Request $request)
+    {
+        // Validate the request parameters
+        $validated = $request->validate([
+            'callSid' => 'required|string',
+        ]);
+
+        // Extract callSid from the request
+        $callSid = $validated['callSid'];
+
+        // Twilio credentials from .env file
+        $accountSid = env('TWILIO_SID');
+        $authToken = env('TWILIO_AUTH_TOKEN');
+
+        // Initialize Twilio client
+        $client = new Client($accountSid, $authToken);
+
+        // Unique name for the conference to ensure uniqueness
+        $conferenceName = 'Conference_' . uniqid();
+
+        try {
+            // Update the ongoing call to join the conference
+            $client->calls($callSid)
+                ->update([
+                    "twiml" => "<Response><Dial><Conference>$conferenceName</Conference></Dial></Response>"
+                ]);
+
+            Log::info("Call updated to conference", ['callSid' => $callSid, 'conferenceName' => $conferenceName]);
+
+            return response()->json(['message' => 'Call converted to conference.']);
+        } catch (\Exception $e) {
+            Log::error("Error converting call to conference", ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'Failed to convert call to conference', 'details' => $e->getMessage()], 500);
+        }
+    }
+
+
+    public function convertToConferenceWithNewNumber(Request $request)
     {
         // Extract callSid and phoneNumber from the request's JSON payload
         $callSid = $request->json('callSid');
