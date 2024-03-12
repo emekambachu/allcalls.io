@@ -255,6 +255,11 @@ class CallService
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
 
+        Log::debug('CallService:DatesBeforeTimezoneConversion:', [
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+        ]);
+
         // Apply date filters
         if ($startDate && $endDate) {
 
