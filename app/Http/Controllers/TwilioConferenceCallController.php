@@ -35,11 +35,13 @@ class TwilioConferenceCallController extends Controller
         // Validate the request parameters
         $validated = $request->validate([
             'callSid' => 'required|string',
+            'otherCallSid' => 'nullable|string', // Second call SID to be joined
         ]);
     
         // Extract callSid from the request
         $callSid = $validated['callSid'];
-    
+        $otherCallSid = $validated['otherCallSid'];
+
         // Twilio credentials from .env file
         $accountSid = env('TWILIO_SID'); // Ensure this is 'TWILIO_ACCOUNT_SID' in your .env
         $authToken = env('TWILIO_AUTH_TOKEN');
@@ -52,12 +54,20 @@ class TwilioConferenceCallController extends Controller
     
         try {
             // Redirect the call to the conference TwiML endpoint
-            $call = $client->calls($callSid)
-                ->update([
-                    "url" => route('conference.direct', ['conferenceName' => $conferenceName])
-                ]);
+            // Update both calls to join the same conference
+            $firstLeg = $client->calls($callSid)
+                ->update(["url" => route('conference.direct', ['conferenceName' => $conferenceName])]);
+            
+            $secondLeg = $client->calls($otherCallSid)
+                ->update(["url" => route('conference.direct', ['conferenceName' => $conferenceName])]);
+
+            Log::info("Both calls updated to conference", [
+                'firstCallSid' => $firstLeg->sid, 
+                'secondCallSid' => $secondLeg->sid, 
+                'conferenceName' => $conferenceName
+            ]);
                 
-            Log::info("Call made to: " . $call->to);
+            // Log::info("Call made to: " . $call->to);
             Log::info("Call redirected to conference TwiML", ['callSid' => $callSid, 'conferenceName' => $conferenceName]);
     
             return response()->json(['message' => 'Call redirected to join the conference.']);
