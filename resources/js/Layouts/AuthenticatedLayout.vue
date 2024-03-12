@@ -138,6 +138,9 @@ let showIncomingCall = (conn) => {
   console.log("Params:");
   console.log(conn.parameters.Params);
 
+  incomingCallSid = conn.parameters.CallSid;
+  console.log("Incoming call SID: " . incomingCallSid);
+  
   // add a timeout for 25 seconds to hide the ringing screen in case the user doesn't accept the call in 25 seconds
   if (ringingTimeout.value) {
     console.log("Clearing the previous timeout.");
@@ -158,8 +161,6 @@ let showIncomingCall = (conn) => {
 
   let params = new URLSearchParams(conn.parameters.Params);
   let uniqueCallId = params.get("unique_call_id");
-  incomingCallSid = conn.parameters.CallSid;
-  console.log("Incoming call SID: " . incomingCallSid);
 
   connectedUniqueCallId.value = uniqueCallId;
 
