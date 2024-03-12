@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Call;
 use Twilio\Rest\Client;
 use Illuminate\Http\Request;
 use Twilio\TwiML\VoiceResponse;
@@ -40,7 +41,21 @@ class TwilioConferenceCallController extends Controller
     
         // Extract callSid from the request
         $callSid = $validated['callSid'];
-        $otherCallSid = $validated['otherCallSid'];
+        // $otherCallSid = $validated['otherCallSid'];
+
+        // Attempt to retrieve the call from the database using callSid
+        $call = Call::where('call_sid', $callSid)->first();
+
+        if (!$call) {
+            return response()->json(['error' => 'Call not found'], 404);
+        }
+
+        // Use the parent_call_sid as otherCallSid if otherCallSid is not provided
+        $otherCallSid = $validated['otherCallSid'] ?? $call->parent_call_sid;
+
+        if (is_null($otherCallSid)) {
+            return response()->json(['error' => 'Other call SID is required but not provided or available'], 400);
+        }
 
         // Twilio credentials from .env file
         $accountSid = env('TWILIO_SID'); // Ensure this is 'TWILIO_ACCOUNT_SID' in your .env
