@@ -19,9 +19,10 @@ class TwilioConferenceCallController extends Controller
     {
         $response = new VoiceResponse();
         
+        $conferenceName = $request->input('conferenceName', 'DefaultConferenceName');        
         // Directly dial into the conference room
         $dial = $response->dial();
-        $dial->conference('MyConferenceRoom', [
+        $dial->conference($conferenceName, [
             'waitUrl' => 'http://twimlets.com/holdmusic?Bucket=com.twilio.music.classical'
         ]);
 
@@ -35,35 +36,36 @@ class TwilioConferenceCallController extends Controller
         $validated = $request->validate([
             'callSid' => 'required|string',
         ]);
-
+    
         // Extract callSid from the request
         $callSid = $validated['callSid'];
-
+    
         // Twilio credentials from .env file
-        $accountSid = env('TWILIO_SID');
+        $accountSid = env('TWILIO_SID'); // Ensure this is 'TWILIO_ACCOUNT_SID' in your .env
         $authToken = env('TWILIO_AUTH_TOKEN');
-
+    
         // Initialize Twilio client
         $client = new Client($accountSid, $authToken);
-
-        // Unique name for the conference to ensure uniqueness
-        $conferenceName = 'Conference_' . uniqid();
-
+    
+        // Name for the conference
+        $conferenceName = 'MyConference'; // This should be the same for all calls you want to merge
+    
         try {
-            // Update the ongoing call to join the conference
+            // Redirect the call to the conference TwiML endpoint
             $client->calls($callSid)
                 ->update([
-                    "twiml" => "<Response><Dial><Conference>$conferenceName</Conference></Dial></Response>"
+                    "url" => route('conference.direct', ['conferenceName' => $conferenceName])
                 ]);
-
-            Log::info("Call updated to conference", ['callSid' => $callSid, 'conferenceName' => $conferenceName]);
-
-            return response()->json(['message' => 'Call converted to conference.']);
+    
+            Log::info("Call redirected to conference TwiML", ['callSid' => $callSid, 'conferenceName' => $conferenceName]);
+    
+            return response()->json(['message' => 'Call redirected to join the conference.']);
         } catch (\Exception $e) {
-            Log::error("Error converting call to conference", ['error' => $e->getMessage()]);
-            return response()->json(['error' => 'Failed to convert call to conference', 'details' => $e->getMessage()], 500);
+            Log::error("Error redirecting call to conference TwiML", ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'Failed to redirect call to conference TwiML', 'details' => $e->getMessage()], 500);
         }
     }
+    
 
 
     public function convertToConferenceWithNewNumber(Request $request)
