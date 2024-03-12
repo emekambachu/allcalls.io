@@ -924,6 +924,12 @@ let clearDateFilter = () => {
 }
 
 let applyDateFilter = async (close) => {
+    // format date
+  dateFilterFrom.value = DateService.formatDate(dateFilterFrom.value);
+  if(dateFilterTo.value) {
+        dateFilterTo.value = DateService.formatDate(dateFilterTo.value);
+  }
+
   await fetchCalls(true);
   applyCallFiltersToSummary();
   close();
@@ -961,7 +967,7 @@ let applyDatePreset = (label) => {
 };
 
 function formatDate(date) {
-  return DateService.formatDate(date);
+  return DateService.formatDate(date, '-');
 }
 
 let showLogsForCallId = ref(null);
