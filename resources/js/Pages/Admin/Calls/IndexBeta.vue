@@ -287,11 +287,29 @@ const agentColumns = ref([
     },
 
     {
-        label: "Policies",
+        label: "No. of Policies",
         name: "totalPolicies",
         visible: true,
         render(call) {
             return call.totalPolicies;
+        },
+    },
+
+    {
+        label: "No. of Pending Policies",
+        name: "pendingPolicies",
+        visible: true,
+        render(call) {
+            return call.totalPendingPolicies;
+        },
+    },
+
+    {
+        label: "No. of Declined Policies",
+        name: "declinedPolicies",
+        visible: true,
+        render(call) {
+            return call.totalDeclinedPolicies;
         },
     },
 ]);
@@ -517,6 +535,8 @@ let summaryFooterRow = computed(() => {
   let totalRevenue = 0;
   let totalCallLength = 0;
   let totalPolicies = 0;
+  let totalPendingPolicies = 0;
+  let totalDeclinedPolicies = 0;
 
   for (const userId in maxmizedCallsGroupedByUser.value) {
     const userData = maxmizedCallsGroupedByUser.value[userId];
@@ -525,6 +545,8 @@ let summaryFooterRow = computed(() => {
     totalRevenue += userData.revenueEarned;
     totalCallLength += userData.totalCallLength; // Assuming this field exists in userData
     totalPolicies += userData.totalPolicies;
+    totalPendingPolicies += userData.totalPendingPolicies;
+    totalDeclinedPolicies += userData.totalDeclinedPolicies;
   }
 
   let averageCallLength = totalCalls > 0 ? totalCallLength / totalCalls : 0;
@@ -539,6 +561,8 @@ let summaryFooterRow = computed(() => {
     totalCallLength: totalCallLength,
     averageCallLength: averageCallLength,
     totalPolicies: totalPolicies,
+    totalPendingPolicies: totalPendingPolicies,
+    totalDeclinedPolicies: totalDeclinedPolicies,
   };
 });
 
@@ -862,17 +886,6 @@ const applyCallFiltersToSummary = () => {
         }
         count++;
     });
-
-    // Iterate loadedCalls first and then grouped calls to match the both user ids
-    // if matched add the user group to the maxmizedCallsGroupedByUser
-
-    // for (const [key, value] of getAllCalls.value.entries()) {
-    //     Object.values(unfilteredGroupedPublisherNames).forEach(publisher => {
-    //         if (publisher.user_ids.includes(value.user_id)) {
-    //             callsGroupedByPublisherName.value[publisher.publisher_name] = publisher;
-    //         }
-    //     });
-    // }
 
     console.log("Loaded calls after filter", loadedCalls.value);
     console.log("Grouped Publisher Names after filter", callsGroupedByPublisherName.value);

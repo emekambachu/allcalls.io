@@ -187,7 +187,7 @@ class CallService
 
     public function getAllCallsWithDynamicFilterAndSorting($request): array
     {
-        $query = Call::with('user.roles', 'callType', 'client');
+        $query = Call::with('user.roles', 'callType', 'client', 'getBusiness');
 
         // ringing_duration is a custom attribute, therefore it's not available in the database table
         // Had to use raw queries to get it to work
@@ -347,10 +347,15 @@ class CallService
             $totalCallLength = $calls->sum('call_duration_in_seconds');
             $averageCallLength = $totalCalls > 0 ? $totalCallLength / $totalCalls : 0;
             $totalPolicies = $calls->where('policy_id', '!=', null)->count();
-            $pendingPolicies = $calls->with('getBusiness')
-                ->whereHas('getBusiness', function ($query) {
-                    $query->whereIn('status', ['Submitted', 'Approved']);
-                })->count();
+
+            // Manual filtering for pending and declined policies
+            $totalPendingPolicies = $calls->filter(function ($call) {
+                return $call->getBusiness && in_array($call->getBusiness->status, ['Submitted', 'Approved']);
+            })->count();
+
+            $totalDeclinedPolicies = $calls->filter(function ($call) {
+                return $call->getBusiness && in_array($call->getBusiness->status, ['Declined', 'Cancelled', 'Withdrawn']);
+            })->count();
 
             return [
                 'userId' => $user->id,
@@ -363,6 +368,8 @@ class CallService
                 'totalCallLength' => $totalCallLength,
                 'averageCallLength' => $averageCallLength,
                 'totalPolicies' => $totalPolicies,
+                'totalPendingPolicies' => $totalPendingPolicies,
+                'totalDeclinedPolicies' => $totalDeclinedPolicies,
             ];
         });
     }

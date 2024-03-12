@@ -28,7 +28,7 @@ class InternalAgentMyBusinessFactory extends Factory
             'agent_full_name' => $agent->first_name . ' ' . $agent->last_name,
             'agent_email' => $agent->email,
             'insurance_company' => $this->faker->company,
-            'status' => $this->faker->randomElement(['Submitted', 'Approved', 'Declined', 'Cancelled']),
+            'status' => $this->faker->randomElement(['Submitted', 'Approved', 'Declined', 'Cancelled', 'Withdrawn']),
             'label' => $this->faker->word,
             'product_name' => $this->faker->randomElement(['Whole Life', 'Term Life', 'Final Expense', 'Medicare Supplement', 'Annuity']),
             'application_date' => $this->faker->date(),
@@ -60,6 +60,12 @@ class InternalAgentMyBusinessFactory extends Factory
             'beneficiary_relationship' => $this->faker->word,
             'notes' => $this->faker->sentence,
             'client_id' => $client->id,
+            'ef_number' => $this->faker->word,
+            'upline_manager' => $this->faker->name,
+            'split_sale' => $this->faker->boolean,
+            'split_sale_type' => $this->faker->word,
+            'split_agent_email' => $this->faker->email,
+            'appointment_type' => $this->faker->word,
         ];
     }
 }
