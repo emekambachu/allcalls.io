@@ -28,7 +28,7 @@ class InternalAgentMyBusinessFactory extends Factory
             'agent_full_name' => $agent->first_name . ' ' . $agent->last_name,
             'agent_email' => $agent->email,
             'insurance_company' => $this->faker->company,
-            'status' => $this->faker->randomElement(['Submitted', 'Approved', 'Pending']),
+            'status' => $this->faker->randomElement(['Submitted', 'Approved', 'Declined', 'Cancelled']),
             'label' => $this->faker->word,
             'product_name' => $this->faker->randomElement(['Whole Life', 'Term Life', 'Final Expense', 'Medicare Supplement', 'Annuity']),
             'application_date' => $this->faker->date(),
