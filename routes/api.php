@@ -41,20 +41,21 @@ use App\Http\Controllers\IOSVersionCheckController;
 use App\Http\Controllers\ListFlexResponseController;
 use App\Http\Controllers\NotificationsAPIController;
 use App\Http\Controllers\OverseerResponseController;
+use App\Http\Controllers\CallDeviceActionsController;
 use App\Http\Controllers\AvailableAgentsAPIController;
 use App\Http\Controllers\TwilioWebhookErrorController;
 use App\Http\Controllers\CallUserResponseAPIController;
 use App\Http\Controllers\CallTypesSelectedAPIController;
+use App\Http\Controllers\TwilioConferenceCallController;
 use App\Http\Controllers\TwilioIOSAccessTokenController;
 use App\Http\Controllers\CustomBroadcastingAuthController;
+use App\Http\Controllers\ZoomMeetingNotificationController;
 use App\Http\Controllers\ActiveUsersPusherWebhookController;
 use App\Http\Controllers\CallCenterDispositionAPIController;
-use App\Http\Controllers\CallDeviceActionsController;
 use App\Http\Controllers\TwilioAndroidAccessTokenController;
 use App\Http\Controllers\TwilioIOSAccessTokenGuestController;
 use App\Http\Controllers\TwilioIOSSandboxAccessTokenController;
 use App\Http\Controllers\TwilioAndroidAccessTokenGuestController;
-use App\Http\Controllers\ZoomMeetingNotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -300,3 +301,8 @@ Route::post('/commio/sms/receive', [TextMessageController::class, 'receiveMessag
 Route::post('/twilio-webhook-error', [TwilioWebhookErrorController::class, 'store']);
 
 Route::post('/send/batch/sms/', [ZoomMeetingNotificationController::class, 'sendBatchTextMessages']);
+
+// Handle incoming calls and add them directly to the conference
+Route::post('/conference/direct', [TwilioConferenceCallController::class, 'directToConference'])->name('conference.direct');
+Route::post('/conference/convert', [TwilioConferenceCallController::class, 'convertToConference'])->name('conference.convert');
+Route::post('/conference/convert/withNumber', [TwilioConferenceCallController::class, 'convertToConferenceWithNewNumber'])->name('conference.convertWithThirdNumber');

@@ -257,9 +257,10 @@ class CallService
 
         // Apply date filters
         if ($startDate && $endDate) {
+
             $userTimeZone = Auth::user() && !empty(Auth::user()->timezone) ? Auth::user()->timezone : 'America/New_York';
-            $startDate = Carbon::parse($startDate)->timezone($userTimeZone)->format('Y-m-d H:i:s');
-            $endDate = Carbon::parse($endDate)->timezone($userTimeZone)->format('Y-m-d H:i:s');
+            $startDate = Carbon::parse($startDate)->timezone($userTimeZone)->format('Y-m-d');
+            $endDate = Carbon::parse($endDate)->timezone($userTimeZone)->format('Y-m-d');
 
 
             Log::debug('CallService:DatesAfterTimezoneConversion:', [

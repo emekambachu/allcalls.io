@@ -12,7 +12,7 @@ let DateService = {
         return mm + '/' + dd + '/' + yyyy;
     },
 
-    formatDate(date){
+    formatDate(date, separator = '/'){
         let d = new Date(date),
             month = '' + (d.getMonth() + 1),
             day = '' + d.getDate(),
@@ -23,7 +23,7 @@ let DateService = {
         if (day.length < 2)
             day = '0' + day;
 
-        return [day, month ,year].join('-');
+        return [month, day ,year].join(separator);
     }
 
 }

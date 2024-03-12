@@ -15,6 +15,7 @@ class TwilioDialerTokenController extends Controller
         $apiKey = env('TWILIO_API_KEY_SID');
         $apiKeySecret = env('TWILIO_API_KEY_SECRET');
         $outgoingApplicationSid = env('TWILIO_TWIML_APP_SID');
+        // $outgoingApplicationSid = env('TWILIO_CONFERENCE_TWIML_APP_SID');
 
         // set the identity to the user's id
         $identity = uniqid();
