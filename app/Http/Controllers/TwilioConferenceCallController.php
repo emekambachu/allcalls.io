@@ -56,7 +56,7 @@ class TwilioConferenceCallController extends Controller
         try {
             // Update the ongoing call to join the conference
             $callUpdateResponse = $client->calls($callSid)
-                                          ->update(["twiml" => $twiml]);
+                ->update(["twiml" => $twiml]);
     
             Log::info("Ongoing call updated to join conference", ['callSid' => $callSid, 'conferenceName' => $conferenceName]);
     

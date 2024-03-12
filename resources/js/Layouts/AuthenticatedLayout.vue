@@ -21,6 +21,7 @@ let page = usePage();
 
 let showDialPad = ref(false);
 let conferenceTypedNumber = ref(null);
+let incomingCallSid = ref(null);
 
 let showLowBalanceModal = ref(false);
 if (page.props.auth.role !== "admin" && page.props.auth.user.balance < 40 && page.props.auth.user.basic_training == '1' && page.props.auth.user.agent_access_status === "Live"  && !page.props.auth.user.low_balance_call_scheduled
@@ -157,6 +158,8 @@ let showIncomingCall = (conn) => {
 
   let params = new URLSearchParams(conn.parameters.Params);
   let uniqueCallId = params.get("unique_call_id");
+  incomingCallSid = conn.parameters.CallSid;
+  console.log("Incoming call SID: " . incomingCallSid);
 
   connectedUniqueCallId.value = uniqueCallId;
 
