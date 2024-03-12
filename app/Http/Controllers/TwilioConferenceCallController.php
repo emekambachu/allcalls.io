@@ -43,7 +43,8 @@ class TwilioConferenceCallController extends Controller
         $accountSid = env('TWILIO_ACCOUNT_SID');
         $authToken = env('TWILIO_AUTH_TOKEN');
         $twilioNumber = env('TWILIO_PHONE_NUMBER'); // Your Twilio number that can make calls
-    
+        Log::info("Twilio credentials", ['accountSid' => $accountSid, 'authToken' => $authToken, 'twilioNumber' => $twilioNumber]);
+
         $client = new Client($accountSid, $authToken);
     
         // Unique name for the conference
