@@ -35,6 +35,8 @@ class SaveUserCall
     {
         Log::debug('Save the call now');
         Log::debug($event->user->id);
+        
+        Log::debug('Save the call now: with detail: ' . $event);
 
         $call = Call::create([
             'user_id' => $event->user->id,
