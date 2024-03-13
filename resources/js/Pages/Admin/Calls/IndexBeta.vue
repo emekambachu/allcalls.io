@@ -969,10 +969,10 @@ let applyDateFilter = async (close) => {
   console.log("Date Filter To, Before Applying Format: ", dateFilterTo.value);
 
     // format date
-//   dateFilterFrom.value = DateService.formatDateForInputRange(dateFilterFrom.value);
-//   if(dateFilterTo.value) {
-//         dateFilterTo.value = DateService.formatDateForInputRange(dateFilterTo.value);
-//   }
+  dateFilterFrom.value = DateService.formatDateForInputRange(dateFilterFrom.value);
+  if(dateFilterTo.value) {
+        dateFilterTo.value = DateService.formatDateForInputRange(dateFilterTo.value);
+  }
 
   console.log("Date Filter From, After Applying Format: ", dateFilterFrom.value);
   console.log("Date Filter To, After Applying Format: ", dateFilterTo.value);
@@ -1168,7 +1168,7 @@ onMounted(async () => {
                   >
                       <span class="font-extrabold text-lg font-sans" v-if="!(dateFilterFrom && dateFilterTo)">Select Date Range</span>
                       <span class="font-extrabold text-lg font-sans" v-if="dateFilterFrom && dateFilterTo">
-                        <span>Selected Date Range:</span> {{ dateFilterFrom }} - {{ dateFilterTo }}
+                        <span>Selected Date Range:</span> {{ formatDateForInputRange(dateFilterFrom) }} - {{ formatDateForInputRange(dateFilterTo) }}
                       </span>
                   </button>
               </PopoverButton>
