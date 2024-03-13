@@ -19,6 +19,10 @@ import DispositionModal from "@/Components/DispositionModal.vue";
 
 let page = usePage();
 
+let showDialPad = ref(false);
+let conferenceTypedNumber = ref(null);
+let incomingCallSid = ref(null);
+let incomingCallSidTwo = ref(null);
 
 let showLowBalanceModal = ref(false);
 if (page.props.auth.role !== "admin" && page.props.auth.user.balance < 40 && page.props.auth.user.basic_training == '1' && page.props.auth.user.agent_access_status === "Live"  && !page.props.auth.user.low_balance_call_scheduled
@@ -135,6 +139,10 @@ let showIncomingCall = (conn) => {
   console.log("Params:");
   console.log(conn.parameters.Params);
 
+  incomingCallSid.value = conn.parameters.CallSid;
+  // incomingCallSidTwo.value = conn.parameters.
+  console.log("Incoming call SID: " + incomingCallSid.value);
+  
   // add a timeout for 25 seconds to hide the ringing screen in case the user doesn't accept the call in 25 seconds
   if (ringingTimeout.value) {
     console.log("Clearing the previous timeout.");
@@ -586,6 +594,51 @@ onMounted(() => {
 
   setupTwilioDevice();
 });
+
+let mergeCallsToConference = () => {
+  // Construct the payload
+  const payload = {
+    callSid: incomingCallSid.value,
+    // phoneNumber: conferenceTypedNumber.value,
+  };
+
+  // Send the payload to your endpoint
+  axios.post('/api/conference/convert', payload)
+    .then(response => {
+      console.log('Call initiated', response);
+      // Reset or handle post-call UI here
+    })
+    .catch(error => {
+      console.error('Error initiating call', error);
+      // Handle error
+    });
+}
+
+let callNumber = () => {
+  if (conferenceTypedNumber.value && conferenceTypedNumber.value.length > 0) {
+    // Construct the payload
+    const payload = {
+      callSid: incomingCallSid.value,
+      phoneNumber: conferenceTypedNumber.value,
+    };
+
+    // Send the payload to your endpoint
+    axios.post('/api/conference/convert/withNumber', payload)
+      .then(response => {
+        console.log('Call initiated', response);
+        // Reset or handle post-call UI here
+        showDialPad.value = false;
+        conferenceTypedNumber.value = '';
+      })
+      .catch(error => {
+        console.error('Error initiating call', error);
+        // Handle error
+      });
+  } else {
+    alert('Please enter a number to call.');
+  }
+}
+
 
 onUnmounted(() => {
   unregisterTwilioDevice();
@@ -3093,6 +3146,41 @@ let appDownloadModal = ref(false);
             Hang Up
           </button>
         </div>
+
+        <!-- Merge Calls Button -->
+        <div class="py-3">
+          
+          <!-- @click="mergeCallsToConference" -->
+          <button
+            @click="showDialPad = !showDialPad"
+            class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded"
+          >
+            Merge Calls
+          </button>
+        </div>
+
+        <!-- Numpad/Dialer -->
+        <div v-if="showDialPad" class="p-5">
+          <div class="flex flex-wrap justify-center gap-3 mb-3">
+            <!-- Loop through numpad numbers -->
+            <button
+              v-for="number in ['1','2','3','4','5','6','7','8','9','0','+', '*', '#']"
+              :key="number"
+              @click="conferenceTypedNumber += number"
+              class="bg-gray-300 hover:bg-gray-200 text-black font-bold py-2 px-4 rounded"
+            >
+              {{ number }}
+            </button>
+          </div>
+          <input v-model="conferenceTypedNumber" class="mb-3 p-2 border rounded w-full" />
+          <button
+            @click="callNumber"
+            class="bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 rounded w-full"
+          >
+            Call
+          </button>
+        </div>
+
       </div>
     </Modal>
 
