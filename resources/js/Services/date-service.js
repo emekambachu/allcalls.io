@@ -34,7 +34,7 @@ let DateService = {
 
     formatDate(date, separator = '/') {
         // Split the input date string into components
-        const [year, month, day] = dateStr.split('-').map(part => parseInt(part, 10));
+        const [year, month, day] = date.split('-').map(part => parseInt(part, 10));
 
         // Create a new Date object using the local time zone
         const d = new Date(year, month - 1, day);
