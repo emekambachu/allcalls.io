@@ -3,11 +3,10 @@ let DateService = {
     currentDateMDY() {
         const today = new Date();
 
-
         // Format the date components, ensuring two digits
-        const formattedMonth = ('0' + (d.getMonth() + 1)).slice(-2);
-        const formattedDay = ('0' + d.getDate()).slice(-2);
-        const formattedYear = d.getFullYear();
+        const formattedMonth = ('0' + (today.getMonth() + 1)).slice(-2);
+        const formattedDay = ('0' + today.getDate()).slice(-2);
+        const formattedYear = today.getFullYear();
 
         // Join the components with the separator
         return [formattedMonth, formattedDay, formattedYear].join(separator);
