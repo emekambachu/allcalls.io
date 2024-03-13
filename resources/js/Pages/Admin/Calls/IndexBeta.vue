@@ -1013,6 +1013,10 @@ function formatDate(date) {
   return DateService.formatDate(date, '-');
 }
 
+function formatDateForInputRange(date) {
+    return DateService.formatDateForInputRange(date);
+}
+
 let showLogsForCallId = ref(null);
 let showLogsForCallModal = ref(false);
 let openDetailedLogs = callId => {
@@ -1160,7 +1164,7 @@ onMounted(async () => {
                   >
                       <span class="font-extrabold text-lg font-sans" v-if="!(dateFilterFrom && dateFilterTo)">Select Date Range</span>
                       <span class="font-extrabold text-lg font-sans" v-if="dateFilterFrom && dateFilterTo">
-                        <span>Selected Date Range:</span> {{ formatDate(dateFilterFrom) }} - {{ formatDate(dateFilterTo) }}
+                        <span>Selected Date Range:</span> {{ formatDateForInputRange(dateFilterFrom) }} - {{ formatDateForInputRange(dateFilterTo) }}
                       </span>
                   </button>
               </PopoverButton>
