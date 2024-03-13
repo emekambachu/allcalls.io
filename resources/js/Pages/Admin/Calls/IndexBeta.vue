@@ -1169,7 +1169,7 @@ onMounted(async () => {
                   >
                       <span class="font-extrabold text-lg font-sans" v-if="!(dateFilterFrom && dateFilterTo)">Select Date Range</span>
                       <span class="font-extrabold text-lg font-sans" v-if="dateFilterFrom && dateFilterTo">
-                        <span>Selected Date Range:</span> {{ formatDateForInputRange(dateFilterFrom) }} - {{ formatDateForInputRange(dateFilterTo) }}
+                        <span>Selected Date Range:</span> {{ formatDateForInputRange(dateFilterFrom, '/') }} - {{ formatDateForInputRange(dateFilterTo, '/') }}
                       </span>
                   </button>
               </PopoverButton>
