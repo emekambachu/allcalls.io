@@ -5,10 +5,10 @@ let DateService = {
         const yyyy = today.getUTCFullYear(); // Use UTC year
         let mm = today.getUTCMonth() + 1; // Use UTC month, months start at 0
         let dd = today.getUTCDate(); // Use UTC date
-    
+
         if (dd < 10) dd = '0' + dd;
         if (mm < 10) mm = '0' + mm;
-    
+
         return mm + '/' + dd + '/' + yyyy;
     },
 
@@ -28,6 +28,12 @@ let DateService = {
 
 
     formatDateForInputRange(dateStr, separator = '/') {
+        // Check if the date is already in mm/dd/yyyy format
+        const mmddyyyyPattern = /^\d{2}\/\d{2}\/\d{4}$/;
+        if (mmddyyyyPattern.test(dateStr)) {
+            return dateStr; // Return as is if the date is already in the correct format
+        }
+
         // Split the input date string into components
         const [year, month, day] = dateStr.split('-').map(part => parseInt(part, 10));
 
@@ -41,6 +47,7 @@ let DateService = {
 
         // Join the components with the separator
         return [formattedMonth, formattedDay, formattedYear].join(separator);
+
     }
 
 }
