@@ -1014,6 +1014,7 @@ function formatDate(date) {
 }
 
 function formatDateForInputRange(date) {
+    console.log('formating it for display', date);
     return DateService.formatDateForInputRange(date);
 }
 
