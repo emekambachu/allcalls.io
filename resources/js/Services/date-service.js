@@ -27,7 +27,7 @@ let DateService = {
     },
 
 
-    formatDateForInputRange(dateStr, separator = '/') {
+    formatDateBeta(dateStr, separator = '/') {
         // Check if the date is already in mm/dd/yyyy format
         const mmddyyyyPattern = /^\d{2}\/\d{2}\/\d{4}$/;
         if (mmddyyyyPattern.test(dateStr)) {
