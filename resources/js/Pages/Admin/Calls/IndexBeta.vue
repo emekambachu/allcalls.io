@@ -297,7 +297,7 @@ const agentColumns = ref([
 
     {
         label: "No. of Pending Policies",
-        name: "pendingPolicies",
+        name: "totalPendingPolicies",
         visible: true,
         render(call) {
             return call.totalPendingPolicies;
@@ -306,10 +306,28 @@ const agentColumns = ref([
 
     {
         label: "No. of Declined Policies",
-        name: "declinedPolicies",
+        name: "totalDeclinedPolicies",
         visible: true,
         render(call) {
             return call.totalDeclinedPolicies;
+        },
+    },
+
+    {
+        label: "No. of SI Policies",
+        name: "totalSiPolicies",
+        visible: true,
+        render(call) {
+            return call.totalSiPolicies;
+        },
+    },
+
+    {
+        label: "No. of GI Policies",
+        name: "totalGiPolicies",
+        visible: true,
+        render(call) {
+            return call.totalGiPolicies;
         },
     },
 ]);
@@ -537,6 +555,8 @@ let summaryFooterRow = computed(() => {
   let totalPolicies = 0;
   let totalPendingPolicies = 0;
   let totalDeclinedPolicies = 0;
+  let totalSiPolicies = 0;
+  let totalGiPolicies = 0;
 
   for (const userId in maxmizedCallsGroupedByUser.value) {
     const userData = maxmizedCallsGroupedByUser.value[userId];
@@ -547,6 +567,8 @@ let summaryFooterRow = computed(() => {
     totalPolicies += userData.totalPolicies;
     totalPendingPolicies += userData.totalPendingPolicies;
     totalDeclinedPolicies += userData.totalDeclinedPolicies;
+    totalSiPolicies += userData.totalSiPolicies;
+    totalGiPolicies += userData.totalGiPolicies;
   }
 
   let averageCallLength = totalCalls > 0 ? totalCallLength / totalCalls : 0;
@@ -563,6 +585,8 @@ let summaryFooterRow = computed(() => {
     totalPolicies: totalPolicies,
     totalPendingPolicies: totalPendingPolicies,
     totalDeclinedPolicies: totalDeclinedPolicies,
+    totalSiPolicies: totalSiPolicies,
+    totalGiPolicies: totalGiPolicies,
   };
 });
 

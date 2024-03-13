@@ -357,6 +357,14 @@ class CallService
                 return $call->getBusiness && in_array($call->getBusiness->status, ['Declined', 'Cancelled', 'Withdrawn']);
             })->count();
 
+            $totalSiPolicies = $calls->filter(function ($call) {
+                return $call->getBusiness && $call->client && $call->client->status === 'Sale - Simplified Issue';
+            })->count();
+
+            $totalGiPolicies = $calls->filter(function ($call) {
+                return $call->getBusiness && $call->client && $call->client->status === 'Sale - Guaranteed Issue';
+            })->count();
+
             return [
                 'userId' => $user->id,
                 'agentName' => $user->first_name . ' ' . $user->last_name,
@@ -370,6 +378,8 @@ class CallService
                 'totalPolicies' => $totalPolicies,
                 'totalPendingPolicies' => $totalPendingPolicies,
                 'totalDeclinedPolicies' => $totalDeclinedPolicies,
+                'totalSiPolicies' => $totalSiPolicies,
+                'totalGiPolicies' => $totalGiPolicies,
             ];
         });
     }
