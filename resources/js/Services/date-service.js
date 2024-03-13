@@ -1,10 +1,10 @@
 let DateService = {
 
-    currentDateMDY(){
+    currentDateMDY() {
         const today = new Date();
-        const yyyy = today.getFullYear();
-        let mm = today.getMonth() + 1; // Months start at 0!
-        let dd = today.getDate();
+        const yyyy = today.getUTCFullYear(); // Use UTC year
+        let mm = today.getUTCMonth() + 1; // Use UTC month, months start at 0
+        let dd = today.getUTCDate(); // Use UTC date
 
         if (dd < 10) dd = '0' + dd;
         if (mm < 10) mm = '0' + mm;
@@ -12,7 +12,7 @@ let DateService = {
         return mm + '/' + dd + '/' + yyyy;
     },
 
-    formatDate(date, separator = '/'){
+    formatDate(date, separator = '/') {
         let d = new Date(date),
             month = '' + (d.getMonth() + 1),
             day = '' + d.getDate(),
@@ -23,7 +23,31 @@ let DateService = {
         if (day.length < 2)
             day = '0' + day;
 
-        return [month, day ,year].join(separator);
+        return [month, day, year].join(separator);
+    },
+
+
+    formatDateBeta(dateStr, separator = '/') {
+        // Check if the date is already in mm/dd/yyyy format
+        const mmddyyyyPattern = /^\d{2}\/\d{2}\/\d{4}$/;
+        if (mmddyyyyPattern.test(dateStr)) {
+            return dateStr; // Return as is if the date is already in the correct format
+        }
+
+        // Split the input date string into components
+        const [year, month, day] = dateStr.split('-').map(part => parseInt(part, 10));
+
+        // Create a new Date object using the local time zone
+        const d = new Date(year, month - 1, day);
+
+        // Format the date components, ensuring two digits
+        const formattedMonth = ('0' + (d.getMonth() + 1)).slice(-2);
+        const formattedDay = ('0' + d.getDate()).slice(-2);
+        const formattedYear = d.getFullYear();
+
+        // Join the components with the separator
+        return [formattedMonth, formattedDay, formattedYear].join(separator);
+
     }
 
 }

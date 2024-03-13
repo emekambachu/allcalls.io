@@ -33,6 +33,8 @@ return new class extends Migration
             $table->timestamp('completed_at')->nullable();
             $table->float('cost')->nullable();
             $table->boolean('sent_to_onscript')->nullable();
+            $table->string('call_sid')->nullable();
+            $table->string('parent_call_sid')->nullable();
             $table->timestamps();
         });
     }
@@ -45,6 +47,8 @@ return new class extends Migration
         Schema::table('calls', static function (Blueprint $table) {
             $table->dropForeign('policy_id');
             $table->dropColumn('policy_id');
+            $table->dropColumn('call_sid');
+            $table->dropColumn('parent_call_sid');
         });
 
         // comment foreign key checks after testing the migration

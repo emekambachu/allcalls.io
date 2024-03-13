@@ -35,6 +35,9 @@ class SaveUserCall
     {
         Log::debug('Save the call now');
         Log::debug($event->user->id);
+        
+        Log::debug('Save the call now: callSid: ' . $event->firstCallSid);
+        Log::debug('Save the call now: parentCallSid: ' . $event->secondCallSid);
 
         $call = Call::create([
             'user_id' => $event->user->id,
@@ -42,6 +45,8 @@ class SaveUserCall
             'unique_call_id' => $event->uniqueCallId,
             'from' => $event->from,
             'call_duration_in_seconds' => 0,
+            'call_sid' => $event->firstCallSid,         // Saving firstCallSid to call_sid column
+            'parent_call_sid' => $event->secondCallSid, // Saving secondCallSid to parent_call_sid column
         ]);
 
         UserActivity::create([

@@ -287,11 +287,47 @@ const agentColumns = ref([
     },
 
     {
-        label: "Policies",
+        label: "No. of Policies",
         name: "totalPolicies",
         visible: true,
         render(call) {
             return call.totalPolicies;
+        },
+    },
+
+    {
+        label: "No. of Pending Policies",
+        name: "totalPendingPolicies",
+        visible: true,
+        render(call) {
+            return call.totalPendingPolicies;
+        },
+    },
+
+    {
+        label: "No. of Declined Policies",
+        name: "totalDeclinedPolicies",
+        visible: true,
+        render(call) {
+            return call.totalDeclinedPolicies;
+        },
+    },
+
+    {
+        label: "No. of SI Policies",
+        name: "totalSiPolicies",
+        visible: true,
+        render(call) {
+            return call.totalSiPolicies;
+        },
+    },
+
+    {
+        label: "No. of GI Policies",
+        name: "totalGiPolicies",
+        visible: true,
+        render(call) {
+            return call.totalGiPolicies;
         },
     },
 ]);
@@ -517,6 +553,10 @@ let summaryFooterRow = computed(() => {
   let totalRevenue = 0;
   let totalCallLength = 0;
   let totalPolicies = 0;
+  let totalPendingPolicies = 0;
+  let totalDeclinedPolicies = 0;
+  let totalSiPolicies = 0;
+  let totalGiPolicies = 0;
 
   for (const userId in maxmizedCallsGroupedByUser.value) {
     const userData = maxmizedCallsGroupedByUser.value[userId];
@@ -525,6 +565,10 @@ let summaryFooterRow = computed(() => {
     totalRevenue += userData.revenueEarned;
     totalCallLength += userData.totalCallLength; // Assuming this field exists in userData
     totalPolicies += userData.totalPolicies;
+    totalPendingPolicies += userData.totalPendingPolicies;
+    totalDeclinedPolicies += userData.totalDeclinedPolicies;
+    totalSiPolicies += userData.totalSiPolicies;
+    totalGiPolicies += userData.totalGiPolicies;
   }
 
   let averageCallLength = totalCalls > 0 ? totalCallLength / totalCalls : 0;
@@ -539,6 +583,10 @@ let summaryFooterRow = computed(() => {
     totalCallLength: totalCallLength,
     averageCallLength: averageCallLength,
     totalPolicies: totalPolicies,
+    totalPendingPolicies: totalPendingPolicies,
+    totalDeclinedPolicies: totalDeclinedPolicies,
+    totalSiPolicies: totalSiPolicies,
+    totalGiPolicies: totalGiPolicies,
   };
 });
 
@@ -863,17 +911,6 @@ const applyCallFiltersToSummary = () => {
         count++;
     });
 
-    // Iterate loadedCalls first and then grouped calls to match the both user ids
-    // if matched add the user group to the maxmizedCallsGroupedByUser
-
-    // for (const [key, value] of getAllCalls.value.entries()) {
-    //     Object.values(unfilteredGroupedPublisherNames).forEach(publisher => {
-    //         if (publisher.user_ids.includes(value.user_id)) {
-    //             callsGroupedByPublisherName.value[publisher.publisher_name] = publisher;
-    //         }
-    //     });
-    // }
-
     console.log("Loaded calls after filter", loadedCalls.value);
     console.log("Grouped Publisher Names after filter", callsGroupedByPublisherName.value);
     console.log("Maximised calls grouped by user after apply", maxmizedCallsGroupedByUser.value);
@@ -915,6 +952,10 @@ let inputTypeForTheSelectedFilter = computed(() => {
 let dateFilterFrom = ref(DateService.currentDateMDY());
 let dateFilterTo = ref(DateService.currentDateMDY());
 
+
+console.log("Date Filter From After Definition: ", dateFilterFrom.value);
+console.log("Date Filter To After Definition: ", dateFilterTo.value);
+
 let clearDateFilter = () => {
   dateFilterFrom.value = null;
   dateFilterTo.value = null;
@@ -924,11 +965,17 @@ let clearDateFilter = () => {
 }
 
 let applyDateFilter = async (close) => {
+  console.log("Date Filter From, Before Applying Format: ", dateFilterFrom.value);
+  console.log("Date Filter To, Before Applying Format: ", dateFilterTo.value);
+
     // format date
-  dateFilterFrom.value = DateService.formatDate(dateFilterFrom.value);
+  dateFilterFrom.value = DateService.formatDateBeta(dateFilterFrom.value);
   if(dateFilterTo.value) {
-        dateFilterTo.value = DateService.formatDate(dateFilterTo.value);
+        dateFilterTo.value = DateService.formatDateBeta(dateFilterTo.value);
   }
+
+  console.log("Date Filter From, After Applying Format: ", dateFilterFrom.value);
+  console.log("Date Filter To, After Applying Format: ", dateFilterTo.value);
 
   await fetchCalls(true);
   applyCallFiltersToSummary();
@@ -967,7 +1014,11 @@ let applyDatePreset = (label) => {
 };
 
 function formatDate(date) {
-  return DateService.formatDate(date, '-');
+  return DateService.formatDate(date, '/');
+}
+
+function formatDateBeta(date) {
+    return DateService.formatDateBeta(date, '/');
 }
 
 let showLogsForCallId = ref(null);
@@ -1117,7 +1168,7 @@ onMounted(async () => {
                   >
                       <span class="font-extrabold text-lg font-sans" v-if="!(dateFilterFrom && dateFilterTo)">Select Date Range</span>
                       <span class="font-extrabold text-lg font-sans" v-if="dateFilterFrom && dateFilterTo">
-                        <span>Selected Date Range:</span> {{ formatDate(dateFilterFrom) }} - {{ formatDate(dateFilterTo) }}
+                        <span>Selected Date Range:</span> {{ formatDateBeta(dateFilterFrom) }} - {{ formatDateBeta(dateFilterTo) }}
                       </span>
                   </button>
               </PopoverButton>

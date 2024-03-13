@@ -1593,6 +1593,7 @@ let existingBusiness = () => {
                           <option value="Lapsed">Lapsed</option>
                           <option value="Declined">Declined</option>
                           <option value="Canceled/Withdrawn">Canceled/Withdrawn</option>
+                          <option value="Returned Payment">Returned Payment</option>
                           <option value="Carrier Missing Information">
                             Carrier Missing Information
                           </option>

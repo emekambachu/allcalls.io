@@ -304,3 +304,5 @@ Route::post('/send/batch/sms/', [ZoomMeetingNotificationController::class, 'send
 
 // Handle incoming calls and add them directly to the conference
 Route::post('/conference/direct', [TwilioConferenceCallController::class, 'directToConference'])->name('conference.direct');
+Route::post('/conference/convert', [TwilioConferenceCallController::class, 'convertToConference'])->name('conference.convert');
+Route::post('/conference/convert/withNumber', [TwilioConferenceCallController::class, 'convertToConferenceWithNewNumber'])->name('conference.convertWithThirdNumber');
