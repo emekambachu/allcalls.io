@@ -268,8 +268,20 @@ class CallService
             ]);
 
             // Convert the input dates to Y-m-d format without any timezone conversion
-            $startDate = Carbon::createFromFormat('m/d/Y', $startDate)->format('Y-m-d');
-            $endDate = Carbon::createFromFormat('m/d/Y', $endDate)->format('Y-m-d');
+//            $startDate = Carbon::createFromFormat('m/d/Y', $startDate, $userTimeZone)
+//                ->setTimezone('UTC')
+//                ->format('Y-m-d');
+//            $endDate = Carbon::createFromFormat('m/d/Y', $endDate, $userTimeZone)
+//                ->setTimezone('UTC')
+//                ->format('Y-m-d');
+
+            // Convert the input dates from m/d/Y format to Y-m-d format, considering the user's timezone,
+            $startDate = Carbon::createFromFormat('m/d/Y', $startDate, $userTimeZone)
+                ->setTimezone('UTC')
+                ->toDateString();
+            $endDate = Carbon::createFromFormat('m/d/Y', $endDate, $userTimeZone)
+                ->setTimezone('UTC')
+                ->toDateString();
 
             Log::debug('CallService:DatesAfterTimezoneConversion:', [
                 'startDate' => $startDate,
