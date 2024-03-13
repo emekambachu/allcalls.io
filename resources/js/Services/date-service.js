@@ -27,7 +27,7 @@ let DateService = {
     },
 
 
-    formatDateForInputRange(dateStr, separator = '/') {
+    formatDateForInputRange(dateStr, separator = '-') {
         // Split the input date string into components
         const [year, month, day] = dateStr.split(separator).map(part => parseInt(part, 10));
 
