@@ -1010,7 +1010,7 @@ let applyDatePreset = (label) => {
 };
 
 function formatDate(date) {
-  return DateService.formatDate(date, '-');
+  return DateService.formatDateForInputRange(date, '-');
 }
 
 let showLogsForCallId = ref(null);
