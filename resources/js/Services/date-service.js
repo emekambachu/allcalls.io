@@ -2,14 +2,15 @@ let DateService = {
 
     currentDateMDY() {
         const today = new Date();
-        const yyyy = today.getFullYear();
-        let mm = today.getMonth() + 1; // Months start at 0!
-        let dd = today.getDate();
 
-        if (dd < 10) dd = '0' + dd;
-        if (mm < 10) mm = '0' + mm;
 
-        return mm + '/' + dd + '/' + yyyy;
+        // Format the date components, ensuring two digits
+        const formattedMonth = ('0' + (d.getMonth() + 1)).slice(-2);
+        const formattedDay = ('0' + d.getDate()).slice(-2);
+        const formattedYear = d.getFullYear();
+
+        // Join the components with the separator
+        return [formattedMonth, formattedDay, formattedYear].join(separator);
     },
 
     formatDate(date, separator = '/') {
