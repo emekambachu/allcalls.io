@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ActiveUsersController;
 use App\Http\Controllers\Admin\CallsController;
+use App\Http\Controllers\Admin\PingLogController;
 use App\Http\Controllers\WebCallsAPIController;
 use App\Http\Controllers\AgentInvitesController;
 use App\Http\Controllers\Admin\ClientsController;
@@ -157,4 +158,6 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::get('/live-agent-for-basic-training', [InternalAgentController::class, 'manageTrainingLevel']);
 
     Route::post('/calls/disposition', [CallsController::class, 'disposition'])->name('admin.calls.disposition');
+
+    Route::get('/ping/logs', [PingLogController::class, 'index'])->name('admin.ping.logs.index');
 });

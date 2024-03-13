@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ping;
 use Exception;
 use App\Models\Bid;
 use App\Models\State;
@@ -58,7 +59,7 @@ class AgentStatusAPIController extends Controller
         '38' => ['api_key' => 'L06T43qL9HfwubfCgPDvip6sn78GBt', 'affiliate_percentage' => 10],
         '39' => ['api_key' => '4oRnsq6zThlqGKNqvjVukvlcogYXna', 'affiliate_percentage' => 10],
         '40' => ['api_key' => 'h22dXlknTztdSsITw8tW64SWxz9pm5', 'affiliate_percentage' => 10],
-        
+
     ];
 
     /**
@@ -74,6 +75,11 @@ class AgentStatusAPIController extends Controller
             'headers' => $request->headers->all(),
             'payload' => $request->all(),
             'query_string' => $request->getQueryString(),
+        ]);
+
+        // Save the logs
+      $pingLog = Ping::create([
+          'request' => json_encode($request->all()),
         ]);
 
         // Define vertical mapping
@@ -119,6 +125,7 @@ class AgentStatusAPIController extends Controller
 
         // Agent lookup
         $agentAvailable = $this->isAgentAvailable($state, $vertical);
+
         $price = $this->getPriceForVertical($vertical);
 
         if ($request->has('affiliate_id') && $request->has('api_key')) {
@@ -146,6 +153,14 @@ class AgentStatusAPIController extends Controller
             'status' => $response->getStatusCode(),
         ]);
 
+        // Save the logs
+
+        $pingLog = Ping::find($pingLog->id);
+        if ($pingLog) {
+            $pingLog->response = $response->getContent();
+            $pingLog->status = $response->getStatusCode() == 200 ? 'success' : 'fail';
+            $pingLog->save();
+        }
         return $response;
     }
 
@@ -155,6 +170,11 @@ class AgentStatusAPIController extends Controller
             'headers' => $request->headers->all(),
             'payload' => $request->all(),
             'query_string' => $request->getQueryString(),
+        ]);
+
+        // Save the logs
+        $pingLog = Ping::create([
+            'request' => json_encode($request->all()),
         ]);
 
         // Define vertical mapping
@@ -227,6 +247,13 @@ class AgentStatusAPIController extends Controller
             'status' => $response->getStatusCode(),
         ]);
 
+        $pingLog = Ping::find($pingLog->id);
+        if ($pingLog) {
+            $pingLog->response = $response->getContent();
+            $pingLog->status = $response->getStatusCode() == 200 ? 'success' : 'fail';
+            $pingLog->save();
+        }
+
         return $response;
     }
 
@@ -268,61 +295,61 @@ class AgentStatusAPIController extends Controller
         } else {
             $stateModel = State::whereFullName($state)->firstOrFail();
         }
-    
+
         // Query for the call type
         $callTypeModel = CallType::whereType($vertical)->firstOrFail();
-    
+
         // Initial Online Users Query
         $onlineUsersQuery = OnlineUser::query();
-    
+
         // Apply byCallTypeAndState scope and log count
         $onlineUsersQuery->byCallTypeAndState($callTypeModel, $stateModel);
         $countAfterStateAndCallType = $onlineUsersQuery->count();
         Log::debug('Count after applying byCallTypeAndState', ['count' => $countAfterStateAndCallType]);
-    
+
         // Apply withSufficientBalance scope and log count
         $onlineUsersQuery->withSufficientBalance($callTypeModel);
         $countAfterSufficientBalance = $onlineUsersQuery->count();
         Log::debug('Count after applying withSufficientBalance', ['count' => $countAfterSufficientBalance]);
-    
+
         // Apply withCallStatusWaiting scope and log count
         $onlineUsersQuery->withCallStatusWaiting();
         $countAfterCallStatusWaiting = $onlineUsersQuery->count();
         Log::debug('Count after applying withCallStatusWaiting', ['count' => $countAfterCallStatusWaiting]);
-    
+
         // Final count
         $finalCount = $onlineUsersQuery->count();
         Log::debug('Final count of online users', ['count' => $finalCount]);
-    
+
         // Return true if there are any users, false otherwise
         return $finalCount > 0;
-    }    
+    }
 
     private function getPriceForVertical(string $vertical): float
     {
         // Query for the call type
         $callType = CallType::whereType($vertical)->firstOrFail();
-    
+
         // Get the top two highest bid amounts for the call type
         $highestBids = Bid::where('call_type_id', $callType->id)
             ->orderBy('amount', 'desc')
             ->take(2)
             ->get();
-    
+
         // If there are no bids, or only one bid, return $25
         if ($highestBids->count() <= 1) {
             return 35;
         }
-    
+
         $highestBid = $highestBids[0]->amount;
         $secondHighestBid = $highestBids[1]->amount;
-    
+
         // If the second highest bid is the same as the highest bid
         // Or if the difference between the highest bid and the second highest bid is $1
         if ($secondHighestBid == $highestBid || $highestBid - $secondHighestBid == 1) {
             return $highestBid;
         }
-    
+
         // Otherwise, return the second highest bid amount + 1
         return $secondHighestBid + 1;
     }
