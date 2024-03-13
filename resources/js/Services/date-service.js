@@ -2,6 +2,7 @@ let DateService = {
 
     currentDateMDY() {
         const today = new Date();
+        const separator = '/';
 
         // Format the date components, ensuring two digits
         const formattedMonth = ('0' + (today.getMonth() + 1)).slice(-2);
