@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('calls', function (Blueprint $table) {
+        Schema::table('calls', static function (Blueprint $table) {
             //
             $table->string('call_sid')->nullable();
             $table->string('parent_call_sid')->nullable();
@@ -23,7 +23,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('calls', function (Blueprint $table) {
+        Schema::table('calls', static function (Blueprint $table) {
             //
             $table->dropColumn('call_sid');
             $table->dropColumn('parent_call_sid');

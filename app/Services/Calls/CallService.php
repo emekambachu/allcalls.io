@@ -187,7 +187,7 @@ class CallService
 
     public function getAllCallsWithDynamicFilterAndSorting($request): array
     {
-        $query = Call::with('user.roles', 'callType', 'client');
+        $query = Call::with('user.roles', 'callType', 'client', 'getBusiness');
 
         // ringing_duration is a custom attribute, therefore it's not available in the database table
         // Had to use raw queries to get it to work
@@ -341,13 +341,29 @@ class CallService
         return $allCalls->groupBy('user_id')->map(function ($calls) {
             $user = $calls->first()->user; // Assuming each id group has a user
 
-            $policy = $calls->where('policy_id', '!=', null);
             $totalCalls = $calls->count();
             $paidCalls = $calls->where('amount_spent', '>', 0)->count();
             $totalRevenue = $calls->sum('amount_spent');
             $totalCallLength = $calls->sum('call_duration_in_seconds');
             $averageCallLength = $totalCalls > 0 ? $totalCallLength / $totalCalls : 0;
-            $totalPolicies = $policy->count();
+            $totalPolicies = $calls->where('policy_id', '!=', null)->count();
+
+            // Manual filtering for pending and declined policies
+            $totalPendingPolicies = $calls->filter(function ($call) {
+                return $call->getBusiness && in_array($call->getBusiness->status, ['Submitted', 'Approved']);
+            })->count();
+
+            $totalDeclinedPolicies = $calls->filter(function ($call) {
+                return $call->getBusiness && in_array($call->getBusiness->status, ['Declined', 'Cancelled', 'Withdrawn']);
+            })->count();
+
+            $totalSiPolicies = $calls->filter(function ($call) {
+                return $call->getBusiness && $call->client && $call->client->status === 'Sale - Simplified Issue';
+            })->count();
+
+            $totalGiPolicies = $calls->filter(function ($call) {
+                return $call->getBusiness && $call->client && $call->client->status === 'Sale - Guaranteed Issue';
+            })->count();
 
             return [
                 'userId' => $user->id,
@@ -360,6 +376,10 @@ class CallService
                 'totalCallLength' => $totalCallLength,
                 'averageCallLength' => $averageCallLength,
                 'totalPolicies' => $totalPolicies,
+                'totalPendingPolicies' => $totalPendingPolicies,
+                'totalDeclinedPolicies' => $totalDeclinedPolicies,
+                'totalSiPolicies' => $totalSiPolicies,
+                'totalGiPolicies' => $totalGiPolicies,
             ];
         });
     }

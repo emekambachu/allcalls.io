@@ -67,6 +67,7 @@ return new class extends Migration
             $table->timestamps();
             $table->string('beneficiary_name');
             $table->string('beneficiary_relationship');
+            $table->text('notes')->nullable();
         });
     }
 

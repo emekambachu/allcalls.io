@@ -57,7 +57,7 @@ class CallsController extends Controller
 
     public function indexNew(Request $request): \Inertia\Response
     {
-        $allCalls = Call::with('user')->get();
+        $allCalls = Call::with('user', 'getBusiness', 'client')->get();
         $callsGroupedByUser = $this->call->getCallsGroupedByUserId($allCalls);
         $callsGroupedByPublisherName = $this->call->getCallsGroupedByPublisherName($allCalls);
 

@@ -45,7 +45,7 @@ class Call extends Model
 
     public function getBusiness(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
-        return $this->hasOne(InternalAgentMyBusiness::class, 'policy_id', 'id');
+        return $this->hasOne(InternalAgentMyBusiness::class, 'id', 'policy_id');
     }
 
 
