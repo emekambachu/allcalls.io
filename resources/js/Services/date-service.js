@@ -1,6 +1,6 @@
 let DateService = {
 
-    currentDateMDY(){
+    currentDateMDY() {
         const today = new Date();
         const yyyy = today.getFullYear();
         let mm = today.getMonth() + 1; // Months start at 0!
@@ -12,7 +12,9 @@ let DateService = {
         return mm + '/' + dd + '/' + yyyy;
     },
 
-    formatDate(date, separator = '/'){
+    formatDate(date, separator = '/') {
+        console.log('DateBefore', date);
+
         let d = new Date(date),
             month = '' + (d.getMonth() + 1),
             day = '' + d.getDate(),
@@ -23,7 +25,10 @@ let DateService = {
         if (day.length < 2)
             day = '0' + day;
 
-        return [month, day ,year].join(separator);
+
+        console.log('DateAfter', [month, day, year].join(separator));
+
+        return [month, day, year].join(separator);
     }
 
 }
