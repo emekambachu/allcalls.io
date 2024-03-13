@@ -2,13 +2,13 @@ let DateService = {
 
     currentDateMDY() {
         const today = new Date();
-        const yyyy = today.getFullYear();
-        let mm = today.getMonth() + 1; // Months start at 0!
-        let dd = today.getDate();
-
+        const yyyy = today.getUTCFullYear(); // Use UTC year
+        let mm = today.getUTCMonth() + 1; // Use UTC month, months start at 0
+        let dd = today.getUTCDate(); // Use UTC date
+    
         if (dd < 10) dd = '0' + dd;
         if (mm < 10) mm = '0' + mm;
-
+    
         return mm + '/' + dd + '/' + yyyy;
     },
 
