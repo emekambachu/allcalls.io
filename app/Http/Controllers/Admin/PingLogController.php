@@ -9,10 +9,12 @@ use Inertia\Inertia;
 
 class PingLogController extends Controller
 {
-    public function index(Request $request){
-        $pingLogs = Ping::paginate(2);
-       return Inertia::render('Admin/PingLogs/Index', [
-           'requestData' => $request->all(),
+    public function index(Request $request)
+    {
+        $pingLogs = Ping::paginate(100);
+
+        return Inertia::render('Admin/PingLogs/Index', [
+            'requestData' => $request->all(),
             'pingLogs' => $pingLogs,
         ]);
     }
