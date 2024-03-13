@@ -961,14 +961,17 @@ let clearDateFilter = () => {
 }
 
 let applyDateFilter = async (close) => {
+  console.log("Date Filter From, Before Applying Format: ", dateFilterFrom.value);
+  console.log("Date Filter To, Before Applying Format: ", dateFilterTo.value);
+
     // format date
   dateFilterFrom.value = DateService.formatDate(dateFilterFrom.value);
   if(dateFilterTo.value) {
         dateFilterTo.value = DateService.formatDate(dateFilterTo.value);
   }
 
-  console.log("Date Filter From, After Applying Filter: ", dateFilterFrom.value);
-  console.log("Date Filter To, After Applying Filter: ", dateFilterTo.value);
+  console.log("Date Filter From, After Applying Format: ", dateFilterFrom.value);
+  console.log("Date Filter To, After Applying Format: ", dateFilterTo.value);
 
   await fetchCalls(true);
   applyCallFiltersToSummary();
