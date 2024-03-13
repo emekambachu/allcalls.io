@@ -961,11 +961,17 @@ let clearDateFilter = () => {
 }
 
 let applyDateFilter = async (close) => {
+  console.log("Date Filter From, Before Applying Format: ", dateFilterFrom.value);
+  console.log("Date Filter To, Before Applying Format: ", dateFilterTo.value);
+
     // format date
-  dateFilterFrom.value = DateService.formatDate(dateFilterFrom.value);
+  dateFilterFrom.value = DateService.formatDateForInputRange(dateFilterFrom.value);
   if(dateFilterTo.value) {
-        dateFilterTo.value = DateService.formatDate(dateFilterTo.value);
+        dateFilterTo.value = DateService.formatDateForInputRange(dateFilterTo.value);
   }
+
+  console.log("Date Filter From, After Applying Format: ", dateFilterFrom.value);
+  console.log("Date Filter To, After Applying Format: ", dateFilterTo.value);
 
   await fetchCalls(true);
   applyCallFiltersToSummary();
@@ -1004,7 +1010,7 @@ let applyDatePreset = (label) => {
 };
 
 function formatDate(date) {
-  return DateService.formatDate(date, '-');
+  return DateService.formatDateForInputRange(date, '-');
 }
 
 let showLogsForCallId = ref(null);
