@@ -952,6 +952,10 @@ let inputTypeForTheSelectedFilter = computed(() => {
 let dateFilterFrom = ref(DateService.currentDateMDY());
 let dateFilterTo = ref(DateService.currentDateMDY());
 
+
+console.log("Date Filter From After Definition: ", dateFilterFrom.value);
+console.log("Date Filter To After Definition: ", dateFilterTo.value);
+
 let clearDateFilter = () => {
   dateFilterFrom.value = null;
   dateFilterTo.value = null;
@@ -1165,7 +1169,7 @@ onMounted(async () => {
                   >
                       <span class="font-extrabold text-lg font-sans" v-if="!(dateFilterFrom && dateFilterTo)">Select Date Range</span>
                       <span class="font-extrabold text-lg font-sans" v-if="dateFilterFrom && dateFilterTo">
-                        <span>Selected Date Range:</span>
+                        <span>Selected Date Range:</span> {{ formatDateForInputRange(dateFilterFrom) }} - {{ formatDateForInputRange(dateFilterTo) }}
                       </span>
                   </button>
               </PopoverButton>
