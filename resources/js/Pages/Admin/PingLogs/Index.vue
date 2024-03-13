@@ -79,6 +79,7 @@ let capitalizeAndReplaceUnderscore = (str) => {
                                 <th scope="col" class="px-4 py-3">Request</th>
                                 <th scope="col" class="px-4 py-3">Response</th>
                                 <th scope="col" class="px-4 py-3">Status</th>
+                                <th scope="col" class="px-4 py-3">Created At</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -95,6 +96,10 @@ let capitalizeAndReplaceUnderscore = (str) => {
 
                                     <span v-if="pingLog.status == 'success'" class="bg-green-600 text-white text-xs px-2 py-1 rounded-2xl">{{pingLog.status}}</span>
                                     <span v-else class="bg-red-600 text-white text-xs px-2 py-1 rounded-2xl">{{pingLog.status }}</span>
+                                </td>
+
+                                <td class="text-gray-600 px-4 py-3">
+                                    {{ pingLog.created_at }}
                                 </td>
                             </tr>
                             </tbody>
