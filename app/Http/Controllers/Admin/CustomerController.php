@@ -172,8 +172,11 @@ class CustomerController extends Controller
     {
         $user = User::findOrFail($id);
 
-        Call::where('user_id', $user->id)->delete();
-        InternalAgentMyBusiness::where('user_id', $user->id)->delete();
+        Call::where('user_id', $user->id)->get()->each(function ($call) {
+            InternalAgentMyBusiness::where('call_id', $call->id)->delete();
+            $call->delete();
+        });
+
         Card::where('user_id', $user->id)->delete();
         UserCallTypeState::where('user_id', $user->id)->delete();
         Transaction::where('user_id', $user->id)->delete();
