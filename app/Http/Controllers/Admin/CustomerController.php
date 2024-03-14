@@ -20,6 +20,7 @@ use App\Models\NotificationGroup;
 use App\Models\UserCallTypeState;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\InternalAgentMyBusiness;
 use App\Models\NotificationGroupMember;
 use App\Models\UserActivity;
 use Illuminate\Support\Facades\Crypt;
@@ -171,6 +172,8 @@ class CustomerController extends Controller
     {
         $user = User::findOrFail($id);
 
+        Call::where('user_id', $user->id)->delete();
+        InternalAgentMyBusiness::where('user_id', $user->id)->delete();
         Card::where('user_id', $user->id)->delete();
         UserCallTypeState::where('user_id', $user->id)->delete();
         Transaction::where('user_id', $user->id)->delete();
