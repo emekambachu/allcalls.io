@@ -38,6 +38,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class RegistrationStepController extends Controller
@@ -164,7 +165,7 @@ class RegistrationStepController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
+
         $user = auth()->user();
         $basicInfo = InternalAgentRegInfo::where('user_id', $user->id)->first();
         if ($request->step == 1) {
@@ -172,7 +173,7 @@ class RegistrationStepController extends Controller
                 'first_name' => 'required',
                 'last_name' => 'required',
                 // 'ssn' => 'required|min:11|max:11',
-                'ssn' => 'required|min:11|max:11|unique:' . InternalAgentRegInfo::class,
+                'ssn' => 'required|min:11|max:11' . (isset($basicInfo) ? '|unique:internal_agent_reg_infos,ssn,' . $basicInfo->id : '|unique:internal_agent_reg_infos,ssn'),
                 'gender' => 'required',
                 'dob' => 'required',
                 'marital_status' => 'required',

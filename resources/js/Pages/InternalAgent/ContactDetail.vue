@@ -175,8 +175,6 @@ let formatSSN = (event) => {
     val = val.replace(/-(\d{2})/, '-$1-');
     val = val.replace(/(\d)-(\d{4}).*/, '$1-$2');
     form.value.ssn = val;
-
-    props.firstStepErrors.ssn = false;
 }
 </script>
 <style scoped></style>
