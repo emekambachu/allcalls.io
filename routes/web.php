@@ -292,5 +292,6 @@ Route::post('/web-api/call-device-actions-with-unique-call-id', [CallDeviceActio
 
 Route::post('/webhooks/calendly', [CalendlyWebhookController::class, 'show']);
 
- // Handle incoming calls and add them directly to the conference
- Route::post('/conference/convert/withNumber', [TwilioConferenceCallController::class, 'convertToConferenceWithNewNumber'])->middleware(['auth', 'verified', 'registration-step-check'])->name('conference.convertWithThirdNumber');
+// Handle incoming calls and add them directly to the conference
+Route::post('/conference/convert/withNumber', [TwilioConferenceCallController::class, 'convertToConferenceWithNewNumber'])->middleware(['auth', 'verified', 'registration-step-check'])->name('conference.convertWithThirdNumber');
+
