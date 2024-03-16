@@ -3345,7 +3345,7 @@ let appDownloadModal = ref(false);
 
         <!-- Merge Calls Button -->
 
-        <!-- 
+        
         <div class="py-3">
 
           <button
@@ -3355,7 +3355,7 @@ let appDownloadModal = ref(false);
             Merge Calls
           </button>
         </div>
- -->
+
 
         <!-- Numpad/Dialer -->
         <div v-if="showDialPad" class="p-5">
