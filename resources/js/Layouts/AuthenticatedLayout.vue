@@ -944,9 +944,7 @@ let appDownloadModal = ref(false);
                   Profile
                 </ResponsiveNavLink>
 
-                <ResponsiveNavLink :href="route('logout')" method="post" as="button">
-                  Log Out
-                </ResponsiveNavLink>
+                <ResponsiveLogoutLink />
               </div>
             </div>
           </div>
