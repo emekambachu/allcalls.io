@@ -282,6 +282,11 @@ Route::middleware(['auth:sanctum', 'notBanned'])->group(function () {
     Route::post('/call-device-actions/unique', [CallDeviceActionsController::class, 'storeWithUniqueCallId']);
 
     Route::post('/app-events', [AppEventsController::class, 'store']);
+
+    // Handle incoming calls and add them directly to the conference
+    Route::post('/conference/direct', [TwilioConferenceCallController::class, 'directToConference'])->name('conference.direct');
+    Route::post('/conference/convert', [TwilioConferenceCallController::class, 'convertToConference'])->name('conference.convert');
+    Route::post('/conference/convert/withNumber', [TwilioConferenceCallController::class, 'convertToConferenceWithNewNumber'])->name('conference.convertWithThirdNumber');
 });
 
 Route::post('/sendbird-user/blahblahblah', static function (Request $request) {
@@ -301,8 +306,3 @@ Route::post('/commio/sms/receive', [TextMessageController::class, 'receiveMessag
 Route::post('/twilio-webhook-error', [TwilioWebhookErrorController::class, 'store']);
 
 Route::post('/send/batch/sms/', [ZoomMeetingNotificationController::class, 'sendBatchTextMessages']);
-
-// Handle incoming calls and add them directly to the conference
-Route::post('/conference/direct', [TwilioConferenceCallController::class, 'directToConference'])->name('conference.direct');
-Route::post('/conference/convert', [TwilioConferenceCallController::class, 'convertToConference'])->name('conference.convert');
-Route::post('/conference/convert/withNumber', [TwilioConferenceCallController::class, 'convertToConferenceWithNewNumber'])->name('conference.convertWithThirdNumber');
