@@ -287,6 +287,7 @@ Route::middleware(['auth:sanctum', 'notBanned'])->group(function () {
     Route::post('/conference/direct', [TwilioConferenceCallController::class, 'directToConference'])->name('conference.direct');
     Route::post('/conference/convert', [TwilioConferenceCallController::class, 'convertToConference'])->name('conference.convert');
     Route::post('/conference/convert/withNumber', [TwilioConferenceCallController::class, 'convertToConferenceWithNewNumber'])->name('conference.convertWithThirdNumber');
+    Route::post('/conference/convert/withUnique', [TwilioConferenceCallController::class, 'convertToConferenceWithUniqueCallId'])->name('conference.convertToConferenceWithUniqueCallId');    
 });
 
 Route::post('/sendbird-user/blahblahblah', static function (Request $request) {

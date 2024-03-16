@@ -217,4 +217,78 @@ class TwilioConferenceCallController extends Controller
             return response()->json(['error' => 'Failed to set up conference call', 'details' => $e->getMessage()], 500);
         }
     }
+
+    public function convertToConferenceWithUniqueCallId(Request $request)
+    {
+        // Validate the request parameters to include unique_call_id
+        $validated = $request->validate([
+            'unique_call_id' => 'required|string', // Use unique_call_id to find the call
+            'phoneNumber' => 'required|string', // New parameter for the third participant's phone number
+        ]);
+
+        // Extract unique_call_id from the request
+        $uniqueCallId = $validated['unique_call_id'];
+        $phoneNumber = $validated['phoneNumber']; 
+
+        // Attempt to retrieve the call from the database using unique_call_id
+        $call = Call::where('unique_call_id', $uniqueCallId)->first();
+
+        if (!$call) {
+            return response()->json(['error' => 'Call not found'], 404);
+        }
+
+        // Extract call_sid and parent_call_sid from the retrieved call
+        $callSid = $call->call_sid;
+        $otherCallSid = $call->parent_call_sid ?? null; // Use parent_call_sid if available
+
+        // Twilio credentials from .env file
+        $accountSid = env('TWILIO_SID'); // Ensure this is 'TWILIO_ACCOUNT_SID' in your .env
+        $authToken = env('TWILIO_AUTH_TOKEN');
+        $twilioNumber = env('TWILIO_PHONE_NUMBER');
+
+        // Initialize Twilio client
+        $client = new Client($accountSid, $authToken);
+
+        // Name for the conference
+        $conferenceName = 'MyConference'; // This should be the same for all calls you want to merge
+
+        try {
+            // Redirect the call to the conference TwiML endpoint
+            // Update both calls to join the same conference if otherCallSid is available
+            $client->calls($callSid)
+                ->update(["url" => route('conference.direct', ['conferenceName' => $conferenceName])]);
+
+            if ($otherCallSid) {
+                $client->calls($otherCallSid)
+                    ->update(["url" => route('conference.direct', ['conferenceName' => $conferenceName])]);
+            }
+
+            Log::info("Call(s) updated to conference", [
+                'callSid' => $callSid, 
+                'otherCallSid' => $otherCallSid, 
+                'conferenceName' => $conferenceName
+            ]);
+
+            // If a phone number is provided, dial out to this number and add to the conference
+            if ($phoneNumber) {
+                $twiml = "<Response><Dial><Conference>{$conferenceName}</Conference></Dial></Response>";
+
+                $newCallResponse = $client->calls->create(
+                    $phoneNumber, // The phone number to call and add to the conference
+                    $twilioNumber, // Your Twilio number
+                    ["twiml" => $twiml]
+                );
+
+                Log::info("New participant added to conference", ['phoneNumber' => $phoneNumber, 'conferenceName' => $conferenceName, 'newCallSid' => $newCallResponse->sid]);
+            }
+
+            Log::info("Conference call setup complete", ['uniqueCallId' => $uniqueCallId, 'conferenceName' => $conferenceName]);
+
+            return response()->json(['message' => 'Conference call setup complete.']);
+        } catch (\Exception $e) {
+            Log::error("Error setting up conference call", ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'Failed to set up conference call', 'details' => $e->getMessage()], 500);
+        }
+    }
+
 }
