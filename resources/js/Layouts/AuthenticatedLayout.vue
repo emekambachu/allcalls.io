@@ -11,6 +11,7 @@ import LowBalanceModal from "@/Components/LowBalanceModal.vue";
 import TextInput from "@/Components/TextInput.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import LogoutLink from "@/Components/LogoutLink.vue";
+import ResponsiveLogoutLink from "@/Components/ResponsiveLogoutLink.vue";
 import { toaster } from "@/helper.js";
 import { Device } from "@twilio/voice-sdk";
 import { usePage, router } from "@inertiajs/vue3";
