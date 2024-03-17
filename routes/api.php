@@ -284,6 +284,7 @@ Route::middleware(['auth:sanctum', 'notBanned'])->group(function () {
     Route::post('/app-events', [AppEventsController::class, 'store']);
 
     // Handle incoming calls and add them directly to the conference
+    Route::post('/conference/direct', [TwilioConferenceCallController::class, 'directToConference'])->name('conference.direct');
     Route::post('/conference/convert', [TwilioConferenceCallController::class, 'convertToConference'])->name('conference.convert');
     Route::post('/conference/convert/withNumber', [TwilioConferenceCallController::class, 'convertToConferenceWithNewNumber'])->name('conference.convertWithThirdNumber');
     Route::post('/conference/convert/withUnique', [TwilioConferenceCallController::class, 'convertToConferenceWithUniqueCallId'])->name('conference.convertToConferenceWithUniqueCallId');    
@@ -298,8 +299,6 @@ Route::post('/sendbird-user/blahblahblah', static function (Request $request) {
 Route::get('/test-call', static function () {
     return 'All good!';
 });
-
-Route::post('/conference/direct', [TwilioConferenceCallController::class, 'directToConference'])->name('conference.direct');
 
 Route::post('/twilio/sms/receive', [TwilioSMSController::class, 'receiveSMS']);
 Route::post('/commio/sms/send', [TextMessageController::class, 'sendMessage']);
