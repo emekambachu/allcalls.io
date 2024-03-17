@@ -20,12 +20,13 @@ class TwilioConferenceCallController extends Controller
     {
         $response = new VoiceResponse();
         
-        $conferenceName = $request->input('conferenceName', 'DefaultConferenceName');        
+        $conferenceName = $request->input('conferenceName', 'DefaultConferenceName');
+        $statusCallbackUrl = route('conference.statusCallback');        
         // Directly dial into the conference room
         $dial = $response->dial();
         $dial->conference($conferenceName, [
             'waitUrl' => 'http://twimlets.com/holdmusic?Bucket=com.twilio.music.classical',
-            'statusCallback' => route('conference.statusCallback'),
+            'statusCallback' => (string) $statusCallbackUrl,
             'statusCallbackEvent' => ['start', 'join', 'leave', 'end']
         ]);
 
