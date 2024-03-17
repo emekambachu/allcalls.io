@@ -206,6 +206,7 @@ class TwilioConferenceCallController extends Controller
                 );
 
                 Log::info("New participant added to conference", ['phoneNumber' => $phoneNumber, 'conferenceName' => $conferenceName, 'newCallSid' => $newCallResponse->sid]);
+                Log::info("Response from conversion to conference call: ", $newCallResponse);
             }
                 
             // Log::info("Call made to: " . $call->to);
