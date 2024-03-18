@@ -42,12 +42,19 @@ class LinkAllPoliciesToCalls extends Command
             foreach ($policies as $policy) {
                 if ($policy->client_id) {
                     $client = Client::find($policy->client_id);
-                    $policy->call_id = $client->call_id;
-                    $policy->save();
+                    if ($client) {
+                        $policy->call_id = $client->call_id;
+                        $policy->save();
+                        $policy = $policy->refresh();
+                    }
+                }
 
+                if ($policy->call_id) {
                     $call = Call::find($policy->call_id);
-                    $call->policy_id = $policy->id;
-                    $call->save();
+                    if ($call) {
+                        $call->policy_id = $policy->id;
+                        $call->save();
+                    }
                 }
             }
 
