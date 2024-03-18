@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Exception;
 use Carbon\Carbon;
 use App\Models\Call;
+use App\Models\Client;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -34,31 +35,59 @@ class LinkAllPoliciesToCalls extends Command
         // Start Transaction
         DB::beginTransaction();
 
-        $businesses = InternalAgentMyBusiness::whereNull('call_id')->get();
+        $policies = InternalAgentMyBusiness::all();
 
         try {
             // Assuming $businesses is a collection of Business models
-            foreach ($businesses as $business) {
-                $dateTillEndOfDay = Carbon::parse($business->application_date)->endOfDay();
+            // foreach ($policies as $policy) {
+            //     if ($policy->client_id) {
+            //         $client = Client::find($policy->client_id);
+            //         if ($client) {
+            //             $policy->call_id = $client->call_id;
+            //             $policy->save();
+            //             $policy = $policy->refresh();
 
-                $matchedRecord = Call::whereFrom(trim($business->client_phone_no))
-                    ->where('created_at', '<=', $dateTillEndOfDay)
-                    ->orderBy('created_at', 'desc')
-                    ->first();
+            //             $call = Call::find($client->call_id);
+            //             if ($call) {
+            //                 $call->policy_id = $policy->id;
+            //                 $call->save();
+            //             }
+            //         }
+            //     }
+            // }
 
-                if ($matchedRecord) {
-                    $matchedRecord->policy_id = $business->id;
-                    $business->call_id = $matchedRecord->id;
 
-                    // Save in transaction
-                    $business->save();
-                    $matchedRecord->save();
-
-                    Log::debug("Assign Call To Business --> {$business} AND Call Record ---> {$matchedRecord}");
+            foreach($policies as $policy) {
+                // Check if the call_id already exists:
+                if ($policy->call_id) {
+                    // If it does, find the call record and update the policy_id
+                    $call = Call::find($policy->call_id);
+                    if ($call) {
+                        $call->policy_id = $policy->id;
+                        $call->save();
+                    }
                 } else {
-                    Log::debug("Date --> $dateTillEndOfDay Call Record Not found For Business --> {$business}");
+                    // If it doesn't, find the client record and update the call_id
+                    $client = Client::find($policy->client_id);
+                    // Then find the call record and update the policy_id
+                    if ($client) {
+                        $policy->call_id = $client->call_id;
+                        $policy->save();
+                        $policy = $policy->refresh();
+
+                        $call = Call::find($client->call_id);
+                        if ($call) {
+                            $call->policy_id = $policy->id;
+                            $call->save();
+                        }
+                    }
                 }
+                
             }
+
+
+
+
 
             // Commit Transaction
             DB::commit();
