@@ -12,10 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('calls', static function (Blueprint $table) {
-            $table->foreignId('policy_id')
-                ->after('user_id')
-                ->nullable()
-                ->constrained('calls');
+            if (!Schema::hasColumn('calls', 'policy_id')) { // Check if the column doesn't exist
+                $table->foreignId('policy_id')
+                      ->after('user_id')
+                      ->nullable()
+                      ->constrained('policies'); // Assuming the foreign key is intended to reference the 'policies' table, not 'calls'
+            }
         });
     }
 
@@ -25,8 +27,10 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('calls', static function (Blueprint $table) {
-            $table->dropForeign('policy_id');
-            $table->dropColumn('policy_id');
+            if (Schema::hasColumn('calls', 'policy_id')) { // Check if the column exists
+                $table->dropForeign(['policy_id']); // Use an array to specify the exact foreign key constraint name
+                $table->dropColumn('policy_id');
+            }
         });
     }
 };
