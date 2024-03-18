@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Events\AppSubmittedEvent;
+use App\Events\PolicySubmitedEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Client;
 use App\Models\InternalAgentMyBusiness;
@@ -12,6 +13,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class AgentBusinessController extends Controller
@@ -132,6 +134,11 @@ class AgentBusinessController extends Controller
             'client_email' => $request->client_email,
         ]);
         event(new AppSubmittedEvent($internalAgentBusiness));
+
+        if($internalAgentBusiness->client_id !='' && Str::startsWith($internalAgentBusiness->client->status, 'Sale')){
+            event(new PolicySubmitedEvent($internalAgentBusiness));
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'Business Added Successfully!',
