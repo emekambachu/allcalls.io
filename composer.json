@@ -8,6 +8,7 @@
         "php": "8.1 || ^8.2.0",
         "barryvdh/laravel-dompdf": "^2.0",
         "clegginabox/pdf-merger": "dev-master",
+        "doctrine/dbal": "^3.8",
         "docusign/esign-client": "^6.17",
         "fakerphp/faker": "^1.23",
         "filament/filament": "^3.1",
