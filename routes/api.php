@@ -300,6 +300,7 @@ Route::get('/test-call', static function () {
 });
 
 Route::post('/conference/direct', [TwilioConferenceCallController::class, 'directToConference'])->name('conference.direct');
+Route::post('/conference-status-callback', [TwilioConferenceCallController::class, 'handleConferenceStatusCallback'])->name('conference.statusCallback');
 
 Route::post('/twilio/sms/receive', [TwilioSMSController::class, 'receiveSMS']);
 Route::post('/commio/sms/send', [TextMessageController::class, 'sendMessage']);

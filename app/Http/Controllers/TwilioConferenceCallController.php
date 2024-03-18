@@ -20,11 +20,14 @@ class TwilioConferenceCallController extends Controller
     {
         $response = new VoiceResponse();
         
-        $conferenceName = $request->input('conferenceName', 'DefaultConferenceName');        
+        $conferenceName = $request->input('conferenceName', 'DefaultConferenceName');
+        $statusCallbackUrl = route('conference.statusCallback');        
         // Directly dial into the conference room
         $dial = $response->dial();
         $dial->conference($conferenceName, [
-            'waitUrl' => 'http://twimlets.com/holdmusic?Bucket=com.twilio.music.classical'
+            'waitUrl' => 'http://twimlets.com/holdmusic?Bucket=com.twilio.music.classical',
+            'statusCallback' => $statusCallbackUrl,
+            'statusCallbackEvent' => 'start', 'join', 'leave', 'end'
         ]);
 
         // Return the TwiML as a string
@@ -206,6 +209,7 @@ class TwilioConferenceCallController extends Controller
                 );
 
                 Log::info("New participant added to conference", ['phoneNumber' => $phoneNumber, 'conferenceName' => $conferenceName, 'newCallSid' => $newCallResponse->sid]);
+                Log::info("Response from conversion to conference call: ", ['response' => $newCallResponse]);
             }
                 
             // Log::info("Call made to: " . $call->to);
@@ -291,4 +295,39 @@ class TwilioConferenceCallController extends Controller
         }
     }
 
+    public function handleConferenceStatusCallback(Request $request)
+    {
+        // Capture the entire request body for logging
+        $requestData = $request->all();
+
+        // Log the entire request data
+        Log::info('Conference status callback received', $requestData);
+
+        // You can also extract and log specific parts of the request, if needed
+        $conferenceSid = $request->input('ConferenceSid');
+        $status = $request->input('StatusCallbackEvent');
+        $callSid = $request->input('CallSid'); // SID of the participant who triggered the event
+
+        Log::info("Conference SID: {$conferenceSid}, Status: {$status}, Call SID: {$callSid}");
+
+        // Perform any other actions based on the status callback event
+        switch ($status) {
+            case 'conference-start':
+                // The conference has started
+                break;
+            case 'participant-join':
+                // A participant has joined the conference
+                break;
+            case 'participant-leave':
+                // A participant has left the conference
+                break;
+            case 'conference-end':
+                // The conference has ended
+                break;
+            // ... handle other events
+        }
+
+        // Return a 200 OK response to Twilio
+        return response()->json(['message' => 'Status callback received and logged']);
+    }
 }
