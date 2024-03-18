@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Exception;
 use Carbon\Carbon;
 use App\Models\Call;
+use App\Models\Client;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -34,29 +35,19 @@ class LinkAllPoliciesToCalls extends Command
         // Start Transaction
         DB::beginTransaction();
 
-        $businesses = InternalAgentMyBusiness::whereNull('call_id')->get();
+        $policies = InternalAgentMyBusiness::whereNull('call_id')->get();
 
         try {
             // Assuming $businesses is a collection of Business models
-            foreach ($businesses as $business) {
-                $dateTillEndOfDay = Carbon::parse($business->application_date)->endOfDay();
+            foreach ($policies as $policy) {
+                if ($policy->client_id) {
+                    $client = Client::find($policy->client_id);
+                    $policy->call_id = $client->call_id;
+                    $policy->save();
 
-                $matchedRecord = Call::whereFrom(trim($business->client_phone_no))
-                    ->where('created_at', '<=', $dateTillEndOfDay)
-                    ->orderBy('created_at', 'desc')
-                    ->first();
-
-                if ($matchedRecord) {
-                    $matchedRecord->policy_id = $business->id;
-                    $business->call_id = $matchedRecord->id;
-
-                    // Save in transaction
-                    $business->save();
-                    $matchedRecord->save();
-
-                    Log::debug("Assign Call To Business --> {$business} AND Call Record ---> {$matchedRecord}");
-                } else {
-                    Log::debug("Date --> $dateTillEndOfDay Call Record Not found For Business --> {$business}");
+                    $call = Call::find($policy->call_id);
+                    $call->policy_id = $policy->id;
+                    $call->save();
                 }
             }
 
