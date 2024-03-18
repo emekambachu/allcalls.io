@@ -10,6 +10,8 @@ import Modal from "@/Components/Modal.vue";
 import LowBalanceModal from "@/Components/LowBalanceModal.vue";
 import TextInput from "@/Components/TextInput.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import LogoutLink from "@/Components/LogoutLink.vue";
+import ResponsiveLogoutLink from "@/Components/ResponsiveLogoutLink.vue";
 import { toaster } from "@/helper.js";
 import { Device } from "@twilio/voice-sdk";
 import { usePage, router } from "@inertiajs/vue3";
@@ -634,7 +636,7 @@ let callNumber = () => {
 
     // Send the payload to your endpoint
     axios
-      .post("/api/conference/convert/withNumber", payload)
+      .post("/conference/convert/withNumber", payload)
       .then((response) => {
         console.log("Call initiated", response);
         // Reset or handle post-call UI here
@@ -747,9 +749,8 @@ let appDownloadModal = ref(false);
                       >
                         Profile
                       </DropdownLink>
-                      <DropdownLink :href="route('logout')" method="post" as="button">
-                        Log Out
-                      </DropdownLink>
+
+                      <LogoutLink />
                     </template>
                   </Dropdown>
                 </div>
@@ -944,9 +945,7 @@ let appDownloadModal = ref(false);
                   Profile
                 </ResponsiveNavLink>
 
-                <ResponsiveNavLink :href="route('logout')" method="post" as="button">
-                  Log Out
-                </ResponsiveNavLink>
+                <ResponsiveLogoutLink />
               </div>
             </div>
           </div>
@@ -3345,8 +3344,8 @@ let appDownloadModal = ref(false);
 
         <!-- Merge Calls Button -->
 
-        <!-- 
-        <div class="py-3">
+        
+        <!-- <div class="py-3">
 
           <button
             @click="showDialPad = !showDialPad"
@@ -3354,13 +3353,12 @@ let appDownloadModal = ref(false);
           >
             Merge Calls
           </button>
-        </div>
- -->
+        </div> -->
+
 
         <!-- Numpad/Dialer -->
-        <div v-if="showDialPad" class="p-5">
+        <!-- <div v-if="showDialPad" class="p-5">
           <div class="flex flex-wrap justify-center gap-3 mb-3">
-            <!-- Loop through numpad numbers -->
             <button
               v-for="number in [
                 '1',
@@ -3391,7 +3389,7 @@ let appDownloadModal = ref(false);
           >
             Call
           </button>
-        </div>
+        </div> -->
       </div>
     </Modal>
 

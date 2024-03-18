@@ -36,8 +36,8 @@ class LinkCallsToBusiness extends Command
                 // Update the policy_id column with the call's ID
                 $call->policy_id = $internalAgentMyBusiness->id;
                 $call->save();
-            }else{
-                $this->info('Failed to update call with business Id=>'. $internalAgentMyBusiness->id);
+            } else {
+                $this->info('Failed to update call with business Id=>' . $internalAgentMyBusiness->id);
             }
         }
     }

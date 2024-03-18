@@ -20,6 +20,7 @@ use App\Models\NotificationGroup;
 use App\Models\UserCallTypeState;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\InternalAgentMyBusiness;
 use App\Models\NotificationGroupMember;
 use App\Models\UserActivity;
 use Illuminate\Support\Facades\Crypt;
@@ -170,6 +171,11 @@ class CustomerController extends Controller
     public function destroy($id)
     {
         $user = User::findOrFail($id);
+
+        Call::where('user_id', $user->id)->get()->each(function ($call) {
+            InternalAgentMyBusiness::where('call_id', $call->id)->delete();
+            $call->delete();
+        });
 
         Card::where('user_id', $user->id)->delete();
         UserCallTypeState::where('user_id', $user->id)->delete();

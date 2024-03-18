@@ -4,6 +4,7 @@ use Inertia\Inertia;
 use App\Jobs\SampleJob;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\BidsController;
@@ -51,9 +52,9 @@ use App\Http\Controllers\DeviceIdByUserAgentController;
 use App\Http\Controllers\PromotionGuidelinesController;
 use App\Http\Controllers\AgentStatusPriceDocsController;
 use App\Http\Controllers\TakeCallsOnlineUsersController;
+use App\Http\Controllers\TwilioConferenceCallController;
 use App\Http\Controllers\FEAgentStatusPriceDocsController;
 use App\Http\Controllers\ZoomMeetingNotificationController;
-use Illuminate\Support\Facades\Http;
 
 /*
 |--------------------------------------------------------------------------
@@ -290,3 +291,7 @@ Route::post('/web-api/call-device-actions', [CallDeviceActionsController::class,
 Route::post('/web-api/call-device-actions-with-unique-call-id', [CallDeviceActionsController::class, 'storeWithUniqueCallId'])->middleware(['auth', 'verified', 'registration-step-check']);
 
 Route::post('/webhooks/calendly', [CalendlyWebhookController::class, 'show']);
+
+// Handle incoming calls and add them directly to the conference
+Route::post('/conference/convert/withNumber', [TwilioConferenceCallController::class, 'convertToConferenceWithNewNumber'])->middleware(['auth', 'verified', 'registration-step-check'])->name('conference.convertWithThirdNumber');
+
