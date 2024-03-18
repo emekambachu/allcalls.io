@@ -28,9 +28,26 @@ return new class extends Migration
     {
         Schema::table('calls', static function (Blueprint $table) {
             if (Schema::hasColumn('calls', 'policy_id')) { // Check if the column exists
+
+
+
+                if (self::hasForeignKey('calls', 'calls_policy_id_foreign')) {
+                    $table->dropForeign('calls_policy_id_foreign');
+                }
+
                 $table->dropForeign(['policy_id']); // Use an array to specify the exact foreign key constraint name
                 $table->dropColumn('policy_id');
             }
         });
+    }
+
+    public static function hasForeignKey($table, $key) {
+        $conn = Schema::getConnection()->getDoctrineSchemaManager();
+
+        $keys =  array_map(function($key) {
+            return $key->getName();
+        }, $conn->listTableForeignKeys($table));
+        
+        return in_array($key, $keys);
     }
 };
