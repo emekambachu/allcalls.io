@@ -23,7 +23,6 @@ return new class extends Migration
             $table->string('dob')->nullable();
             $table->string('call_id');
             $table->unsignedInteger('user_id');
-            $table->string('state')->default('');
             $table->boolean('unlocked')->default(false);
             $table->string('beneficiary')->default('');
             $table->timestamps();
