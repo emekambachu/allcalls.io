@@ -11,11 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('invited_by')
-            ->nullable()
-            ->constrained('users');
-        });
+        if (Schema::hasTable('users')) { // Check if the users table exists
+            Schema::table('users', function (Blueprint $table) {
+                // Add the invited_by column if it doesn't already exist
+                if (!Schema::hasColumn('users', 'invited_by')) {
+                    $table->foreignId('invited_by')->nullable()->constrained('users');
+                }
+            });
+        }
     }
 
     /**
@@ -23,9 +26,14 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign('invited_by');
-            $table->dropColumn('invited_by');
-        });
+        if (Schema::hasTable('users')) { // Check again if the users table exists
+            Schema::table('users', function (Blueprint $table) {
+                // Drop the invited_by column if it exists
+                if (Schema::hasColumn('users', 'invited_by')) {
+                    $table->dropForeign(['invited_by']); // Specify the foreign key constraint name within an array
+                    $table->dropColumn('invited_by');
+                }
+            });
+        }
     }
 };
