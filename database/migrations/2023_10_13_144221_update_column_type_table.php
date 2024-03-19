@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('docu_sign_trackers', function (Blueprint $table) {
-            $table->string('sign_type')->change();
-        });
+        if (Schema::hasTable('docu_sign_trackers')) { // Check if the table exists
+            Schema::table('docu_sign_trackers', function (Blueprint $table) {
+                if (Schema::hasColumn('docu_sign_trackers', 'sign_type')) { // Check if the column exists
+                    $table->string('sign_type')->change();
+                }
+            });
+        }
     }
 
     /**
@@ -21,8 +25,13 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('docu_sign_trackers', function (Blueprint $table) {
-            $table->integer('sign_type')->change();
-        });
+        if (Schema::hasTable('docu_sign_trackers')) { // Check if the table exists
+            Schema::table('docu_sign_trackers', function (Blueprint $table) {
+                if (Schema::hasColumn('docu_sign_trackers', 'sign_type')) { // Check if the column exists
+                    $table->integer('sign_type')->change();
+                }
+            });
+        }
     }
+
 };
