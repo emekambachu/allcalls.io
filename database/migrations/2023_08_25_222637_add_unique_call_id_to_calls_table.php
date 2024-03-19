@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('calls', static function (Blueprint $table) {
-            $table->string('unique_call_id')->nullable();
-        });
+        if (Schema::hasTable('calls')) { // Check if the table exists
+            Schema::table('calls', static function (Blueprint $table) {
+                if (!Schema::hasColumn('calls', 'unique_call_id')) { // Check if the column doesn't exist
+                    $table->string('unique_call_id')->nullable();
+                }
+            });
+        }
     }
 
     /**
@@ -21,8 +25,12 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('calls', function (Blueprint $table) {
-            $table->dropColumn('unique_call_id');
-        });
+        if (Schema::hasTable('calls')) { // Check if the table exists
+            Schema::table('calls', function (Blueprint $table) {
+                if (Schema::hasColumn('calls', 'unique_call_id')) { // Check if the column exists
+                    $table->dropColumn('unique_call_id');
+                }
+            });
+        }
     }
 };
