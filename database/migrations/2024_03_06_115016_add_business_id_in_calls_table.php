@@ -16,7 +16,7 @@ return new class extends Migration
                 $table->foreignId('policy_id')
                       ->after('user_id')
                       ->nullable()
-                      ->constrained('policies'); // Assuming the foreign key is intended to reference the 'policies' table, not 'calls'
+                      ->constrained('internal_agent_my_businesses'); // Assuming the foreign key is intended to reference the 'policies' table, not 'calls'
             }
         });
     }
