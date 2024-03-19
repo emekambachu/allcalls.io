@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('clients', static function (Blueprint $table) {
-            $table->string('beneficiary')->nullable(); // Assuming it's a string and can be nullable
-        });
+        if (Schema::hasTable('clients')) { // Check if the table exists
+            Schema::table('clients', static function (Blueprint $table) {
+                if (!Schema::hasColumn('clients', 'beneficiary')) { // Check if the column doesn't exist
+                    $table->string('beneficiary')->nullable(); // Add the column if it doesn't exist
+                }
+            });
+        }
     }
 
     /**
@@ -21,8 +25,12 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('clients', function (Blueprint $table) {
-            $table->dropColumn('beneficiary');
-        });
+        if (Schema::hasTable('clients')) { // Check if the table exists
+            Schema::table('clients', function (Blueprint $table) {
+                if (Schema::hasColumn('clients', 'beneficiary')) { // Check if the column exists
+                    $table->dropColumn('beneficiary'); // Drop the column if it exists
+                }
+            });
+        }
     }
 };
