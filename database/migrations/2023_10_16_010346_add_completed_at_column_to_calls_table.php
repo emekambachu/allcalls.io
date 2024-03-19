@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('calls', static function (Blueprint $table) {
-            $table->timestamp('completed_at')->nullable();
-        });
+        if (Schema::hasTable('calls')) { // Check if the 'calls' table exists
+            Schema::table('calls', function (Blueprint $table) {
+                if (!Schema::hasColumn('calls', 'completed_at')) { // Check if the 'completed_at' column doesn't exist
+                    $table->timestamp('completed_at')->nullable();
+                }
+            });
+        }
     }
 
     /**
@@ -21,8 +25,12 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('calls', function (Blueprint $table) {
-            $table->dropColumn('completed_at');
-        });
+        if (Schema::hasTable('calls')) { // Check if the 'calls' table exists
+            Schema::table('calls', function (Blueprint $table) {
+                if (Schema::hasColumn('calls', 'completed_at')) { // Check if the 'completed_at' column exists
+                    $table->dropColumn('completed_at');
+                }
+            });
+        }
     }
 };
