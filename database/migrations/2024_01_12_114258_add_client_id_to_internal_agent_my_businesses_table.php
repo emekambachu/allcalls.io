@@ -11,11 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('internal_agent_my_businesses', static function (Blueprint $table) {
-            $table->foreignId('client_id')
-            ->nullable()
-            ->constrained('clients')->after('policy_draft_date');
-        });
+        if (Schema::hasTable('internal_agent_my_businesses')) { // Check if the table exists
+            Schema::table('internal_agent_my_businesses', static function (Blueprint $table) {
+                $table->foreignId('client_id')
+                      ->nullable()
+                      ->constrained('clients')
+                      ->after('policy_draft_date');
+            });
+        }
     }
 
     /**
@@ -23,8 +26,13 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('internal_agent_my_businesses', static function (Blueprint $table) {
-            $table->dropColumn('client_id');
-        });
+        if (Schema::hasTable('internal_agent_my_businesses')) { // Check if the table exists
+            Schema::table('internal_agent_my_businesses', static function (Blueprint $table) {
+                // First, remove the foreign key constraint
+                $table->dropForeign(['client_id']); // Laravel expects an array of column names here
+                // Then, drop the column
+                $table->dropColumn('client_id');
+            });
+        }
     }
 };
