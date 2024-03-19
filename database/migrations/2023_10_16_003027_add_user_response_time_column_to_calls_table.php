@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('calls', static function (Blueprint $table) {
-            $table->timestamp('user_response_time')->nullable();
-        });
+        if (Schema::hasTable('calls')) { // Check if the table exists
+            Schema::table('calls', static function (Blueprint $table) {
+                if (!Schema::hasColumn('calls', 'user_response_time')) { // Check if the column doesn't exist
+                    $table->timestamp('user_response_time')->nullable();
+                }
+            });
+        }
     }
 
     /**
@@ -21,8 +25,13 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('calls', function (Blueprint $table) {
-            $table->dropColumn('user_response_time');
-        });
+        if (Schema::hasTable('calls')) { // Check if the table exists
+            Schema::table('calls', function (Blueprint $table) {
+                if (Schema::hasColumn('calls', 'user_response_time')) { // Check if the column exists
+                    $table->dropColumn('user_response_time');
+                }
+            });
+        }
     }
+
 };
