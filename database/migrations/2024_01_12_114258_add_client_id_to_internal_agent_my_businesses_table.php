@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (Schema::hasTable('internal_agent_my_businesses')) { // Check if the table exists
+        if (Schema::hasTable('internal_agent_my_businesses')) {
             Schema::table('internal_agent_my_businesses', static function (Blueprint $table) {
-                $table->foreignId('client_id')
-                      ->nullable()
-                      ->constrained('clients')
-                      ->after('policy_draft_date');
+                if (!Schema::hasColumn('internal_agent_my_businesses', 'client_id')) {
+                    $table->foreignId('client_id')
+                          ->nullable()
+                          ->constrained('clients')
+                          ->after('policy_draft_date');
+                }
             });
         }
     }
@@ -26,13 +28,28 @@ return new class extends Migration
      */
     public function down(): void
     {
-        if (Schema::hasTable('internal_agent_my_businesses')) { // Check if the table exists
+        if (Schema::hasTable('internal_agent_my_businesses')) {
             Schema::table('internal_agent_my_businesses', static function (Blueprint $table) {
-                // First, remove the foreign key constraint
-                $table->dropForeign(['client_id']); // Laravel expects an array of column names here
-                // Then, drop the column
-                $table->dropColumn('client_id');
+                if (self::hasForeignKey('internal_agent_my_businesses', 'internal_agent_my_businesses_client_id_foreign')) {
+                    $table->dropForeign(['client_id']);
+                }
+                if (Schema::hasColumn('internal_agent_my_businesses', 'client_id')) {
+                    $table->dropColumn('client_id');
+                }
             });
         }
+    }
+
+    /**
+     * Check if a foreign key exists on a table.
+     */
+    public static function hasForeignKey($table, $foreignKey): bool
+    {
+        $conn = Schema::getConnection()->getDoctrineSchemaManager();
+        $keys = array_map(function ($key) {
+            return $key->getName();
+        }, $conn->listTableForeignKeys($table));
+
+        return in_array($foreignKey, $keys);
     }
 };
