@@ -31,7 +31,7 @@ class PolicySubmited
             ])->post('https://api-' . env('SENDBIRD_APPLICATION_ID') . '.sendbird.com/v3/group_channels/' . env('SENDBIRD_INTERNAL_AGENTS_GROUP_URL') . '/messages', [
                 'user_id' => env('SENDBIRD_ADMIN_ID'),
                 'message_type' => 'MESG',
-                'message' => "{$event->business->client->first_name} {$event->business->client->last_name} just made a sale! Awais Testing",
+                'message' => "{$event->business->client->first_name} {$event->business->client->last_name} just made a sale!",
             ]);
             Log::debug("New Policy" . $response->json());
         } catch (Exception $e) {
