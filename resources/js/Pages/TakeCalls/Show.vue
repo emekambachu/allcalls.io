@@ -7,7 +7,7 @@ import { toaster } from "@/helper.js";
 let page = usePage();
 let props = defineProps({
   callTypes: Array,
-  onlineCallType: Object,
+  onlineCallTypes: Array,
 });
 
 console.log(props.callTypes);
@@ -22,28 +22,24 @@ let setupFlashMessages = () => {
     toaster("error", page.props.errors.balance);
   }
 };
-let setOnlineCallType = () => {
-  callTypesWithToggles.value.map((type) => {
-    return { callType: type.callType, toggle: false };
-  });
 
-  for (let i = 0; i < callTypesWithToggles.value.length; i++) {
-    if (
-      props.onlineCallType &&
-      props.onlineCallType.call_type_id ===
-      callTypesWithToggles.value[i].callType.id
-    ) {
-      callTypesWithToggles.value[i].toggle = true;
-      return;
-    }
-  }
+let setOnlineCallTypes = () => {
+  callTypesWithToggles.value.forEach((type) => {
+    type.toggle = props.onlineCallTypes.some(onlineType => onlineType.call_type_id === type.callType.id);
+  });
 };
 
 let callTypesWithToggles = ref(
   props.callTypes
     .filter((callType) => callType.selected)
     .map((callType) => {
-      return { callType: callType, toggle: false, bidAmount: Number(callType.bidAmount), topBid: Number(callType.topBid), averageBid: Number(callType.averageBid) };
+      return { 
+        callType: callType, 
+        toggle: false, 
+        bidAmount: Number(callType.bidAmount), 
+        topBid: Number(callType.topBid), 
+        averageBid: Number(callType.averageBid) 
+      };
     })
 );
 
@@ -67,20 +63,11 @@ let cancelEditMenu = (callTypeId) => {
   openedEditMenus.splice(openedEditMenus.indexOf(Number(callTypeId)), 1);
 }
 
-let userCallTypesToggles = ref(
-  props.callTypes
-    .filter((callType) => callType.selected)
-    .map((callType) => {
-      return {};
-    })
-);
-
 let toggled = (event, callType) => {
   console.log("toggled!");
   console.log(event.target.checked);
 
   if (event.target.checked) {
-    // Add to the online users
     console.log("add");
     router.visit("/take-calls/online-users", {
       method: "POST",
@@ -90,17 +77,18 @@ let toggled = (event, callType) => {
     });
   } else {
     console.log("remove");
-    // Remove from the online users
     router.visit(`/take-calls/online-users/${callType.id}`, {
       method: "DELETE",
     });
   }
 };
+
 watchEffect(async () => {
-  setOnlineCallType();
+  setOnlineCallTypes();
   setupFlashMessages();
 });
 </script>
+
 
 <template>
   <Head title="Take Calls" />
