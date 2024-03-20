@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('internal_agent_my_businesses', static function (Blueprint $table) {
-            $table->text('label')->after('insurance_company')->nullable();
-        });
+        if (Schema::hasTable('internal_agent_my_businesses')) { // Check if the table exists
+            Schema::table('internal_agent_my_businesses', static function (Blueprint $table) {
+                if (!Schema::hasColumn('internal_agent_my_businesses', 'label')) { // Check if the column doesn't exist
+                    $table->text('label')->after('insurance_company')->nullable();
+                }
+            });
+        }
     }
 
     /**
@@ -21,8 +25,12 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('internal_agent_my_businesses', function (Blueprint $table) {
-            $table->dropColumn('label');
-        });
+        if (Schema::hasTable('internal_agent_my_businesses')) { // Check if the table exists
+            Schema::table('internal_agent_my_businesses', function (Blueprint $table) {
+                if (Schema::hasColumn('internal_agent_my_businesses', 'label')) { // Check if the column exists
+                    $table->dropColumn('label');
+                }
+            });
+        }
     }
 };

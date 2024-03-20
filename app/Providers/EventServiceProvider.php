@@ -7,7 +7,9 @@ use App\Events\FundsAdded;
 use App\Events\CareerEvent;
 use App\Events\FundsTooLow;
 use App\Events\InviteAgent;
+use App\Events\PolicySubmitedEvent;
 use App\Events\SendToOnScriptUpdate;
+use App\Listeners\PolicySubmited;
 use App\Models\Transaction;
 use App\Events\RecordingSaved;
 use App\Events\MissedCallEvent;
@@ -142,6 +144,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         SendToOnScriptUpdate::class => [
             SendCallInfoToOnScriptAI::class,
+        ],
+        PolicySubmitedEvent::class => [
+            PolicySubmited::class,
         ],
     ];
 

@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('calls', function (Blueprint $table) {
-            $table->float('cost')->nullable();
-        });
+        if (Schema::hasTable('calls')) { // Check if the table exists
+            Schema::table('calls', function (Blueprint $table) {
+                if (!Schema::hasColumn('calls', 'cost')) { // Check if the column doesn't exist
+                    $table->float('cost')->nullable();
+                }
+            });
+        }
     }
 
     /**
@@ -21,8 +25,12 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('calls', function (Blueprint $table) {
-            $table->dropColumn('cost');
-        });
+        if (Schema::hasTable('calls')) { // Check if the table exists
+            Schema::table('calls', function (Blueprint $table) {
+                if (Schema::hasColumn('calls', 'cost')) { // Check if the column exists
+                    $table->dropColumn('cost');
+                }
+            });
+        }
     }
 };

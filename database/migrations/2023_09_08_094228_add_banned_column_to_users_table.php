@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->boolean('banned')->default(false);
-        });
+        if (Schema::hasTable('users')) { // Check if the table exists
+            Schema::table('users', function (Blueprint $table) {
+                if (!Schema::hasColumn('users', 'banned')) { // Check if the column doesn't exist
+                    $table->boolean('banned')->default(false);
+                }
+            });
+        }
     }
 
     /**
@@ -21,8 +25,12 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
-        });
+        if (Schema::hasTable('users')) { // Check if the table exists
+            Schema::table('users', function (Blueprint $table) {
+                if (Schema::hasColumn('users', 'banned')) { // Check if the column exists
+                    $table->dropColumn('banned');
+                }
+            });
+        }
     }
 };

@@ -11,12 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('level_id')
-            ->nullable()
-            ->constrained('internal_agent_levels');
-            $table->string('upline_id')->nullable();
-        });
+        if (Schema::hasTable('users')) {
+            Schema::table('users', function (Blueprint $table) {
+                if (!Schema::hasColumn('users', 'level_id')) {
+                    $table->foreignId('level_id')
+                          ->nullable()
+                          ->constrained('internal_agent_levels');
+                }
+                if (!Schema::hasColumn('users', 'upline_id')) {
+                    $table->string('upline_id')->nullable();
+                }
+            });
+        }
     }
 
     /**
@@ -24,10 +30,19 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign('level_id');
-            $table->dropColumn('level_id');
-            $table->dropColumn('upline_id');
-        });
+        if (Schema::hasTable('users')) {
+            Schema::table('users', function (Blueprint $table) {
+                // Checking for the 'level_id' column before dropping might be redundant since you're dropping it anyway,
+                // but it's included here for consistency and to avoid errors in case the column doesn't exist.
+                if (Schema::hasColumn('users', 'level_id')) {
+                    // Assuming 'users_level_id_foreign' is the name of the foreign key constraint
+                    $table->dropForeign(['level_id']);
+                    $table->dropColumn('level_id');
+                }
+                if (Schema::hasColumn('users', 'upline_id')) {
+                    $table->dropColumn('upline_id');
+                }
+            });
+        }
     }
 };

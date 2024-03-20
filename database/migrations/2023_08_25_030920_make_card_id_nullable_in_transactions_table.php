@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('transactions', function (Blueprint $table) {
-            $table->unsignedBigInteger('card_id')->nullable()->change();
-        });
+        if (Schema::hasTable('transactions')) { // Check if the table exists
+            Schema::table('transactions', function (Blueprint $table) {
+                if (Schema::hasColumn('transactions', 'card_id')) { // Check if the column exists
+                    $table->unsignedBigInteger('card_id')->nullable()->change();
+                }
+            });
+        }
     }
 
     /**
@@ -21,8 +25,12 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('transactions', function (Blueprint $table) {
-            $table->unsignedBigInteger('card_id')->nullable(false)->change();
-        });
+        if (Schema::hasTable('transactions')) { // Check if the table exists
+            Schema::table('transactions', function (Blueprint $table) {
+                if (Schema::hasColumn('transactions', 'card_id')) { // Check if the column exists
+                    $table->unsignedBigInteger('card_id')->nullable(false)->change();
+                }
+            });
+        }
     }
 };

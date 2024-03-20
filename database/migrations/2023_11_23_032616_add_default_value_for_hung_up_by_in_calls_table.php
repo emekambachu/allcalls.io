@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('calls', function (Blueprint $table) {
-            $table->string('hung_up_by')->default('Caller')->change();
-        });
+        if (Schema::hasTable('calls') && Schema::hasColumn('calls', 'hung_up_by')) {
+            Schema::table('calls', function (Blueprint $table) {
+                $table->string('hung_up_by')->default('Caller')->change();
+            });
+        }
     }
 
     /**
@@ -21,8 +23,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('calls', function (Blueprint $table) {
-            $table->string('hung_up_by')->nullable()->change();
-        });
+        if (Schema::hasTable('calls') && Schema::hasColumn('calls', 'hung_up_by')) {
+            Schema::table('calls', function (Blueprint $table) {
+                $table->string('hung_up_by')->nullable()->change();
+            });
+        }
     }
 };

@@ -29,9 +29,23 @@ return new class extends Migration
     {
         Schema::table('clients', function (Blueprint $table) {
             if (Schema::hasColumn('clients', 'call_id')) {
-                $table->dropForeign(['call_id']);
                 $table->dropColumn('call_id');
             }
+
+            if (self::hasForeignKey('clients', 'clients_call_id_foreign')) {
+                $table->dropForeign(['call_id']);
+            }
         });
+    }
+
+    public static function hasForeignKey($table, $key)
+    {
+        $conn = Schema::getConnection()->getDoctrineSchemaManager();
+
+        $keys =  array_map(function ($key) {
+            return $key->getName();
+        }, $conn->listTableForeignKeys($table));
+
+        return in_array($key, $keys);
     }
 };

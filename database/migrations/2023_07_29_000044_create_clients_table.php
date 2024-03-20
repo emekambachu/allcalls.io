@@ -21,14 +21,8 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('address')->nullable();
             $table->string('dob')->nullable();
-            $table->foreignId('call_id')
-                ->constrained('calls')
-                ->cascadeOnDelete()
-                ->cascadeOnUpdate();
+            $table->string('call_id');
             $table->unsignedInteger('user_id');
-            $table->string('status')->nullable();
-            $table->string('state')->default('');
-            $table->boolean('unlocked')->default(false);
             $table->string('beneficiary')->default('');
             $table->timestamps();
         });
@@ -39,9 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // comment foreign key checks after testing the migration
-//        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::dropIfExists('clients');
-//        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 };

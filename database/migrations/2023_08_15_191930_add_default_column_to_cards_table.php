@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('cards', function (Blueprint $table) {
-            $table->boolean('default')->default(false);
-        });
+        if (Schema::hasTable('cards')) { // Check if the table exists
+            Schema::table('cards', function (Blueprint $table) {
+                if (!Schema::hasColumn('cards', 'default')) { // Check if the column doesn't exist
+                    $table->boolean('default')->default(false);
+                }
+            });
+        }
     }
 
     /**
@@ -21,8 +25,12 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('cards', function (Blueprint $table) {
-            $table->dropColumn('default');
-        });
+        if (Schema::hasTable('cards')) { // Check if the table exists
+            Schema::table('cards', function (Blueprint $table) {
+                if (Schema::hasColumn('cards', 'default')) { // Check if the column exists
+                    $table->dropColumn('default');
+                }
+            });
+        }
     }
 };

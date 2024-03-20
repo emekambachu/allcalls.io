@@ -12,9 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('internal_agent_my_businesses', function (Blueprint $table) {
-            $table->string('beneficiary_name');
-            $table->string('beneficiary_relationship');
-            $table->text('notes')->nullable();
+            if (!Schema::hasColumn('internal_agent_my_businesses', 'beneficiary_name')) {
+                $table->string('beneficiary_name');
+            }
+            if (!Schema::hasColumn('internal_agent_my_businesses', 'beneficiary_relationship')) {
+                $table->string('beneficiary_relationship');
+            }
+            if (!Schema::hasColumn('internal_agent_my_businesses', 'notes')) {
+                $table->text('notes')->nullable();
+            }
         });
     }
 
@@ -24,9 +30,20 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('internal_agent_my_businesses', function (Blueprint $table) {
-            $table->dropColumn('beneficiary_name');
-            $table->dropColumn('beneficiary_relationship');
-            $table->dropColumn('notes');
+            $columnsToDrop = [];
+            if (Schema::hasColumn('internal_agent_my_businesses', 'beneficiary_name')) {
+                $columnsToDrop[] = 'beneficiary_name';
+            }
+            if (Schema::hasColumn('internal_agent_my_businesses', 'beneficiary_relationship')) {
+                $columnsToDrop[] = 'beneficiary_relationship';
+            }
+            if (Schema::hasColumn('internal_agent_my_businesses', 'notes')) {
+                $columnsToDrop[] = 'notes';
+            }
+            if (!empty($columnsToDrop)) {
+                $table->dropColumn($columnsToDrop);
+            }
         });
     }
+
 };

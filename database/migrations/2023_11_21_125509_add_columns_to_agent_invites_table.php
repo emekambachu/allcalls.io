@@ -11,15 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('agent_invites', function (Blueprint $table) {
-            $table->foreignId('level_id')
-            ->after('id')
-            ->nullable()
-            ->constrained('internal_agent_levels')
-            ->cascadeOnDelete()
-            ->cascadeOnUpdate();
-            $table->string('upline_id')->after('email')->nullable();
-        });
+        if (Schema::hasTable('agent_invites')) { // Check if the table exists
+            Schema::table('agent_invites', function (Blueprint $table) {
+                if (!Schema::hasColumn('agent_invites', 'level_id')) { // Check if the column doesn't exist
+                    $table->foreignId('level_id')
+                        ->after('id')
+                        ->nullable()
+                        ->constrained('internal_agent_levels')
+                        ->cascadeOnDelete()
+                        ->cascadeOnUpdate();
+                }
+                if (!Schema::hasColumn('agent_invites', 'upline_id')) { // Check if the column doesn't exist
+                    $table->string('upline_id')->after('email')->nullable();
+                }
+            });
+        }
     }
 
     /**
@@ -27,10 +33,19 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('agent_invites', function (Blueprint $table) {
-            $table->dropForeign('level_id');
-            $table->dropColumn('level_id');
-            $table->dropColumn('upline_id');
-        });
+        if (Schema::hasTable('agent_invites')) { // Check if the table exists
+            Schema::table('agent_invites', function (Blueprint $table) {
+                // It's generally safe to assume the column exists if you're dropping it, but checking can prevent errors
+                if (Schema::hasColumn('agent_invites', 'level_id')) { // Check if the column exists
+                    // Assuming 'agent_invites_level_id_foreign' is the name of the foreign key constraint
+                    $table->dropForeign(['level_id']); 
+                    $table->dropColumn('level_id');
+                }
+                if (Schema::hasColumn('agent_invites', 'upline_id')) { // Check if the column exists
+                    $table->dropColumn('upline_id');
+                }
+            });
+        }
     }
+
 };

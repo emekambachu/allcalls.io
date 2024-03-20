@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\InternalAgent;
 
 use App\Events\AppSubmittedEvent;
+use App\Events\PolicySubmitedEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Client;
 use App\Models\InternalAgentMyBusiness;
 use App\Models\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Carbon\Carbon;
 
@@ -171,6 +173,13 @@ class MyBusinessController extends Controller
         $internalAgentBusiness->save();
 
         event(new AppSubmittedEvent($internalAgentBusiness));
+
+        if(!isset($request->business_id)){
+
+            if($internalAgentBusiness->client_id !='' && Str::startsWith($internalAgentBusiness->client->status, 'Sale')){
+                event(new PolicySubmitedEvent($internalAgentBusiness));
+            }
+        }
 
         return response()->json([
             'success' => true,

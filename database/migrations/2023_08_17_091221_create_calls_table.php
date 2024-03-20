@@ -16,9 +16,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')
                 ->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('policy_id')
-                ->nullable()
-                ->constrained('calls');
             $table->timestamp('call_taken')->useCurrent();
             $table->integer('call_duration_in_seconds');
             $table->enum('hung_up_by', ['Caller', 'Agent'])->default('Caller');
@@ -33,8 +30,8 @@ return new class extends Migration
             $table->timestamp('completed_at')->nullable();
             $table->float('cost')->nullable();
             $table->boolean('sent_to_onscript')->nullable();
-            $table->string('call_sid')->nullable();
-            $table->string('parent_call_sid')->nullable();
+            // $table->string('call_sid')->nullable();
+            // $table->string('parent_call_sid')->nullable();
             $table->timestamps();
         });
     }
@@ -44,16 +41,14 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('calls', static function (Blueprint $table) {
-            $table->dropForeign('policy_id');
-            $table->dropColumn('policy_id');
-            $table->dropColumn('call_sid');
-            $table->dropColumn('parent_call_sid');
-        });
+        // Schema::table('calls', static function (Blueprint $table) {
+        //     $table->dropColumn('call_sid');
+        //     $table->dropColumn('parent_call_sid');
+        // });
 
         // comment foreign key checks after testing the migration
-        //DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::dropIfExists('calls');
-        //DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 };

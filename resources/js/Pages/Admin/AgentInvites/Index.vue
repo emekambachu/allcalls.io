@@ -132,7 +132,7 @@ let ReInviteAgentFun = () => {
             </div>
           </div>
           <hr class="mb-4" />
-          <div v-if="agentInvites.data.length">
+          <div v-if="agentInvites.data.length" class="overflow-x-auto">
             <table class="w-full text-sm text-left text-gray-400">
               <thead class="text-xs text-gray-300 uppercase bg-sky-900">
                 <tr>
