@@ -15,7 +15,7 @@ class TakeCallsController extends Controller
     public function show(Request $request)
     {
         $callTypes = $this->getCallTypesForUser($request->user());
-        $onlineCallTypes = $this->getOnlineCallTypesForUser($request->user());
+        $onlineCallType = $this->getOnlineCallTypeForUser($request->user());
 
         $callTypes->map(function ($callType) use ($request) {
             $bid = Bid::getForUserAndCallType($request->user(), $callType);
@@ -38,15 +38,13 @@ class TakeCallsController extends Controller
             return $callType;
         });
 
-        return Inertia::render('TakeCalls/Show', compact('callTypes', 'onlineCallTypes'));
+        return Inertia::render('TakeCalls/Show', compact('callTypes', 'onlineCallType'));
     }
 
-    protected function getOnlineCallTypesForUser($user)
+    protected function getOnlineCallTypeForUser($user)
     {
         $onlineCallTypes = OnlineUser::where('user_id', $user->id)->get();
         $count = $onlineCallTypes->count();
-
-        return $onlineCallTypes;
 
         if ($count > 1) {
             $firstRecord = $onlineCallTypes->first();
