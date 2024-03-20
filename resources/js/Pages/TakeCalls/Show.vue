@@ -91,6 +91,10 @@ watchEffect(async () => {
   setOnlineCallTypes();
   setupFlashMessages();
 });
+
+let isOnline = (callTypeId) => {
+  return props.onlineCallTypes.some((type) => type.call_type_id === callTypeId);
+};
 </script>
 
 <template>
