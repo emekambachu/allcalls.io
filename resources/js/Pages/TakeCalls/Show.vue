@@ -67,25 +67,25 @@ let cancelEditMenu = (callTypeId) => {
   openedEditMenus.splice(openedEditMenus.indexOf(Number(callTypeId)), 1);
 };
 
-let toggled = (event, callType) => {
-  console.log("toggled!");
-  console.log(event.target.checked);
+// let toggled = (event, callType) => {
+//   console.log("toggled!");
+//   console.log(event.target.checked);
 
-  if (event.target.checked) {
-    console.log("add");
-    router.visit("/take-calls/online-users", {
-      method: "POST",
-      data: {
-        call_type_id: callType.id,
-      },
-    });
-  } else {
-    console.log("remove");
-    router.visit(`/take-calls/online-users/${callType.id}`, {
-      method: "DELETE",
-    });
-  }
-};
+//   if (event.target.checked) {
+//     console.log("add");
+//     router.visit("/take-calls/online-users", {
+//       method: "POST",
+//       data: {
+//         call_type_id: callType.id,
+//       },
+//     });
+//   } else {
+//     console.log("remove");
+//     router.visit(`/take-calls/online-users/${callType.id}`, {
+//       method: "DELETE",
+//     });
+//   }
+// };
 
 watchEffect(async () => {
   setOnlineCallTypes();
@@ -94,6 +94,34 @@ watchEffect(async () => {
 
 let isOnline = (callTypeId) => {
   return props.onlineCallTypes.some((type) => type.call_type_id === callTypeId);
+};
+
+
+let toggled = (event, callType) => {
+  console.log("toggled!");
+  console.log(event.target.checked);
+
+  // Define a callback function to reload the page
+  let onSuccess = () => router.reload();
+
+  if (event.target.checked) {
+    console.log("add");
+    // Use the onSuccess callback after the POST request
+    router.visit("/take-calls/online-users", {
+      method: "POST",
+      data: {
+        call_type_id: callType.id,
+      },
+      onSuccess,
+    });
+  } else {
+    console.log("remove");
+    // Use the onSuccess callback after the DELETE request
+    router.visit(`/take-calls/online-users/${callType.id}`, {
+      method: "DELETE",
+      onSuccess,
+    });
+  }
 };
 </script>
 
