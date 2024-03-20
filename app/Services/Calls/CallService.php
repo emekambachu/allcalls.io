@@ -309,9 +309,49 @@ class CallService
         $perPage = $request->per_page ?? 100;
         $calls = $query->paginate((int)$perPage);
 
-        // Group calls by user to filter grouped
-        $callsGroupedByUser = $this->getCallsGroupedByUserId($allCalls);
-        $callsGroupedByPublisherName = $this->getCallsGroupedByPublisherName($allCalls);
+        //Group and Sort calls by agents and publishers
+        $sortAgentsColumn = $request->input('sort_agents_column');
+        $sortPublishersColumn = $request->input('sort_publishers_column');
+
+        $getCallsGroupedByUser = $this->getCallsGroupedByUserId($allCalls);
+        if ($sortAgentsColumn) {
+            // Convert from array to collection, sort by column, and convert back to array
+            $callsGroupedByUser = collect($getCallsGroupedByUser)
+                ->sort(function ($a, $b) use ($sortAgentsColumn, $sortDirection) {
+                    return $sortDirection === 'asc' ? $a[$sortAgentsColumn] <=> $b[$sortAgentsColumn] : $b[$sortAgentsColumn] <=> $a[$sortAgentsColumn];
+                })->values()->all();
+        } else {
+            $callsGroupedByUser = $getCallsGroupedByUser;
+        }
+
+        $getCallsGroupedByPublisherName = $this->getCallsGroupedByPublisherName($allCalls);
+        if ($sortPublishersColumn) {
+            // Convert from array to collection, sort by column, and convert back to array
+            $callsGroupedByPublisherName = collect($getCallsGroupedByPublisherName)
+                ->sort(function ($a, $b) use ($sortPublishersColumn, $sortDirection) {
+                    return $sortDirection === 'asc' ? $a[$sortPublishersColumn] <=> $b[$sortPublishersColumn] : $b[$sortPublishersColumn] <=> $a[$sortPublishersColumn];
+                })->values()->all();
+        } else {
+            $callsGroupedByPublisherName = $getCallsGroupedByPublisherName;
+        }
+
+//        $getCallsGroupedByUser = $this->getCallsGroupedByUserId($allCalls);
+//        if($sortAgentsColumn){
+//            // convert from array to collection, sort by name and convert back to array
+//            $callsGroupedByUser = collect($getCallsGroupedByUser)
+//                ->sortBy($sortAgentsColumn, SORT_REGULAR, $sortDirection)->values()->all();
+//        }else{
+//            $callsGroupedByUser = $getCallsGroupedByUser;
+//        }
+//
+//        $getCallsGroupedByPublisherName = $this->getCallsGroupedByPublisherName($allCalls);
+//        if($sortPublishersColumn){
+//            // convert from array to collection, sort by name and convert back to array
+//            $callsGroupedByPublisherName = collect($getCallsGroupedByPublisherName)
+//                ->sortBy($sortPublishersColumn, SORT_REGULAR, $sortDirection)->values()->all();
+//        }else{
+//            $callsGroupedByPublisherName = $getCallsGroupedByPublisherName;
+//        }
 
         // For paginated data
         $calls->getCollection()->each(function ($call, $index) {
