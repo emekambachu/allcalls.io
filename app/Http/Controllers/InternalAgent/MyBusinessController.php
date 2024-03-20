@@ -175,7 +175,6 @@ class MyBusinessController extends Controller
         event(new AppSubmittedEvent($internalAgentBusiness));
 
         if(!isset($request->business_id)){
-            dd('Test==========',$internalAgentBusiness,$internalAgentBusiness->client->status);
             if($internalAgentBusiness->client_id !='' && Str::startsWith($internalAgentBusiness->client->status, 'Sale')){
                 event(new PolicySubmitedEvent($internalAgentBusiness));
 
