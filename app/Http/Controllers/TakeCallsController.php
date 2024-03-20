@@ -46,6 +46,8 @@ class TakeCallsController extends Controller
         $onlineCallTypes = OnlineUser::where('user_id', $user->id)->get();
         $count = $onlineCallTypes->count();
 
+        return $onlineCallTypes;
+
         if ($count > 1) {
             $firstRecord = $onlineCallTypes->first();
             $firstId = $firstRecord->id; // Get the ID of the first record.
