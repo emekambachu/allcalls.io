@@ -195,35 +195,38 @@ class CallService
             $query->select('*', DB::raw('IFNULL(TIMESTAMPDIFF(SECOND, created_at, user_response_time), 20) AS ringing_duration'));
         }
 
-        // Apply sorting for columns with or without joins
-        if (in_array($request->input('sort_column'), $this->columnsWithJoins, true)) {
-            $sortColumn = $request->input('sort_column', 'calls.created_at');
-        } else {
-            $sortColumn = $request->input('sort_column', 'created_at');
-        }
         $sortDirection = $request->input('sort_direction', 'desc');
 
-        if (in_array($sortColumn, $this->supportedSortColumns, true)) {
-            $sortDirection = $sortDirection === 'asc' ? 'asc' : 'desc';
-            $query->orderBy($sortColumn, $sortDirection);
+        if($request->input('sort_column')){
+            // Apply sorting for columns with or without joins
+            if (in_array($request->input('sort_column'), $this->columnsWithJoins, true)) {
+                $sortColumn = $request->input('sort_column', 'calls.created_at');
+            } else {
+                $sortColumn = $request->input('sort_column', 'created_at');
+            }
 
-            // apply joins to columns with relationships
-        } else if ($sortColumn === 'disposition') {
-            $query->join('clients', 'clients.call_id', '=', 'calls.id')
-                ->orderBy('clients.status', $sortDirection)
-                ->select('calls.*', 'clients.call_id AS clients_call_id', 'clients.status');
+            if (in_array($sortColumn, $this->supportedSortColumns, true)) {
+                $sortDirection = $sortDirection === 'asc' ? 'asc' : 'desc';
+                $query->orderBy($sortColumn, $sortDirection);
 
-            // apply joins to columns with relationships
-        } else if ($sortColumn === 'agent_name') {
-            $query->join('users', 'users.id', '=', 'calls.user_id')
-                ->orderBy('users.first_name', $sortDirection)
-                ->select('calls.*', 'users.id AS users_id', 'users.first_name');
+                // apply joins to columns with relationships
+            } else if ($sortColumn === 'disposition') {
+                $query->join('clients', 'clients.call_id', '=', 'calls.id')
+                    ->orderBy('clients.status', $sortDirection)
+                    ->select('calls.*', 'clients.call_id AS clients_call_id', 'clients.status');
 
-            // apply joins to columns with relationships
-        } else if ($sortColumn === 'vertical') {
-            $query->join('call_types', 'call_types.id', '=', 'calls.call_type_id')
-                ->orderBy('call_types.type', $sortDirection)
-                ->select('calls.*', 'call_types.id AS call_types_id', 'call_types.type');
+                // apply joins to columns with relationships
+            } else if ($sortColumn === 'agent_name') {
+                $query->join('users', 'users.id', '=', 'calls.user_id')
+                    ->orderBy('users.first_name', $sortDirection)
+                    ->select('calls.*', 'users.id AS users_id', 'users.first_name');
+
+                // apply joins to columns with relationships
+            } else if ($sortColumn === 'vertical') {
+                $query->join('call_types', 'call_types.id', '=', 'calls.call_type_id')
+                    ->orderBy('call_types.type', $sortDirection)
+                    ->select('calls.*', 'call_types.id AS call_types_id', 'call_types.type');
+            }
         }
 
         $operatorMap = [
@@ -334,24 +337,6 @@ class CallService
         } else {
             $callsGroupedByPublisherName = $getCallsGroupedByPublisherName;
         }
-
-//        $getCallsGroupedByUser = $this->getCallsGroupedByUserId($allCalls);
-//        if($sortAgentsColumn){
-//            // convert from array to collection, sort by name and convert back to array
-//            $callsGroupedByUser = collect($getCallsGroupedByUser)
-//                ->sortBy($sortAgentsColumn, SORT_REGULAR, $sortDirection)->values()->all();
-//        }else{
-//            $callsGroupedByUser = $getCallsGroupedByUser;
-//        }
-//
-//        $getCallsGroupedByPublisherName = $this->getCallsGroupedByPublisherName($allCalls);
-//        if($sortPublishersColumn){
-//            // convert from array to collection, sort by name and convert back to array
-//            $callsGroupedByPublisherName = collect($getCallsGroupedByPublisherName)
-//                ->sortBy($sortPublishersColumn, SORT_REGULAR, $sortDirection)->values()->all();
-//        }else{
-//            $callsGroupedByPublisherName = $getCallsGroupedByPublisherName;
-//        }
 
         // For paginated data
         $calls->getCollection()->each(function ($call, $index) {
