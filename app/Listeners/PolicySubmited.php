@@ -33,7 +33,7 @@ class PolicySubmited
                 'message_type' => 'MESG',
                 'message' => "{$event->business->client->first_name} {$event->business->client->last_name} just made a sale! Awais Testing",
             ]);
-            dd($response);
+            dd($response->json());
             Log::debug("New Policy" . $response->json());
         } catch (Exception $e) {
             Log::error('PolicySubmitedEvent: ' . $e->getMessage());
