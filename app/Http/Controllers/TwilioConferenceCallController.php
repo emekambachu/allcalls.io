@@ -30,6 +30,8 @@ class TwilioConferenceCallController extends Controller
             'statusCallbackEvent' => 'start', 'join', 'leave', 'end'
         ]);
 
+        Log::info("Generated TwiML", ['twiml' => (string) $response]);
+
         // Return the TwiML as a string
         return response($response)->header('Content-Type', 'text/xml');
     }
