@@ -356,7 +356,7 @@ class TwilioConferenceCallController extends Controller
             // Attempt to remove the participant
             $participant = $client->conferences($conferenceSid)
                                   ->participants($callSid)
-                                  ->update(["status" => "completed"]);
+                                  ->delete();
     
             // Log the response for debugging
             Log::info('Participant removed from conference', [
