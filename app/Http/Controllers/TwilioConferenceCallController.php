@@ -339,12 +339,6 @@ class TwilioConferenceCallController extends Controller
         $accountSid = env('TWILIO_SID'); 
         $authToken = env('TWILIO_AUTH_TOKEN');
     
-        // Log the input for debugging
-        Log::info('HangUpThirdParty request received', [
-            'conferenceSid' => $request->input('conferenceSid'), 
-            'callSid' => $request->input('callSid')
-        ]);
-    
         // Instantiate a new Twilio Rest Client
         $client = new Client($accountSid, $authToken);
     
@@ -353,21 +347,15 @@ class TwilioConferenceCallController extends Controller
         $callSid = $request->input('callSid');
     
         try {
-            // Attempt to remove the participant
-            $participant = $client->conferences($conferenceSid)
-                                  ->participants($callSid)
-                                  ->delete();
+            // Use the Twilio REST API to remove the participant from the conference
+            $client->conferences($conferenceSid)
+                   ->participants($callSid)
+                   ->delete();
     
-            // Log the response for debugging
-            Log::info('Participant removed from conference', [
-                'conferenceSid' => $conferenceSid, 
-                'callSid' => $callSid, 
-                'participantStatus' => $participant->status
-            ]);
-    
+            // Since delete() does not return a response, assume successful deletion if no exception was thrown
             return response()->json(['message' => 'Call with third party ended successfully.']);
         } catch (\Exception $e) {
-            // Log the exception
+            // Log and return the exception details
             Log::error('Error ending call with third party', [
                 'conferenceSid' => $conferenceSid, 
                 'callSid' => $callSid, 
