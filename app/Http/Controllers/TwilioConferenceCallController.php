@@ -332,4 +332,31 @@ class TwilioConferenceCallController extends Controller
         // Return a 200 OK response to Twilio
         return response()->json(['message' => 'Status callback received and logged']);
     }
+
+    public function hangUpThirdParty(Request $request)
+    {
+        // Your Twilio Account SID and Auth Token from twilio.com/console
+        $accountSid = env('TWILIO_SID'); 
+        $authToken = env('TWILIO_AUTH_TOKEN');
+
+        // Instantiate a new Twilio Rest Client
+        $client = new Client($accountSid, $authToken);
+
+        // Retrieve Conference SID and Call SID of the third-party participant from the request
+        // These would ideally be passed to this endpoint from your frontend or application logic
+        $conferenceSid = $request->input('conferenceSid');
+        $callSid = $request->input('callSid');
+
+        // Use the Twilio REST API to update the participant's status to 'completed', removing them from the conference
+        try {
+            $client->conferences($conferenceSid)
+                ->participants($callSid)
+                ->update(["status" => "completed"]);
+
+            return response()->json(['message' => 'Call with third party ended successfully.']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to end call with third party', 'details' => $e->getMessage()], 500);
+        }
+    }
+
 }
