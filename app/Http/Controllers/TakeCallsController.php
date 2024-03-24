@@ -9,6 +9,7 @@ use App\Models\State;
 use App\Models\CallType;
 use App\Models\OnlineUser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class TakeCallsController extends Controller
 {
@@ -39,6 +40,8 @@ class TakeCallsController extends Controller
         });
 
         $onlineUsers = OnlineUser::whereUserId($request->user()->id)->get();
+
+        Log::debug('onlineUsers', $onlineUsers);
 
         return Inertia::render('TakeCalls/Show', compact('callTypes', 'onlineCallType', 'onlineUsers'));
     }
