@@ -11,7 +11,7 @@ let props = defineProps({
   onlineUsers: Array,
 });
 
-console.log(props.onlineUsers);
+console.log('onlineUsers', props.onlineUsers);
 console.log(props.callTypes);
 
 let setupFlashMessages = () => {
