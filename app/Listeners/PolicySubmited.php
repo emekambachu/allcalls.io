@@ -42,7 +42,7 @@ class PolicySubmited
             ])->post('https://api-' . env('SENDBIRD_APPLICATION_ID') . '.sendbird.com/v3/group_channels/' . env('SENDBIRD_INTERNAL_AGENTS_GROUP_URL_TEST') . '/messages', [
                 'user_id' => env('SENDBIRD_ADMIN_ID'),
                 'message_type' => 'MESG',
-                'message' => "{$agent->first_name} {$agent->last_name} just submitted an application & Protected a Family in {$state->full_name} for \${$event->business->premium_volumn} AP!",
+                'message' => "{$agent->first_name} {$agent->last_name} just submitted an application & Protected a Family in {$state->full_name} for \${$event->business->premium_volumn} APV!",
             ]);
 
             Log::debug("New Policy" . $response->body());
