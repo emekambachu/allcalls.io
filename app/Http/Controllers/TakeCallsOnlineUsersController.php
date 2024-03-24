@@ -64,7 +64,7 @@ class TakeCallsOnlineUsersController extends Controller
         $user->save();
 
         // Dispatch the event
-        OnlineUserListUpdated::dispatch();
+        // OnlineUserListUpdated::dispatch();
 
         // Return a response
         return redirect()->back()->with(['message' => "Listening to calls for {$callType->type}."]);
