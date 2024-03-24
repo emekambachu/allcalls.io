@@ -30,7 +30,7 @@ class TakeCallsOnlineUsersController extends Controller
         $callTypeId = $request->call_type_id;
         $callType = CallType::findOrFail($callTypeId);
 
-        OnlineUser::where('user_id', $request->user()->id)->delete();
+        // OnlineUser::where('user_id', $request->user()->id)->delete();
 
         // OnlineUser::updateOrInsert(
         //     ['user_id' => $userId],
