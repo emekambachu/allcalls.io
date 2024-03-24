@@ -40,10 +40,21 @@ class MergeDNC extends Command
 
         if (is_resource($process)) {
             while ($line = fgets($pipes[1])) {
-                Log::debug(trim($line));
+                $trimmedLine = trim($line);
+                Log::debug($trimmedLine);
+                $this->line($trimmedLine); // Output to terminal
             }
 
             fclose($pipes[1]);
+
+            // Optionally, handle stderr as well
+            while ($errLine = fgets($pipes[2])) {
+                $trimmedErrLine = trim($errLine);
+                Log::error($trimmedErrLine);
+                $this->error($trimmedErrLine); // Output errors to terminal
+            }
+            fclose($pipes[2]);
+
             $return_value = proc_close($process);
 
             $this->info('Node.js script execution completed.');
