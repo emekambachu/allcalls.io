@@ -32,10 +32,14 @@ class TakeCallsOnlineUsersController extends Controller
 
         OnlineUser::where('user_id', $request->user()->id)->delete();
 
-        OnlineUser::updateOrInsert(
-            ['user_id' => $userId],
-            ['call_type_id' => $callTypeId]
-        );
+        // OnlineUser::updateOrInsert(
+        //     ['user_id' => $userId],
+        //     ['call_type_id' => $callTypeId]
+        // );
+        OnlineUser::create([
+            'user_id' => $userId,
+            'call_type_id' => $callTypeId
+        ]);
 
         Log::debug('online-user-logs:online', [
             'user_id' => $userId,
