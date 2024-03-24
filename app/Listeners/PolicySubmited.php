@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use Exception;
 use App\Models\User;
+use App\Models\State;
 use App\Events\PolicySubmitedEvent;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
@@ -29,6 +30,7 @@ class PolicySubmited
             $agentId = $event->business->agent_id;
 
             $agent = User::find($agentId);
+            $state = State::find($event->business->client_state);
 
             if (!$agent) {
                 throw new Exception("Agent not found with ID: $agentId");
@@ -40,7 +42,7 @@ class PolicySubmited
             ])->post('https://api-' . env('SENDBIRD_APPLICATION_ID') . '.sendbird.com/v3/group_channels/' . env('SENDBIRD_INTERNAL_AGENTS_GROUP_URL_TEST') . '/messages', [
                 'user_id' => env('SENDBIRD_ADMIN_ID'),
                 'message_type' => 'MESG',
-                'message' => "{$agent->first_name} {$agent->last_name} just made a sale!",
+                'message' => "{$agent->first_name} {$agent->last_name} just submitted an application & Protected a Family in {$state->full_name} for \${$event->business->premium_volumn} AP!",
             ]);
 
             Log::debug("New Policy" . $response->body());
