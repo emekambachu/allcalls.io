@@ -1730,9 +1730,7 @@ let appDownloadModal = ref(false);
                         Profile
                       </DropdownLink>
 
-                      <DropdownLink :href="route('logout')" method="post" as="button">
-                        Log Out
-                      </DropdownLink>
+                      <LogoutLink />
                     </template>
                   </Dropdown>
                 </div>
@@ -2429,9 +2427,8 @@ let appDownloadModal = ref(false);
                 >
                   Profile
                 </ResponsiveNavLink>
-                <ResponsiveNavLink :href="route('logout')" method="post" as="button">
-                  Log Out
-                </ResponsiveNavLink>
+
+                <ResponsiveLogoutLink />
               </div>
             </div>
           </div>
