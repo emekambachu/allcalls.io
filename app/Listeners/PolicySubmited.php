@@ -28,7 +28,8 @@ class PolicySubmited
             $response = Http::withHeaders([
                 'Api-Token' => env('SENDBIRD_API_TOKEN'),
                 'Content-Type' => 'application/json',
-            ])->post('https://api-' . env('SENDBIRD_APPLICATION_ID') . '.sendbird.com/v3/group_channels/' . env('SENDBIRD_INTERNAL_AGENTS_GROUP_URL') . '/messages', [
+            // ])->post('https://api-' . env('SENDBIRD_APPLICATION_ID') . '.sendbird.com/v3/group_channels/' . env('SENDBIRD_INTERNAL_AGENTS_GROUP_URL') . '/messages', [
+            ])->post('https://api-' . env('SENDBIRD_APPLICATION_ID') . '.sendbird.com/v3/group_channels/' . env('SENDBIRD_INTERNAL_AGENTS_GROUP_URL_TEST') . '/messages', [
                 'user_id' => env('SENDBIRD_ADMIN_ID'),
                 'message_type' => 'MESG',
                 'message' => "{$event->business->client->first_name} {$event->business->client->last_name} just made a sale!",
