@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\DeltaExecution;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -27,35 +28,40 @@ class MergeDNC extends Command
     public function handle()
     {
         $this->info('Starting Node.js script...');
-
         $cmd = 'node ~/node-delta/index';
-
-        $descriptorSpec = array(
-            0 => array("pipe", "r"),  // stdin
-            1 => array("pipe", "w"),  // stdout
-            2 => array("pipe", "w")   // stderr
-        );
+        $descriptorSpec = [
+            0 => ["pipe", "r"],
+            1 => ["pipe", "w"],
+            2 => ["pipe", "w"]
+        ];
 
         $process = proc_open($cmd, $descriptorSpec, $pipes);
+        $output = ''; // Variable to accumulate output
 
         if (is_resource($process)) {
             while ($line = fgets($pipes[1])) {
                 $trimmedLine = trim($line);
                 Log::debug($trimmedLine);
                 $this->line($trimmedLine); // Output to terminal
+                $output .= $trimmedLine . PHP_EOL; // Accumulate the output
             }
 
             fclose($pipes[1]);
 
-            // Optionally, handle stderr as well
             while ($errLine = fgets($pipes[2])) {
                 $trimmedErrLine = trim($errLine);
                 Log::error($trimmedErrLine);
                 $this->error($trimmedErrLine); // Output errors to terminal
+                $output .= $trimmedErrLine . PHP_EOL; // Accumulate the error output
             }
-            fclose($pipes[2]);
 
+            fclose($pipes[2]);
             $return_value = proc_close($process);
+
+            // Save the accumulated output to the database
+            $deltaExecution = new DeltaExecution();
+            $deltaExecution->output = $output;
+            $deltaExecution->save();
 
             $this->info('Node.js script execution completed.');
         } else {
