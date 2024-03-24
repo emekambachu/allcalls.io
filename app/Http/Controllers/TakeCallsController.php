@@ -38,7 +38,9 @@ class TakeCallsController extends Controller
             return $callType;
         });
 
-        return Inertia::render('TakeCalls/Show', compact('callTypes', 'onlineCallType'));
+        $onlineUsers = OnlineUser::whereUserId($request->user()->id)->get();
+
+        return Inertia::render('TakeCalls/Show', compact('callTypes', 'onlineCallType', 'onlineUsers'));
     }
 
     protected function getOnlineCallTypeForUser($user)

@@ -8,8 +8,10 @@ let page = usePage();
 let props = defineProps({
   callTypes: Array,
   onlineCallType: Object,
+  onlineUsers: Array,
 });
 
+console.log(props.onlineUsers);
 console.log(props.callTypes);
 
 let setupFlashMessages = () => {
