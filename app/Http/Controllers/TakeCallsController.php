@@ -41,8 +41,6 @@ class TakeCallsController extends Controller
 
         $onlineUsers = OnlineUser::whereUserId($request->user()->id)->get();
 
-        Log::debug('onlineUsers', $onlineUsers);
-
         return Inertia::render('TakeCalls/Show', compact('callTypes', 'onlineCallType', 'onlineUsers'));
     }
 
