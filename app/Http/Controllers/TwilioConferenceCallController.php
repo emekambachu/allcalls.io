@@ -27,8 +27,10 @@ class TwilioConferenceCallController extends Controller
         $dial->conference($conferenceName, [
             'waitUrl' => 'http://twimlets.com/holdmusic?Bucket=com.twilio.music.classical',
             'statusCallback' => $statusCallbackUrl,
-            'statusCallbackEvent' => 'start', 'join', 'leave', 'end'
+            'statusCallbackEvent' => 'start join leave end'
         ]);
+
+        Log::info("Generated TwiML", ['twiml' => (string) $response]);
 
         // Return the TwiML as a string
         return response($response)->header('Content-Type', 'text/xml');
@@ -330,4 +332,39 @@ class TwilioConferenceCallController extends Controller
         // Return a 200 OK response to Twilio
         return response()->json(['message' => 'Status callback received and logged']);
     }
+
+    public function hangUpThirdParty(Request $request)
+    {
+        // Your Twilio Account SID and Auth Token from twilio.com/console
+        $accountSid = env('TWILIO_SID'); 
+        $authToken = env('TWILIO_AUTH_TOKEN');
+    
+        // Instantiate a new Twilio Rest Client
+        $client = new Client($accountSid, $authToken);
+    
+        // Retrieve Conference SID and Call SID of the third-party participant from the request
+        $conferenceSid = $request->input('conferenceSid');
+        $callSid = $request->input('callSid');
+    
+        try {
+            // Use the Twilio REST API to remove the participant from the conference
+            $client->conferences($conferenceSid)
+                   ->participants($callSid)
+                   ->delete();
+    
+            // Since delete() does not return a response, assume successful deletion if no exception was thrown
+            return response()->json(['message' => 'Call with third party ended successfully.']);
+        } catch (\Exception $e) {
+            // Log and return the exception details
+            Log::error('Error ending call with third party', [
+                'conferenceSid' => $conferenceSid, 
+                'callSid' => $callSid, 
+                'error' => $e->getMessage()
+            ]);
+    
+            return response()->json(['error' => 'Failed to end call with third party', 'details' => $e->getMessage()], 500);
+        }
+    }
+    
+
 }

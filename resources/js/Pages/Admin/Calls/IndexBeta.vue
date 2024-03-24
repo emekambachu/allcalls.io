@@ -223,6 +223,7 @@ const agentColumns = ref([
     {
         label: "Agent Name",
         name: "agentName",
+        sortable: true,
         visible: true,
         render(call) {
             return call.agentName;
@@ -233,6 +234,7 @@ const agentColumns = ref([
     {
         label: "Total Calls",
         name: "totalCalls",
+        sortable: true,
         visible: true,
         render(call) {
             return call.totalCalls;
@@ -243,6 +245,7 @@ const agentColumns = ref([
         label: "Paid Calls",
         name: "paidCalls",
         visible: true,
+        sortable: true,
         render(call) {
             return call.paidCalls;
         },
@@ -252,6 +255,7 @@ const agentColumns = ref([
         label: "Revenue Earned",
         name: "revenueEarned",
         visible: true,
+        sortable: true,
         render(call) {
             return call.revenueEarned;
         },
@@ -261,6 +265,7 @@ const agentColumns = ref([
         label: "Revenue Per Call",
         name: "revenuePerCall",
         visible: true,
+        sortable: true,
         render(call) {
             return call.revenuePerCall.toFixed(2);
         },
@@ -270,6 +275,7 @@ const agentColumns = ref([
         label: "Total Call Length",
         name: "totalCallLength",
         visible: true,
+        sortable: true,
         render(call) {
             return String(Math.floor(call.totalCallLength / 60)).padStart(2, "0") +
                 ":" +
@@ -281,6 +287,7 @@ const agentColumns = ref([
         label: "Average Call Length",
         name: "averageCallLength",
         visible: true,
+        sortable: true,
         render(call) {
             return call.averageCallLength.toFixed(2);
         },
@@ -290,6 +297,7 @@ const agentColumns = ref([
         label: "No. of Policies",
         name: "totalPolicies",
         visible: true,
+        sortable: true,
         render(call) {
             return call.totalPolicies;
         },
@@ -299,6 +307,7 @@ const agentColumns = ref([
         label: "No. of Pending Policies",
         name: "totalPendingPolicies",
         visible: true,
+        sortable: true,
         render(call) {
             return call.totalPendingPolicies;
         },
@@ -308,6 +317,7 @@ const agentColumns = ref([
         label: "No. of Declined Policies",
         name: "totalDeclinedPolicies",
         visible: true,
+        sortable: true,
         render(call) {
             return call.totalDeclinedPolicies;
         },
@@ -317,6 +327,7 @@ const agentColumns = ref([
         label: "No. of SI Policies",
         name: "totalSiPolicies",
         visible: true,
+        sortable: true,
         render(call) {
             return call.totalSiPolicies;
         },
@@ -326,6 +337,7 @@ const agentColumns = ref([
         label: "No. of GI Policies",
         name: "totalGiPolicies",
         visible: true,
+        sortable: true,
         render(call) {
             return call.totalGiPolicies;
         },
@@ -337,6 +349,7 @@ const publisherColumns = ref([
         label: "Publisher Name",
         name: "publisher_name",
         visible: true,
+        sortable: true,
         render(call) {
             return call.publisher_name;
         },
@@ -346,6 +359,7 @@ const publisherColumns = ref([
         label: "Total Calls",
         name: "totalCalls",
         visible: true,
+        sortable: true,
         render(call) {
             return call.totalCalls;
         },
@@ -355,6 +369,7 @@ const publisherColumns = ref([
         label: "Paid Calls",
         name: "paidCalls",
         visible: true,
+        sortable: true,
         render(call) {
             return call.paidCalls;
         },
@@ -364,6 +379,7 @@ const publisherColumns = ref([
         label: "Revenue Earned",
         name: "revenueEarned",
         visible: true,
+        sortable: true,
         render(call) {
             return call.revenueEarned;
         },
@@ -373,6 +389,7 @@ const publisherColumns = ref([
         label: "Revenue Per Call",
         name: "revenuePerCall",
         visible: true,
+        sortable: true,
         render(call) {
             return call.revenuePerCall;
         },
@@ -382,6 +399,7 @@ const publisherColumns = ref([
         label: "Total Call Length",
         name: "totalCallLength",
         visible: true,
+        sortable: true,
         render(call) {
             return call.totalCallLength;
         },
@@ -391,6 +409,7 @@ const publisherColumns = ref([
         label: "Average Call Length",
         name: "averageCallLength",
         visible: true,
+        sortable: true,
         render(call) {
             return call.averageCallLength;
         },
@@ -410,6 +429,8 @@ let renderColumn = (column, call) => {
 let callsPaginator = ref(null);
 let loadedCalls = ref([]);
 let sortColumn = ref(null);
+let sortAgentsColumn = ref(null);
+let sortPublishersColumn = ref(null);
 let sortDirection = ref("desc");
 let loading = ref(false);
 let currentPage = ref(1);
@@ -433,16 +454,24 @@ let fetchCalls = async (replace = false, per_page = null) => {
   let url = "/admin/web-api/calls?page=" + currentPage.value;
 
   if (sortColumn.value) {
-    url += "&sort_column=" + sortColumn.value;
+      url += "&sort_column=" + sortColumn.value;
+  }
+
+  if (sortAgentsColumn.value) {
+      url += "&sort_agents_column=" + sortAgentsColumn.value;
+  }
+
+  if (sortPublishersColumn.value) {
+      url += "&sort_publishers_column=" + sortPublishersColumn.value;
   }
 
   if (sortDirection.value) {
-    url += "&sort_direction=" + sortDirection.value;
+      url += "&sort_direction=" + sortDirection.value;
   }
 
   if (dateFilterFrom.value && dateFilterTo.value) {
-    url += "&start_date=" + dateFilterFrom.value;
-    url += "&end_date=" + dateFilterTo.value;
+      url += "&start_date=" + dateFilterFrom.value;
+      url += "&end_date=" + dateFilterTo.value;
   }
 
   if(per_page !== null) {
@@ -508,20 +537,40 @@ let loadMore = async () => {
   await fetchCalls(true, per_page);
 };
 
-let sortByColumn = async (column) => {
-  console.log("Sort By Column: ", column.name);
+let sortByColumn = async (column, type = null) => {
 
-  if (!column.sortable) return;
+    console.log("Sort By Column: ", column.name);
+    if (!column.sortable) return;
 
-  sortColumn.value = column.name;
+    // Clear all sort columns
+    sortAgentsColumn.value = null;
+    sortPublishersColumn.value = null;
+    sortColumn.value = null;
 
-  if (sortDirection.value === "asc") {
-    sortDirection.value = "desc";
-  } else {
-    sortDirection.value = "asc";
-  }
+    if(type === 'agents') {
+      sortAgentsColumn.value = column.name;
+    } else if(type === 'publishers') {
+      sortPublishersColumn.value = column.name;
+    } else {
+      sortColumn.value = column.name;
+    }
 
-  await fetchCalls(true, paginate.value.perPage);
+    if (sortDirection.value === "asc") {
+        sortDirection.value = "desc";
+    } else {
+        sortDirection.value = "asc";
+    }
+
+    await fetchCalls(true, paginate.value.perPage);
+
+    showMoreForGrouped.value = true;
+
+    // Populate after search results
+    if(sortAgentsColumn.value) {
+        maxmizedCallsGroupedByUser.value = callsGroupedByUserResults.value;
+    }else if(sortPublishersColumn.value) {
+        callsGroupedByPublisherName.value = callsGroupedByPublisherNameResults.value;
+    }
 };
 
 let callsGroupedByUserArray = Object.entries(props.callsGroupedByUser);
@@ -884,9 +933,9 @@ const applyCallFiltersToSummary = () => {
     console.log("Maximised calls grouped by user before apply", maxmizedCallsGroupedByUser.value);
 
     // Populate grouped calls when filter button is clicked
-    maxmizedCallsGroupedByUser.value = Object.fromEntries(callsGroupedByUserArray);
-    minimizedCallsGroupedByUser.value = Object.fromEntries(minimizedCallsGroupedByUserArray);
-    callsGroupedByPublisherName.value = Object.fromEntries(callsGroupedByPublisherNameArray);
+    // maxmizedCallsGroupedByUser.value = Object.fromEntries(callsGroupedByUserArray);
+    // minimizedCallsGroupedByUser.value = Object.fromEntries(minimizedCallsGroupedByUserArray);
+    // callsGroupedByPublisherName.value = Object.fromEntries(callsGroupedByPublisherNameArray);
 
     // // assigned grouped calls to new variables
     // const unfilteredGroupedPublisherNames = callsGroupedByPublisherName.value;
@@ -928,7 +977,7 @@ const removeFiltersForSummary = () => {
 
     // console.log("Minimized Calls Grouped By User: ", minimizedCallsGroupedByUserArray.value);
 
-    // reset total calls and revenue
+    // reset total calls and revenue from props
     getTotalCalls.value = props.totalCalls;
     getTotalRevenue.value = props.totalRevenue;
 }
@@ -1539,17 +1588,52 @@ onMounted(async () => {
                           <table class="w-full text-sm text-left text-gray-500">
                               <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                                 <tr class="cursor-pointer">
-
                                   <th
                                       scope="col"
                                       class="px-4 py-3 whitespace-nowrap"
                                       v-for="(column, index) in agentColumns"
                                       :key="index"
                                       v-show="column.visible"
+                                      @click="sortByColumn(column, 'agents')"
                                   >
-                                      {{ column.label }}
+                                      <div class="flex items-center">
+                                          <span>{{ column.label }}</span>
+                                          <span v-if="column.sortable && (sortAgentsColumn && sortAgentsColumn === column.name)">
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke-width="1.5"
+                                                stroke="currentColor"
+                                                class="w-3 h-3 ml-1"
+                                                v-if="sortDirection === 'asc'"
+                                            >
+                                              <path
+                                                  stroke-linecap="round"
+                                                  stroke-linejoin="round"
+                                                  d="M4.5 15.75l7.5-7.5 7.5 7.5"
+                                              />
+                                            </svg>
+
+                                            <svg
+                                                v-if="sortDirection === 'desc'"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke-width="1.5"
+                                                stroke="currentColor"
+                                                class="w-3 h-3 ml-1"
+                                            >
+                                              <path
+                                                  stroke-linecap="round"
+                                                  stroke-linejoin="round"
+                                                  d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                                              />
+                                            </svg>
+                                          </span>
+                                      </div>
                                   </th>
-                              </tr>
+                                </tr>
                               </thead>
                               <tbody v-if="loadedCalls.length > 0">
                                   <tr
@@ -1684,8 +1768,46 @@ onMounted(async () => {
                                         v-for="(column, index) in publisherColumns"
                                         :key="index"
                                         v-show="column.visible"
+                                        @click="sortByColumn(column, 'publishers')"
                                     >
-                                        {{ column.label }}
+
+                                        <div class="flex items-center">
+                                            <span>{{ column.label }}</span>
+                                            <span v-if="column.sortable && (sortPublishersColumn && sortPublishersColumn === column.name)">
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    stroke-width="1.5"
+                                                    stroke="currentColor"
+                                                    class="w-3 h-3 ml-1"
+                                                    v-if="sortDirection === 'asc'"
+                                                >
+                                                  <path
+                                                      stroke-linecap="round"
+                                                      stroke-linejoin="round"
+                                                      d="M4.5 15.75l7.5-7.5 7.5 7.5"
+                                                  />
+                                                </svg>
+
+                                                <svg
+                                                    v-if="sortDirection === 'desc'"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    stroke-width="1.5"
+                                                    stroke="currentColor"
+                                                    class="w-3 h-3 ml-1"
+                                                >
+                                                  <path
+                                                      stroke-linecap="round"
+                                                      stroke-linejoin="round"
+                                                      d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                                                  />
+                                                </svg>
+                                          </span>
+                                        </div>
+
                                     </th>
 
 <!--                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Publisher Name</th>-->
@@ -1702,14 +1824,13 @@ onMounted(async () => {
 <!--                                      Average Call Length-->
 <!--                                  </th>-->
 <!--                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Actions</th>-->
-                              </tr>
+                                </tr>
                               </thead>
                               <tbody v-if="loadedCalls.length > 0">
                                 <tr
                                   v-for="(publisher, index) in callsGroupedByPublisherName"
                                   :key="index"
-                                  class="border-b hover:bg-gray-100"
-                              >
+                                  class="border-b hover:bg-gray-100">
                                     <td
                                         v-for="(column, colIndex) in publisherColumns"
                                         :key="colIndex"
@@ -2010,6 +2131,7 @@ onMounted(async () => {
                     v-show="column.visible"
                     @click="sortByColumn(column)"
                   >
+
                     <div class="flex items-center">
                       <span>{{ column.label }}</span>
 
@@ -2047,6 +2169,7 @@ onMounted(async () => {
                         </svg>
                       </span>
                     </div>
+
                   </th>
                   <th scope="col" class="px-4 py-3 whitespace-nowrap">Recording</th>
                   <th scope="col" class="px-4 py-3 whitespace-nowrap">Actions</th>
