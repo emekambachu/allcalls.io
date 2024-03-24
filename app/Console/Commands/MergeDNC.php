@@ -58,9 +58,13 @@ class MergeDNC extends Command
             fclose($pipes[2]);
             $return_value = proc_close($process);
 
+            // Determine the status based on the output content
+            $status = str_contains($output, "All lines have been processed") ? "Successful" : "Unsuccessful";
+
             // Save the accumulated output to the database
             $deltaExecution = new DeltaExecution();
             $deltaExecution->output = $output;
+            $deltaExecution->status = $status; // Assuming you have a 'status' column
             $deltaExecution->save();
 
             $this->info('Node.js script execution completed.');
