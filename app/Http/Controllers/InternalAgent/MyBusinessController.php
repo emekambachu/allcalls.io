@@ -115,13 +115,13 @@ class MyBusinessController extends Controller
             ], 400);
         }
         // if (isset($request->client_id)) {
-            // $business = InternalAgentMyBusiness::where('client_id', $request->client_id)->first();
-            // if ($business) {
-            //     return response()->json([
-            //         'success' => false,
-            //         'error' => 'This client already contain a business. Please select new one.',
-            //     ], 400);
-            // }
+        // $business = InternalAgentMyBusiness::where('client_id', $request->client_id)->first();
+        // if ($business) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'error' => 'This client already contain a business. Please select new one.',
+        //     ], 400);
+        // }
         // }
 
         if (isset($request->business_id)) {
@@ -174,16 +174,15 @@ class MyBusinessController extends Controller
 
         event(new AppSubmittedEvent($internalAgentBusiness));
 
-        if(!isset($request->business_id)){
-            if($internalAgentBusiness->client_id !='' && Str::startsWith($internalAgentBusiness->client->status, 'Sale')){
+        if (!isset($request->business_id)) {
+            if ($internalAgentBusiness->client_id != '' && Str::startsWith($internalAgentBusiness->client->status, 'Sale')) {
                 event(new PolicySubmitedEvent($internalAgentBusiness));
-
             }
         }
 
         return response()->json([
             'success' => true,
-            'message' => isset($request->business_id)? 'Client has been attached to the policy' : 'Business added successfully.',
+            'message' => isset($request->business_id) ? 'Client has been attached to the policy' : 'Business added successfully.',
         ], 200);
     }
     public function businessByLabel(Request $request)

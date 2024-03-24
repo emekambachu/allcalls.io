@@ -26,33 +26,24 @@ class PolicySubmited
     public function handle(PolicySubmitedEvent $event): void
     {
         try {
-            // Assuming the business's client is accessible via $event->business->client
-            $client = $event->business->client;
+            $agentId = $event->business->agent_id;
 
-            // Check if client is attached and the status starts with "Sale"
-            if ($client && strpos($client->status, 'Sale') === 0) {
-                $agentId = $event->business->agent_id;
+            $agent = User::find($agentId);
 
-                $agent = User::find($agentId);
-
-                if (!$agent) {
-                    throw new Exception("Agent not found with ID: $agentId");
-                }
-
-                $response = Http::withHeaders([
-                    'Api-Token' => env('SENDBIRD_API_TOKEN'),
-                    'Content-Type' => 'application/json',
-                ])->post('https://api-' . env('SENDBIRD_APPLICATION_ID') . '.sendbird.com/v3/group_channels/' . env('SENDBIRD_INTERNAL_AGENTS_GROUP_URL') . '/messages', [
-                    'user_id' => env('SENDBIRD_ADMIN_ID'),
-                    'message_type' => 'MESG',
-                    'message' => "{$agent->first_name} {$agent->last_name} just made a sale!",
-                ]);
-
-                Log::debug("New Policy" . $response->body());
-            } else {
-                // Log or handle cases where client status does not start with "Sale" or client is not attached
-                Log::info('PolicySubmitedEvent: Client status does not start with "Sale" or client is not attached.');
+            if (!$agent) {
+                throw new Exception("Agent not found with ID: $agentId");
             }
+
+            $response = Http::withHeaders([
+                'Api-Token' => env('SENDBIRD_API_TOKEN'),
+                'Content-Type' => 'application/json',
+            ])->post('https://api-' . env('SENDBIRD_APPLICATION_ID') . '.sendbird.com/v3/group_channels/' . env('SENDBIRD_INTERNAL_AGENTS_GROUP_URL_TEST') . '/messages', [
+                'user_id' => env('SENDBIRD_ADMIN_ID'),
+                'message_type' => 'MESG',
+                'message' => "{$agent->first_name} {$agent->last_name} just made a sale!",
+            ]);
+
+            Log::debug("New Policy" . $response->body());
         } catch (Exception $e) {
             Log::error('PolicySubmitedEvent: ' . $e->getMessage());
         }
