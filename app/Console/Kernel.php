@@ -40,7 +40,8 @@ class Kernel extends ConsoleKernel
         })->dailyAt('23:59');
 
 
-        if (app()->environment('production')) {
+        // TODO: Replace environment to production after testing
+        if (app()->environment('staging')) {
             // DNC Delta Merge @ 7, 8, 9, 10, 11, 12, 13, 14, 15 EST
             $times = ['07', '08', '09', '10', '11', '12', '13', '14', '15'];
             foreach ($times as $time) {
