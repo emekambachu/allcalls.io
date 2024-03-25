@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\DeltaExecution;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Mail;
 
 class CheckDNCHealth extends Command
 {
@@ -35,7 +36,15 @@ class CheckDNCHealth extends Command
         $successful = $deltaExecutions->contains('status', 'Successful');
 
         if ($successful) {
-            $this->info('Sending success email to the team...');
+            // $this->info('Sending success email to the team...');
+
+            // Send a plain text email to the email "iamfaizahmed123@gmail.com"
+            // with the subject "DNC Merge Successful" and the body "The DNC merge was successful."
+            Mail::send([], [], function ($message) {
+                $message->to('iamfaizahmed123@gmail.com');
+                $message->subject('DNC Merge Successful');
+                $message->setBody('The DNC merge was successful.');
+            });
         } else {
             $this->error('Sending failed email to the team...');
         }
