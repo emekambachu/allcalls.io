@@ -29,6 +29,7 @@ class CheckDNCHealth extends Command
     {
         // First get all App\Models\DeltaExecution records for today in EST timezone:
         $today = now()->setTimezone('America/New_York')->format('Y-m-d');
+        $formattedToday = now()->setTimezone('America/New_York')->format('m-d-Y'); // Format date as mm-dd-yyyy
         $deltaExecutions = DeltaExecution::whereDate('created_at', $today)->get();
 
         // deltaExecution could have two statuses: 'Successful' or 'Unsuccessful'
@@ -39,11 +40,11 @@ class CheckDNCHealth extends Command
             // $this->info('Sending success email to the team...');
 
             // Send a plain text email to the email "iamfaizahmed123@gmail.com"
-            // with the subject "DNC Merge Successful" and the body "The DNC merge was successful."
-            Mail::send([], [], function ($message) {
+            // with the subject "DNC Merge Successful" and the body including the formatted date:
+            Mail::send([], [], function ($message) use ($formattedToday) { // Use the formatted date in the closure
                 $message->to('iamfaizahmed123@gmail.com');
                 $message->subject('DNC Merge Successful');
-                $message->text('The DNC merge was successful.');
+                $message->text("The DNC merge was successful for $formattedToday."); // Dynamic date in the email body
             });
         } else {
             $this->error('Sending failed email to the team...');
