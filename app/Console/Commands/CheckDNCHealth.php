@@ -43,7 +43,7 @@ class CheckDNCHealth extends Command
             // with the subject "DNC Merge Successful" and the body including the formatted date:
             Mail::send([], [], function ($message) use ($formattedToday) { // Use the formatted date in the closure
                 $message->to('iamfaizahmed123@gmail.com');
-                $message->subject('$formattedToday: DNC Merge Successful');
+                $message->subject("$formattedToday: DNC Merge Successful");
                 $message->text("The DNC merge was successful for $formattedToday."); // Dynamic date in the email body
             });
         } else {
