@@ -27,6 +27,8 @@ class MergeDNC extends Command
      */
     public function handle()
     {
+        Log::debug('Starting DNC merge...');
+
         $this->info('Starting Node.js script...');
         $cmd = 'node ~/node-delta/index';
         $descriptorSpec = [
