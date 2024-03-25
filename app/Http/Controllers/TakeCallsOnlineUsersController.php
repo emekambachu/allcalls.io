@@ -78,7 +78,7 @@ class TakeCallsOnlineUsersController extends Controller
         Log::debug('User last login platform updated', ['userId' => $userId, 'platform' => 'web']);
     
         // Dispatch the event
-        // OnlineUserListUpdated::dispatch();
+        OnlineUserListUpdated::dispatch();
     
         // Return a response
         Log::debug('Exiting store function', ['message' => "Listening to calls for {$callType->type}."]);
