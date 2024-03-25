@@ -43,7 +43,7 @@ class CheckDNCHealth extends Command
             Mail::send([], [], function ($message) {
                 $message->to('iamfaizahmed123@gmail.com');
                 $message->subject('DNC Merge Successful');
-                $message->setBody('The DNC merge was successful.', 'text/plain');
+                $message->text('The DNC merge was successful.');
             });
         } else {
             $this->error('Sending failed email to the team...');
