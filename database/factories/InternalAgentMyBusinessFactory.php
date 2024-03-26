@@ -60,7 +60,6 @@ class InternalAgentMyBusinessFactory extends Factory
             'beneficiary_relationship' => $this->faker->word,
             'notes' => $this->faker->sentence,
             'client_id' => $client->id,
-            'split_agent_email' => $this->faker->email,
             'appointment_type' => $this->faker->word,
         ];
     }
