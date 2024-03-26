@@ -31,7 +31,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->call(function () {
             // Check the condition before executing the command
-            if(config('app.url')== AllCALLS_LIVE){
+            if (config('app.url') == AllCALLS_LIVE) {
                 $calls = Call::whereSentToOnscript(false)->count();
                 if ($calls > 0) {
                     Artisan::call('allcalls:send-calls-to-on-script');
@@ -46,10 +46,14 @@ class Kernel extends ConsoleKernel
             $times = ['07', '08', '09', '10', '11', '12', '13', '14', '15'];
             foreach ($times as $time) {
                 $schedule->command('allcalls:merge-dnc')
-                        ->timezone('America/New_York')
-                        ->dailyAt("{$time}:00");
+                    ->timezone('America/New_York')
+                    ->dailyAt("{$time}:00");
             }
         }
+
+        $schedule->command('allcalls:check-dnc-health')
+            ->timezone('America/New_York') // EST timezone
+            ->dailyAt('15:00'); // 3 PM
     }
 
     /**
