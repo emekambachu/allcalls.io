@@ -390,6 +390,9 @@ class CallService
             $totalCallLength = $calls->sum('call_duration_in_seconds');
             $averageCallLength = $totalCalls > 0 ? $totalCallLength / $totalCalls : 0;
 
+            // Get total policies, pending policies, declined policies,
+            // simplified issue policies, and guaranteed issue policies
+            // using the InternalAgentMyBusinessService class
             $totalPolicies = $this->policy->internalAgentMyBusinessByAgentId($user->id)->count();
             $totalPendingPolicies = $this->policy->internalAgentMyBusinessByAgentId($user->id)
                 ->where('status', 'Pending/Approved')->count();
