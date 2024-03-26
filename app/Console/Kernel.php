@@ -41,7 +41,7 @@ class Kernel extends ConsoleKernel
 
 
         // TODO: Replace environment to production after testing
-        if (app()->environment('staging')) {
+        if (app()->environment('production')) {
             // DNC Delta Merge @ 7, 8, 9, 10, 11, 12, 13, 14, 15 EST
             $times = ['07', '08', '09', '10', '11', '12', '13', '14', '15'];
             foreach ($times as $time) {
