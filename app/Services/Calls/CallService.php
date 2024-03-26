@@ -6,6 +6,7 @@ use App\Models\Call;
 use App\Models\CallType;
 use App\Models\User;
 use App\Services\Client\ClientService;
+use App\Services\InternalAgent\InternalAgentMyBusinessService;
 use App\Services\User\UserService;
 use Carbon\Carbon;
 use Illuminate\Contracts\Database\Query\Builder;
@@ -18,12 +19,16 @@ class CallService
 {
     protected ClientService $client;
     protected UserService $user;
+    protected InternalAgentMyBusinessService $policy;
+
     public function __construct(
         ClientService $client,
         UserService $user,
+        InternalAgentMyBusinessService $policy
     ) {
         $this->client = $client;
         $this->user = $user;
+        $this->policy = $policy;
     }
 
     public function call(): Call
@@ -189,7 +194,8 @@ class CallService
     {
         $query = Call::with('user.roles', 'callType', 'client', 'getBusiness');
 
-        // ringing_duration is a custom attribute, therefore it's not available in the database table
+        // ringing_duration is a custom attribute.
+        // therefore, it's not available in the database table
         // Had to use raw queries to get it to work
         if ($request->input('sort_column') === 'ringing_duration') {
             $query->select('*', DB::raw('IFNULL(TIMESTAMPDIFF(SECOND, created_at, user_response_time), 20) AS ringing_duration'));
@@ -383,24 +389,37 @@ class CallService
             $totalRevenue = $calls->sum('amount_spent');
             $totalCallLength = $calls->sum('call_duration_in_seconds');
             $averageCallLength = $totalCalls > 0 ? $totalCallLength / $totalCalls : 0;
-            $totalPolicies = $calls->where('policy_id', '!=', null)->count();
+
+            // Get total policies, pending policies, declined policies,
+            // simplified issue policies, and guaranteed issue policies
+            // using the InternalAgentMyBusinessService class
+            $totalPolicies = $this->policy->internalAgentMyBusinessByAgentId($user->id)->count();
+            $totalPendingPolicies = $this->policy->internalAgentMyBusinessByAgentId($user->id)
+                ->where('status', 'Pending/Approved')->count();
+            $totalDeclinedPolicies = $this->policy->internalAgentMyBusinessByAgentId($user->id)
+                ->whereIn('status', ['Declined', 'Cancelled', 'Withdrawn'])->count();
+            $totalSiPolicies = $this->policy->internalAgentMyBusinessByAgentId($user->id)
+                ->where('status', 'Sale - Simplified Issue')->count();
+            $totalGiPolicies = $this->policy->internalAgentMyBusinessByAgentId($user->id)
+                ->where('status', 'Sale - Guaranteed Issue')->count();
+
 
             // Manual filtering for pending and declined policies
-            $totalPendingPolicies = $calls->filter(function ($call) {
-                return $call->getBusiness && in_array($call->getBusiness->status, ['Submitted', 'Approved']);
-            })->count();
+//            $totalPendingPolicies = $calls->filter(function ($call) {
+//                return $call->getBusiness && in_array($call->getBusiness->status, ['Submitted', 'Approved']);
+//            })->count();
 
-            $totalDeclinedPolicies = $calls->filter(function ($call) {
-                return $call->getBusiness && in_array($call->getBusiness->status, ['Declined', 'Cancelled', 'Withdrawn']);
-            })->count();
+//            $totalDeclinedPolicies = $calls->filter(function ($call) {
+//                return $call->getBusiness && in_array($call->getBusiness->status, ['Declined', 'Cancelled', 'Withdrawn']);
+//            })->count();
 
-            $totalSiPolicies = $calls->filter(function ($call) {
-                return $call->getBusiness && $call->client && $call->client->status === 'Sale - Simplified Issue';
-            })->count();
-
-            $totalGiPolicies = $calls->filter(function ($call) {
-                return $call->getBusiness && $call->client && $call->client->status === 'Sale - Guaranteed Issue';
-            })->count();
+//            $totalSiPolicies = $calls->filter(function ($call) {
+//                return $call->getBusiness && $call->client && $call->client->status === 'Sale - Simplified Issue';
+//            })->count();
+//
+//            $totalGiPolicies = $calls->filter(function ($call) {
+//                return $call->getBusiness && $call->client && $call->client->status === 'Sale - Guaranteed Issue';
+//            })->count();
 
             return [
                 'userId' => $user->id,

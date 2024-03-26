@@ -9,6 +9,7 @@ use App\Models\State;
 use App\Models\CallType;
 use App\Models\OnlineUser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class TakeCallsController extends Controller
 {
@@ -38,7 +39,9 @@ class TakeCallsController extends Controller
             return $callType;
         });
 
-        return Inertia::render('TakeCalls/Show', compact('callTypes', 'onlineCallType'));
+        $onlineUsers = OnlineUser::whereUserId($request->user()->id)->get();
+
+        return Inertia::render('TakeCalls/Show', compact('callTypes', 'onlineCallType', 'onlineUsers'));
     }
 
     protected function getOnlineCallTypeForUser($user)
@@ -49,7 +52,7 @@ class TakeCallsController extends Controller
         if ($count > 1) {
             $firstRecord = $onlineCallTypes->first();
             $firstId = $firstRecord->id; // Get the ID of the first record.
-            OnlineUser::where('user_id', $user->id)->where('id', '!=', $firstId)->delete();
+            // OnlineUser::where('user_id', $user->id)->where('id', '!=', $firstId)->delete();
         }
 
         return ($count >= 1) ? $onlineCallTypes[0] : null;

@@ -11,7 +11,6 @@ let props = defineProps({
   onlineUsers: Array,
 });
 
-console.log('onlineUsers', props.onlineUsers);
 console.log(props.callTypes);
 
 let setupFlashMessages = () => {
@@ -24,42 +23,22 @@ let setupFlashMessages = () => {
     toaster("error", page.props.errors.balance);
   }
 };
-// let setOnlineCallType = () => {
-//   callTypesWithToggles.value.map((type) => {
-//     return { callType: type.callType, toggle: false };
-//   });
-
-//   for (let i = 0; i < callTypesWithToggles.value.length; i++) {
-//     if (
-//       props.onlineCallType &&
-//       props.onlineCallType.call_type_id ===
-//       callTypesWithToggles.value[i].callType.id
-//     ) {
-//       callTypesWithToggles.value[i].toggle = true;
-//       return;
-//     }
-//   }
-// };
-
 let setOnlineCallType = () => {
-  // This map operation still doesn't store the result, so it has no effect as before
   callTypesWithToggles.value.map((type) => {
     return { callType: type.callType, toggle: false };
   });
 
-  // Iterate over each call type in callTypesWithToggles
   for (let i = 0; i < callTypesWithToggles.value.length; i++) {
-    // Check each onlineUser to see if their call_type_id matches the current call type's id
-    for (let user of props.onlineUsers) {
-      if (user.call_type_id === callTypesWithToggles.value[i].callType.id) {
-        // If a match is found, set the toggle to true and break out of the inner loop
-        callTypesWithToggles.value[i].toggle = true;
-        break; // Only breaks out of the inner loop, continues checking the next call type
-      }
+    if (
+      props.onlineCallType &&
+      props.onlineCallType.call_type_id ===
+      callTypesWithToggles.value[i].callType.id
+    ) {
+      callTypesWithToggles.value[i].toggle = true;
+      return;
     }
   }
 };
-
 
 let callTypesWithToggles = ref(
   props.callTypes
