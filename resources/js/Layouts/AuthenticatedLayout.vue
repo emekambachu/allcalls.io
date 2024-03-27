@@ -622,7 +622,11 @@ onMounted(() => {
       console.log("Joined event for third party came in! " + JSON.stringify(e.participant));
       
       // Update your UI here based on the received participant data
-        conferenceCallStatus.value = 'ringing';
+      conferenceCallStatus.value = 'Joined';
+
+      setTimeout(() => {
+        showDialPad.value = false;
+      }, 500);
     });
 
 });
@@ -668,7 +672,7 @@ let callNumber = () => {
         thirdPartySid.value = response.data.thirdPartySid; 
 
         // Reset or handle post-call UI here
-        showDialPad.value = false;
+        // showDialPad.value = false;
         conferenceTypedNumber.value = "";
       })
       .catch((error) => {
