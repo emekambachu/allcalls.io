@@ -27,6 +27,8 @@ let incomingCallSid = ref(null);
 let incomingCallSidTwo = ref(null);
 let thirdPartySid = ref('');
 let conferenceName = ref('');
+let conferenceCallStatus = ref(null);
+let isConferenceCallInitiated = ref(false);
 
 let showLowBalanceModal = ref(false);
 if (
@@ -610,7 +612,21 @@ onMounted(() => {
   Echo.channel('conference-call')
     .listen('ConferenceCallThirdPartyRinging', (e) => {
       console.log("Ringing event for third party came in! " + JSON.stringify(e.participant));
-        // Update your UI here based on the received participant data
+      
+      // Update your UI here based on the received participant data
+        conferenceCallStatus.value = 'ringing';
+    });
+
+    Echo.channel('conference-call')
+    .listen('ConferenceCallThirdPartyJoined', (e) => {
+      console.log("Joined event for third party came in! " + JSON.stringify(e.participant));
+      
+      // Update your UI here based on the received participant data
+      conferenceCallStatus.value = 'joined';
+
+      setTimeout(() => {
+        showDialPad.value = false;
+      }, 500);
     });
 
 });
@@ -643,6 +659,9 @@ let callNumber = () => {
       phoneNumber: conferenceTypedNumber.value,
     };
 
+    isConferenceCallInitiated.value = true;
+    conferenceCallStatus.value = "initiated";
+
     // Send the payload to your endpoint
     axios
       .post("/conference/convert/withNumber", payload)
@@ -653,7 +672,7 @@ let callNumber = () => {
         thirdPartySid.value = response.data.thirdPartySid; 
 
         // Reset or handle post-call UI here
-        showDialPad.value = false;
+        // showDialPad.value = false;
         conferenceTypedNumber.value = "";
       })
       .catch((error) => {
@@ -3420,6 +3439,10 @@ let appDownloadModal = ref(false);
           </button>
 
         </div>
+
+        <div v-if="conferenceCallStatus === 'initiated'">Third Party: Call Initiated...</div>
+        <div v-if="conferenceCallStatus === 'ringing'">Third Party: Ringing...</div>
+        <div v-if="conferenceCallStatus === 'joined'">Third Party: Joined</div>
           
         <button
           @click="hangupThirdPartyCall"

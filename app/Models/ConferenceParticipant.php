@@ -11,7 +11,7 @@ class ConferenceParticipant extends Model
     use HasFactory;
 
     protected $fillable = [
-        'conference_call_id', 'sid', 'status', 'phone_number', 'muted', 'hold', 'coaching', 'call_status', 'reason_left'
+        'conference_call_id', 'sid', 'status', 'phone_number', 'muted', 'hold', 'coaching', 'call_status', 'reason_left', 'is_third_party'
     ];
     
 
