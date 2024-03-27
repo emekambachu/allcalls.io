@@ -3408,14 +3408,14 @@ let appDownloadModal = ref(false);
             Call
           </button>
 
-          <button
-            @click="hangupThirdPartyCall"
-            class="bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 rounded"
-          >
-            Hangup Third-Party
-          </button>
-
         </div>
+          
+        <button
+          @click="hangupThirdPartyCall"
+          class="bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 rounded"
+        >
+          Hangup Third-Party
+        </button>
         <!-- Merge Calls Button Ends -->    
 
       </div>
