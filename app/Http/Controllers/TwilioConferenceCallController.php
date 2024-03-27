@@ -188,7 +188,7 @@ class TwilioConferenceCallController extends Controller
                         ]);
                     } else {
                         // Add new participant to this conference
-                        $conferenceCall->participants()->create([
+                        $conferenceCall->participants()->updateOrCreate([
                             'sid' => $participant->sid,
                             'status' => $participant === $newCallResponse ? 'ringing' : 'connected',
                             'phone_number' => $participant === $newCallResponse ? $phoneNumber : null,
