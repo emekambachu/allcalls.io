@@ -21,7 +21,7 @@ class SendCallsToOnScriptAfterFiveMinutes implements ShouldQueue
     public $disposition;
     public $agentId;
     public $clientPhone;
-    public $delay = 10; // Delay the job execution by 300 seconds (5 minutes)
+    // public $delay = 10; // Delay the job execution by 300 seconds (5 minutes)
 
     /**
      * Create a new job instance.
