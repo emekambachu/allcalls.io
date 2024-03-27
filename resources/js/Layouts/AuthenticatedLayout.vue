@@ -622,7 +622,7 @@ onMounted(() => {
       console.log("Joined event for third party came in! " + JSON.stringify(e.participant));
       
       // Update your UI here based on the received participant data
-      conferenceCallStatus.value = 'Joined';
+      conferenceCallStatus.value = 'joined';
 
       setTimeout(() => {
         showDialPad.value = false;
