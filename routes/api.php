@@ -310,3 +310,5 @@ Route::post('/commio/sms/receive', [TextMessageController::class, 'receiveMessag
 Route::post('/twilio-webhook-error', [TwilioWebhookErrorController::class, 'store']);
 
 Route::post('/send/batch/sms/', [ZoomMeetingNotificationController::class, 'sendBatchTextMessages']);
+
+Route::get('/onscript/delay', [OnScriptController::class, 'delayDispatch']);
