@@ -11,12 +11,21 @@ class OnScriptDelayedAPIController extends Controller
     {
         $agentName = $request->query('agent_name');
         $url = $request->query('url');
-        $timestamp = $request->query('timestamp');
+
+        // Parse the timestamp and format it
+        try {
+            $timestampDateTime = new \DateTime($request->query('timestamp'));
+            $formattedTimestamp = $timestampDateTime->format('Y-m-d H:i:s');
+        } catch (\Exception $e) {
+            // Handle the case where the timestamp format is invalid
+            return response()->json(['error' => 'Invalid timestamp format'], 400);
+        }
+
         $disposition = $request->query('disposition');
         $agentId = $request->query('agent_id');
         $clientPhone = $request->query('client_phone');
 
-        SendCallsToOnScriptAfterFiveMinutes::dispatch($agentName, $url, $timestamp, $disposition, $agentId, $clientPhone)
+        SendCallsToOnScriptAfterFiveMinutes::dispatch($agentName, $url, $formattedTimestamp, $disposition, $agentId, $clientPhone)
             ->delay(now()->addMinutes(5));
 
         return response()->json(['message' => 'Call info will be sent in 5 minutes.']);
