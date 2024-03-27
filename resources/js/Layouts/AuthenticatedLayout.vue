@@ -3428,8 +3428,8 @@ let appDownloadModal = ref(false);
 
         </div>
 
-        <div v-if="callStatus === 'initiated'">Third Party: Call Initiated...</div>
-        <div v-if="callStatus === 'ringing'">Third Party: Ringing...</div>
+        <div v-if="conferenceCallStatus === 'initiated'">Third Party: Call Initiated...</div>
+        <div v-if="conferenceCallStatus === 'ringing'">Third Party: Ringing...</div>
           
         <button
           @click="hangupThirdPartyCall"
