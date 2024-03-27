@@ -659,6 +659,9 @@ let callNumber = () => {
 };
 
 let hangupThirdPartyCall = () => {
+  console.log('Conference Name:', conferenceName.value);
+  console.log('Third Party Call SID:', thirdPartySid.value);
+  
   axios.post('/api/hangup-third-party', {
     conferenceName: conferenceName.value, // Assuming this is stored in your component's state
     callSid: thirdPartySid.value, // Assuming this is stored in your component's state
@@ -671,6 +674,7 @@ let hangupThirdPartyCall = () => {
     // Handle error
     console.error('Error ending third-party call:', error);
     alert('Failed to end third-party call.');
+    
   });
 }
 
