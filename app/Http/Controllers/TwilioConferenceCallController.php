@@ -152,7 +152,7 @@ class TwilioConferenceCallController extends Controller
             ]);
 
             // Attempt to find or create the conference call
-            $conferenceCall = ConferenceCall::firstOrCreate([
+            $conferenceCall = ConferenceCall::updateOrCreate([
                 'name' => $conferenceName,
             ], [
                 'status' => 'initiated',
