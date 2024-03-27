@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\DeltaExecution;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class CheckDNCHealth extends Command
@@ -27,6 +28,8 @@ class CheckDNCHealth extends Command
      */
     public function handle()
     {
+        Log::debug('Checking the status of the DNC merge...');
+
         // First get all App\Models\DeltaExecution records for today in EST timezone:
         $today = now()->setTimezone('America/New_York')->format('Y-m-d');
         $formattedToday = now()->setTimezone('America/New_York')->format('m-d-Y'); // Format date as mm-dd-yyyy
@@ -36,23 +39,21 @@ class CheckDNCHealth extends Command
         // Check if ANY of them are 'Successful':
         $successful = $deltaExecutions->contains('status', 'Successful');
 
-        if ($successful) {
-            // $this->info('Sending success email to the team...');
+        $recipients = ['iamfaizahmed123@gmail.com', 'ryan@allcalls.io', 'vince@allcalls.io'];
 
-            // Send a plain text email to the email "iamfaizahmed123@gmail.com"
-            // with the subject "DNC Merge Successful" and the body including the formatted date:
-            Mail::send([], [], function ($message) use ($formattedToday) { // Use the formatted date in the closure
-                $message->to('iamfaizahmed123@gmail.com');
+        if ($successful) {
+            // Sending success email to multiple recipients:
+            Mail::send([], [], function ($message) use ($formattedToday, $recipients) {
+                $message->to($recipients); // Use the array of recipients
                 $message->subject("✅ $formattedToday: DNC Merge Successful");
-                $message->text("The DNC merge was successful for $formattedToday."); // Dynamic date in the email body
+                $message->text("The DNC merge was successful for $formattedToday.");
             });
         } else {
-            // $this->error('Sending failed email to the team...');
-
-            Mail::send([], [], function ($message) use ($formattedToday) { // Use the formatted date in the closure
-                $message->to('iamfaizahmed123@gmail.com');
-                $message->subject("$formattedToday: DNC Merge Unsuccessful");
+            // Sending failed email to multiple recipients:
+            Mail::send([], [], function ($message) use ($formattedToday, $recipients) {
+                $message->to($recipients); // Use the array of recipients
                 $message->subject("❌ $formattedToday: DNC Merge Unsuccessful");
+                $message->text("The DNC merge was unsuccessful for $formattedToday.");
             });
         }
     }
