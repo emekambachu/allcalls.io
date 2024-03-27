@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Call;
 use Twilio\Rest\Client;
 use Illuminate\Http\Request;
+use App\Models\ConferenceCall;
 use Twilio\TwiML\VoiceResponse;
 use Illuminate\Support\Facades\Log;
 
@@ -183,7 +184,7 @@ class TwilioConferenceCallController extends Controller
         $client = new Client($accountSid, $authToken);
     
         // Name for the conference
-        $conferenceName = 'MyConference'; // This should be the same for all calls you want to merge
+        $conferenceName = 'MyConference' . uniqid(); // This should be the same for all calls you want to merge
     
         try {
             // Redirect the call to the conference TwiML endpoint
@@ -200,6 +201,14 @@ class TwilioConferenceCallController extends Controller
                 'conferenceName' => $conferenceName
             ]);
 
+            $conferenceCall = ConferenceCall::create([
+                'name' => $conferenceName,
+                'status' => 'initiated',
+                'call_id' => $call->id 
+            ]);
+
+            Log::info("Conference Call saved to database: " . $conferenceCall); 
+
             // If a phone number is provided, dial out to this number and add to the conference
             if ($phoneNumber) {
                 $twiml = "<Response><Dial><Conference>{$conferenceName}</Conference></Dial></Response>";
@@ -213,6 +222,25 @@ class TwilioConferenceCallController extends Controller
                 Log::info("New participant added to conference", ['phoneNumber' => $phoneNumber, 'conferenceName' => $conferenceName, 'newCallSid' => $newCallResponse->sid]);
                 Log::info("Response from conversion to conference call: ", ['response' => $newCallResponse]);
             }
+
+            // Adding first and second legs with a default 'connected' status
+            foreach ([$firstLeg, $secondLeg] as $leg) {
+                if ($leg) {
+                    $conferenceCall->participants()->create([
+                        'call_sid' => $leg->sid,
+                        'status' => 'connected', // Default status for existing participants                        
+                    ]);
+                }
+            }
+
+            // Adding the third party with a 'ringing' status, if applicable
+            if (isset($newCallResponse)) {
+                $conferenceCall->participants()->create([
+                    'call_sid' => $newCallResponse->sid,
+                    'status' => 'ringing', // Specific status for the new call
+                ]);
+            }
+
                 
             // Log::info("Call made to: " . $call->to);
             Log::info("Call redirected to conference TwiML", ['callSid' => $callSid, 'conferenceName' => $conferenceName]);

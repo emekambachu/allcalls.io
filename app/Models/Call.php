@@ -7,6 +7,7 @@ use DateInterval;
 use DateTimeZone;
 use Carbon\Carbon;
 use DateTimeInterface;
+use App\Models\ConferenceCall;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Database\Eloquent\Model;
@@ -47,6 +48,13 @@ class Call extends Model
     {
         return $this->hasOne(InternalAgentMyBusiness::class, 'id', 'policy_id');
     }
+
+    // Conference Call instance for an existing call
+    public function conferenceCall()
+    {
+        return $this->hasMany(ConferenceCall::class);
+    }
+
 
 
     /**
