@@ -25,6 +25,8 @@ let showDialPad = ref(false);
 let conferenceTypedNumber = ref(null);
 let incomingCallSid = ref(null);
 let incomingCallSidTwo = ref(null);
+let thirdPartySid = ref('');
+let conferenceName = ref('');
 
 let showLowBalanceModal = ref(false);
 if (
@@ -639,6 +641,10 @@ let callNumber = () => {
       .post("/conference/convert/withNumber", payload)
       .then((response) => {
         console.log("Call initiated", response);
+        // Extract and store conferenceName and thirdPartySid from response
+        conferenceName.value = response.data.conferenceName;
+        thirdPartySid.value = response.data.thirdPartySid; 
+
         // Reset or handle post-call UI here
         showDialPad.value = false;
         conferenceTypedNumber.value = "";
@@ -651,6 +657,27 @@ let callNumber = () => {
     alert("Please enter a number to call.");
   }
 };
+
+let hangupThirdPartyCall = () => {
+  console.log('Conference Name:', conferenceName.value);
+  console.log('Third Party Call SID:', thirdPartySid.value);
+  
+  axios.post('/api/hangup-third-party', {
+    callSid: thirdPartySid.value, 
+    conferenceName: conferenceName.value,
+  })
+  .then(response => {
+    // Handle success
+    alert('Third-party call ended successfully.');
+  })
+  .catch(error => {
+    // Handle error
+    console.error('Error ending third-party call:', error);
+    alert('Failed to end third-party call.');
+    
+  });
+}
+
 
 onUnmounted(() => {
   unregisterTwilioDevice();
@@ -3339,10 +3366,10 @@ let appDownloadModal = ref(false);
           </button>
         </div>
 
-        <!-- Merge Calls Button -->
 
-        
-        <!-- <div class="py-3">
+
+        <!-- Merge Calls Button -->    
+        <div class="py-3">
           <button
             @click="showDialPad = !showDialPad"
             class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded"
@@ -3384,7 +3411,17 @@ let appDownloadModal = ref(false);
           >
             Call
           </button>
-        </div> -->
+
+        </div>
+          
+        <button
+          @click="hangupThirdPartyCall"
+          class="bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 rounded"
+        >
+          Hangup Third-Party
+        </button>
+        <!-- Merge Calls Button Ends -->    
+
       </div>
     </Modal>
 

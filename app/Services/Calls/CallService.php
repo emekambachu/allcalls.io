@@ -375,6 +375,7 @@ class CallService
             'calls_grouped_by_user' => $callsGroupedByUser,
             'calls_grouped_by_publisher_name' => $callsGroupedByPublisherName,
             'total_revenue' => round((float) $allCalls->sum('amount_spent'), 2),
+            'all_policies' => $this->policy->internalAgentMyBusiness()->count(),
             'per_page' => $perPage,
         ];
     }
