@@ -246,7 +246,12 @@ class TwilioConferenceCallController extends Controller
             // Log::info("Call made to: " . $call->to);
             Log::info("Call redirected to conference TwiML", ['callSid' => $callSid, 'conferenceName' => $conferenceName]);
     
-            return response()->json(['message' => 'Conference call setup complete. Conference name: ' . $conferenceName . ' Third party: ' . $newCallResponse->sid]);
+            return response()->json([
+                'message' => 'Conference call setup complete.',
+                'conferenceName' => $conferenceName,
+                'thirdPartySid' => $newCallResponse->sid,
+            ]);
+            
         } catch (\Exception $e) {
             Log::error("Error setting up conference call", ['error' => $e->getMessage()]);
             return response()->json(['error' => 'Failed to set up conference call', 'details' => $e->getMessage()], 500);
