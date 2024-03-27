@@ -43,6 +43,7 @@ use App\Http\Controllers\NotificationsAPIController;
 use App\Http\Controllers\OverseerResponseController;
 use App\Http\Controllers\CallDeviceActionsController;
 use App\Http\Controllers\AvailableAgentsAPIController;
+use App\Http\Controllers\OnScriptDelayedAPIController;
 use App\Http\Controllers\TwilioWebhookErrorController;
 use App\Http\Controllers\CallUserResponseAPIController;
 use App\Http\Controllers\CallTypesSelectedAPIController;
@@ -311,4 +312,4 @@ Route::post('/twilio-webhook-error', [TwilioWebhookErrorController::class, 'stor
 
 Route::post('/send/batch/sms/', [ZoomMeetingNotificationController::class, 'sendBatchTextMessages']);
 
-Route::get('/onscript/delay', [OnScriptController::class, 'delayDispatch']);
+Route::get('/onscript/delay', [OnScriptDelayedAPIController::class, 'delayDispatch']);
