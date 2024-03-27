@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\DeltaExecution;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class CheckDNCHealth extends Command
@@ -27,6 +28,8 @@ class CheckDNCHealth extends Command
      */
     public function handle()
     {
+        Log::debug('Checking the status of the DNC merge...');
+
         // First get all App\Models\DeltaExecution records for today in EST timezone:
         $today = now()->setTimezone('America/New_York')->format('Y-m-d');
         $formattedToday = now()->setTimezone('America/New_York')->format('m-d-Y'); // Format date as mm-dd-yyyy
