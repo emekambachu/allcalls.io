@@ -196,6 +196,10 @@ class TwilioConferenceCallController extends Controller
                     'phone_number' => $phoneNumber,
                     'is_third_party' => true
                 ]);
+
+                Log::info('Third Party is set to true and saved to DB ' . $thirdPartyParticipant);
+            } else {
+                Log::info('Third Party not found ');
             }
 
             // ConferenceCallThirdPartyRinging::dispatch($thirdPartyParticipant);
