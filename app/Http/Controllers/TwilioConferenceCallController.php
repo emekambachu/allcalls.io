@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\ConferenceCallThirdPartyRinging;
 use App\Models\Call;
 use Twilio\Rest\Client;
 use Illuminate\Http\Request;
 use App\Models\ConferenceCall;
 use Twilio\TwiML\VoiceResponse;
 use Illuminate\Support\Facades\Log;
+use App\Models\ConferenceParticipant;
+use App\Events\ConferenceCallThirdPartyRinging;
 
 class TwilioConferenceCallController extends Controller
 {
@@ -313,6 +314,12 @@ class TwilioConferenceCallController extends Controller
         $conferenceSid = $request->input('ConferenceSid');
         $status = $request->input('StatusCallbackEvent');
         $callSid = $request->input('CallSid'); // SID of the participant who triggered the event
+        $statusCallbackEvent = $request->input('StatusCallbackEvent');
+        $participantCallStatus = $request->input('ParticipantCallStatus');
+        $reasonParticipantLeft = $request->input('ReasonParticipantLeft');
+        $muted = $request->boolean('Muted') ? 1 : 0;
+        $hold = $request->boolean('Hold') ? 1 : 0;
+        $coaching = $request->boolean('Coaching') ? 1 : 0;
 
         Log::info("Conference SID: {$conferenceSid}, Status: {$status}, Call SID: {$callSid}");
 
@@ -331,7 +338,15 @@ class TwilioConferenceCallController extends Controller
 
             case 'participant-join':
                 // A participant has joined the conference
+                $this->updateParticipantStatus($callSid, [
+                    'status' => 'joined', // Assuming you have a 'joined' status
+                    'muted' => $muted,
+                    'hold' => $hold,
+                    'coaching' => $coaching,
+                    'call_status' => $participantCallStatus // Or another appropriate status
+                ]);
                 break;
+
             case 'participant-leave':
                 // A participant has left the conference
                 break;
@@ -343,6 +358,17 @@ class TwilioConferenceCallController extends Controller
 
         // Return a 200 OK response to Twilio
         return response()->json(['message' => 'Status callback received and logged']);
+    }
+
+    protected function updateParticipantStatus($callSid, $attributes)
+    {
+        $participant = ConferenceParticipant::where('sid', $callSid)->first();
+        if ($participant) {
+            $participant->update($attributes);
+            Log::info("Participant status updated", ['sid' => $callSid, 'attributes' => $attributes]);
+        } else {
+            Log::error("Participant not found", ['sid' => $callSid]);
+        }
     }
 
     public function hangUpThirdParty(Request $request)
