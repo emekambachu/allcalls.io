@@ -227,7 +227,7 @@ class TwilioConferenceCallController extends Controller
             foreach ([$firstLeg, $secondLeg] as $leg) {
                 if ($leg) {
                     $conferenceCall->participants()->create([
-                        'call_sid' => $leg->sid,
+                        'sid' => $leg->sid,
                         'status' => 'connected', // Default status for existing participants                        
                     ]);
                 }
@@ -236,7 +236,7 @@ class TwilioConferenceCallController extends Controller
             // Adding the third party with a 'ringing' status, if applicable
             if (isset($newCallResponse)) {
                 $conferenceCall->participants()->create([
-                    'call_sid' => $newCallResponse->sid,
+                    'sid' => $newCallResponse->sid,
                     'status' => 'ringing', // Specific status for the new call
                 ]);
             }
