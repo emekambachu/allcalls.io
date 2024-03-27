@@ -98,56 +98,6 @@ class TwilioConferenceCallController extends Controller
         }
     }
     
-
-
-    // public function convertToConferenceWithNewNumber(Request $request)
-    // {
-    //     // Extract callSid and phoneNumber from the request's JSON payload
-    //     $callSid = $request->json('callSid');
-    //     $phoneNumber = $request->json('phoneNumber');
-    
-    //     // Log the incoming request details
-    //     Log::info("Converting call to conference", ['callSid' => $callSid, 'phoneNumber' => $phoneNumber]);
-    
-    //     // Twilio credentials
-    //     $accountSid = env('TWILIO_SID');
-    //     $authToken = env('TWILIO_AUTH_TOKEN');
-    //     $twilioNumber = env('TWILIO_PHONE_NUMBER'); // Your Twilio number that can make calls
-    //     Log::info("Twilio credentials", ['accountSid' => $accountSid, 'authToken' => $authToken, 'twilioNumber' => $twilioNumber]);
-
-    //     $client = new Client($accountSid, $authToken);
-    
-    //     // Unique name for the conference
-    //     $conferenceName = 'Conference' . uniqid();
-    
-    //     // TwiML to join the ongoing call to a conference
-    //     $twiml = '<Response><Dial><Conference>' . htmlspecialchars($conferenceName) . '</Conference></Dial></Response>';
-    
-    //     try {
-    //         // Update the ongoing call to join the conference
-    //         $callUpdateResponse = $client->calls($callSid)
-    //             ->update(["twiml" => $twiml]);
-    
-    //         Log::info("Ongoing call updated to join conference", ['callSid' => $callSid, 'conferenceName' => $conferenceName]);
-    
-    //         // Create a new call to add the new participant to the same conference
-    //         $newCallResponse = $client->calls->create(
-    //             $phoneNumber, // The phone number to add to the conference
-    //             $twilioNumber, // A number in your Twilio account that can make calls
-    //             ["twiml" => $twiml]
-    //         );
-    
-    //         Log::info("New participant added to conference", ['phoneNumber' => $phoneNumber, 'conferenceName' => $conferenceName]);
-    
-    //     } catch (\Exception $e) {
-    //         // Log any errors
-    //         Log::error("Error converting call to conference", ['error' => $e->getMessage()]);
-    //         return response()->json(['message' => 'Failed to convert call to conference', 'error' => $e->getMessage()], 500);
-    //     }
-    
-    //     return response()->json(['message' => 'Call converted to conference and participant added']);
-    // }
-    
     public function convertToConferenceWithNewNumber(Request $request)
     {
         // Validate the request parameters
@@ -201,10 +151,12 @@ class TwilioConferenceCallController extends Controller
                 'conferenceName' => $conferenceName
             ]);
 
-            $conferenceCall = ConferenceCall::create([
+            // Attempt to find or create the conference call
+            $conferenceCall = ConferenceCall::firstOrCreate([
                 'name' => $conferenceName,
+            ], [
                 'status' => 'initiated',
-                'call_id' => $call->id 
+                'call_id' => $call->id,
             ]);
 
             Log::info("Conference Call saved to database: " . $conferenceCall); 
@@ -223,25 +175,27 @@ class TwilioConferenceCallController extends Controller
                 Log::info("Response from conversion to conference call: ", ['response' => $newCallResponse]);
             }
 
-            // Adding first and second legs with a default 'connected' status
-            foreach ([$firstLeg, $secondLeg] as $leg) {
-                if ($leg) {
-                    $conferenceCall->participants()->create([
-                        'sid' => $leg->sid,
-                        'status' => 'connected', // Default status for existing participants                        
-                    ]);
+
+            // Check and add/update participants
+            $participants = [$firstLeg, $secondLeg, isset($newCallResponse) ? $newCallResponse : null];
+            foreach ($participants as $participant) {
+                if ($participant) {
+                    $existingParticipant = $conferenceCall->participants()->where('sid', $participant->sid)->first();
+                    if ($existingParticipant) {
+                        // Update existing participant if already in this conference
+                        $existingParticipant->update([
+                            'status' => $participant === $newCallResponse ? 'ringing' : 'connected',
+                        ]);
+                    } else {
+                        // Add new participant to this conference
+                        $conferenceCall->participants()->create([
+                            'sid' => $participant->sid,
+                            'status' => $participant === $newCallResponse ? 'ringing' : 'connected',
+                            'phone_number' => $participant === $newCallResponse ? $phoneNumber : null,
+                        ]);
+                    }
                 }
             }
-
-            // Adding the third party with a 'ringing' status, if applicable
-            if (isset($newCallResponse)) {
-                $conferenceCall->participants()->create([
-                    'sid' => $newCallResponse->sid,
-                    'status' => 'ringing', // Specific status for the new call
-                    'phone_number' => $phoneNumber
-                ]);
-            }
-
                 
             // Log::info("Call made to: " . $call->to);
             Log::info("Call redirected to conference TwiML", ['callSid' => $callSid, 'conferenceName' => $conferenceName]);
@@ -359,7 +313,7 @@ class TwilioConferenceCallController extends Controller
                     ]);
                 }
                 break;
-                
+
             case 'participant-join':
                 // A participant has joined the conference
                 break;
