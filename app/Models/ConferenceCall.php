@@ -11,6 +11,9 @@ class ConferenceCall extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['name', 'conference_sid', 'status', 'call_id'];
+
+
     public function call()
     {
         return $this->belongsTo(Call::class);
