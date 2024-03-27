@@ -606,6 +606,13 @@ onMounted(() => {
   );
 
   setupTwilioDevice();
+
+  Echo.channel('conference-call')
+    .listen('ConferenceCallThirdPartyRinging', (e) => {
+      console.log("Ringing event for third party came in! " + JSON.stringify(e.participant));
+        // Update your UI here based on the received participant data
+    });
+
 });
 
 let mergeCallsToConference = () => {

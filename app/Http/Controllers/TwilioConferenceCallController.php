@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ConferenceCallThirdPartyRinging;
 use App\Models\Call;
 use Twilio\Rest\Client;
 use Illuminate\Http\Request;
@@ -152,7 +153,7 @@ class TwilioConferenceCallController extends Controller
             ]);
 
             // Attempt to find or create the conference call
-            $conferenceCall = ConferenceCall::updateOrCreate([
+            $conferenceCall = ConferenceCall::firstOrCreate([
                 'name' => $conferenceName,
             ], [
                 'status' => 'initiated',
@@ -175,26 +176,40 @@ class TwilioConferenceCallController extends Controller
                 Log::info("Response from conversion to conference call: ", ['response' => $newCallResponse]);
             }
 
-
-            // Check and add/update participants
-            $participants = [$firstLeg, $secondLeg, isset($newCallResponse) ? $newCallResponse : null];
-            foreach ($participants as $participant) {
-                if ($participant) {
-                    $existingParticipant = $conferenceCall->participants()->where('sid', $participant->sid)->first();
-                    if ($existingParticipant) {
-                        // Update existing participant if already in this conference
-                        $existingParticipant->update([
-                            'status' => $participant === $newCallResponse ? 'ringing' : 'connected',
-                        ]);
-                    } else {
-                        // Add new participant to this conference
-                        $conferenceCall->participants()->updateOrCreate([
-                            'sid' => $participant->sid,
-                            'status' => $participant === $newCallResponse ? 'ringing' : 'connected',
-                            'phone_number' => $participant === $newCallResponse ? $phoneNumber : null,
-                        ]);
-                    }
+            // Adding first and second legs with a default 'connected' status
+            foreach ([$firstLeg, $secondLeg] as $leg) {
+                if ($leg) {
+                    $conferenceCall->participants()->create([
+                        'sid' => $leg->sid,
+                        'status' => 'connected', // Default status for existing participants                        
+                    ]);
                 }
+            }
+
+            // Adding the third party with a 'ringing' status, if applicable
+            if (isset($newCallResponse)) {
+                $thirdPartyParticipant = $conferenceCall->participants()->create([
+                    'sid' => $newCallResponse->sid,
+                    'status' => 'ringing', // Specific status for the new call
+                    'phone_number' => $phoneNumber
+                ]);
+            }
+
+            // ConferenceCallThirdPartyRinging::dispatch($thirdPartyParticipant);
+            try {
+                // Dispatch the event
+                ConferenceCallThirdPartyRinging::dispatch($thirdPartyParticipant);
+                
+                // Log successful dispatch
+                Log::info('ConferenceCallThirdPartyRinging event dispatched successfully.', [
+                    'participant_id' => $thirdPartyParticipant->id,
+                ]);
+            } catch (\Exception $e) {
+                // Log any exceptions that occur during dispatch
+                Log::error('Error dispatching ConferenceCallThirdPartyRinging event.', [
+                    'error_message' => $e->getMessage(),
+                    'participant_id' => isset($thirdPartyParticipant) ? $thirdPartyParticipant->id : 'N/A',
+                ]);
             }
                 
             // Log::info("Call made to: " . $call->to);
