@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use DateTime;
+use Exception;
 use Illuminate\Http\Request;
 use App\Jobs\SendCallsToOnScriptAfterFiveMinutes;
 
@@ -14,9 +16,9 @@ class OnScriptDelayedAPIController extends Controller
 
         // Parse the timestamp and format it
         try {
-            $timestampDateTime = new \DateTime($request->query('timestamp'));
+            $timestampDateTime = new DateTime($request->query('timestamp'));
             $formattedTimestamp = $timestampDateTime->format('Y-m-d H:i:s');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Handle the case where the timestamp format is invalid
             return response()->json(['error' => 'Invalid timestamp format'], 400);
         }
