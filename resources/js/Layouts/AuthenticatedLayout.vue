@@ -617,6 +617,14 @@ onMounted(() => {
         conferenceCallStatus.value = 'ringing';
     });
 
+    Echo.channel('conference-call')
+    .listen('ConferenceCallThirdPartyJoined', (e) => {
+      console.log("Joined event for third party came in! " + JSON.stringify(e.participant));
+      
+      // Update your UI here based on the received participant data
+        conferenceCallStatus.value = 'ringing';
+    });
+
 });
 
 let mergeCallsToConference = () => {

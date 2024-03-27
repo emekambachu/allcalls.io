@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ConferenceCallThirdPartyJoined;
 use App\Models\Call;
 use Twilio\Rest\Client;
 use Illuminate\Http\Request;
@@ -192,7 +193,8 @@ class TwilioConferenceCallController extends Controller
                 $thirdPartyParticipant = $conferenceCall->participants()->create([
                     'sid' => $newCallResponse->sid,
                     'status' => 'ringing', // Specific status for the new call
-                    'phone_number' => $phoneNumber
+                    'phone_number' => $phoneNumber,
+                    'is_third_party' => true
                 ]);
             }
 
@@ -338,6 +340,8 @@ class TwilioConferenceCallController extends Controller
 
             case 'participant-join':
                 // A participant has joined the conference
+                $participant = ConferenceParticipant::where('sid', $callSid)->first();
+                
                 $this->updateParticipantStatus($callSid, [
                     'status' => 'joined', // Assuming you have a 'joined' status
                     'muted' => $muted,
@@ -345,6 +349,12 @@ class TwilioConferenceCallController extends Controller
                     'coaching' => $coaching,
                     'call_status' => $participantCallStatus // Or another appropriate status
                 ]);
+
+                // Check if the participant is the third-party participant
+                if ($participant->is_third_party) {
+                    // Dispatch your custom event for third-party participant join
+                    ConferenceCallThirdPartyJoined::dispatch($participant);
+                }
                 break;
 
             case 'participant-leave':
