@@ -340,6 +340,7 @@ class TwilioConferenceCallController extends Controller
         Log::info('Conference status callback received', $requestData);
 
         // You can also extract and log specific parts of the request, if needed
+        $conferenceName = $request->input('FriendlyName');
         $conferenceSid = $request->input('ConferenceSid');
         $status = $request->input('StatusCallbackEvent');
         $callSid = $request->input('CallSid'); // SID of the participant who triggered the event
@@ -350,7 +351,15 @@ class TwilioConferenceCallController extends Controller
         switch ($status) {
             case 'conference-start':
                 // The conference has started
+                $conference = ConferenceCall::where('name', $conferenceName)->first();
+                if ($conference) {
+                    $conference->update([
+                        'conference_sid' => $conferenceSid,
+                        'status' => 'active', // Assuming 'active' is a valid status in your application
+                    ]);
+                }
                 break;
+                
             case 'participant-join':
                 // A participant has joined the conference
                 break;
