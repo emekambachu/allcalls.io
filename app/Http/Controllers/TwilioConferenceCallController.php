@@ -238,6 +238,7 @@ class TwilioConferenceCallController extends Controller
                 $conferenceCall->participants()->create([
                     'sid' => $newCallResponse->sid,
                     'status' => 'ringing', // Specific status for the new call
+                    'phone_number' => $phoneNumber
                 ]);
             }
 
@@ -245,7 +246,7 @@ class TwilioConferenceCallController extends Controller
             // Log::info("Call made to: " . $call->to);
             Log::info("Call redirected to conference TwiML", ['callSid' => $callSid, 'conferenceName' => $conferenceName]);
     
-            return response()->json(['message' => 'Conference call setup complete.']);
+            return response()->json(['message' => 'Conference call setup complete. Conference name: ' . $conferenceName . ' Third party: ' . $newCallResponse->sid]);
         } catch (\Exception $e) {
             Log::error("Error setting up conference call", ['error' => $e->getMessage()]);
             return response()->json(['error' => 'Failed to set up conference call', 'details' => $e->getMessage()], 500);
@@ -363,36 +364,35 @@ class TwilioConferenceCallController extends Controller
 
     public function hangUpThirdParty(Request $request)
     {
-        // Your Twilio Account SID and Auth Token from twilio.com/console
-        $accountSid = env('TWILIO_SID'); 
+        // Your Twilio Account SID and Auth Token
+        $accountSid = env('TWILIO_SID');
         $authToken = env('TWILIO_AUTH_TOKEN');
-    
-        // Instantiate a new Twilio Rest Client
         $client = new Client($accountSid, $authToken);
     
-        // Retrieve Conference SID and Call SID of the third-party participant from the request
-        $conferenceSid = $request->input('conferenceSid');
         $callSid = $request->input('callSid');
+        $conferenceName = $request->input('conferenceName');
+    
+        if ($conferenceName) {
+            // Retrieve the conference SID using the conference name
+            $conference = ConferenceCall::where('name', $conferenceName)->first();
+            if (!$conference) {
+                return response()->json(['error' => 'Conference not found'], 404);
+            }
+            $conferenceSid = $conference->conference_sid;
+        } else {
+            $conferenceSid = $request->input('conferenceSid');
+        }
     
         try {
-            // Use the Twilio REST API to remove the participant from the conference
-            $client->conferences($conferenceSid)
-                   ->participants($callSid)
-                   ->delete();
-    
-            // Since delete() does not return a response, assume successful deletion if no exception was thrown
+            $client->conferences($conferenceSid)->participants($callSid)->delete();
             return response()->json(['message' => 'Call with third party ended successfully.']);
         } catch (\Exception $e) {
-            // Log and return the exception details
             Log::error('Error ending call with third party', [
                 'conferenceSid' => $conferenceSid, 
                 'callSid' => $callSid, 
                 'error' => $e->getMessage()
             ]);
-    
             return response()->json(['error' => 'Failed to end call with third party', 'details' => $e->getMessage()], 500);
         }
-    }
-    
-
+    }    
 }
