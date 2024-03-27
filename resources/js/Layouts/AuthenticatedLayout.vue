@@ -27,6 +27,8 @@ let incomingCallSid = ref(null);
 let incomingCallSidTwo = ref(null);
 let thirdPartySid = ref('');
 let conferenceName = ref('');
+let conferenceCallStatus = ref(null);
+let isConferenceCallInitiated = ref(false);
 
 let showLowBalanceModal = ref(false);
 if (
@@ -610,7 +612,9 @@ onMounted(() => {
   Echo.channel('conference-call')
     .listen('ConferenceCallThirdPartyRinging', (e) => {
       console.log("Ringing event for third party came in! " + JSON.stringify(e.participant));
-        // Update your UI here based on the received participant data
+      
+      // Update your UI here based on the received participant data
+        conferenceCallStatus.value = 'ringing';
     });
 
 });
@@ -642,6 +646,9 @@ let callNumber = () => {
       callSid: incomingCallSid.value,
       phoneNumber: conferenceTypedNumber.value,
     };
+
+    isConferenceCallInitiated.value = true;
+    conferenceCallStatus.value = "initiated";
 
     // Send the payload to your endpoint
     axios
@@ -3420,6 +3427,9 @@ let appDownloadModal = ref(false);
           </button>
 
         </div>
+
+        <div v-if="callStatus === 'initiated'">Third Party: Call Initiated...</div>
+        <div v-if="callStatus === 'ringing'">Third Party: Ringing...</div>
           
         <button
           @click="hangupThirdPartyCall"
