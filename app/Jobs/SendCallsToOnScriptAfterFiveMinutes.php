@@ -19,7 +19,6 @@ class SendCallsToOnScriptAfterFiveMinutes implements ShouldQueue
     public $url;
     public $timestamp;
     public $disposition;
-    public $agentId;
     public $clientPhone;
     // public $delay = 5; // Delay the job execution by 300 seconds (5 seconds)
 
@@ -28,13 +27,12 @@ class SendCallsToOnScriptAfterFiveMinutes implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($agentName, $url, $timestamp, $disposition, $agentId, $clientPhone)
+    public function __construct($agentName, $url, $timestamp, $disposition, $clientPhone)
     {
         $this->agentName = $agentName;
         $this->url = $url;
         $this->timestamp = $timestamp;
         $this->disposition = $disposition;
-        $this->agentId = $agentId;
         $this->clientPhone = $clientPhone;
     }
 
@@ -50,7 +48,6 @@ class SendCallsToOnScriptAfterFiveMinutes implements ShouldQueue
             'url' => $this->url,
             'timestamp' => $this->timestamp,
             'disposition' => $this->disposition,
-            'agentId' => $this->agentId,
             'clientPhone' => $this->clientPhone,
         ]);
 
@@ -59,7 +56,6 @@ class SendCallsToOnScriptAfterFiveMinutes implements ShouldQueue
             'url' => $this->url,
             'timestamp' => $this->timestamp,
             'disposition' => $this->disposition,
-            'agent_id' => $this->agentId,
             'client_phone' => $this->clientPhone,
             // Include the API key if needed, assuming it's stored as an environment variable
             'api_key' => env('ONSCRIPT_AI_API_KEY'),
