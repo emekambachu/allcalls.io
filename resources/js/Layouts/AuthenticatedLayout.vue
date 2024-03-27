@@ -3339,10 +3339,10 @@ let appDownloadModal = ref(false);
           </button>
         </div>
 
-        <!-- Merge Calls Button -->
 
-        
-        <!-- <div class="py-3">
+
+        <!-- Merge Calls Button -->    
+        <div class="py-3">
           <button
             @click="showDialPad = !showDialPad"
             class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded"
@@ -3384,7 +3384,9 @@ let appDownloadModal = ref(false);
           >
             Call
           </button>
-        </div> -->
+        </div>
+        <!-- Merge Calls Button Ends -->    
+
       </div>
     </Modal>
 
