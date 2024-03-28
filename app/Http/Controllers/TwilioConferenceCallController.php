@@ -171,7 +171,12 @@ class TwilioConferenceCallController extends Controller
                 $newCallResponse = $client->calls->create(
                     $phoneNumber, // The phone number to call and add to the conference
                     $twilioNumber, // Your Twilio number
-                    ["twiml" => $twiml]
+                    // ["twiml" => $twiml]
+                    [
+                        "twiml" => $twiml,
+                        "StatusCallback" => route('conference.statusCallback'),
+                        "StatusCallbackEvent" => ["initiated", "ringing", "answered", "completed"]
+                    ]
                 );
 
                 Log::info("New participant added to conference", ['phoneNumber' => $phoneNumber, 'conferenceName' => $conferenceName, 'newCallSid' => $newCallResponse->sid]);

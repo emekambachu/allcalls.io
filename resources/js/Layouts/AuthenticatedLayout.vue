@@ -3400,7 +3400,7 @@ let appDownloadModal = ref(false);
             @click="showDialPad = !showDialPad"
             class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded"
           >
-            Merge Calls
+            Add Call
           </button>
         </div>
 
