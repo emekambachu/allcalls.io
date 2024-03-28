@@ -394,13 +394,15 @@ class CallService
             // Get total policies, pending policies, declined policies,
             // simplified issue policies, and guaranteed issue policies
             // using the InternalAgentMyBusinessService class
+
             $totalApprovedPolicies = $this->policy->internalAgentMyBusinessByAgentId($user->id)
                 ->whereNotIn('status', ['Declined', 'Carrier Missing Information'])->count();
             $totalPolicies = $this->policy->internalAgentMyBusinessByAgentId($user->id)->count();
             $totalPendingPolicies = $this->policy->internalAgentMyBusinessByAgentId($user->id)
-                ->where('status', 'Pending/Approved')->count();
+                ->where('status', 'Approved')->count();
             $totalDeclinedPolicies = $this->policy->internalAgentMyBusinessByAgentId($user->id)
-                ->whereIn('status', ['Declined', 'Cancelled', 'Withdrawn'])->count();
+                ->whereIn('status', ['Declined', 'Cancelled/Withdrawn'])->count();
+
             $totalSiPolicies = $this->policy->internalAgentMyBusinessByAgentId($user->id)
                 ->where('status', 'Sale - Simplified Issue')->count();
             $totalGiPolicies = $this->policy->internalAgentMyBusinessByAgentId($user->id)

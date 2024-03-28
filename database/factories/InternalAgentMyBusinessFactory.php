@@ -24,7 +24,6 @@ class InternalAgentMyBusinessFactory extends Factory
             ->has('clients')
             ->has('calls')
             ->inRandomOrder()->first();
-//        $agent = $user->with('clients')->has('clients')->inRandomOrder()->first();
         $client = $agent && $agent->clients ? $agent->clients->first() : null;
         $clientStateId = State::inRandomOrder()->first()->id;
 
@@ -33,7 +32,16 @@ class InternalAgentMyBusinessFactory extends Factory
             'agent_full_name' => $agent->first_name . ' ' . $agent->last_name,
             'agent_email' => $agent->email,
             'insurance_company' => $this->faker->company,
-            'status' => $this->faker->randomElement(['Submitted', 'Approved', 'Declined', 'Cancelled', 'Withdrawn']),
+            'status' => $this->faker->randomElement([
+                'Submitted',
+                'Approved',
+                'Declined',
+                'Paid',
+                'Lapsed',
+                'Cancelled/Withdrawn',
+                'Returned Payment',
+                'Carrier Missing Information',
+            ]),
             'label' => $this->faker->word,
             'product_name' => $this->faker->randomElement(['Whole Life', 'Term Life', 'Final Expense', 'Medicare Supplement', 'Annuity']),
             'application_date' => $this->faker->date(),
