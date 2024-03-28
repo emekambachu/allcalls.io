@@ -403,10 +403,19 @@ class CallService
             $totalDeclinedPolicies = $this->policy->internalAgentMyBusinessByAgentId($user->id)
                 ->whereIn('status', ['Declined', 'Cancelled/Withdrawn'])->count();
 
+            // correct this, these status are from clients and not from InternalAgentMyBusiness
             $totalSiPolicies = $this->policy->internalAgentMyBusinessByAgentId($user->id)
-                ->where('status', 'Sale - Simplified Issue')->count();
+                ->with('client')
+                ->whereHas('client', function ($query) {
+                    $query->where('status', 'Sale - Simplified Issue');
+                })->count();
+
             $totalGiPolicies = $this->policy->internalAgentMyBusinessByAgentId($user->id)
-                ->where('status', 'Sale - Guaranteed Issue')->count();
+                ->with('client')
+                ->whereHas('client', function ($query) {
+                    $query->where('status', 'Sale - Guaranteed Issue');
+                })->count();
+
             $percentGiPolicies = $totalApprovedPolicies > 0 ? ($totalGiPolicies / $totalApprovedPolicies) * 100 : 0;
             $percentSiPolicies = $totalApprovedPolicies > 0 ? ($totalSiPolicies / $totalApprovedPolicies) * 100 : 0;
 
