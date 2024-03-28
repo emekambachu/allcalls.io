@@ -342,6 +342,26 @@ const agentColumns = ref([
             return call.totalGiPolicies;
         },
     },
+
+    {
+        label: "% of SI Policies",
+        name: "percentSiPolicies",
+        visible: true,
+        sortable: true,
+        render(call) {
+            return call.percentSiPolicies.toFixed(2)+'%';
+        },
+    },
+
+    {
+        label: "% of GI Policies",
+        name: "percentGiPolicies",
+        visible: true,
+        sortable: true,
+        render(call) {
+            return call.percentGiPolicies.toFixed(2)+'%';
+        },
+    },
 ]);
 
 const publisherColumns = ref([
@@ -606,6 +626,8 @@ let summaryFooterRow = computed(() => {
   let totalDeclinedPolicies = 0;
   let totalSiPolicies = 0;
   let totalGiPolicies = 0;
+  let percentSiPolicies = 0;
+  let percentGiPolicies = 0;
 
   for (const userId in maxmizedCallsGroupedByUser.value) {
     const userData = maxmizedCallsGroupedByUser.value[userId];
@@ -618,6 +640,8 @@ let summaryFooterRow = computed(() => {
     totalDeclinedPolicies += userData.totalDeclinedPolicies;
     totalSiPolicies += userData.totalSiPolicies;
     totalGiPolicies += userData.totalGiPolicies;
+    percentGiPolicies += userData.percentGiPolicies;
+    percentSiPolicies += userData.percentSiPolicies;
   }
 
   let averageCallLength = totalCalls > 0 ? totalCallLength / totalCalls : 0;
@@ -636,6 +660,8 @@ let summaryFooterRow = computed(() => {
     totalDeclinedPolicies: totalDeclinedPolicies,
     totalSiPolicies: totalSiPolicies,
     totalGiPolicies: totalGiPolicies,
+    percentSiPolicies: percentSiPolicies,
+    percentGiPolicies: percentGiPolicies,
   };
 });
 
