@@ -2,18 +2,19 @@
 
 namespace App\Jobs;
 
-use App\Models\EquisDuplicate;
-use App\Models\State;
+use Exception;
 use Carbon\Carbon;
+use App\Models\State;
+use App\Mail\EquisApiError;
 use Illuminate\Bus\Queueable;
+use App\Models\EquisDuplicate;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\EquisApiError;
 
 class EquisAPIJob implements ShouldQueue
 {
@@ -33,7 +34,15 @@ class EquisAPIJob implements ShouldQueue
         ]);
         $this->user = $user;
         $this->partnerUniqueId = "AC" . $this->user->id;
-        $this->managerPartnerUniqueId = "AC636";
+
+        if ($this->user->invited_by) {
+            $this->managerPartnerUniqueId = "AC" . $this->user->invited_by;
+        } else {
+            throw new Exception('This user does not have an invited by person.');
+            // $this->managerPartnerUniqueId = "AC73";
+        }
+
+        // $this->managerPartnerUniqueId = "AC636";
         // $this->managerPartnerUniqueId = "AC71";
 //        $this->managerPartnerUniqueId = isset($this->user->invitedBy) && isset($this->user->invitedBy->upline_id) ? $this->user->invitedBy->upline_id : null;
     }
