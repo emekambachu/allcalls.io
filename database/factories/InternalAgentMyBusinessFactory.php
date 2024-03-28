@@ -19,7 +19,12 @@ class InternalAgentMyBusinessFactory extends Factory
     public function definition(): array
     {
         $user = new User();
-        $agent = $user->with('clients')->has('clients')->inRandomOrder()->first();
+        // user with calls and clients relationship
+        $agent = $user->with('clients', 'calls')
+            ->has('clients')
+            ->has('calls')
+            ->inRandomOrder()->first();
+//        $agent = $user->with('clients')->has('clients')->inRandomOrder()->first();
         $client = $agent && $agent->clients ? $agent->clients->first() : null;
         $clientStateId = State::inRandomOrder()->first()->id;
 
