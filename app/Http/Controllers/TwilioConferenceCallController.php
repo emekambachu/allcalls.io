@@ -31,7 +31,7 @@ class TwilioConferenceCallController extends Controller
         $dial->conference($conferenceName, [
             'waitUrl' => 'http://twimlets.com/holdmusic?Bucket=com.twilio.music.classical',
             'statusCallback' => $statusCallbackUrl,
-            'statusCallbackEvent' => 'start join leave end'
+            'statusCallbackEvent' => 'initiated ringing answered completed start join leave end'
         ]);
 
         Log::info("Generated TwiML", ['twiml' => (string) $response]);
