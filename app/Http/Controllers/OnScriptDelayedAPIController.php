@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use DateTime;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Jobs\SendCallsToOnScriptAfterFiveMinutes;
 
 class OnScriptDelayedAPIController extends Controller
 {
     public function delayDispatch(Request $request)
     {
+        Log::debug('OnScriptDelayedAPIController:delayDispatch', $request->all());
+
         $agentName = $request->query('agent_name');
         $url = $request->query('url');
 
