@@ -50,7 +50,7 @@ class EquisAPIJob implements ShouldQueue
             'grant_type' => 'client_credentials',
             'client_id' => $clientId,
             'client_secret' => $clientSecret,
-            'scope' => 'https://equisfinancialb2c.onmicrosoft.com/equis-partner-api-uat/.default'
+            'scope' => env('EQUIS_SCOPE'),
         ]);
 
         Log::debug('equis-api-job:token response:', [
