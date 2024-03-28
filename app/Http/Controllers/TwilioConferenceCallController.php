@@ -31,7 +31,7 @@ class TwilioConferenceCallController extends Controller
         $dial->conference($conferenceName, [
             'waitUrl' => 'http://twimlets.com/holdmusic?Bucket=com.twilio.music.classical',
             'statusCallback' => $statusCallbackUrl,
-            'statusCallbackEvent' => 'initiated ringing answered completed start join leave end'
+            'statusCallbackEvent' => 'start join leave end'
         ]);
 
         Log::info("Generated TwiML", ['twiml' => (string) $response]);
@@ -171,7 +171,12 @@ class TwilioConferenceCallController extends Controller
                 $newCallResponse = $client->calls->create(
                     $phoneNumber, // The phone number to call and add to the conference
                     $twilioNumber, // Your Twilio number
-                    ["twiml" => $twiml]
+                    // ["twiml" => $twiml]
+                    [
+                        "twiml" => $twiml,
+                        "StatusCallback" => route('conference.statusCallback'),
+                        "StatusCallbackEvent" => ["initiated", "ringing", "answered", "completed"]
+                    ]
                 );
 
                 Log::info("New participant added to conference", ['phoneNumber' => $phoneNumber, 'conferenceName' => $conferenceName, 'newCallSid' => $newCallResponse->sid]);
