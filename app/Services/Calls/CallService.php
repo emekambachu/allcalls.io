@@ -375,6 +375,7 @@ class CallService
             'calls_grouped_by_user' => $callsGroupedByUser,
             'calls_grouped_by_publisher_name' => $callsGroupedByPublisherName,
             'total_revenue' => round((float) $allCalls->sum('amount_spent'), 2),
+            'all_policies' => $this->policy->internalAgentMyBusiness()->count(),
             'per_page' => $perPage,
         ];
     }
@@ -393,16 +394,30 @@ class CallService
             // Get total policies, pending policies, declined policies,
             // simplified issue policies, and guaranteed issue policies
             // using the InternalAgentMyBusinessService class
+
+            $totalApprovedPolicies = $this->policy->internalAgentMyBusinessByAgentId($user->id)
+                ->whereNotIn('status', ['Declined', 'Carrier Missing Information'])->count();
             $totalPolicies = $this->policy->internalAgentMyBusinessByAgentId($user->id)->count();
             $totalPendingPolicies = $this->policy->internalAgentMyBusinessByAgentId($user->id)
-                ->where('status', 'Pending/Approved')->count();
+                ->where('status', 'Approved')->count();
             $totalDeclinedPolicies = $this->policy->internalAgentMyBusinessByAgentId($user->id)
-                ->whereIn('status', ['Declined', 'Cancelled', 'Withdrawn'])->count();
-            $totalSiPolicies = $this->policy->internalAgentMyBusinessByAgentId($user->id)
-                ->where('status', 'Sale - Simplified Issue')->count();
-            $totalGiPolicies = $this->policy->internalAgentMyBusinessByAgentId($user->id)
-                ->where('status', 'Sale - Guaranteed Issue')->count();
+                ->whereIn('status', ['Declined', 'Cancelled/Withdrawn'])->count();
 
+            // correct this, these status are from clients and not from InternalAgentMyBusiness
+            $totalSiPolicies = $this->policy->internalAgentMyBusinessByAgentId($user->id)
+                ->with('client')
+                ->whereHas('client', function ($query) {
+                    $query->where('status', 'Sale - Simplified Issue');
+                })->count();
+
+            $totalGiPolicies = $this->policy->internalAgentMyBusinessByAgentId($user->id)
+                ->with('client')
+                ->whereHas('client', function ($query) {
+                    $query->where('status', 'Sale - Guaranteed Issue');
+                })->count();
+
+            $percentGiPolicies = $totalApprovedPolicies > 0 ? ($totalGiPolicies / $totalApprovedPolicies) * 100 : 0;
+            $percentSiPolicies = $totalApprovedPolicies > 0 ? ($totalSiPolicies / $totalApprovedPolicies) * 100 : 0;
 
             // Manual filtering for pending and declined policies
 //            $totalPendingPolicies = $calls->filter(function ($call) {
@@ -436,6 +451,8 @@ class CallService
                 'totalDeclinedPolicies' => $totalDeclinedPolicies,
                 'totalSiPolicies' => $totalSiPolicies,
                 'totalGiPolicies' => $totalGiPolicies,
+                'percentGiPolicies' => $percentGiPolicies,
+                'percentSiPolicies' => $percentSiPolicies,
             ];
         });
     }

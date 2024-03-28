@@ -19,11 +19,11 @@ return new class extends Migration
                 ->cascadeOnDelete();
             $table->string('agent_full_name');
             $table->string('agent_email');
-            $table->string('ef_number');
-            $table->string('upline_manager');
-            $table->boolean('split_sale');
+//            $table->string('ef_number');
+//            $table->string('upline_manager');
+//            $table->boolean('split_sale');
             $table->string('split_sale_type')->nullable();
-            $table->string('split_agent_email');
+//            $table->string('split_agent_email');
             $table->string('insurance_company');
             $table->string('status')->nullable();
             $table->text('label')->nullable();
@@ -38,7 +38,7 @@ return new class extends Migration
             $table->string('carrier_writing_number')->nullable();
             $table->string('this_app_from_lead');
             $table->string('source_of_lead')->nullable();
-            $table->string('appointment_type');
+            //$table->string('appointment_type');
             $table->date('policy_draft_date');
             $table->foreignId('client_id')
                 ->nullable()

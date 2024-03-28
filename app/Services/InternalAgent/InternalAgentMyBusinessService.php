@@ -20,4 +20,9 @@ class InternalAgentMyBusinessService
     {
         return $this->internalAgentMyBusiness()->where('agent_id', $agentId);
     }
+
+    public function policiesWithNoAgent()
+    {
+        return $this->internalAgentMyBusiness()->whereNull('agent_id')->get();
+    }
 }
