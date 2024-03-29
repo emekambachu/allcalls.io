@@ -252,10 +252,10 @@ class AgentBusinessController extends Controller
             'agents' => $agents
         ]);
     }
-    public function fetchClient($id)
+    public function fetchClient()
     {
         try {
-            $clients = Client::where('user_id', $id)->where('unlocked', true)->get();
+            $clients = Client::where('unlocked', true)->get();
             return response()->json([
                 'clients' => $clients,
                 'status' => 200

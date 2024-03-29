@@ -115,8 +115,8 @@ let updateFormAndDisableElement = (
     applicationDate.value = true;
   }
 };
-const fetchaClientsData = (id) => {
-  axios.get(`/admin/fetch-clients/${id}`)
+const fetchaClientsData = () => {
+  axios.get(`/admin/fetch-clients`)
     .then((res) => {
       // console.log('res', res);
       ClientsData.value = res.data.clients
@@ -176,9 +176,9 @@ if (props.businessData) {
     form.value.client_id = props.businessData?.client.id;
     form.value.client_full_name = props.businessData?.client.first_name + " " + props.businessData?.client.last_name;
   }
-  if (page.props.auth.role === "admin") {
-    fetchaClientsData(form.value.agent_id)
-  }
+  // if (page.props.auth.role === "admin") {
+  //   fetchaClientsData()
+  // }
   // form.value.client_id = props.businessData?.client.id
 
   // if (props.businessData.this_app_from_lead == 'NO') {
@@ -550,21 +550,12 @@ let filteredBusiness = computed(() => {
 });
 
 let filteredClients = computed(() => {
-  if (page.props.auth.role === "admin") {
-    return ClientsData.value.filter((user) => {
-      return user.phone.toLowerCase().includes(search2.value.toLowerCase());
-      // ||
-      //  user.first_name.toLowerCase().includes(search2.value) ||
-      //  user.last_name.toLowerCase().includes(search2.value)
-    });
-  } else {
     return props.clients.filter((user) => {
       return user.phone.toLowerCase().includes(search2.value.toLowerCase());
       // ||
       //  user.first_name.toLowerCase().includes(search2.value) ||
       //  user.last_name.toLowerCase().includes(search2.value)
     });
-  }
 
 
   // const sanitizedSearch = search2.value.replace(/\D/g, ''); // Remove non-digit characters
@@ -727,13 +718,13 @@ const handleOutsideClick = (event) => {
   // }
 };
 let selectagent = (agent) => {
-  if (form.value.agent_id !== agent.id) {
+  // if (form.value.agent_id !== agent.id) {
     form.value.agent_full_name = agent.first_name + " " + agent.last_name;
     form.value.agent_email = agent.email;
     form.value.agent_id = agent.id;
-    clearClient()
-    fetchaClientsData(agent.id)
-  }
+    // clearClient()
+    // fetchaClientsData()
+  // }
   // console.log("form.value", form.value);
   isOpen.value = false;
 
