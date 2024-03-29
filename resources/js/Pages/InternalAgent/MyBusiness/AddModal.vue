@@ -734,7 +734,6 @@ let selectagent = (agent) => {
     clearClient()
     fetchaClientsData(agent.id)
   }
-
   // console.log("form.value", form.value);
   isOpen.value = false;
 
