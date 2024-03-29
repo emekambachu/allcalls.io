@@ -100,7 +100,8 @@ class AgentBusinessController extends Controller
             ], 400);
         }
         $internalAgentBusiness =   InternalAgentMyBusiness::create([
-            'agent_id' => auth()->user()->id,
+            'agent_id' => $request->agent_id,
+            'client_id' => $request->client_id ? $request->client_id :  null,
             'agent_full_name' => $request->agent_full_name,
             'agent_email' => $request->agent_email,
             'status' => $request->status,
