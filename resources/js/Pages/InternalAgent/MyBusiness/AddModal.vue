@@ -26,7 +26,7 @@ let props = defineProps({
   clients: Array,
   businessesFilter: Array,
 });
-let ClientsData = ref(props.clients)
+let ClientsData = ref([])
 let firstStepErrors = ref({});
 
 let loading = ref(false);
@@ -727,12 +727,18 @@ const handleOutsideClick = (event) => {
   // }
 };
 let selectagent = (agent) => {
-  form.value.agent_full_name = agent.first_name + " " + agent.last_name;
-  form.value.agent_email = agent.email;
-  form.value.agent_id = agent.id;
+  if (form.value.agent_id !== agent.id) {
+    form.value.agent_full_name = agent.first_name + " " + agent.last_name;
+    form.value.agent_email = agent.email;
+    form.value.agent_id = agent.id;
+    clearClient()
+    fetchaClientsData(agent.id)
+  }
+
   // console.log("form.value", form.value);
   isOpen.value = false;
-  fetchaClientsData(agent.id)
+
+
 };
 
 let selectClient = (client) => {
@@ -1100,11 +1106,23 @@ let existingBusiness = () => {
                             <div class="relative">
                               <ul style="width: 100%; max-height: 250px"
                                 class="absolute z-10 pb-2 overflow-auto bg-white rounded-md shadow-md">
-                                <div class="mx-2 mt-1">
+                                <div class="mx-2 mt-1 flex items-center">
                                   <input v-if="!is_client" v-model="search2" autocomplete="off" type="text"
                                     id="agent_full_name"
-                                    class="bg-gray-50 mb-1 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full"
+                                    class="bg-gray-50 mb-1 mr-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full"
                                     placeholder="Filter By Phone" required />
+                                  <!-- <p class="ml-0"> -->
+                                  <!-- </p> -->
+                                  <svg @click="clearClient()" class="w-8 h-8 cursor-pointer" viewBox="0 0 24 24"
+                                    fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                    <g id="SVGRepo_iconCarrier">
+                                      <path d="M6 6L18 18" stroke="#000000" stroke-linecap="round"></path>
+                                      <path d="M18 6L6.00001 18" stroke="#000000" stroke-linecap="round"></path>
+                                    </g>
+                                  </svg>
+                                  <!-- <svg @click="clearClient()"  class="w-8 h-8 cursor-pointer" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M19 5L4.99998 19M5.00001 5L19 19" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg> -->
                                 </div>
                                 <global-spinner class="text-center" :spinner="clientsLoader" />
                                 <ul class="max-w-md divide-y divide-gray-200">
@@ -1121,12 +1139,6 @@ let existingBusiness = () => {
                                             {{ client.phone }}
                                           </p>
                                         </div>
-                                      </div>
-                                    </li>
-                                    <li>
-                                      <div @click="clearClient()"
-                                        class="cursor-pointer flex items-center space-x-4 rtl:space-x-reverse hover:bg-gray-50 p-2">
-                                        Clear
                                       </div>
                                     </li>
                                   </div>
