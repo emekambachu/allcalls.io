@@ -136,7 +136,7 @@ class AgentBusinessController extends Controller
         ]);
         event(new AppSubmittedEvent($internalAgentBusiness));
 
-        if($internalAgentBusiness->client_id !='' && Str::startsWith($internalAgentBusiness->client->status, 'Sale')){
+        if ($internalAgentBusiness->client_id != '' && Str::startsWith($internalAgentBusiness->client->status, 'Sale')) {
             event(new PolicySubmitedEvent($internalAgentBusiness));
         }
 
@@ -251,5 +251,20 @@ class AgentBusinessController extends Controller
         return response()->json([
             'agents' => $agents
         ]);
+    }
+    public function fetchClient($id)
+    {
+        try {
+            $clients = Client::where('user_id', $id)->where('unlocked', true)->get();
+            return response()->json([
+                'clients' => $clients,
+                'status' => 200
+            ],200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'error' => $th->getMessage(),
+                'status' => 404
+            ],404);
+        }
     }
 }
