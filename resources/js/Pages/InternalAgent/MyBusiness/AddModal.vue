@@ -162,9 +162,9 @@ if (props.businessData) {
   form.value.agent_full_name = props.businessData.agent_full_name;
   form.value.agent_email = props.businessData.agent_email;
   form.value.agent_id = props.businessData.agent_id;
-
   if (props.businessData?.client) {
     form.value.client_id = props.businessData?.client.id;
+    form.value.client_full_name = props.businessData?.client.first_name + " " + props.businessData?.client.last_name;
   }
   // form.value.client_id = props.businessData?.client.id
 
@@ -1135,10 +1135,10 @@ let existingBusiness = () => {
                       class="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-x-8"
                     >
                       <div
-                        v-if="$page.props.auth.role === 'internal-agent'"
+                        v-if="$page.props.auth.role === 'internal-agent' || $page.props.auth.role === 'admin' "
                         id="dropdown_main_id2"
                       >
-                        <div v-if="$page.props.auth.role === 'internal-agent'">
+                        <div v-if="$page.props.auth.role === 'internal-agent' || $page.props.auth.role === 'admin'">
                           <label
                             id="select_client"
                             class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
