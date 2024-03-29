@@ -550,12 +550,23 @@ let filteredBusiness = computed(() => {
 });
 
 let filteredClients = computed(() => {
-  return ClientsData.value.filter((user) => {
-    return user.phone.toLowerCase().includes(search2.value.toLowerCase());
-    // ||
-    //  user.first_name.toLowerCase().includes(search2.value) ||
-    //  user.last_name.toLowerCase().includes(search2.value)
-  });
+  if (page.props.auth.role === "admin") {
+    return ClientsData.value.filter((user) => {
+      return user.phone.toLowerCase().includes(search2.value.toLowerCase());
+      // ||
+      //  user.first_name.toLowerCase().includes(search2.value) ||
+      //  user.last_name.toLowerCase().includes(search2.value)
+    });
+  } else {
+    return props.clients.filter((user) => {
+      return user.phone.toLowerCase().includes(search2.value.toLowerCase());
+      // ||
+      //  user.first_name.toLowerCase().includes(search2.value) ||
+      //  user.last_name.toLowerCase().includes(search2.value)
+    });
+  }
+
+
   // const sanitizedSearch = search2.value.replace(/\D/g, ''); // Remove non-digit characters
   // return props.clients.filter(user => {
   //   const sanitizedPhone = user.phone.replace(/\D/g, ''); // Remove non-digit characters
@@ -708,11 +719,11 @@ const handleOutsideClick = (event) => {
     }
   }
   // if (page.props.auth.role === "internal-agent") {
-    const dropdownElement2 = document.getElementById("dropdown_main_id2");
+  const dropdownElement2 = document.getElementById("dropdown_main_id2");
 
-    if (!dropdownElement2.contains(event.target)) {
-      isOpen2.value = false;
-    }
+  if (!dropdownElement2.contains(event.target)) {
+    isOpen2.value = false;
+  }
   // }
 };
 let selectagent = (agent) => {
