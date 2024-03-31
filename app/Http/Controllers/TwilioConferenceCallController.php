@@ -166,6 +166,7 @@ class TwilioConferenceCallController extends Controller
             Log::info("Conference Call saved to database: " . $conferenceCall); 
             
             $specialCallToken = Cache::get('specialCallToken');
+            $storedCallerId = Cache::get("incoming_caller_id");
 
             // If a phone number is provided, dial out to this number and add to the conference
             if ($phoneNumber) {
@@ -180,7 +181,7 @@ class TwilioConferenceCallController extends Controller
                         "callToken" => $specialCallToken,
                         "StatusCallback" => route('conference.statusCallback'),
                         "StatusCallbackEvent" => ["initiated", "ringing", "answered", "completed"],
-                        "callerId" => $call->from
+                        "callerId" => $storedCallerId
                     ]
                 );
 
