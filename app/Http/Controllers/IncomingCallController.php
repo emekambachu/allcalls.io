@@ -28,7 +28,7 @@ class IncomingCallController extends Controller
 
         $to = $request->input('To');
         Log::debug('To attribute: ' . $to);
-        Log::info('Incoming call request from twilio: ' . $request->all());
+        Log::info('Incoming call request from twilio: ' . json_encode($request->all()));
 
         // Remove the "+1" from the beginning of the "To" number
         $to = substr($to, 2);
