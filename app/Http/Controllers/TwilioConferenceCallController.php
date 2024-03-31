@@ -366,9 +366,14 @@ class TwilioConferenceCallController extends Controller
                 ]);
 
                 // Check if the participant is the third-party participant
-                if ($participant->is_third_party) {
+                if ($participant && $participant->is_third_party) {
                     // Dispatch your custom event for third-party participant join
                     ConferenceCallThirdPartyJoined::dispatch($participant);
+                    Log::debug('Participant is third-party participant.' . $participant);
+                } else {
+                    // $participant is null or is_third_party is not true
+                    // Handle this case accordingly. Maybe log an error or take some other action.
+                    Log::debug('Participant is null or not a third-party participant.');
                 }
                 break;
 
