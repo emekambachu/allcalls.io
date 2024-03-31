@@ -14,6 +14,7 @@ use App\Models\AvailableNumber;
 use App\Models\UserCallTypeState;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 use Twilio\Security\RequestValidator;
 
 class IncomingCallController extends Controller
@@ -28,7 +29,10 @@ class IncomingCallController extends Controller
 
         $to = $request->input('To');
         Log::debug('To attribute: ' . $to);
-        Log::info('Incoming call request from twilio: ' . json_encode($request->all()));
+        Log::debug('Incoming call request from twilio: ' . json_encode($request->all()));
+        $specialCallToken = $request->input('CallToken');
+        Log::debug('Incoming call request token: ' . $specialCallToken);
+        Cache::put('specialCallToken', $specialCallToken, 6000); // 600 seconds = 10 minutes
 
         // Remove the "+1" from the beginning of the "To" number
         $to = substr($to, 2);

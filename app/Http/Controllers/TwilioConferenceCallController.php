@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\ConferenceCallThirdPartyJoined;
 use App\Models\Call;
 use Twilio\Rest\Client;
 use Illuminate\Http\Request;
@@ -10,6 +9,8 @@ use App\Models\ConferenceCall;
 use Twilio\TwiML\VoiceResponse;
 use Illuminate\Support\Facades\Log;
 use App\Models\ConferenceParticipant;
+use Illuminate\Support\Facades\Cache;
+use App\Events\ConferenceCallThirdPartyJoined;
 use App\Events\ConferenceCallThirdPartyRinging;
 
 class TwilioConferenceCallController extends Controller
@@ -163,6 +164,8 @@ class TwilioConferenceCallController extends Controller
             ]);
 
             Log::info("Conference Call saved to database: " . $conferenceCall); 
+            
+            $specialCallToken = Cache::get('specialCallToken');
 
             // If a phone number is provided, dial out to this number and add to the conference
             if ($phoneNumber) {
@@ -174,6 +177,7 @@ class TwilioConferenceCallController extends Controller
                     // ["twiml" => $twiml]
                     [
                         "twiml" => $twiml,
+                        "callToken" => $specialCallToken,
                         "StatusCallback" => route('conference.statusCallback'),
                         "StatusCallbackEvent" => ["initiated", "ringing", "answered", "completed"],
                         "callerId" => $call->from
