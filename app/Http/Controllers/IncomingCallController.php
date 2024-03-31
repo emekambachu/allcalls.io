@@ -31,10 +31,10 @@ class IncomingCallController extends Controller
         Log::debug('To attribute: ' . $to);
         Log::debug('Incoming call request from twilio: ' . json_encode($request->all()));
         $specialCallToken = $request->input('CallToken');
-        Log::debug('Incoming call request token: ' . $specialCallToken);
+        $incomingCallerId = $request->input('From'); // Get the caller ID from the Twilio request        
+        Log::debug('Incoming call request token: ' . $incomingCallerId . $specialCallToken);
         Cache::put('specialCallToken', $specialCallToken, 6000); // 600 seconds = 10 minutes
         $incomingCallSid = $request->input('CallSid'); // Get the incoming call SID from the Twilio request
-        $incomingCallerId = $request->input('From'); // Get the caller ID from the Twilio request        
         // You might want to save the incoming call data in the database or a cache for later use
         // For this example, let's assume you're storing it in the cache temporarily
         Cache::put("incoming_caller_id", $incomingCallerId, now()->addMinutes(100));
