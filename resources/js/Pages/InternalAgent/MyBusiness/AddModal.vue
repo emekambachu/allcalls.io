@@ -26,6 +26,7 @@ let props = defineProps({
   clients: Array,
   businessesFilter: Array,
 });
+let ClientsData = ref([])
 let firstStepErrors = ref({});
 
 let loading = ref(false);
@@ -114,6 +115,15 @@ let updateFormAndDisableElement = (
     applicationDate.value = true;
   }
 };
+const fetchaClientsData = () => {
+  axios.get(`/admin/fetch-clients`)
+    .then((res) => {
+      // console.log('res', res);
+      ClientsData.value = res.data.clients
+    }).catch((error) => {
+      // console.log('error', error);
+    })
+}
 if (props.businessData) {
   edit_data.value = true;
   form.value.insurance_company = props.businessData.insurance_company
@@ -162,10 +172,13 @@ if (props.businessData) {
   form.value.agent_full_name = props.businessData.agent_full_name;
   form.value.agent_email = props.businessData.agent_email;
   form.value.agent_id = props.businessData.agent_id;
-
   if (props.businessData?.client) {
     form.value.client_id = props.businessData?.client.id;
+    form.value.client_full_name = props.businessData?.client.first_name + " " + props.businessData?.client.last_name;
   }
+  // if (page.props.auth.role === "admin") {
+  //   fetchaClientsData()
+  // }
   // form.value.client_id = props.businessData?.client.id
 
   // if (props.businessData.this_app_from_lead == 'NO') {
@@ -315,12 +328,12 @@ let Previous = (data) => {
   step.value -= 1;
 };
 let dateFormat = (val) => {
-    const date = new Date(val);
-    const dateString = date.toISOString().split('T')[0]; // Extracting the date part
-    const [year, month, day] = dateString.split('-'); // Splitting the date string
-// Create the formatted date string
-//     return `${month}-${day}-${year}`;
-    return `${year}-${month}-${day}`;
+  const date = new Date(val);
+  const dateString = date.toISOString().split('T')[0]; // Extracting the date part
+  const [year, month, day] = dateString.split('-'); // Splitting the date string
+  // Create the formatted date string
+  //     return `${month}-${day}-${year}`;
+  return `${year}-${month}-${day}`;
 };
 // save business data start
 let isLoading = ref(false);
@@ -381,7 +394,7 @@ let UpdateBussinessData = async () => {
     route = "/internal-agent/my-business";
   }
   form.value.application_date = dateFormat(form.value.application_date);
-  console.log('application_date',form.value.application_date)
+  console.log('application_date', form.value.application_date)
   form.value.policy_draft_date = dateFormat(form.value.policy_draft_date);
   form.value.dob = dateFormat(form.value.dob);
   isLoading2.value = true;
@@ -537,12 +550,14 @@ let filteredBusiness = computed(() => {
 });
 
 let filteredClients = computed(() => {
-  return props.clients.filter((user) => {
-    return user.phone.toLowerCase().includes(search2.value.toLowerCase());
-    // ||
-    //  user.first_name.toLowerCase().includes(search2.value) ||
-    //  user.last_name.toLowerCase().includes(search2.value)
-  });
+    return props.clients.filter((user) => {
+      return user.phone.toLowerCase().includes(search2.value.toLowerCase());
+      // ||
+      //  user.first_name.toLowerCase().includes(search2.value) ||
+      //  user.last_name.toLowerCase().includes(search2.value)
+    });
+
+
   // const sanitizedSearch = search2.value.replace(/\D/g, ''); // Remove non-digit characters
   // return props.clients.filter(user => {
   //   const sanitizedPhone = user.phone.replace(/\D/g, ''); // Remove non-digit characters
@@ -644,7 +659,6 @@ onMounted(() => {
     form.value.client_full_name =
       props.businessData.client.first_name + " " + props.businessData.client.last_name;
   }
-
   if (props.clientData) {
     selectClient(props.clientData);
   }
@@ -695,20 +709,26 @@ const handleOutsideClick = (event) => {
       isOpen3.value = false;
     }
   }
-  if (page.props.auth.role === "internal-agent") {
-    const dropdownElement2 = document.getElementById("dropdown_main_id2");
+  // if (page.props.auth.role === "internal-agent") {
+  const dropdownElement2 = document.getElementById("dropdown_main_id2");
 
-    if (!dropdownElement2.contains(event.target)) {
-      isOpen2.value = false;
-    }
+  if (!dropdownElement2.contains(event.target)) {
+    isOpen2.value = false;
   }
+  // }
 };
 let selectagent = (agent) => {
-  form.value.agent_full_name = agent.first_name + " " + agent.last_name;
-  form.value.agent_email = agent.email;
-  form.value.agent_id = agent.id;
-  console.log("form.value", form.value);
+  // if (form.value.agent_id !== agent.id) {
+    form.value.agent_full_name = agent.first_name + " " + agent.last_name;
+    form.value.agent_email = agent.email;
+    form.value.agent_id = agent.id;
+    // clearClient()
+    // fetchaClientsData()
+  // }
+  // console.log("form.value", form.value);
   isOpen.value = false;
+
+
 };
 
 let selectClient = (client) => {
@@ -940,21 +960,14 @@ let existingBusiness = () => {
 }
 </style>
 <template>
-  <Transition
-    name="modal"
-    enter-active-class="transition ease-out  duration-300 transform"
+  <Transition name="modal" enter-active-class="transition ease-out  duration-300 transform"
     enter-from-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
     enter-to-class="opacity-100 translate-y-0 sm:scale-100"
     leave-active-class="transition ease-in duration-200 transform"
     leave-from-class="opacity-100 translate-y-0 sm:scale-100"
-    leave-to-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-  >
-    <div
-      id="defaultModal"
-      v-show="addBusinessModal"
-      tabindex="-1"
-      class="flex items-center justify-center fixed inset-0 z-50 w-full h-full overflow-x-hidden overflow-y-auto max-h-full mx-4 sm:mx-0"
-    >
+    leave-to-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+    <div id="defaultModal" v-show="addBusinessModal" tabindex="-1"
+      class="flex items-center justify-center fixed inset-0 z-50 w-full h-full overflow-x-hidden overflow-y-auto max-h-full mx-4 sm:mx-0">
       <div class="fixed inset-0 bg-black opacity-90 blurred-overlay"></div>
 
       <!-- This is the overlay -->
@@ -966,50 +979,24 @@ let existingBusiness = () => {
               <span v-if="attactClientEdit">Attach Client</span>
               <span v-if="!attactClientEdit">Report Application</span>
             </h3>
-            <button
-              @click="close"
-              type="button"
+            <button @click="close" type="button"
               class="text-gray-400 bg-transparent mr-2 mt-2 hover:bg-gray-200 hover:text-gray-700 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
-              data-modal-hide="defaultModal"
-            >
-              <svg
-                class="w-3 h-3"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 14 14"
-              >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                />
+              data-modal-hide="defaultModal">
+              <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 14 14">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
               </svg>
               <span class="sr-only">Close modal</span>
             </button>
           </div>
 
           <div v-if="is_client && step === 1" class="mx-12 mt-4">
-            <div
-              class="mb-4 flex flex-col md:flex-row rounded-lg bg-blue-100 p-4 text-blue-900"
-              role="alert"
-            >
-              <svg
-                class="mr-4 h-6 w-6 flex-shrink-0 text-blue-500"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
+            <div class="mb-4 flex flex-col md:flex-row rounded-lg bg-blue-100 p-4 text-blue-900" role="alert">
+              <svg class="mr-4 h-6 w-6 flex-shrink-0 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <div class="flex-1">
                 <h3 class="text-lg font-semibold">Attention Required</h3>
@@ -1030,7 +1017,8 @@ let existingBusiness = () => {
           </div>
 
           <div v-if="is_client && step === 1" class="mx-12 mt-4">
-            <ClientPolicies :clientId="clientData.id" :clientName="`${clientData.first_name} ${clientData.last_name}`" />
+            <ClientPolicies :clientId="clientData.id"
+              :clientName="`${clientData.first_name} ${clientData.last_name}`" />
           </div>
 
           <div class="px-12 py-2">
@@ -1040,81 +1028,38 @@ let existingBusiness = () => {
                 <div class="question-card animate__animated" style="position: relative">
                   <div v-show="step == 1">
                     <div v-if="$page.props.auth.role === 'admin'">
-                      <h1
-                        style="background-color: #134576"
-                        class="my-0 text-center rounded-md py-2 text-white"
-                      >
+                      <h1 style="background-color: #134576" class="my-0 text-center rounded-md py-2 text-white">
                         Agent Information
                       </h1>
-                      <div
-                        class="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-x-8"
-                      >
+                      <div class="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-x-8">
                         <div id="dropdown_main_id">
-                          <label
-                            class="block mt-5 text-sm mb-2 font-medium text-gray-900"
-                            >Select Agent<span class="text-red-400">*</span></label
-                          >
-                          <button
-                            @click="SugestAgent"
+                          <label class="block mt-5 text-sm mb-2 font-medium text-gray-900">Select Agent<span
+                              class="text-red-400">*</span></label>
+                          <button @click="SugestAgent"
                             class="bg-gray-50 mt-1 mb-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 flex"
-                            id="states-button"
-                            data-dropdown-toggle="dropdown-states"
-                            type="button"
-                          >
-                            <span
-                              ><svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke-width="1.5"
-                                stroke="currentColor"
-                                class="w-4 mt-1 h-4"
-                              >
-                                <path
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-                                /></svg></span
-                            ><span v-if="!form.agent_full_name" class="ml-2"
-                              >Select Agent</span
-                            >
+                            id="states-button" data-dropdown-toggle="dropdown-states" type="button">
+                            <span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="w-4 mt-1 h-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                              </svg></span><span v-if="!form.agent_full_name" class="ml-2">Select Agent</span>
                             <span class="ml-2">{{ form.agent_full_name }}</span>
                           </button>
 
-                          <div
-                            v-if="firstStepErrors.agent_full_name"
-                            class="text-red-500"
-                            v-text="firstStepErrors.agent_full_name[0]"
-                          ></div>
+                          <div v-if="firstStepErrors.agent_full_name" class="text-red-500"
+                            v-text="firstStepErrors.agent_full_name[0]"></div>
 
                           <div v-if="isOpen > 0" class="items-center justify-center">
                             <div class="relative">
-                              <ul
-                                style="width: 100%; max-height: 250px"
-                                class="absolute z-10 pb-2 overflow-auto bg-white rounded-md shadow-md"
-                              >
+                              <ul style="width: 100%; max-height: 250px"
+                                class="absolute z-10 pb-2 overflow-auto bg-white rounded-md shadow-md">
                                 <div class="mx-2 mt-1">
-                                  <input
-                                    v-model="search"
-                                    autocomplete="off"
-                                    type="text"
-                                    id="agent_full_name"
+                                  <input v-model="search" autocomplete="off" type="text" id="agent_full_name"
                                     class="bg-gray-50 mb-1 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full"
-                                    placeholder="Filter By Name"
-                                    required
-                                  />
+                                    placeholder="Filter By Name" required />
                                 </div>
-                                <global-spinner
-                                  class="text-center"
-                                  :spinner="agentLoader"
-                                />
-                                <li
-                                  v-if="!agentLoader"
-                                  v-for="(agent, index) in filteredAgents"
-                                  :key="index"
-                                  @click="selectagent(agent)"
-                                  class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                                >
+                                <global-spinner class="text-center" :spinner="agentLoader" />
+                                <li v-if="!agentLoader" v-for="(agent, index) in filteredAgents" :key="index"
+                                  @click="selectagent(agent)" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                                   {{ agent.first_name }} {{ agent.last_name }}
                                 </li>
                               </ul>
@@ -1124,108 +1069,75 @@ let existingBusiness = () => {
                       </div>
                     </div>
 
-                    <h1
-                      style="background-color: #134576"
-                      class="mt-5 text-center rounded-md py-2 text-white"
-                    >
+                    <h1 style="background-color: #134576" class="mt-5 text-center rounded-md py-2 text-white">
                       Client Information
                     </h1>
 
-                    <div
-                      class="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-x-8"
-                    >
-                      <div
-                        v-if="$page.props.auth.role === 'internal-agent'"
-                        id="dropdown_main_id2"
-                      >
-                        <div v-if="$page.props.auth.role === 'internal-agent'">
-                          <label
-                            id="select_client"
-                            class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
-                            >Select Client
+                    <div class="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-x-8">
+                      <div v-if="$page.props.auth.role === 'internal-agent' || $page.props.auth.role === 'admin'"
+                        id="dropdown_main_id2">
+                        <div v-if="$page.props.auth.role === 'internal-agent' || $page.props.auth.role === 'admin'">
+                          <label id="select_client" class="block mt-5 text-sm mb-2 font-medium text-gray-900 ">Select
+                            Client
                           </label>
-                          <button
-                            @click="SugestClient"
-                            :disabled="is_client"
+                          <button @click="SugestClient" :disabled="is_client"
                             class="bg-gray-50 mt-1 mb-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 flex"
-                            id="states-button"
-                            data-dropdown-toggle="dropdown-states"
-                            type="button"
-                          >
-                            <span
-                              ><svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke-width="1.5"
-                                stroke="currentColor"
-                                class="w-4 mt-1 h-4"
-                              >
-                                <path
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-                                /></svg></span
-                            ><span v-if="!form.client_full_name" class="ml-2"
-                              >Select Client</span
-                            >
+                            id="states-button" data-dropdown-toggle="dropdown-states" type="button">
+                            <span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="w-4 mt-1 h-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                              </svg></span><span v-if="!form.client_full_name" class="ml-2">Select Client</span>
                             <span class="ml-2">{{ form.client_full_name }} </span>
                           </button>
 
-                          <div
-                            v-if="firstStepErrors.client_full_name"
-                            class="text-red-500"
-                            v-text="firstStepErrors.client_full_name[0]"
-                          ></div>
-
+                          <div v-if="firstStepErrors.client_full_name" class="text-red-500"
+                            v-text="firstStepErrors.client_full_name[0]"></div>
                           <div v-if="isOpen2 > 0" class="items-center justify-center">
                             <div class="relative">
-                              <ul
-                                style="width: 100%; max-height: 250px"
-                                class="absolute z-10 pb-2 overflow-auto bg-white rounded-md shadow-md"
-                              >
-                                <div class="mx-2 mt-1">
-                                  <input
-                                    v-if="!is_client"
-                                    v-model="search2"
-                                    autocomplete="off"
-                                    type="text"
+                              <ul style="width: 100%; max-height: 250px"
+                                class="absolute z-10 pb-2 overflow-auto bg-white rounded-md shadow-md">
+                                <div class="mx-2 mt-1 flex items-center">
+                                  <input v-if="!is_client" v-model="search2" autocomplete="off" type="text"
                                     id="agent_full_name"
-                                    class="bg-gray-50 mb-1 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full"
-                                    placeholder="Filter By Phone"
-                                    required
-                                  />
+                                    class="bg-gray-50 mb-1 mr-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full"
+                                    placeholder="Filter By Phone" required />
+                                  <!-- <p class="ml-0"> -->
+                                  <!-- </p> -->
+                                  <svg @click="clearClient()" class="w-8 h-8 cursor-pointer" viewBox="0 0 24 24"
+                                    fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                    <g id="SVGRepo_iconCarrier">
+                                      <path d="M6 6L18 18" stroke="#000000" stroke-linecap="round"></path>
+                                      <path d="M18 6L6.00001 18" stroke="#000000" stroke-linecap="round"></path>
+                                    </g>
+                                  </svg>
+                                  <!-- <svg @click="clearClient()"  class="w-8 h-8 cursor-pointer" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M19 5L4.99998 19M5.00001 5L19 19" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg> -->
                                 </div>
-                                <global-spinner
-                                  class="text-center"
-                                  :spinner="clientsLoader"
-                                />
+                                <global-spinner class="text-center" :spinner="clientsLoader" />
                                 <ul class="max-w-md divide-y divide-gray-200">
-                                  <li>
-                                    <div
-                                      @click="clearClient()"
-                                      class="cursor-pointer flex items-center space-x-4 rtl:space-x-reverse hover:bg-gray-50 p-2"
-                                    >
-                                      Clear
-                                    </div>
-                                  </li>
-                                  <li v-for="client in filteredClients" :key="client.id">
-                                    <div
-                                      @click.prevent="selectClient(client)"
-                                      class="cursor-pointer flex items-center space-x-4 rtl:space-x-reverse hover:bg-gray-50 p-2"
-                                    >
-                                      <div class="flex-1 min-w-0">
-                                        <p
-                                          class="text-sm font-medium text-gray-900 truncate"
-                                        >
-                                          {{ client.first_name }} {{ client.last_name }}
-                                        </p>
-                                        <p class="text-sm text-gray-500 truncate">
-                                          {{ client.phone }}
-                                        </p>
+
+                                  <div v-if="filteredClients.length > 0">
+                                    <li v-for="client in filteredClients" :key="client.id">
+                                      <div @click.prevent="selectClient(client)"
+                                        class="cursor-pointer flex items-center space-x-4 rtl:space-x-reverse hover:bg-gray-50 p-2">
+                                        <div class="flex-1 min-w-0">
+                                          <p class="text-sm font-medium text-gray-900 truncate">
+                                            {{ client.first_name }} {{ client.last_name }}
+                                          </p>
+                                          <p class="text-sm text-gray-500 truncate">
+                                            {{ client.phone }}
+                                          </p>
+                                        </div>
                                       </div>
+                                    </li>
+                                  </div>
+                                  <div v-else>
+                                    <div class="py-2 text-center  text-sm  text-gray-500 truncate">Clients Not Found.
                                     </div>
-                                  </li>
+                                  </div>
+
+
                                 </ul>
                                 <!-- <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer ">Clear</li> -->
                               </ul>
@@ -1234,339 +1146,166 @@ let existingBusiness = () => {
                         </div>
                       </div>
                       <div>
-                        <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900"
-                          >First Name<span class="text-red-400">*</span></label
-                        >
-                        <input
-                          v-model="form.first_name"
-                          type="text"
-                          id="first_name"
+                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900">First Name<span
+                            class="text-red-400">*</span></label>
+                        <input v-model="form.first_name" type="text" id="first_name"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                          placeholder=""
-                          required
-                        />
-                        <div
-                          v-if="firstStepErrors.first_name"
-                          class="text-red-500"
-                          v-text="firstStepErrors.first_name[0]"
-                        ></div>
+                          placeholder="" required />
+                        <div v-if="firstStepErrors.first_name" class="text-red-500"
+                          v-text="firstStepErrors.first_name[0]"></div>
                       </div>
 
                       <div>
-                        <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900"
-                          >MI</label
-                        >
-                        <input
-                          v-model="form.mi"
-                          type="text"
-                          id="mi"
+                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900">MI</label>
+                        <input v-model="form.mi" type="text" id="mi"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                          placeholder=""
-                          required
-                        />
-                        <div
-                          v-if="firstStepErrors.mi"
-                          class="text-red-500"
-                          v-text="firstStepErrors.mi[0]"
-                        ></div>
+                          placeholder="" required />
+                        <div v-if="firstStepErrors.mi" class="text-red-500" v-text="firstStepErrors.mi[0]"></div>
                       </div>
 
                       <div>
-                        <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900"
-                          >Last Name<span class="text-red-400">*</span></label
-                        >
-                        <input
-                          v-model="form.last_name"
-                          type="text"
-                          id="last_name"
+                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900">Last Name<span
+                            class="text-red-400">*</span></label>
+                        <input v-model="form.last_name" type="text" id="last_name"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                          placeholder=""
-                          required
-                        />
-                        <div
-                          v-if="firstStepErrors.last_name"
-                          class="text-red-500"
-                          v-text="firstStepErrors.last_name[0]"
-                        ></div>
+                          placeholder="" required />
+                        <div v-if="firstStepErrors.last_name" class="text-red-500"
+                          v-text="firstStepErrors.last_name[0]"></div>
                       </div>
 
                       <div>
-                        <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
-                          >Beneficiary Name<span class="text-red-400">*</span></label
-                        >
-                        <input
-                          v-model="form.beneficiary_name"
-                          type="text"
-                          id="beneficiary_name"
+                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 ">Beneficiary Name<span
+                            class="text-red-400">*</span></label>
+                        <input v-model="form.beneficiary_name" type="text" id="beneficiary_name"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                          placeholder=""
-                          required
-                        />
-                        <div
-                          v-if="firstStepErrors.beneficiary_name"
-                          class="text-red-500"
-                          v-text="firstStepErrors.beneficiary_name[0]"
-                        ></div>
+                          placeholder="" required />
+                        <div v-if="firstStepErrors.beneficiary_name" class="text-red-500"
+                          v-text="firstStepErrors.beneficiary_name[0]"></div>
                       </div>
 
                       <div>
-                        <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900"
-                          >Beneficiary Relationship<span class="text-red-400"
-                            >*</span
-                          ></label
-                        >
-                        <input
-                          v-model="form.beneficiary_relationship"
-                          type="text"
-                          id="beneficiary_relationship"
+                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900">Beneficiary Relationship<span
+                            class="text-red-400">*</span></label>
+                        <input v-model="form.beneficiary_relationship" type="text" id="beneficiary_relationship"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                          placeholder=""
-                          required
-                        />
-                        <div
-                          v-if="firstStepErrors.beneficiary_relationship"
-                          class="text-red-500"
-                          v-text="firstStepErrors.beneficiary_relationship[0]"
-                        ></div>
+                          placeholder="" required />
+                        <div v-if="firstStepErrors.beneficiary_relationship" class="text-red-500"
+                          v-text="firstStepErrors.beneficiary_relationship[0]"></div>
                       </div>
 
                       <div>
-                        <label
-                          for="EFNumber"
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900"
-                          >Street Address 1<span class="text-red-400">*</span></label
-                        >
-                        <input
-                          v-model="form.client_street_address_1"
-                          type="text"
-                          id="client_street_address_1"
+                        <label for="EFNumber" class="block mt-5 text-sm mb-2 font-medium text-gray-900">Street Address
+                          1<span class="text-red-400">*</span></label>
+                        <input v-model="form.client_street_address_1" type="text" id="client_street_address_1"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                          placeholder=""
-                          required
-                        />
-                        <div
-                          v-if="firstStepErrors.client_street_address_1"
-                          class="text-red-500"
-                          v-text="firstStepErrors.client_street_address_1[0]"
-                        ></div>
+                          placeholder="" required />
+                        <div v-if="firstStepErrors.client_street_address_1" class="text-red-500"
+                          v-text="firstStepErrors.client_street_address_1[0]"></div>
                       </div>
 
                       <div>
-                        <label
-                          for="EFNumber"
-                          class="block mb-2 mt-5 text-sm mb-2 font-medium text-gray-900 "
-                          >Street Address 2</label
-                        >
-                        <input
-                          v-model="form.client_street_address_2"
-                          type="text"
-                          id="client_street_address_2"
+                        <label for="EFNumber" class="block mb-2 mt-5 text-sm mb-2 font-medium text-gray-900 ">Street
+                          Address 2</label>
+                        <input v-model="form.client_street_address_2" type="text" id="client_street_address_2"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                          placeholder=""
-                          required
-                        />
-                        <div
-                          v-if="firstStepErrors.client_street_address_2"
-                          class="text-red-500"
-                          v-text="firstStepErrors.client_street_address_2[0]"
-                        ></div>
+                          placeholder="" required />
+                        <div v-if="firstStepErrors.client_street_address_2" class="text-red-500"
+                          v-text="firstStepErrors.client_street_address_2[0]"></div>
                       </div>
 
                       <div>
-                        <label
-                          for="EFNumber"
-                          class="block mb-2 mt-5 text-sm mb-2 font-medium text-gray-900 "
-                          >City<span class="text-red-400">*</span></label
-                        >
-                        <input
-                          v-model="form.client_city"
-                          type="text"
-                          id="client_city"
+                        <label for="EFNumber" class="block mb-2 mt-5 text-sm mb-2 font-medium text-gray-900 ">City<span
+                            class="text-red-400">*</span></label>
+                        <input v-model="form.client_city" type="text" id="client_city"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                          placeholder=""
-                          required
-                        />
-                        <div
-                          v-if="firstStepErrors.client_city"
-                          class="text-red-500"
-                          v-text="firstStepErrors.client_city[0]"
-                        ></div>
+                          placeholder="" required />
+                        <div v-if="firstStepErrors.client_city" class="text-red-500"
+                          v-text="firstStepErrors.client_city[0]"></div>
                       </div>
 
                       <div>
-                        <label
-                          for="EFNumber"
-                          class="block mb-2 mt-5 text-sm mb-2 font-medium text-gray-900 "
-                          >State<span class="text-red-400">*</span></label
-                        >
-                        <select
-                          v-model="form.client_state"
-                          @change="StateChange(this)"
-                          id="client_state"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                        >
+                        <label for="EFNumber" class="block mb-2 mt-5 text-sm mb-2 font-medium text-gray-900 ">State<span
+                            class="text-red-400">*</span></label>
+                        <select v-model="form.client_state" @change="StateChange(this)" id="client_state"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
                           <option disabled>Select</option>
                           <option v-for="state in states" :value="state.id">
                             {{ state.full_name }}
                           </option>
                         </select>
-                        <div
-                          v-if="firstStepErrors.client_state"
-                          class="text-red-500"
-                          v-text="firstStepErrors.client_state[0]"
-                        ></div>
+                        <div v-if="firstStepErrors.client_state" class="text-red-500"
+                          v-text="firstStepErrors.client_state[0]"></div>
                       </div>
                       <div>
-                        <label
-                          for=""
-                          class="block mb-2 mt-5 text-sm mb-2 font-medium text-gray-900 "
-                          >Zip-code<span class="text-red-400">*</span></label
-                        >
-                        <input
-                          v-model="form.client_zipcode"
-                          @input="
-                            enforceFiveDigitInput(form.client_zipcode, 'client_zipcode')
-                          "
-                          type="text"
-                          id="client_zipcode"
+                        <label for="" class="block mb-2 mt-5 text-sm mb-2 font-medium text-gray-900 ">Zip-code<span
+                            class="text-red-400">*</span></label>
+                        <input v-model="form.client_zipcode" @input="
+      enforceFiveDigitInput(form.client_zipcode, 'client_zipcode')
+      " type="text" id="client_zipcode"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                          placeholder=""
-                          required
-                        />
-                        <div
-                          v-if="firstStepErrors.client_zipcode"
-                          class="text-red-500"
-                          v-text="firstStepErrors.client_zipcode[0]"
-                        ></div>
+                          placeholder="" required />
+                        <div v-if="firstStepErrors.client_zipcode" class="text-red-500"
+                          v-text="firstStepErrors.client_zipcode[0]"></div>
                       </div>
                       <div>
-                        <label
-                          for="EFNumber"
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
-                          >Client Phone Number<span class="text-red-400">*</span></label
-                        >
+                        <label for="EFNumber" class="block mt-5 text-sm mb-2 font-medium text-gray-900 ">Client Phone
+                          Number<span class="text-red-400">*</span></label>
 
-                        <input
-                          v-model="form.client_phone_no"
-                          type="text"
-                          id="client_phone_no"
-                          maxLength="15"
-                          @input="
-                            CurrencyValidation(form.client_phone_no, 'client_phone_no')
-                          "
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                          placeholder=""
-                          required
-                        />
-                        <div
-                          v-if="firstStepErrors.client_phone_no"
-                          class="text-red-500"
-                          v-text="firstStepErrors.client_phone_no[0]"
-                        ></div>
+                        <input v-model="form.client_phone_no" type="text" id="client_phone_no" maxLength="15" @input="
+      CurrencyValidation(form.client_phone_no, 'client_phone_no')
+      " class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                          placeholder="" required />
+                        <div v-if="firstStepErrors.client_phone_no" class="text-red-500"
+                          v-text="firstStepErrors.client_phone_no[0]"></div>
                       </div>
 
                       <div>
-                        <label
-                          for="EFNumber"
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
-                          >Client Email<span class="text-red-400">*</span></label
-                        >
-                        <input
-                          v-model="form.client_email"
-                          type="text"
-                          id="client_email"
+                        <label for="EFNumber" class="block mt-5 text-sm mb-2 font-medium text-gray-900 ">Client
+                          Email<span class="text-red-400">*</span></label>
+                        <input v-model="form.client_email" type="text" id="client_email"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                          placeholder=""
-                          required
-                        />
-                        <div
-                          v-if="firstStepErrors.client_email"
-                          class="text-red-500"
-                          v-text="firstStepErrors.client_email[0]"
-                        ></div>
+                          placeholder="" required />
+                        <div v-if="firstStepErrors.client_email" class="text-red-500"
+                          v-text="firstStepErrors.client_email[0]"></div>
                       </div>
 
                       <div>
-                        <label
-                          for="EFNumber"
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
-                          >Gender<span class="text-red-400">*</span></label
-                        >
+                        <label for="EFNumber" class="block mt-5 text-sm mb-2 font-medium text-gray-900 ">Gender<span
+                            class="text-red-400">*</span></label>
 
-                        <select
-                          v-model="form.gender"
-                          id="gender"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                        >
+                        <select v-model="form.gender" id="gender"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
                           <option disabled>Select</option>
                           <option value="Male">Male</option>
                           <option value="Female">Female</option>
                           <option value="Other">Other</option>
                         </select>
-                        <div
-                          v-if="firstStepErrors.gender"
-                          class="text-red-500"
-                          v-text="firstStepErrors.gender[0]"
-                        ></div>
+                        <div v-if="firstStepErrors.gender" class="text-red-500" v-text="firstStepErrors.gender[0]">
+                        </div>
                       </div>
 
                       <div>
-                        <label
-                          for="EFNumber"
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
-                          >Date of Birth<span class="text-red-400">*</span></label
-                        >
+                        <label for="EFNumber" class="block mt-5 text-sm mb-2 font-medium text-gray-900 ">Date of
+                          Birth<span class="text-red-400">*</span></label>
 
-                        <VueDatePicker
-                          v-model="form.dob"
-                          :disabled="disabledDob"
-                          format="MM-dd-yyyy"
-                          :maxDate="maxDate"
-                          auto-apply
-                          utc="preserve"
-                        >
+                        <VueDatePicker v-model="form.dob" :disabled="disabledDob" format="MM-dd-yyyy" :maxDate="maxDate"
+                          auto-apply utc="preserve">
                         </VueDatePicker>
-                        <div
-                          v-if="firstStepErrors.dob"
-                          class="text-red-500"
-                          v-text="firstStepErrors.dob[0]"
-                        ></div>
+                        <div v-if="firstStepErrors.dob" class="text-red-500" v-text="firstStepErrors.dob[0]"></div>
                       </div>
                     </div>
 
-                    <label
-                      for="message"
-                      class="block mt-5 mb-2 text-sm font-medium text-gray-900"
-                      >Notes</label
-                    >
-                    <textarea
-                      v-model="form.notes"
-                      id="notes"
-                      rows="5"
+                    <label for="message" class="block mt-5 mb-2 text-sm font-medium text-gray-900">Notes</label>
+                    <textarea v-model="form.notes" id="notes" rows="5"
                       class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
-                      placeholder="Write your thoughts here..."
-                    ></textarea>
-                    <div
-                      v-if="firstStepErrors.notes"
-                      class="text-red-500"
-                      v-text="firstStepErrors.notes[0]"
-                    ></div>
+                      placeholder="Write your thoughts here..."></textarea>
+                    <div v-if="firstStepErrors.notes" class="text-red-500" v-text="firstStepErrors.notes[0]"></div>
 
-                    <h1
-                      style="background-color: #134576"
-                      class="mt-5 text-center rounded-md py-2 text-white"
-                    >
+                    <h1 style="background-color: #134576" class="mt-5 text-center rounded-md py-2 text-white">
                       Policy Information
                     </h1>
 
-                    <div
-                      class="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-x-8"
-                    >
+                    <div class="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-x-8">
                       <!-- <div>
                         <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 ">Business
                           Label</label>
@@ -1577,15 +1316,10 @@ let existingBusiness = () => {
                       </div> -->
 
                       <div>
-                        <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
-                          >Status<span class="text-red-400">*</span></label
-                        >
-                        <select
-                          v-model="form.status"
-                          id="status"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                        >
+                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 ">Status<span
+                            class="text-red-400">*</span></label>
+                        <select v-model="form.status" id="status"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
                           <option disabled>Select</option>
                           <option value="Submitted">Submitted</option>
                           <option value="Approved">Approved</option>
@@ -1598,201 +1332,109 @@ let existingBusiness = () => {
                             Carrier Missing Information
                           </option>
                         </select>
-                        <div
-                          v-if="firstStepErrors.status"
-                          class="text-red-500"
-                          v-text="firstStepErrors.status[0]"
-                        ></div>
+                        <div v-if="firstStepErrors.status" class="text-red-500" v-text="firstStepErrors.status[0]">
+                        </div>
                       </div>
                       <div>
-                        <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
-                          >Insurance Company<span class="text-red-400">*</span></label
-                        >
-                        <select
-                          v-model="form.insurance_company"
-                          id="insurance_company"
-                          @change="ChangeProducName()"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                        >
+                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 ">Insurance Company<span
+                            class="text-red-400">*</span></label>
+                        <select v-model="form.insurance_company" id="insurance_company" @change="ChangeProducName()"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
                           <option disabled>Select</option>
-                          <option
-                            v-for="option in getInsuranceCompanyOptions()"
-                            v-text="option"
-                          ></option>
+                          <option v-for="option in getInsuranceCompanyOptions()" v-text="option"></option>
                         </select>
-                        <div
-                          v-if="firstStepErrors.insurance_company"
-                          class="text-red-500"
-                          v-text="firstStepErrors.insurance_company[0]"
-                        ></div>
+                        <div v-if="firstStepErrors.insurance_company" class="text-red-500"
+                          v-text="firstStepErrors.insurance_company[0]"></div>
                       </div>
 
                       <div>
-                        <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
-                          >Product Name<span class="text-red-400">*</span></label
-                        >
-                        <select
-                          v-model="form.product_name"
-                          id="product_name"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                        >
+                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 ">Product Name<span
+                            class="text-red-400">*</span></label>
+                        <select v-model="form.product_name" id="product_name"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
                           <option disabled>Select</option>
-                          <option
-                            v-for="option in getProductNameOptions()"
-                            :value="option"
-                            v-text="option"
-                          ></option>
+                          <option v-for="option in getProductNameOptions()" :value="option" v-text="option"></option>
                         </select>
-                        <div
-                          v-if="firstStepErrors.product_name"
-                          class="text-red-500"
-                          v-text="firstStepErrors.product_name[0]"
-                        ></div>
+                        <div v-if="firstStepErrors.product_name" class="text-red-500"
+                          v-text="firstStepErrors.product_name[0]"></div>
                       </div>
 
                       <div>
-                        <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
-                          >Application Date <span class="text-red-400">*</span></label
-                        >
-                        <VueDatePicker
-                          v-model="form.application_date"
-                          :disabled="applicationDate"
-                          format="MM-dd-yyyy"
-                          :maxDate="maxDate"
-                          auto-apply
-                          utc="preserve">
+                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 ">Application Date <span
+                            class="text-red-400">*</span></label>
+                        <VueDatePicker v-model="form.application_date" :disabled="applicationDate" format="MM-dd-yyyy"
+                          :maxDate="maxDate" auto-apply utc="preserve">
                         </VueDatePicker>
-                        <div
-                          v-if="firstStepErrors.application_date"
-                          class="text-red-500"
-                          v-text="firstStepErrors.application_date[0]"
-                        ></div>
+                        <div v-if="firstStepErrors.application_date" class="text-red-500"
+                          v-text="firstStepErrors.application_date[0]"></div>
                       </div>
 
                       <div>
-                        <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
-                          >Coverage Amount<span class="text-red-400">*</span></label
-                        >
-                        <input
-                          v-model="form.coverage_amount"
-                          @input="
-                            CurrencyValidation(form.coverage_amount, 'coverage_amount')
-                          "
-                          type="text"
-                          id="coverage_amount"
+                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 ">Coverage Amount<span
+                            class="text-red-400">*</span></label>
+                        <input v-model="form.coverage_amount" @input="
+      CurrencyValidation(form.coverage_amount, 'coverage_amount')
+      " type="text" id="coverage_amount"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                          placeholder="$ 0.00"
-                          required
-                        />
-                        <div
-                          v-if="firstStepErrors.coverage_amount"
-                          class="text-red-500"
-                          v-text="firstStepErrors.coverage_amount[0]"
-                        ></div>
+                          placeholder="$ 0.00" required />
+                        <div v-if="firstStepErrors.coverage_amount" class="text-red-500"
+                          v-text="firstStepErrors.coverage_amount[0]"></div>
                       </div>
 
                       <div>
-                        <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
-                          >Coverage Length<span class="text-red-400">*</span></label
-                        >
-                        <select
-                          v-model="form.coverage_length"
-                          id="coverage_length"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                        >
+                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 ">Coverage Length<span
+                            class="text-red-400">*</span></label>
+                        <select v-model="form.coverage_length" id="coverage_length"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
                           <option disabled>Select</option>
-                          <option
-                            v-for="option in coverageLengthArray"
-                            :value="option"
-                            v-text="option"
-                          ></option>
+                          <option v-for="option in coverageLengthArray" :value="option" v-text="option"></option>
                         </select>
-                        <div
-                          v-if="firstStepErrors.coverage_length"
-                          class="text-red-500"
-                          v-text="firstStepErrors.coverage_length[0]"
-                        ></div>
+                        <div v-if="firstStepErrors.coverage_length" class="text-red-500"
+                          v-text="firstStepErrors.coverage_length[0]"></div>
                       </div>
 
                       <div>
-                        <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
-                          >Premium Frequency<span class="text-red-400">*</span></label
-                        >
-                        <select
-                          v-model="form.premium_frequency"
-                          @change="ChangeFrequency(form.premium_frequency)"
+                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 ">Premium Frequency<span
+                            class="text-red-400">*</span></label>
+                        <select v-model="form.premium_frequency" @change="ChangeFrequency(form.premium_frequency)"
                           id="premium_frequency"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                        >
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
                           <option disabled>Select</option>
                           <option value="Monthly">Monthly</option>
                           <option value="Quarterly">Quarterly</option>
                           <option value="Semi-Annual">Semi-Annual</option>
                           <option value="Annual">Annual</option>
                         </select>
-                        <div
-                          v-if="firstStepErrors.premium_frequency"
-                          class="text-red-500"
-                          v-text="firstStepErrors.premium_frequency[0]"
-                        ></div>
+                        <div v-if="firstStepErrors.premium_frequency" class="text-red-500"
+                          v-text="firstStepErrors.premium_frequency[0]"></div>
                       </div>
 
                       <div>
-                        <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
-                          >{{
-                            form.premium_frequency != "Select"
-                              ? form.premium_frequency
-                              : ""
-                          }}
-                          Premium Amount<span class="text-red-400">*</span></label
-                        >
-                        <input
-                          v-model="form.premium_amount"
-                          @input="
-                            CurrencyValidation(form.premium_amount, 'premium_amount')
-                          "
-                          type="text"
-                          id="premium_amount"
+                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 ">{{
+      form.premium_frequency != "Select"
+        ? form.premium_frequency
+        : ""
+    }}
+                          Premium Amount<span class="text-red-400">*</span></label>
+                        <input v-model="form.premium_amount" @input="
+      CurrencyValidation(form.premium_amount, 'premium_amount')
+      " type="text" id="premium_amount"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                          placeholder="$ 0.00"
-                          required
-                        />
-                        <div
-                          v-if="firstStepErrors.premium_amount"
-                          class="text-red-500"
-                          v-text="firstStepErrors.premium_amount[0]"
-                        ></div>
+                          placeholder="$ 0.00" required />
+                        <div v-if="firstStepErrors.premium_amount" class="text-red-500"
+                          v-text="firstStepErrors.premium_amount[0]"></div>
                       </div>
 
                       <div>
-                        <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
-                          >Annual Premium Volume<span class="text-red-400">*</span></label
-                        >
-                        <input
-                          v-model="form.premium_volumn"
-                          disabled
-                          @input="
-                            CurrencyValidation(form.premium_volumn, 'premium_volumn')
-                          "
-                          type="text"
-                          id="premium_volumn"
+                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 ">Annual Premium Volume<span
+                            class="text-red-400">*</span></label>
+                        <input v-model="form.premium_volumn" disabled @input="
+      CurrencyValidation(form.premium_volumn, 'premium_volumn')
+      " type="text" id="premium_volumn"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                          placeholder="$ 0.00"
-                          required
-                        />
-                        <div
-                          v-if="firstStepErrors.premium_volumn"
-                          class="text-red-500"
-                          v-text="firstStepErrors.premium_volumn[0]"
-                        ></div>
+                          placeholder="$ 0.00" required />
+                        <div v-if="firstStepErrors.premium_volumn" class="text-red-500"
+                          v-text="firstStepErrors.premium_volumn[0]"></div>
                       </div>
 
                       <!-- <div>
@@ -1810,146 +1452,80 @@ let existingBusiness = () => {
                       </div> -->
 
                       <div>
-                        <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
-                          >Carrier Writing Number</label
-                        >
-                        <input
-                          v-model="form.carrier_writing_number"
-                          type="text"
-                          id="carrier_writing_number"
+                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 ">Carrier Writing Number</label>
+                        <input v-model="form.carrier_writing_number" type="text" id="carrier_writing_number"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                          placeholder=""
-                          required
-                        />
-                        <div
-                          v-if="firstStepErrors.carrier_writing_number"
-                          class="text-red-500"
-                          v-text="firstStepErrors.carrier_writing_number[0]"
-                        ></div>
+                          placeholder="" required />
+                        <div v-if="firstStepErrors.carrier_writing_number" class="text-red-500"
+                          v-text="firstStepErrors.carrier_writing_number[0]"></div>
                       </div>
 
                       <div>
-                        <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
-                          >Was this app from a lead?<span class="text-red-400"
-                            >*</span
-                          ></label
-                        >
-                        <select
-                          v-model="form.this_app_from_lead"
-                          @change="changeAppLead()"
-                          id="this_app_from_lead"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                        >
+                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 ">Was this app from a lead?<span
+                            class="text-red-400">*</span></label>
+                        <select v-model="form.this_app_from_lead" @change="changeAppLead()" id="this_app_from_lead"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
                           <option disabled>Select</option>
                           <option value="YES">YES</option>
                           <option value="NO">NO</option>
                         </select>
-                        <div
-                          v-if="firstStepErrors.this_app_from_lead"
-                          class="text-red-500"
-                          v-text="firstStepErrors.this_app_from_lead[0]"
-                        ></div>
+                        <div v-if="firstStepErrors.this_app_from_lead" class="text-red-500"
+                          v-text="firstStepErrors.this_app_from_lead[0]"></div>
                       </div>
 
                       <div>
-                        <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
-                          >Source of the lead<span class="text-red-400">*</span></label
-                        >
+                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 ">Source of the lead<span
+                            class="text-red-400">*</span></label>
                         <!-- <input v-model="form.source_of_lead" :class="{'bg-slate-300': form.this_app_from_lead == 'NO'}" :disabled="form.this_app_from_lead == 'NO'" type="text" id="source_of_lead"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                           placeholder="" required /> -->
-                        <select
-                          v-model="form.source_of_lead"
+                        <select v-model="form.source_of_lead"
                           :class="{ 'bg-slate-300': form.this_app_from_lead == 'NO' }"
-                          :disabled="form.this_app_from_lead == 'NO'"
-                          id="source_of_lead"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                        >
+                          :disabled="form.this_app_from_lead == 'NO'" id="source_of_lead"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
                           <option disabled>Select</option>
                           <option value="Allcalls Client">Allcalls</option>
                           <option value="Outside Lead">Outside Lead</option>
                         </select>
-                        <div
-                          v-if="firstStepErrors.source_of_lead"
-                          class="text-red-500"
-                          v-text="firstStepErrors.source_of_lead[0]"
-                        ></div>
+                        <div v-if="firstStepErrors.source_of_lead" class="text-red-500"
+                          v-text="firstStepErrors.source_of_lead[0]"></div>
                       </div>
 
                       <div>
-                        <label
-                          class="block mt-5 text-sm mb-2 font-medium text-gray-900 "
-                          >What Is the Policy Draft Date?<span class="text-red-400"
-                            >*</span
-                          ></label
-                        >
-                        <VueDatePicker
-                          v-model="form.policy_draft_date"
-                          :disabled="disabledPolicydraftdate"
-                          format="MM-dd-yyyy"
-                          auto-apply
-                          utc="preserve"
-                        >
+                        <label class="block mt-5 text-sm mb-2 font-medium text-gray-900 ">What Is the Policy Draft
+                          Date?<span class="text-red-400">*</span></label>
+                        <VueDatePicker v-model="form.policy_draft_date" :disabled="disabledPolicydraftdate"
+                          format="MM-dd-yyyy" auto-apply utc="preserve">
                         </VueDatePicker>
-                        <div
-                          v-if="firstStepErrors.policy_draft_date"
-                          class="text-red-500"
-                          v-text="firstStepErrors.policy_draft_date[0]"
-                        ></div>
+                        <div v-if="firstStepErrors.policy_draft_date" class="text-red-500"
+                          v-text="firstStepErrors.policy_draft_date[0]"></div>
                       </div>
                     </div>
                   </div>
 
                   <div v-show="step == 2">
-                    <PreviewInfo
-                      :form="form"
-                      :heading="'Please confirm all your information is correct'"
-                    />
+                    <PreviewInfo :form="form" :heading="'Please confirm all your information is correct'" />
                   </div>
 
-                  <div
-                    class="flex mt-8 mb-10"
-                    :class="step > 1 ? 'justify-between' : 'justify-end '"
-                  >
-                    <a
-                      v-if="step > 1"
-                      @click.prevent="Previous(step)"
+                  <div class="flex mt-8 mb-10" :class="step > 1 ? 'justify-between' : 'justify-end '">
+                    <a v-if="step > 1" @click.prevent="Previous(step)"
                       class="button-custom-back px-3 py-2 rounded-md flex items-center"
-                      v-text="step < 2 ? 'Previous' : 'Change Entries'"
-                      href="#"
-                    >
+                      v-text="step < 2 ? 'Previous' : 'Change Entries'" href="#">
                     </a>
-                    <a
-                      v-if="step < 2"
-                      @click.prevent="Next(step)"
-                      class="button-custom px-3 py-2 rounded-md flex items-center"
-                      href="#"
-                    >
+                    <a v-if="step < 2" @click.prevent="Next(step)"
+                      class="button-custom px-3 py-2 rounded-md flex items-center" href="#">
                       Next
                     </a>
-                    <button
-                      v-if="step === 2 && !edit_data"
-                      :class="{ 'opacity-25': isLoading === true }"
-                      :disabled="isLoading == true"
-                      @click="SaveBussinessData()"
-                      class="button-custom px-3 py-2 rounded-md flex items-center"
-                      href="#"
-                    >
+                    <button v-if="step === 2 && !edit_data" :class="{ 'opacity-25': isLoading === true }"
+                      :disabled="isLoading == true" @click="SaveBussinessData()"
+                      class="button-custom px-3 py-2 rounded-md flex items-center" href="#">
                       <global-spinner :spinner="isLoading" />
                       <span v-if="!attactClientEdit">Confirm</span>
                       <span v-if="attactClientEdit">Update</span>
                     </button>
-                    <button
-                      v-if="step === 2 && edit_data"
-                      :class="{ 'opacity-25': isLoading2 === true }"
-                      :disabled="isLoading2 == true"
-                      @click="UpdateBussinessData()"
-                      class="button-custom px-3 py-2 rounded-md flex items-center"
-                      href="#"
-                    >
+                    <button v-if="step === 2 && edit_data" :class="{ 'opacity-25': isLoading2 === true }"
+                      :disabled="isLoading2 == true" @click="UpdateBussinessData()"
+                      class="button-custom px-3 py-2 rounded-md flex items-center" href="#">
                       <global-spinner :spinner="isLoading2" /> Update
                     </button>
                   </div>
