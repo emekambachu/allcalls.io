@@ -153,7 +153,7 @@ Route::get('/twiml', function (Request $request) {
 Route::middleware(['auth:sanctum', 'notBanned'])->get('/device/token', [TwilioTokenController::class, 'show']);
 
 
-Route::get('/call/incoming', [IncomingCallController::class, 'respond'])->middleware('twilio');
+Route::post('/call/incoming', [IncomingCallController::class, 'respond'])->middleware('twilio');
 // Route::get('/call/incoming', function() {
 // $numberToDial = '+15736523170';
 
