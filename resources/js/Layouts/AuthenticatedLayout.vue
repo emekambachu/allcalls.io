@@ -3450,6 +3450,59 @@ let appDownloadModal = ref(false);
         >
           Hangup Third-Party
         </button> -->
+
+
+        <div id="app" class="p-5">
+          <!-- Toggle Button for Dial Pad Modal -->
+          <div class="py-3">
+              <button @click="showDialPad = !showDialPad" class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded flex items-center justify-center">
+                  <i class="fas fa-phone-alt"></i>
+                  <span class="ml-2">Add Call</span>
+              </button>
+          </div>
+
+          <!-- Dial Pad Modal -->
+          <div v-if="showDialPad" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" id="modal">
+              <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                  <!-- Modal Header -->
+                  <div class="flex justify-between items-center pb-3">
+                      <p class="text-2xl font-bold">Enter the number</p>
+                      <div class="cursor-pointer z-50" @click="showDialPad = false">
+                          <i class="fas fa-times"></i>
+                      </div>
+                  </div>
+                  <!-- Dial Pad Buttons -->
+                  <div class="flex flex-wrap justify-center gap-3 mb-3">
+                      <button v-for="number in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#']"
+                              :key="number"
+                              @click="conferenceTypedNumber += number"
+                              class="bg-gray-300 hover:bg-gray-200 text-black font-bold py-2 px-4 rounded">
+                          {{ number }}
+                      </button>
+                  </div>
+                  <!-- Number Display -->
+                  <input v-model="conferenceTypedNumber" class="mb-3 p-2 border rounded w-full" />
+                  <!-- Call Button -->
+                  <button @click="callNumber"
+                          class="bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 rounded w-full">
+                      Call
+                  </button>
+              </div>
+          </div>
+
+          <!-- Call Status Messages -->
+          <div v-if="conferenceCallStatus" class="mt-4">
+              <div v-if="conferenceCallStatus === 'initiated'">Third Party: Call Initiated...</div>
+              <div v-if="conferenceCallStatus === 'ringing'">Third Party: Ringing...</div>
+              <div v-if="conferenceCallStatus === 'joined'">Third Party: Joined</div>
+          </div>
+          
+          <!-- Hangup Button -->
+          <button @click="hangupThirdPartyCall"
+                  class="mt-4 bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 rounded">
+              Hangup Third-Party
+          </button>
+        </div>
         <!-- Merge Calls Button Ends -->    
 
       </div>
