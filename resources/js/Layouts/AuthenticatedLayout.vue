@@ -3406,7 +3406,7 @@ let appDownloadModal = ref(false);
         <div class="py-3">
           <button
             @click="showDialPad = !showDialPad"
-            class="bg-custom-dark hover:bg-blue-400 text-white py-2 px-4 rounded"
+            class="bg-blue-700 hover:bg-blue-500 text-white py-2 px-4 rounded"
           >
             Add Call
           </button>
@@ -3511,41 +3511,47 @@ let appDownloadModal = ref(false);
 
         </div> -->
 
-        <div v-if="showDialPad" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-
-          <div id="app" class="container mx-auto mt-10">
-            <!-- <button @click="showDialPad = true" class="mx-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full text-lg flex items-center">
-                <i class="fas fa-phone-alt mr-2"></i> Open Dial Pad
-            </button> -->
-            <!-- Modal container -->
-            <div class="bg-white p-6 rounded-lg shadow-lg">
-              <!-- Modal header with close button -->
-              <div class="flex justify-between items-center mb-4">
-                <span class="text-lg font-medium">Enter the number</span>
-                <button @click="showDialPad = false" class="text-gray-700 hover:text-gray-900">
-                  <XIcon class="h-5 w-5" />
-                </button>
-              </div>
-              <!-- Input field -->
-              <div class="flex justify-center items-center mb-4">
-                <input type="tel" v-model="conferenceTypedNumber" class="form-control text-center text-xl border-b-2 border-gray-300 focus:outline-none focus:border-gray-500" placeholder="+1 (555) 123-4567" />
-              </div>
-              <!-- Dial pad -->
-              <div class="grid grid-cols-3 gap-3 mb-4">
-                <button v-for="digit in ['1','2','3','4','5','6','7','8','9','*','0','#']" :key="digit" @click="appendNumber(digit)" class="flex justify-center items-center h-12 w-12 bg-gray-200 rounded-full text-xl hover:bg-gray-300">
-                  {{ digit }}
-                </button>
-              </div>
-              <!-- Call and delete buttons -->
-              <div class="flex justify-between mt-4">
-                <button @click="callNumber" class="flex justify-center items-center h-12 w-12 bg-green-500 rounded-full text-white hover:bg-green-600">
-                  <PhoneIcon class="h-6 w-6" />
-                </button>
-                <button @click="appendNumber('+')" class="text-xl">+</button>
-                <button @click="deleteNumber" class="flex justify-center items-center h-12 w-12 bg-red-500 rounded-full text-white hover:bg-red-600">
-                  <XIcon class="h-6 w-6" />
-                </button>
-              </div>
+        <div v-if="showDialPad" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center p-4">
+          <!-- Modal container -->
+          <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
+            <!-- Modal header with close button -->
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-lg font-medium">Enter the number</h3>
+              <button @click="showDialPad = false" class="rounded p-1 hover:bg-gray-200">
+                <!-- Close icon -->
+                <svg class="h-6 w-6 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <!-- Input field -->
+            <div class="flex justify-center items-center mb-4">
+              <input type="tel" v-model="conferenceTypedNumber" class="form-control text-center text-xl border-b-2 border-gray-300 focus:outline-none focus:border-gray-500 w-full" placeholder="+1 (555) 123-4567" />
+            </div>
+            <!-- Dial pad -->
+            <div class="grid grid-cols-3 gap-4 mb-4">
+              <button v-for="digit in ['1','2','3','4','5','6','7','8','9','*','0','#']" :key="digit" @click="appendNumber(digit)" class="flex justify-center items-center h-12 w-full bg-gray-200 rounded text-xl hover:bg-gray-300">
+                {{ digit }}
+              </button>
+            </div>
+            <!-- Call and delete buttons -->
+            <div class="flex justify-between mt-4">
+              <button @click="callNumber" class="flex justify-center items-center h-12 w-12 bg-green-500 rounded-full text-white hover:bg-green-600">
+                <!-- Phone icon -->
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10a9 9 0 0113-7m4 4v13a9 9 0 01-9 9H5a9 9 0 01-9-9v-4a9 9 0 019-9h3" />
+                </svg>
+              </button>
+              <button @click="appendNumber('+')" class="flex justify-center items-center h-12 w-12">
+                <!-- Plus icon (represented by SVG inline) -->
+                <!-- Add Plus SVG from heroicons here -->
+              </button>
+              <button @click="deleteNumber" class="flex justify-center items-center h-12 w-12 bg-red-500 rounded-full text-white hover:bg-red-600">
+                <!-- X icon -->
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
