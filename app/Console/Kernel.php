@@ -51,9 +51,11 @@ class Kernel extends ConsoleKernel
             }
         }
 
-        $schedule->command('allcalls:check-dnc-health')
-            ->timezone('America/New_York') // EST timezone
-            ->dailyAt('15:00'); // 3 PM
+        if (app()->environment('production')) {
+            $schedule->command('allcalls:check-dnc-health')
+                ->timezone('America/New_York') // EST timezone
+                ->dailyAt('16:00'); // 4 PM
+        }
     }
 
     /**

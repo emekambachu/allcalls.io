@@ -14,6 +14,7 @@ use App\Models\AvailableNumber;
 use App\Models\UserCallTypeState;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 use Twilio\Security\RequestValidator;
 
 class IncomingCallController extends Controller
@@ -28,7 +29,16 @@ class IncomingCallController extends Controller
 
         $to = $request->input('To');
         Log::debug('To attribute: ' . $to);
-
+        Log::debug('Incoming call request from twilio: ' . json_encode($request->all()));
+        $specialCallToken = $request->input('CallToken');
+        $incomingCallerId = $request->input('From'); // Get the caller ID from the Twilio request        
+        Log::debug('Incoming call request token: ' . $incomingCallerId . $specialCallToken);
+        Cache::put('specialCallToken', $specialCallToken, 6000); // 600 seconds = 10 minutes
+        $incomingCallSid = $request->input('CallSid'); // Get the incoming call SID from the Twilio request
+        // You might want to save the incoming call data in the database or a cache for later use
+        // For this example, let's assume you're storing it in the cache temporarily
+        Cache::put("incoming_caller_id", $incomingCallerId, now()->addMinutes(100));
+        
         // Remove the "+1" from the beginning of the "To" number
         $to = substr($to, 2);
 
@@ -301,7 +311,8 @@ class IncomingCallController extends Controller
             Log::debug('CallComingFrom:client', [
                 'From' => request('From'),
             ]);
-            $callerId = '+441146971410';
+            // $callerId = '+441146971410';
+            $callerId = '+18045172235';
         } else {
             Log::debug('CallComingFrom:phone', [
                 'From' => request('From'),

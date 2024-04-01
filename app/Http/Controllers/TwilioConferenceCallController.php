@@ -5,8 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Call;
 use Twilio\Rest\Client;
 use Illuminate\Http\Request;
+use App\Models\ConferenceCall;
 use Twilio\TwiML\VoiceResponse;
 use Illuminate\Support\Facades\Log;
+use App\Models\ConferenceParticipant;
+use Illuminate\Support\Facades\Cache;
+use App\Events\ConferenceCallThirdPartyJoined;
+use App\Events\ConferenceCallThirdPartyRinging;
 
 class TwilioConferenceCallController extends Controller
 {
@@ -97,56 +102,6 @@ class TwilioConferenceCallController extends Controller
         }
     }
     
-
-
-    // public function convertToConferenceWithNewNumber(Request $request)
-    // {
-    //     // Extract callSid and phoneNumber from the request's JSON payload
-    //     $callSid = $request->json('callSid');
-    //     $phoneNumber = $request->json('phoneNumber');
-    
-    //     // Log the incoming request details
-    //     Log::info("Converting call to conference", ['callSid' => $callSid, 'phoneNumber' => $phoneNumber]);
-    
-    //     // Twilio credentials
-    //     $accountSid = env('TWILIO_SID');
-    //     $authToken = env('TWILIO_AUTH_TOKEN');
-    //     $twilioNumber = env('TWILIO_PHONE_NUMBER'); // Your Twilio number that can make calls
-    //     Log::info("Twilio credentials", ['accountSid' => $accountSid, 'authToken' => $authToken, 'twilioNumber' => $twilioNumber]);
-
-    //     $client = new Client($accountSid, $authToken);
-    
-    //     // Unique name for the conference
-    //     $conferenceName = 'Conference' . uniqid();
-    
-    //     // TwiML to join the ongoing call to a conference
-    //     $twiml = '<Response><Dial><Conference>' . htmlspecialchars($conferenceName) . '</Conference></Dial></Response>';
-    
-    //     try {
-    //         // Update the ongoing call to join the conference
-    //         $callUpdateResponse = $client->calls($callSid)
-    //             ->update(["twiml" => $twiml]);
-    
-    //         Log::info("Ongoing call updated to join conference", ['callSid' => $callSid, 'conferenceName' => $conferenceName]);
-    
-    //         // Create a new call to add the new participant to the same conference
-    //         $newCallResponse = $client->calls->create(
-    //             $phoneNumber, // The phone number to add to the conference
-    //             $twilioNumber, // A number in your Twilio account that can make calls
-    //             ["twiml" => $twiml]
-    //         );
-    
-    //         Log::info("New participant added to conference", ['phoneNumber' => $phoneNumber, 'conferenceName' => $conferenceName]);
-    
-    //     } catch (\Exception $e) {
-    //         // Log any errors
-    //         Log::error("Error converting call to conference", ['error' => $e->getMessage()]);
-    //         return response()->json(['message' => 'Failed to convert call to conference', 'error' => $e->getMessage()], 500);
-    //     }
-    
-    //     return response()->json(['message' => 'Call converted to conference and participant added']);
-    // }
-    
     public function convertToConferenceWithNewNumber(Request $request)
     {
         // Validate the request parameters
@@ -183,7 +138,7 @@ class TwilioConferenceCallController extends Controller
         $client = new Client($accountSid, $authToken);
     
         // Name for the conference
-        $conferenceName = 'MyConference'; // This should be the same for all calls you want to merge
+        $conferenceName = 'MyConference' . uniqid(); // This should be the same for all calls you want to merge
     
         try {
             // Redirect the call to the conference TwiML endpoint
@@ -200,6 +155,19 @@ class TwilioConferenceCallController extends Controller
                 'conferenceName' => $conferenceName
             ]);
 
+            // Attempt to find or create the conference call
+            $conferenceCall = ConferenceCall::firstOrCreate([
+                'name' => $conferenceName,
+            ], [
+                'status' => 'initiated',
+                'call_id' => $call->id,
+            ]);
+
+            Log::info("Conference Call saved to database: " . $conferenceCall); 
+            
+            $specialCallToken = Cache::get('specialCallToken');
+            $storedCallerId = Cache::get("incoming_caller_id");
+
             // If a phone number is provided, dial out to this number and add to the conference
             if ($phoneNumber) {
                 $twiml = "<Response><Dial><Conference>{$conferenceName}</Conference></Dial></Response>";
@@ -207,17 +175,70 @@ class TwilioConferenceCallController extends Controller
                 $newCallResponse = $client->calls->create(
                     $phoneNumber, // The phone number to call and add to the conference
                     $twilioNumber, // Your Twilio number
-                    ["twiml" => $twiml]
+                    // ["twiml" => $twiml]
+                    [
+                        "twiml" => $twiml,
+                        "callToken" => $specialCallToken,
+                        "StatusCallback" => route('conference.statusCallback'),
+                        "StatusCallbackEvent" => ["initiated", "ringing", "answered", "completed"],
+                        "callerId" => $storedCallerId
+                    ]
                 );
 
                 Log::info("New participant added to conference", ['phoneNumber' => $phoneNumber, 'conferenceName' => $conferenceName, 'newCallSid' => $newCallResponse->sid]);
                 Log::info("Response from conversion to conference call: ", ['response' => $newCallResponse]);
             }
+
+            // Adding first and second legs with a default 'connected' status
+            foreach ([$firstLeg, $secondLeg] as $leg) {
+                if ($leg) {
+                    $conferenceCall->participants()->create([
+                        'sid' => $leg->sid,
+                        'status' => 'connected', // Default status for existing participants                        
+                    ]);
+                }
+            }
+
+            // Adding the third party with a 'ringing' status, if applicable
+            if (isset($newCallResponse)) {
+                $thirdPartyParticipant = $conferenceCall->participants()->create([
+                    'sid' => $newCallResponse->sid,
+                    'status' => 'ringing', // Specific status for the new call
+                    'phone_number' => $phoneNumber,
+                    'is_third_party' => true
+                ]);
+
+                Log::info('Third Party is set to true and saved to DB ' . $thirdPartyParticipant);
+            } else {
+                Log::info('Third Party not found ');
+            }
+
+            // ConferenceCallThirdPartyRinging::dispatch($thirdPartyParticipant);
+            try {
+                // Dispatch the event
+                ConferenceCallThirdPartyRinging::dispatch($thirdPartyParticipant);
+                
+                // Log successful dispatch
+                Log::info('ConferenceCallThirdPartyRinging event dispatched successfully.', [
+                    'participant_id' => $thirdPartyParticipant->id,
+                ]);
+            } catch (\Exception $e) {
+                // Log any exceptions that occur during dispatch
+                Log::error('Error dispatching ConferenceCallThirdPartyRinging event.', [
+                    'error_message' => $e->getMessage(),
+                    'participant_id' => isset($thirdPartyParticipant) ? $thirdPartyParticipant->id : 'N/A',
+                ]);
+            }
                 
             // Log::info("Call made to: " . $call->to);
             Log::info("Call redirected to conference TwiML", ['callSid' => $callSid, 'conferenceName' => $conferenceName]);
     
-            return response()->json(['message' => 'Conference call setup complete.']);
+            return response()->json([
+                'message' => 'Conference call setup complete.',
+                'conferenceName' => $conferenceName,
+                'thirdPartySid' => $newCallResponse->sid,
+            ]);
+            
         } catch (\Exception $e) {
             Log::error("Error setting up conference call", ['error' => $e->getMessage()]);
             return response()->json(['error' => 'Failed to set up conference call', 'details' => $e->getMessage()], 500);
@@ -306,9 +327,16 @@ class TwilioConferenceCallController extends Controller
         Log::info('Conference status callback received', $requestData);
 
         // You can also extract and log specific parts of the request, if needed
+        $conferenceName = $request->input('FriendlyName');
         $conferenceSid = $request->input('ConferenceSid');
         $status = $request->input('StatusCallbackEvent');
         $callSid = $request->input('CallSid'); // SID of the participant who triggered the event
+        $statusCallbackEvent = $request->input('StatusCallbackEvent');
+        $participantCallStatus = $request->input('ParticipantCallStatus');
+        $reasonParticipantLeft = $request->input('ReasonParticipantLeft');
+        $muted = $request->boolean('Muted') ? 1 : 0;
+        $hold = $request->boolean('Hold') ? 1 : 0;
+        $coaching = $request->boolean('Coaching') ? 1 : 0;
 
         Log::info("Conference SID: {$conferenceSid}, Status: {$status}, Call SID: {$callSid}");
 
@@ -316,10 +344,39 @@ class TwilioConferenceCallController extends Controller
         switch ($status) {
             case 'conference-start':
                 // The conference has started
+                $conference = ConferenceCall::where('name', $conferenceName)->first();
+                if ($conference) {
+                    $conference->update([
+                        'conference_sid' => $conferenceSid,
+                        'status' => 'active', // Assuming 'active' is a valid status in your application
+                    ]);
+                }
                 break;
+
             case 'participant-join':
                 // A participant has joined the conference
+                $participant = ConferenceParticipant::where('sid', $callSid)->first();
+                
+                $this->updateParticipantStatus($callSid, [
+                    'status' => 'joined', // Assuming you have a 'joined' status
+                    'muted' => $muted,
+                    'hold' => $hold,
+                    'coaching' => $coaching,
+                    'call_status' => $participantCallStatus // Or another appropriate status
+                ]);
+
+                // Check if the participant is the third-party participant
+                if ($participant && $participant->is_third_party) {
+                    // Dispatch your custom event for third-party participant join
+                    ConferenceCallThirdPartyJoined::dispatch($participant);
+                    Log::debug('Participant is third-party participant.' . $participant);
+                } else {
+                    // $participant is null or is_third_party is not true
+                    // Handle this case accordingly. Maybe log an error or take some other action.
+                    Log::debug('Participant is null or not a third-party participant.');
+                }
                 break;
+
             case 'participant-leave':
                 // A participant has left the conference
                 break;
@@ -333,38 +390,48 @@ class TwilioConferenceCallController extends Controller
         return response()->json(['message' => 'Status callback received and logged']);
     }
 
+    protected function updateParticipantStatus($callSid, $attributes)
+    {
+        $participant = ConferenceParticipant::where('sid', $callSid)->first();
+        if ($participant) {
+            $participant->update($attributes);
+            Log::info("Participant status updated", ['sid' => $callSid, 'attributes' => $attributes]);
+        } else {
+            Log::error("Participant not found", ['sid' => $callSid]);
+        }
+    }
+
     public function hangUpThirdParty(Request $request)
     {
-        // Your Twilio Account SID and Auth Token from twilio.com/console
-        $accountSid = env('TWILIO_SID'); 
+        // Your Twilio Account SID and Auth Token
+        $accountSid = env('TWILIO_SID');
         $authToken = env('TWILIO_AUTH_TOKEN');
-    
-        // Instantiate a new Twilio Rest Client
         $client = new Client($accountSid, $authToken);
     
-        // Retrieve Conference SID and Call SID of the third-party participant from the request
-        $conferenceSid = $request->input('conferenceSid');
         $callSid = $request->input('callSid');
+        $conferenceName = $request->input('conferenceName');
+    
+        if ($conferenceName) {
+            // Retrieve the conference SID using the conference name
+            $conference = ConferenceCall::where('name', $conferenceName)->first();
+            if (!$conference) {
+                return response()->json(['error' => 'Conference not found'], 404);
+            }
+            $conferenceSid = $conference->conference_sid;
+        } else {
+            $conferenceSid = $request->input('conferenceSid');
+        }
     
         try {
-            // Use the Twilio REST API to remove the participant from the conference
-            $client->conferences($conferenceSid)
-                   ->participants($callSid)
-                   ->delete();
-    
-            // Since delete() does not return a response, assume successful deletion if no exception was thrown
+            $client->conferences($conferenceSid)->participants($callSid)->delete();
             return response()->json(['message' => 'Call with third party ended successfully.']);
         } catch (\Exception $e) {
-            // Log and return the exception details
             Log::error('Error ending call with third party', [
                 'conferenceSid' => $conferenceSid, 
                 'callSid' => $callSid, 
                 'error' => $e->getMessage()
             ]);
-    
             return response()->json(['error' => 'Failed to end call with third party', 'details' => $e->getMessage()], 500);
         }
-    }
-    
-
+    }    
 }

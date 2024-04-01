@@ -43,6 +43,7 @@ use App\Http\Controllers\NotificationsAPIController;
 use App\Http\Controllers\OverseerResponseController;
 use App\Http\Controllers\CallDeviceActionsController;
 use App\Http\Controllers\AvailableAgentsAPIController;
+use App\Http\Controllers\OnScriptDelayedAPIController;
 use App\Http\Controllers\TwilioWebhookErrorController;
 use App\Http\Controllers\CallUserResponseAPIController;
 use App\Http\Controllers\CallTypesSelectedAPIController;
@@ -152,7 +153,7 @@ Route::get('/twiml', function (Request $request) {
 Route::middleware(['auth:sanctum', 'notBanned'])->get('/device/token', [TwilioTokenController::class, 'show']);
 
 
-Route::get('/call/incoming', [IncomingCallController::class, 'respond'])->middleware('twilio');
+Route::post('/call/incoming', [IncomingCallController::class, 'respond'])->middleware('twilio');
 // Route::get('/call/incoming', function() {
 // $numberToDial = '+15736523170';
 
@@ -310,3 +311,5 @@ Route::post('/commio/sms/receive', [TextMessageController::class, 'receiveMessag
 Route::post('/twilio-webhook-error', [TwilioWebhookErrorController::class, 'store']);
 
 Route::post('/send/batch/sms/', [ZoomMeetingNotificationController::class, 'sendBatchTextMessages']);
+
+Route::get('/onscript/delay', [OnScriptDelayedAPIController::class, 'delayDispatch']);

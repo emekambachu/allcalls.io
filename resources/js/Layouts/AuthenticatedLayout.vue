@@ -25,6 +25,10 @@ let showDialPad = ref(false);
 let conferenceTypedNumber = ref(null);
 let incomingCallSid = ref(null);
 let incomingCallSidTwo = ref(null);
+let thirdPartySid = ref('');
+let conferenceName = ref('');
+let conferenceCallStatus = ref(null);
+let isConferenceCallInitiated = ref(false);
 
 let showLowBalanceModal = ref(false);
 if (
@@ -604,6 +608,27 @@ onMounted(() => {
   );
 
   setupTwilioDevice();
+
+  Echo.channel('conference-call')
+    .listen('ConferenceCallThirdPartyRinging', (e) => {
+      console.log("Ringing event for third party came in! " + JSON.stringify(e.participant));
+      
+      // Update your UI here based on the received participant data
+        conferenceCallStatus.value = 'ringing';
+    });
+
+    Echo.channel('conference-call')
+    .listen('ConferenceCallThirdPartyJoined', (e) => {
+      console.log("Joined event for third party came in! " + JSON.stringify(e.participant));
+      
+      // Update your UI here based on the received participant data
+      conferenceCallStatus.value = 'joined';
+
+      setTimeout(() => {
+        showDialPad.value = false;
+      }, 500);
+    });
+
 });
 
 let mergeCallsToConference = () => {
@@ -634,13 +659,20 @@ let callNumber = () => {
       phoneNumber: conferenceTypedNumber.value,
     };
 
+    isConferenceCallInitiated.value = true;
+    conferenceCallStatus.value = "initiated";
+
     // Send the payload to your endpoint
     axios
       .post("/conference/convert/withNumber", payload)
       .then((response) => {
         console.log("Call initiated", response);
+        // Extract and store conferenceName and thirdPartySid from response
+        conferenceName.value = response.data.conferenceName;
+        thirdPartySid.value = response.data.thirdPartySid; 
+
         // Reset or handle post-call UI here
-        showDialPad.value = false;
+        // showDialPad.value = false;
         conferenceTypedNumber.value = "";
       })
       .catch((error) => {
@@ -651,6 +683,27 @@ let callNumber = () => {
     alert("Please enter a number to call.");
   }
 };
+
+let hangupThirdPartyCall = () => {
+  console.log('Conference Name:', conferenceName.value);
+  console.log('Third Party Call SID:', thirdPartySid.value);
+  
+  axios.post('/api/hangup-third-party', {
+    callSid: thirdPartySid.value, 
+    conferenceName: conferenceName.value,
+  })
+  .then(response => {
+    // Handle success
+    alert('Third-party call ended successfully.');
+  })
+  .catch(error => {
+    // Handle error
+    console.error('Error ending third-party call:', error);
+    alert('Failed to end third-party call.');
+    
+  });
+}
+
 
 onUnmounted(() => {
   unregisterTwilioDevice();
@@ -3339,15 +3392,15 @@ let appDownloadModal = ref(false);
           </button>
         </div>
 
-        <!-- Merge Calls Button -->
 
-        
+
+        <!-- Merge Calls Button -->    
         <!-- <div class="py-3">
           <button
             @click="showDialPad = !showDialPad"
             class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded"
           >
-            Merge Calls
+            Add Call
           </button>
         </div>
 
@@ -3384,7 +3437,21 @@ let appDownloadModal = ref(false);
           >
             Call
           </button>
-        </div> -->
+
+        </div>
+
+        <div v-if="conferenceCallStatus === 'initiated'">Third Party: Call Initiated...</div>
+        <div v-if="conferenceCallStatus === 'ringing'">Third Party: Ringing...</div>
+        <div v-if="conferenceCallStatus === 'joined'">Third Party: Joined</div>
+          
+        <button
+          @click="hangupThirdPartyCall"
+          class="bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 rounded"
+        >
+          Hangup Third-Party
+        </button> -->
+        <!-- Merge Calls Button Ends -->    
+
       </div>
     </Modal>
 
