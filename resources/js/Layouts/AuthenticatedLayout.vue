@@ -3467,7 +3467,7 @@ let appDownloadModal = ref(false);
                   </div>
                   <div class="p-6">
                       <div class="flex justify-center mb-4">
-                          <input type="text" class="form-control text-center bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" v-model="conferenceTypedNumber" placeholder="Enter number">
+                          <input type="number" class="form-control text-center bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" v-model="conferenceTypedNumber" placeholder="Enter number">
                       </div>
                       <div class="grid grid-cols-3 gap-4 justify-center items-center">
                           <button v-for="n in ['1','2','3']" :key="n" @click="conferenceTypedNumber += n" class="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded-full">{{ n }}</button>
