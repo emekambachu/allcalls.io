@@ -3407,22 +3407,22 @@ let appDownloadModal = ref(false);
         <div class="py-3 flex gap-2">
           <button
             @click="showDialPad = !showDialPad"
-            class="bg-blue-700 hover:bg-blue-500 text-white py-2 px-6 rounded-full"
+            class="bg-blue-700 hover:bg-blue-500 text-white text-sm py-1 px-3 rounded-full"
           >
             Add Call
           </button>
 
           <button
             @click="hangupThirdPartyCall"
-            v-if="conferenceCallStatus"
-            class="bg-red-600 hover:bg-red-500 text-white rounded-full py-2 px-6"
+            v-if="isConferenceCallInitiated"
+            class="bg-red-600 hover:bg-red-500 text-sm text-white rounded-full py-1 px-3"
           >
             Hangup Third-Party
           </button>
           <button
             @click="alert('Coming soon!')"
-            v-if="conferenceCallStatus"
-            class="bg-red-700 hover:bg-red-600 text-white rounded-full py-2 px-6"
+            v-if="isConferenceCallInitiated"
+            class="bg-red-700 hover:bg-red-600 text-sm text-white rounded-full py-1 px-3"
           >
             Leave 3-Way Call
           </button>
@@ -3560,14 +3560,14 @@ let appDownloadModal = ref(false);
                 </svg>
 
               </button>
-              <button @click="appendNumber('+')" class="flex justify-center items-center h-12 w-12">
+              <button @click="appendNumber('+')" class="flex justify-center items-center h-12 w-12 bg-gray-200 rounded-full text-white hover:bg-green-600">
                 <!-- Plus icon (represented by SVG inline) -->
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                 </svg>
                 <!-- Add Plus SVG from heroicons here -->
               </button>
-              <button @click="deleteNumber" class="flex justify-center items-center h-12 w-12 bg-red-500 rounded-full text-white hover:bg-red-600">
+              <button @click="deleteNumber" class="flex justify-center items-center h-12 w-12 bg-red-300 rounded-full text-white hover:bg-red-600">
                 <!-- X icon -->
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 9.75 14.25 12m0 0 2.25 2.25M14.25 12l2.25-2.25M14.25 12 12 14.25m-2.58 4.92-6.374-6.375a1.125 1.125 0 0 1 0-1.59L9.42 4.83c.21-.211.497-.33.795-.33H19.5a2.25 2.25 0 0 1 2.25 2.25v10.5a2.25 2.25 0 0 1-2.25 2.25h-9.284c-.298 0-.585-.119-.795-.33Z" />
