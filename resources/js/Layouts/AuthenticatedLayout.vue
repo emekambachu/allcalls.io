@@ -3560,7 +3560,7 @@ let appDownloadModal = ref(false);
                 </svg>
 
               </button>
-              <button @click="appendNumber('+')" class="flex justify-center items-center h-12 w-12 bg-gray-200 rounded-full text-white hover:bg-green-600">
+              <button @click="appendNumber('+')" class="flex justify-center items-center h-12 w-12 bg-gray-300 rounded-full text-white hover:bg-gray-400">
                 <!-- Plus icon (represented by SVG inline) -->
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
