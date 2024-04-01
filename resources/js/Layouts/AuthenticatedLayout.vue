@@ -3479,7 +3479,7 @@ let appDownloadModal = ref(false);
                       </div>
                   </div>
                   <div class="flex justify-around p-6 border-t border-gray-200 rounded-b">
-                      <button @click="makeCall" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full flex items-center">
+                      <button @click="callNumber" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full flex items-center">
                           <i class="fas fa-phone-alt mr-2"></i> Call
                       </button>
                       <button @click="showDialPad = false" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full flex items-center">
