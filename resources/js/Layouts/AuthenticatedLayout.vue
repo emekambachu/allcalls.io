@@ -695,6 +695,7 @@ let hangupThirdPartyCall = () => {
   .then(response => {
     // Handle success
     alert('Third-party call ended successfully.');
+    isConferenceCallInitiated.value = false;
   })
   .catch(error => {
     // Handle error
@@ -3403,13 +3404,29 @@ let appDownloadModal = ref(false);
 
 
         <!-- Merge Calls Button -->    
-        <div class="py-3">
+        <div class="py-3 flex gap-2">
           <button
             @click="showDialPad = !showDialPad"
-            class="bg-blue-700 hover:bg-blue-500 text-white py-2 px-4 rounded"
+            class="bg-blue-700 hover:bg-blue-500 text-white py-2 px-6 rounded-full"
           >
             Add Call
           </button>
+
+          <button
+            @click="hangupThirdPartyCall"
+            v-if="conferenceCallStatus"
+            class="bg-red-600 hover:bg-red-500 text-white rounded-full py-2 px-6"
+          >
+            Hangup Third-Party
+          </button>
+          <button
+            @click="alert('Coming soon!')"
+            v-if="conferenceCallStatus"
+            class="bg-red-700 hover:bg-red-600 text-white rounded-full py-2 px-6"
+          >
+            Leave 3-Way Call
+          </button>
+          
         </div>
 
         <!--
@@ -3538,20 +3555,31 @@ let appDownloadModal = ref(false);
             <div class="flex justify-between mt-4">
               <button @click="callNumber" class="flex justify-center items-center h-12 w-12 bg-green-500 rounded-full text-white hover:bg-green-600">
                 <!-- Phone icon -->
-                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10a9 9 0 0113-7m4 4v13a9 9 0 01-9 9H5a9 9 0 01-9-9v-4a9 9 0 019-9h3" />
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 3.75v4.5m0-4.5h-4.5m4.5 0-6 6m3 12c-8.284 0-15-6.716-15-15V4.5A2.25 2.25 0 0 1 4.5 2.25h1.372c.516 0 .966.351 1.091.852l1.106 4.423c.11.44-.054.902-.417 1.173l-1.293.97a1.062 1.062 0 0 0-.38 1.21 12.035 12.035 0 0 0 7.143 7.143c.441.162.928-.004 1.21-.38l.97-1.293a1.125 1.125 0 0 1 1.173-.417l4.423 1.106c.5.125.852.575.852 1.091V19.5a2.25 2.25 0 0 1-2.25 2.25h-2.25Z" />
                 </svg>
+
               </button>
               <button @click="appendNumber('+')" class="flex justify-center items-center h-12 w-12">
                 <!-- Plus icon (represented by SVG inline) -->
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
                 <!-- Add Plus SVG from heroicons here -->
               </button>
               <button @click="deleteNumber" class="flex justify-center items-center h-12 w-12 bg-red-500 rounded-full text-white hover:bg-red-600">
                 <!-- X icon -->
-                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9.75 14.25 12m0 0 2.25 2.25M14.25 12l2.25-2.25M14.25 12 12 14.25m-2.58 4.92-6.374-6.375a1.125 1.125 0 0 1 0-1.59L9.42 4.83c.21-.211.497-.33.795-.33H19.5a2.25 2.25 0 0 1 2.25 2.25v10.5a2.25 2.25 0 0 1-2.25 2.25h-9.284c-.298 0-.585-.119-.795-.33Z" />
                 </svg>
               </button>
+
+              <button @click="hangupThirdPartyCall" class="flex justify-center items-center h-12 w-12 bg-red-500 rounded-full text-white hover:bg-red-600">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 3.75 18 6m0 0 2.25 2.25M18 6l2.25-2.25M18 6l-2.25 2.25m1.5 13.5c-8.284 0-15-6.716-15-15V4.5A2.25 2.25 0 0 1 4.5 2.25h1.372c.516 0 .966.351 1.091.852l1.106 4.423c.11.44-.054.902-.417 1.173l-1.293.97a1.062 1.062 0 0 0-.38 1.21 12.035 12.035 0 0 0 7.143 7.143c.441.162.928-.004 1.21-.38l.97-1.293a1.125 1.125 0 0 1 1.173-.417l4.423 1.106c.5.125.852.575.852 1.091V19.5a2.25 2.25 0 0 1-2.25 2.25h-2.25Z" />
+                </svg>
+              </button>
+
             </div>
           </div>
         </div>
