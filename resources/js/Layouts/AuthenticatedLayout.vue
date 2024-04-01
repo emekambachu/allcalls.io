@@ -3482,13 +3482,13 @@ let appDownloadModal = ref(false);
                           </div>
                           <div class="btn-group-vertical mx-auto">
                               <div class="btn-group">
-                                  <button v-for="n in ['1','2','3']" @click="typedNumber += n" class="btn btn-outline-secondary">{{ n }}</button>
+                                  <button v-for="n in ['1','2','3']" :key="n" @click="typedNumber += n" class="btn btn-outline-secondary">{{ n }}</button>
                               </div>
                               <div class="btn-group">
-                                  <button v-for="n in ['4','5','6']" @click="typedNumber += n" class="btn btn-outline-secondary">{{ n }}</button>
+                                  <button v-for="n in ['4','5','6']" :key="n" @click="typedNumber += n" class="btn btn-outline-secondary">{{ n }}</button>
                               </div>
                               <div class="btn-group">
-                                  <button v-for="n in ['7','8','9']" @click="typedNumber += n" class="btn btn-outline-secondary">{{ n }}</button>
+                                  <button v-for="n in ['7','8','9']" :key="n" @click="typedNumber += n" class="btn btn-outline-secondary">{{ n }}</button>
                               </div>
                               <div class="btn-group">
                                   <button @click="typedNumber += '*'" class="btn btn-outline-secondary">*</button>
