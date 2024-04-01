@@ -3403,16 +3403,16 @@ let appDownloadModal = ref(false);
 
 
         <!-- Merge Calls Button -->    
-        <!-- <div class="py-3">
+        <div class="py-3">
           <button
             @click="showDialPad = !showDialPad"
-            class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded"
+            class="bg-custom-dark hover:bg-blue-400 text-white py-2 px-4 rounded"
           >
             Add Call
           </button>
         </div>
 
-
+        <!--
         <div v-if="showDialPad" class="p-5">
           <div class="flex flex-wrap justify-center gap-3 mb-3">
             <button
@@ -3514,9 +3514,9 @@ let appDownloadModal = ref(false);
         <div v-if="showDialPad" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
 
           <div id="app" class="container mx-auto mt-10">
-            <button @click="showDialPad = true" class="mx-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full text-lg flex items-center">
+            <!-- <button @click="showDialPad = true" class="mx-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full text-lg flex items-center">
                 <i class="fas fa-phone-alt mr-2"></i> Open Dial Pad
-            </button>
+            </button> -->
             <!-- Modal container -->
             <div class="bg-white p-6 rounded-lg shadow-lg">
               <!-- Modal header with close button -->
