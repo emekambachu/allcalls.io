@@ -3464,47 +3464,44 @@ let appDownloadModal = ref(false);
           Hangup Third-Party
         </button> -->
 
-        <div id="app" class="container mt-5">
-          <button type="button" @click="showDialPad = true" class="btn btn-primary btn-lg">
-              <i class="fas fa-phone"></i> Open Dial Pad
-          </button>
+        <div id="app" class="container mx-auto mt-10">
+    <button @click="showDialPad = true" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full text-lg flex items-center">
+        <i class="fas fa-phone-alt mr-2"></i> Open Dial Pad
+    </button>
 
-          <div v-if="showDialPad" class="modal show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
-              <div class="modal-dialog">
-                  <div class="modal-content">
-                      <div class="modal-header">
-                          <h5 class="modal-title">Dial Pad</h5>
-                          <button type="button" class="btn-close" aria-label="Close" @click="showDialPad = false"></button>
-                      </div>
-                      <div class="modal-body">
-                          <div class="input-group mb-3">
-                              <input type="text" class="form-control text-center" v-model="typedNumber" placeholder="Enter number" disabled>
-                          </div>
-                          <div class="btn-group-vertical mx-auto">
-                              <div class="btn-group">
-                                  <button v-for="n in ['1','2','3']" :key="n" @click="typedNumber += n" class="btn btn-outline-secondary">{{ n }}</button>
-                              </div>
-                              <div class="btn-group">
-                                  <button v-for="n in ['4','5','6']" :key="n" @click="typedNumber += n" class="btn btn-outline-secondary">{{ n }}</button>
-                              </div>
-                              <div class="btn-group">
-                                  <button v-for="n in ['7','8','9']" :key="n" @click="typedNumber += n" class="btn btn-outline-secondary">{{ n }}</button>
-                              </div>
-                              <div class="btn-group">
-                                  <button @click="typedNumber += '*'" class="btn btn-outline-secondary">*</button>
-                                  <button @click="typedNumber += '0'" class="btn btn-outline-secondary">0</button>
-                                  <button @click="typedNumber += '#'" class="btn btn-outline-secondary">#</button>
-                              </div>
-                          </div>
-                      </div>
-                      <div class="modal-footer">
-                          <button type="button" class="btn btn-success" @click="makeCall"><i class="fas fa-phone"></i> Call</button>
-                          <button type="button" class="btn btn-secondary" @click="showDialPad = false">Close</button>
-                      </div>
-                  </div>
-              </div>
-          </div>
+    <div v-if="showDialPad" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+        <div class="bg-white rounded-lg">
+            <div class="flex justify-between items-center p-5 border-b border-gray-200">
+                <h5 class="text-xl font-medium text-gray-900">Dial Pad</h5>
+                <button @click="showDialPad = false" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="flex justify-center mb-4">
+                    <input type="text" class="form-control text-center bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" v-model="typedNumber" placeholder="Enter number" disabled>
+                </div>
+                <div class="grid grid-cols-3 gap-4 justify-center items-center">
+                    <button v-for="n in ['1','2','3']" :key="n" @click="typedNumber += n" class="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded-full">{{ n }}</button>
+                    <button v-for="n in ['4','5','6']" :key="n" @click="typedNumber += n" class="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded-full">{{ n }}</button>
+                    <button v-for="n in ['7','8','9']" :key="n" @click="typedNumber += n" class="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded-full">{{ n }}</button>
+                    <button @click="typedNumber += '*'" class="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded-full">*</button>
+                    <button @click="typedNumber += '0'" class="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded-full">0</button>
+                    <button @click="typedNumber += '#'" class="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded-full">#</button>
+                </div>
+            </div>
+            <div class="flex justify-around p-6 border-t border-gray-200 rounded-b">
+                <button @click="makeCall" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full flex items-center">
+                    <i class="fas fa-phone-alt mr-2"></i> Call
+                </button>
+                <button @click="showDialPad = false" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full flex items-center">
+                    <i class="fas fa-times mr-2"></i> Close
+                </button>
+            </div>
         </div>
+    </div>
+</div>
+
         <!-- Merge Calls Button Ends -->    
 
       </div>
