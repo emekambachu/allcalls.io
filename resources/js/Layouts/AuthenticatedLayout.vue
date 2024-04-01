@@ -724,18 +724,6 @@ let appDownloadModal = ref(false);
 </script>
 
 <template>
-  <Head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dial Pad Modal</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <style>
-        .modal-content .btn-group-vertical .btn { width: 70px; }
-        .modal-content .input-group { justify-content: center; }
-        .modal-content .btn-close { position: absolute; right: 15px; top: 10px; }
-    </style>
-  </Head>
 
   <div>
     <div id="body-background-element" class="min-h-screen bg-custom-indigo">
