@@ -3452,7 +3452,8 @@ let appDownloadModal = ref(false);
           Hangup Third-Party
         </button> -->
 
-        <div id="app" class="container mx-auto mt-10">
+        <!-- Dialpad TYPE 2 -->
+        <!-- <div id="app" class="container mx-auto mt-10">
           <button @click="showDialPad = true" class="mx-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full text-lg flex items-center">
               <i class="fas fa-phone-alt mr-2"></i> Open Dial Pad
           </button>
@@ -3467,7 +3468,7 @@ let appDownloadModal = ref(false);
                   </div>
                   <div class="p-6">
                       <div class="flex justify-center mb-4">
-                          <!-- <input type="number" v-model="conferenceTypedNumber" class="form-control text-center bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter number"> -->
+                          <input type="number" v-model="conferenceTypedNumber" class="form-control text-center bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter number">
                           <input v-model="conferenceTypedNumber" class="mb-3 p-2 border rounded w-full" />
                       </div>
                       <div class="grid grid-cols-3 gap-4 justify-center items-center">
@@ -3479,7 +3480,7 @@ let appDownloadModal = ref(false);
                           <button @click="conferenceTypedNumber += '#'" class="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded-full">#</button>
                       </div>
                   </div>
-                  <div class="flex justify-around p-6 border-t border-gray-200 rounded-b">
+                  <div class="flex justify-around p-6 border-t border-gray-200 rounded-b gap-2">
                       <button @click="callNumber" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full flex items-center">
                           <i class="fas fa-phone-alt mr-2"></i> Call
                       </button>
@@ -3495,8 +3496,42 @@ let appDownloadModal = ref(false);
                   </div>
               </div>
           </div>
-        </div>
+        </div> -->
 
+
+        <!-- Dialpad TYPE 3 -->
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center">
+          <!-- Modal container -->
+          <div class="bg-white p-6 rounded-lg shadow-lg">
+            <!-- Modal header with close button -->
+            <div class="flex justify-between items-center mb-4">
+              <span class="text-lg font-medium">Enter the number</span>
+              <button @click="showDialPad = false" class="text-gray-700 hover:text-gray-900">
+                <XIcon class="h-5 w-5" />
+              </button>
+            </div>
+            <!-- Input field -->
+            <div class="flex justify-center items-center mb-4">
+              <input type="tel" v-model="conferenceTypedNumber" class="form-control text-center text-xl border-b-2 border-gray-300 focus:outline-none focus:border-gray-500" placeholder="+1 (555) 123-4567" />
+            </div>
+            <!-- Dial pad -->
+            <div class="grid grid-cols-3 gap-3 mb-4">
+              <button v-for="digit in ['1','2','3','4','5','6','7','8','9','*','0','#']" :key="digit" @click="appendNumber(digit)" class="flex justify-center items-center h-12 w-12 bg-gray-200 rounded-full text-xl hover:bg-gray-300">
+                {{ digit }}
+              </button>
+            </div>
+            <!-- Call and delete buttons -->
+            <div class="flex justify-between mt-4">
+              <button @click="callNumber" class="flex justify-center items-center h-12 w-12 bg-green-500 rounded-full text-white hover:bg-green-600">
+                <PhoneIcon class="h-6 w-6" />
+              </button>
+              <button @click="appendNumber('+')" class="text-xl">+</button>
+              <button @click="deleteNumber" class="flex justify-center items-center h-12 w-12 bg-red-500 rounded-full text-white hover:bg-red-600">
+                <XIcon class="h-6 w-6" />
+              </button>
+            </div>
+          </div>
+        </div>
         <!-- Merge Calls Button Ends -->    
 
       </div>
