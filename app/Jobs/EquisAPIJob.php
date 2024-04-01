@@ -161,7 +161,7 @@ class EquisAPIJob implements ShouldQueue
             "address" => fake()->address(),
             "birthDate" => fake()->date($format = 'Y-m-d', $max = 'now'),
             "city" => fake()->city(),
-            "currentlyLicensed" => false,
+            "currentlyLicensed" => true,
             "email" => fake()->safeEmail(),
             "firstName" => fake()->firstName(),
             "languageId" => "en",
@@ -171,7 +171,7 @@ class EquisAPIJob implements ShouldQueue
             "role" => "Agent",
             "details" => "A New Agent Registered.",
             "state" => fake()->stateAbbr(),
-            "managerPartnerUniqueId" => fake()->regexify('[A-Z0-9]{4}'),
+            "managerPartnerUniqueId" => 'AC73',
             "zipCode" => fake()->postcode(),
         ];
     }
