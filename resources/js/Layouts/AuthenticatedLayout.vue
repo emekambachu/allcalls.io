@@ -3482,6 +3482,12 @@ let appDownloadModal = ref(false);
                       <button @click="callNumber" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full flex items-center">
                           <i class="fas fa-phone-alt mr-2"></i> Call
                       </button>
+                      <button
+                        @click="hangupThirdPartyCall"
+                        class="bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 rounded"
+                      >
+                        Hangup Third-Party
+                      </button>
                       <button @click="showDialPad = false" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full flex items-center">
                           <i class="fas fa-times mr-2"></i> Close
                       </button>
