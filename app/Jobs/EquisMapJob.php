@@ -52,6 +52,10 @@ class EquisMapJob implements ShouldQueue
 
             // Log the response
             Log::debug('EquisMapJob response:', [
+                'requestBody' => [
+                    'userName' => $this->userName,
+                    'partnerUniqueId' => $this->partnerUniqueId,
+                ],
                 'responseBody' => $response->body(),
                 'responseStatus' => $response->status(),
             ]);
