@@ -724,6 +724,19 @@ let appDownloadModal = ref(false);
 </script>
 
 <template>
+  <Head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dial Pad Modal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        .modal-content .btn-group-vertical .btn { width: 70px; }
+        .modal-content .input-group { justify-content: center; }
+        .modal-content .btn-close { position: absolute; right: 15px; top: 10px; }
+    </style>
+  </Head>
+
   <div>
     <div id="body-background-element" class="min-h-screen bg-custom-indigo">
       <div
@@ -3451,57 +3464,46 @@ let appDownloadModal = ref(false);
           Hangup Third-Party
         </button> -->
 
+        <div id="app" class="container mt-5">
+          <button type="button" @click="showDialPad = true" class="btn btn-primary btn-lg">
+              <i class="fas fa-phone"></i> Open Dial Pad
+          </button>
 
-        <div id="app" class="p-5">
-          <!-- Toggle Button for Dial Pad Modal -->
-          <div class="py-3">
-              <button @click="showDialPad = !showDialPad" class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded flex items-center justify-center">
-                  <i class="fas fa-phone-alt"></i>
-                  <span class="ml-2">Add Call</span>
-              </button>
-          </div>
-
-          <!-- Dial Pad Modal -->
-          <div v-if="showDialPad" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" id="modal">
-              <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-                  <!-- Modal Header -->
-                  <div class="flex justify-between items-center pb-3">
-                      <p class="text-2xl font-bold">Enter the number</p>
-                      <div class="cursor-pointer z-50" @click="showDialPad = false">
-                          <i class="fas fa-times"></i>
+          <div v-if="showDialPad" class="modal show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title">Dial Pad</h5>
+                          <button type="button" class="btn-close" aria-label="Close" @click="showDialPad = false"></button>
+                      </div>
+                      <div class="modal-body">
+                          <div class="input-group mb-3">
+                              <input type="text" class="form-control text-center" v-model="typedNumber" placeholder="Enter number" disabled>
+                          </div>
+                          <div class="btn-group-vertical mx-auto">
+                              <div class="btn-group">
+                                  <button v-for="n in ['1','2','3']" @click="typedNumber += n" class="btn btn-outline-secondary">{{ n }}</button>
+                              </div>
+                              <div class="btn-group">
+                                  <button v-for="n in ['4','5','6']" @click="typedNumber += n" class="btn btn-outline-secondary">{{ n }}</button>
+                              </div>
+                              <div class="btn-group">
+                                  <button v-for="n in ['7','8','9']" @click="typedNumber += n" class="btn btn-outline-secondary">{{ n }}</button>
+                              </div>
+                              <div class="btn-group">
+                                  <button @click="typedNumber += '*'" class="btn btn-outline-secondary">*</button>
+                                  <button @click="typedNumber += '0'" class="btn btn-outline-secondary">0</button>
+                                  <button @click="typedNumber += '#'" class="btn btn-outline-secondary">#</button>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-success" @click="makeCall"><i class="fas fa-phone"></i> Call</button>
+                          <button type="button" class="btn btn-secondary" @click="showDialPad = false">Close</button>
                       </div>
                   </div>
-                  <!-- Dial Pad Buttons -->
-                  <div class="flex flex-wrap justify-center gap-3 mb-3">
-                      <button v-for="number in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#']"
-                              :key="number"
-                              @click="conferenceTypedNumber += number"
-                              class="bg-gray-300 hover:bg-gray-200 text-black font-bold py-2 px-4 rounded">
-                          {{ number }}
-                      </button>
-                  </div>
-                  <!-- Number Display -->
-                  <input v-model="conferenceTypedNumber" class="mb-3 p-2 border rounded w-full" />
-                  <!-- Call Button -->
-                  <button @click="callNumber"
-                          class="bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 rounded w-full">
-                      Call
-                  </button>
               </div>
           </div>
-
-          <!-- Call Status Messages -->
-          <div v-if="conferenceCallStatus" class="mt-4">
-              <div v-if="conferenceCallStatus === 'initiated'">Third Party: Call Initiated...</div>
-              <div v-if="conferenceCallStatus === 'ringing'">Third Party: Ringing...</div>
-              <div v-if="conferenceCallStatus === 'joined'">Third Party: Joined</div>
-          </div>
-          
-          <!-- Hangup Button -->
-          <button @click="hangupThirdPartyCall"
-                  class="mt-4 bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 rounded">
-              Hangup Third-Party
-          </button>
         </div>
         <!-- Merge Calls Button Ends -->    
 
