@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\ConferenceCallThirdPartyJoined;
 use App\Models\Call;
 use Twilio\Rest\Client;
 use Illuminate\Http\Request;
@@ -10,6 +9,8 @@ use App\Models\ConferenceCall;
 use Twilio\TwiML\VoiceResponse;
 use Illuminate\Support\Facades\Log;
 use App\Models\ConferenceParticipant;
+use Illuminate\Support\Facades\Cache;
+use App\Events\ConferenceCallThirdPartyJoined;
 use App\Events\ConferenceCallThirdPartyRinging;
 
 class TwilioConferenceCallController extends Controller
@@ -163,6 +164,9 @@ class TwilioConferenceCallController extends Controller
             ]);
 
             Log::info("Conference Call saved to database: " . $conferenceCall); 
+            
+            $specialCallToken = Cache::get('specialCallToken');
+            $storedCallerId = Cache::get("incoming_caller_id");
 
             // If a phone number is provided, dial out to this number and add to the conference
             if ($phoneNumber) {
@@ -174,8 +178,10 @@ class TwilioConferenceCallController extends Controller
                     // ["twiml" => $twiml]
                     [
                         "twiml" => $twiml,
+                        "callToken" => $specialCallToken,
                         "StatusCallback" => route('conference.statusCallback'),
-                        "StatusCallbackEvent" => ["initiated", "ringing", "answered", "completed"]
+                        "StatusCallbackEvent" => ["initiated", "ringing", "answered", "completed"],
+                        "callerId" => $storedCallerId
                     ]
                 );
 
@@ -360,9 +366,14 @@ class TwilioConferenceCallController extends Controller
                 ]);
 
                 // Check if the participant is the third-party participant
-                if ($participant->is_third_party) {
+                if ($participant && $participant->is_third_party) {
                     // Dispatch your custom event for third-party participant join
                     ConferenceCallThirdPartyJoined::dispatch($participant);
+                    Log::debug('Participant is third-party participant.' . $participant);
+                } else {
+                    // $participant is null or is_third_party is not true
+                    // Handle this case accordingly. Maybe log an error or take some other action.
+                    Log::debug('Participant is null or not a third-party participant.');
                 }
                 break;
 
