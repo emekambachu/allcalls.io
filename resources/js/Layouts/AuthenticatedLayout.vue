@@ -3467,7 +3467,8 @@ let appDownloadModal = ref(false);
                   </div>
                   <div class="p-6">
                       <div class="flex justify-center mb-4">
-                          <input type="number" v-model="conferenceTypedNumber" class="form-control text-center bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter number">
+                          <!-- <input type="number" v-model="conferenceTypedNumber" class="form-control text-center bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter number"> -->
+                          <input v-model="conferenceTypedNumber" class="mb-3 p-2 border rounded w-full" />
                       </div>
                       <div class="grid grid-cols-3 gap-4 justify-center items-center">
                           <button v-for="n in ['1','2','3']" :key="n" @click="conferenceTypedNumber += n" class="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded-full">{{ n }}</button>
@@ -3484,7 +3485,7 @@ let appDownloadModal = ref(false);
                       </button>
                       <button
                         @click="hangupThirdPartyCall"
-                        class="bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 rounded"
+                        class="bg-red-500 hover:bg-red-400 text-white rounded-full py-2 px-6"
                       >
                         Hangup Third-Party
                       </button>
