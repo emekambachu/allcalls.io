@@ -3407,7 +3407,7 @@ let appDownloadModal = ref(false);
         <div class="py-3 flex gap-2">
           <button
             @click="showDialPad = !showDialPad"
-            class="bg-blue-700 hover:bg-blue-500 text-white text-sm py-1 px-3 rounded-full"
+            class="bg-blue-700 hover:bg-blue-500 text-white text-lg py-1 px-3 rounded-full"
           >
             Add Call
           </button>
@@ -3415,14 +3415,14 @@ let appDownloadModal = ref(false);
           <button
             @click="hangupThirdPartyCall"
             v-if="isConferenceCallInitiated"
-            class="bg-red-600 hover:bg-red-500 text-sm text-white rounded-full py-1 px-3"
+            class="bg-red-600 hover:bg-red-500 text-lg text-white rounded-full py-1 px-3"
           >
             Hangup Third-Party
           </button>
           <button
             @click="alert('Coming soon!')"
             v-if="isConferenceCallInitiated"
-            class="bg-red-700 hover:bg-red-600 text-sm text-white rounded-full py-1 px-3"
+            class="bg-red-700 hover:bg-red-600 text-lg text-white rounded-full py-1 px-3"
           >
             Leave 3-Way Call
           </button>
