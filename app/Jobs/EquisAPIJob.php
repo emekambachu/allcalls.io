@@ -70,10 +70,11 @@ class EquisAPIJob implements ShouldQueue
         Log::debug('equis-api-job:request data to create an agent:', [
             'requestData' => $requestData,
         ]);
+
         // Now, make the POST request to the API endpoint with the Bearer token to create an agent
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
-        ])->withToken($accessToken)->post('https://equisapipartner-uat.azurewebsites.net/Agent', $requestData);
+        ])->withToken($accessToken)->post(env('EQUIS_BASE_URL') . '/Agent', $requestData);
 
         Log::debug('equis-api-job:response equis api to create an agent:', [
             'responseBody' => $response->body(),
