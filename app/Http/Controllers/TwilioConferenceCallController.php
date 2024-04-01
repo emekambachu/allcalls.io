@@ -181,11 +181,11 @@ class TwilioConferenceCallController extends Controller
                         "callToken" => $specialCallToken,
                         "StatusCallback" => route('conference.statusCallback'),
                         "StatusCallbackEvent" => ["initiated", "ringing", "answered", "completed"],
-                        "callerId" => $storedCallerId
+                        "callerId" => $call->from
                     ]
                 );
 
-                Log::info("New participant added to conference", ['phoneNumber' => $phoneNumber, 'conferenceName' => $conferenceName, 'newCallSid' => $newCallResponse->sid]);
+                Log::info("New participant added to conference", ['fromNumber' => $call->from, 'phoneNumber' => $phoneNumber, 'conferenceName' => $conferenceName, 'newCallSid' => $newCallResponse->sid]);
                 Log::info("Response from conversion to conference call: ", ['response' => $newCallResponse]);
             }
 
