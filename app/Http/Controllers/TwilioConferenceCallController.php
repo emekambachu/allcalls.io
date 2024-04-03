@@ -144,14 +144,14 @@ class TwilioConferenceCallController extends Controller
         try {
             // Redirect the call to the conference TwiML endpoint
             // Update both calls to join the same conference
-            $firstLeg = $client->calls($callSid)
-                ->update(["url" => route('conference.direct', ['conferenceName' => $conferenceName])]);
+            // $firstLeg = $client->calls($callSid)
+            //     ->update(["url" => route('conference.direct', ['conferenceName' => $conferenceName])]);
             
             $secondLeg = $client->calls($otherCallSid)
                 ->update(["url" => route('conference.direct', ['conferenceName' => $conferenceName])]);
 
             Log::info("Both calls updated to conference", [
-                'firstCallSid' => $firstLeg->sid, 
+                // 'firstCallSid' => $firstLeg->sid, 
                 'secondCallSid' => $secondLeg->sid, 
                 'conferenceName' => $conferenceName
             ]);
