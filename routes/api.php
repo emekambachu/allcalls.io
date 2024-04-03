@@ -303,6 +303,7 @@ Route::get('/test-call', static function () {
 Route::post('/conference/direct', [TwilioConferenceCallController::class, 'directToConference'])->name('conference.direct');
 Route::post('/conference-status-callback', [TwilioConferenceCallController::class, 'handleConferenceStatusCallback'])->name('conference.statusCallback');
 Route::post('/hangup-third-party', [TwilioConferenceCallController::class, 'hangUpThirdParty'])->name('conference.hangupThirdParty');
+Route::post('/hangup-self', [TwilioConferenceCallController::class, 'endCall'])->name('conference.hangupSelf');
 
 Route::post('/twilio/sms/receive', [TwilioSMSController::class, 'receiveSMS']);
 Route::post('/commio/sms/send', [TextMessageController::class, 'sendMessage']);
