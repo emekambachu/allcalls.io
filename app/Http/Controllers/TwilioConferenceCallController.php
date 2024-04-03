@@ -181,7 +181,8 @@ class TwilioConferenceCallController extends Controller
                         "callToken" => $specialCallToken,
                         "StatusCallback" => route('conference.statusCallback'),
                         "StatusCallbackEvent" => ["initiated", "ringing", "answered", "completed"],
-                        "callerId" => $call->from
+                        // "callerId" => $call->from
+                        "callerId" => $storedCallerId
                     ]
                 );
 
