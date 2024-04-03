@@ -440,8 +440,8 @@ class TwilioConferenceCallController extends Controller
     public function endCall(Request $request)
     {
         // Your Twilio Account SID and Auth Token from twilio.com/console
-        $accountSid = 'YOUR_TWILIO_ACCOUNT_SID';
-        $authToken = 'YOUR_TWILIO_AUTH_TOKEN';
+        $accountSid = 'TWILIO_SID';
+        $authToken = 'TWILIO_AUTH_TOKEN';
         // Twilio REST API client
         $client = new Client($accountSid, $authToken);
         
