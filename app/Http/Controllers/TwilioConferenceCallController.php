@@ -192,7 +192,9 @@ class TwilioConferenceCallController extends Controller
             }
 
             // Adding first and second legs with a default 'connected' status
-            foreach ([$firstLeg, $secondLeg] as $leg) {
+            foreach ([
+                // $firstLeg,
+                 $secondLeg] as $leg) {
                 if ($leg) {
                     $conferenceCall->participants()->create([
                         'sid' => $leg->sid,
