@@ -3,6 +3,7 @@
 namespace App\Services\Base;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpFoundation\Response;
 
 class BaseService
 {
@@ -23,10 +24,12 @@ class BaseService
 
     public static function tryCatchException($e, $identifier = null): \Illuminate\Http\JsonResponse
     {
-        Log::error('SERVER ERROR: '."Line ".$e->getLine()." of ".$e->getFile().", ".$e->getMessage().", Identifier: ".$identifier !== null && isset($identifier['identifier']) ? $identifier['identifier'] : '');
+        Log::error('SERVER: Line ' . $e->getLine() . ' of ' . $e->getFile() . ', ' . $e->getMessage() . ', Identifier: ' . ($identifier !== null && isset($identifier['identifier']) ? $identifier['identifier'] : 'None'));
+
         return response()->json([
-            'error_message' => "Line ".$e->getLine()." of ".$e->getFile().", ".$e->getMessage(),
-        ], 500);
+            'success' => false,
+            'server_error' => "Line ".$e->getLine()." of ".$e->getFile().", ".$e->getMessage(),
+        ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     public static function formatFormDateToDbCarbon($date): string

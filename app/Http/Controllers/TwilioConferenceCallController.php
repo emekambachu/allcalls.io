@@ -32,7 +32,8 @@ class TwilioConferenceCallController extends Controller
         $dial->conference($conferenceName, [
             'waitUrl' => 'http://twimlets.com/holdmusic?Bucket=com.twilio.music.classical',
             'statusCallback' => $statusCallbackUrl,
-            'statusCallbackEvent' => 'start join leave end'
+            'statusCallbackEvent' => 'start join leave end',
+            'endConferenceOnExit' => 'false'
         ]);
 
         Log::info("Generated TwiML", ['twiml' => (string) $response]);
@@ -181,11 +182,12 @@ class TwilioConferenceCallController extends Controller
                         "callToken" => $specialCallToken,
                         "StatusCallback" => route('conference.statusCallback'),
                         "StatusCallbackEvent" => ["initiated", "ringing", "answered", "completed"],
+                        // "callerId" => $call->from
                         "callerId" => $storedCallerId
                     ]
                 );
 
-                Log::info("New participant added to conference", ['phoneNumber' => $phoneNumber, 'conferenceName' => $conferenceName, 'newCallSid' => $newCallResponse->sid]);
+                Log::info("New participant added to conference", ['fromNumber' => $call->from, 'phoneNumber' => $phoneNumber, 'conferenceName' => $conferenceName, 'newCallSid' => $newCallResponse->sid]);
                 Log::info("Response from conversion to conference call: ", ['response' => $newCallResponse]);
             }
 
@@ -433,5 +435,24 @@ class TwilioConferenceCallController extends Controller
             ]);
             return response()->json(['error' => 'Failed to end call with third party', 'details' => $e->getMessage()], 500);
         }
-    }    
+    }
+    
+    public function endCall(Request $request)
+    {
+        // Your Twilio Account SID and Auth Token from twilio.com/console
+        $accountSid = env('TWILIO_SID');
+        $authToken = env('TWILIO_AUTH_TOKEN');
+        // Twilio REST API client
+        $client = new Client($accountSid, $authToken);
+        
+        // The Call SID of the call you want to end - usually passed to your application in some way
+        $callSid = $request->input('callSid');
+
+        try {
+            $call = $client->calls($callSid)->update(["status" => "completed"]);
+            return response()->json(['message' => 'Call ended successfully.', 'call' => $call]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

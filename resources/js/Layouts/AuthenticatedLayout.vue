@@ -22,7 +22,7 @@ import DispositionModal from "@/Components/DispositionModal.vue";
 let page = usePage();
 
 let showDialPad = ref(false);
-let conferenceTypedNumber = ref(null);
+let conferenceTypedNumber = ref('');
 let incomingCallSid = ref(null);
 let incomingCallSidTwo = ref(null);
 let thirdPartySid = ref('');
@@ -695,6 +695,7 @@ let hangupThirdPartyCall = () => {
   .then(response => {
     // Handle success
     alert('Third-party call ended successfully.');
+    isConferenceCallInitiated.value = false;
   })
   .catch(error => {
     // Handle error
@@ -704,6 +705,13 @@ let hangupThirdPartyCall = () => {
   });
 }
 
+const appendNumber = (number) => {
+  conferenceTypedNumber.value += number;
+};
+
+const deleteNumber = () => {
+  conferenceTypedNumber.value = conferenceTypedNumber.value.slice(0, -1);
+};
 
 onUnmounted(() => {
   unregisterTwilioDevice();
@@ -724,6 +732,7 @@ let appDownloadModal = ref(false);
 </script>
 
 <template>
+
   <div>
     <div id="body-background-element" class="min-h-screen bg-custom-indigo">
       <div
@@ -3395,16 +3404,32 @@ let appDownloadModal = ref(false);
 
 
         <!-- Merge Calls Button -->    
-        <!-- <div class="py-3">
+        <div class="py-3 flex gap-2">
           <button
             @click="showDialPad = !showDialPad"
-            class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded"
+            class="bg-blue-700 hover:bg-blue-500 text-white text-base py-1 px-3 rounded-full"
           >
             Add Call
           </button>
+
+          <button
+            @click="hangupThirdPartyCall"
+            v-if="isConferenceCallInitiated"
+            class="bg-red-600 hover:bg-red-500 text-base text-white rounded-full py-1 px-3"
+          >
+            Hangup Third-Party
+          </button>
+          <button
+            @click="alert('Coming soon!')"
+            v-if="isConferenceCallInitiated"
+            class="bg-red-700 hover:bg-red-600 text-base text-white rounded-full py-1 px-3"
+          >
+            Leave 3-Way Call
+          </button>
+          
         </div>
 
-
+        <!--
         <div v-if="showDialPad" class="p-5">
           <div class="flex flex-wrap justify-center gap-3 mb-3">
             <button
@@ -3450,6 +3475,114 @@ let appDownloadModal = ref(false);
         >
           Hangup Third-Party
         </button> -->
+
+        <!-- Dialpad TYPE 2 -->
+        <!-- <div id="app" class="container mx-auto mt-10">
+          <button @click="showDialPad = true" class="mx-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full text-lg flex items-center">
+              <i class="fas fa-phone-alt mr-2"></i> Open Dial Pad
+          </button>
+
+          <div v-if="showDialPad" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+              <div class="bg-white rounded-lg">
+                  <div class="flex justify-between items-center p-5 border-b border-gray-200">
+                      <h5 class="text-xl font-medium text-gray-900">Dial Pad</h5>
+                      <button @click="showDialPad = false" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center">
+                          <i class="fas fa-times"></i>
+                      </button>
+                  </div>
+                  <div class="p-6">
+                      <div class="flex justify-center mb-4">
+                          <input type="number" v-model="conferenceTypedNumber" class="form-control text-center bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter number">
+                          <input v-model="conferenceTypedNumber" class="mb-3 p-2 border rounded w-full" />
+                      </div>
+                      <div class="grid grid-cols-3 gap-4 justify-center items-center">
+                          <button v-for="n in ['1','2','3']" :key="n" @click="conferenceTypedNumber += n" class="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded-full">{{ n }}</button>
+                          <button v-for="n in ['4','5','6']" :key="n" @click="conferenceTypedNumber += n" class="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded-full">{{ n }}</button>
+                          <button v-for="n in ['7','8','9']" :key="n" @click="conferenceTypedNumber += n" class="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded-full">{{ n }}</button>
+                          <button @click="conferenceTypedNumber += '*'" class="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded-full">*</button>
+                          <button @click="conferenceTypedNumber += '0'" class="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded-full">0</button>
+                          <button @click="conferenceTypedNumber += '#'" class="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded-full">#</button>
+                      </div>
+                  </div>
+                  <div class="flex justify-around p-6 border-t border-gray-200 rounded-b gap-2">
+                      <button @click="callNumber" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full flex items-center">
+                          <i class="fas fa-phone-alt mr-2"></i> Call
+                      </button>
+                      <button
+                        @click="hangupThirdPartyCall"
+                        class="bg-red-500 hover:bg-red-400 text-white rounded-full py-2 px-6"
+                      >
+                        Hangup Third-Party
+                      </button>
+                      <button @click="showDialPad = false" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full flex items-center">
+                          <i class="fas fa-times mr-2"></i> Close
+                      </button>
+                  </div>
+              </div>
+          </div>
+        </div> -->
+
+
+        <!-- Dialpad TYPE 3 -->
+        <!-- <div class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center">
+
+        </div> -->
+
+        <div v-if="showDialPad" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center p-4">
+          <!-- Modal container -->
+          <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
+            <!-- Modal header with close button -->
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-lg font-medium">Enter the number</h3>
+              <button @click="showDialPad = false" class="rounded p-1 hover:bg-gray-200">
+                <!-- Close icon -->
+                <svg class="h-6 w-6 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <!-- Input field -->
+            <div class="flex justify-center items-center mb-4">
+              <input type="tel" v-model="conferenceTypedNumber" class="form-control text-center text-xl border-b-2 border-gray-300 focus:outline-none focus:border-gray-500 w-full" placeholder="+1 (555) 123-4567" />
+            </div>
+            <!-- Dial pad -->
+            <div class="grid grid-cols-3 gap-4 mb-4">
+              <button v-for="digit in ['1','2','3','4','5','6','7','8','9','*','0','#']" :key="digit" @click="appendNumber(digit)" class="flex justify-center items-center h-12 w-full bg-gray-200 rounded text-xl hover:bg-gray-300">
+                {{ digit }}
+              </button>
+            </div>
+            <!-- Call and delete buttons -->
+            <div class="flex justify-between mt-4">
+              <button @click="callNumber" class="flex justify-center items-center h-12 w-12 bg-green-500 rounded-full text-white hover:bg-green-600">
+                <!-- Phone icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 3.75v4.5m0-4.5h-4.5m4.5 0-6 6m3 12c-8.284 0-15-6.716-15-15V4.5A2.25 2.25 0 0 1 4.5 2.25h1.372c.516 0 .966.351 1.091.852l1.106 4.423c.11.44-.054.902-.417 1.173l-1.293.97a1.062 1.062 0 0 0-.38 1.21 12.035 12.035 0 0 0 7.143 7.143c.441.162.928-.004 1.21-.38l.97-1.293a1.125 1.125 0 0 1 1.173-.417l4.423 1.106c.5.125.852.575.852 1.091V19.5a2.25 2.25 0 0 1-2.25 2.25h-2.25Z" />
+                </svg>
+
+              </button>
+              <button @click="appendNumber('+')" class="flex justify-center items-center h-12 w-12 bg-gray-300 rounded-full text-white hover:bg-gray-400">
+                <!-- Plus icon (represented by SVG inline) -->
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                <!-- Add Plus SVG from heroicons here -->
+              </button>
+              <button @click="deleteNumber" class="flex justify-center items-center h-12 w-12 bg-red-300 rounded-full text-white hover:bg-red-600">
+                <!-- X icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9.75 14.25 12m0 0 2.25 2.25M14.25 12l2.25-2.25M14.25 12 12 14.25m-2.58 4.92-6.374-6.375a1.125 1.125 0 0 1 0-1.59L9.42 4.83c.21-.211.497-.33.795-.33H19.5a2.25 2.25 0 0 1 2.25 2.25v10.5a2.25 2.25 0 0 1-2.25 2.25h-9.284c-.298 0-.585-.119-.795-.33Z" />
+                </svg>
+              </button>
+
+              <button @click="hangupThirdPartyCall" class="flex justify-center items-center h-12 w-12 bg-red-500 rounded-full text-white hover:bg-red-600">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 3.75 18 6m0 0 2.25 2.25M18 6l2.25-2.25M18 6l-2.25 2.25m1.5 13.5c-8.284 0-15-6.716-15-15V4.5A2.25 2.25 0 0 1 4.5 2.25h1.372c.516 0 .966.351 1.091.852l1.106 4.423c.11.44-.054.902-.417 1.173l-1.293.97a1.062 1.062 0 0 0-.38 1.21 12.035 12.035 0 0 0 7.143 7.143c.441.162.928-.004 1.21-.38l.97-1.293a1.125 1.125 0 0 1 1.173-.417l4.423 1.106c.5.125.852.575.852 1.091V19.5a2.25 2.25 0 0 1-2.25 2.25h-2.25Z" />
+                </svg>
+              </button>
+
+            </div>
+          </div>
+        </div>
         <!-- Merge Calls Button Ends -->    
 
       </div>

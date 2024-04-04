@@ -471,70 +471,72 @@ const paginate = ref({
 
 
 let fetchCalls = async (replace = false, per_page = null) => {
-  let url = "/admin/web-api/calls?page=" + currentPage.value;
 
-  if (sortColumn.value) {
-      url += "&sort_column=" + sortColumn.value;
-  }
+    loading.value = true;
 
-  if (sortAgentsColumn.value) {
-      url += "&sort_agents_column=" + sortAgentsColumn.value;
-  }
+    let url = "/admin/web-api/calls?page=" + currentPage.value;
 
-  if (sortPublishersColumn.value) {
-      url += "&sort_publishers_column=" + sortPublishersColumn.value;
-  }
+    if (sortColumn.value) {
+        url += "&sort_column=" + sortColumn.value;
+    }
 
-  if (sortDirection.value) {
-      url += "&sort_direction=" + sortDirection.value;
-  }
+      if (sortAgentsColumn.value) {
+          url += "&sort_agents_column=" + sortAgentsColumn.value;
+      }
 
-  if (dateFilterFrom.value && dateFilterTo.value) {
-      url += "&start_date=" + dateFilterFrom.value;
-      url += "&end_date=" + dateFilterTo.value;
-  }
+      if (sortPublishersColumn.value) {
+          url += "&sort_publishers_column=" + sortPublishersColumn.value;
+      }
 
-  if(per_page !== null) {
-      url += "&per_page=" + per_page;
-  }
+      if (sortDirection.value) {
+          url += "&sort_direction=" + sortDirection.value;
+      }
 
-  // Append filters to the query string
-  appliedFilters.value.forEach((filter, index) => {
-    url += `&filters[${index}][name]=${encodeURIComponent(filter.name)}`;
-    url += `&filters[${index}][value]=${encodeURIComponent(filter.value)}`;
-    url += `&filters[${index}][operator]=${encodeURIComponent(filter.operator)}`;
-  });
+      if (dateFilterFrom.value && dateFilterTo.value) {
+          url += "&start_date=" + dateFilterFrom.value;
+          url += "&end_date=" + dateFilterTo.value;
+      }
 
-  loading.value = true;
-  let response = await axios.get(url);
+      if(per_page !== null) {
+          url += "&per_page=" + per_page;
+      }
 
-  if (replace) {
-    loadedCalls.value = response.data.calls.data;
-  } else {
-    loadedCalls.value = [...loadedCalls.value, ...response.data.calls.data];
-  }
+      // Append filters to the query string
+      appliedFilters.value.forEach((filter, index) => {
+        url += `&filters[${index}][name]=${encodeURIComponent(filter.name)}`;
+        url += `&filters[${index}][value]=${encodeURIComponent(filter.value)}`;
+        url += `&filters[${index}][operator]=${encodeURIComponent(filter.operator)}`;
+      });
 
-  callsPaginator.value = response.data.calls;
-  getAllCalls.value = response.data.all_calls;
-  getTotalCallResults.value = response.data.total;
-  getTotalRevenueResults.value = response.data.total_revenue;
-  callsGroupedByUserResults.value = response.data.calls_grouped_by_user;
-  callsGroupedByPublisherNameResults.value = response.data.calls_grouped_by_publisher_name;
+      let response = await axios.get(url);
 
-  // keep track of current page and pagination
-  paginate.value.perPage = response.data.per_page;
-  paginate.value.currentPage = currentPage.value;
-  console.log({
-      currentPage: paginate.value.currentPage,
-      perPage: paginate.value.perPage,
-  });
+      if (replace) {
+        loadedCalls.value = response.data.calls.data;
+      } else {
+        loadedCalls.value = [...loadedCalls.value, ...response.data.calls.data];
+      }
 
-  loading.value = false;
-  console.log("Loaded Calls: ", loadedCalls.value);
-  console.log("Total Call Results: ", getTotalCallResults.value);
-  console.log("Total Revenue: ", getTotalRevenueResults.value);
-  console.log("Grouped Publisher Names", callsGroupedByPublisherName.value);
-  console.log("Calls Grouped By User", callsGroupedByUserResults.value);
+      callsPaginator.value = response.data.calls;
+      getAllCalls.value = response.data.all_calls;
+      getTotalCallResults.value = response.data.total;
+      getTotalRevenueResults.value = response.data.total_revenue;
+      callsGroupedByUserResults.value = response.data.calls_grouped_by_user;
+      callsGroupedByPublisherNameResults.value = response.data.calls_grouped_by_publisher_name;
+
+      // keep track of current page and pagination
+      paginate.value.perPage = response.data.per_page;
+      paginate.value.currentPage = currentPage.value;
+      console.log({
+          currentPage: paginate.value.currentPage,
+          perPage: paginate.value.perPage,
+      });
+
+    loading.value = false;
+    console.log("Loaded Calls: ", loadedCalls.value);
+    console.log("Total Call Results: ", getTotalCallResults.value);
+    console.log("Total Revenue: ", getTotalRevenueResults.value);
+    console.log("Grouped Publisher Names", callsGroupedByPublisherName.value);
+    console.log("Calls Grouped By User", callsGroupedByUserResults.value);
 };
 
 
@@ -1661,7 +1663,27 @@ onMounted(async () => {
                                   </th>
                                 </tr>
                               </thead>
-                              <tbody v-if="loadedCalls.length > 0">
+
+                              <!--Loading-->
+                              <tbody v-if="loading">
+                                  <tr>
+                                    <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap text-center text-lg"
+                                        :colspan="agentColumns.length">
+                                        <div class="text-center">
+                                            <div role="status">
+                                                <svg aria-hidden="true" class="inline w-12 h-12 text-gray-200 animate-spin dark:text-gray-600 fill-blue-400" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                                                    <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                                                </svg>
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                  </tr>
+                              </tbody>
+
+                              <!--Data Available-->
+                              <tbody v-else-if="loadedCalls.length > 0">
                                   <tr
                                       v-for="(userData, userId) in groupedCalls"
                                       :key="userId"
@@ -1718,6 +1740,8 @@ onMounted(async () => {
                                   </tr>
 
                               </tbody>
+
+                              <!--Data Un-available-->
                               <tbody v-else>
                                 <tr>
                                     <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap text-center text-lg" colspan="8">
@@ -1852,7 +1876,27 @@ onMounted(async () => {
 <!--                                  <th scope="col" class="px-4 py-3 whitespace-nowrap">Actions</th>-->
                                 </tr>
                               </thead>
-                              <tbody v-if="loadedCalls.length > 0">
+
+                              <!--Loading-->
+                              <tbody v-if="loading">
+                              <tr>
+                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap text-center text-lg"
+                                      :colspan="publisherColumns.length">
+                                      <div class="text-center">
+                                          <div role="status">
+                                              <svg aria-hidden="true" class="inline w-12 h-12 text-gray-200 animate-spin dark:text-gray-600 fill-blue-400" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                  <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                                                  <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                                              </svg>
+                                              <span class="sr-only">Loading...</span>
+                                          </div>
+                                      </div>
+                                  </td>
+                              </tr>
+                              </tbody>
+
+                              <!--Data Available-->
+                              <tbody v-else-if="loadedCalls.length > 0">
                                 <tr
                                   v-for="(publisher, index) in callsGroupedByPublisherName"
                                   :key="index"
@@ -1933,7 +1977,9 @@ onMounted(async () => {
 <!--                                  <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"></td>-->
                               </tr>
                               </tbody>
-                                <tbody v-else>
+
+                                <!--Data Un-available-->
+                              <tbody v-else>
                                     <tr>
                                         <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap text-center text-lg" colspan="8">
                                             No data available
@@ -2201,7 +2247,27 @@ onMounted(async () => {
                   <th scope="col" class="px-4 py-3 whitespace-nowrap">Actions</th>
                 </tr>
               </thead>
-              <tbody v-if="loadedCalls.length > 0">
+
+                <!--Loading-->
+                <tbody v-if="loading">
+                <tr>
+                    <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap text-center text-lg"
+                        :colspan="columns.length">
+                        <div class="text-center">
+                            <div role="status">
+                                <svg aria-hidden="true" class="inline w-12 h-12 text-gray-200 animate-spin dark:text-gray-600 fill-blue-400" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                                    <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                                </svg>
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+
+                <!--Data Available-->
+                <tbody v-else-if="loadedCalls.length > 0">
                 <tr
                   class="border-b hover:bg-gray-100"
                   v-for="(call, index) in loadedCalls"
@@ -2284,14 +2350,16 @@ onMounted(async () => {
                   </td>
                 </tr>
               </tbody>
-              <tbody v-else>
+
+                <!--Data Un-available-->
+                <tbody v-else>
                 <tr>
                     <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap text-center text-lg" colspan="8">
                         No data available
                     </td>
                 </tr>
               </tbody>
-            </table>
+             </table>
 
             <div
               v-if="(callsPaginator && callsPaginator.next_page_url && loadedCalls.length === paginate.perPage) || getTotalCalls !== loadedCalls.length"
