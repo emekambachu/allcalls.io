@@ -75,6 +75,9 @@ class EquisAPIJob implements ShouldQueue
 
         $accessToken = $tokenResponse->json()['access_token'];
 
+
+        $this->mapManager($accessToken);
+
         $requestData = $this->getRequestData();
         // Log the request data
         Log::debug('equis-api-job:request data to create an agent:', [
@@ -198,5 +201,10 @@ class EquisAPIJob implements ShouldQueue
             // Handle the error scenario
             Log::debug('Failed to save EF Number for user', ['Invitee' => $this->user->id, 'Server error response' => $response->body()]);
         }
+    }
+
+    protected function mapManager($accessToken)
+    {
+        
     }
 }
