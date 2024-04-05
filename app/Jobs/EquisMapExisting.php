@@ -16,19 +16,12 @@ class EquisMapExisting implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $userName;
-    protected $partnerUniqueId;
-
     /**
      * Create a new job instance.
      *
-     * @param string $userName The username of the user to be mapped.
-     * @param string $partnerUniqueId The unique ID for the partner to be mapped with the user.
      */
-    public function __construct(string $userName, string $partnerUniqueId)
+    public function __construct()
     {
-        $this->userName = $userName;
-        $this->partnerUniqueId = $partnerUniqueId;
     }
 
     /**
