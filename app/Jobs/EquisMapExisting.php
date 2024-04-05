@@ -45,7 +45,7 @@ class EquisMapJob implements ShouldQueue
             }
 
 
-            $users = User::whereNotNull('equis_number')->get();
+            $users = User::whereNotNull('equis_number')->get(['id', 'equis_number']);
 
             foreach($users as $user) 
             {
