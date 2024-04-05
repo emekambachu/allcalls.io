@@ -27,6 +27,8 @@ class ImportEFNumbers extends Command
     {
         $filePath = storage_path(__DIR__ . '/AgentsAndEFNumbers.csv');
 
+        $this->info('Reading from: ' . $filePath);
+
         // Open the file
         $fileHandle = fopen($filePath, 'r');
 
