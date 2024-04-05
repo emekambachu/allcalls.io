@@ -42,6 +42,7 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
         'upline_id',
         'level_id',
         'invited_by',
+        'equis_number',
     ];
 
     /**
