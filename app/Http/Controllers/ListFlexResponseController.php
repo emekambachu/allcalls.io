@@ -20,7 +20,7 @@ class ListFlexResponseController extends Controller
 
         // 2. Set up the payload.
         $payload = [
-            'tenantname' => 'El Salvador BPO',
+            'tenantname' => 'Lead Generator Center - Cochin',
             'vendorName' => 'Pinnacle',
             'firstname'  => $firstname,
             'lastname'   => $lastname,
