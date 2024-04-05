@@ -12,7 +12,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-class EquisMapJob implements ShouldQueue
+class EquisMapExisting implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -40,19 +40,17 @@ class EquisMapJob implements ShouldQueue
             $accessToken = $this->getAccessToken();
 
             if (!$accessToken) {
-                Log::error('Failed to retrieve access token for EquisMapJob.');
+                Log::error('Failed to retrieve access token for EquisMapExisting.');
                 return;
             }
 
-
             $users = User::whereNotNull('equis_number')->get(['id', 'equis_number']);
 
-            foreach($users as $user) 
-            {
+            foreach ($users as $user) {
                 $this->mapUser($user, $accessToken);
             }
         } catch (Exception $e) {
-            Log::debug('EquisMapJob encountered an exception.', [
+            Log::debug('EquisMapExisting encountered an exception.', [
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);
@@ -62,29 +60,31 @@ class EquisMapJob implements ShouldQueue
     protected function mapUser($user, $accessToken)
     {
         $response = Http::withHeaders([
-                'Content-Type' => 'application/json',
-            ])->withToken($accessToken)->post(env('EQUIS_BASE_URL') . '/Agent/Map', [
+            'Content-Type' => 'application/json',
+        ])->withToken($accessToken)->post(env('EQUIS_BASE_URL') . '/Agent/Map', [
+            'userName' => $user->equis_number,
+            'partnerUniqueId' => 'AC' . $user->id,
+        ]);
+
+        // Log the response
+        Log::debug('EquisMapExistingJob response:', [
+            'requestBody' => [
                 'userName' => $user->equis_number,
                 'partnerUniqueId' => 'AC' . $user->id,
-            ]);
+            ],
+            'responseBody' => $response->body(),
+            'responseStatus' => $response->status(),
+        ]);
 
-            // Log the response
-            Log::debug('EquisMapJob response:', [
-                'requestBody' => [
-                    'userName' => $this->userName,
-                    'partnerUniqueId' => $this->partnerUniqueId,
-                ],
+        if (!$response->successful()) {
+            // Handle unsuccessful map attempt, maybe retry or send notification
+            Log::debug('EquisMapExisting failed to map agent.', [
                 'responseBody' => $response->body(),
                 'responseStatus' => $response->status(),
             ]);
 
-            if (!$response->successful()) {
-                // Handle unsuccessful map attempt, maybe retry or send notification
-                Log::debug('EquisMapJob failed to map agent.', [
-                    'responseBody' => $response->body(),
-                    'responseStatus' => $response->status(),
-                ]);
-            }
+            return;
+        }
     }
 
     /**
