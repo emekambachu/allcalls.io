@@ -25,7 +25,7 @@ class ImportEFNumbers extends Command
      */
     public function handle()
     {
-        $filePath = storage_path('equis.csv'); // Adjust the path to your CSV file
+        $filePath = storage_path('app/equis/AgentsAndEFNumbers.csv');
 
         // Open the file
         $fileHandle = fopen($filePath, 'r');
