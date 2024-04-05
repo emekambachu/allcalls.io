@@ -44,8 +44,7 @@ class EquisAPIJob implements ShouldQueue
 
         // $this->managerPartnerUniqueId = "AC636";
         // $this->managerPartnerUniqueId = "AC71";
-       $this->managerPartnerUniqueId = isset($this->user->invitedBy) && isset($this->user->invitedBy->equis_number) ? $this->user->invitedBy->equis_number : null;
-
+        $this->managerPartnerUniqueId = isset($this->user->invitedBy) && isset($this->user->invitedBy->equis_number) ? $this->user->invitedBy->equis_number : null;
     }
 
     /**
@@ -77,7 +76,7 @@ class EquisAPIJob implements ShouldQueue
         $accessToken = $tokenResponse->json()['access_token'];
 
 
-        $this->mapManager($accessToken);
+        // $this->mapManager($accessToken);
 
         $requestData = $this->getRequestData();
         // Log the request data
@@ -143,10 +142,16 @@ class EquisAPIJob implements ShouldQueue
 
     protected function mapAgentToEquis($accessToken)
     {
+        if (! $this->user->equis_number) {
+            $equisNumber = $this->findExistingEFNumber();
+        } else {
+            $equisNumber = $this->user->equis_number;
+        }
+
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
         ])->withToken($accessToken)->post(env('EQUIS_BASE_URL') . '/Agent/Map', [
-            "userName" => isset($this->user->equis_number) ? $this->user->equis_number : "",
+            "userName" => $equisNumber,
             "partnerUniqueId" => "AC" . $this->user->id,
         ]);
 
@@ -244,5 +249,41 @@ class EquisAPIJob implements ShouldQueue
         ]);
 
         return;
+    }
+
+    /**
+     * Finds and returns the userName for a given user based on their email or phone.
+     *
+     * @param User $user The user object containing email and phone.
+     * @return string|null The userName if found, or null if not.
+     */
+    protected function findExistingEFNumber()
+    {
+        $filePath = __DIR__ . '/AgentsAndEFNumbers.csv';
+
+        // Open the file
+        if (($fileHandle = fopen($filePath, 'r')) !== false) {
+            // Skip the header row
+            fgetcsv($fileHandle);
+
+            // Loop through each row of the CSV
+            while (($row = fgetcsv($fileHandle)) !== false) {
+                // Check if all expected columns are present
+                if (count($row) >= 5) {
+                    list($userName, $firstName, $lastName, $email, $phoneNumber) = $row;
+
+                    // Check if the current row's email or phone matches the user's
+                    if ($email === $this->user->email || $phoneNumber === $this->user->phone) {
+                        fclose($fileHandle);
+                        return $userName; // Return the userName if a match is found
+                    }
+                }
+            }
+
+            // Close the file after reading
+            fclose($fileHandle);
+        }
+
+        return null; // Return null if no match is found
     }
 }
