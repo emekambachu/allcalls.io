@@ -144,7 +144,7 @@ class EquisAPIJob implements ShouldQueue
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
         ])->withToken($accessToken)->post(env('EQUIS_BASE_URL') . '/Agent/Map', [
-            "userName" => isset($this->user->upline_id) ? $this->user->upline_id : "",
+            "userName" => isset($this->user->equis_number) ? $this->user->equis_number : "",
             "partnerUniqueId" => "AC" . $this->user->id,
         ]);
 
