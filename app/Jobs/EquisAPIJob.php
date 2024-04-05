@@ -44,7 +44,7 @@ class EquisAPIJob implements ShouldQueue
 
         // $this->managerPartnerUniqueId = "AC636";
         // $this->managerPartnerUniqueId = "AC71";
-        //        $this->managerPartnerUniqueId = isset($this->user->invitedBy) && isset($this->user->invitedBy->upline_id) ? $this->user->invitedBy->upline_id : null;
+       $this->managerPartnerUniqueId = isset($this->user->invitedBy) && isset($this->user->invitedBy->equis_number) ? $this->user->invitedBy->equis_number : null;
     }
 
     /**
@@ -53,7 +53,7 @@ class EquisAPIJob implements ShouldQueue
     public function handle(): void
     {
         // First, retrieve the Bearer token
-        $clientId = env('EQUIS_CLIENT_ID'); // Your client ID her
+        $clientId = env('EQUIS_CLIENT_ID'); // Your client ID here
         $clientSecret = env('EQUIS_CLIENT_SECRET'); // Your client secret here
         // First, retrieve the Bearer token
         $tokenResponse = Http::asForm()->post('https://equisfinancialb2c.b2clogin.com/equisfinancialb2c.onmicrosoft.com/B2C_1_SignIn/oauth2/v2.0/token', [
@@ -83,7 +83,6 @@ class EquisAPIJob implements ShouldQueue
         Log::debug('equis-api-job:request data to create an agent:', [
             'requestData' => $requestData,
         ]);
-
         // Now, make the POST request to the API endpoint with the Bearer token to create an agent
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
@@ -94,7 +93,7 @@ class EquisAPIJob implements ShouldQueue
             'responseStatus' => $response->status(),
         ]);
 
-        if ($response->status() !== 200) {
+        if($response->status() !== 200) {
             Mail::to(EQUIS_JOB_ERROR_EMAILS)->send(new EquisApiError($response->body()));
             Log::debug('Equis API error email triggered.');
             return;
@@ -160,47 +159,25 @@ class EquisAPIJob implements ShouldQueue
 
     protected function getRequestData()
     {
+        // This is the sample REQUIRED data that we need to send to Equis API
         return [
-            "address" => fake()->address(),
-            "birthDate" => fake()->date($format = 'Y-m-d', $max = 'now'),
-            "city" => fake()->city(),
-            "currentlyLicensed" => true,
-            "email" => fake()->safeEmail(),
-            "firstName" => fake()->firstName(),
+            "address" => $this->user->internalAgentContract->address ?? null,
+            "birthDate" => isset($this->user->internalAgentContract->dob) ? Carbon::parse($this->user->internalAgentContract->dob)->format('Y-m-d') : null,
+            "city" => $this->user->internalAgentContract->city ?? null,
+            "currentlyLicensed" => false,
+            "email" => $this->user->internalAgentContract->email ?? null,
+            "firstName" => $this->user->internalAgentContract->first_name ?? null,
             "languageId" => "en",
-            "lastName" => fake()->lastName(),
-            "npn" => fake()->numerify('############'),
-            "partnerUniqueId" => fake()->regexify('[A-Z0-9]{5}'),
+            "lastName" => $this->user->internalAgentContract->last_name ?? null,
+            "npn" => $this->user->internalAgentContract->resident_insu_license_no ?? null,
+            "partnerUniqueId" => $this->partnerUniqueId,
             "role" => "Agent",
             "details" => "A New Agent Registered.",
-            "state" => fake()->stateAbbr(),
-            "managerPartnerUniqueId" => 'AC73',
-            "zipCode" => fake()->postcode(),
+            "state" => isset($this->user->internalAgentContract->state) ? $this->getStateAbbrev($this->user->internalAgentContract->state) : null,
+            "managerPartnerUniqueId" => $this->managerPartnerUniqueId,
+            "zipCode" => $this->user->internalAgentContract->zip ?? null,
         ];
     }
-
-
-    // protected function getRequestData()
-    // {
-    //     // This is the sample REQUIRED data that we need to send to Equis API
-    //     return [
-    //         "address" => $this->user->internalAgentContract->address ?? null,
-    //         "birthDate" => isset($this->user->internalAgentContract->dob) ? Carbon::parse($this->user->internalAgentContract->dob)->format('Y-m-d') : null,
-    //         "city" => $this->user->internalAgentContract->city ?? null,
-    //         "currentlyLicensed" => true,
-    //         "email" => $this->user->internalAgentContract->email ?? null,
-    //         "firstName" => $this->user->internalAgentContract->first_name ?? null,
-    //         "languageId" => "en",
-    //         "lastName" => $this->user->internalAgentContract->last_name ?? null,
-    //         "npn" => $this->user->internalAgentContract->resident_insu_license_no ?? null,
-    //         "partnerUniqueId" => $this->partnerUniqueId,
-    //         "role" => "Agent",
-    //         "details" => "A New Agent Registered.",
-    //         "state" => isset($this->user->internalAgentContract->state) ? $this->getStateAbbrev($this->user->internalAgentContract->state) : null,
-    //         "managerPartnerUniqueId" => $this->managerPartnerUniqueId,
-    //         "zipCode" => $this->user->internalAgentContract->zip ?? null,
-    //     ];
-    // }
 
     protected function getStateAbbrev($stateId)
     {
@@ -209,7 +186,8 @@ class EquisAPIJob implements ShouldQueue
 
     protected function saveManagerIdForUser($accessToken)
     {
-        $url = "https://equisapipartner-uat.azurewebsites.net/Agent/{$this->managerPartnerUniqueId}/UserName";
+        $url = env('EQUIS_BASE_URL') . "/Agent/{$this->managerPartnerUniqueId}/UserName";
+
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
         ])->withToken($accessToken)->get($url);
@@ -228,6 +206,19 @@ class EquisAPIJob implements ShouldQueue
 
     protected function mapManager($accessToken)
     {
-        
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+        ])->withToken($accessToken)->post(env('EQUIS_BASE_URL') . '/Agent/Map', [
+            "userName" => isset($this->user->upline_id) ? $this->user->upline_id : "",
+            "partnerUniqueId" => $this->managerPartnerUniqueId,
+        ]);
+
+        // Log the response body and status
+        Log::debug('equis-api-job:map manager response:', [
+            'responseBody' => $response->body(),
+            'responseStatus' => $response->status(),
+        ]);
+
+        return;
     }
 }
