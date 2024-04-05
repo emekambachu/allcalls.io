@@ -44,7 +44,8 @@ class EquisAPIJob implements ShouldQueue
 
         // $this->managerPartnerUniqueId = "AC636";
         // $this->managerPartnerUniqueId = "AC71";
-        //        $this->managerPartnerUniqueId = isset($this->user->invitedBy) && isset($this->user->invitedBy->upline_id) ? $this->user->invitedBy->upline_id : null;
+       $this->managerPartnerUniqueId = isset($this->user->invitedBy) && isset($this->user->invitedBy->equis_number) ? $this->user->invitedBy->equis_number : null;
+
     }
 
     /**
@@ -74,6 +75,9 @@ class EquisAPIJob implements ShouldQueue
         }
 
         $accessToken = $tokenResponse->json()['access_token'];
+
+
+        $this->mapManager($accessToken);
 
         $requestData = $this->getRequestData();
         // Log the request data
@@ -142,7 +146,7 @@ class EquisAPIJob implements ShouldQueue
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
         ])->withToken($accessToken)->post(env('EQUIS_BASE_URL') . '/Agent/Map', [
-            "userName" => isset($this->user->upline_id) ? $this->user->upline_id : "",
+            "userName" => isset($this->user->equis_number) ? $this->user->equis_number : "",
             "partnerUniqueId" => "AC" . $this->user->id,
         ]);
 
@@ -206,7 +210,8 @@ class EquisAPIJob implements ShouldQueue
 
     protected function saveManagerIdForUser($accessToken)
     {
-        $url = "https://equisapipartner-uat.azurewebsites.net/Agent/{$this->managerPartnerUniqueId}/UserName";
+        $url = env('EQUIS_BASE_URL') . "/Agent/{$this->managerPartnerUniqueId}/UserName";
+
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
         ])->withToken($accessToken)->get($url);
@@ -221,5 +226,23 @@ class EquisAPIJob implements ShouldQueue
             // Handle the error scenario
             Log::debug('Failed to save EF Number for user', ['Invitee' => $this->user->id, 'Server error response' => $response->body()]);
         }
+    }
+
+    protected function mapManager($accessToken)
+    {
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+        ])->withToken($accessToken)->post(env('EQUIS_BASE_URL') . '/Agent/Map', [
+            "userName" => isset($this->user->upline_id) ? $this->user->upline_id : "",
+            "partnerUniqueId" => $this->managerPartnerUniqueId,
+        ]);
+
+        // Log the response body and status
+        Log::debug('equis-api-job:map manager response:', [
+            'responseBody' => $response->body(),
+            'responseStatus' => $response->status(),
+        ]);
+
+        return;
     }
 }
