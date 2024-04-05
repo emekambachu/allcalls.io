@@ -164,49 +164,49 @@ class EquisAPIJob implements ShouldQueue
         return;
     }
 
-    protected function getRequestData()
-    {
-        return [
-            "address" => fake()->address(),
-            "birthDate" => fake()->date($format = 'Y-m-d', $max = 'now'),
-            "city" => fake()->city(),
-            "currentlyLicensed" => true,
-            "email" => fake()->safeEmail(),
-            "firstName" => fake()->firstName(),
-            "languageId" => "en",
-            "lastName" => fake()->lastName(),
-            "npn" => fake()->numerify('############'),
-            "partnerUniqueId" => fake()->regexify('[A-Z0-9]{5}'),
-            "role" => "Agent",
-            "details" => "A New Agent Registered.",
-            "state" => fake()->stateAbbr(),
-            "managerPartnerUniqueId" => 'AC73',
-            "zipCode" => fake()->postcode(),
-        ];
-    }
-
-
     // protected function getRequestData()
     // {
-    //     // This is the sample REQUIRED data that we need to send to Equis API
     //     return [
-    //         "address" => $this->user->internalAgentContract->address ?? null,
-    //         "birthDate" => isset($this->user->internalAgentContract->dob) ? Carbon::parse($this->user->internalAgentContract->dob)->format('Y-m-d') : null,
-    //         "city" => $this->user->internalAgentContract->city ?? null,
+    //         "address" => fake()->address(),
+    //         "birthDate" => fake()->date($format = 'Y-m-d', $max = 'now'),
+    //         "city" => fake()->city(),
     //         "currentlyLicensed" => true,
-    //         "email" => $this->user->internalAgentContract->email ?? null,
-    //         "firstName" => $this->user->internalAgentContract->first_name ?? null,
+    //         "email" => fake()->safeEmail(),
+    //         "firstName" => fake()->firstName(),
     //         "languageId" => "en",
-    //         "lastName" => $this->user->internalAgentContract->last_name ?? null,
-    //         "npn" => $this->user->internalAgentContract->resident_insu_license_no ?? null,
-    //         "partnerUniqueId" => $this->partnerUniqueId,
+    //         "lastName" => fake()->lastName(),
+    //         "npn" => fake()->numerify('############'),
+    //         "partnerUniqueId" => fake()->regexify('[A-Z0-9]{5}'),
     //         "role" => "Agent",
     //         "details" => "A New Agent Registered.",
-    //         "state" => isset($this->user->internalAgentContract->state) ? $this->getStateAbbrev($this->user->internalAgentContract->state) : null,
-    //         "managerPartnerUniqueId" => $this->managerPartnerUniqueId,
-    //         "zipCode" => $this->user->internalAgentContract->zip ?? null,
+    //         "state" => fake()->stateAbbr(),
+    //         "managerPartnerUniqueId" => 'AC73',
+    //         "zipCode" => fake()->postcode(),
     //     ];
     // }
+
+
+    protected function getRequestData()
+    {
+        // This is the sample REQUIRED data that we need to send to Equis API
+        return [
+            "address" => $this->user->internalAgentContract->address ?? null,
+            "birthDate" => isset($this->user->internalAgentContract->dob) ? Carbon::parse($this->user->internalAgentContract->dob)->format('Y-m-d') : null,
+            "city" => $this->user->internalAgentContract->city ?? null,
+            "currentlyLicensed" => true,
+            "email" => $this->user->internalAgentContract->email ?? null,
+            "firstName" => $this->user->internalAgentContract->first_name ?? null,
+            "languageId" => "en",
+            "lastName" => $this->user->internalAgentContract->last_name ?? null,
+            "npn" => $this->user->internalAgentContract->resident_insu_license_no ?? null,
+            "partnerUniqueId" => $this->partnerUniqueId,
+            "role" => "Agent",
+            "details" => "A New Agent Registered.",
+            "state" => isset($this->user->internalAgentContract->state) ? $this->getStateAbbrev($this->user->internalAgentContract->state) : null,
+            "managerPartnerUniqueId" => $this->managerPartnerUniqueId,
+            "zipCode" => $this->user->internalAgentContract->zip ?? null,
+        ];
+    }
 
     protected function getStateAbbrev($stateId)
     {
