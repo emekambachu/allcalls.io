@@ -66,13 +66,13 @@ class InternalAgentMyBusinessFactory extends Factory
             'client_state' => $clientStateId,
             'client_zipcode' => $this->faker->postcode,
             'client_phone_no' => $this->faker->phoneNumber,
-            'client_email' => $client->email,
+            'client_email' => $client->email ?? null,
             'created_at' => $this->faker->dateTimeBetween('-60 days', 'now')->format('Y-m-d H:i:s'),
             'updated_at' => $this->faker->dateTimeBetween('-60 days', 'now')->format('Y-m-d H:i:s'),
             'beneficiary_name' => $this->faker->name,
             'beneficiary_relationship' => $this->faker->word,
             'notes' => $this->faker->sentence,
-            'client_id' => $client->id,
+            'client_id' => $client->id ?? null,
         ];
     }
 }
