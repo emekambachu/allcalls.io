@@ -76,7 +76,7 @@ class EquisAPIJob implements ShouldQueue
         $accessToken = $tokenResponse->json()['access_token'];
 
 
-        $this->mapManager($accessToken);
+        // $this->mapManager($accessToken);
 
         $requestData = $this->getRequestData();
         // Log the request data
@@ -142,10 +142,17 @@ class EquisAPIJob implements ShouldQueue
 
     protected function mapAgentToEquis($accessToken)
     {
+        if (! $this->user->equis_number) {
+            $equisNumber = $this->findExistingEFNumber();
+        } else {
+            $equisNumber = $this->user->equis_number;
+        }
+
+
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
         ])->withToken($accessToken)->post(env('EQUIS_BASE_URL') . '/Agent/Map', [
-            "userName" => isset($this->user->equis_number) ? $this->user->equis_number : "",
+            "userName" => $equisNumber,
             "partnerUniqueId" => "AC" . $this->user->id,
         ]);
 
@@ -251,7 +258,7 @@ class EquisAPIJob implements ShouldQueue
      * @param User $user The user object containing email and phone.
      * @return string|null The userName if found, or null if not.
      */
-    protected function findExistingEFNumber($user)
+    protected function findExistingEFNumber()
     {
         $filePath = __DIR__ . '/AgentsAndEFNumbers.csv';
 
@@ -267,7 +274,7 @@ class EquisAPIJob implements ShouldQueue
                     list($userName, $firstName, $lastName, $email, $phoneNumber) = $row;
 
                     // Check if the current row's email or phone matches the user's
-                    if ($email === $user->email || $phoneNumber === $user->phone) {
+                    if ($email === $this->user->email || $phoneNumber === $this->user->phone) {
                         fclose($fileHandle);
                         return $userName; // Return the userName if a match is found
                     }
