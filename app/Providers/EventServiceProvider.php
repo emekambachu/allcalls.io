@@ -2,28 +2,31 @@
 
 namespace App\Providers;
 
-use App\Events\AppSubmittedEvent;
 use App\Events\FundsAdded;
 use App\Events\CareerEvent;
 use App\Events\FundsTooLow;
 use App\Events\InviteAgent;
-use App\Events\PolicySubmitedEvent;
-use App\Events\SendToOnScriptUpdate;
-use App\Listeners\PolicySubmited;
 use App\Models\Transaction;
 use App\Events\RecordingSaved;
 use App\Events\MissedCallEvent;
 use App\Listeners\SaveUserCall;
 use App\Events\RingingCallEvent;
+use App\Listeners\LinkAppToCall;
+use App\Events\AppSubmittedEvent;
 use App\Events\CallJustCompleted;
 use App\Events\CallStatusUpdated;
 use App\Listeners\AddDefaultBids;
 use App\Listeners\CareerListener;
+use App\Listeners\MarkCallAsSale;
+use App\Listeners\PolicySubmited;
 use App\Events\CompletedCallEvent;
 use App\Events\InitiatedCallEvent;
+use App\Listeners\CreateEquisUser;
 use App\Listeners\MakeUserOffline;
 use App\Events\OnboardingCompleted;
+use App\Events\PolicySubmitedEvent;
 use App\Listeners\SendWelcomeEmail;
+use App\Events\SendToOnScriptUpdate;
 use App\Events\OnlineUserListUpdated;
 use App\Listeners\AddTargetsInRingba;
 use Illuminate\Support\Facades\Event;
@@ -55,8 +58,6 @@ use App\Listeners\AddCompletedCallUserActivity;
 use App\Listeners\NotifyUserForLowFundsViaEmail;
 use App\Listeners\InviteAgent as ListenersInviteAgent;
 use App\Listeners\DispatchDispositionUpdateNotification;
-use App\Listeners\LinkAppToCall;
-use App\Listeners\MarkCallAsSale;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -132,6 +133,7 @@ class EventServiceProvider extends ServiceProvider
 
         OnboardingCompleted::class => [
             OnboardingCompletedTrigger::class,
+            CreateEquisUser::class,
         ],
 
         CareerEvent::class => [
