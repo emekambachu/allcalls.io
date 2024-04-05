@@ -37,13 +37,15 @@ class ImportEFNumbers extends Command
 
         // Iterate through the CSV rows
         while (($row = fgetcsv($fileHandle)) !== false) {
-            list($userName, $firstName, $lastName, $email, $phoneNumber) = $row;
+            // Check if all expected columns are present
+            if (count($row) >= 5) {
+                list($userName, $firstName, $lastName, $email, $phoneNumber) = $row;
 
-            // Search for a user by email or phone number and update equis_id
-            // \App\Models\User::where('email', $email)
-            //     ->orWhere('phone_number', $phoneNumber) // Adjust your column name for phone number
-            //     ->update(['equis_id' => $userName]);
-            $this->info('Match found: ' . $userName . ' for ' . $email . ' or ' . $phoneNumber);
+                // Your existing logic here...
+                $this->info('Match found: ' . $userName . ' for ' . $email . ' or ' . $phoneNumber);
+            } else {
+                $this->error('A row in the CSV file does not contain all required columns.');
+            }
         }
 
         fclose($fileHandle);
