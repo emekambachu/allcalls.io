@@ -44,7 +44,7 @@ class EquisAPIJob implements ShouldQueue
 
         // $this->managerPartnerUniqueId = "AC636";
         // $this->managerPartnerUniqueId = "AC71";
-        //        $this->managerPartnerUniqueId = isset($this->user->invitedBy) && isset($this->user->invitedBy->upline_id) ? $this->user->invitedBy->upline_id : null;
+        // $this->managerPartnerUniqueId = isset($this->user->invitedBy) && isset($this->user->invitedBy->equis_number) ? $this->user->invitedBy->equis_number : null;
     }
 
     /**
@@ -74,6 +74,9 @@ class EquisAPIJob implements ShouldQueue
         }
 
         $accessToken = $tokenResponse->json()['access_token'];
+
+
+        // $this->mapManager($accessToken);
 
         $requestData = $this->getRequestData();
         // Log the request data
@@ -110,7 +113,7 @@ class EquisAPIJob implements ShouldQueue
             }
             return;
         }
-        $this->saveManagerIdForUser($accessToken);
+        // $this->saveManagerIdForUser($accessToken);
     }
 
     protected function sendEmailsToPeople()
@@ -139,10 +142,16 @@ class EquisAPIJob implements ShouldQueue
 
     protected function mapAgentToEquis($accessToken)
     {
+        if (! $this->user->equis_number) {
+            $equisNumber = $this->findExistingEFNumber();
+        } else {
+            $equisNumber = $this->user->equis_number;
+        }
+
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
         ])->withToken($accessToken)->post(env('EQUIS_BASE_URL') . '/Agent/Map', [
-            "userName" => isset($this->user->upline_id) ? $this->user->upline_id : "",
+            "userName" => $equisNumber,
             "partnerUniqueId" => "AC" . $this->user->id,
         ]);
 
@@ -155,49 +164,49 @@ class EquisAPIJob implements ShouldQueue
         return;
     }
 
-    protected function getRequestData()
-    {
-        return [
-            "address" => fake()->address(),
-            "birthDate" => fake()->date($format = 'Y-m-d', $max = 'now'),
-            "city" => fake()->city(),
-            "currentlyLicensed" => true,
-            "email" => fake()->safeEmail(),
-            "firstName" => fake()->firstName(),
-            "languageId" => "en",
-            "lastName" => fake()->lastName(),
-            "npn" => fake()->numerify('############'),
-            "partnerUniqueId" => fake()->regexify('[A-Z0-9]{5}'),
-            "role" => "Agent",
-            "details" => "A New Agent Registered.",
-            "state" => fake()->stateAbbr(),
-            "managerPartnerUniqueId" => 'AC73',
-            "zipCode" => fake()->postcode(),
-        ];
-    }
-
-
     // protected function getRequestData()
     // {
-    //     // This is the sample REQUIRED data that we need to send to Equis API
     //     return [
-    //         "address" => $this->user->internalAgentContract->address ?? null,
-    //         "birthDate" => isset($this->user->internalAgentContract->dob) ? Carbon::parse($this->user->internalAgentContract->dob)->format('Y-m-d') : null,
-    //         "city" => $this->user->internalAgentContract->city ?? null,
+    //         "address" => fake()->address(),
+    //         "birthDate" => fake()->date($format = 'Y-m-d', $max = 'now'),
+    //         "city" => fake()->city(),
     //         "currentlyLicensed" => true,
-    //         "email" => $this->user->internalAgentContract->email ?? null,
-    //         "firstName" => $this->user->internalAgentContract->first_name ?? null,
+    //         "email" => fake()->safeEmail(),
+    //         "firstName" => fake()->firstName(),
     //         "languageId" => "en",
-    //         "lastName" => $this->user->internalAgentContract->last_name ?? null,
-    //         "npn" => $this->user->internalAgentContract->resident_insu_license_no ?? null,
-    //         "partnerUniqueId" => $this->partnerUniqueId,
+    //         "lastName" => fake()->lastName(),
+    //         "npn" => fake()->numerify('############'),
+    //         "partnerUniqueId" => fake()->regexify('[A-Z0-9]{5}'),
     //         "role" => "Agent",
     //         "details" => "A New Agent Registered.",
-    //         "state" => isset($this->user->internalAgentContract->state) ? $this->getStateAbbrev($this->user->internalAgentContract->state) : null,
-    //         "managerPartnerUniqueId" => $this->managerPartnerUniqueId,
-    //         "zipCode" => $this->user->internalAgentContract->zip ?? null,
+    //         "state" => fake()->stateAbbr(),
+    //         "managerPartnerUniqueId" => 'AC73',
+    //         "zipCode" => fake()->postcode(),
     //     ];
     // }
+
+
+    protected function getRequestData()
+    {
+        // This is the sample REQUIRED data that we need to send to Equis API
+        return [
+            "address" => $this->user->internalAgentContract->address ?? null,
+            "birthDate" => isset($this->user->internalAgentContract->dob) ? Carbon::parse($this->user->internalAgentContract->dob)->format('Y-m-d') : null,
+            "city" => $this->user->internalAgentContract->city ?? null,
+            "currentlyLicensed" => true,
+            "email" => $this->user->internalAgentContract->email ?? null,
+            "firstName" => $this->user->internalAgentContract->first_name ?? null,
+            "languageId" => "en",
+            "lastName" => $this->user->internalAgentContract->last_name ?? null,
+            "npn" => $this->user->internalAgentContract->resident_insu_license_no ?? null,
+            "partnerUniqueId" => $this->partnerUniqueId,
+            "role" => "Agent",
+            "details" => "A New Agent Registered.",
+            "state" => isset($this->user->internalAgentContract->state) ? $this->getStateAbbrev($this->user->internalAgentContract->state) : null,
+            "managerPartnerUniqueId" => $this->managerPartnerUniqueId,
+            "zipCode" => $this->user->internalAgentContract->zip ?? null,
+        ];
+    }
 
     protected function getStateAbbrev($stateId)
     {
@@ -206,7 +215,8 @@ class EquisAPIJob implements ShouldQueue
 
     protected function saveManagerIdForUser($accessToken)
     {
-        $url = "https://equisapipartner-uat.azurewebsites.net/Agent/{$this->managerPartnerUniqueId}/UserName";
+        $url = env('EQUIS_BASE_URL') . "/Agent/{$this->managerPartnerUniqueId}/UserName";
+
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
         ])->withToken($accessToken)->get($url);
@@ -221,5 +231,59 @@ class EquisAPIJob implements ShouldQueue
             // Handle the error scenario
             Log::debug('Failed to save EF Number for user', ['Invitee' => $this->user->id, 'Server error response' => $response->body()]);
         }
+    }
+
+    protected function mapManager($accessToken)
+    {
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+        ])->withToken($accessToken)->post(env('EQUIS_BASE_URL') . '/Agent/Map', [
+            "userName" => isset($this->user->upline_id) ? $this->user->upline_id : "",
+            "partnerUniqueId" => $this->managerPartnerUniqueId,
+        ]);
+
+        // Log the response body and status
+        Log::debug('equis-api-job:map manager response:', [
+            'responseBody' => $response->body(),
+            'responseStatus' => $response->status(),
+        ]);
+
+        return;
+    }
+
+    /**
+     * Finds and returns the userName for a given user based on their email or phone.
+     *
+     * @param User $user The user object containing email and phone.
+     * @return string|null The userName if found, or null if not.
+     */
+    protected function findExistingEFNumber()
+    {
+        $filePath = __DIR__ . '/AgentsAndEFNumbers.csv';
+
+        // Open the file
+        if (($fileHandle = fopen($filePath, 'r')) !== false) {
+            // Skip the header row
+            fgetcsv($fileHandle);
+
+            // Loop through each row of the CSV
+            while (($row = fgetcsv($fileHandle)) !== false) {
+                // Check if all expected columns are present
+                if (count($row) >= 5) {
+                    list($userName, $firstName, $lastName, $email, $phoneNumber) = $row;
+
+                    // Check if the current row's email or phone matches the user's
+                    if ($email === $this->user->email || $phoneNumber === $this->user->phone) {
+                        fclose($fileHandle);
+                        return $userName; // Return the userName if a match is found
+                    }
+                }
+            }
+
+            // Close the file after reading
+            fclose($fileHandle);
+        }
+
+        return null; // Return null if no match is found
     }
 }
