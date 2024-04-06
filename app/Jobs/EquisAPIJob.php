@@ -44,7 +44,7 @@ class EquisAPIJob implements ShouldQueue
 
         // $this->managerPartnerUniqueId = "AC636";
         // $this->managerPartnerUniqueId = "AC71";
-        $this->managerPartnerUniqueId = isset($this->user->invitedBy) && isset($this->user->invitedBy->equis_number) ? $this->user->invitedBy->equis_number : null;
+        // $this->managerPartnerUniqueId = isset($this->user->invitedBy) && isset($this->user->invitedBy->equis_number) ? $this->user->invitedBy->equis_number : null;
     }
 
     /**
