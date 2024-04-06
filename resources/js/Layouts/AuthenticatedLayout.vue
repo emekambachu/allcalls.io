@@ -3404,7 +3404,7 @@ let appDownloadModal = ref(false);
 
 
         <!-- Merge Calls Button -->    
-        <!-- <div class="py-3 flex gap-2">
+        <div class="py-3 flex gap-2">
           <button
             @click="showDialPad = !showDialPad"
             class="bg-blue-700 hover:bg-blue-500 text-white text-base py-1 px-3 rounded-full"
@@ -3427,7 +3427,7 @@ let appDownloadModal = ref(false);
             Leave 3-Way Call
           </button>
           
-        </div> -->
+        </div>
 
         <!--
         <div v-if="showDialPad" class="p-5">
@@ -3524,11 +3524,9 @@ let appDownloadModal = ref(false);
 
 
         <!-- Dialpad TYPE 3 -->
-        <!-- <div class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center">
+        <!-- <div class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center"></div> -->
 
-        </div> -->
-
-        <!-- <div v-if="showDialPad" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center p-4">
+        <div v-if="showDialPad" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center p-4">
           <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
             <div class="flex justify-between items-center mb-4">
               <h3 class="text-lg font-medium">Enter the number</h3>
@@ -3572,7 +3570,7 @@ let appDownloadModal = ref(false);
 
             </div>
           </div>
-        </div> -->
+        </div>
         <!-- Merge Calls Button Ends -->    
 
       </div>
