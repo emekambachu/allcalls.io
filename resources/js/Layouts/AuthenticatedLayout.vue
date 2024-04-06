@@ -3441,7 +3441,7 @@ let appDownloadModal = ref(false);
             Hangup Third-Party
           </button>
           <button
-            @click="alert('Coming soon!')"
+            @click="hangupFirstPartyCall"
             v-if="isConferenceCallInitiated"
             class="bg-red-700 hover:bg-red-600 text-base text-white rounded-full py-1 px-3"
           >
