@@ -389,9 +389,9 @@ let isLoading2 = ref(false);
 let UpdateBussinessData = async () => {
   let route = "";
   if (page.props.auth.role == "admin") {
-    route = "/admin/my-business";
+    route = "/admin/my-business/update";
   } else if (page.props.auth.role == "internal-agent") {
-    route = "/internal-agent/my-business";
+    route = "/internal-agent/my-business/store";
   }
   form.value.application_date = dateFormat(form.value.application_date);
   console.log('application_date', form.value.application_date)
@@ -399,7 +399,7 @@ let UpdateBussinessData = async () => {
   form.value.dob = dateFormat(form.value.dob);
   isLoading2.value = true;
   await axios
-    .post(`${route}/update`, form.value)
+    .post(`${route}`, form.value)
     .then((response) => {
       toaster("success", response.data.message);
       // router.visit(page.url)
