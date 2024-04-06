@@ -705,6 +705,27 @@ let hangupThirdPartyCall = () => {
   });
 }
 
+let hangupFirstPartyCall = () => {
+  console.log('Conference Name:', conferenceName.value);
+  console.log('First Party Call SID:', incomingCallSid.value);
+  
+  axios.post('/api/hangup-self', {
+    callSid: incomingCallSid.value, 
+    // conferenceName: conferenceName.value,
+  })
+  .then(response => {
+    // Handle success
+    alert('First-party call ended successfully.');
+    isConferenceCallInitiated.value = false;
+  })
+  .catch(error => {
+    // Handle error
+    console.error('Error ending third-party call:', error);
+    alert('Failed to end third-party call.');
+    
+  });
+}
+
 const appendNumber = (number) => {
   conferenceTypedNumber.value += number;
 };
