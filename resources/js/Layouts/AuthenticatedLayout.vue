@@ -29,6 +29,9 @@ let thirdPartySid = ref('');
 let conferenceName = ref('');
 let conferenceCallStatus = ref(null);
 let isConferenceCallInitiated = ref(false);
+// Reactive reference for the current playing tone
+let currentTone = ref(null);
+
 
 let showLowBalanceModal = ref(false);
 if (
@@ -631,6 +634,7 @@ onMounted(() => {
 
 });
 
+// conference call setup starts
 let mergeCallsToConference = () => {
   // Construct the payload
   const payload = {
@@ -726,6 +730,24 @@ let hangupFirstPartyCall = () => {
   });
 }
 
+// Method to play a tone
+let playDialpadTone = (digit) => {
+  // Stop any currently playing tone first
+  stopTone();
+  const audioSrc = `/dialpad-tones/${digit}.mp3`; // Adjust the path as needed
+  currentTone.value = new Audio(audioSrc);
+  currentTone.value.play().catch(error => console.error("Audio play error:", error));
+}
+
+// Method to stop the tone
+let stopDialpadTone = () => {
+  if (currentTone.value) {
+    currentTone.value.pause();
+    currentTone.value.currentTime = 0; // Reset the playback position
+    currentTone.value = null; // Clear the reference
+  }
+}
+
 const appendNumber = (number) => {
   conferenceTypedNumber.value += number;
 };
@@ -733,6 +755,7 @@ const appendNumber = (number) => {
 const deleteNumber = () => {
   conferenceTypedNumber.value = conferenceTypedNumber.value.slice(0, -1);
 };
+// conference call setup ends
 
 onUnmounted(() => {
   unregisterTwilioDevice();
@@ -3424,7 +3447,7 @@ let appDownloadModal = ref(false);
 
 
 
-        <!-- Merge Calls Button -->    
+      <!-- Merge Calls Button -->    
         <div class="py-3 flex gap-2">
           <button
             @click="showDialPad = !showDialPad"
@@ -3450,100 +3473,6 @@ let appDownloadModal = ref(false);
           
         </div>
 
-        <!--
-        <div v-if="showDialPad" class="p-5">
-          <div class="flex flex-wrap justify-center gap-3 mb-3">
-            <button
-              v-for="number in [
-                '1',
-                '2',
-                '3',
-                '4',
-                '5',
-                '6',
-                '7',
-                '8',
-                '9',
-                '0',
-                '+',
-                '*',
-                '#',
-              ]"
-              :key="number"
-              @click="conferenceTypedNumber += number"
-              class="bg-gray-300 hover:bg-gray-200 text-black font-bold py-2 px-4 rounded"
-            >
-              {{ number }}
-            </button>
-          </div>
-          <input v-model="conferenceTypedNumber" class="mb-3 p-2 border rounded w-full" />
-          <button
-            @click="callNumber"
-            class="bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 rounded w-full"
-          >
-            Call
-          </button>
-
-        </div>
-
-        <div v-if="conferenceCallStatus === 'initiated'">Third Party: Call Initiated...</div>
-        <div v-if="conferenceCallStatus === 'ringing'">Third Party: Ringing...</div>
-        <div v-if="conferenceCallStatus === 'joined'">Third Party: Joined</div>
-          
-        <button
-          @click="hangupThirdPartyCall"
-          class="bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 rounded"
-        >
-          Hangup Third-Party
-        </button> -->
-
-        <!-- Dialpad TYPE 2 -->
-        <!-- <div id="app" class="container mx-auto mt-10">
-          <button @click="showDialPad = true" class="mx-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full text-lg flex items-center">
-              <i class="fas fa-phone-alt mr-2"></i> Open Dial Pad
-          </button>
-
-          <div v-if="showDialPad" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-              <div class="bg-white rounded-lg">
-                  <div class="flex justify-between items-center p-5 border-b border-gray-200">
-                      <h5 class="text-xl font-medium text-gray-900">Dial Pad</h5>
-                      <button @click="showDialPad = false" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center">
-                          <i class="fas fa-times"></i>
-                      </button>
-                  </div>
-                  <div class="p-6">
-                      <div class="flex justify-center mb-4">
-                          <input type="number" v-model="conferenceTypedNumber" class="form-control text-center bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter number">
-                          <input v-model="conferenceTypedNumber" class="mb-3 p-2 border rounded w-full" />
-                      </div>
-                      <div class="grid grid-cols-3 gap-4 justify-center items-center">
-                          <button v-for="n in ['1','2','3']" :key="n" @click="conferenceTypedNumber += n" class="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded-full">{{ n }}</button>
-                          <button v-for="n in ['4','5','6']" :key="n" @click="conferenceTypedNumber += n" class="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded-full">{{ n }}</button>
-                          <button v-for="n in ['7','8','9']" :key="n" @click="conferenceTypedNumber += n" class="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded-full">{{ n }}</button>
-                          <button @click="conferenceTypedNumber += '*'" class="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded-full">*</button>
-                          <button @click="conferenceTypedNumber += '0'" class="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded-full">0</button>
-                          <button @click="conferenceTypedNumber += '#'" class="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded-full">#</button>
-                      </div>
-                  </div>
-                  <div class="flex justify-around p-6 border-t border-gray-200 rounded-b gap-2">
-                      <button @click="callNumber" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full flex items-center">
-                          <i class="fas fa-phone-alt mr-2"></i> Call
-                      </button>
-                      <button
-                        @click="hangupThirdPartyCall"
-                        class="bg-red-500 hover:bg-red-400 text-white rounded-full py-2 px-6"
-                      >
-                        Hangup Third-Party
-                      </button>
-                      <button @click="showDialPad = false" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full flex items-center">
-                          <i class="fas fa-times mr-2"></i> Close
-                      </button>
-                  </div>
-              </div>
-          </div>
-        </div> -->
-
-
         <!-- Dialpad TYPE 3 -->
         <!-- <div class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center"></div> -->
 
@@ -3561,7 +3490,16 @@ let appDownloadModal = ref(false);
               <input type="tel" v-model="conferenceTypedNumber" class="form-control text-center text-xl border-b-2 border-gray-300 focus:outline-none focus:border-gray-500 w-full" placeholder="+1 (555) 123-4567" />
             </div>
             <div class="grid grid-cols-3 gap-4 mb-4">
-              <button v-for="digit in ['1','2','3','4','5','6','7','8','9','*','0','#']" :key="digit" @click="appendNumber(digit)" class="flex justify-center items-center h-12 w-full bg-gray-200 rounded text-xl hover:bg-gray-300">
+              <button 
+                v-for="digit in ['1','2','3','4','5','6','7','8','9','*','0','#']" 
+                :key="digit" 
+                @click="appendNumber(digit)" 
+                @mousedown="playDialpadTone(digit)"
+                @mouseup="stopDialpadTone"
+                @touchstart.prevent="playDialpadTone(digit)"
+                @touchend.prevent="stopDialpadTone"
+                class="flex justify-center items-center h-12 w-full bg-gray-200 rounded text-xl hover:bg-gray-300"
+              >
                 {{ digit }}
               </button>
             </div>
