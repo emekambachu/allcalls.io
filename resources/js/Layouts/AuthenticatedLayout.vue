@@ -735,7 +735,7 @@ let playDialpadTone = async(digit) => {
   // Stop any currently playing tone first
   // stopDialpadTone();
   const encodedDigit = encodeURI(digit);
-  const audioSrc = `/sounds/${encodedDigit}.mp3`; // Adjust the path as needed
+  const audioSrc = `/dialpad-tones/${encodedDigit}-sound.mp3`; // Adjust the path as needed
   currentTone.value = new Audio(audioSrc);
   try {
     await currentTone.value.play();
