@@ -176,7 +176,7 @@ class TwilioConferenceCallController extends Controller
                 $newCallResponse = $client->calls->create(
                     $phoneNumber, // The phone number to call and add to the conference
                     // $twilioNumber, // Your Twilio number
-                    $storedCallerId,
+                    $call->from,
                     // ["twiml" => $twiml]
                     [
                         "twiml" => $twiml,
