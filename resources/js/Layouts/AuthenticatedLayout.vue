@@ -731,20 +731,29 @@ let hangupFirstPartyCall = () => {
 }
 
 // Method to play a tone
-let playDialpadTone = (digit) => {
+let playDialpadTone = async(digit) => {
   // Stop any currently playing tone first
   // stopDialpadTone();
-  const audioSrc = `/dialpad-tones/${digit}-sound.mp3`; // Adjust the path as needed
+  const encodedDigit = encodeURI(digit);
+  const audioSrc = `/sounds/${encodedDigit}.mp3`; // Adjust the path as needed
   currentTone.value = new Audio(audioSrc);
-  currentTone.value.play().catch(error => console.error("Audio play error:", error));
+  try {
+    await currentTone.value.play();
+  } catch (error) {
+    console.error("Audio play error:", error);
+  }
+}
+
+let isAudioPlaying = (audio) => {
+  return !audio.paused && !audio.ended && audio.currentTime > 0;
 }
 
 // Method to stop the tone
 let stopDialpadTone = () => {
-  if (currentTone.value) {
+  if (currentTone.value && isAudioPlaying(currentTone.value)) {
     currentTone.value.pause();
-    currentTone.value.currentTime = 0; // Reset the playback position
-    currentTone.value = null; // Clear the reference
+    currentTone.value.currentTime = 0;
+    currentTone.value = null;
   }
 }
 
