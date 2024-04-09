@@ -3460,9 +3460,9 @@ let appDownloadModal = ref(false);
         <div class="py-3 flex gap-2">
           <button
             @click="showDialPad = !showDialPad"
+            v-text="isConferenceCallInitiated ? 'Show Dialpad' : 'Add Call'"
             class="bg-blue-700 hover:bg-blue-500 text-white text-base py-1 px-3 rounded-full"
-          >
-            Add Call
+          >            
           </button>
 
           <button
