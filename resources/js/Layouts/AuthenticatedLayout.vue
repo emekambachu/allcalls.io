@@ -734,7 +734,8 @@ let hangupFirstPartyCall = () => {
 let playDialpadTone = async(digit) => {
   // Stop any currently playing tone first
   // stopDialpadTone();
-  const encodedDigit = encodeURIComponent(digit);
+  const fileName = dialPadToneMapping[digit] || digit;
+  const encodedDigit = encodeURIComponent(fileName);
   const audioSrc = `/dialpad-tones/${encodedDigit}-sound.mp3`; // Adjust the path as needed
   currentTone.value = new Audio(audioSrc);
   try {
@@ -743,6 +744,12 @@ let playDialpadTone = async(digit) => {
     console.error("Audio play error:", error);
   }
 }
+
+const dialPadToneMapping = {
+  '*': 'star',
+  '#': 'hash',
+  // Add any other special characters mappings here
+};
 
 let isAudioPlaying = (audio) => {
   return !audio.paused && !audio.ended && audio.currentTime > 0;
