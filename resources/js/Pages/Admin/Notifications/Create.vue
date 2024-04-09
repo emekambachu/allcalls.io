@@ -177,7 +177,7 @@ const processedEmailButtonUrl = computed(() => {
   if (!url) return '';
 
   // Remove any existing http://, https://, or malformed variants
-  url = url.replace(/^(https?:\\+|http:\\+|htpts:\\+|https?:\/\/)/, '');
+  url = url.replace(/^(https?:\\+|http:\\+|htpts:\\+|https?:\/\/)/i, '');
 
   // Prepend with 'https://'
   url = 'https://' + url;
