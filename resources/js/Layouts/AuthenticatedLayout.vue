@@ -734,7 +734,7 @@ let hangupFirstPartyCall = () => {
 let playDialpadTone = (digit) => {
   // Stop any currently playing tone first
   // stopDialpadTone();
-  const audioSrc = `/dialpad-tones/${digit}.mp3`; // Adjust the path as needed
+  const audioSrc = `/dialpad-tones/${digit}-sound.mp3`; // Adjust the path as needed
   currentTone.value = new Audio(audioSrc);
   currentTone.value.play().catch(error => console.error("Audio play error:", error));
 }
