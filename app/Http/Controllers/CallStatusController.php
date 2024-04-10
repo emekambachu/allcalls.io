@@ -203,13 +203,30 @@ class CallStatusController extends Controller
                 // if ($callDuration > 0) {
                 try {
                     // End the parent call if it's still going
-                    if ($parentCallSid) {
-                        $client->calls($parentCallSid)->update(['status' => 'completed']);
-                    }
+                    // if ($parentCallSid) {
+                    //     $client->calls($parentCallSid)->update(['status' => 'completed']);
+                    // }
 
-                    // End the child call if it's still going
-                    if ($childCallSid && $childCallSid !== $parentCallSid) {
-                        $client->calls($childCallSid)->update(['status' => 'completed']);
+                    // // End the child call if it's still going
+                    // if ($childCallSid && $childCallSid !== $parentCallSid) {
+                    //     $client->calls($childCallSid)->update(['status' => 'completed']);
+                    // }
+
+                    // This is pseudo-code, we'll need to adapt based on application's logic
+                    if ($call->conferenceCall) {
+                        // Handle conference call participant without terminating the entire call
+                        // Maybe just remove the participant if they are leaving
+                    } else {
+                        // Handle regular call termination
+                        if ($parentCallSid) {
+                            $client->calls($parentCallSid)->update(['status' => 'completed']);
+                        }
+
+                        if ($childCallSid && $childCallSid !== $parentCallSid) {
+                            $client->calls($childCallSid)->update(['status' => 'completed']);
+                        }
+
+                        Log::debug('Terminated call chain due to duration exceeding 10 seconds.');
                     }
 
                     Log::debug('Terminated call chain due to duration exceeding 10 seconds.');
