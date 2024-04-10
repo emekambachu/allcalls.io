@@ -675,12 +675,12 @@ let callNumber = () => {
       .then((response) => {
         console.log("Call initiated", response);
         // Extract and store conferenceName and thirdPartySid from response
-        conferenceName.value = response.data.conferenceName;
-        thirdPartySid.value = response.data.thirdPartySid; 
+        // conferenceName.value = response.data.conferenceName;
+        // thirdPartySid.value = response.data.thirdPartySid; 
 
-        // Reset or handle post-call UI here
-        // showDialPad.value = false;
-        conferenceTypedNumber.value = "";
+        // // Reset or handle post-call UI here
+        // // showDialPad.value = false;
+        // conferenceTypedNumber.value = "";
       })
       .catch((error) => {
         console.error("Error initiating call", error);
