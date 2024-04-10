@@ -21,6 +21,7 @@ import DispositionModal from "@/Components/DispositionModal.vue";
 
 let page = usePage();
 
+const currentConnection = ref(null);
 let showDialPad = ref(false);
 let conferenceTypedNumber = ref('');
 let incomingCallSid = ref(null);
@@ -155,6 +156,8 @@ let getFormattedTime = (startTime) => {
 let showIncomingCall = (conn) => {
   console.log("show incoming call now");
   console.log(conn);
+
+  currentConnection.value = conn;
 
   console.log("Params:");
   console.log(conn.parameters.Params);
@@ -734,15 +737,31 @@ let hangupFirstPartyCall = () => {
 let playDialpadTone = async(digit) => {
   // Stop any currently playing tone first
   // stopDialpadTone();
-  const encodedDigit = encodeURI(digit);
+  const fileName = dialPadToneMapping[digit] || digit;
+  const encodedDigit = encodeURIComponent(fileName);
   const audioSrc = `/dialpad-tones/${encodedDigit}-sound.mp3`; // Adjust the path as needed
   currentTone.value = new Audio(audioSrc);
+
+  // Check if there's an active connection
+  if (currentConnection.value) {
+    currentConnection.value.sendDigits(digit);
+    console.log("Active connection found, DTMF tones sent");
+  } else {
+    console.error("No active connection to send DTMF.");
+  }
+
   try {
     await currentTone.value.play();
   } catch (error) {
     console.error("Audio play error:", error);
   }
 }
+
+const dialPadToneMapping = {
+  '*': 'star',
+  '#': 'hash',
+  // Add any other special characters mappings here
+};
 
 let isAudioPlaying = (audio) => {
   return !audio.paused && !audio.ended && audio.currentTime > 0;
@@ -3460,9 +3479,9 @@ let appDownloadModal = ref(false);
         <div class="py-3 flex gap-2">
           <button
             @click="showDialPad = !showDialPad"
+            v-text="isConferenceCallInitiated ? 'Dial Pad' : 'Add Call'"
             class="bg-blue-700 hover:bg-blue-500 text-white text-base py-1 px-3 rounded-full"
-          >
-            Add Call
+          >            
           </button>
 
           <button
