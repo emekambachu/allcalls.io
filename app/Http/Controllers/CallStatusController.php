@@ -207,10 +207,12 @@ class CallStatusController extends Controller
                     //     $client->calls($parentCallSid)->update(['status' => 'completed']);
                     // }
 
-                    // End the child call if it's still going
+                    // // End the child call if it's still going
                     // if ($childCallSid && $childCallSid !== $parentCallSid) {
                     //     $client->calls($childCallSid)->update(['status' => 'completed']);
                     // }
+
+                    
 
                     Log::debug('Terminated call chain due to duration exceeding 10 seconds.');
                 } catch (Exception $e) {
