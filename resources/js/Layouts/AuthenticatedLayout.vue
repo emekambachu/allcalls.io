@@ -738,12 +738,18 @@ let playDialpadTone = async(digit) => {
   const encodedDigit = encodeURIComponent(fileName);
   const audioSrc = `/dialpad-tones/${encodedDigit}-sound.mp3`; // Adjust the path as needed
   currentTone.value = new Audio(audioSrc);
+
+  // Check if there's an active connection
+  let activeConnection = device.activeConnection();
+  
+  if (activeConnection) {
+    activeConnection.sendDigits(digit);
+  } else {
+    console.error("No active connection.");
+  }
+
   try {
     await currentTone.value.play();
-
-    if (device && device.activeConnection()) {
-      device.activeConnection().sendDigits(digit);
-    }
   } catch (error) {
     console.error("Audio play error:", error);
   }
