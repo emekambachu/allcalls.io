@@ -2774,6 +2774,7 @@ let appDownloadModal = ref(false);
                   route().current('billing.funds.index') ||
                   route().current('billing.cards.index') ||
                   route().current('billing.autopay.index')"
+                xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
@@ -3282,9 +3283,7 @@ let appDownloadModal = ref(false);
         </div>
 
         <h3 class="text-2xl font-medium">Ongoing Call</h3>
-        <p class="text-center" v-if="currentVerticalName" v-text="currentVerticalName">
-          Vertical Name
-        </p>
+        <p class="text-center" v-if="currentVerticalName" v-text="currentVerticalName"></p>
 
         <!-- Client's Basic Info -->
         <div v-if="connectedClient && !hasSixtySecondsPassed" class="w-full">
