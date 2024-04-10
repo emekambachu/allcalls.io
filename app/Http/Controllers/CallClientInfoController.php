@@ -16,7 +16,7 @@ class CallClientInfoController extends Controller
         $uniqueCallId = $request->input('unique_call_id');
 
         // Find the Call record by unique_call_id
-        $call = Call::where('unique_call_id', $uniqueCallId)->first();
+        $call = Call::where('unique_call_id', $uniqueCallId)->with('callType')->first();
 
         if ($call) {
             // Fetch the related Client
