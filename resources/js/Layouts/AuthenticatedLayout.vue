@@ -141,6 +141,7 @@ let showOngoing = ref(false);
 let call = reactive(null);
 let hasSixtySecondsPassed = ref(false);
 let ringingTimeout = ref(null);
+let currentVerticalName = ref('');
 
 // Left side menu
 const navSettingDropDown = ref(false);
@@ -309,6 +310,11 @@ let refetchClient = () => {
 
       console.log("connected client now: ");
       console.log(connectedClient.value);
+
+      if (response.data.call.call_type)
+      {
+        currentVerticalName.value = response.data.call.call_type.type;
+      }
     })
     .catch((error) => {
       // Handle any error that occurred during the request
@@ -3284,7 +3290,7 @@ let appDownloadModal = ref(false);
         </div>
 
         <h3 class="text-2xl font-medium">Ongoing Call</h3>
-        <p class="text-center">Vertical Name</p>
+        <p class="text-center" v-if="currentVerticalName" v-text="currentVerticalName"></p>
 
         <!-- Client's Basic Info -->
         <div v-if="connectedClient && !hasSixtySecondsPassed" class="w-full">
