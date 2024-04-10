@@ -740,6 +740,10 @@ let playDialpadTone = async(digit) => {
   currentTone.value = new Audio(audioSrc);
   try {
     await currentTone.value.play();
+
+    if (device && device.activeConnection()) {
+      device.activeConnection().sendDigits(digit);
+    }
   } catch (error) {
     console.error("Audio play error:", error);
   }
