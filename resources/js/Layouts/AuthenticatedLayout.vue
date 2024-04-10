@@ -21,6 +21,7 @@ import DispositionModal from "@/Components/DispositionModal.vue";
 
 let page = usePage();
 
+const currentConnection = ref(null);
 let showDialPad = ref(false);
 let conferenceTypedNumber = ref('');
 let incomingCallSid = ref(null);
@@ -155,6 +156,8 @@ let getFormattedTime = (startTime) => {
 let showIncomingCall = (conn) => {
   console.log("show incoming call now");
   console.log(conn);
+
+  currentConnection.value = conn;
 
   console.log("Params:");
   console.log(conn.parameters.Params);
@@ -740,12 +743,11 @@ let playDialpadTone = async(digit) => {
   currentTone.value = new Audio(audioSrc);
 
   // Check if there's an active connection
-  let activeConnection = device.activeConnection();
-  
-  if (activeConnection) {
-    activeConnection.sendDigits(digit);
+  if (currentConnection.value) {
+    currentConnection.value.sendDigits(digit);
+    console.log("Active connection found, DTMF tones sent");
   } else {
-    console.error("No active connection.");
+    console.error("No active connection to send DTMF.");
   }
 
   try {
