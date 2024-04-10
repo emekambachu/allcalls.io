@@ -2139,8 +2139,7 @@ let appDownloadModal = ref(false);
                 :active="
                   route().current('billing.funds.index') ||
                   route().current('billing.cards.index') ||
-                  route().current('billing.autopay.index')
-                "
+                  route().current('billing.autopay.index')"
                 v-if="!isInternalLevel"
               >
                 <div class="row pb-3 flex">
@@ -2150,8 +2149,7 @@ let appDownloadModal = ref(false);
                       v-if="
                         route().current('billing.funds.index') ||
                         route().current('billing.cards.index') ||
-                        route().current('billing.autopay.index')
-                      "
+                        route().current('billing.autopay.index')"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
