@@ -193,6 +193,9 @@ let showIncomingCall = (conn) => {
     axios
       .get("/call-client-info?unique_call_id=" + connectedUniqueCallId.value)
       .then((response) => {
+
+        console.log('Call full response:', response.data);
+
         connectedClient.value = response.data.client;
         dispositionClient.value = response.data.client;
 
