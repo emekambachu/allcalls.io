@@ -733,35 +733,35 @@ let hangupFirstPartyCall = () => {
   });
 }
 
-// Method to play a tone
-let playDialpadTone = async(digit) => {
-  // Stop any currently playing tone first
-  // stopDialpadTone();
-  const fileName = dialPadToneMapping[digit] || digit;
-  const encodedDigit = encodeURIComponent(fileName);
-  const audioSrc = `/dialpad-tones/${encodedDigit}-sound.mp3`; // Adjust the path as needed
-  currentTone.value = new Audio(audioSrc);
+// // Method to play a tone
+// let playDialpadTone = async(digit) => {
+//   // Stop any currently playing tone first
+//   // stopDialpadTone();
+//   const fileName = dialPadToneMapping[digit] || digit;
+//   const encodedDigit = encodeURIComponent(fileName);
+//   const audioSrc = `/dialpad-tones/${encodedDigit}-sound.mp3`; // Adjust the path as needed
+//   currentTone.value = new Audio(audioSrc);
 
-  // Check if there's an active connection
-  if (currentConnection.value) {
-    currentConnection.value.sendDigits(digit);
-    console.log("Active connection found, DTMF tones sent");
-  } else {
-    console.error("No active connection to send DTMF.");
-  }
+//   // Check if there's an active connection
+//   if (currentConnection.value) {
+//     currentConnection.value.sendDigits(digit);
+//     console.log("Active connection found, DTMF tones sent");
+//   } else {
+//     console.error("No active connection to send DTMF.");
+//   }
 
-  try {
-    await currentTone.value.play();
-  } catch (error) {
-    console.error("Audio play error:", error);
-  }
-}
+//   try {
+//     await currentTone.value.play();
+//   } catch (error) {
+//     console.error("Audio play error:", error);
+//   }
+// }
 
-const dialPadToneMapping = {
-  '*': 'star',
-  '#': 'hash',
-  // Add any other special characters mappings here
-};
+// const dialPadToneMapping = {
+//   '*': 'star',
+//   '#': 'hash',
+//   // Add any other special characters mappings here
+// };
 
 let isAudioPlaying = (audio) => {
   return !audio.paused && !audio.ended && audio.currentTime > 0;
