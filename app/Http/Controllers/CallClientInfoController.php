@@ -27,7 +27,8 @@ class CallClientInfoController extends Controller
                 // Return the client as a JSON response
                 return response()->json([
                     'status' => 'success',
-                    'client' => $client
+                    'client' => $client,
+                    'call' => $call,
                 ]);
             } else {
                 // Handle situation where Client is not found
