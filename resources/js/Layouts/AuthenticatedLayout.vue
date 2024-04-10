@@ -195,9 +195,9 @@ let showIncomingCall = (conn) => {
       .then((response) => {
         console.log("Call full response:", response.data);
 
-        if (response.data.call.call_type) {
-          console.log('Call type is: ', response.data.call.call_type.type);
-          currentVerticalName.value = response.data.call.call_type.type;
+        if (response.data.call) {
+          console.log('Call type is: ', response.data.call.call_type);
+          // currentVerticalName.value = response.data.call.call_type.type;
         }
 
         connectedClient.value = response.data.client;
