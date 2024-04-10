@@ -3281,6 +3281,7 @@ let appDownloadModal = ref(false);
         </div>
 
         <h3 class="text-2xl font-medium">Ongoing Call</h3>
+        <p class="text-center">Vertical Name</p>
 
         <!-- Client's Basic Info -->
         <div v-if="connectedClient && !hasSixtySecondsPassed" class="w-full">
