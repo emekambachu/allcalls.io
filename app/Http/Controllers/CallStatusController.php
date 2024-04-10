@@ -201,22 +201,22 @@ class CallStatusController extends Controller
 
                 // If the call duration is more than 0 seconds
                 // if ($callDuration > 0) {
-                // try {
-                //     // End the parent call if it's still going
-                //     if ($parentCallSid) {
-                //         $client->calls($parentCallSid)->update(['status' => 'completed']);
-                //     }
+                try {
+                    // End the parent call if it's still going
+                    // if ($parentCallSid) {
+                    //     $client->calls($parentCallSid)->update(['status' => 'completed']);
+                    // }
 
-                //     // End the child call if it's still going
-                //     if ($childCallSid && $childCallSid !== $parentCallSid) {
-                //         $client->calls($childCallSid)->update(['status' => 'completed']);
-                //     }
+                    // End the child call if it's still going
+                    if ($childCallSid && $childCallSid !== $parentCallSid) {
+                        $client->calls($childCallSid)->update(['status' => 'completed']);
+                    }
 
-                //     Log::debug('Terminated call chain due to duration exceeding 10 seconds.');
-                // } catch (Exception $e) {
-                //     // Log the exception for debugging
-                //     Log::debug('Error while trying to terminate call chain: ' . $e->getMessage());
-                // }
+                    Log::debug('Terminated call chain due to duration exceeding 10 seconds.');
+                } catch (Exception $e) {
+                    // Log the exception for debugging
+                    Log::debug('Error while trying to terminate call chain: ' . $e->getMessage());
+                }
                 // }
                 // ========================================
                 // END: Terminate Call Chain Block
