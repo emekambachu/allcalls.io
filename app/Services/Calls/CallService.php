@@ -363,12 +363,13 @@ class CallService
             return $call;
         });
 
-        // Save collection in session for search
+        // Save collection in session for export
         Session::put('all_calls', [
             'calls' => $allCalls,
         ]);
 
         return [
+//            'users_with_no_calls' => $this->user->usersWithoutCalls(),
             'calls' => $calls,
             'all_calls' => $allCalls, // Get a better solution for this
             'total' => $allCalls->count(),
@@ -453,6 +454,38 @@ class CallService
                 'totalGiPolicies' => $totalGiPolicies,
                 'percentGiPolicies' => $percentGiPolicies,
                 'percentSiPolicies' => $percentSiPolicies,
+            ];
+        });
+    }
+
+    public function getCallsGroupedByEmptyUserId($allCalls){
+
+//        return $this->call()->where('user_id', 0)->get();
+
+        return $allCalls->where('user_id', 0)->map(function ($calls) {
+            $totalCalls = $calls->count();
+            $paidCalls = $calls->where('amount_spent', '>', 0)->count();
+            $totalRevenue = $calls->sum('amount_spent');
+            $totalCallLength = $calls->sum('call_duration_in_seconds');
+            $averageCallLength = $totalCalls > 0 ? $totalCallLength / $totalCalls : 0;
+
+            return [
+                'userId' => null,
+                'agentName' => 'No Agent',
+                'agentEmail' => 'No Email',
+                'totalCalls' => $totalCalls,
+                'paidCalls' => $paidCalls,
+                'revenueEarned' => $totalRevenue,
+                'revenuePerCall' => $totalCalls > 0 ? $totalRevenue / $totalCalls : 0,
+                'totalCallLength' => $totalCallLength,
+                'averageCallLength' => $averageCallLength,
+                'totalPolicies' => 0,
+                'totalPendingPolicies' => 0,
+                'totalDeclinedPolicies' => 0,
+                'totalSiPolicies' => 0,
+                'totalGiPolicies' => 0,
+                'percentGiPolicies' => 0,
+                'percentSiPolicies' => 0,
             ];
         });
     }

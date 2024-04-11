@@ -12,8 +12,14 @@ class UserService
         return new User();
     }
 
-    public function withRelations(){
-        $this->user()->with('cards', 'transactions', 'callTypes','states', 'activities', 'clients', 'roles', 'activeUser', 'internalAgentContract', 'additionalFiles', 'devices');
+    public function withRelations(): \Illuminate\Database\Eloquent\Builder
+    {
+        return $this->user()->with('cards', 'transactions', 'callTypes','states', 'activities', 'clients', 'roles', 'activeUser', 'internalAgentContract', 'additionalFiles', 'devices');
+    }
+
+    public function usersWithoutCalls()
+    {
+        return $this->user()->with('roles')->doesntHave('calls')->count();
     }
 
     public function updateUser($request): array
