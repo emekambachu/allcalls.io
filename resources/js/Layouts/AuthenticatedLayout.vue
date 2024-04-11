@@ -3226,7 +3226,7 @@ let appDownloadModal = ref(false);
 
           <h1 class="text-2xl font-bold text-black">Incoming Call</h1>
           <p class="text-md text-gray-600 mt-2">
-            AllCalls Client <span v-if="currentVerticalName" v-text="currentVerticalName"></span>
+            AllCalls Client <span v-if="currentVerticalName">({{ currentVerticalName }})</span>
           </p>
 
           <div class="flex mt-20 space-x-10">
