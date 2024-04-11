@@ -268,7 +268,7 @@ let acceptCall = () => {
       let now = new Date();
       let differenceInSeconds = (now - callConnectionTime) / 1000;
 
-      console.log(("CURRENT VERTICAL IS": currentVerticalName.value));
+      console.log("CURRENT VERTICAL IS:", currentVerticalName.value);
 
       if (differenceInSeconds >= 80 && !hasSixtySecondsPassed.value) {
         hasSixtySecondsPassed.value = true;
