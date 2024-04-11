@@ -61,6 +61,8 @@ class SendCallsToOnScriptAfterFiveMinutes implements ShouldQueue
             'api_key' => env('ONSCRIPT_AI_API_KEY'),
         ];
 
+        Log::debug('SendCallInfoIn5MinsFinalQueryParams:', $queryParams);
+
         // Filter out null values
         $queryParams = array_filter($queryParams, function ($value) {
             return !is_null($value);
@@ -81,5 +83,4 @@ class SendCallsToOnScriptAfterFiveMinutes implements ShouldQueue
             ]);
         }
     }
-
 }
