@@ -268,7 +268,12 @@ let acceptCall = () => {
       let now = new Date();
       let differenceInSeconds = (now - callConnectionTime) / 1000;
 
+      // For this one particular vertical, we DO NOT need to wait for 60 seconds before we display the data.
       console.log("CURRENT VERTICAL IS:", currentVerticalName.value);
+      if (currentVerticalName.value === 'NO BUFFER - Final Expense - Fronter') {
+        hasSixtySecondsPassed.value = true
+      }
+      // End
 
       if (differenceInSeconds >= 80 && !hasSixtySecondsPassed.value) {
         hasSixtySecondsPassed.value = true;
