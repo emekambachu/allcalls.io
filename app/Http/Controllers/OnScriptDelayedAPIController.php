@@ -29,6 +29,14 @@ class OnScriptDelayedAPIController extends Controller
         $disposition = $request->query('disposition');
         $clientPhone = $request->query('client_phone');
 
+        Log::debug('OnScriptData:', [
+            'agentName' => $agentName,
+            'url' => $url,
+            'timestamp' => $formattedTimestamp,
+            'disposition' => $disposition,
+            'clientPhone' => $clientPhone,
+        ]);
+
         SendCallsToOnScriptAfterFiveMinutes::dispatch($agentName, $url, $formattedTimestamp, $disposition, $clientPhone)
             ->delay(now()->addMinutes(5));
 
