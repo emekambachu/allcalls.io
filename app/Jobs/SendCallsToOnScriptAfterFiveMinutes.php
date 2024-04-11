@@ -45,7 +45,7 @@ class SendCallsToOnScriptAfterFiveMinutes implements ShouldQueue
     {
         Log::debug('SendCallInfoIn5Minutes', [
             'agentName' => $this->agentName,
-            'url' => $this->url,
+            'url' => $this->url . '-all.mp3',
             'timestamp' => $this->timestamp,
             'disposition' => $this->disposition,
             'clientPhone' => $this->clientPhone,
@@ -53,7 +53,7 @@ class SendCallsToOnScriptAfterFiveMinutes implements ShouldQueue
 
         $queryParams = [
             'agent_name' => $this->agentName,
-            'url' => $this->url,
+            'url' => $this->url . '-all.mp3',
             'timestamp' => $this->timestamp,
             'disposition' => $this->disposition,
             'client_phone' => $this->clientPhone,
