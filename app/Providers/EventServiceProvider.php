@@ -40,6 +40,7 @@ use App\Listeners\SendFundsReceiptEmail;
 use App\Listeners\UpdateTargetsInRingba;
 use Plivo\Resources\Recording\Recording;
 use App\Http\Controllers\FundsController;
+use App\Listeners\UnlockClientForFronter;
 use App\Listeners\UpdateActiveUserStatus;
 use App\Listeners\ChargeUserForMissedCall;
 use Illuminate\Mail\Events\MessageSending;
@@ -100,6 +101,7 @@ class EventServiceProvider extends ServiceProvider
         ],
 
         CallJustCompleted::class => [
+            UnlockClientForFronter::class,
         ],
 
         RecordingSaved::class => [
