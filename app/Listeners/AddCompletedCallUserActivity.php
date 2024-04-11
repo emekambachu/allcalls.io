@@ -24,12 +24,12 @@ class AddCompletedCallUserActivity
     {
         Log::debug('AddCompletedCallUserActivity::handle');
 
-        Log::debug('AddCompletedCallUserActivity::type ' . $event->callType->type);
+        // Log::debug('AddCompletedCallUserActivity::type ' . $event->callType->type);
 
-        if ($event->callType->type === 'NO BUFFER - Final Expense - Fronter') {
-            Log::debug('AddCompletedCallUserActivity::discontinue is NO BUFFER - Final Expense - Fronter');
-            return;
-        }
+        // if ($event->callType->type === 'NO BUFFER - Final Expense - Fronter') {
+        //     Log::debug('AddCompletedCallUserActivity::discontinue is NO BUFFER - Final Expense - Fronter');
+        //     return;
+        // }
 
         UserActivity::create([
             'action' => 'Charged for call.',
