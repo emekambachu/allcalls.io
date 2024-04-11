@@ -196,7 +196,7 @@ let showIncomingCall = (conn) => {
         console.log("Call full response:", response.data);
 
         if (response.data.call.call_type) {
-          console.log('Setting call type to: ', response.data.call.call_type);
+          console.log("Setting call type to: ", response.data.call.call_type);
           currentVerticalName.value = response.data.call.call_type.type;
         }
 
@@ -267,6 +267,8 @@ let acceptCall = () => {
 
       let now = new Date();
       let differenceInSeconds = (now - callConnectionTime) / 1000;
+
+      console.log(("CURRENT VERTICAL IS": currentVerticalName.value));
 
       if (differenceInSeconds >= 80 && !hasSixtySecondsPassed.value) {
         hasSixtySecondsPassed.value = true;
@@ -2139,7 +2141,8 @@ let appDownloadModal = ref(false);
                 :active="
                   route().current('billing.funds.index') ||
                   route().current('billing.cards.index') ||
-                  route().current('billing.autopay.index')"
+                  route().current('billing.autopay.index')
+                "
                 v-if="!isInternalLevel"
               >
                 <div class="row pb-3 flex">
@@ -2149,7 +2152,8 @@ let appDownloadModal = ref(false);
                       v-if="
                         route().current('billing.funds.index') ||
                         route().current('billing.cards.index') ||
-                        route().current('billing.autopay.index')"
+                        route().current('billing.autopay.index')
+                      "
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -2773,7 +2777,8 @@ let appDownloadModal = ref(false);
                 v-if="
                   route().current('billing.funds.index') ||
                   route().current('billing.cards.index') ||
-                  route().current('billing.autopay.index')"
+                  route().current('billing.autopay.index')
+                "
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -3226,7 +3231,8 @@ let appDownloadModal = ref(false);
 
           <h1 class="text-2xl font-bold text-black">Incoming Call</h1>
           <p class="text-md text-gray-600 mt-2">
-            AllCalls Client <span v-if="currentVerticalName">({{ currentVerticalName }})</span>
+            AllCalls Client
+            <span v-if="currentVerticalName">({{ currentVerticalName }})</span>
           </p>
 
           <div class="flex mt-20 space-x-10">
@@ -3285,7 +3291,11 @@ let appDownloadModal = ref(false);
         </div>
 
         <h3 class="text-2xl font-medium">Ongoing Call</h3>
-        <p class="text-center" v-if="currentVerticalName" v-text="currentVerticalName"></p>
+        <p
+          class="text-center"
+          v-if="currentVerticalName"
+          v-text="currentVerticalName"
+        ></p>
 
         <!-- Client's Basic Info -->
         <div v-if="connectedClient && !hasSixtySecondsPassed" class="w-full">
@@ -3478,9 +3488,7 @@ let appDownloadModal = ref(false);
           </button>
         </div>
 
-
-
-      <!-- Merge Calls Button -->    
+        <!-- Merge Calls Button -->
         <!-- <div class="py-3 flex gap-2">
           <button
             @click="showDialPad = !showDialPad"
@@ -3645,8 +3653,7 @@ let appDownloadModal = ref(false);
             </div>
           </div>
         </div> -->
-        <!-- Merge Calls Button Ends -->    
-
+        <!-- Merge Calls Button Ends -->
       </div>
     </Modal>
 
