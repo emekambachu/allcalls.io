@@ -277,10 +277,20 @@ class CallStatusController extends Controller
 
             case 'initiated':
                 Log::debug('initiated event for user ' . $request->user_id);
+                Log::debug('Full request data: ' . json_encode($request->all()));
+                
                 $firstCallSid = $request->CallSid;
                 $secondCallSid = $request->ParentCallSid;
                 Log::debug('info with initiated event for user CallSid: ' . $firstCallSid);
                 Log::debug('info with initiated event for user ParentCallSid: ' . $secondCallSid);
+
+                // Check if CallToken is present and log it
+                if ($request->has('CallToken')) {
+                    Log::debug('CallToken when initiated callback received: ' . $request->CallToken);
+                } else {
+                    Log::debug('No CallToken found when initiated callback received.');
+                }
+
                 InitiatedCallEvent::dispatch($user, $request->unique_call_id, $request->call_type_id, $request->from, $firstCallSid, $secondCallSid);
                 break;
 
