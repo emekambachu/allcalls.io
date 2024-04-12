@@ -217,6 +217,7 @@ class CallStatusController extends Controller
                         // Handle conference call participant without terminating the entire call
                         // Maybe just remove the participant if they are leaving
                         Log::debug('ConferenceCall found - NOT terminating call chain');
+                        Log::debug('ConferenceCall Details: ' . json_encode($call->conferenceCall));
                     } else {
                         // Handle regular call termination
                         if ($parentCallSid) {
