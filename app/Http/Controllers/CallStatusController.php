@@ -213,18 +213,13 @@ class CallStatusController extends Controller
                     // }
 
                     // This is pseudo-code, we'll need to adapt based on application's logic
-                    if (isset($call->conferenceCall) && $call->conferenceCall) {
+                    if ($call->conferenceCall()->exists()) {
                         // Handle conference call participant without terminating the entire call
                         // Maybe just remove the participant if they are leaving
                         Log::debug('ConferenceCall found - NOT terminating call chain');
-                        // Log::debug('ConferenceCall Details: ' . json_encode($call->conferenceCall));
-
-                        // Check if the conference call details are properly populated
-                        if (!empty($call->conferenceCall)) {
-                            Log::debug('ConferenceCall Details: ' . $call->conferenceCall);
-                        } else {
-                            Log::debug('ConferenceCall Details are empty');
-                        }
+                        // If you need details from the conferenceCall, load them now
+                        $conferenceDetails = $call->conferenceCall()->first(); // This will fetch the conference call data
+                        Log::debug('ConferenceCall Details: ' . json_encode($conferenceDetails));
 
                     } else {
                         // Handle regular call termination
