@@ -175,8 +175,8 @@ class TwilioConferenceCallController extends Controller
 
                 $newCallResponse = $client->calls->create(
                     $phoneNumber, // The phone number to call and add to the conference
-                    // $twilioNumber, // Your Twilio number
-                    $call->from,
+                    $twilioNumber, // Your Twilio number
+                    // $call->from,
                     // ["twiml" => $twiml]
                     [
                         "twiml" => $twiml,
@@ -184,7 +184,7 @@ class TwilioConferenceCallController extends Controller
                         "StatusCallback" => route('conference.statusCallback'),
                         "StatusCallbackEvent" => ["initiated", "ringing", "answered", "completed"],
                         // "callerId" => $call->from
-                        // "callerId" => $storedCallerId
+                        "callerId" => $storedCallerId
                     ]
                 );
 
