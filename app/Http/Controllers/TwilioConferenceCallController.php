@@ -181,7 +181,7 @@ class TwilioConferenceCallController extends Controller
                     // ["twiml" => $twiml]
                     [
                         "twiml" => $twiml,
-                        "callToken" => $specialCallToken,
+                        // "callToken" => $specialCallToken,
                         "StatusCallback" => route('conference.statusCallback'),
                         "StatusCallbackEvent" => ["initiated", "ringing", "answered", "completed"],
                         // "callerId" => $call->from
