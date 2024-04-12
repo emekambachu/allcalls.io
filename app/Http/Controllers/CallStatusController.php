@@ -221,11 +221,11 @@ class CallStatusController extends Controller
 
                         // Check if the conference call details are properly populated
                         if (!empty($call->conferenceCall)) {
-                            Log::debug('ConferenceCall Details: ' . json_encode($call->conferenceCall));
+                            Log::debug('ConferenceCall Details: ' . $call->conferenceCall);
                         } else {
                             Log::debug('ConferenceCall Details are empty');
                         }
-                        
+
                     } else {
                         // Handle regular call termination
                         if ($parentCallSid) {
