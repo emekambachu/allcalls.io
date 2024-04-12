@@ -58,7 +58,7 @@ class SendCallsToOnScriptAfterFiveMinutes implements ShouldQueue
             'disposition' => $this->disposition,
             'client_phone' => $this->clientPhone,
             // Include the API key if needed, assuming it's stored as an environment variable
-            'api_key' => env('ONSCRIPT_AI_API_KEY'),
+            'api_key' => '5483a4c8-1dbf-4ab2-af5d-3cb1db1e11a3',
         ];
 
         Log::debug('SendCallInfoIn5MinsFinalQueryParams:', $queryParams);
