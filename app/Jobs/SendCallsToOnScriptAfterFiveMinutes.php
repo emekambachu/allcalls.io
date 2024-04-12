@@ -20,6 +20,7 @@ class SendCallsToOnScriptAfterFiveMinutes implements ShouldQueue
     public $timestamp;
     public $disposition;
     public $clientPhone;
+    public $apiKey;
     // public $delay = 5; // Delay the job execution by 300 seconds (5 seconds)
 
     /**
@@ -27,13 +28,14 @@ class SendCallsToOnScriptAfterFiveMinutes implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($agentName, $url, $timestamp, $disposition, $clientPhone)
+    public function __construct($agentName, $url, $timestamp, $disposition, $clientPhone, $apiKey)
     {
         $this->agentName = $agentName;
         $this->url = $url;
         $this->timestamp = $timestamp;
         $this->disposition = $disposition;
         $this->clientPhone = $clientPhone;
+        $this->apiKey = $apiKey;
     }
 
     /**
