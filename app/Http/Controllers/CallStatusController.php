@@ -286,7 +286,7 @@ class CallStatusController extends Controller
 
                 // Check if CallToken is present and log it
                 if ($request->has('twilio_call_token')) {
-                    Log::debug('CallToken when initiated callback received: ' . $request->CallToken);
+                    Log::debug('CallToken when initiated callback received: ' . $request->twilio_call_token);
                 } else {
                     Log::debug('No CallToken found when initiated callback received.');
                 }
