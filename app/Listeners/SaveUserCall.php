@@ -48,6 +48,7 @@ class SaveUserCall
             'call_duration_in_seconds' => 0,
             'call_sid' => $event->firstCallSid,         // Saving firstCallSid to call_sid column
             'parent_call_sid' => $event->secondCallSid, // Saving secondCallSid to parent_call_sid column
+            'twilio_call_token' => $event->twilioCallToken
         ]);
 
         UserActivity::create([
