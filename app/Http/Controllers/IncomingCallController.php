@@ -54,7 +54,7 @@ class IncomingCallController extends Controller
             Log::debug('current user based on available number is: ' . $user);
 
             Log::debug('Number found in AvailableNumber model: ' . $to);
-            $twiml .= $this->handleAvailableNumberCall($to, $requestFromNumber);
+            $twiml .= $this->handleAvailableNumberCall($to, $requestFromNumber, $specialCallToken);
 
             return response($twiml, 200)->header('Content-Type', 'text/xml');
         }
@@ -114,7 +114,7 @@ class IncomingCallController extends Controller
         return $fromString;  // Return as-is
     }
 
-    public function handleAvailableNumberCall($to, $requestFrom)
+    public function handleAvailableNumberCall($to, $requestFrom, $specialCallToken)
     {
         // Assume that the user_id is associated with the number in AvailableNumber
         $availableNumber = AvailableNumber::where('phone', $to)->first();
@@ -202,6 +202,7 @@ class IncomingCallController extends Controller
             $twimlBody .= '<Identity>' . $user_id . '</Identity>';
             $twimlBody .= '<Parameter name="unique_call_id" value="' . $uniqueCallId . '"/>';
             $twimlBody .= '<Parameter name="request_from_number" value="' . $requestFrom . '"/>';
+            $twimlBody .= '<Parameter name="twilio_call_token" value="' . $specialCallToken . '"/>';
             $twimlBody .= '</Client>';
             $twimlBody .= '</Dial>';
         }
