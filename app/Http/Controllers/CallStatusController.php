@@ -213,7 +213,7 @@ class CallStatusController extends Controller
                     // }
 
                     // This is pseudo-code, we'll need to adapt based on application's logic
-                    if ($call->conferenceCall) {
+                    if (isset($call->conferenceCall) && $call->conferenceCaall) {
                         // Handle conference call participant without terminating the entire call
                         // Maybe just remove the participant if they are leaving
                         Log::debug('ConferenceCall found - NOT terminating call chain');
