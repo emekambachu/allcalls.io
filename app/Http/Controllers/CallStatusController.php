@@ -291,7 +291,7 @@ class CallStatusController extends Controller
                     Log::debug('No CallToken found when initiated callback received.');
                 }
 
-                InitiatedCallEvent::dispatch($user, $request->unique_call_id, $request->call_type_id, $request->from, $firstCallSid, $secondCallSid);
+                InitiatedCallEvent::dispatch($user, $request->unique_call_id, $request->call_type_id, $request->from, $firstCallSid, $secondCallSid, $request->twilio_call_token);
                 break;
 
             default:

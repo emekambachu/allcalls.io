@@ -38,6 +38,7 @@ class SaveUserCall
         
         Log::debug('Save the call now: callSid: ' . $event->firstCallSid);
         Log::debug('Save the call now: parentCallSid: ' . $event->secondCallSid);
+        Log::debug('Save the call now: callToken: ' . $event->twilioCallToken);
 
         $call = Call::create([
             'user_id' => $event->user->id,
