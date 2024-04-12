@@ -166,7 +166,8 @@ class TwilioConferenceCallController extends Controller
 
             Log::info("Conference Call saved to database: " . $conferenceCall); 
             
-            $specialCallToken = Cache::get('specialCallToken');
+            // $specialCallToken = Cache::get('specialCallToken');
+            $specialCallToken = $call->twilio_call_token;
             $storedCallerId = Cache::get("incoming_caller_id");
 
             // If a phone number is provided, dial out to this number and add to the conference
