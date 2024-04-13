@@ -61,7 +61,6 @@ class SendCallsToOnScriptAfterFiveMinutes implements ShouldQueue
             'timestamp' => $this->timestamp,
             'disposition' => $this->disposition,
             'client_phone' => $this->clientPhone,
-            // Include the API key if needed, assuming it's stored as an environment variable
             'api_key' => $this->apiKey ?? '5483a4c8-1dbf-4ab2-af5d-3cb1db1e11a3',
         ];
 
