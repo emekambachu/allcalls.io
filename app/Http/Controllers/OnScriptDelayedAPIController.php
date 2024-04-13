@@ -37,7 +37,11 @@ class OnScriptDelayedAPIController extends Controller
             'clientPhone' => $clientPhone,
         ]);
 
-        SendCallsToOnScriptAfterFiveMinutes::dispatch($agentName, $url, $formattedTimestamp, $disposition, $clientPhone)
+
+        $apiKey = $request->query('api_key') ?? null;
+
+        SendCallsToOnScriptAfterFiveMinutes::dispatch($agentName, $url, $formattedTimestamp, $disposition, $clientPhone, $apiKey)
+
             ->delay(now()->addMinutes(5));
 
         return response()->json(['message' => 'Call info will be sent in 5 minutes.']);

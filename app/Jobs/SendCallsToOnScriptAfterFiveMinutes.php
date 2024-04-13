@@ -20,6 +20,7 @@ class SendCallsToOnScriptAfterFiveMinutes implements ShouldQueue
     public $timestamp;
     public $disposition;
     public $clientPhone;
+    public $apiKey = null;
     // public $delay = 5; // Delay the job execution by 300 seconds (5 seconds)
 
     /**
@@ -27,13 +28,16 @@ class SendCallsToOnScriptAfterFiveMinutes implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($agentName, $url, $timestamp, $disposition, $clientPhone)
+    public function __construct($agentName, $url, $timestamp, $disposition, $clientPhone, $apiKey = null)
     {
         $this->agentName = $agentName;
         $this->url = $url;
         $this->timestamp = $timestamp;
         $this->disposition = $disposition;
         $this->clientPhone = $clientPhone;
+        if ($apiKey) {
+            $this->apiKey = $apiKey;
+        }
     }
 
     /**
@@ -57,8 +61,7 @@ class SendCallsToOnScriptAfterFiveMinutes implements ShouldQueue
             'timestamp' => $this->timestamp,
             'disposition' => $this->disposition,
             'client_phone' => $this->clientPhone,
-            // Include the API key if needed, assuming it's stored as an environment variable
-            'api_key' => '5483a4c8-1dbf-4ab2-af5d-3cb1db1e11a3',
+            'api_key' => $this->apiKey ?? '5483a4c8-1dbf-4ab2-af5d-3cb1db1e11a3',
         ];
 
         Log::debug('SendCallInfoIn5MinsFinalQueryParams:', $queryParams);
