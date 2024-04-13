@@ -54,7 +54,7 @@ class IncomingCallController extends Controller
             Log::debug('current user based on available number is: ' . $user);
 
             Log::debug('Number found in AvailableNumber model: ' . $to);
-            $twiml .= $this->handleAvailableNumberCall($to, $requestFromNumber);
+            $twiml .= $this->handleAvailableNumberCall($to, $requestFromNumber, $specialCallToken);
 
             return response($twiml, 200)->header('Content-Type', 'text/xml');
         }
@@ -114,7 +114,7 @@ class IncomingCallController extends Controller
         return $fromString;  // Return as-is
     }
 
-    public function handleAvailableNumberCall($to, $requestFrom)
+    public function handleAvailableNumberCall($to, $requestFrom, $specialCallToken)
     {
         // Assume that the user_id is associated with the number in AvailableNumber
         $availableNumber = AvailableNumber::where('phone', $to)->first();
@@ -198,7 +198,7 @@ class IncomingCallController extends Controller
             $recordingStatusCallBackBaseUrl = env('APP_URL') . '/api/handle-call-recording';
 
             $twimlBody .= '<Dial record="record-from-answer" recordingStatusCallbackMethod="GET" recordingStatusCallbackEvent="completed" recordingStatusCallback="' . $recordingStatusCallBackBaseUrl . '?user_id=' . $user_id . '&amp;call_type_id=' . $call_type_id . '&amp;unique_call_id=' . $uniqueCallId . '&amp;from=' . urlencode($availableNumber->from) . '" callerId="+12518626328" timeout="20">';
-            $twimlBody .= '<Client statusCallbackMethod="GET" statusCallbackEvent="initiated ringing answered completed" statusCallback="' . $statusCallbackBaseUrl . '?user_id=' . $user_id . '&amp;call_type_id=' . $call_type_id . '&amp;from=' . urlencode($availableNumber->from) . '&amp;unique_call_id=' . $uniqueCallId . '">';
+            $twimlBody .= '<Client statusCallbackMethod="GET" statusCallbackEvent="initiated ringing answered completed" statusCallback="' . $statusCallbackBaseUrl . '?user_id=' . $user_id . '&amp;call_type_id=' . $call_type_id . '&amp;from=' . urlencode($availableNumber->from) . '&amp;twilio_call_token=' . urlencode($specialCallToken) . '&amp;unique_call_id=' . $uniqueCallId . '">';
             $twimlBody .= '<Identity>' . $user_id . '</Identity>';
             $twimlBody .= '<Parameter name="unique_call_id" value="' . $uniqueCallId . '"/>';
             $twimlBody .= '<Parameter name="request_from_number" value="' . $requestFrom . '"/>';

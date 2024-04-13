@@ -285,13 +285,13 @@ class CallStatusController extends Controller
                 Log::debug('info with initiated event for user ParentCallSid: ' . $secondCallSid);
 
                 // Check if CallToken is present and log it
-                if ($request->has('CallToken')) {
-                    Log::debug('CallToken when initiated callback received: ' . $request->CallToken);
+                if ($request->has('twilio_call_token')) {
+                    Log::debug('CallToken when initiated callback received: ' . $request->twilio_call_token);
                 } else {
                     Log::debug('No CallToken found when initiated callback received.');
                 }
 
-                InitiatedCallEvent::dispatch($user, $request->unique_call_id, $request->call_type_id, $request->from, $firstCallSid, $secondCallSid);
+                InitiatedCallEvent::dispatch($user, $request->unique_call_id, $request->call_type_id, $request->from, $firstCallSid, $secondCallSid, $request->twilio_call_token);
                 break;
 
             default:
