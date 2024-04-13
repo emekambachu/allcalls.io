@@ -15,10 +15,10 @@ class AprilVerticals extends Seeder
     public function run(): void
     {
         $types = [
-            ['type' => 'Final Expense - Fronter', 'phone' => '+19285506150', 'stagingPhone' => '+18474624275'],
-            ['type' => 'NO BUFFER - Final Expense - Fronter', 'phone' => '+18135016768', 'stagingPhone' => '+12185228474'],
-            ['type' => 'Simplified Issue Customer', 'phone' => '+14138315585', 'stagingPhone' => '+15672986384'],
-            ['type' => 'Guaranteed Issue Customer', 'phone' => '+18173832431', 'stagingPhone' => '+14133845341'],
+            ['type' => 'Final Expense - Fronter', 'phone' => '9285506150', 'stagingPhone' => '8474624275'],
+            ['type' => 'NO BUFFER - Final Expense - Fronter', 'phone' => '8135016768', 'stagingPhone' => '2185228474'],
+            ['type' => 'Simplified Issue Customer', 'phone' => '4138315585', 'stagingPhone' => '5672986384'],
+            ['type' => 'Guaranteed Issue Customer', 'phone' => '8173832431', 'stagingPhone' => '4133845341'],
         ];
 
 
