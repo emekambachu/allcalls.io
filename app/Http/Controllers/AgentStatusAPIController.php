@@ -78,8 +78,8 @@ class AgentStatusAPIController extends Controller
         ]);
 
         // Save the logs
-      $pingLog = Ping::create([
-          'request' => json_encode($request->all()),
+        $pingLog = Ping::create([
+            'request' => json_encode($request->all()),
         ]);
 
         // Define vertical mapping
@@ -89,6 +89,10 @@ class AgentStatusAPIController extends Controller
             'u65_health' => 'U65 Health',
             'aca' => 'ACA',
             'medicare' => 'Medicare',
+            'final_expense_fronter' => 'Final Expense - Fronter',
+            'final_expense_fronter_no_buffer' => 'NO BUFFER - Final Expense - Fronter',
+            'simplified_issue_customer' => 'Simplified Issue Customer',
+            'guaranteed_issue_customer' => 'Guaranteed Issue Customer',
         ];
 
         // Validate inputs
@@ -184,6 +188,10 @@ class AgentStatusAPIController extends Controller
             'u65_health' => 'U65 Health',
             'aca' => 'ACA',
             'medicare' => 'Medicare',
+            'final_expense_fronter' => 'Final Expense - Fronter',
+            'final_expense_fronter_no_buffer' => 'NO BUFFER - Final Expense - Fronter',
+            'simplified_issue_customer' => 'Simplified Issue Customer',
+            'guaranteed_issue_customer' => 'Guaranteed Issue Customer',
         ];
 
         // Validate inputs
