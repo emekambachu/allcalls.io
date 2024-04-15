@@ -304,16 +304,30 @@ class AgentStatusAPIController extends Controller
             $stateModel = State::whereFullName($state)->firstOrFail();
         }
 
-        // Query for the call type
         $callTypeModel = CallType::whereType($vertical)->firstOrFail();
 
         // Initial Online Users Query
         $onlineUsersQuery = OnlineUser::query();
 
-        // Apply byCallTypeAndState scope and log count
-        $onlineUsersQuery->byCallTypeAndState($callTypeModel, $stateModel);
-        $countAfterStateAndCallType = $onlineUsersQuery->count();
-        Log::debug('Count after applying byCallTypeAndState', ['count' => $countAfterStateAndCallType]);
+
+
+        if ($vertical !== 'Final Expense') {
+            // Apply byCallTypeAndState scope and log count
+            $onlineUsersQuery->byCallTypeAndState($callTypeModel, $stateModel);
+            $countAfterStateAndCallType = $onlineUsersQuery->count();
+            Log::debug('Count after applying byCallTypeAndState', ['count' => $countAfterStateAndCallType]);
+        } else {
+            // If the vertical is Final Expense, get the call type IDs for Final Expense, Final Expense - Fronter, and NO BUFFER - Final Expense - Fronter:
+
+            $callTypeIds = CallType::whereIn('type', ['Final Expense', 'Final Expense - Fronter', 'NO BUFFER - Final Expense - Fronter'])
+                ->pluck('id');
+
+            // Apply byCallTypeAndState scope for all final expense call types and log count
+            $onlineUsersQuery->byCallTypesAndState($callTypeIds, $stateModel);
+            $countAfterStateAndCallType = $onlineUsersQuery->count();
+            Log::debug('Count after applying byCallTypesAndState for final expense verticals', ['count' => $countAfterStateAndCallType]);
+        }
+
 
         // Apply withSufficientBalance scope and log count
         $onlineUsersQuery->withSufficientBalance($callTypeModel);
