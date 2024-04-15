@@ -17,9 +17,53 @@ class UserService
         return $this->user()->with('cards', 'transactions', 'callTypes','states', 'activities', 'clients', 'roles', 'activeUser', 'internalAgentContract', 'additionalFiles', 'devices');
     }
 
-    public function usersWithoutCalls()
+    // Get only users with policies but optionally include calls and clients.
+    public function usersWithPolicies(): \Illuminate\Database\Eloquent\Builder
     {
-        return $this->user()->with('roles')->doesntHave('calls')->count();
+        return $this->user()->with('policies', 'calls', 'clients')->has('policies');
+    }
+
+    public function calculateCallsAndPoliciesFromUsers(): \Illuminate\Support\Collection
+    {
+        return $this->usersWithPolicies()->get()->map(function ($user) {
+
+            $totalCalls = $user->calls->count();
+            $paidCalls = $user->calls->where('amount_spent', '>', 0)->count();
+            $totalRevenue = $user->calls->sum('amount_spent');
+            $totalCallLength = $user->calls->sum('call_duration_in_seconds');
+            $averageCallLength = $totalCalls > 0 ? $totalCallLength / $totalCalls : 0;
+
+            $totalApprovedPolicies = $user->policies->whereNotIn('status', ['Declined', 'Carrier Missing Information'])->count();
+            $totalPolicies = $user->policies->count();
+            $totalPendingPolicies = $user->policies->where('status', 'Approved')->count();
+            $totalDeclinedPolicies = $user->policies->whereIn('status', ['Declined', 'Cancelled/Withdrawn'])->count();
+
+            // correct this, these status are from clients and not from InternalAgentMyBusiness
+            $totalSiPolicies = $user->clients->where('status', 'Sale - Simplified Issue')->count();
+            $totalGiPolicies = $user->clients->where('status', 'Sale - Guaranteed Issue')->count();
+
+            $percentGiPolicies = $totalApprovedPolicies > 0 ? ($totalGiPolicies / $totalApprovedPolicies) * 100 : 0;
+            $percentSiPolicies = $totalApprovedPolicies > 0 ? ($totalSiPolicies / $totalApprovedPolicies) * 100 : 0;
+
+            return [
+                'userId' => $user->id,
+                'agentName' => $user->first_name . ' ' . $user->last_name,
+                'agentEmail' => $user->email,
+                'totalCalls' => $totalCalls,
+                'paidCalls' => $paidCalls,
+                'revenueEarned' => $totalRevenue,
+                'revenuePerCall' => $totalCalls > 0 ? $totalRevenue / $totalCalls : 0,
+                'totalCallLength' => $totalCallLength,
+                'averageCallLength' => $averageCallLength,
+                'totalPolicies' => $totalPolicies,
+                'totalPendingPolicies' => $totalPendingPolicies,
+                'totalDeclinedPolicies' => $totalDeclinedPolicies,
+                'totalSiPolicies' => $totalSiPolicies,
+                'totalGiPolicies' => $totalGiPolicies,
+                'percentGiPolicies' => $percentGiPolicies,
+                'percentSiPolicies' => $percentSiPolicies,
+            ];
+        });
     }
 
     public function updateUser($request): array

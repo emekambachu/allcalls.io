@@ -236,6 +236,11 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
         return $this->hasMany(Call::class);
     }
 
+    public function policies(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(InternalAgentMyBusiness::class, 'agent_id', 'id');
+    }
+
 
     public function unsubscribeToken()
     {

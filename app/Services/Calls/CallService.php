@@ -368,15 +368,18 @@ class CallService
             'calls' => $allCalls,
         ]);
 
+//        dd("Calculate calls and policies from users", $this->user->calculateCallsAndPoliciesFromUsers());
+
         return [
-//            'users_with_no_calls' => $this->user->usersWithoutCalls(),
+//            'users_with_policies' => $this->user->calculateCallsAndPoliciesFromUsers(),
+            'all_policies' => $this->policy->internalAgentMyBusiness()->count(),
+
             'calls' => $calls,
             'all_calls' => $allCalls, // Get a better solution for this
             'total' => $allCalls->count(),
-            'calls_grouped_by_user' => $callsGroupedByUser,
+            'calls_grouped_by_user' => $this->user->calculateCallsAndPoliciesFromUsers(),
             'calls_grouped_by_publisher_name' => $callsGroupedByPublisherName,
             'total_revenue' => round((float) $allCalls->sum('amount_spent'), 2),
-            'all_policies' => $this->policy->internalAgentMyBusiness()->count(),
             'per_page' => $perPage,
         ];
     }
@@ -454,38 +457,6 @@ class CallService
                 'totalGiPolicies' => $totalGiPolicies,
                 'percentGiPolicies' => $percentGiPolicies,
                 'percentSiPolicies' => $percentSiPolicies,
-            ];
-        });
-    }
-
-    public function getCallsGroupedByEmptyUserId($allCalls){
-
-//        return $this->call()->where('user_id', 0)->get();
-
-        return $allCalls->where('user_id', 0)->map(function ($calls) {
-            $totalCalls = $calls->count();
-            $paidCalls = $calls->where('amount_spent', '>', 0)->count();
-            $totalRevenue = $calls->sum('amount_spent');
-            $totalCallLength = $calls->sum('call_duration_in_seconds');
-            $averageCallLength = $totalCalls > 0 ? $totalCallLength / $totalCalls : 0;
-
-            return [
-                'userId' => null,
-                'agentName' => 'No Agent',
-                'agentEmail' => 'No Email',
-                'totalCalls' => $totalCalls,
-                'paidCalls' => $paidCalls,
-                'revenueEarned' => $totalRevenue,
-                'revenuePerCall' => $totalCalls > 0 ? $totalRevenue / $totalCalls : 0,
-                'totalCallLength' => $totalCallLength,
-                'averageCallLength' => $averageCallLength,
-                'totalPolicies' => 0,
-                'totalPendingPolicies' => 0,
-                'totalDeclinedPolicies' => 0,
-                'totalSiPolicies' => 0,
-                'totalGiPolicies' => 0,
-                'percentGiPolicies' => 0,
-                'percentSiPolicies' => 0,
             ];
         });
     }

@@ -959,6 +959,8 @@ const applyCallFiltersToSummary = () => {
     console.log("Loaded calls before filter", getAllCalls.value);
     console.log("Grouped Publisher Names before filter", callsGroupedByPublisherName.value);
     console.log("Maximised calls grouped by user before apply", maxmizedCallsGroupedByUser.value);
+    console.log("Calls grouped by user before apply", callsGroupedByUserResults.value);
+
 
     // Populate grouped calls when filter button is clicked
     // maxmizedCallsGroupedByUser.value = Object.fromEntries(callsGroupedByUserArray);
@@ -991,6 +993,7 @@ const applyCallFiltersToSummary = () => {
     console.log("Loaded calls after filter", loadedCalls.value);
     console.log("Grouped Publisher Names after filter", callsGroupedByPublisherName.value);
     console.log("Maximised calls grouped by user after apply", maxmizedCallsGroupedByUser.value);
+    console.log("Grouped calls after apply", groupedCalls.value);
 }
 
 const removeFiltersForSummary = () => {
@@ -1575,7 +1578,7 @@ onMounted(async () => {
                     'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',
                   ]"
               >
-                  <div class="overflow-hidden bg-white sm:rounded-lg" :class="{'height-600': loadedCalls.length <= 14}">
+                  <div class="overflow-hidden bg-white sm:rounded-lg" :class="{'height-600': groupedCalls.length <= 14}">
                       <!--Grouped Agent calls-->
                       <div class="flex justify-end">
                           <Popover class="relative mr-2">
@@ -1683,7 +1686,7 @@ onMounted(async () => {
                               </tbody>
 
                               <!--Data Available-->
-                              <tbody v-else-if="loadedCalls.length > 0">
+                              <tbody v-else-if="groupedCalls.length > 0">
                                   <tr
                                       v-for="(userData, userId) in groupedCalls"
                                       :key="userId"
@@ -1751,7 +1754,7 @@ onMounted(async () => {
                               </tbody>
                           </table>
 
-                          <div v-if="loadedCalls.length > 0" class="flex justify-center mt-4">
+                          <div v-if="groupedCalls.length > 0" class="flex justify-center mt-4">
                               <button
                                   @click.prevent="showMoreForGrouped = !showMoreForGrouped"
                                   class="bg-gray-200 hover:bg-gray-100 text-gray-800 cursor-pointer px-4 py-2 text-sm rounded-md flex items-center"
