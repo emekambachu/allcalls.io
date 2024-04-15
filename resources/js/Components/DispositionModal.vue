@@ -115,6 +115,7 @@ let updateLatestClientDisposition = () => {
         <option value="Dead Air/No Response">Dead Air/No Response</option>
         <option value="Thought Was Free">Thought Was Free</option>
         <option value="No Checking/Savings Account">No Checking/Savings Account</option>
+        <option value="Transferred to Licensed Agent">Transferred to Licensed Agent</option>
       </select>
     </div>
 
