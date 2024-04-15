@@ -41,13 +41,45 @@ class OnlineUser extends Model
         Log::debug('Call type id is ' . $callType->id);
 
         $onlineUsersWithUsers = self::with('user')->get();
-        
+
         Log::debug('All online users at this time with their users', [
             'onlineUsers' => $onlineUsersWithUsers,
         ]);
 
         return $query->whereIn('user_id', $userIds)
             ->where('call_type_id', $callType->id);
+    }
+
+    /**
+     * Scope a query to only include online users based on a specific call types and state.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * 
+     * @param  \App\Models\State  $state
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByCallTypesAndState($query, $callTypeIds, State $state)
+    {
+        Log::debug('byCallTypeAndState Called');
+
+        $userIds = UserCallTypeState::whereIn('call_type_id', $callTypeIds)
+            ->where('state_id', $state->id)
+            ->pluck('user_id');
+
+        Log::debug('User Ids associated with this call_type and state');
+        Log::debug($userIds);
+
+
+        // Log::debug('Call type id is ' . $callType->id);
+
+        $onlineUsersWithUsers = self::with('user')->get();
+
+        Log::debug('All online users at this time with their users', [
+            'onlineUsers' => $onlineUsersWithUsers,
+        ]);
+
+        return $query->whereIn('user_id', $userIds)
+            ->whereIn('call_type_id', $callTypeIds);
     }
 
     public function scopeWithSufficientBalance($query, $callType)
@@ -204,7 +236,6 @@ class OnlineUser extends Model
             // - negative bidAmount to sort in descending order by bid
             // - lastCalledAt to sort by time
             return [1, -$bidAmount, $lastCalledAt];
-
         })->values();
     }
 }
