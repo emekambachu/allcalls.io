@@ -207,10 +207,33 @@ class CallStatusController extends Controller
                     //     $client->calls($parentCallSid)->update(['status' => 'completed']);
                     // }
 
-                    // End the child call if it's still going
+                    // // End the child call if it's still going
                     // if ($childCallSid && $childCallSid !== $parentCallSid) {
                     //     $client->calls($childCallSid)->update(['status' => 'completed']);
                     // }
+
+                    // This is pseudo-code, we'll need to adapt based on application's logic
+                    if ($call->conferenceCall()->exists()) {
+                        // Handle conference call participant without terminating the entire call
+                        // Maybe just remove the participant if they are leaving
+                        Log::debug('ConferenceCall found - NOT terminating call chain');
+                        // If you need details from the conferenceCall, load them now
+                        $conferenceDetails = $call->conferenceCall()->first(); // This will fetch the conference call data
+                        Log::debug('ConferenceCall Details: ' . json_encode($conferenceDetails));
+
+                    } else {
+                        // Handle regular call termination
+                        if ($parentCallSid) {
+                            $client->calls($parentCallSid)->update(['status' => 'completed']);
+                        }
+
+                        if ($childCallSid && $childCallSid !== $parentCallSid) {
+                            $client->calls($childCallSid)->update(['status' => 'completed']);
+                        }
+
+                        Log::debug('ConferenceCall NOT found - Terminating call chain');
+                        Log::debug('Terminated call chain due to duration exceeding 10 seconds.');
+                    }
 
                     Log::debug('Terminated call chain due to duration exceeding 10 seconds.');
                 } catch (Exception $e) {
@@ -254,11 +277,21 @@ class CallStatusController extends Controller
 
             case 'initiated':
                 Log::debug('initiated event for user ' . $request->user_id);
+                Log::debug('Full request data: ' . json_encode($request->all()));
+                
                 $firstCallSid = $request->CallSid;
                 $secondCallSid = $request->ParentCallSid;
                 Log::debug('info with initiated event for user CallSid: ' . $firstCallSid);
                 Log::debug('info with initiated event for user ParentCallSid: ' . $secondCallSid);
-                InitiatedCallEvent::dispatch($user, $request->unique_call_id, $request->call_type_id, $request->from, $firstCallSid, $secondCallSid);
+
+                // Check if CallToken is present and log it
+                if ($request->has('twilio_call_token')) {
+                    Log::debug('CallToken when initiated callback received: ' . $request->twilio_call_token);
+                } else {
+                    Log::debug('No CallToken found when initiated callback received.');
+                }
+
+                InitiatedCallEvent::dispatch($user, $request->unique_call_id, $request->call_type_id, $request->from, $firstCallSid, $secondCallSid, $request->twilio_call_token);
                 break;
 
             default:

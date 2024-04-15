@@ -16,7 +16,7 @@ class CallClientInfoController extends Controller
         $uniqueCallId = $request->input('unique_call_id');
 
         // Find the Call record by unique_call_id
-        $call = Call::where('unique_call_id', $uniqueCallId)->first();
+        $call = Call::where('unique_call_id', $uniqueCallId)->with('callType')->first();
 
         if ($call) {
             // Fetch the related Client
@@ -27,7 +27,8 @@ class CallClientInfoController extends Controller
                 // Return the client as a JSON response
                 return response()->json([
                     'status' => 'success',
-                    'client' => $client
+                    'client' => $client,
+                    'call' => $call,
                 ]);
             } else {
                 // Handle situation where Client is not found

@@ -21,10 +21,11 @@ class InitiatedCallEvent
     public $from;
     public $firstCallSid;
     public $secondCallSid;
+    public $twilioCallToken;
     /**
      * Create a new event instance.
      */
-    public function __construct(User $user, $uniqueCallId, $callTypeId, $from, $firstCallSid = null, $secondCallSid = null)
+    public function __construct(User $user, $uniqueCallId, $callTypeId, $from, $firstCallSid = null, $secondCallSid = null, $twilioCallToken = null)
     {
         $this->user = $user;
         $this->uniqueCallId = $uniqueCallId;
@@ -32,6 +33,7 @@ class InitiatedCallEvent
         $this->from = $from;
         $this->firstCallSid = $firstCallSid;
         $this->secondCallSid = $secondCallSid;
+        $this->twilioCallToken = $twilioCallToken;
     }
 
 
