@@ -319,7 +319,7 @@ class AgentStatusAPIController extends Controller
         } else {
             // If the vertical is Final Expense, get the call type IDs for Final Expense, Final Expense - Fronter, and NO BUFFER - Final Expense - Fronter:
 
-            $callTypeIds = CallType::whereTypeIn(['Final Expense', 'Final Expense - Fronter', 'NO BUFFER - Final Expense - Fronter'])
+            $callTypeIds = CallType::whereIn('type', ['Final Expense', 'Final Expense - Fronter', 'NO BUFFER - Final Expense - Fronter'])
                 ->pluck('id');
 
             // Apply byCallTypeAndState scope for all final expense call types and log count
