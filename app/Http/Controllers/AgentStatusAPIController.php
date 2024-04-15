@@ -304,14 +304,7 @@ class AgentStatusAPIController extends Controller
             $stateModel = State::whereFullName($state)->firstOrFail();
         }
 
-        if ($vertical === 'Final Expense') {
-            // Query for all three final expense call types:
-            $callTypeModel = CallType::whereIn('type', ['Final Expense', 'Final Expense - Fronter', 'NO BUFFER - Final Expense - Fronter'])->firstOrFail();
-        } else {
-            // Query for the call type
-            $callTypeModel = CallType::whereType($vertical)->firstOrFail();
-        }
-
+        $callTypeModel = CallType::whereType($vertical)->firstOrFail();
 
         // Initial Online Users Query
         $onlineUsersQuery = OnlineUser::query();
