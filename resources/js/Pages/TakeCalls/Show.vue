@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, watchEffect } from "vue";
+import { ref, reactive, watchEffect, onMounted, onUnmounted } from "vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { toaster } from "@/helper.js";
@@ -122,6 +122,137 @@ watchEffect(async () => {
   setOnlineCallType();
   setupFlashMessages();
 });
+
+/**  Outbound Call implementation starts **/
+const showOutboundDialPad = ref(false);
+const outboundTypedNumber = ref('');
+const currentOutboundTone = ref(null);
+const outboundDevice = ref(null);
+
+// Twilio device setup for outbound
+let setupOutboundTwilioDevice = () => {
+  axios.get("/twilio-device-token").then((response) => {
+    let token = response.data.token;
+    // console.log("token is ", token);
+
+    outboundDevice = new Device(token, {
+      // Set Opus as our preferred codec. Opus generally performs better, requiring less bandwidth and
+      // providing better audio quality in restrained network conditions. Opus will be default in 2.0.
+      codecPreferences: ["opus", "pcmu"],
+      // Use fake DTMF tones client-side. Real tones are still sent to the other end of the call,
+      // but the client-side DTMF tones are fake. This prevents the local mic capturing the DTMF tone
+      // a second time and sending the tone twice. This will be default in 2.0.
+      // fakeLocalDTMF: true,
+      // Use `enableRingingState` to enable the outboundDevice to emit the `ringing`
+      // state. The TwiML backend also needs to have the attribute
+      // `answerOnBridge` also set to true in the `Dial` verb. This option
+      // changes the behavior of the SDK to consider a call `ringing` starting
+      // from the connection to the TwiML backend to when the recipient of
+      // the `Dial` verb answers.
+      enableRingingState: true,
+      // debug: true,
+    });
+    // console.log("outboundDeviceee", outboundDevice);
+
+    outboundDevice.on("ready", function (device) {
+      console.log("Twilio.Device Ready!");
+    });
+
+    outboundDevice.on("registered", function () {
+      console.log("REGISTERED!");
+    });
+
+    outboundDevice.on("error", function (error) {
+      console.log("Twilio.Device Error: " + error.message);
+    });
+
+    outboundDevice.on("connect", function (conn) {
+      console.log("Successfully established call ! ");
+    });
+
+    outboundDevice.on("disconnect", function (conn) {
+      console.log("Call should disconnect now.");
+      // showRinging.value = false;
+      // showOngoing.value = false;
+      // hasSixtySecondsPassed.value = false;
+      // showUpdateDispositionModal();
+    });
+
+    outboundDevice.on("cancel", function () {
+      console.log("Incoming call was canceled");
+      // Update the UI to hide the incoming call notification
+    });
+
+    outboundDevice.register();
+  });
+};
+
+let unregisterOutboundTwilioDevice = () => {
+  if (device) {
+    outboundDevice.destroy(); // or device.unregister();
+    console.log("Twilio.Device Unregistered!");
+  }
+};
+
+// Method to play a tone
+let playOutboundDialpadTone = async (digit) => {
+  // Stop any currently playing tone first
+  // stopOutboundDialpadTone();
+  const fileName = dialPadToneMapping[digit] || digit;
+  const encodedDigit = encodeURIComponent(fileName);
+  const audioSrc = `/dialpad-tones/${encodedDigit}-sound.mp3`; // Adjust the path as needed
+  currentOutboundTone.value = new Audio(audioSrc);
+
+  // Check if there's an active connection
+  // if (currentConnection.value) {
+  //   currentConnection.value.sendDigits(digit);
+  //   console.log("Active connection found, DTMF tones sent");
+  // } else {
+  //   console.error("No active connection to send DTMF.");
+  // }
+
+  try {
+    await currentOutboundTone.value.play();
+  } catch (error) {
+    console.error("Audio play error:", error);
+  }
+};
+
+const dialPadToneMapping = {
+  "*": "star",
+  "#": "hash",
+  // Add any other special characters mappings here
+};
+
+let isAudioPlaying = (audio) => {
+  return !audio.paused && !audio.ended && audio.currentTime > 0;
+};
+
+// Method to stop the tone
+let stopOutboundDialpadTone = () => {
+  if (currentOutboundTone.value && isAudioPlaying(currentOutboundTone.value)) {
+    currentOutboundTone.value.pause();
+    currentOutboundTone.value.currentTime = 0;
+    currentOutboundTone.value = null;
+  }
+};
+
+const appendOutboundNumber = (number) => {
+  outboundTypedNumber.value += number;
+};
+
+const deleteOutboundNumber = () => {
+  outboundTypedNumber.value = outboundTypedNumber.value.slice(0, -1);
+};
+/**  Outbound Call ends **/
+
+onMounted(() => {
+  setupOutboundTwilioDevice();
+});
+
+onUnmounted(() => {
+  unregisterOutboundTwilioDevice();
+});
 </script>
 
 <template>
@@ -161,6 +292,153 @@ watchEffect(async () => {
                       </li>
                       <li>Please make sure notifications are turned on for this app.</li>
                   </ul>
+
+                  <!-- Outbound Call Starts -->
+                  <button 
+                    @click="showOutboundDialPad = !showOutboundDialPad" 
+                    class="mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded
+                  ">
+                    Show Dialpad
+                  </button>
+
+                  <div v-if="showOutboundDialPad" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center p-4">
+                    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
+                      <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-medium">Enter the number</h3>
+                        <button @click="showOutboundDialPad = false" class="rounded p-1 hover:bg-gray-200">
+                          <svg
+                            class="h-6 w-6 text-gray-800"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            aria-hidden="true"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M6 18L18 6M6 6l12 12"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                      <div class="flex justify-center items-center mb-4">
+                        <input
+                          type="tel"
+                          v-model="outboundTypedNumber"
+                          class="form-control text-center text-xl border-b-2 border-gray-300 focus:outline-none focus:border-gray-500 w-full"
+                          placeholder="+1 (555) 123-4567"
+                        />
+                      </div>
+                      <div class="grid grid-cols-3 gap-4 mb-4">
+                        <button
+                          v-for="digit in [
+                            '1',
+                            '2',
+                            '3',
+                            '4',
+                            '5',
+                            '6',
+                            '7',
+                            '8',
+                            '9',
+                            '*',
+                            '0',
+                            '#',
+                          ]"
+                          :key="digit"
+                          @click="appendOutboundNumber(digit)"
+                          @mousedown="playOutboundDialpadTone(digit)"
+                          @mouseup="stopOutboundDialpadTone"
+                          @touchstart.prevent="playOutboundDialpadTone(digit)"
+                          @touchend.prevent="stopOutboundDialpadTone"
+                          class="flex justify-center items-center h-12 w-full bg-gray-200 rounded text-xl hover:bg-gray-300"
+                        >
+                          {{ digit }}
+                        </button>
+                      </div>
+                      <div class="flex justify-between mt-4">
+                        <button
+                          @click="callOutboundNumber"
+                          class="flex justify-center items-center h-12 w-12 bg-green-500 rounded-full text-white hover:bg-green-600"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="w-6 h-6"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M20.25 3.75v4.5m0-4.5h-4.5m4.5 0-6 6m3 12c-8.284 0-15-6.716-15-15V4.5A2.25 2.25 0 0 1 4.5 2.25h1.372c.516 0 .966.351 1.091.852l1.106 4.423c.11.44-.054.902-.417 1.173l-1.293.97a1.062 1.062 0 0 0-.38 1.21 12.035 12.035 0 0 0 7.143 7.143c.441.162.928-.004 1.21-.38l.97-1.293a1.125 1.125 0 0 1 1.173-.417l4.423 1.106c.5.125.852.575.852 1.091V19.5a2.25 2.25 0 0 1-2.25 2.25h-2.25Z"
+                            />
+                          </svg>
+                        </button>
+                        <button
+                          @click="appendOutboundNumber('+')"
+                          class="flex justify-center items-center h-12 w-12 bg-gray-300 rounded-full text-white hover:bg-gray-400"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="w-6 h-6"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M12 4.5v15m7.5-7.5h-15"
+                            />
+                          </svg>
+                        </button>
+                        <button
+                          @click="deleteOutboundNumber"
+                          class="flex justify-center items-center h-12 w-12 bg-red-300 rounded-full text-white hover:bg-red-600"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="w-6 h-6"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M12 9.75 14.25 12m0 0 2.25 2.25M14.25 12l2.25-2.25M14.25 12 12 14.25m-2.58 4.92-6.374-6.375a1.125 1.125 0 0 1 0-1.59L9.42 4.83c.21-.211.497-.33.795-.33H19.5a2.25 2.25 0 0 1 2.25 2.25v10.5a2.25 2.25 0 0 1-2.25 2.25h-9.284c-.298 0-.585-.119-.795-.33Z"
+                            />
+                          </svg>
+                        </button>
+
+                        <button
+                          @click="hangupThirdPartyCall"
+                          class="flex justify-center items-center h-12 w-12 bg-red-500 rounded-full text-white hover:bg-red-600"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="w-6 h-6"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M15.75 3.75 18 6m0 0 2.25 2.25M18 6l2.25-2.25M18 6l-2.25 2.25m1.5 13.5c-8.284 0-15-6.716-15-15V4.5A2.25 2.25 0 0 1 4.5 2.25h1.372c.516 0 .966.351 1.091.852l1.106 4.423c.11.44-.054.902-.417 1.173l-1.293.97a1.062 1.062 0 0 0-.38 1.21 12.035 12.035 0 0 0 7.143 7.143c.441.162.928-.004 1.21-.38l.97-1.293a1.125 1.125 0 0 1 1.173-.417l4.423 1.106c.5.125.852.575.852 1.091V19.5a2.25 2.25 0 0 1-2.25 2.25h-2.25Z"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Outbound Call Ends -->
 
                   <h1 v-if="page.props.auth.role === 'internal-agent'" class="text-2xl font-bold mb-4 text-gray-700 mt-6">Tools:</h1>
                   <div v-if="page.props.auth.role === 'internal-agent'">
