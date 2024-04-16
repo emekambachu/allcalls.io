@@ -500,7 +500,7 @@ onUnmounted(() => {
                         </button>
 
                         <button
-                          @click="hangupThirdPartyCall"
+                          @click="hangupOutboundCall"
                           class="flex justify-center items-center h-12 w-12 bg-red-500 rounded-full text-white hover:bg-red-600"
                         >
                           <svg
