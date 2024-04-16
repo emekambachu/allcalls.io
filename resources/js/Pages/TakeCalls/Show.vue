@@ -169,6 +169,16 @@ let setupOutboundTwilioDevice = () => {
       console.log("Outbound Twilio.Device Error: " + error.message);
     });
 
+    outboundDevice.on('connect', () => {
+      outboundCallStatus.value = 'connected';
+      console.log('Connection established with SID:', call.parameters.CallSid);
+    });
+
+    outboundDevice.on('disconnect', () => {
+      outboundCallStatus.value = '';
+      console.log('Call disconnected for SID:', call.parameters.CallSid);
+    });
+
     // outboundDevice.on("connect", function (conn) {
     //   console.log("Outbound Successfully established call ! ");
     // });
@@ -270,15 +280,15 @@ const makeOutboundCall = async () => {
       console.log('Outbound Ringing...'); 
     });
 
-    call.on('connected', () => {
-      outboundCallStatus.value = 'connected';
-      console.log('Connection established with SID:', call.parameters.CallSid);
-    });
+    // call.on('connect', () => {
+    //   outboundCallStatus.value = 'connected';
+    //   console.log('Connection established with SID:', call.parameters.CallSid);
+    // });
 
-    call.on('disconnected', () => {
-      outboundCallStatus.value = '';
-      console.log('Call disconnected for SID:', call.parameters.CallSid);
-    });
+    // call.on('disconnect', () => {
+    //   outboundCallStatus.value = '';
+    //   console.log('Call disconnected for SID:', call.parameters.CallSid);
+    // });
 
     call.on('error', (error) => {
       console.error('Error during the call with SID:', call.parameters.CallSid, error.message);
@@ -301,7 +311,7 @@ const hangupOutboundCall = () => {
 onMounted(() => {
   setTimeout(() => {
     setupOutboundTwilioDevice();
-  }, 5000);
+  }, 1000);
 });
 
 onUnmounted(() => {
