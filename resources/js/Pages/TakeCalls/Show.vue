@@ -355,7 +355,7 @@ onUnmounted(() => {
                     Show Dialpad
                   </button>
 
-                  <div v-if="showOutboundDialPad" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center p-4">
+                  <div v-if="showOutboundDialPad" class="fixed z-20 inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center p-4">
                     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
                       <button
                         @click.prevent="hangupOutboundCall()"
