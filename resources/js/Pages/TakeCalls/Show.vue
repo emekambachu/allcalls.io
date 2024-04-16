@@ -129,7 +129,7 @@ let showOutboundDialPad = ref(false);
 let outboundTypedNumber = ref('');
 let currentOutboundTone = ref(null);
 let outboundDevice = ref(null);
-let currentOutboundCall = reactive(null);
+let currentOutboundCall = ref(null);
 let outboundCallStatus = ref(null);
 
 // Twilio device setup for outbound
