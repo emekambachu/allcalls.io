@@ -27,7 +27,7 @@ class TwilioDeviceTokenController extends Controller
 
         $voiceGrant = new VoiceGrant();
         $voiceGrant->setOutgoingApplicationSid($outgoingApplicationSid);
-        $voiceGrant->setIncomingAllow(true);
+        // $voiceGrant->setIncomingAllow(true);
 
         $accessToken->addGrant($voiceGrant);
 
