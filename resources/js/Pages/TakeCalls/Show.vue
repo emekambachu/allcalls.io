@@ -359,7 +359,7 @@ onUnmounted(() => {
                     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
                       <button
                         @click.prevent="hangupOutboundCall()"
-                        v-if="outboundCallStatus != ''"
+                        v-if="outboundCallStatus !== ''"
                         class="bg-red-500 hover:bg-red-400 text-white rounded-full py-2 px-6"
                       >
                         Hang Up
