@@ -3,6 +3,7 @@ import { ref, reactive, watchEffect, onMounted, onUnmounted } from "vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { toaster } from "@/helper.js";
+import { Device } from "@twilio/voice-sdk";
 
 let page = usePage();
 let props = defineProps({
