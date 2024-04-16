@@ -273,26 +273,26 @@ const makeOutboundCall = async () => {
         To: outboundTypedNumber.value
       }
     });
-    currentOutboundCall.value = call;
+    currentOutboundCall.value = outboundCall;
     console.log('Dialing outbound number:', outboundTypedNumber.value);
 
-    call.on('ringing', ()=> {
+    outboundCall.on('ringing', ()=> {
       outboundCallStatus.value = 'ringing';
       console.log('Outbound Ringing...'); 
     });
 
-    call.on('connect', () => {
+    outboundCall.on('connect', () => {
       outboundCallStatus.value = 'connected';
-      console.log('Connection established with SID:', call.parameters.CallSid);
+      console.log('Connection established with SID:', outboundCall.parameters.CallSid);
     });
 
-    call.on('disconnect', () => {
+    outboundCall.on('disconnect', () => {
       outboundCallStatus.value = '';
-      console.log('Call disconnected for SID:', call.parameters.CallSid);
+      console.log('Call disconnected for SID:', outboundCall.parameters.CallSid);
     });
 
-    call.on('error', (error) => {
-      console.error('Error during the call with SID:', call.parameters.CallSid, error.message);
+    outboundCall.on('error', (error) => {
+      console.error('Error during the outboundCall with SID:', outboundCall.parameters.CallSid, error.message);
     });
 
   } catch (error) {
