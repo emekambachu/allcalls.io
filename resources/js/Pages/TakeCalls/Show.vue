@@ -246,11 +246,29 @@ const deleteOutboundNumber = () => {
   outboundTypedNumber.value = outboundTypedNumber.value.slice(0, -1);
 };
 
-const makeOutboundCall = async() => {
-  const call = await outboundDevice.connect();
+const makeOutboundCall = async () => {
+  try {
+    console.log('Attempting to connect for an outbound call...');
+    const call = await outboundDevice.connect();
+    console.log('Dialing outbound number:', call);
 
-  console.log('Dialing outbound number');
+    // Optionally, you can add more details depending on the Twilio call object properties
+    call.on('connect', () => {
+      console.log('Connection established.');
+    });
+
+    call.on('disconnect', () => {
+      console.log('Call disconnected.');
+    });
+
+    call.on('error', (error) => {
+      console.error('Error during the call:', error.message);
+    });
+  } catch (error) {
+    console.error('Failed to make an outbound call:', error);
+  }
 }
+
 /**  Outbound Call ends **/
 
 onMounted(() => {
