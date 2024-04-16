@@ -247,7 +247,9 @@ const deleteOutboundNumber = () => {
 /**  Outbound Call ends **/
 
 onMounted(() => {
-  setupOutboundTwilioDevice();
+  setTimeout(() => {
+    setupOutboundTwilioDevice();
+  }, 5000);
 });
 
 onUnmounted(() => {
