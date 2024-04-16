@@ -291,7 +291,7 @@ const makeOutboundCall = async () => {
 
 const hangupOutboundCall = () => {
   if (currentOutboundCall.value) {
-    currentOutboundCall.disconnect();
+    outboundDevice.disconnect();
     outboundCallStatus.value = '';
   }
 }
