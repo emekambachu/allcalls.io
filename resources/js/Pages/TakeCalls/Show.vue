@@ -154,7 +154,7 @@ let setupOutboundTwilioDevice = () => {
     });
     // console.log("outboundDeviceee", outboundDevice);
 
-    outboundDevice.on("ready", function (device) {
+    outboundDevice.on("ready", function (outboundDevice) {
       console.log("Twilio.Device Ready!");
     });
 
@@ -188,7 +188,7 @@ let setupOutboundTwilioDevice = () => {
 };
 
 let unregisterOutboundTwilioDevice = () => {
-  if (device) {
+  if (outboundDevice) {
     outboundDevice.destroy(); // or device.unregister();
     console.log("Twilio.Device Unregistered!");
   }
