@@ -270,12 +270,12 @@ const makeOutboundCall = async () => {
       console.log('Outbound Ringing...'); 
     });
 
-    call.on('connect', () => {
+    call.on('connected', () => {
       outboundCallStatus.value = 'connected';
       console.log('Connection established with SID:', call.parameters.CallSid);
     });
 
-    call.on('disconnect', () => {
+    call.on('disconnected', () => {
       outboundCallStatus.value = '';
       console.log('Call disconnected for SID:', call.parameters.CallSid);
     });
@@ -355,7 +355,7 @@ onUnmounted(() => {
 
                   <button 
                     @click="showOutboundDialPad = !showOutboundDialPad" 
-                    class="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded
+                    class="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg
                   ">
                     Show Dialpad
                   </button>
