@@ -159,12 +159,12 @@ let showIncomingCall = (conn) => {
 
   currentConnection.value = conn;
 
-  console.log("Params:");
-  console.log(conn.parameters.Params);
+  // console.log("Params:");
+  // console.log(conn.parameters.Params);
 
   incomingCallSid.value = conn.parameters.CallSid;
   // incomingCallSidTwo.value = conn.parameters.
-  console.log("Incoming call SID: " + incomingCallSid.value);
+  // console.log("Incoming call SID: " + incomingCallSid.value);
 
   // add a timeout for 25 seconds to hide the ringing screen in case the user doesn't accept the call in 25 seconds
   if (ringingTimeout.value) {
@@ -432,7 +432,7 @@ let logDeviceAction = (action) => {
 let setupTwilioDevice = () => {
   axios.get("/twilio-device-token").then((response) => {
     let token = response.data.token;
-    console.log("token is ", token);
+    // console.log("token is ", token);
 
     device = new Device(token, {
       // Set Opus as our preferred codec. Opus generally performs better, requiring less bandwidth and
@@ -449,9 +449,9 @@ let setupTwilioDevice = () => {
       // from the connection to the TwiML backend to when the recipient of
       // the `Dial` verb answers.
       enableRingingState: true,
-      debug: true,
+      // debug: true,
     });
-    console.log("deviceee", device);
+    // console.log("deviceee", device);
 
     device.on("ready", function (device) {
       console.log("Twilio.Device Ready!");
@@ -686,7 +686,7 @@ let callNumber = () => {
     axios
       .post("/conference/convert/withNumber", payload)
       .then((response) => {
-        console.log("Call initiated", response);
+        // console.log("Call initiated", response);
         // Extract and store conferenceName and thirdPartySid from response
         conferenceName.value = response.data.conferenceName;
         thirdPartySid.value = response.data.thirdPartySid;
@@ -705,8 +705,8 @@ let callNumber = () => {
 };
 
 let hangupThirdPartyCall = () => {
-  console.log("Conference Name:", conferenceName.value);
-  console.log("Third Party Call SID:", thirdPartySid.value);
+  // console.log("Conference Name:", conferenceName.value);
+  // console.log("Third Party Call SID:", thirdPartySid.value);
 
   axios
     .post("/api/hangup-third-party", {
@@ -726,8 +726,8 @@ let hangupThirdPartyCall = () => {
 };
 
 let hangupFirstPartyCall = () => {
-  console.log("Conference Name:", conferenceName.value);
-  console.log("First Party Call SID:", incomingCallSid.value);
+  // console.log("Conference Name:", conferenceName.value);
+  // console.log("First Party Call SID:", incomingCallSid.value);
 
   axios
     .post("/api/hangup-self", {
