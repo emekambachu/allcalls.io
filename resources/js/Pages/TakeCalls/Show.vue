@@ -249,10 +249,19 @@ const deleteOutboundNumber = () => {
 const makeOutboundCall = async () => {
   try {
     console.log('Attempting to connect for an outbound call...');
-    const call = await outboundDevice.connect();
-    console.log('Dialing outbound number:', call.parameters.CallSid);
+    // Ensure phoneNumber is defined and correctly passed
+    if (!outboundTypedNumber.value) {
+      console.error('No phone number provided for the outbound call.');
+      alert('No phone number provided');
+      return; // Stop the function if no number is provided
+    }
+    const call = await outboundDevice.connect({
+      params: {
+        To: outboundTypedNumber.value
+      }
+    });
+    console.log('Dialing outbound number:', this.phoneNumber);
 
-    // Event listeners for detailed call lifecycle monitoring
     call.on('connect', () => {
       console.log('Connection established with SID:', call.parameters.CallSid);
     });
@@ -269,6 +278,7 @@ const makeOutboundCall = async () => {
     console.error('Failed to make an outbound call:', error);
   }
 }
+
 
 
 /**  Outbound Call ends **/
