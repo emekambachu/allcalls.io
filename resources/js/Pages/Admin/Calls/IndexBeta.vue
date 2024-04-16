@@ -1063,7 +1063,19 @@ let applyDateFilter = async (close) => {
 }
 
 
-let applyDatePreset = (label) => {
+let applyDatePreset = (event, label) => {
+
+    // Remove border from all date presets
+    let divs = document.getElementsByClassName('cursor-pointer');
+    let classes = ['border-solid', 'border-2', 'border-sky-500'];
+
+    for (let div of divs) {
+        classes.forEach(cls => div.classList.remove(cls));
+    }
+
+    let id = event.target.id;
+    classes.forEach(cls => document.getElementById(id).classList.add(cls));
+
   const today = new Date();
   let from, to;
   switch(label) {
@@ -1274,20 +1286,20 @@ onMounted(async () => {
                           </div>
                       </div>
 
-                      <div @click.prevent="applyDatePreset('Today')"
-                           class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+                      <div @click.prevent="applyDatePreset($event, 'Today')"
+                           class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer" id="today-date-preset">
                           Today
                       </div>
-                      <div @click.prevent="applyDatePreset('Yesterday')"
-                           class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+                      <div @click.prevent="applyDatePreset($event, 'Yesterday')"
+                           class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer" id="yesterday-date-preset">
                           Yesterday
                       </div>
-                      <div @click.prevent="applyDatePreset('Past 7 Days')"
-                           class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+                      <div @click.prevent="applyDatePreset($event, 'Past 7 Days')"
+                           class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer" id="past7days-date-preset">
                           Past 7 Days
                       </div>
-                      <div @click.prevent="applyDatePreset('Past 30 Days')"
-                           class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+                      <div @click.prevent="applyDatePreset($event, 'Past 30 Days')"
+                           class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer" id="past30days-date-preset">
                           Past 30 Days
                       </div>
 

@@ -4,6 +4,7 @@ namespace App\Services\User;
 
 use App\Models\User;
 use App\Models\UserCallTypeState;
+use Illuminate\Support\Facades\DB;
 
 class UserService
 {
@@ -23,9 +24,91 @@ class UserService
         return $this->user()->with('policies', 'calls', 'clients')->has('policies');
     }
 
-    public function calculateCallsAndPoliciesFromUsers(): \Illuminate\Support\Collection
+    public function usersJoinCallsAndPolicies(): \Illuminate\Database\Eloquent\Builder
     {
-        return $this->usersWithPolicies()->get()->map(function ($user) {
+        return $this->usersWithPolicies()
+            ->leftJoin('calls', 'users.id', '=', 'calls.user_id')
+            ->leftJoin('internal_agent_my_businesses', 'users.id', '=', 'internal_agent_my_businesses.agent_id')
+            ->leftJoin('clients', 'users.id', '=', 'clients.user_id')
+            ->select(
+                'users.*',
+                'users.id AS user_id',
+                'users.created_at AS user_created_at',
+
+                'internal_agent_my_businesses.*',
+                'internal_agent_my_businesses.id AS policy_id',
+                'internal_agent_my_businesses.status AS policy_status',
+                'internal_agent_my_businesses.created_at AS policy_created_at',
+
+                'calls.*',
+                'calls.id AS call_id',
+                'calls.created_at AS call_created_at',
+
+                'clients.*',
+                'clients.id AS client_id',
+                'clients.status AS client_status',
+                'clients.created_at AS client_created_at',
+
+                // total calls
+                DB::raw('COUNT(calls.id) AS total_calls'),
+                // count where amount_spend > 0
+                DB::raw('SUM(IF(calls.amount_spent > 0, 1, 0)) AS paid_calls'),
+                // sum of amount_spent
+                DB::raw('SUM(calls.amount_spent) AS total_revenue'),
+                // sum of call_duration_in_seconds
+                DB::raw('SUM(calls.call_duration_in_seconds) AS total_call_length'),
+                // count internal_agent_my_businesses
+                DB::raw('SUM(IF(internal_agent_my_businesses.id IS NOT NULL, 1, 0)) AS total_policies')
+            );
+    }
+
+    public function calculateJoinedCallsAndPoliciesFromUsers($query): \Illuminate\Support\Collection
+    {
+        return $query->map(function ($joined) {
+
+            $totalCalls = $joined->total_calls;
+            $paidCalls = $joined->paid_calls;
+            $totalRevenue = $joined->total_revenue;
+            $totalCallLength = $joined->total_call_length;
+            $averageCallLength = $totalCalls > 0 ? $totalCallLength / $totalCalls : 0;
+
+            $totalApprovedPolicies = $joined->whereNotIn('policy_status', ['Declined', 'Carrier Missing Information'])->count();
+
+            $totalPolicies = $joined->total_policies;
+            $totalPendingPolicies = $joined->where('policy_status', 'Approved')->count();
+            $totalDeclinedPolicies = $joined->whereIn('policy_status', ['Declined', 'Cancelled/Withdrawn'])->count();
+
+            // correct this, these status are from clients and not from InternalAgentMyBusiness
+            $totalSiPolicies = $joined->where('client_status', 'Sale - Simplified Issue')->count();
+            $totalGiPolicies = $joined->where('client_status', 'Sale - Guaranteed Issue')->count();
+
+            $percentGiPolicies = $totalApprovedPolicies > 0 ? ($totalGiPolicies / $totalApprovedPolicies) * 100 : 0;
+            $percentSiPolicies = $totalApprovedPolicies > 0 ? ($totalSiPolicies / $totalApprovedPolicies) * 100 : 0;
+
+            return [
+                'userId' => $joined->user_id,
+                'agentName' => $joined->first_name . ' ' . $joined->last_name,
+                'agentEmail' => $joined->email,
+                'totalCalls' => $totalCalls,
+                'paidCalls' => $paidCalls,
+                'revenueEarned' => $totalRevenue,
+                'revenuePerCall' => $totalCalls > 0 ? $totalRevenue / $totalCalls : 0,
+                'totalCallLength' => $totalCallLength,
+                'averageCallLength' => $averageCallLength,
+                'totalPolicies' => $totalPolicies,
+                'totalPendingPolicies' => $totalPendingPolicies,
+                'totalDeclinedPolicies' => $totalDeclinedPolicies,
+                'totalSiPolicies' => $totalSiPolicies,
+                'totalGiPolicies' => $totalGiPolicies,
+                'percentGiPolicies' => $percentGiPolicies,
+                'percentSiPolicies' => $percentSiPolicies,
+            ];
+        });
+    }
+
+    public function calculateCallsAndPoliciesFromUsers($query): \Illuminate\Support\Collection
+    {
+        return $query->map(function ($user) {
 
             $totalCalls = $user->calls->count();
             $paidCalls = $user->calls->where('amount_spent', '>', 0)->count();

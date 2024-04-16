@@ -97,7 +97,7 @@ class CallService
 
     protected function applyUserRoleFilter($query, $filter)
     {
-        $userIds = User::whereHas('roles', fn ($query) => $query->where('name', 'internal-agent'))
+        $userIds = User::whereHas('roles', static fn ($query) => $query->where('name', 'internal-agent'))
             ->pluck('id');
 
         if ($filter['value'] === 'internal-agent') {
@@ -193,6 +193,8 @@ class CallService
     public function getAllCallsWithDynamicFilterAndSorting($request): array
     {
         $query = Call::with('user.roles', 'callType', 'client', 'getBusiness');
+        //$mergedUsersWithPolicies = $this->user->usersJoinCallsAndPolicies();
+        $mergedUsersWithPolicies = $this->user->usersWithPolicies();
 
         // ringing_duration is a custom attribute.
         // therefore, it's not available in the database table
@@ -254,6 +256,13 @@ class CallService
                 } else {
                     $filter['operator'] = $operatorMap[$filter['operator']] ?? $filter['operator'];
                     $query->where($filter['name'], $filter['operator'], $filter['value']);
+
+                    // Apply filters to merged users, policies and calls
+                    //$mergedUsersWithPolicies->where('calls.'.$filter['name'], $filter['operator'], $filter['value']);
+
+                    $mergedUsersWithPolicies->whereHas('calls', function ($query) use ($filter) {
+                        $query->where($filter['name'], $filter['operator'], $filter['value']);
+                    });
                 }
             }
         }
@@ -276,14 +285,6 @@ class CallService
                 'userTimeZone' => $userTimeZone,
             ]);
 
-            // Convert the input dates to Y-m-d format without any timezone conversion
-//            $startDate = Carbon::createFromFormat('m/d/Y', $startDate, $userTimeZone)
-//                ->setTimezone('UTC')
-//                ->format('Y-m-d');
-//            $endDate = Carbon::createFromFormat('m/d/Y', $endDate, $userTimeZone)
-//                ->setTimezone('UTC')
-//                ->format('Y-m-d');
-
             // Convert the input dates from m/d/Y format to Y-m-d format, considering the user's timezone,
             $startDate = Carbon::createFromFormat('m/d/Y', $startDate, $userTimeZone)
                 ->shiftTimezone('UTC')
@@ -296,6 +297,26 @@ class CallService
                 'startDate' => $startDate,
                 'endDate' => $endDate,
             ]);
+
+//            // Apply date filter to policies and calls
+//            $mergedUsersWithPolicies->whereHas('calls', function ($query) use ($startDate, $endDate) {
+//                $query->whereDate('created_at', '>=', $startDate)
+//                    ->whereDate('created_at', '<=', $endDate);
+//
+//            })->whereHas('policies', function ($query) use ($startDate, $endDate) {
+//                $query->whereDate('created_at', '>=', $startDate)
+//                    ->whereDate('created_at', '<=', $endDate);
+//            });
+
+            $mergedUsersWithPolicies->where(function ($query) use ($startDate, $endDate) {
+                $query->whereHas('calls', function ($query) use ($startDate, $endDate) {
+                    $query->whereDate('created_at', '>=', $startDate)
+                        ->whereDate('created_at', '<=', $endDate);
+                })->orWhereHas('policies', function ($query) use ($startDate, $endDate) {
+                    $query->whereDate('created_at', '>=', $startDate)
+                        ->whereDate('created_at', '<=', $endDate);
+                });
+            });
 
             if (in_array($request->input('sort_column'), $this->columnsWithJoins, true)) {
                 Log::debug('CallService:DatesAppliedToJoinQuery:');
@@ -317,6 +338,8 @@ class CallService
         $allCalls = $query->get();
         $perPage = $request->per_page ?? 100;
         $calls = $query->paginate((int)$perPage);
+
+        $mergedTables = $allCalls->merge($this->policy->internalAgentMyBusiness()->get());
 
         //Group and Sort calls by agents and publishers
         $sortAgentsColumn = $request->input('sort_agents_column');
@@ -368,16 +391,18 @@ class CallService
             'calls' => $allCalls,
         ]);
 
-//        dd("Calculate calls and policies from users", $this->user->calculateCallsAndPoliciesFromUsers());
-
         return [
-//            'users_with_policies' => $this->user->calculateCallsAndPoliciesFromUsers(),
+//            'merged_tables' => $mergedTables,
             'all_policies' => $this->policy->internalAgentMyBusiness()->count(),
 
             'calls' => $calls,
             'all_calls' => $allCalls, // Get a better solution for this
             'total' => $allCalls->count(),
-            'calls_grouped_by_user' => $this->user->calculateCallsAndPoliciesFromUsers(),
+
+//            'merged_users_with_policies' => $this->user->calculateCallsAndPoliciesFromUsers($mergedUsersWithPolicies->get()),
+//            'users_with_policies' => $this->user->calculateCallsAndPoliciesFromUsers($mergedUsersWithPolicies->get()),
+
+            'calls_grouped_by_user' => $this->user->calculateCallsAndPoliciesFromUsers($mergedUsersWithPolicies->get()),
             'calls_grouped_by_publisher_name' => $callsGroupedByPublisherName,
             'total_revenue' => round((float) $allCalls->sum('amount_spent'), 2),
             'per_page' => $perPage,
