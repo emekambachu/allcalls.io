@@ -348,9 +348,14 @@ onUnmounted(() => {
                   </ul>
 
                   <!-- Outbound Call Starts -->
+                  <div class="mt-12 sm:rounded-lg">
+                    <div class="text-4xl text-custom-sky font-bold mb-6">Dial Outgoing Call</div>
+                    <hr class="mb-4" />
+                  </div>
+
                   <button 
                     @click="showOutboundDialPad = !showOutboundDialPad" 
-                    class="mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded
+                    class="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded
                   ">
                     Show Dialpad
                   </button>
