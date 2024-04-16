@@ -311,7 +311,7 @@ const hangupOutboundCall = () => {
 onMounted(() => {
   setTimeout(() => {
     setupOutboundTwilioDevice();
-  }, 5000);
+  }, 1000);
 });
 
 onUnmounted(() => {
