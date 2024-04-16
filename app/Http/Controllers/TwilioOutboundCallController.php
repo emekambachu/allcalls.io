@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Twilio\Jwt\AccessToken;
+use Illuminate\Http\Request;
+use Twilio\TwiML\VoiceResponse;
 use Twilio\Jwt\Grants\VoiceGrant;
 
 class TwilioOutboundCallController extends Controller
@@ -35,5 +36,19 @@ class TwilioOutboundCallController extends Controller
             'token' => $accessToken->toJWT(),
             'identity' => $identity
         ]);
+    }
+
+    public function handleCall(Request $request)
+    {
+        $to = $request->input('To');
+        $response = new VoiceResponse();
+
+        if ($to) {
+            $response->dial($to);
+        } else {
+            $response->say("No number provided", array("voice" => "alice"));
+        }
+
+        return response($response, 200)->header('Content-Type', 'text/xml');
     }
 }

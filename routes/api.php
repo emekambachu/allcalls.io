@@ -307,7 +307,7 @@ Route::post('/hangup-third-party', [TwilioConferenceCallController::class, 'hang
 Route::post('/hangup-self', [TwilioConferenceCallController::class, 'endCall'])->name('conference.hangupSelf');
 
 // Twilio outbound call routes
-// Route::post('/hangup-self', [TwilioConferenceCallController::class, 'respo'])->name('conference.hangupSelf');
+Route::post('/call/outbound', [TwilioConferenceCallController::class, 'handleCall']);
 
 Route::post('/twilio/sms/receive', [TwilioSMSController::class, 'receiveSMS']);
 Route::post('/commio/sms/send', [TextMessageController::class, 'sendMessage']);
