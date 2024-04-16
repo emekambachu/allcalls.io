@@ -125,9 +125,9 @@ watchEffect(async () => {
 });
 
 /**  Outbound Call implementation starts **/
-const showOutboundDialPad = ref(false);
-const outboundTypedNumber = ref('');
-const currentOutboundTone = ref(null);
+let showOutboundDialPad = ref(false);
+let outboundTypedNumber = ref('');
+let currentOutboundTone = ref(null);
 let outboundDevice = ref(null);
 
 // Twilio device setup for outbound
@@ -245,6 +245,12 @@ const appendOutboundNumber = (number) => {
 const deleteOutboundNumber = () => {
   outboundTypedNumber.value = outboundTypedNumber.value.slice(0, -1);
 };
+
+const makeOutboundCall = async() => {
+  const call = await outboundDevice.connect();
+
+  console.log('Dialing outbound number');
+}
 /**  Outbound Call ends **/
 
 onMounted(() => {
@@ -362,7 +368,7 @@ onUnmounted(() => {
                       </div>
                       <div class="flex justify-between mt-4">
                         <button
-                          @click="callOutboundNumber"
+                          @click="makeOutboundCall()"
                           class="flex justify-center items-center h-12 w-12 bg-green-500 rounded-full text-white hover:bg-green-600"
                         >
                           <svg
