@@ -21,7 +21,7 @@ class UserService
     // Get only users with policies but optionally include calls and clients.
     public function usersWithPolicies(): \Illuminate\Database\Eloquent\Builder
     {
-        return $this->user()->with('policies', 'calls', 'clients')->has('policies');
+        return $this->user()->with('policies', 'calls', 'clients');
     }
 
     public function usersJoinCallsAndPolicies(): \Illuminate\Database\Eloquent\Builder
