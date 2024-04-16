@@ -129,6 +129,8 @@ let showOutboundDialPad = ref(false);
 let outboundTypedNumber = ref('');
 let currentOutboundTone = ref(null);
 let outboundDevice = ref(null);
+let currentOutboundCall = reactive(null);
+let outboundCallStatus = ref(null);
 
 // Twilio device setup for outbound
 let setupOutboundTwilioDevice = () => {
@@ -260,13 +262,21 @@ const makeOutboundCall = async () => {
         To: outboundTypedNumber.value
       }
     });
+    currentOutboundCall.value = call;
     console.log('Dialing outbound number:', outboundTypedNumber.value);
 
+    call.on('ringing', ()=> {
+      outboundCallStatus.value = 'ringing';
+      console.log('Outbound Ringing...'); 
+    });
+
     call.on('connect', () => {
+      outboundCallStatus.value = 'connected';
       console.log('Connection established with SID:', call.parameters.CallSid);
     });
 
     call.on('disconnect', () => {
+      outboundCallStatus.value = '';
       console.log('Call disconnected for SID:', call.parameters.CallSid);
     });
 
@@ -279,7 +289,12 @@ const makeOutboundCall = async () => {
   }
 }
 
-
+const hangupOutboundCall = () => {
+  if (currentOutboundCall.value) {
+    currentOutboundCall.disconnect();
+    outboundCallStatus.value = '';
+  }
+}
 
 /**  Outbound Call ends **/
 
@@ -342,6 +357,14 @@ onUnmounted(() => {
 
                   <div v-if="showOutboundDialPad" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center p-4">
                     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
+                      <button
+                        @click.prevent="hangupOutboundCall()"
+                        v-if="outboundCallStatus != ''"
+                        class="bg-red-500 hover:bg-red-400 text-white rounded-full py-2 px-6"
+                      >
+                        Hang Up
+                      </button>
+
                       <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-medium">Enter the number</h3>
                         <button @click="showOutboundDialPad = false" class="rounded p-1 hover:bg-gray-200">
