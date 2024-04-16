@@ -155,23 +155,23 @@ let setupOutboundTwilioDevice = () => {
     // console.log("outboundDeviceee", outboundDevice);
 
     outboundDevice.on("ready", function (outboundDevice) {
-      console.log("Twilio.Device Ready!");
+      console.log("Outbound Twilio.Device Ready!");
     });
 
     outboundDevice.on("registered", function () {
-      console.log("REGISTERED!");
+      console.log("Outbound REGISTERED!");
     });
 
     outboundDevice.on("error", function (error) {
-      console.log("Twilio.Device Error: " + error.message);
+      console.log("Outbound Twilio.Device Error: " + error.message);
     });
 
     outboundDevice.on("connect", function (conn) {
-      console.log("Successfully established call ! ");
+      console.log("Outbound Successfully established call ! ");
     });
 
     outboundDevice.on("disconnect", function (conn) {
-      console.log("Call should disconnect now.");
+      console.log("Outbound Call should disconnect now.");
       // showRinging.value = false;
       // showOngoing.value = false;
       // hasSixtySecondsPassed.value = false;
@@ -190,7 +190,7 @@ let setupOutboundTwilioDevice = () => {
 let unregisterOutboundTwilioDevice = () => {
   if (outboundDevice) {
     outboundDevice.destroy(); // or device.unregister();
-    console.log("Twilio.Device Unregistered!");
+    console.log("Outbound Twilio.Device Unregistered!");
   }
 };
 
