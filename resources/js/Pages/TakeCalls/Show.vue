@@ -370,6 +370,8 @@ onUnmounted(() => {
                         Hang Up
                       </button>
 
+                      <div class="bg-blue-200 text-2xl" v-text="outboundCallStatus"></div>
+
                       <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-medium">Enter the number</h3>
                         <button @click="showOutboundDialPad = false" class="rounded p-1 hover:bg-gray-200">
