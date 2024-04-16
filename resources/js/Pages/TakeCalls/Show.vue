@@ -280,15 +280,15 @@ const makeOutboundCall = async () => {
       console.log('Outbound Ringing...'); 
     });
 
-    // call.on('connect', () => {
-    //   outboundCallStatus.value = 'connected';
-    //   console.log('Connection established with SID:', call.parameters.CallSid);
-    // });
+    call.on('connect', () => {
+      outboundCallStatus.value = 'connected';
+      console.log('Connection established with SID:', call.parameters.CallSid);
+    });
 
-    // call.on('disconnect', () => {
-    //   outboundCallStatus.value = '';
-    //   console.log('Call disconnected for SID:', call.parameters.CallSid);
-    // });
+    call.on('disconnect', () => {
+      outboundCallStatus.value = '';
+      console.log('Call disconnected for SID:', call.parameters.CallSid);
+    });
 
     call.on('error', (error) => {
       console.error('Error during the call with SID:', call.parameters.CallSid, error.message);
