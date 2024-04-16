@@ -134,7 +134,7 @@ let outboundCallStatus = ref(null);
 
 // Twilio device setup for outbound
 let setupOutboundTwilioDevice = () => {
-  axios.get("/twilio-device-token").then((response) => {
+  axios.get("/twilio-outbound-device-token").then((response) => {
     let token = response.data.token;
     // console.log("token is ", token);
 
