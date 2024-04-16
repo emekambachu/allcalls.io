@@ -42,11 +42,14 @@ class TwilioOutboundCallController extends Controller
     {
         $to = $request->input('To');
         $response = new VoiceResponse();
+        $callerId = env('TWILIO_PHONE_NUMBER');
 
         if ($to) {
-            $response->dial($to);
+            // Use the Dial verb and set the callerId attribute
+            $dial = $response->dial('', ['callerId' => $callerId]);
+            $dial->number($to);
         } else {
-            $response->say("No number provided", array("voice" => "alice"));
+            $response->say("No number provided", ['voice' => 'alice']);
         }
 
         return response($response, 200)->header('Content-Type', 'text/xml');

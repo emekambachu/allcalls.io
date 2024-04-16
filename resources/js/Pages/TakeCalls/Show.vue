@@ -280,7 +280,7 @@ const makeOutboundCall = async () => {
       console.log('Outbound Ringing...'); 
     });
 
-    call.on('connect', () => {
+    Twilio.Connection.on('connect', () => {
       outboundCallStatus.value = 'connected';
       console.log('Connection established with SID:', call.parameters.CallSid);
     });
