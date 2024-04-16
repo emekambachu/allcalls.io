@@ -44,6 +44,7 @@ use App\Http\Controllers\OverseerResponseController;
 use App\Http\Controllers\CallDeviceActionsController;
 use App\Http\Controllers\AvailableAgentsAPIController;
 use App\Http\Controllers\OnScriptDelayedAPIController;
+use App\Http\Controllers\TwilioOutboundCallController;
 use App\Http\Controllers\TwilioWebhookErrorController;
 use App\Http\Controllers\CallUserResponseAPIController;
 use App\Http\Controllers\CallTypesSelectedAPIController;
@@ -307,7 +308,7 @@ Route::post('/hangup-third-party', [TwilioConferenceCallController::class, 'hang
 Route::post('/hangup-self', [TwilioConferenceCallController::class, 'endCall'])->name('conference.hangupSelf');
 
 // Twilio outbound call routes
-Route::post('/call/outbound', [TwilioConferenceCallController::class, 'handleCall']);
+Route::post('/call/outbound', [TwilioOutboundCallController::class, 'handleCall']);
 
 Route::post('/twilio/sms/receive', [TwilioSMSController::class, 'receiveSMS']);
 Route::post('/commio/sms/send', [TextMessageController::class, 'sendMessage']);
