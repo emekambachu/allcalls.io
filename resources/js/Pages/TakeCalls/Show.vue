@@ -167,22 +167,22 @@ let setupOutboundTwilioDevice = () => {
       console.log("Outbound Twilio.Device Error: " + error.message);
     });
 
-    outboundDevice.on("connect", function (conn) {
-      console.log("Outbound Successfully established call ! ");
-    });
+    // outboundDevice.on("connect", function (conn) {
+    //   console.log("Outbound Successfully established call ! ");
+    // });
 
-    outboundDevice.on("disconnect", function (conn) {
-      console.log("Outbound Call should disconnect now.");
+    // outboundDevice.on("disconnect", function (conn) {
+    //   console.log("Outbound Call should disconnect now.");
       // showRinging.value = false;
       // showOngoing.value = false;
       // hasSixtySecondsPassed.value = false;
       // showUpdateDispositionModal();
-    });
+    // });
 
-    outboundDevice.on("cancel", function () {
-      console.log("Incoming call was canceled");
-      // Update the UI to hide the incoming call notification
-    });
+    // outboundDevice.on("cancel", function () {
+    //   console.log("Incoming call was canceled");
+    //   // Update the UI to hide the incoming call notification
+    // });
 
     outboundDevice.register();
   });
@@ -250,24 +250,26 @@ const makeOutboundCall = async () => {
   try {
     console.log('Attempting to connect for an outbound call...');
     const call = await outboundDevice.connect();
-    console.log('Dialing outbound number:', call);
+    console.log('Dialing outbound number:', call.parameters.CallSid);
 
-    // Optionally, you can add more details depending on the Twilio call object properties
+    // Event listeners for detailed call lifecycle monitoring
     call.on('connect', () => {
-      console.log('Connection established.');
+      console.log('Connection established with SID:', call.parameters.CallSid);
     });
 
     call.on('disconnect', () => {
-      console.log('Call disconnected.');
+      console.log('Call disconnected for SID:', call.parameters.CallSid);
     });
 
     call.on('error', (error) => {
-      console.error('Error during the call:', error.message);
+      console.error('Error during the call with SID:', call.parameters.CallSid, error.message);
     });
+
   } catch (error) {
     console.error('Failed to make an outbound call:', error);
   }
 }
+
 
 /**  Outbound Call ends **/
 
