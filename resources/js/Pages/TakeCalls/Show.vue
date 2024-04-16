@@ -128,7 +128,7 @@ watchEffect(async () => {
 const showOutboundDialPad = ref(false);
 const outboundTypedNumber = ref('');
 const currentOutboundTone = ref(null);
-const outboundDevice = ref(null);
+let outboundDevice = ref(null);
 
 // Twilio device setup for outbound
 let setupOutboundTwilioDevice = () => {
