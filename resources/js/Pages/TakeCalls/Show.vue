@@ -260,7 +260,7 @@ const makeOutboundCall = async () => {
         To: outboundTypedNumber.value
       }
     });
-    console.log('Dialing outbound number:', this.phoneNumber);
+    console.log('Dialing outbound number:', outboundTypedNumber.value);
 
     call.on('connect', () => {
       console.log('Connection established with SID:', call.parameters.CallSid);
