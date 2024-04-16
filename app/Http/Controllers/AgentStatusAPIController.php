@@ -150,7 +150,7 @@ class AgentStatusAPIController extends Controller
 
         $response = $agentAvailable
             ? response()->json(['online' => true, 'price' => $price], 200)
-            : response()->json(['online' => false, 'price' => $price], 200);
+            : response()->json(['online' => false, 'price' => 0], 200);
 
         Log::debug('api-logs:agent-status-price: Response Data', [
             'data' => json_decode($response->getContent(), true),
