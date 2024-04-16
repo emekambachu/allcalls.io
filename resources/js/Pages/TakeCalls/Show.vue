@@ -131,6 +131,7 @@ let currentOutboundTone = ref(null);
 let outboundDevice = ref(null);
 let currentOutboundCall = ref(null);
 let outboundCallStatus = ref(null);
+let outboundCall = ref(null);
 
 // Twilio device setup for outbound
 let setupOutboundTwilioDevice = () => {
@@ -267,7 +268,7 @@ const makeOutboundCall = async () => {
       alert('No phone number provided');
       return; // Stop the function if no number is provided
     }
-    const call = await outboundDevice.connect({
+    outboundCall = await outboundDevice.connect({
       params: {
         To: outboundTypedNumber.value
       }
@@ -301,7 +302,10 @@ const makeOutboundCall = async () => {
 
 const hangupOutboundCall = () => {
   if (currentOutboundCall.value) {
-    outboundDevice.disconnect();
+    // outboundDevice.disconnect();
+    if(outboundCall) {
+      outboundCall.disconnect();
+    }
     outboundCallStatus.value = '';
   }
 }
