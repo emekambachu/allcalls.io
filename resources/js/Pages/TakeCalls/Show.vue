@@ -133,6 +133,7 @@ let currentOutboundCall = ref(null);
 let outboundCallStatus = ref(null);
 let outboundCall = ref(null);
 let outboundCallSid = ref(null);
+let outboundConferenceTypedNumber = ref('+16787232049');
 
 // Twilio device setup for outbound
 let setupOutboundTwilioDevice = () => {
@@ -313,6 +314,40 @@ const hangupOutboundCall = () => {
   }
 }
 
+let callConferenceNumber = () => {
+  if (outboundConferenceTypedNumber.value && conferenceTypedNumber.value.length > 0) {
+    // Construct the payload
+    const payload = {
+      callSid: outboundCallSid.value,
+      phoneNumber: conferenceTypedNumber.value,
+    };
+
+    // isConferenceCallInitiated.value = true;
+    // conferenceCallStatus.value = "initiated";
+
+    // Send the payload to your endpoint
+    axios
+      .post("/conference/convert/withNumber", payload)
+      .then((response) => {
+        // console.log("Call initiated", response);
+        // Extract and store conferenceName and thirdPartySid from response
+        // conferenceName.value = response.data.conferenceName;
+        // thirdPartySid.value = response.data.thirdPartySid;
+        console.log('Successfully converted! Response from server: ' , response);
+        // Reset or handle post-call UI here
+        // showDialPad.value = false;
+        conferenceTypedNumber.value = "";
+      })
+      .catch((error) => {
+        console.error("Error initiating call", error);
+        // Handle error
+      });
+  } else {
+    alert("Please enter a number to call.");
+  }
+};
+
+
 /**  Outbound Call ends **/
 
 onMounted(() => {
@@ -378,13 +413,21 @@ onUnmounted(() => {
                   </button>
 
                   <div v-if="showOutboundDialPad" class="fixed z-20 inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center p-4">
-                    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
+                    <div class="gap-2 flex items-center justify-between bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
                       <button
                         @click.prevent="hangupOutboundCall()"
                         v-if="outboundCallStatus !== '' && outboundCallStatus !== null"
                         class="bg-red-500 hover:bg-red-400 text-white rounded-full py-2 px-6 mx-auto"
                       >
                         Hang Up
+                      </button>
+
+                      <button
+                        @click.prevent="callConferenceNumber()"
+                        v-if="outboundCallStatus !== '' && outboundCallStatus !== null"
+                        class="bg-blue-700 hover:bg-red-400 text-white rounded-full py-2 px-6 mx-auto"
+                      >
+                        Add Call
                       </button>
 
                       <div class="bg-blue-200 text-2xl" v-text="outboundCallStatus"></div>
