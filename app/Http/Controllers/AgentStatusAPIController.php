@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Ping;
 use Exception;
 use App\Models\Bid;
+use App\Models\Call;
+use App\Models\Ping;
 use App\Models\State;
 use App\Models\CallType;
 use App\Models\OnlineUser;
@@ -148,6 +149,13 @@ class AgentStatusAPIController extends Controller
             }
         }
 
+        // Check if there is a call record in the past 30 days with this phone number:
+        $pingIsDuplicate = Call::whereFrom($normalizedPhone)
+            ->where('created_at', '>=', now()->subDays(30))
+            ->exists();
+
+        Log::debug('api-logs:agent-status-price: ping-is-duplicate', ['is_duplicate' => $pingIsDuplicate]);
+
         $response = $agentAvailable
             ? response()->json(['online' => true, 'price' => $price], 200)
             : response()->json(['online' => false, 'price' => 0], 200);
@@ -245,6 +253,13 @@ class AgentStatusAPIController extends Controller
                 return response()->json(['message' => 'Invalid affiliate credentials.'], 400);
             }
         }
+
+        // Check if there is a call record in the past 30 days with this phone number:
+        $pingIsDuplicate = Call::whereFrom($normalizedPhone)
+            ->where('created_at', '>=', now()->subDays(30))
+            ->exists();
+
+        Log::debug('api-logs:agent-status-price: ping-is-duplicate', ['is_duplicate' => $pingIsDuplicate]);
 
         $response = $agentAvailable
             ? response()->json(['online' => true], 200)
