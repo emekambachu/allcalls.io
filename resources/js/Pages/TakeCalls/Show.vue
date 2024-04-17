@@ -413,24 +413,26 @@ onUnmounted(() => {
                   </button>
 
                   <div v-if="showOutboundDialPad" class="fixed z-20 inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center p-4">
-                    <div class="gap-2 flex items-center justify-between bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
-                      <button
-                        @click.prevent="hangupOutboundCall()"
-                        v-if="outboundCallStatus !== '' && outboundCallStatus !== null"
-                        class="bg-red-500 hover:bg-red-400 text-white rounded-full py-2 px-6 mx-auto"
-                      >
-                        Hang Up
-                      </button>
+                    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
+                      <div class="p-4 gap-2 flex items-center justify-between">
+                        <button
+                          @click.prevent="hangupOutboundCall()"
+                          v-if="outboundCallStatus !== '' && outboundCallStatus !== null"
+                          class="bg-red-500 hover:bg-red-400 text-white rounded-full py-2 px-6 mx-auto"
+                        >
+                          Hang Up
+                        </button>
 
-                      <button
-                        @click.prevent="callConferenceNumber()"
-                        v-if="outboundCallStatus !== '' && outboundCallStatus !== null"
-                        class="bg-blue-700 hover:bg-red-400 text-white rounded-full py-2 px-6 mx-auto"
-                      >
-                        Add Call
-                      </button>
-
-                      <div class="bg-blue-200 text-2xl" v-text="outboundCallStatus"></div>
+                        <button
+                          @click.prevent="callConferenceNumber()"
+                          v-if="outboundCallStatus !== '' && outboundCallStatus !== null"
+                          class="bg-blue-700 hover:bg-red-400 text-white rounded-full py-2 px-6 mx-auto"
+                        >
+                          Add Call
+                        </button>
+                      </div>
+                
+                      <div class="text-2xl p-2 text-center" v-text="outboundCallStatus"></div>
 
                       <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-medium">Enter the number</h3>
