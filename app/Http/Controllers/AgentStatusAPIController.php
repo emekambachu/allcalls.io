@@ -156,7 +156,7 @@ class AgentStatusAPIController extends Controller
 
         Log::debug('api-logs:agent-status-price: ping-is-duplicate', ['is_duplicate' => $pingIsDuplicate]);
 
-        $response = $agentAvailable
+        $response = ($agentAvailable && !$pingIsDuplicate)
             ? response()->json(['online' => true, 'price' => $price], 200)
             : response()->json(['online' => false, 'price' => 0], 200);
 
@@ -261,7 +261,7 @@ class AgentStatusAPIController extends Controller
 
         Log::debug('api-logs:agent-status-price: ping-is-duplicate', ['is_duplicate' => $pingIsDuplicate]);
 
-        $response = $agentAvailable
+        $response = ($agentAvailable && !$pingIsDuplicate)
             ? response()->json(['online' => true], 200)
             : response()->json(['online' => false], 200);
 
