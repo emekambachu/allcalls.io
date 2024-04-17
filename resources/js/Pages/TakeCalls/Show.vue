@@ -132,6 +132,7 @@ let outboundDevice = ref(null);
 let currentOutboundCall = ref(null);
 let outboundCallStatus = ref(null);
 let outboundCall = ref(null);
+let outboundCallSid = ref(null);
 
 // Twilio device setup for outbound
 let setupOutboundTwilioDevice = () => {
@@ -284,6 +285,8 @@ const makeOutboundCall = async () => {
     outboundCall.on('connect', () => {
       outboundCallStatus.value = 'connected';
       console.log('Connection established with SID:', outboundCall.parameters.CallSid);
+      outboundCallSid = outboundCall.parameters.CallSid;
+      console.log('Saved SID is: ' , outboundCallSid);
     });
 
     outboundCall.on('disconnect', () => {
