@@ -1494,6 +1494,7 @@ onMounted(async () => {
                       <option value="No Checking/Savings Account">No Checking/Savings Account</option>
                       <option value="Transferred to Licensed Agent">Transferred to Licensed Agent</option>
                       <option value="NQ - No Text or Email">NQ - No Text or Email</option>
+                      <option value="Customer had CHF, Cancer or Oxygen Use">Customer had CHF, Cancer or Oxygen Use</option>
                   </select>
                   <div v-if="firstStepErrors.disposition" class="text-red-500 mt-1" v-text="firstStepErrors.disposition[0]"></div>
 
