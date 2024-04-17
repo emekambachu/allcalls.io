@@ -250,16 +250,26 @@ class Call extends Model
             'filters' => [
                 [
                     'anyConditionToMatch' => [
+                        // [
+                        //     'column' => 'targetNumber',
+                        //     'value' => $targetNumber,
+                        //     'comparisonType' => 'EQUALS'
+                        // ],
                         [
                             'column' => 'targetName',
                             'value' => $targetName,
                             'comparisonType' => 'EQUALS'
                         ],
                         [
-                            'column' => 'targetNumber',
-                            'value' => $targetNumber,
+                            'column' => 'targetName',
+                            'value' => 'FE Fronters',
                             'comparisonType' => 'EQUALS'
-                        ]
+                        ],
+                        [
+                            'column' => 'targetName',
+                            'value' => 'FE Fronters - NO BUFFER',
+                            'comparisonType' => 'EQUALS'
+                        ],
                     ],
                 ],
                 [
