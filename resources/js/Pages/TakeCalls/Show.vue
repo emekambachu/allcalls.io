@@ -315,11 +315,11 @@ const hangupOutboundCall = () => {
 }
 
 let callConferenceNumber = () => {
-  if (outboundConferenceTypedNumber.value && conferenceTypedNumber.value.length > 0) {
+  if (outboundConferenceTypedNumber.value && outboundConferenceTypedNumber.value.length > 0) {
     // Construct the payload
     const payload = {
       callSid: outboundCallSid.value,
-      phoneNumber: conferenceTypedNumber.value,
+      phoneNumber: outboundConferenceTypedNumber.value,
     };
 
     // isConferenceCallInitiated.value = true;
@@ -336,7 +336,7 @@ let callConferenceNumber = () => {
         console.log('Successfully converted! Response from server: ' , response);
         // Reset or handle post-call UI here
         // showDialPad.value = false;
-        conferenceTypedNumber.value = "";
+        // conferenceTypedNumber.value = "";
       })
       .catch((error) => {
         console.error("Error initiating call", error);
