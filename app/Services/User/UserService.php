@@ -136,15 +136,11 @@ class UserService
     {
         return $query->map(function ($user) use ($startDate, $endDate){
 
-//            $filterPoliciesByDate = $user->policies->each(function ($policy) use($startDate, $endDate) {
-//                return $policy->created_at->between($startDate, $endDate);
-//            });
+            // Only works for calls greater than current date
+            $totalCalls = $user->calls->filter(function ($call) use($startDate, $endDate) {
+                return $call->created_at->greaterThanOrEqualTo($startDate);
+            })->count();
 
-//            $filterPoliciesByDate = $user->policies->where('created_at', '>=', $startDate)
-//                ->where('created_at', '<=', $endDate)
-//                ->count();
-
-            $totalCalls = $user->calls->count();
             $paidCalls = $user->calls->where('amount_spent', '>', 0)->count();
             $totalRevenue = $user->calls->sum('amount_spent');
             $totalCallLength = $user->calls->sum('call_duration_in_seconds');

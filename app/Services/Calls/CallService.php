@@ -303,8 +303,9 @@ class CallService
                 $query->whereHas('calls', function ($query) use ($startDate, $endDate) {
                     $query->whereDate('created_at', '>=', $startDate)
                         ->whereDate('created_at', '<=', $endDate);
-                })->orWhereHas('policies', function ($query) use ($startDate) {
-                    $query->whereDate('created_at', '>=', $startDate);
+                })->orWhereHas('policies', function ($query) use ($startDate, $endDate) {
+                    $query->whereDate('created_at', '>=', $startDate)
+                        ->whereDate('created_at', '<=', $endDate);
                 });
             });
 
