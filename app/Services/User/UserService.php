@@ -106,9 +106,43 @@ class UserService
         });
     }
 
-    public function calculateCallsAndPoliciesFromUsers($query): \Illuminate\Support\Collection
+    private function filterDateForOnlyCalls($user, $startDate, $endDate): int
     {
-        return $query->map(function ($user) {
+        $policyOutput = 0;
+        $callOutput = 0;
+
+        if($startDate && $endDate) {
+            if($user->policies) {
+                $policyOutput = $user->policies->filter(function ($policy) use($startDate, $endDate) {
+                    return $policy->created_at->between($startDate, $endDate);
+                })->count();
+            }
+
+//            if($user->calls) {
+//                $calls = $user->calls()->get();
+//                $callOutput = $calls->filter(function ($call) use($startDate, $endDate) {
+//                    $callDate = $call->created_at;
+//                    return $callDate->greaterThanOrEqualTo($startDate) && $callDate->lessThanOrEqualTo($endDate);
+//                })->count();
+//            }
+
+            return $policyOutput;
+            //return $policyOutput > 0 ? 0 : ($callOutput > 0 ? $callOutput : 0);
+        }
+        return 0;
+    }
+
+    public function calculateCallsAndPoliciesFromUsers($query, $startDate, $endDate): \Illuminate\Support\Collection
+    {
+        return $query->map(function ($user) use ($startDate, $endDate){
+
+//            $filterPoliciesByDate = $user->policies->each(function ($policy) use($startDate, $endDate) {
+//                return $policy->created_at->between($startDate, $endDate);
+//            });
+
+//            $filterPoliciesByDate = $user->policies->where('created_at', '>=', $startDate)
+//                ->where('created_at', '<=', $endDate)
+//                ->count();
 
             $totalCalls = $user->calls->count();
             $paidCalls = $user->calls->where('amount_spent', '>', 0)->count();
@@ -116,10 +150,16 @@ class UserService
             $totalCallLength = $user->calls->sum('call_duration_in_seconds');
             $averageCallLength = $totalCalls > 0 ? $totalCallLength / $totalCalls : 0;
 
-            $totalApprovedPolicies = $user->policies->whereNotIn('status', ['Declined', 'Carrier Missing Information'])->count();
-            $totalPolicies = $user->policies->count();
-            $totalPendingPolicies = $user->policies->where('status', 'Approved')->count();
-            $totalDeclinedPolicies = $user->policies->whereIn('status', ['Declined', 'Cancelled/Withdrawn'])->count();
+            $totalApprovedPolicies = $user->policies->where('created_at', '>=', $startDate)
+                ->whereNotIn('status', ['Declined', 'Carrier Missing Information'])->count();
+
+            $totalPolicies = $user->policies->where('created_at', '>=', $startDate)->count();
+
+            $totalPendingPolicies = $user->policies->where('created_at', '>=', $startDate)
+                ->where('status', 'Approved')->count();
+
+            $totalDeclinedPolicies = $user->policies->where('created_at', '>=', $startDate)
+                ->whereIn('status', ['Declined', 'Cancelled/Withdrawn'])->count();
 
             // correct this, these status are from clients and not from InternalAgentMyBusiness
             $totalSiPolicies = $user->clients->where('status', 'Sale - Simplified Issue')->count();

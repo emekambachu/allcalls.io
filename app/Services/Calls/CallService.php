@@ -298,23 +298,13 @@ class CallService
                 'endDate' => $endDate,
             ]);
 
-//            // Apply date filter to policies and calls
-//            $mergedUsersWithPolicies->whereHas('calls', function ($query) use ($startDate, $endDate) {
-//                $query->whereDate('created_at', '>=', $startDate)
-//                    ->whereDate('created_at', '<=', $endDate);
-//
-//            })->whereHas('policies', function ($query) use ($startDate, $endDate) {
-//                $query->whereDate('created_at', '>=', $startDate)
-//                    ->whereDate('created_at', '<=', $endDate);
-//            });
-
+            // Apply date filter to policies and calls
             $mergedUsersWithPolicies->where(function ($query) use ($startDate, $endDate) {
                 $query->whereHas('calls', function ($query) use ($startDate, $endDate) {
                     $query->whereDate('created_at', '>=', $startDate)
                         ->whereDate('created_at', '<=', $endDate);
-                })->orWhereHas('policies', function ($query) use ($startDate, $endDate) {
-                    $query->whereDate('created_at', '>=', $startDate)
-                        ->whereDate('created_at', '<=', $endDate);
+                })->orWhereHas('policies', function ($query) use ($startDate) {
+                    $query->whereDate('created_at', '>=', $startDate);
                 });
             });
 
@@ -338,8 +328,6 @@ class CallService
         $allCalls = $query->get();
         $perPage = $request->per_page ?? 100;
         $calls = $query->paginate((int)$perPage);
-
-        $mergedTables = $allCalls->merge($this->policy->internalAgentMyBusiness()->get());
 
         //Group and Sort calls by agents and publishers
         $sortAgentsColumn = $request->input('sort_agents_column');
@@ -392,17 +380,11 @@ class CallService
         ]);
 
         return [
-//            'merged_tables' => $mergedTables,
             'all_policies' => $this->policy->internalAgentMyBusiness()->count(),
-
             'calls' => $calls,
             'all_calls' => $allCalls, // Get a better solution for this
             'total' => $allCalls->count(),
-
-//            'merged_users_with_policies' => $this->user->calculateCallsAndPoliciesFromUsers($mergedUsersWithPolicies->get()),
-//            'users_with_policies' => $this->user->calculateCallsAndPoliciesFromUsers($mergedUsersWithPolicies->get()),
-
-            'calls_grouped_by_user' => $this->user->calculateCallsAndPoliciesFromUsers($mergedUsersWithPolicies->get()),
+            'calls_grouped_by_user' => $this->user->calculateCallsAndPoliciesFromUsers($mergedUsersWithPolicies->get(), $startDate, $endDate),
             'calls_grouped_by_publisher_name' => $callsGroupedByPublisherName,
             'total_revenue' => round((float) $allCalls->sum('amount_spent'), 2),
             'per_page' => $perPage,
