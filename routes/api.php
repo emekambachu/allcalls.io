@@ -44,6 +44,7 @@ use App\Http\Controllers\OverseerResponseController;
 use App\Http\Controllers\CallDeviceActionsController;
 use App\Http\Controllers\AvailableAgentsAPIController;
 use App\Http\Controllers\OnScriptDelayedAPIController;
+use App\Http\Controllers\TwilioOutboundCallController;
 use App\Http\Controllers\TwilioWebhookErrorController;
 use App\Http\Controllers\CallUserResponseAPIController;
 use App\Http\Controllers\CallTypesSelectedAPIController;
@@ -300,10 +301,14 @@ Route::get('/test-call', static function () {
     return 'All good!';
 });
 
+// Twilio conference routes
 Route::post('/conference/direct', [TwilioConferenceCallController::class, 'directToConference'])->name('conference.direct');
 Route::post('/conference-status-callback', [TwilioConferenceCallController::class, 'handleConferenceStatusCallback'])->name('conference.statusCallback');
 Route::post('/hangup-third-party', [TwilioConferenceCallController::class, 'hangUpThirdParty'])->name('conference.hangupThirdParty');
 Route::post('/hangup-self', [TwilioConferenceCallController::class, 'endCall'])->name('conference.hangupSelf');
+
+// Twilio outbound call routes
+Route::post('/call/outbound', [TwilioOutboundCallController::class, 'handleCall']);
 
 Route::post('/twilio/sms/receive', [TwilioSMSController::class, 'receiveSMS']);
 Route::post('/commio/sms/send', [TextMessageController::class, 'sendMessage']);

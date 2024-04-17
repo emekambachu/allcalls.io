@@ -131,10 +131,11 @@ let currentOutboundTone = ref(null);
 let outboundDevice = ref(null);
 let currentOutboundCall = ref(null);
 let outboundCallStatus = ref(null);
+let outboundCall = ref(null);
 
 // Twilio device setup for outbound
 let setupOutboundTwilioDevice = () => {
-  axios.get("/twilio-device-token").then((response) => {
+  axios.get("/twilio-outbound-device-token").then((response) => {
     let token = response.data.token;
     // console.log("token is ", token);
 
@@ -267,31 +268,31 @@ const makeOutboundCall = async () => {
       alert('No phone number provided');
       return; // Stop the function if no number is provided
     }
-    const call = await outboundDevice.connect({
+    outboundCall = await outboundDevice.connect({
       params: {
         To: outboundTypedNumber.value
       }
     });
-    currentOutboundCall.value = call;
+    currentOutboundCall.value = outboundCall;
     console.log('Dialing outbound number:', outboundTypedNumber.value);
 
-    call.on('ringing', ()=> {
+    outboundCall.on('ringing', ()=> {
       outboundCallStatus.value = 'ringing';
       console.log('Outbound Ringing...'); 
     });
 
-    // call.on('connect', () => {
-    //   outboundCallStatus.value = 'connected';
-    //   console.log('Connection established with SID:', call.parameters.CallSid);
-    // });
+    outboundCall.on('connect', () => {
+      outboundCallStatus.value = 'connected';
+      console.log('Connection established with SID:', outboundCall.parameters.CallSid);
+    });
 
-    // call.on('disconnect', () => {
-    //   outboundCallStatus.value = '';
-    //   console.log('Call disconnected for SID:', call.parameters.CallSid);
-    // });
+    outboundCall.on('disconnect', () => {
+      outboundCallStatus.value = '';
+      console.log('Call disconnected for SID:', outboundCall.parameters.CallSid);
+    });
 
-    call.on('error', (error) => {
-      console.error('Error during the call with SID:', call.parameters.CallSid, error.message);
+    outboundCall.on('error', (error) => {
+      console.error('Error during the outboundCall with SID:', outboundCall.parameters.CallSid, error.message);
     });
 
   } catch (error) {
@@ -301,7 +302,10 @@ const makeOutboundCall = async () => {
 
 const hangupOutboundCall = () => {
   if (currentOutboundCall.value) {
-    outboundDevice.disconnect();
+    // outboundDevice.disconnect();
+    if(outboundCall) {
+      outboundCall.disconnect();
+    }
     outboundCallStatus.value = '';
   }
 }
@@ -496,7 +500,7 @@ onUnmounted(() => {
                         </button>
 
                         <button
-                          @click="hangupThirdPartyCall"
+                          @click="hangupOutboundCall"
                           class="flex justify-center items-center h-12 w-12 bg-red-500 rounded-full text-white hover:bg-red-600"
                         >
                           <svg
