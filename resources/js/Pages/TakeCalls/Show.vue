@@ -261,49 +261,100 @@ const deleteOutboundNumber = () => {
   outboundTypedNumber.value = outboundTypedNumber.value.slice(0, -1);
 };
 
+// const makeOutboundCall = async () => {
+//   try {
+//     console.log('Attempting to connect for an outbound call...');
+//     // Ensure phoneNumber is defined and correctly passed
+//     if (!outboundTypedNumber.value) {
+//       console.error('No phone number provided for the outbound call.');
+//       alert('No phone number provided');
+//       return; // Stop the function if no number is provided
+//     }
+//     outboundCall = await outboundDevice.connect({
+//       params: {
+//         To: outboundTypedNumber.value
+//       }
+//     });
+//     currentOutboundCall.value = outboundCall;
+//     console.log('Dialing outbound number:', outboundTypedNumber.value);
+
+//     outboundCall.on('ringing', ()=> {
+//       outboundCallStatus.value = 'ringing';
+//       console.log('Outbound Ringing...'); 
+//     });
+
+//     outboundCall.on('connect', () => {
+//       outboundCallStatus.value = 'connected';
+//       console.log('Connection established with SID:', outboundCall.parameters.CallSid);
+//       // outboundCallSid.value = outboundCall.parameters.CallSid;
+//       // console.log('Saved SID is: ' , outboundCallSid.value);
+//     });
+
+//     outboundCall.on('disconnect', () => {
+//       outboundCallStatus.value = '';
+//       console.log('Call disconnected for SID:', outboundCall.parameters.CallSid);
+//     });
+
+//     outboundCall.on('error', (error) => {
+//       console.error('Error during the outboundCall with SID:', outboundCall.parameters.CallSid, error.message);
+//     });
+
+//   } catch (e) {
+//     // console.error('Failed to make an outbound call:', error);
+//     console.error("Error connecting: ", e.response ? e.response.data : e);
+//     throw e;
+//   }
+// }
+
 const makeOutboundCall = async () => {
   try {
     console.log('Attempting to connect for an outbound call...');
-    // Ensure phoneNumber is defined and correctly passed
+
     if (!outboundTypedNumber.value) {
       console.error('No phone number provided for the outbound call.');
       alert('No phone number provided');
-      return; // Stop the function if no number is provided
+      return;
     }
+
+    console.log('Dialing outbound number:', outboundTypedNumber.value);
     outboundCall = await outboundDevice.connect({
       params: {
         To: outboundTypedNumber.value
       }
     });
+
+    // Ensure the outbound call object is captured and current before attaching events
     currentOutboundCall.value = outboundCall;
-    console.log('Dialing outbound number:', outboundTypedNumber.value);
 
-    outboundCall.on('ringing', ()=> {
-      outboundCallStatus.value = 'ringing';
-      console.log('Outbound Ringing...'); 
-    });
+    // Attach event handlers
+    attachCallEventHandlers(outboundCall);
 
-    outboundCall.on('connect', () => {
-      outboundCallStatus.value = 'connected';
-      console.log('Connection established with SID:', outboundCall.parameters.CallSid);
-      // outboundCallSid.value = outboundCall.parameters.CallSid;
-      // console.log('Saved SID is: ' , outboundCallSid.value);
-    });
-
-    outboundCall.on('disconnect', () => {
-      outboundCallStatus.value = '';
-      console.log('Call disconnected for SID:', outboundCall.parameters.CallSid);
-    });
-
-    outboundCall.on('error', (error) => {
-      console.error('Error during the outboundCall with SID:', outboundCall.parameters.CallSid, error.message);
-    });
-
-  } catch (e) {
-    // console.error('Failed to make an outbound call:', error);
-    console.error("Error connecting: ", e.response ? e.response.data : e);
-    throw e;
+  } catch (error) {
+    console.error("Error connecting: ", error);
+    console.error("Detailed error:", JSON.stringify(error, null, 2));
+    alert('Failed to make an outbound call. Check the console for more details.');
   }
+}
+
+function attachCallEventHandlers(call) {
+  call.on('ringing', () => {
+    console.log('Outbound Ringing...');
+    outboundCallStatus.value = 'ringing';
+  });
+
+  call.on('connect', () => {
+    console.log('Connection established with SID:', call.parameters.CallSid);
+    outboundCallStatus.value = 'connected';
+  });
+
+  call.on('disconnect', () => {
+    console.log('Call disconnected for SID:', call.parameters.CallSid);
+    outboundCallStatus.value = '';
+  });
+
+  call.on('error', (error) => {
+    console.error('Error during the outboundCall with SID:', call.parameters.CallSid, error);
+  });
 }
 
 const hangupOutboundCall = () => {
