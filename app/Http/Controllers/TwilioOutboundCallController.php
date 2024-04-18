@@ -40,77 +40,77 @@ class TwilioOutboundCallController extends Controller
         ]);
     }
 
-    // public function handleCall(Request $request)
-    // {
-    //     Log::info('Incoming request to handleCall:', $request->all());
-
-    //     $to = $request->input('To');
-    //     $response = new VoiceResponse();
-    //     $callerId = env('TWILIO_PHONE_NUMBER');
-    //     $statusCallbackUrl = 'https://staging.allcalls.io/api/call/outbound/callback';
-
-    //     if ($to) {
-    //         // Use the Dial verb and set the callerId attribute
-    //         $dial = $response->dial('', [
-    //             'callerId' => $callerId,
-    //             'statusCallback' => $statusCallbackUrl,
-    //             'statusCallbackEvent' => 'initiated ringing',
-    //             'statusCallbackMethod' => 'POST',
-    //         ]);
-    //         $dial->number($to);
-    //     } else {
-    //         $response->say("No number provided", ['voice' => 'alice']);
-    //     }
-
-    //     // Convert the TwiML to a string and log it
-    //     $twimlString = $response->asXML();
-    //     Log::info('Generated outbound TwiML:', ['twiml' => $twimlString]);
-
-    //     // Return the TwiML response
-    //     return response($twimlString, 200)->header('Content-Type', 'text/xml');
-    // }
-
     public function handleCall(Request $request)
     {
         Log::info('Incoming request to handleCall:', $request->all());
 
         $to = $request->input('To');
-        $accountSid = env('TWILIO_SID'); 
-        $authToken = env('TWILIO_AUTH_TOKEN');
-        $from = env('TWILIO_PHONE_NUMBER');
+        $response = new VoiceResponse();
+        $callerId = env('TWILIO_PHONE_NUMBER');
         $statusCallbackUrl = 'https://staging.allcalls.io/api/call/outbound/callback';
-        $twiml = "<Response><Dial>{$to}</Dial></Response>";
 
-        if (!$to) {
-            Log::error('No phone number provided for the outbound call.');
-            return response()->json(['error' => 'No phone number provided'], 400);
+        if ($to) {
+            // Use the Dial verb and set the callerId attribute
+            $dial = $response->dial('', [
+                'callerId' => $callerId,
+                'statusCallback' => $statusCallbackUrl,
+                'statusCallbackEvent' => 'initiated ringing',
+                'statusCallbackMethod' => 'POST',
+            ]);
+            $dial->number($to);
+        } else {
+            $response->say("No number provided", ['voice' => 'alice']);
         }
 
-        // Initialize Twilio client
-        $client = new Client($accountSid, $authToken);
+        // Convert the TwiML to a string and log it
+        $twimlString = $response->asXML();
+        Log::info('Generated outbound TwiML:', ['twiml' => $twimlString]);
 
-
-        try {
-            // Create an outbound call with the Twilio client
-            $call = $client->calls->create(
-                $to, // The number to call
-                $from, // A valid Twilio number in your account
-                [
-                    'twiml' => $twiml, // URL to TwiML instructions for the call
-                    'statusCallback' => $statusCallbackUrl,
-                    'statusCallbackEvent' => ['initiated', 'ringing', 'answered', 'completed'],
-                    'statusCallbackMethod' => 'POST'
-                ]
-            );
-
-            Log::info('Outbound call created:', ['callSid' => $call->sid]);
-            return response()->json(['message' => 'Call initiated successfully', 'callSid' => $call->sid]);
-        } catch (\Exception $e) {
-            Log::error('Failed to make an outbound call:', ['error' => $e->getMessage()]);
-            return response()->json(['error' => 'Failed to make an outbound call', 'details' => $e->getMessage()], 500);
-        }
-
+        // Return the TwiML response
+        return response($twimlString, 200)->header('Content-Type', 'text/xml');
     }
+
+    // public function handleCall(Request $request)
+    // {
+    //     Log::info('Incoming request to handleCall:', $request->all());
+
+    //     $to = $request->input('To');
+    //     $accountSid = env('TWILIO_SID'); 
+    //     $authToken = env('TWILIO_AUTH_TOKEN');
+    //     $from = env('TWILIO_PHONE_NUMBER');
+    //     $statusCallbackUrl = 'https://staging.allcalls.io/api/call/outbound/callback';
+    //     $twiml = "<Response><Dial>{$to}</Dial></Response>";
+
+    //     if (!$to) {
+    //         Log::error('No phone number provided for the outbound call.');
+    //         return response()->json(['error' => 'No phone number provided'], 400);
+    //     }
+
+    //     // Initialize Twilio client
+    //     $client = new Client($accountSid, $authToken);
+
+
+    //     try {
+    //         // Create an outbound call with the Twilio client
+    //         $call = $client->calls->create(
+    //             $to, // The number to call
+    //             $from, // A valid Twilio number in your account
+    //             [
+    //                 'twiml' => $twiml, // URL to TwiML instructions for the call
+    //                 'statusCallback' => $statusCallbackUrl,
+    //                 'statusCallbackEvent' => ['initiated', 'ringing', 'answered', 'completed'],
+    //                 'statusCallbackMethod' => 'POST'
+    //             ]
+    //         );
+
+    //         Log::info('Outbound call created:', ['callSid' => $call->sid]);
+    //         return response()->json(['message' => 'Call initiated successfully', 'callSid' => $call->sid]);
+    //     } catch (\Exception $e) {
+    //         Log::error('Failed to make an outbound call:', ['error' => $e->getMessage()]);
+    //         return response()->json(['error' => 'Failed to make an outbound call', 'details' => $e->getMessage()], 500);
+    //     }
+
+    // }
 
 
 
