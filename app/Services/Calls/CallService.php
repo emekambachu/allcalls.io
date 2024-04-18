@@ -9,11 +9,13 @@ use App\Services\Client\ClientService;
 use App\Services\InternalAgent\InternalAgentMyBusinessService;
 use App\Services\User\UserService;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
+use JsonException;
 
 class CallService
 {
@@ -119,7 +121,7 @@ class CallService
     }
 
     /**
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function exportCalls($export, $allCalls): \Symfony\Component\HttpFoundation\StreamedResponse
     {
@@ -152,7 +154,7 @@ class CallService
                             } else {
                                 $rowData[] = null;
                             }
-                        } catch (\Exception $e) {
+                        } catch (Exception $e) {
                             Log::error("Export Error " . $column['name'] . " in call object: " . $e->getMessage());
                         }
                     }
@@ -190,10 +192,12 @@ class CallService
         ];
     }
 
+    /**
+     * @throws Exception
+     */
     public function getAllCallsWithDynamicFilterAndSorting($request): array
     {
         $query = Call::with('user.roles', 'callType', 'client', 'getBusiness');
-        //$mergedUsersWithPolicies = $this->user->usersJoinCallsAndPolicies();
         $mergedUsersWithPolicies = $this->user->usersWithPolicies();
 
         // ringing_duration is a custom attribute.
@@ -279,7 +283,7 @@ class CallService
         // Apply date filters
         if ($startDate && $endDate) {
 
-            $userTimeZone = Auth::user() && !empty(Auth::user()->timezone) ? Auth::user()->timezone : 'America/New_York';
+            $userTimeZone = $this->user->userTimeZone();
 
             Log::debug('CallService:UserTimeZone:', [
                 'userTimeZone' => $userTimeZone,
@@ -334,17 +338,19 @@ class CallService
         $sortAgentsColumn = $request->input('sort_agents_column');
         $sortPublishersColumn = $request->input('sort_publishers_column');
 
-        $getCallsGroupedByUser = $this->getCallsGroupedByUserId($allCalls);
-        if ($sortAgentsColumn) {
-            // Convert from array to collection, sort by column, and convert back to array
-            $callsGroupedByUser = collect($getCallsGroupedByUser)
-                ->sort(function ($a, $b) use ($sortAgentsColumn, $sortDirection) {
-                    return $sortDirection === 'asc' ? $a[$sortAgentsColumn] <=> $b[$sortAgentsColumn] : $b[$sortAgentsColumn] <=> $a[$sortAgentsColumn];
-                })->values()->all();
-        } else {
-            $callsGroupedByUser = $getCallsGroupedByUser;
-        }
+        // Leave this here to help with future implementation of sorting agents
+//        $getCallsGroupedByUser = $this->getCallsGroupedByUserId($allCalls);
+//        if ($sortAgentsColumn) {
+//            // Convert from array to collection, sort by column, and convert back to array
+//            $callsGroupedByUser = collect($getCallsGroupedByUser)
+//                ->sort(function ($a, $b) use ($sortAgentsColumn, $sortDirection) {
+//                    return $sortDirection === 'asc' ? $a[$sortAgentsColumn] <=> $b[$sortAgentsColumn] : $b[$sortAgentsColumn] <=> $a[$sortAgentsColumn];
+//                })->values()->all();
+//        } else {
+//            $callsGroupedByUser = $getCallsGroupedByUser;
+//        }
 
+        // Sort publishers
         $getCallsGroupedByPublisherName = $this->getCallsGroupedByPublisherName($allCalls);
         if ($sortPublishersColumn) {
             // Convert from array to collection, sort by column, and convert back to array
@@ -430,23 +436,6 @@ class CallService
 
             $percentGiPolicies = $totalApprovedPolicies > 0 ? ($totalGiPolicies / $totalApprovedPolicies) * 100 : 0;
             $percentSiPolicies = $totalApprovedPolicies > 0 ? ($totalSiPolicies / $totalApprovedPolicies) * 100 : 0;
-
-            // Manual filtering for pending and declined policies
-//            $totalPendingPolicies = $calls->filter(function ($call) {
-//                return $call->getBusiness && in_array($call->getBusiness->status, ['Submitted', 'Approved']);
-//            })->count();
-
-//            $totalDeclinedPolicies = $calls->filter(function ($call) {
-//                return $call->getBusiness && in_array($call->getBusiness->status, ['Declined', 'Cancelled', 'Withdrawn']);
-//            })->count();
-
-//            $totalSiPolicies = $calls->filter(function ($call) {
-//                return $call->getBusiness && $call->client && $call->client->status === 'Sale - Simplified Issue';
-//            })->count();
-//
-//            $totalGiPolicies = $calls->filter(function ($call) {
-//                return $call->getBusiness && $call->client && $call->client->status === 'Sale - Guaranteed Issue';
-//            })->count();
 
             return [
                 'userId' => $user->id,

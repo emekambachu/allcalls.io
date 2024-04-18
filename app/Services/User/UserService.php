@@ -4,6 +4,10 @@ namespace App\Services\User;
 
 use App\Models\User;
 use App\Models\UserCallTypeState;
+use Carbon\Carbon;
+use DateTime;
+use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class UserService
@@ -11,6 +15,16 @@ class UserService
     public function user(): User
     {
         return new User();
+    }
+
+    public function loggedUser(): ?\Illuminate\Contracts\Auth\Authenticatable
+    {
+        return Auth::user();
+    }
+
+    public function userTimeZone(): string
+    {
+        return $this->loggedUser() && !empty($this->loggedUser()->timezone) ? $this->loggedUser()->timezone : 'America/New_York';
     }
 
     public function withRelations(): \Illuminate\Database\Eloquent\Builder
@@ -62,100 +76,94 @@ class UserService
             );
     }
 
-    public function calculateJoinedCallsAndPoliciesFromUsers($query): \Illuminate\Support\Collection
-    {
-        return $query->map(function ($joined) {
-
-            $totalCalls = $joined->total_calls;
-            $paidCalls = $joined->paid_calls;
-            $totalRevenue = $joined->total_revenue;
-            $totalCallLength = $joined->total_call_length;
-            $averageCallLength = $totalCalls > 0 ? $totalCallLength / $totalCalls : 0;
-
-            $totalApprovedPolicies = $joined->whereNotIn('policy_status', ['Declined', 'Carrier Missing Information'])->count();
-
-            $totalPolicies = $joined->total_policies;
-            $totalPendingPolicies = $joined->where('policy_status', 'Approved')->count();
-            $totalDeclinedPolicies = $joined->whereIn('policy_status', ['Declined', 'Cancelled/Withdrawn'])->count();
-
-            // correct this, these status are from clients and not from InternalAgentMyBusiness
-            $totalSiPolicies = $joined->where('client_status', 'Sale - Simplified Issue')->count();
-            $totalGiPolicies = $joined->where('client_status', 'Sale - Guaranteed Issue')->count();
-
-            $percentGiPolicies = $totalApprovedPolicies > 0 ? ($totalGiPolicies / $totalApprovedPolicies) * 100 : 0;
-            $percentSiPolicies = $totalApprovedPolicies > 0 ? ($totalSiPolicies / $totalApprovedPolicies) * 100 : 0;
-
-            return [
-                'userId' => $joined->user_id,
-                'agentName' => $joined->first_name . ' ' . $joined->last_name,
-                'agentEmail' => $joined->email,
-                'totalCalls' => $totalCalls,
-                'paidCalls' => $paidCalls,
-                'revenueEarned' => $totalRevenue,
-                'revenuePerCall' => $totalCalls > 0 ? $totalRevenue / $totalCalls : 0,
-                'totalCallLength' => $totalCallLength,
-                'averageCallLength' => $averageCallLength,
-                'totalPolicies' => $totalPolicies,
-                'totalPendingPolicies' => $totalPendingPolicies,
-                'totalDeclinedPolicies' => $totalDeclinedPolicies,
-                'totalSiPolicies' => $totalSiPolicies,
-                'totalGiPolicies' => $totalGiPolicies,
-                'percentGiPolicies' => $percentGiPolicies,
-                'percentSiPolicies' => $percentSiPolicies,
-            ];
-        });
-    }
-
-    private function filterDateForOnlyCalls($user, $startDate, $endDate): int
-    {
-        $policyOutput = 0;
-        $callOutput = 0;
-
-        if($startDate && $endDate) {
-            if($user->policies) {
-                $policyOutput = $user->policies->filter(function ($policy) use($startDate, $endDate) {
-                    return $policy->created_at->between($startDate, $endDate);
-                })->count();
-            }
-
-//            if($user->calls) {
-//                $calls = $user->calls()->get();
-//                $callOutput = $calls->filter(function ($call) use($startDate, $endDate) {
-//                    $callDate = $call->created_at;
-//                    return $callDate->greaterThanOrEqualTo($startDate) && $callDate->lessThanOrEqualTo($endDate);
-//                })->count();
+    /**
+     * @throws Exception
+     */
+//    private function countByDateBetween($query, $startDate, $endDate): int
+//    {
+//        $total = 0;
+//        // Use timezone from logged user or default to America/New_York to compare dates unless it won't work correctly
+//        $userTimeZone = $this->userTimeZone();
+//        $startDate = Carbon::parse($startDate)->timezone($userTimeZone)->startOfDay();
+//        $endDate = Carbon::parse($endDate)->timezone($userTimeZone)->endOfDay();
+//
+//        foreach ($query as $item) {
+//            $createdAt = $item->created_at;
+//            if ($createdAt >= $startDate && $createdAt <= $endDate) {
+//                $total++;
 //            }
+//        }
+//        return $total;
+//    }
+//
+//    private function sumByDateBetween($query, $sumItem, $startDate, $endDate){
+//        $total = 0;
+//        // Use timezone from logged user or default to America/New_York to compare dates unless it won't work correctly
+//        $userTimeZone = $this->userTimeZone();
+//        $startDate = Carbon::parse($startDate)->timezone($userTimeZone)->startOfDay();
+//        $endDate = Carbon::parse($endDate)->timezone($userTimeZone)->endOfDay();
+//
+//        foreach ($query as $item) {
+//            $createdAt = $item->created_at;
+//            if ($createdAt >= $startDate && $createdAt <= $endDate) {
+//                $total += $item->{$sumItem};
+//            }
+//        }
+//        return $total;
+//    }
 
-            return $policyOutput;
-            //return $policyOutput > 0 ? 0 : ($callOutput > 0 ? $callOutput : 0);
-        }
-        return 0;
-    }
-
+    /**
+     * @throws Exception
+     */
     public function calculateCallsAndPoliciesFromUsers($query, $startDate, $endDate): \Illuminate\Support\Collection
     {
-        return $query->map(function ($user) use ($startDate, $endDate){
+        // get timezone from logged user or default to America/New_York
+        $startDate = Carbon::parse($startDate)->timezone($this->userTimeZone())->startOfDay();
+        $endDate = Carbon::parse($endDate)->timezone($this->userTimeZone())->endOfDay();
 
-            // Only works for calls greater than current date
-            $totalCalls = $user->calls->filter(function ($call) use($startDate, $endDate) {
-                return $call->created_at->greaterThanOrEqualTo($startDate);
+        return $query->map( function ($user) use ($startDate, $endDate){
+
+            $totalCalls = $user->calls->filter(function($call) use ($startDate, $endDate){
+                return $call->created_at >= $startDate && $call->created_at <= $endDate;
             })->count();
 
-            $paidCalls = $user->calls->where('amount_spent', '>', 0)->count();
-            $totalRevenue = $user->calls->sum('amount_spent');
-            $totalCallLength = $user->calls->sum('call_duration_in_seconds');
+            //$paidCalls = $user->calls->where('amount_spent', '>', 0)->count();
+            $paidCalls = $user->calls->filter(function($call) use ($startDate, $endDate){
+                return ($call->created_at >= $startDate && $call->created_at <= $endDate) && $call->amount_spent > 0;
+            })->count();
+
+            //$totalRevenue = $this->sumByDateBetween($user->calls, 'amount_spent', $startDate, $endDate);
+            $totalRevenue = $user->calls->filter(function($call) use ($startDate, $endDate){
+                return $call->created_at >= $startDate && $call->created_at <= $endDate;
+            })->sum('amount_spent');
+
+            //$totalCallLength = $user->calls->sum('call_duration_in_seconds');
+            $totalCallLength = $user->calls->filter(function($call) use ($startDate, $endDate){
+                return $call->created_at >= $startDate && $call->created_at <= $endDate;
+            })->sum('call_duration_in_seconds');
+
             $averageCallLength = $totalCalls > 0 ? $totalCallLength / $totalCalls : 0;
 
-            $totalApprovedPolicies = $user->policies->where('created_at', '>=', $startDate)
-                ->whereNotIn('status', ['Declined', 'Carrier Missing Information'])->count();
+            //$totalApprovedPolicies = $user->policies->whereNotIn('status', ['Declined', 'Carrier Missing Information'])->count();
+            $totalApprovedPolicies = $user->policies->filter(function ($policy) use ($startDate, $endDate){
+                return ($policy->created_at >= $startDate && $policy->created_at <= $endDate) && !in_array($policy->status, ['Declined', 'Carrier Missing Information']);
+            })->count();
 
-            $totalPolicies = $user->policies->where('created_at', '>=', $startDate)->count();
+            //$totalPolicies = $user->policies->where('created_at', '>=', $startDate)->count();
+            $totalPolicies = $user->policies->filter(function ($policy) use ($startDate, $endDate){
+                return $policy->created_at >= $startDate && $policy->created_at <= $endDate;
+            })->count();
 
-            $totalPendingPolicies = $user->policies->where('created_at', '>=', $startDate)
-                ->where('status', 'Approved')->count();
+            //$totalPendingPolicies = $user->policies->where('status', 'Approved')->count();
+            $totalPendingPolicies = $user->policies->filter(function ($policy) use ($startDate, $endDate){
+                return ($policy->created_at >= $startDate && $policy->created_at <= $endDate) && $policy->status === 'Approved';
+            })->count();
 
-            $totalDeclinedPolicies = $user->policies->where('created_at', '>=', $startDate)
-                ->whereIn('status', ['Declined', 'Cancelled/Withdrawn'])->count();
+            $totalDeclinedPolicies = $user->policies->filter(function ($policy) use ($startDate, $endDate){
+                return ($policy->created_at >= $startDate && $policy->created_at <= $endDate) && in_array($policy->status, ['Declined', 'Cancelled/Withdrawn']);
+            })->count();
+
+            //$totalDeclinedPolicies = $user->policies->whereIn('status', ['Declined', 'Cancelled/Withdrawn'])->get();
 
             // correct this, these status are from clients and not from InternalAgentMyBusiness
             $totalSiPolicies = $user->clients->where('status', 'Sale - Simplified Issue')->count();
