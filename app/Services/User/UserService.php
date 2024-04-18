@@ -10,6 +10,7 @@ use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class UserService
 {
@@ -86,6 +87,11 @@ class UserService
         //$startDate = Carbon::parse($startDate)->shiftTimezone($this->userTimeZone())->startOfDay();
         $startDate = Carbon::parse($startDate)->shiftTimezone($this->userTimeZone())->startOfDay();
         $endDate = Carbon::parse($endDate)->shiftTimezone($this->userTimeZone())->endOfDay();
+
+        Log::debug('UserService:DatesAfterSecondConversion:', [
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+        ]);
 
         return $query->map( function ($user) use ($startDate, $endDate){
 

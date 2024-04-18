@@ -290,10 +290,10 @@ class CallService
             // Convert the input dates from m/d/Y format to Y-m-d format, considering the user's timezone,
             $startDate = Carbon::createFromFormat('m/d/Y', $startDate, $userTimeZone)
                 ->shiftTimezone('UTC')
-                ->toDateString();
+                ->startOfDay();
             $endDate = Carbon::createFromFormat('m/d/Y', $endDate, $userTimeZone)
                 ->shiftTimezone('UTC')
-                ->toDateString();
+                ->endOfDay();
 
             Log::debug('CallService:DatesAfterTimezoneConversion:', [
                 'startDate' => $startDate,
