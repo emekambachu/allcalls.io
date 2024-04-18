@@ -155,7 +155,7 @@ let setupOutboundTwilioDevice = () => {
       // changes the behavior of the SDK to consider a call `ringing` starting
       // from the connection to the TwiML backend to when the recipient of
       // the `Dial` verb answers.
-      enableRingingState: true,
+      // enableRingingState: true,
       // debug: true,
     });
     // console.log("outboundDeviceee", outboundDevice);
