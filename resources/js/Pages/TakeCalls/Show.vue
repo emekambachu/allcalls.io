@@ -353,6 +353,8 @@ function attachCallEventHandlers(call) {
 
   call.on('disconnect', () => {
     console.log('Call disconnected for SID:', call.parameters.CallSid);
+    console.log(`Call disconnected: Outbound call is: ` , outboundCall);
+    console.log(`Call disconnected: Outbound call's params are: ` , outboundCall.parameters);
     outboundCallStatus.value = '';
   });
 
