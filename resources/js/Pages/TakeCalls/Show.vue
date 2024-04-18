@@ -347,6 +347,8 @@ function attachCallEventHandlers(call) {
     outboundCallStatus.value = 'connected';
     outboundCallSid.value = outboundCall.parameters.CallSid;
     console.log('Saved SID is: ' , outboundCallSid.value);
+    console.log(`Outbound call is: ` , outboundCall);
+    console.log(`Outbound call's params are: ` , outboundCall.parameters);
   });
 
   call.on('disconnect', () => {
