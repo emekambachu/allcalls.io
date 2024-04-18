@@ -337,20 +337,20 @@ const makeOutboundCall = async () => {
 }
 
 function attachCallEventHandlers(call) {
-  // call.on('ringing', () => {
-  //   console.log('Outbound Ringing...');
-  //   outboundCallStatus.value = 'ringing';
-  // });
+  call.on('ringing', () => {
+    console.log('Outbound Ringing...');
+    outboundCallStatus.value = 'ringing';
+  });
 
-  // call.on('connect', () => {
-  //   console.log('Connection established with SID:', call.parameters.CallSid);
-  //   outboundCallStatus.value = 'connected';
-  // });
+  call.on('accept', () => {
+    console.log('Connection established with SID:', call.parameters.CallSid);
+    outboundCallStatus.value = 'connected';
+  });
 
-  // call.on('disconnect', () => {
-  //   console.log('Call disconnected for SID:', call.parameters.CallSid);
-  //   outboundCallStatus.value = '';
-  // });
+  call.on('disconnect', () => {
+    console.log('Call disconnected for SID:', call.parameters.CallSid);
+    outboundCallStatus.value = '';
+  });
 
   call.on('error', (error) => {
     console.error('Error during the outboundCall with SID:', call.parameters.CallSid, error);
