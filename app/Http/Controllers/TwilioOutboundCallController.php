@@ -79,7 +79,15 @@ class TwilioOutboundCallController extends Controller
         $authToken = env('TWILIO_AUTH_TOKEN');
         $from = env('TWILIO_PHONE_NUMBER');
         $statusCallbackUrl = 'https://staging.allcalls.io/api/call/outbound/callback';
-        $twiml = "<Response><Dial>{$to}</Dial></Response>";
+        // $twiml = "<Response><Dial>{$to}</Dial></Response>";
+        
+        // Create TwiML directly without needing a separate URL endpoint
+        $twiml = new VoiceResponse();
+        $twiml->dial($to, ['callerId' => $from]);
+
+        // Convert TwiML object to a string
+        $twimlString = (string) $twiml;
+        Log::info('Generated TwiML:', ['twiml' => $twimlString]);
 
         if (!$to) {
             Log::error('No phone number provided for the outbound call.');
@@ -89,14 +97,13 @@ class TwilioOutboundCallController extends Controller
         // Initialize Twilio client
         $client = new Client($accountSid, $authToken);
 
-
         try {
             // Create an outbound call with the Twilio client
             $call = $client->calls->create(
                 $to, // The number to call
                 $from, // A valid Twilio number in your account
                 [
-                    'twiml' => $twiml, // URL to TwiML instructions for the call
+                    'twiml' => $twimlString, // URL to TwiML instructions for the call
                     'statusCallback' => $statusCallbackUrl,
                     'statusCallbackEvent' => ['initiated', 'ringing', 'answered', 'completed'],
                     'statusCallbackMethod' => 'POST'
