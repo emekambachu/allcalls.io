@@ -80,42 +80,6 @@ class UserService
     /**
      * @throws Exception
      */
-//    private function countByDateBetween($query, $startDate, $endDate): int
-//    {
-//        $total = 0;
-//        // Use timezone from logged user or default to America/New_York to compare dates unless it won't work correctly
-//        $userTimeZone = $this->userTimeZone();
-//        $startDate = Carbon::parse($startDate)->timezone($userTimeZone)->startOfDay();
-//        $endDate = Carbon::parse($endDate)->timezone($userTimeZone)->endOfDay();
-//
-//        foreach ($query as $item) {
-//            $createdAt = $item->created_at;
-//            if ($createdAt >= $startDate && $createdAt <= $endDate) {
-//                $total++;
-//            }
-//        }
-//        return $total;
-//    }
-//
-//    private function sumByDateBetween($query, $sumItem, $startDate, $endDate){
-//        $total = 0;
-//        // Use timezone from logged user or default to America/New_York to compare dates unless it won't work correctly
-//        $userTimeZone = $this->userTimeZone();
-//        $startDate = Carbon::parse($startDate)->timezone($userTimeZone)->startOfDay();
-//        $endDate = Carbon::parse($endDate)->timezone($userTimeZone)->endOfDay();
-//
-//        foreach ($query as $item) {
-//            $createdAt = $item->created_at;
-//            if ($createdAt >= $startDate && $createdAt <= $endDate) {
-//                $total += $item->{$sumItem};
-//            }
-//        }
-//        return $total;
-//    }
-
-    /**
-     * @throws Exception
-     */
     public function calculateCallsAndPoliciesFromUsers($query, $startDate, $endDate): Collection
     {
         // get timezone from logged user or default to America/New_York

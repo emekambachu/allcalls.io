@@ -262,8 +262,6 @@ class CallService
                     $query->where($filter['name'], $filter['operator'], $filter['value']);
 
                     // Apply filters to merged users, policies and calls
-                    //$mergedUsersWithPolicies->where('calls.'.$filter['name'], $filter['operator'], $filter['value']);
-
                     $mergedUsersWithPolicies->whereHas('calls', function ($query) use ($filter) {
                         $query->where($filter['name'], $filter['operator'], $filter['value']);
                     });
@@ -339,16 +337,16 @@ class CallService
         $sortPublishersColumn = $request->input('sort_publishers_column');
 
         // Leave this here to help with future implementation of sorting agents
-//        $getCallsGroupedByUser = $this->getCallsGroupedByUserId($allCalls);
-//        if ($sortAgentsColumn) {
-//            // Convert from array to collection, sort by column, and convert back to array
-//            $callsGroupedByUser = collect($getCallsGroupedByUser)
-//                ->sort(function ($a, $b) use ($sortAgentsColumn, $sortDirection) {
-//                    return $sortDirection === 'asc' ? $a[$sortAgentsColumn] <=> $b[$sortAgentsColumn] : $b[$sortAgentsColumn] <=> $a[$sortAgentsColumn];
-//                })->values()->all();
-//        } else {
-//            $callsGroupedByUser = $getCallsGroupedByUser;
-//        }
+        //        $getCallsGroupedByUser = $this->getCallsGroupedByUserId($allCalls);
+        //        if ($sortAgentsColumn) {
+        //            // Convert from array to collection, sort by column, and convert back to array
+        //            $callsGroupedByUser = collect($getCallsGroupedByUser)
+        //                ->sort(function ($a, $b) use ($sortAgentsColumn, $sortDirection) {
+        //                    return $sortDirection === 'asc' ? $a[$sortAgentsColumn] <=> $b[$sortAgentsColumn] : $b[$sortAgentsColumn] <=> $a[$sortAgentsColumn];
+        //                })->values()->all();
+        //        } else {
+        //            $callsGroupedByUser = $getCallsGroupedByUser;
+        //        }
 
         // Sort publishers
         $getCallsGroupedByPublisherName = $this->getCallsGroupedByPublisherName($allCalls);
