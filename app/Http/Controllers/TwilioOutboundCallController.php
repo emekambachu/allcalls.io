@@ -53,7 +53,7 @@ class TwilioOutboundCallController extends Controller
             $dial = $response->dial('', [
                 'callerId' => $callerId,
                 'statusCallback' => $statusCallbackUrl,
-                'statusCallbackEvent' => ['initiated', 'ringing', 'answered', 'completed'],
+                'statusCallbackEvent' => 'initiated ringing',
                 'statusCallbackMethod' => 'POST',
             ]);
             $dial->number($to);
@@ -63,7 +63,7 @@ class TwilioOutboundCallController extends Controller
 
         // Convert the TwiML to a string and log it
         $twimlString = $response->asXML();
-        Log::info('Generated TwiML:', ['twiml' => $twimlString]);
+        Log::info('Generated outbound TwiML:', ['twiml' => $twimlString]);
 
         // Return the TwiML response
         return response($twimlString, 200)->header('Content-Type', 'text/xml');
