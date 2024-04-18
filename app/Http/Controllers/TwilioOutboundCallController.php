@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Twilio\TwiML\VoiceResponse;
 use Twilio\Jwt\Grants\VoiceGrant;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class TwilioOutboundCallController extends Controller
 {
@@ -146,6 +147,14 @@ class TwilioOutboundCallController extends Controller
      */
     private function handleInitiatedCall(array $data)
     {
+        if (!Auth::check()) {
+            Log::error('No authenticated user for initiating call', ['Call SID' => $data['call_sid']]);
+            return; // or handle this case as needed
+        }
+    
+        // Add the current authenticated user's ID to the data array
+        $data['user_id'] = Auth::id();
+        
         try {
             OutboundCall::create($data);
             Log::info('Initiated call saved', ['Call SID' => $data['call_sid']]);
