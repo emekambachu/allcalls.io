@@ -100,8 +100,8 @@ class TwilioOutboundCallController extends Controller
         try {
             // Create an outbound call with the Twilio client
             $call = $client->calls->create(
-                'client:Anonymous', // To a client or a placeholder since 'To' is handled in TwiML
-                // $to, // The number to call
+                // 'client:Anonymous', // To a client or a placeholder since 'To' is handled in TwiML
+                $to, // The number to call
                 $from, // A valid Twilio number in your account
                 [
                     'twiml' => $twimlString, // URL to TwiML instructions for the call
