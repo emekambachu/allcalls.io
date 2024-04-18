@@ -84,8 +84,8 @@ class UserService
     {
         // get timezone from logged user or default to America/New_York
         //$startDate = Carbon::parse($startDate)->shiftTimezone($this->userTimeZone())->startOfDay();
-        $startDate = Carbon::parse($startDate)->shiftTimezone($this->userTimeZone())->toDateString();
-        $endDate = Carbon::parse($endDate)->shiftTimezone($this->userTimeZone())->toDateString();
+        $startDate = Carbon::parse($startDate)->shiftTimezone($this->userTimeZone())->startOfDay();
+        $endDate = Carbon::parse($endDate)->shiftTimezone($this->userTimeZone())->endOfDay();
 
         return $query->map( function ($user) use ($startDate, $endDate){
 
