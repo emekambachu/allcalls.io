@@ -50,7 +50,7 @@ class TwilioOutboundCallController extends Controller
             // Use the Dial verb and set the callerId attribute
             $dial = $response->dial('', [
                 'callerId' => $callerId,
-                'statusCallbackMethod' => 'GET',
+                'statusCallbackMethod' => 'POST',
                 'statusCallbackEvent' => 'initiated ringing answered completed',
                 'statusCallback' => $statusCallbackUrl
             ]);
