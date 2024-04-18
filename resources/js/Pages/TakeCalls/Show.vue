@@ -382,7 +382,7 @@ let callConferenceNumber = () => {
 
     // Send the payload to your endpoint
     axios
-      .post("/conference/convert/withNumber", payload)
+      .post("/api/conference/convert/withNumber", payload)
       .then((response) => {
         // console.log("Call initiated", response);
         // Extract and store conferenceName and thirdPartySid from response
