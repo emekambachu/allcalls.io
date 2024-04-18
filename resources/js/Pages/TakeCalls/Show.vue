@@ -371,7 +371,7 @@ const sendCallRequest = async () => {
   try {
     // Construct the payload
     const payload = {
-      to: outboundTypedNumber.value,
+      To: outboundTypedNumber.value,
     };
 
     // Send the POST request with fetch
