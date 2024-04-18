@@ -363,42 +363,6 @@ function attachCallEventHandlers(call) {
   });
 }
 
-// Function to send POST request
-const sendCallRequest = async () => {
-  // URL of the API endpoint
-  const url = 'https://staging.allcalls.io/api/call/outbound';
-
-  try {
-    // Construct the payload
-    const payload = {
-      To: outboundTypedNumber.value,
-    };
-
-    // Send the POST request with fetch
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    });
-
-    // Check if the response is ok (status in the range 200-299)
-    if (!response.ok) {
-      // Not ok, throw an error with the status
-      throw new Error('Network response was not ok: ' + response.status);
-    }
-
-    // Parse JSON data from the response
-    const data = await response.json();
-
-    // Log or handle the response data
-    console.log('Success:', data);
-  } catch (error) {
-    // Log or handle errors
-    console.error('Error during fetch:', error);
-  }
-};
 
 const hangupOutboundCall = () => {
   if (currentOutboundCall.value) {
@@ -585,10 +549,8 @@ onUnmounted(() => {
                         </button>
                       </div>
                       <div class="flex justify-between mt-4">
-                        <!-- @click="makeOutboundCall()" -->
                         <button
-                        @click="sendCallRequest()"
-                          
+                          @click="makeOutboundCall()"
                           class="flex justify-center items-center h-12 w-12 bg-green-500 rounded-full text-white hover:bg-green-600"
                         >
                           <svg
