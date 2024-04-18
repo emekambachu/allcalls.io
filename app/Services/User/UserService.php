@@ -83,8 +83,9 @@ class UserService
     public function calculateCallsAndPoliciesFromUsers($query, $startDate, $endDate): Collection
     {
         // get timezone from logged user or default to America/New_York
-        $startDate = Carbon::parse($startDate)->shiftTimezone($this->userTimeZone())->startOfDay();
-        $endDate = Carbon::parse($endDate)->shiftTimezone($this->userTimeZone())->endOfDay();
+        //$startDate = Carbon::parse($startDate)->shiftTimezone($this->userTimeZone())->startOfDay();
+        $startDate = Carbon::parse($startDate)->shiftTimezone($this->userTimeZone())->toDateString();
+        $endDate = Carbon::parse($endDate)->shiftTimezone($this->userTimeZone())->toDateString();
 
         return $query->map( function ($user) use ($startDate, $endDate){
 
