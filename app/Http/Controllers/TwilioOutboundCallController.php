@@ -41,6 +41,8 @@ class TwilioOutboundCallController extends Controller
 
     public function handleCall(Request $request)
     {
+        Log::info('Incoming request to handleCall:', $request->all());
+
         $to = $request->input('To');
         $response = new VoiceResponse();
         $callerId = env('TWILIO_PHONE_NUMBER');
@@ -59,7 +61,12 @@ class TwilioOutboundCallController extends Controller
             $response->say("No number provided", ['voice' => 'alice']);
         }
 
-        return response($response, 200)->header('Content-Type', 'text/xml');
+        // Convert the TwiML to a string and log it
+        $twimlString = $response->asXML();
+        Log::info('Generated TwiML:', ['twiml' => $twimlString]);
+
+        // Return the TwiML response
+        return response($twimlString, 200)->header('Content-Type', 'text/xml');
     }
 
     public function logTwilioRequest(Request $request)
