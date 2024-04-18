@@ -7,6 +7,7 @@ use App\Models\UserCallTypeState;
 use Carbon\Carbon;
 use DateTime;
 use Exception;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -115,7 +116,7 @@ class UserService
     /**
      * @throws Exception
      */
-    public function calculateCallsAndPoliciesFromUsers($query, $startDate, $endDate): \Illuminate\Support\Collection
+    public function calculateCallsAndPoliciesFromUsers($query, $startDate, $endDate): Collection
     {
         // get timezone from logged user or default to America/New_York
         $startDate = Carbon::parse($startDate)->timezone($this->userTimeZone())->startOfDay();
