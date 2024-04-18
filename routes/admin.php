@@ -163,5 +163,5 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
 
     Route::get('/ping/logs', [PingLogController::class, 'index'])->name('admin.ping.logs.index');
 
-    // Route::get('/web-api/fronter', [FronterController::class, 'store'])->name('admin.fronter.store');
+    Route::get('/web-api/fronter', [FronterController::class, 'store'])->name('admin.fronter.store');
 });

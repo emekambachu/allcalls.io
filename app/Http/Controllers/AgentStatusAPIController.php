@@ -61,6 +61,28 @@ class AgentStatusAPIController extends Controller
         '39' => ['api_key' => '4oRnsq6zThlqGKNqvjVukvlcogYXna', 'affiliate_percentage' => 10],
         '40' => ['api_key' => 'h22dXlknTztdSsITw8tW64SWxz9pm5', 'affiliate_percentage' => 10],
 
+        '41' => ['api_key' => 'W1fRzNtYl3JokpVZqC4dE7AhGiTu69', 'affiliate_percentage' => 10],
+        '42' => ['api_key' => 'X2Kp8aO0JLs5TdBzCmH9gqwyFvRnI3', 'affiliate_percentage' => 10],
+        '43' => ['api_key' => 'V3IoQp1YdB6aWczMrkU8SnfJlHxGt5', 'affiliate_percentage' => 10],
+        '44' => ['api_key' => 'M4ZrQa2Te7bFkPyVxS9GojwHnIxLu1', 'affiliate_percentage' => 10],
+        '45' => ['api_key' => 'B5SsNf3Yo8dGhQzKxC0ApvIuJmRtW7', 'affiliate_percentage' => 10],
+        '46' => ['api_key' => 'F6TwOr4Zp9eJiRzLyS1BqxCvKuNsM8', 'affiliate_percentage' => 10],
+        '47' => ['api_key' => 'G7VuPs5Ap0fKjSyMzT2CrwDvLoQtN9', 'affiliate_percentage' => 10],
+        '48' => ['api_key' => 'H8WvQr6Bq1gLyTxNzU3DsAxMkPvRo0', 'affiliate_percentage' => 10],
+        '49' => ['api_key' => 'I9XuSt7Cr2hMzVyPwT4EsByOkQwSp1', 'affiliate_percentage' => 10],
+        '50' => ['api_key' => 'J0YwVu8Ds3iNyUzQxV5FtCzPlRxTq2', 'affiliate_percentage' => 10],
+
+        '51' => ['api_key' => 'K1ZxWv9Et4jOzVzRyU6GtCyQmSyUp3', 'affiliate_percentage' => 10],
+        '52' => ['api_key' => 'L2AyXw0Fu5kPzWySzV7HuDzRnTzVq4', 'affiliate_percentage' => 10],
+        '53' => ['api_key' => 'M3BzYx1Gv6lQzXzTaW8IvEzSoUzWr5', 'affiliate_percentage' => 10],
+        '54' => ['api_key' => 'N4CzZy2Hw7mRzYzUbX9JwFzTpVzXs6', 'affiliate_percentage' => 10],
+        '55' => ['api_key' => 'O5DzAy3Ix8nSzZzVcY0KxGzUqWzYt7', 'affiliate_percentage' => 10],
+        '56' => ['api_key' => 'P6EzBz4Jy9oTzAzWdZ1LyHzVrXzZu8', 'affiliate_percentage' => 10],
+        '57' => ['api_key' => 'Q7FzCz5Kz0pUzBzXeA2MzIzWsYzAv9', 'affiliate_percentage' => 10],
+        '58' => ['api_key' => 'R8GzDz6Lz1qVzCzYfB3NzJzXtZzBw0', 'affiliate_percentage' => 10],
+        '59' => ['api_key' => 'S9HzEz7Mz2rWzDzZgC4OzKzYuZzCx1', 'affiliate_percentage' => 10],
+        '60' => ['api_key' => 'T0IzFz8Nz3sXzEzAhD5PzLzZvZzDy2', 'affiliate_percentage' => 10],
+
     ];
 
     /**
