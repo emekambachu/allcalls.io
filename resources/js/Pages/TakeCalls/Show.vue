@@ -299,8 +299,10 @@ const makeOutboundCall = async () => {
       console.error('Error during the outboundCall with SID:', outboundCall.parameters.CallSid, error.message);
     });
 
-  } catch (error) {
-    console.error('Failed to make an outbound call:', error);
+  } catch (e) {
+    // console.error('Failed to make an outbound call:', error);
+    console.error("Error connecting: ", e.response ? e.response.data : e);
+    throw e;
   }
 }
 
