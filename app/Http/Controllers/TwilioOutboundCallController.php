@@ -6,6 +6,7 @@ use Twilio\Jwt\AccessToken;
 use Illuminate\Http\Request;
 use Twilio\TwiML\VoiceResponse;
 use Twilio\Jwt\Grants\VoiceGrant;
+use Illuminate\Support\Facades\Log;
 
 class TwilioOutboundCallController extends Controller
 {
@@ -53,5 +54,19 @@ class TwilioOutboundCallController extends Controller
         }
 
         return response($response, 200)->header('Content-Type', 'text/xml');
+    }
+
+    public function logTwilioRequest(Request $request)
+    {
+        // Log the entire request
+        Log::info('Received Twilio outbound callback', $request->all());
+
+        // Optionally, you can log specific parts of the request
+        Log::info('Twilio outbound Call SID: ' . $request->input('CallSid'));
+        Log::info('Twilio outbound From: ' . $request->input('From'));
+        Log::info('Twilio outbound To: ' . $request->input('To'));
+
+        // Respond to Twilio to acknowledge receipt of the callback
+        return response()->json(['message' => 'Request logged successfully']);
     }
 }
