@@ -132,6 +132,8 @@ let outboundDevice = ref(null);
 let currentOutboundCall = ref(null);
 let outboundCallStatus = ref(null);
 let outboundCall = ref(null);
+let outboundCallSid = ref(null);
+let outboundConferenceTypedNumber = ref('+16787232049');
 
 // Twilio device setup for outbound
 let setupOutboundTwilioDevice = () => {
@@ -170,15 +172,15 @@ let setupOutboundTwilioDevice = () => {
       console.log("Outbound Twilio.Device Error: " + error.message);
     });
 
-    outboundDevice.on('connect', () => {
-      outboundCallStatus.value = 'connected';
-      console.log('Connection established with SID:', call.parameters.CallSid);
-    });
+    // outboundDevice.on('connect', () => {
+    //   outboundCallStatus.value = 'connected';
+    //   console.log('Connection established with SID:', call.parameters.CallSid);
+    // });
 
-    outboundDevice.on('disconnect', () => {
-      outboundCallStatus.value = '';
-      console.log('Call disconnected for SID:', call.parameters.CallSid);
-    });
+    // outboundDevice.on('disconnect', () => {
+    //   outboundCallStatus.value = '';
+    //   console.log('Call disconnected for SID:', call.parameters.CallSid);
+    // });
 
     // outboundDevice.on("connect", function (conn) {
     //   console.log("Outbound Successfully established call ! ");
@@ -259,45 +261,104 @@ const deleteOutboundNumber = () => {
   outboundTypedNumber.value = outboundTypedNumber.value.slice(0, -1);
 };
 
+// const makeOutboundCall = async () => {
+//   try {
+//     console.log('Attempting to connect for an outbound call...');
+//     // Ensure phoneNumber is defined and correctly passed
+//     if (!outboundTypedNumber.value) {
+//       console.error('No phone number provided for the outbound call.');
+//       alert('No phone number provided');
+//       return; // Stop the function if no number is provided
+//     }
+//     outboundCall = await outboundDevice.connect({
+//       params: {
+//         To: outboundTypedNumber.value
+//       }
+//     });
+//     currentOutboundCall.value = outboundCall;
+//     console.log('Dialing outbound number:', outboundTypedNumber.value);
+
+//     outboundCall.on('ringing', ()=> {
+//       outboundCallStatus.value = 'ringing';
+//       console.log('Outbound Ringing...'); 
+//     });
+
+//     outboundCall.on('connect', () => {
+//       outboundCallStatus.value = 'connected';
+//       console.log('Connection established with SID:', outboundCall.parameters.CallSid);
+//       // outboundCallSid.value = outboundCall.parameters.CallSid;
+//       // console.log('Saved SID is: ' , outboundCallSid.value);
+//     });
+
+//     outboundCall.on('disconnect', () => {
+//       outboundCallStatus.value = '';
+//       console.log('Call disconnected for SID:', outboundCall.parameters.CallSid);
+//     });
+
+//     outboundCall.on('error', (error) => {
+//       console.error('Error during the outboundCall with SID:', outboundCall.parameters.CallSid, error.message);
+//     });
+
+//   } catch (e) {
+//     // console.error('Failed to make an outbound call:', error);
+//     console.error("Error connecting: ", e.response ? e.response.data : e);
+//     throw e;
+//   }
+// }
+
 const makeOutboundCall = async () => {
   try {
     console.log('Attempting to connect for an outbound call...');
-    // Ensure phoneNumber is defined and correctly passed
+
     if (!outboundTypedNumber.value) {
       console.error('No phone number provided for the outbound call.');
       alert('No phone number provided');
-      return; // Stop the function if no number is provided
+      return;
     }
+
+    console.log('Dialing outbound number:', outboundTypedNumber.value);
     outboundCall = await outboundDevice.connect({
       params: {
         To: outboundTypedNumber.value
       }
     });
+
+    // Ensure the outbound call object is captured and current before attaching events
     currentOutboundCall.value = outboundCall;
-    console.log('Dialing outbound number:', outboundTypedNumber.value);
 
-    outboundCall.on('ringing', ()=> {
-      outboundCallStatus.value = 'ringing';
-      console.log('Outbound Ringing...'); 
-    });
-
-    outboundCall.on('connect', () => {
-      outboundCallStatus.value = 'connected';
-      console.log('Connection established with SID:', outboundCall.parameters.CallSid);
-    });
-
-    outboundCall.on('disconnect', () => {
-      outboundCallStatus.value = '';
-      console.log('Call disconnected for SID:', outboundCall.parameters.CallSid);
-    });
-
-    outboundCall.on('error', (error) => {
-      console.error('Error during the outboundCall with SID:', outboundCall.parameters.CallSid, error.message);
-    });
+    // Attach event handlers
+    attachCallEventHandlers(outboundCall);
 
   } catch (error) {
-    console.error('Failed to make an outbound call:', error);
+    console.error("Error connecting: ", error);
+    console.error("Detailed error:", JSON.stringify(error, null, 2));
+    alert('Failed to make an outbound call. Check the console for more details.');
   }
+}
+
+function attachCallEventHandlers(call) {
+  call.on('ringing', () => {
+    console.log('Outbound Ringing...');
+    outboundCallStatus.value = 'ringing';
+  });
+
+  call.on('accept', () => {
+    console.log('Connection established with SID:', call.parameters.CallSid);
+    outboundCallStatus.value = 'connected';
+    outboundCallSid.value = outboundCall.parameters.CallSid;
+    console.log('Saved SID is: ' , outboundCallSid.value);
+    console.log(`Outbound call is: ` , outboundCall);
+    console.log(`Outbound call's params are: ` , outboundCall.parameters);
+  });
+
+  call.on('disconnect', () => {
+    console.log('Call disconnected for SID:', call.parameters.CallSid);
+    outboundCallStatus.value = '';
+  });
+
+  call.on('error', (error) => {
+    console.error('Error during the outboundCall with SID:', call.parameters.CallSid, error);
+  });
 }
 
 const hangupOutboundCall = () => {
@@ -309,6 +370,40 @@ const hangupOutboundCall = () => {
     outboundCallStatus.value = '';
   }
 }
+
+let callConferenceNumber = () => {
+  if (outboundConferenceTypedNumber.value && outboundConferenceTypedNumber.value.length > 0) {
+    // Construct the payload
+    const payload = {
+      callSid: outboundCallSid.value,
+      phoneNumber: outboundConferenceTypedNumber.value,
+    };
+
+    // isConferenceCallInitiated.value = true;
+    // conferenceCallStatus.value = "initiated";
+
+    // Send the payload to your endpoint
+    axios
+      .post("/conference/convert/withNumber", payload)
+      .then((response) => {
+        // console.log("Call initiated", response);
+        // Extract and store conferenceName and thirdPartySid from response
+        // conferenceName.value = response.data.conferenceName;
+        // thirdPartySid.value = response.data.thirdPartySid;
+        console.log('Successfully converted! Response from server: ' , response);
+        // Reset or handle post-call UI here
+        // showDialPad.value = false;
+        // conferenceTypedNumber.value = "";
+      })
+      .catch((error) => {
+        console.error("Error initiating call", error);
+        // Handle error
+      });
+  } else {
+    alert("Please enter a number to call.");
+  }
+};
+
 
 /**  Outbound Call ends **/
 
@@ -376,15 +471,25 @@ onUnmounted(() => {
 
                   <div v-if="showOutboundDialPad" class="fixed z-20 inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center p-4">
                     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
-                      <button
-                        @click.prevent="hangupOutboundCall()"
-                        v-if="outboundCallStatus !== '' && outboundCallStatus !== null"
-                        class="bg-red-500 hover:bg-red-400 text-white rounded-full py-2 px-6 mx-auto"
-                      >
-                        Hang Up
-                      </button>
+                      <div class="p-4 gap-2 flex items-center justify-between">
+                        <button
+                          @click.prevent="hangupOutboundCall()"
+                          v-if="outboundCallStatus !== '' && outboundCallStatus !== null"
+                          class="bg-red-500 hover:bg-red-400 text-white rounded-full py-2 px-6 mx-auto"
+                        >
+                          Hang Up
+                        </button>
 
-                      <div class="bg-blue-200 text-2xl" v-text="outboundCallStatus"></div>
+                        <button
+                          @click.prevent="callConferenceNumber()"
+                          v-if="outboundCallStatus !== '' && outboundCallStatus !== null"
+                          class="bg-blue-700 hover:bg-red-400 text-white rounded-full py-2 px-6 mx-auto"
+                        >
+                          Add Call
+                        </button>
+                      </div>
+                
+                      <div class="text-2xl p-2 text-center" v-text="outboundCallStatus"></div>
 
                       <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-medium">Enter the number</h3>
