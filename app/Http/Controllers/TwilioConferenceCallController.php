@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Call;
 use Twilio\Rest\Client;
+use App\Models\OutboundCall;
 use Illuminate\Http\Request;
 use App\Models\ConferenceCall;
 use Twilio\TwiML\VoiceResponse;
@@ -116,10 +117,26 @@ class TwilioConferenceCallController extends Controller
         $callSid = $validated['callSid'];
         $phoneNumber = $validated['phoneNumber']; 
 
-        // Attempt to retrieve the call from the database using callSid
+        // // Attempt to retrieve the call from the database using callSid
+        // $call = Call::where('call_sid', $callSid)->first();
+
+        // if (!$call) {
+        //     return response()->json(['error' => 'Call not found'], 404);
+        // }
+        // ^^ temporary check, later should refactor to separate requests coming from outbound and inbound calls
+
+        // First attempt to retrieve the call from the Call model
         $call = Call::where('call_sid', $callSid)->first();
 
+        // If not found in Call model, attempt to find in OutboundCall model
         if (!$call) {
+            Log::info('Call not found in Call model, checking OutboundCall model', ['Call SID' => $callSid]);
+            $call = OutboundCall::where('call_sid', $callSid)->first();
+        }
+
+        // Handle the case where the call is still not found
+        if (!$call) {
+            Log::error('Call not found in any model', ['Call SID' => $callSid]);
             return response()->json(['error' => 'Call not found'], 404);
         }
 
