@@ -322,4 +322,4 @@ Route::post('/send/batch/sms/', [ZoomMeetingNotificationController::class, 'send
 
 Route::get('/onscript/delay', [OnScriptDelayedAPIController::class, 'delayDispatch']);
 
-Route::get('/check-dnc', [CheckDNCListController::class, 'checkDNC']);
+Route::get('/check-dnc', [CheckDNCListController::class, 'check']);

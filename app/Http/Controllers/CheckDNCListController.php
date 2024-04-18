@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class CheckDNCListController extends Controller
 {
-    public function store(Request $request)
+    public function check(Request $request)
     {
         // Retrieve the 'phone' query parameter from the URL
         $phoneNumber = $request->query('phone');
