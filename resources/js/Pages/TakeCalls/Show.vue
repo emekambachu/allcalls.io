@@ -286,8 +286,8 @@ const makeOutboundCall = async () => {
     outboundCall.on('connect', () => {
       outboundCallStatus.value = 'connected';
       console.log('Connection established with SID:', outboundCall.parameters.CallSid);
-      outboundCallSid.value = outboundCall.parameters.CallSid;
-      console.log('Saved SID is: ' , outboundCallSid.value);
+      // outboundCallSid.value = outboundCall.parameters.CallSid;
+      // console.log('Saved SID is: ' , outboundCallSid.value);
     });
 
     outboundCall.on('disconnect', () => {
