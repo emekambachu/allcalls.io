@@ -37,7 +37,6 @@ class UserSeeder extends Seeder
             ]);
         }
 
-
         $agent = User::updateOrCreate([ 'email' => 'agent@agent.com'],[
             'first_name' => 'system',
             'last_name' => 'agent',
@@ -59,8 +58,6 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
             ]);
         }
-
-        User::factory()->count(5)->create();
 
     }
 }
