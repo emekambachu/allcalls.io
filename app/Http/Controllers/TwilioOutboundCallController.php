@@ -44,10 +44,16 @@ class TwilioOutboundCallController extends Controller
         $to = $request->input('To');
         $response = new VoiceResponse();
         $callerId = env('TWILIO_PHONE_NUMBER');
+        $statusCallbackUrl = 'https://staging.allcalls.io/api/call/outbound/callback';
 
         if ($to) {
             // Use the Dial verb and set the callerId attribute
-            $dial = $response->dial('', ['callerId' => $callerId]);
+            $dial = $response->dial('', [
+                'callerId' => $callerId,
+                'statusCallbackMethod' => 'GET',
+                'statusCallbackEvent' => 'initiated ringing answered completed',
+                'statusCallback' => $statusCallbackUrl
+            ]);
             $dial->number($to);
         } else {
             $response->say("No number provided", ['voice' => 'alice']);
