@@ -172,15 +172,15 @@ let setupOutboundTwilioDevice = () => {
       console.log("Outbound Twilio.Device Error: " + error.message);
     });
 
-    outboundDevice.on('connect', () => {
-      outboundCallStatus.value = 'connected';
-      console.log('Connection established with SID:', call.parameters.CallSid);
-    });
+    // outboundDevice.on('connect', () => {
+    //   outboundCallStatus.value = 'connected';
+    //   console.log('Connection established with SID:', call.parameters.CallSid);
+    // });
 
-    outboundDevice.on('disconnect', () => {
-      outboundCallStatus.value = '';
-      console.log('Call disconnected for SID:', call.parameters.CallSid);
-    });
+    // outboundDevice.on('disconnect', () => {
+    //   outboundCallStatus.value = '';
+    //   console.log('Call disconnected for SID:', call.parameters.CallSid);
+    // });
 
     // outboundDevice.on("connect", function (conn) {
     //   console.log("Outbound Successfully established call ! ");
