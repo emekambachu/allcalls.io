@@ -28,6 +28,7 @@ use App\Http\Controllers\OnlineUsersController;
 use App\Http\Controllers\TextMessageController;
 use App\Http\Controllers\TwilioTokenController;
 use App\Http\Controllers\CallTypesAPIController;
+use App\Http\Controllers\CheckDNCListController;
 use App\Http\Controllers\DispositionsController;
 use App\Http\Controllers\IncomingCallController;
 use App\Http\Controllers\LaravelTokenController;
@@ -319,3 +320,5 @@ Route::post('/twilio-webhook-error', [TwilioWebhookErrorController::class, 'stor
 Route::post('/send/batch/sms/', [ZoomMeetingNotificationController::class, 'sendBatchTextMessages']);
 
 Route::get('/onscript/delay', [OnScriptDelayedAPIController::class, 'delayDispatch']);
+
+Route::get('/check-dnc', [CheckDNCListController::class, 'checkDNC']);
