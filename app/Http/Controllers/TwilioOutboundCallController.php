@@ -70,7 +70,7 @@ class TwilioOutboundCallController extends Controller
     //     return response($twimlString, 200)->header('Content-Type', 'text/xml');
     // }
 
-    public function makeCall(Request $request)
+    public function handleCall(Request $request)
     {
         Log::info('Incoming request to handleCall:', $request->all());
 
