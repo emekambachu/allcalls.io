@@ -155,7 +155,7 @@ let setupOutboundTwilioDevice = () => {
       // changes the behavior of the SDK to consider a call `ringing` starting
       // from the connection to the TwiML backend to when the recipient of
       // the `Dial` verb answers.
-      enableRingingState: true,
+      // enableRingingState: true,
       // debug: true,
     });
     // console.log("outboundDeviceee", outboundDevice);
@@ -353,6 +353,8 @@ function attachCallEventHandlers(call) {
 
   call.on('disconnect', () => {
     console.log('Call disconnected for SID:', call.parameters.CallSid);
+    console.log(`Call disconnected: Outbound call is: ` , outboundCall);
+    console.log(`Call disconnected: Outbound call's params are: ` , outboundCall.parameters);
     outboundCallStatus.value = '';
   });
 
@@ -360,6 +362,7 @@ function attachCallEventHandlers(call) {
     console.error('Error during the outboundCall with SID:', call.parameters.CallSid, error);
   });
 }
+
 
 const hangupOutboundCall = () => {
   if (currentOutboundCall.value) {

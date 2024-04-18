@@ -155,7 +155,7 @@ Route::get('/twiml', function (Request $request) {
 Route::middleware(['auth:sanctum', 'notBanned'])->get('/device/token', [TwilioTokenController::class, 'show']);
 
 
-Route::post('/call/incoming', [IncomingCallController::class, 'respond'])->middleware('twilio');
+// Route::post('/call/incoming', [IncomingCallController::class, 'respond'])->middleware('twilio');
 // Route::get('/call/incoming', function() {
 // $numberToDial = '+15736523170';
 
@@ -309,8 +309,8 @@ Route::post('/hangup-third-party', [TwilioConferenceCallController::class, 'hang
 Route::post('/hangup-self', [TwilioConferenceCallController::class, 'endCall'])->name('conference.hangupSelf');
 
 // Twilio outbound call routes
-Route::post('/call/outbound', [TwilioOutboundCallController::class, 'handleCall']);
-Route::post('/call/outbound/callback', [TwilioOutboundCallController::class, 'logTwilioRequest']);
+// Route::post('/call/outbound', [TwilioOutboundCallController::class, 'handleCall'])->name('outbound.makeCall');
+// Route::post('/call/outbound/callback', [TwilioOutboundCallController::class, 'logTwilioRequest']);
 
 Route::post('/twilio/sms/receive', [TwilioSMSController::class, 'receiveSMS']);
 Route::post('/commio/sms/send', [TextMessageController::class, 'sendMessage']);
