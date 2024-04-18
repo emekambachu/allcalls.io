@@ -53,7 +53,7 @@ class TwilioOutboundCallController extends Controller
             $dial = $response->dial('', [
                 'callerId' => $callerId,
                 'statusCallback' => $statusCallbackUrl,
-                'statusCallbackEvent' => 'initiated ringing answered completed',
+                "StatusCallbackEvent" => ["initiated", "ringing", "answered", "completed"],
                 'statusCallbackMethod' => 'POST',
             ]);
             $dial->number($to);
