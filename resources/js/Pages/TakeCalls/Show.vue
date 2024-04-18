@@ -363,6 +363,7 @@ function attachCallEventHandlers(call) {
   });
 }
 
+
 const hangupOutboundCall = () => {
   if (currentOutboundCall.value) {
     // outboundDevice.disconnect();

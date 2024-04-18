@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Twilio\Rest\Client;
 use Twilio\Jwt\AccessToken;
 use Illuminate\Http\Request;
 use Twilio\TwiML\VoiceResponse;
@@ -52,11 +53,12 @@ class TwilioOutboundCallController extends Controller
             // Use the Dial verb and set the callerId attribute
             $dial = $response->dial('', [
                 'callerId' => $callerId,
+            ]);
+            $dial->number($to, [
                 'statusCallback' => $statusCallbackUrl,
-                'statusCallbackEvent' => 'initiated ringing',
+                'statusCallbackEvent' => 'initiated ringing answered completed',
                 'statusCallbackMethod' => 'POST',
             ]);
-            $dial->number($to);
         } else {
             $response->say("No number provided", ['voice' => 'alice']);
         }
@@ -68,6 +70,57 @@ class TwilioOutboundCallController extends Controller
         // Return the TwiML response
         return response($twimlString, 200)->header('Content-Type', 'text/xml');
     }
+
+    // public function handleCall(Request $request)
+    // {
+    //     Log::info('Incoming request to handleCall:', $request->all());
+
+    //     $to = $request->input('To');
+    //     $accountSid = env('TWILIO_SID'); 
+    //     $authToken = env('TWILIO_AUTH_TOKEN');
+    //     $from = env('TWILIO_PHONE_NUMBER');
+    //     $statusCallbackUrl = route('outbound.logRequest');
+    //     // $twiml = "<Response><Dial>{$to}</Dial></Response>";
+        
+    //     // Create TwiML directly without needing a separate URL endpoint
+    //     $twiml = new VoiceResponse();
+    //     $twiml->dial($to, ['callerId' => $from]);
+
+    //     // Convert TwiML object to a string
+    //     $twimlString = (string) $twiml;
+    //     Log::info('Generated TwiML:', ['twiml' => $twimlString]);
+
+    //     if (!$to) {
+    //         Log::error('No phone number provided for the outbound call.');
+    //         return response()->json(['error' => 'No phone number provided'], 400);
+    //     }
+
+    //     // Initialize Twilio client
+    //     $client = new Client($accountSid, $authToken);
+
+    //     try {
+    //         // Create an outbound call with the Twilio client
+    //         $call = $client->calls->create(
+    //             'client:Anonymous', // To a client or a placeholder since 'To' is handled in TwiML
+    //             // $to, // The number to call
+    //             $from, // A valid Twilio number in your account
+    //             [
+    //                 'twiml' => $twimlString, // URL to TwiML instructions for the call
+    //                 'StatusCallback' => $statusCallbackUrl,
+    //                 'StatusCallbackEvent' => ['initiated', 'ringing', 'answered', 'completed'],
+    //             ]
+    //         );
+
+    //         Log::info('Outbound call created:', ['callSid' => $call->sid]);
+    //         return response()->json(['message' => 'Call initiated successfully', 'callSid' => $call->sid]);
+    //     } catch (\Exception $e) {
+    //         Log::error('Failed to make an outbound call:', ['error' => $e->getMessage()]);
+    //         return response()->json(['error' => 'Failed to make an outbound call', 'details' => $e->getMessage()], 500);
+    //     }
+
+    // }
+
+
 
     public function logTwilioRequest(Request $request)
     {
