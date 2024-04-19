@@ -42,6 +42,7 @@ use App\Http\Controllers\IOSVersionCheckController;
 use App\Http\Controllers\ListFlexResponseController;
 use App\Http\Controllers\NotificationsAPIController;
 use App\Http\Controllers\OverseerResponseController;
+use App\Http\Controllers\AgentStatusDNCAPIController;
 use App\Http\Controllers\CallDeviceActionsController;
 use App\Http\Controllers\AvailableAgentsAPIController;
 use App\Http\Controllers\OnScriptDelayedAPIController;
@@ -183,6 +184,10 @@ Route::get('/twilio-ios-access-token-guest', [TwilioIOSAccessTokenGuestControlle
 
 Route::match(['get', 'post'], '/agent-status-price', [AgentStatusAPIController::class, 'show']);
 Route::match(['get', 'post'], '/agent-status', [AgentStatusAPIController::class, 'showWithoutPrice']);
+
+Route::match(['get', 'post'], '/agent-status-price-dnc', [AgentStatusDNCAPIController::class, 'show']);
+Route::match(['get', 'post'], '/agent-status-dnc', [AgentStatusDNCAPIController::class, 'showWithoutPrice']);
+
 Route::match(['get', 'post'], '/call-center/disposition', [CallCenterDispositionAPIController::class, 'update']);
 Route::match(['get', 'post'], '/listflex/api-mme-bpo', [ListFlexResponseController::class, 'store']);
 Route::match(['get', 'post'], '/ringy', [RingyResponseController::class, 'store']);
