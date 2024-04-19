@@ -360,6 +360,10 @@ class TwilioConferenceCallController extends Controller
         $coaching = $request->boolean('Coaching') ? 1 : 0;
 
         Log::info("Conference SID: {$conferenceSid}, Status: {$status}, Call SID: {$callSid}");
+    
+        // Initialize Twilio client
+        $client = new Client(env('TWILIO_SID'), env('TWILIO_AUTH_TOKEN'));
+
 
         // Perform any other actions based on the status callback event
         switch ($status) {
@@ -400,6 +404,17 @@ class TwilioConferenceCallController extends Controller
 
             case 'participant-leave':
                 // A participant has left the conference
+                $participants = $client->conferences($conferenceSid)
+                    ->participants
+                    ->read([], 20); // Fetch up to 20 participants
+
+                // Check if only one participant remains
+                if (count($participants) === 1) {
+                    // If only one participant is left, end the conference immediately
+                    $client->conferences($conferenceSid)
+                        ->update(['status' => 'completed']);
+                    Log::info('Conference ended because only one participant remained.', ['ConferenceSid' => $conferenceSid]);
+                }
                 break;
             case 'conference-end':
                 // The conference has ended
