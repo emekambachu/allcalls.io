@@ -84,6 +84,12 @@ class TwilioOutboundCallController extends Controller
         $from = $request->input('From');
         $to = $request->input('To');
         $status = $request->input('CallStatus');
+        $userId = $request->input('UserId');
+        
+        if (!$userId) {
+            Log::warning("User not found when received outbound callback", ['UserID' => $userId]);
+            // return response()->json(['error' => 'User not found'], 404);
+        }
     
         // Log specific parts of the request
         Log::info('Twilio outbound Call SID:', ['Call SID' => $callSid]);
@@ -99,9 +105,10 @@ class TwilioOutboundCallController extends Controller
             'to'                => $request->input('Called'),
             'status'            => $request->input('CallStatus'),
             'duration'          => $request->input('Duration'),
-            'recording_url'     => $request->input('RecordingUrl', ''), // Assuming there might be a recording URL
-            'twilio_call_token' => $request->input('CallToken', ''), // Assuming there is a token
-            'cost'              => $request->input('Cost', 0) // Assuming there is a cost field
+            'recording_url'     => $request->input('RecordingUrl', ''), 
+            'twilio_call_token' => $request->input('CallToken', ''), 
+            'cost'              => $request->input('Cost', 0),
+            'user_id'           => $userId
         ];
 
         // Log specific parts of the request
@@ -146,15 +153,7 @@ class TwilioOutboundCallController extends Controller
      * @param array $data
      */
     private function handleInitiatedCall(array $data)
-    {
-        if (!Auth::check()) {
-            Log::error('No authenticated user for initiating call', ['Call SID' => $data['call_sid']]);
-            return; // or handle this case as needed
-        }
-    
-        // Add the current authenticated user's ID to the data array
-        $data['user_id'] = Auth::id();
-        
+    {   
         try {
             OutboundCall::create($data);
             Log::info('Initiated call saved', ['Call SID' => $data['call_sid']]);

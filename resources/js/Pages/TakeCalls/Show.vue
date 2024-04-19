@@ -310,6 +310,8 @@ const makeOutboundCall = async () => {
   try {
     console.log('Attempting to connect for an outbound call...');
 
+    const userId = page.props.auth.user.id;  // Accessing the user ID
+
     if (!outboundTypedNumber.value) {
       console.error('No phone number provided for the outbound call.');
       alert('No phone number provided');
@@ -319,7 +321,8 @@ const makeOutboundCall = async () => {
     console.log('Dialing outbound number:', outboundTypedNumber.value);
     outboundCall = await outboundDevice.connect({
       params: {
-        To: outboundTypedNumber.value
+        To: outboundTypedNumber.value,
+        UserId: userId  // Passing the user ID to Twilio
       }
     });
 
