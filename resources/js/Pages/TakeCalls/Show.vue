@@ -419,7 +419,7 @@ onUnmounted(() => {
 
                   <!-- Outbound Call Starts -->
                   <div class="mt-12 sm:rounded-lg">
-                    <div class="text-4xl text-custom-sky font-bold mb-6">Dial Outgoing Call</div>
+                    <div class="text-4xl text-custom-sky font-bold mb-6">Dial Outbound Call</div>
                     <hr class="mb-4" />
                   </div>
 
