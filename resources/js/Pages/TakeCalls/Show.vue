@@ -308,9 +308,9 @@ const deleteOutboundNumber = () => {
 
 const makeOutboundCall = async () => {
   try {
-    console.log('Attempting to connect for an outbound call...');
-
     const userId = page.props.auth.user.id;  // Accessing the user ID
+    
+    console.log('User id: ' ,userId,  ' Attempting to connect for an outbound call...');
 
     if (!outboundTypedNumber.value) {
       console.error('No phone number provided for the outbound call.');
