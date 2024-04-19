@@ -42,6 +42,39 @@ class TwilioOutboundCallController extends Controller
         ]);
     }
 
+    /**
+     * Retrieve an outbound call's SID using the parent call's SID.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+    */
+    public function getCallSid(Request $request)
+    {
+        // Validate the incoming request
+        $request->validate([
+            'parentCallSid' => 'required|string',
+        ]);
+
+        // Retrieve the parentCallSid from the request
+        $parentCallSid = $request->query('parentCallSid');
+
+        // Find the outbound call using the parent call SID
+        $outboundCall = OutboundCall::where('parent_call_sid', $parentCallSid)->first();
+
+        if (!$outboundCall) {
+            Log::warning('Outbound call not found', ['Parent Call SID' => $parentCallSid]);
+            return response()->json(['error' => 'Outbound call not found'], 404);
+        }
+
+        Log::info('Outbound call found', ['Call SID' => $outboundCall->call_sid]);
+
+        // Return the call_sid of the found outbound call
+        return response()->json([
+            'message' => 'Outbound call SID retrieved successfully',
+            'callSid' => $outboundCall->call_sid
+        ]);
+    }
+
     public function handleCall(Request $request)
     {
         Log::info('Incoming request to handleCall:', $request->all());

@@ -131,6 +131,7 @@ Route::middleware(['auth', 'verified', 'registration-step-check', 'notBanned', '
 
     Route::get('/twilio-device-token', [TwilioDeviceTokenController::class, 'show']);
     Route::get('/twilio-outbound-device-token', [TwilioOutboundCallController::class, 'getToken']);
+    Route::get('/twilio-outbound-call-sid', [TwilioOutboundCallController::class, 'getCallSid']);
     Route::get('/call-client-info', [CallClientInfoController::class, 'show']);
 });
 

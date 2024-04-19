@@ -379,9 +379,16 @@ const hangupOutboundCall = () => {
 
 let callConferenceNumber = () => {
   if (outboundConferenceTypedNumber.value && outboundConferenceTypedNumber.value.length > 0) {
+
+    // First fetch the callSid using the outboundCallSid
+    axios.get('/twilio-outbound-call-sid', { params: { parentCallSid: outboundCallSid.value } })
+      .then(response => {
+        // On success, use the retrieved callSid for the next request
+        const callSid = response.data.callSid;
+
     // Construct the payload
     const payload = {
-      callSid: outboundCallSid.value,
+      callSid: callSid,
       phoneNumber: outboundConferenceTypedNumber.value,
     };
 

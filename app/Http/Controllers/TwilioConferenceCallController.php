@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Call;
 use Twilio\Rest\Client;
-use App\Models\OutboundCall;
 use Illuminate\Http\Request;
 use App\Models\ConferenceCall;
 use Twilio\TwiML\VoiceResponse;
@@ -13,6 +12,7 @@ use App\Models\ConferenceParticipant;
 use Illuminate\Support\Facades\Cache;
 use App\Events\ConferenceCallThirdPartyJoined;
 use App\Events\ConferenceCallThirdPartyRinging;
+use App\Models\OutboundCall;
 
 class TwilioConferenceCallController extends Controller
 {
@@ -115,7 +115,6 @@ class TwilioConferenceCallController extends Controller
     
         // Extract callSid from the request
         $callSid = $validated['callSid'];
-        $otherCallSid = $request->input('otherCallSid');
         $phoneNumber = $validated['phoneNumber']; 
 
         // // Attempt to retrieve the call from the database using callSid
@@ -124,54 +123,25 @@ class TwilioConferenceCallController extends Controller
         // if (!$call) {
         //     return response()->json(['error' => 'Call not found'], 404);
         // }
+        // ^^ temporary check, later should refactor to separate requests coming from outbound and inbound calls
+
         // First attempt to retrieve the call from the Call model
-        // $call = Call::where('call_sid', $callSid)->first();
-
-        // // If not found in Call model, attempt to find in OutboundCall model
-        // if (!$call) {
-        //     Log::info('Call not found in Call model, checking OutboundCall model', ['Call SID' => $callSid]);
-        //     $call = OutboundCall::where('call_sid', $callSid)->first();
-        // }
-
-        // // Handle the case where the call is still not found
-        // if (!$call) {
-        //     Log::error('Call not found in any model', ['Call SID' => $callSid]);
-        //     return response()->json(['error' => 'Call not found'], 404);
-        // }
-
-        // // Use the parent_call_sid as otherCallSid if otherCallSid is not provided
-        // $otherCallSid = $validated['otherCallSid'] ?? $call->parent_call_sid;
-
-        /**  ^^ temporary check, later should refactor to separate requests coming from outbound and inbound calls **/
-
-        // First, try to find the call in the Call model
         $call = Call::where('call_sid', $callSid)->first();
-        $source = 'Call';
 
+        // If not found in Call model, attempt to find in OutboundCall model
         if (!$call) {
             Log::info('Call not found in Call model, checking OutboundCall model', ['Call SID' => $callSid]);
-            // If not found, try to find it in the OutboundCall model
-            $call = OutboundCall::where('parent_call_sid', $callSid)->first();
-            $source = 'OutboundCall';
+            $call = OutboundCall::where('call_sid', $callSid)->first();
         }
 
+        // Handle the case where the call is still not found
         if (!$call) {
             Log::error('Call not found in any model', ['Call SID' => $callSid]);
             return response()->json(['error' => 'Call not found'], 404);
         }
 
-        // Adjust how otherCallSid is set based on the type of call
-        if ($source === 'OutboundCall') {
-            // If it's an OutboundCall and otherCallSid not provided, use the call_sid of the OutboundCall
-            if (is_null($otherCallSid)) {
-                $otherCallSid = $call->call_sid; // Here call_sid itself can be otherCallSid if not provided
-            }
-        } else {
-            // For regular Calls, use the parent_call_sid as otherCallSid if otherCallSid is not provided
-            if (is_null($otherCallSid)) {
-                $otherCallSid = $call->parent_call_sid;
-            }
-        }
+        // Use the parent_call_sid as otherCallSid if otherCallSid is not provided
+        $otherCallSid = $validated['otherCallSid'] ?? $call->parent_call_sid;
 
         if (is_null($otherCallSid)) {
             return response()->json(['error' => 'Other call SID is required but not provided or available'], 400);
