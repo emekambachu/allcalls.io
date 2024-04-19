@@ -11,6 +11,7 @@ use App\Models\CallType;
 use App\Models\OnlineUser;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
@@ -178,6 +179,17 @@ class AgentStatusAPIController extends Controller
 
         Log::debug('api-logs:agent-status-price: ping-is-duplicate', ['is_duplicate' => $pingIsDuplicate]);
 
+        // Check if the affiliate id is in a particular array of affiliate ids,
+        // if so check for DNC list:
+        if (in_array($request->input('affiliate_id'), [13, 37, 40, 41])) {
+            // Check if the phone number exists in the dnc_table_gamma using the mysql2 connection
+            $existsInDNC = $this->existsInDNC($normalizedPhone);
+
+            if ($existsInDNC) {
+                return response()->json(['message' => 'Phone number is in the DNC list.'], 400);
+            }
+        }
+
         $response = ($agentAvailable && !$pingIsDuplicate)
             ? response()->json(['online' => true, 'price' => $price], 200)
             : response()->json(['online' => false, 'price' => 0], 200);
@@ -282,6 +294,17 @@ class AgentStatusAPIController extends Controller
             ->exists();
 
         Log::debug('api-logs:agent-status-price: ping-is-duplicate', ['is_duplicate' => $pingIsDuplicate]);
+
+        // Check if the affiliate id is in a particular array of affiliate ids,
+        // if so check for DNC list:
+        if (in_array($request->input('affiliate_id'), [13, 37, 40, 41])) {
+            // Check if the phone number exists in the dnc_table_gamma using the mysql2 connection
+            $existsInDNC = $this->existsInDNC($normalizedPhone);
+
+            if ($existsInDNC) {
+                return response()->json(['message' => 'Phone number is in the DNC list.'], 400);
+            }
+        }
 
         $response = ($agentAvailable && !$pingIsDuplicate)
             ? response()->json(['online' => true], 200)
@@ -424,5 +447,13 @@ class AgentStatusAPIController extends Controller
         }
 
         return $cleanNumber;
+    }
+
+    protected function existsInDNC($phoneNumber)
+    {
+        $connection = DB::connection('mysql2');
+
+        // Check if the phone number exists in the dnc_table_gamma using the mysql2 connection
+        return $connection->table('dnc_table_gamma')->where('PhoneID', $phoneNumber)->exists();
     }
 }
