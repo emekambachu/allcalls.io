@@ -46,6 +46,7 @@ use App\Http\Controllers\FEAgentStatusDocsController;
 use App\Http\Controllers\NotificationGroupController;
 use App\Http\Controllers\TwilioDeviceTokenController;
 use App\Http\Controllers\TwilioDialerTokenController;
+use App\Http\Controllers\TwilioOutboundCallController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CallUserResponseAPIController;
 use App\Http\Controllers\DeviceIdByUserAgentController;
@@ -129,6 +130,8 @@ Route::middleware(['auth', 'verified', 'registration-step-check', 'notBanned', '
     Route::delete('/additional-files/{additionalFile}', [AdditionalFilesController::class, 'destroy'])->name('additional-files.destroy');
 
     Route::get('/twilio-device-token', [TwilioDeviceTokenController::class, 'show']);
+    Route::get('/twilio-outbound-device-token', [TwilioOutboundCallController::class, 'getToken']);
+    Route::get('/twilio-outbound-call-sid', [TwilioOutboundCallController::class, 'getCallSid']);
     Route::get('/call-client-info', [CallClientInfoController::class, 'show']);
 });
 

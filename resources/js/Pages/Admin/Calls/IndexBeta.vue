@@ -959,6 +959,8 @@ const applyCallFiltersToSummary = () => {
     console.log("Loaded calls before filter", getAllCalls.value);
     console.log("Grouped Publisher Names before filter", callsGroupedByPublisherName.value);
     console.log("Maximised calls grouped by user before apply", maxmizedCallsGroupedByUser.value);
+    console.log("Calls grouped by user before apply", callsGroupedByUserResults.value);
+
 
     // Populate grouped calls when filter button is clicked
     // maxmizedCallsGroupedByUser.value = Object.fromEntries(callsGroupedByUserArray);
@@ -991,6 +993,7 @@ const applyCallFiltersToSummary = () => {
     console.log("Loaded calls after filter", loadedCalls.value);
     console.log("Grouped Publisher Names after filter", callsGroupedByPublisherName.value);
     console.log("Maximised calls grouped by user after apply", maxmizedCallsGroupedByUser.value);
+    console.log("Grouped calls after apply", groupedCalls.value);
 }
 
 const removeFiltersForSummary = () => {
@@ -1060,7 +1063,19 @@ let applyDateFilter = async (close) => {
 }
 
 
-let applyDatePreset = (label) => {
+let applyDatePreset = (event, label) => {
+
+    // Remove border from all date presets
+    let divs = document.getElementsByClassName('cursor-pointer');
+    let classes = ['border-solid', 'border-2', 'border-sky-500'];
+
+    for (let div of divs) {
+        classes.forEach(cls => div.classList.remove(cls));
+    }
+
+    let id = event.target.id;
+    classes.forEach(cls => document.getElementById(id).classList.add(cls));
+
   const today = new Date();
   let from, to;
   switch(label) {
@@ -1271,20 +1286,20 @@ onMounted(async () => {
                           </div>
                       </div>
 
-                      <div @click.prevent="applyDatePreset('Today')"
-                           class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+                      <div @click.prevent="applyDatePreset($event, 'Today')"
+                           class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer" id="today-date-preset">
                           Today
                       </div>
-                      <div @click.prevent="applyDatePreset('Yesterday')"
-                           class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+                      <div @click.prevent="applyDatePreset($event, 'Yesterday')"
+                           class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer" id="yesterday-date-preset">
                           Yesterday
                       </div>
-                      <div @click.prevent="applyDatePreset('Past 7 Days')"
-                           class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+                      <div @click.prevent="applyDatePreset($event, 'Past 7 Days')"
+                           class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer" id="past7days-date-preset">
                           Past 7 Days
                       </div>
-                      <div @click.prevent="applyDatePreset('Past 30 Days')"
-                           class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer">
+                      <div @click.prevent="applyDatePreset($event, 'Past 30 Days')"
+                           class="text-sm hover:bg-gray-50 bg-gray-100 p-3 flex items-center w-full my-3 rounded shadow border border-gray-200 cursor-pointer" id="past30days-date-preset">
                           Past 30 Days
                       </div>
 
@@ -1579,7 +1594,7 @@ onMounted(async () => {
                     'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',
                   ]"
               >
-                  <div class="overflow-hidden bg-white sm:rounded-lg" :class="{'height-600': loadedCalls.length <= 14}">
+                  <div class="overflow-hidden bg-white sm:rounded-lg" :class="{'height-600': groupedCalls.length <= 14}">
                       <!--Grouped Agent calls-->
                       <div class="flex justify-end">
                           <Popover class="relative mr-2">
@@ -1687,7 +1702,7 @@ onMounted(async () => {
                               </tbody>
 
                               <!--Data Available-->
-                              <tbody v-else-if="loadedCalls.length > 0">
+                              <tbody v-else-if="groupedCalls.length > 0">
                                   <tr
                                       v-for="(userData, userId) in groupedCalls"
                                       :key="userId"
@@ -1755,7 +1770,7 @@ onMounted(async () => {
                               </tbody>
                           </table>
 
-                          <div v-if="loadedCalls.length > 0" class="flex justify-center mt-4">
+                          <div v-if="groupedCalls.length > 0" class="flex justify-center mt-4">
                               <button
                                   @click.prevent="showMoreForGrouped = !showMoreForGrouped"
                                   class="bg-gray-200 hover:bg-gray-100 text-gray-800 cursor-pointer px-4 py-2 text-sm rounded-md flex items-center"

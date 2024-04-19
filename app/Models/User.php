@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Filament\Panel;
 use Illuminate\Support\Str;
+use App\Models\OutboundCall;
 use Laravel\Cashier\Billable;
 use Laravel\Sanctum\HasApiTokens;
 use Filament\Models\Contracts\HasName;
@@ -236,6 +237,11 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
         return $this->hasMany(Call::class);
     }
 
+    public function policies(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(InternalAgentMyBusiness::class, 'agent_id', 'id');
+    }
+
 
     public function unsubscribeToken()
     {
@@ -250,5 +256,10 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
 
         $token = Str::random(40); // Or any other secure token generation method
         $this->unsubscribeToken()->create(['token' => $token]);
+    }
+
+    public function outboundCalls()
+    {
+        return $this->hasMany(OutboundCall::class);
     }
 }

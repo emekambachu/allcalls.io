@@ -1,11 +1,13 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FronterController;
 use App\Http\Controllers\ActiveUsersController;
 use App\Http\Controllers\Admin\CallsController;
-use App\Http\Controllers\Admin\PingLogController;
 use App\Http\Controllers\WebCallsAPIController;
 use App\Http\Controllers\AgentInvitesController;
 use App\Http\Controllers\Admin\ClientsController;
+use App\Http\Controllers\Admin\PingLogController;
 use App\Http\Controllers\AdminCallLogsController;
 use App\Http\Controllers\AdminPoliciesController;
 use App\Http\Controllers\PublisherInfoController;
@@ -23,7 +25,6 @@ use App\Http\Controllers\Admin\AvailableNumberController;
 use App\Http\Controllers\AdminAvaialbleNumbersController;
 use App\Http\Controllers\Admin\LegalQuestionPdfController;
 use App\Http\Controllers\AvailableNumberReleaseController;
-use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -161,4 +162,6 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::post('/calls/disposition', [CallsController::class, 'disposition'])->name('admin.calls.disposition');
 
     Route::get('/ping/logs', [PingLogController::class, 'index'])->name('admin.ping.logs.index');
+
+    Route::get('/web-api/fronter', [FronterController::class, 'store'])->name('admin.fronter.store');
 });

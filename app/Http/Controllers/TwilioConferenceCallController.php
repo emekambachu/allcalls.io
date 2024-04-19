@@ -12,6 +12,7 @@ use App\Models\ConferenceParticipant;
 use Illuminate\Support\Facades\Cache;
 use App\Events\ConferenceCallThirdPartyJoined;
 use App\Events\ConferenceCallThirdPartyRinging;
+use App\Models\OutboundCall;
 
 class TwilioConferenceCallController extends Controller
 {
@@ -116,10 +117,26 @@ class TwilioConferenceCallController extends Controller
         $callSid = $validated['callSid'];
         $phoneNumber = $validated['phoneNumber']; 
 
-        // Attempt to retrieve the call from the database using callSid
+        // // Attempt to retrieve the call from the database using callSid
+        // $call = Call::where('call_sid', $callSid)->first();
+
+        // if (!$call) {
+        //     return response()->json(['error' => 'Call not found'], 404);
+        // }
+        // ^^ temporary check, later should refactor to separate requests coming from outbound and inbound calls
+
+        // First attempt to retrieve the call from the Call model
         $call = Call::where('call_sid', $callSid)->first();
 
+        // If not found in Call model, attempt to find in OutboundCall model
         if (!$call) {
+            Log::info('Call not found in Call model, checking OutboundCall model', ['Call SID' => $callSid]);
+            $call = OutboundCall::where('call_sid', $callSid)->first();
+        }
+
+        // Handle the case where the call is still not found
+        if (!$call) {
+            Log::error('Call not found in any model', ['Call SID' => $callSid]);
             return response()->json(['error' => 'Call not found'], 404);
         }
 
@@ -343,6 +360,10 @@ class TwilioConferenceCallController extends Controller
         $coaching = $request->boolean('Coaching') ? 1 : 0;
 
         Log::info("Conference SID: {$conferenceSid}, Status: {$status}, Call SID: {$callSid}");
+    
+        // Initialize Twilio client
+        $client = new Client(env('TWILIO_SID'), env('TWILIO_AUTH_TOKEN'));
+
 
         // Perform any other actions based on the status callback event
         switch ($status) {
@@ -383,6 +404,17 @@ class TwilioConferenceCallController extends Controller
 
             case 'participant-leave':
                 // A participant has left the conference
+                $participants = $client->conferences($conferenceSid)
+                    ->participants
+                    ->read([], 20); // Fetch up to 20 participants
+
+                // Check if only one participant remains
+                if (count($participants) === 1) {
+                    // If only one participant is left, end the conference immediately
+                    $client->conferences($conferenceSid)
+                        ->update(['status' => 'completed']);
+                    Log::info('Conference ended because only one participant remained.', ['ConferenceSid' => $conferenceSid]);
+                }
                 break;
             case 'conference-end':
                 // The conference has ended

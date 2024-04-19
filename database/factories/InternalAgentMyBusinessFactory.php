@@ -21,16 +21,14 @@ class InternalAgentMyBusinessFactory extends Factory
         $user = new User();
         // user with calls and clients relationship
         $agent = $user->with('clients', 'calls')
-            ->has('clients')
-            ->has('calls')
             ->inRandomOrder()->first();
         $client = $agent && $agent->clients ? $agent->clients->first() : null;
         $clientStateId = State::inRandomOrder()->first()->id;
 
         return [
-            'agent_id' => $agent->id,
-            'agent_full_name' => $agent->first_name . ' ' . $agent->last_name,
-            'agent_email' => $agent->email,
+            'agent_id' => $agent?->id,
+            'agent_full_name' => $agent?->first_name . ' ' . $agent?->last_name,
+            'agent_email' => $agent?->email,
             'insurance_company' => $this->faker->company,
             'status' => $this->faker->randomElement([
                 'Submitted',
@@ -43,10 +41,23 @@ class InternalAgentMyBusinessFactory extends Factory
                 'Carrier Missing Information',
             ]),
             'label' => $this->faker->word,
-            'product_name' => $this->faker->randomElement(['Whole Life', 'Term Life', 'Final Expense', 'Medicare Supplement', 'Annuity']),
+            'product_name' => $this->faker->randomElement([
+                'Whole Life',
+                'Term Life',
+                'Final Expense',
+                'Medicare Supplement',
+                'Annuity'
+            ]),
             'application_date' => $this->faker->date(),
             'coverage_amount' => $this->faker->numberBetween(10000, 100000),
-            'coverage_length' => $this->faker->randomElement(['5 Years', '10 Years', '15 Years', '20 Years', '25 Years', '30 Years']),
+            'coverage_length' => $this->faker->randomElement([
+                '5 Years',
+                '10 Years',
+                '15 Years',
+                '20 Years',
+                '25 Years',
+                '30 Years'
+            ]),
             'premium_frequency' => $this->faker->randomElement(['Monthly', 'Quarterly', 'Semi-Annually', 'Annually']),
             'premium_amount' => $this->faker->numberBetween(100, 1000),
             'premium_volumn' => $this->faker->numberBetween(1, 12),
@@ -66,7 +77,7 @@ class InternalAgentMyBusinessFactory extends Factory
             'client_state' => $clientStateId,
             'client_zipcode' => $this->faker->postcode,
             'client_phone_no' => $this->faker->phoneNumber,
-            'client_email' => $client->email ?? null,
+            'client_email' => $client->email ?? $this->faker->email,
             'created_at' => $this->faker->dateTimeBetween('-60 days', 'now')->format('Y-m-d H:i:s'),
             'updated_at' => $this->faker->dateTimeBetween('-60 days', 'now')->format('Y-m-d H:i:s'),
             'beneficiary_name' => $this->faker->name,
