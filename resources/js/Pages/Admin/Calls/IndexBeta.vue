@@ -448,7 +448,7 @@ let renderColumn = (column, call) => {
 
 let callsPaginator = ref(null);
 let loadedCalls = ref([]);
-let sortColumn = ref(null);
+let sortColumn = ref('call_taken');
 let sortAgentsColumn = ref(null);
 let sortPublishersColumn = ref(null);
 let sortDirection = ref("desc");
