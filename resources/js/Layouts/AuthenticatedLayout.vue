@@ -3663,7 +3663,7 @@ let appDownloadModal = ref(false);
     </Modal>
 
     <Modal
-      :show="showUpdateDispositionForLastClient && dispositionClient"
+      :show="showUpdateDispositionForLastClient && dispositionClient && !showRinging && !showOngoing"
       :closeable="false"
     >
       <DispositionModal

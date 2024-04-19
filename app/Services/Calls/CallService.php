@@ -303,24 +303,24 @@ class CallService
             // Apply date filter to policies and calls
             $mergedUsersWithPolicies->where(function ($query) use ($startDate, $endDate) {
                 $query->whereHas('calls', function ($query) use ($startDate, $endDate) {
-                    $query->whereDate('created_at', '>=', $startDate)
-                        ->whereDate('created_at', '<=', $endDate);
+                    $query->where('created_at', '>=', $startDate)
+                        ->where('created_at', '<=', $endDate);
                 })->orWhereHas('policies', function ($query) use ($startDate, $endDate) {
-                    $query->whereDate('created_at', '>=', $startDate)
-                        ->whereDate('created_at', '<=', $endDate);
+                    $query->where('created_at', '>=', $startDate)
+                        ->where('created_at', '<=', $endDate);
                 });
             });
 
             if (in_array($request->input('sort_column'), $this->columnsWithJoins, true)) {
                 Log::debug('CallService:DatesAppliedToJoinQuery:');
 
-                $query->whereDate('calls.created_at', '>=', $startDate)
-                    ->whereDate('calls.created_at', '<=', $endDate);
+                $query->where('calls.created_at', '>=', $startDate)
+                    ->where('calls.created_at', '<=', $endDate);
             } else {
                 Log::debug('CallService:DatesApplied:');
 
-                $query->whereDate('created_at', '>=', $startDate)
-                    ->whereDate('created_at', '<=', $endDate);
+                $query->where('created_at', '>=', $startDate)
+                    ->where('created_at', '<=', $endDate);
             }
         }
 
