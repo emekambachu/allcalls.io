@@ -52,7 +52,7 @@ class TwilioOutboundCallController extends Controller
         $callerId = env('TWILIO_PHONE_NUMBER');
         $statusCallbackUrl = 'https://staging.allcalls.io/api/call/outbound/callback?UserId=' . $userId;
 
-        Log::info('Outbound handleCall: User id is:', $userId, $statusCallbackUrl);
+        Log::info('Outbound handleCall: User id is:', $userId . $statusCallbackUrl);
 
         if ($to) {
             // Use the Dial verb and set the callerId attribute
