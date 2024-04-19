@@ -86,6 +86,9 @@ class AgentStatusAPIController extends Controller
 
     ];
 
+
+    private $checkDNCAffiliateIds = [13, 37, 40, 41];
+
     /**
      * Check if an agent is available for a given phone number's area code and vertical.
      *
@@ -181,7 +184,7 @@ class AgentStatusAPIController extends Controller
 
         // Check if the affiliate id is in a particular array of affiliate ids,
         // if so check for DNC list:
-        if (in_array($request->input('affiliate_id'), [13, 37, 40, 41])) {
+        if (in_array($request->input('affiliate_id'), $this->checkDNCAffiliateIds)) {
             // Check if the phone number exists in the dnc_table_gamma using the mysql2 connection
             $existsInDNC = $this->existsInDNC($normalizedPhone);
 
@@ -297,7 +300,7 @@ class AgentStatusAPIController extends Controller
 
         // Check if the affiliate id is in a particular array of affiliate ids,
         // if so check for DNC list:
-        if (in_array($request->input('affiliate_id'), [13, 37, 40, 41])) {
+        if (in_array($request->input('affiliate_id'), $this->checkDNCAffiliateIds)) {
             // Check if the phone number exists in the dnc_table_gamma using the mysql2 connection
             $existsInDNC = $this->existsInDNC($normalizedPhone);
 
@@ -436,7 +439,7 @@ class AgentStatusAPIController extends Controller
         return $secondHighestBid + 1;
     }
 
-    protected function normalizePhoneNumber($inputNumber)
+    private function normalizePhoneNumber($inputNumber)
     {
         // Remove any non-numeric characters
         $cleanNumber = preg_replace('/\D/', '', $inputNumber);
@@ -449,7 +452,7 @@ class AgentStatusAPIController extends Controller
         return $cleanNumber;
     }
 
-    protected function existsInDNC($phoneNumber)
+    private function existsInDNC($phoneNumber)
     {
         $connection = DB::connection('mysql2');
 
