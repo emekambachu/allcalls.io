@@ -133,7 +133,7 @@ let currentOutboundCall = ref(null);
 let outboundCallStatus = ref(null);
 let outboundCall = ref(null);
 let outboundCallSid = ref(null);
-let outboundConferenceTypedNumber = ref('+16787232049');
+let outboundConferenceTypedNumber = ref(null);
 
 // Twilio device setup for outbound
 let setupOutboundTwilioDevice = () => {
@@ -261,51 +261,6 @@ const deleteOutboundNumber = () => {
   outboundTypedNumber.value = outboundTypedNumber.value.slice(0, -1);
 };
 
-// const makeOutboundCall = async () => {
-//   try {
-//     console.log('Attempting to connect for an outbound call...');
-//     // Ensure phoneNumber is defined and correctly passed
-//     if (!outboundTypedNumber.value) {
-//       console.error('No phone number provided for the outbound call.');
-//       alert('No phone number provided');
-//       return; // Stop the function if no number is provided
-//     }
-//     outboundCall = await outboundDevice.connect({
-//       params: {
-//         To: outboundTypedNumber.value
-//       }
-//     });
-//     currentOutboundCall.value = outboundCall;
-//     console.log('Dialing outbound number:', outboundTypedNumber.value);
-
-//     outboundCall.on('ringing', ()=> {
-//       outboundCallStatus.value = 'ringing';
-//       console.log('Outbound Ringing...'); 
-//     });
-
-//     outboundCall.on('connect', () => {
-//       outboundCallStatus.value = 'connected';
-//       console.log('Connection established with SID:', outboundCall.parameters.CallSid);
-//       // outboundCallSid.value = outboundCall.parameters.CallSid;
-//       // console.log('Saved SID is: ' , outboundCallSid.value);
-//     });
-
-//     outboundCall.on('disconnect', () => {
-//       outboundCallStatus.value = '';
-//       console.log('Call disconnected for SID:', outboundCall.parameters.CallSid);
-//     });
-
-//     outboundCall.on('error', (error) => {
-//       console.error('Error during the outboundCall with SID:', outboundCall.parameters.CallSid, error.message);
-//     });
-
-//   } catch (e) {
-//     // console.error('Failed to make an outbound call:', error);
-//     console.error("Error connecting: ", e.response ? e.response.data : e);
-//     throw e;
-//   }
-// }
-
 const makeOutboundCall = async () => {
   try {
     const userId = page.props.auth.user.id;  // Accessing the user ID
@@ -328,7 +283,7 @@ const makeOutboundCall = async () => {
 
     // Ensure the outbound call object is captured and current before attaching events
     currentOutboundCall.value = outboundCall;
-
+    outboundTypedNumber.value = '';
     // Attach event handlers
     attachCallEventHandlers(outboundCall);
 
@@ -378,6 +333,7 @@ const hangupOutboundCall = () => {
 }
 
 let callConferenceNumber = () => {
+  outboundConferenceTypedNumber.value = outboundTypedNumber.value;
   if (outboundConferenceTypedNumber.value && outboundConferenceTypedNumber.value.length > 0) {
     // First fetch the callSid using the outboundCallSid
     axios.get('/twilio-outbound-call-sid', { params: { parentCallSid: outboundCallSid.value } })
@@ -476,25 +432,7 @@ onUnmounted(() => {
 
                   <div v-if="showOutboundDialPad" class="fixed z-20 inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center p-4">
                     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
-                      <div class="p-4 gap-2 flex items-center justify-between">
-                        <button
-                          @click.prevent="hangupOutboundCall()"
-                          v-if="outboundCallStatus !== '' && outboundCallStatus !== null"
-                          class="bg-red-500 hover:bg-red-400 text-white rounded-full py-2 px-6 mx-auto"
-                        >
-                          Hang Up
-                        </button>
-
-                        <button
-                          @click.prevent="callConferenceNumber()"
-                          v-if="outboundCallStatus !== '' && outboundCallStatus !== null"
-                          class="bg-blue-700 hover:bg-red-400 text-white rounded-full py-2 px-6 mx-auto"
-                        >
-                          Add Call
-                        </button>
-                      </div>
-                
-                      <div class="text-2xl p-2 text-center" v-text="outboundCallStatus"></div>
+                      <div class="text-2xl p-1 text-center" v-text="outboundCallStatus"></div>
 
                       <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-medium">Enter the number</h3>
@@ -627,6 +565,23 @@ onUnmounted(() => {
                               d="M15.75 3.75 18 6m0 0 2.25 2.25M18 6l2.25-2.25M18 6l-2.25 2.25m1.5 13.5c-8.284 0-15-6.716-15-15V4.5A2.25 2.25 0 0 1 4.5 2.25h1.372c.516 0 .966.351 1.091.852l1.106 4.423c.11.44-.054.902-.417 1.173l-1.293.97a1.062 1.062 0 0 0-.38 1.21 12.035 12.035 0 0 0 7.143 7.143c.441.162.928-.004 1.21-.38l.97-1.293a1.125 1.125 0 0 1 1.173-.417l4.423 1.106c.5.125.852.575.852 1.091V19.5a2.25 2.25 0 0 1-2.25 2.25h-2.25Z"
                             />
                           </svg>
+                        </button>
+                      </div>
+                      <div class="mt-4 gap-2 flex items-center justify-between">
+                        <button
+                          @click.prevent="hangupOutboundCall()"
+                          v-if="outboundCallStatus !== '' && outboundCallStatus !== null"
+                          class="bg-red-500 hover:bg-red-400 text-white rounded-full py-2 px-6 mx-auto"
+                        >
+                          Hang Up
+                        </button>
+
+                        <button
+                          @click.prevent="callConferenceNumber(); "
+                          v-if="outboundCallStatus !== '' && outboundCallStatus !== null"
+                          class="bg-blue-700 hover:bg-red-400 text-white rounded-full py-2 px-6 mx-auto"
+                        >
+                          Add Call
                         </button>
                       </div>
                     </div>
