@@ -379,43 +379,35 @@ const hangupOutboundCall = () => {
 
 let callConferenceNumber = () => {
   if (outboundConferenceTypedNumber.value && outboundConferenceTypedNumber.value.length > 0) {
-
     // First fetch the callSid using the outboundCallSid
     axios.get('/twilio-outbound-call-sid', { params: { parentCallSid: outboundCallSid.value } })
       .then(response => {
         // On success, use the retrieved callSid for the next request
         const callSid = response.data.callSid;
+        
+        // Construct the payload with the retrieved callSid
+        const payload = {
+          callSid: callSid,
+          phoneNumber: outboundConferenceTypedNumber.value,
+        };
 
-    // Construct the payload
-    const payload = {
-      callSid: callSid,
-      phoneNumber: outboundConferenceTypedNumber.value,
-    };
-
-    // isConferenceCallInitiated.value = true;
-    // conferenceCallStatus.value = "initiated";
-
-    // Send the payload to your endpoint
-    axios
-      .post("/conference/convert/withNumber", payload)
-      .then((response) => {
-        // console.log("Call initiated", response);
-        // Extract and store conferenceName and thirdPartySid from response
-        // conferenceName.value = response.data.conferenceName;
-        // thirdPartySid.value = response.data.thirdPartySid;
-        console.log('Successfully converted! Response from server: ' , response);
-        // Reset or handle post-call UI here
-        // showDialPad.value = false;
-        // conferenceTypedNumber.value = "";
+        // Proceed with the original function's logic
+        axios.post("/conference/convert/withNumber", payload)
+          .then((response) => {
+            console.log('Successfully converted! Response from server: ', response);
+          })
+          .catch((error) => {
+            console.error("Error initiating conference call", error);
+          });
       })
-      .catch((error) => {
-        console.error("Error initiating call", error);
-        // Handle error
+      .catch(error => {
+        console.error("Error fetching outbound call SID", error);
       });
   } else {
     alert("Please enter a number to call.");
   }
 };
+
 
 
 /**  Outbound Call ends **/
