@@ -45,14 +45,19 @@ class TwilioOutboundCallController extends Controller
     public function handleCall(Request $request)
     {
         Log::info('Incoming request to handleCall:', $request->all());
-        
+
         $userId = $request->input('UserId');
+        if (!$userId) {
+            Log::error('UserId not provided in handleCall request');
+            return response()->json(['error' => 'UserId is required'], 400);
+        }
+
         $to = $request->input('To');
         $response = new VoiceResponse();
         $callerId = env('TWILIO_PHONE_NUMBER');
         $statusCallbackUrl = 'https://staging.allcalls.io/api/call/outbound/callback?UserId=' . $userId;
 
-        Log::info('Outbound handleCall: User id is:', $userId . $statusCallbackUrl);
+        Log::info('Outbound handleCall: User id and Callback URL', ['UserId' => $userId, 'CallbackURL' => $statusCallbackUrl]);
 
         if ($to) {
             // Use the Dial verb and set the callerId attribute
