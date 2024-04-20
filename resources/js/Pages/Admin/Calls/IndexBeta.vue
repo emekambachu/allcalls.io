@@ -604,17 +604,7 @@ let maxmizedCallsGroupedByUser = ref(Object.fromEntries(callsGroupedByUserArray)
 let showMoreForGrouped = ref(false);
 
 const toggleShowMore = () => {
-    if(showMoreForGrouped.value === true){
-        showMoreForGrouped.value = false;
-        console.log("Show More For Grouped: ", showMoreForGrouped.value);
-        console.log("Toggle show more: ", groupedCalls.value);
-        // groupedCalls.value = minimizedCallsGroupedByUser.value;
-    }else{
-        showMoreForGrouped.value = true;
-        console.log("Show More For Grouped: ", showMoreForGrouped.value);
-        console.log("Toggle show more: ", groupedCalls.value);
-        // groupedCalls.value = maxmizedCallsGroupedByUser.value;
-    }
+    showMoreForGrouped.value = showMoreForGrouped.value !== true;
 };
 
 const callsGroupedByPublisherNameArray = Object.entries(props.callsGroupedByPublisherName);
