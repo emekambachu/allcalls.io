@@ -603,6 +603,20 @@ let minimizedCallsGroupedByUser = ref(
 let maxmizedCallsGroupedByUser = ref(Object.fromEntries(callsGroupedByUserArray));
 let showMoreForGrouped = ref(false);
 
+const toggleShowMore = () => {
+    if(showMoreForGrouped.value === true){
+        showMoreForGrouped.value = false;
+        console.log("Show More For Grouped: ", showMoreForGrouped.value);
+        console.log("Toggle show more: ", groupedCalls.value);
+        // groupedCalls.value = minimizedCallsGroupedByUser.value;
+    }else{
+        showMoreForGrouped.value = true;
+        console.log("Show More For Grouped: ", showMoreForGrouped.value);
+        console.log("Toggle show more: ", groupedCalls.value);
+        // groupedCalls.value = maxmizedCallsGroupedByUser.value;
+    }
+};
+
 const callsGroupedByPublisherNameArray = Object.entries(props.callsGroupedByPublisherName);
 const callsGroupedByPublisherName = ref(Object.fromEntries(callsGroupedByPublisherNameArray));
 
@@ -961,19 +975,13 @@ const applyCallFiltersToSummary = () => {
     console.log("Maximised calls grouped by user before apply", maxmizedCallsGroupedByUser.value);
     console.log("Calls grouped by user before apply", callsGroupedByUserResults.value);
 
-
-    // Populate grouped calls when filter button is clicked
-    // maxmizedCallsGroupedByUser.value = Object.fromEntries(callsGroupedByUserArray);
-    // minimizedCallsGroupedByUser.value = Object.fromEntries(minimizedCallsGroupedByUserArray);
-    // callsGroupedByPublisherName.value = Object.fromEntries(callsGroupedByPublisherNameArray);
-
     // // assigned grouped calls to new variables
     // const unfilteredGroupedPublisherNames = callsGroupedByPublisherName.value;
     showMoreForGrouped.value = true;
 
     // Clear the grouped calls to be filled with filtered results
     maxmizedCallsGroupedByUser.value = {};
-    minimizedCallsGroupedByUser.value = {};
+    minimizedCallsGroupedByUser.value = [];
     callsGroupedByPublisherName.value = {};
 
     // update with results
@@ -983,9 +991,9 @@ const applyCallFiltersToSummary = () => {
     callsGroupedByPublisherName.value = callsGroupedByPublisherNameResults.value;
 
     let count = 0;
-    Object.values(maxmizedCallsGroupedByUser.value).forEach(group => {
+    maxmizedCallsGroupedByUser.value.forEach(user => {
         if(count < 2){
-            minimizedCallsGroupedByUser.value[group.userId] = group;
+            minimizedCallsGroupedByUser.value.push(user);
         }
         count++;
     });
@@ -993,6 +1001,8 @@ const applyCallFiltersToSummary = () => {
     console.log("Loaded calls after filter", loadedCalls.value);
     console.log("Grouped Publisher Names after filter", callsGroupedByPublisherName.value);
     console.log("Maximised calls grouped by user after apply", maxmizedCallsGroupedByUser.value);
+    console.log("Minimised calls grouped by user after apply", minimizedCallsGroupedByUser.value);
+    console.log("Calls grouped by user after apply", callsGroupedByUserResults.value);
     console.log("Grouped calls after apply", groupedCalls.value);
 }
 
@@ -1702,7 +1712,7 @@ onMounted(async () => {
                               </tbody>
 
                               <!--Data Available-->
-                              <tbody v-else-if="groupedCalls.length > 0">
+                              <tbody v-else-if="groupedCalls.length">
                                   <tr
                                       v-for="(userData, userId) in groupedCalls"
                                       :key="userId"
@@ -1772,7 +1782,7 @@ onMounted(async () => {
 
                           <div v-if="groupedCalls.length > 0" class="flex justify-center mt-4">
                               <button
-                                  @click.prevent="showMoreForGrouped = !showMoreForGrouped"
+                                  @click.prevent="toggleShowMore"
                                   class="bg-gray-200 hover:bg-gray-100 text-gray-800 cursor-pointer px-4 py-2 text-sm rounded-md flex items-center"
                               >
                                   <span v-if="showMoreForGrouped">Show Less</span>
